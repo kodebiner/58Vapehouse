@@ -74,12 +74,12 @@ class Auth extends BaseConfig
      * @var array
      */
     public $views = [
-        'login'           => 'Views\Auth\login',
-        'register'        => 'Views\Auth\register',
-        'forgot'          => 'Views\Auth\forgot',
-        'reset'           => 'Views\Auth\reset',
-        'emailForgot'     => 'Views\Auth\emails\forgot',
-        'emailActivation' => 'Views\Auth\emails\activation',
+        'login'           => 'App\Views\Auth\login',
+        'register'        => 'App\Views\Auth\register',
+        'forgot'          => 'App\Views\Auth\forgot',
+        'reset'           => 'App\Views\Auth\reset',
+        'emailForgot'     => 'App\Views\Auth\emails\forgot',
+        'emailActivation' => 'App\Views\Auth\emails\activation',
     ];
 
     /**
@@ -89,7 +89,7 @@ class Auth extends BaseConfig
      *
      * @var string
      */
-    public $viewLayout = 'Views\Auth\layout';
+    public $viewLayout = 'App\Views\Auth\layout';
 
     /**
      * --------------------------------------------------------------------

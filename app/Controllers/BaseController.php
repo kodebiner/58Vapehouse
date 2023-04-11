@@ -9,6 +9,8 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+use App\Models\UserModel;
+
 /**
  * Class BaseController
  *
@@ -35,7 +37,7 @@ abstract class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = [];
+    protected $helpers = ['auth'];
 
     /**
      * Be sure to declare properties for any property fetch you initialized.
@@ -54,5 +56,31 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = \Config\Services::session();
+
+        $this->agent = $this->request->getUserAgent();
+        $this->uri = $this->request->uri;
+
+        // Calling Model
+        $this->userModel = new UserModel();
+
+        // Login Check
+        $auth = service('authentication');
+        if (!$auth->check()) {
+            $this->userId = null;
+            $fullname = '';
+        }
+        else {
+            $this->userId = $auth->id();
+            $this->user = $this->userModel->find($this->userId);
+            $fullname = $this->user->getname();
+        }
+
+
+        $this->data = [
+			'ismobile'	=> $this->agent->isMobile(),
+			'uri'		=> $this->uri,
+            'uid'       => $this->userId,
+            'fullname'  => $fullname,
+		];
     }
 }
