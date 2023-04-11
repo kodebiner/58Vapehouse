@@ -74,12 +74,12 @@ class Auth extends BaseConfig
      * @var array
      */
     public $views = [
-        'login'           => 'Myth\Auth\Views\login',
-        'register'        => 'Myth\Auth\Views\register',
-        'forgot'          => 'Myth\Auth\Views\forgot',
-        'reset'           => 'Myth\Auth\Views\reset',
-        'emailForgot'     => 'Myth\Auth\Views\emails\forgot',
-        'emailActivation' => 'Myth\Auth\Views\emails\activation',
+        'login'           => 'Views\Auth\login',
+        'register'        => 'Views\Auth\register',
+        'forgot'          => 'Views\Auth\forgot',
+        'reset'           => 'Views\Auth\reset',
+        'emailForgot'     => 'Views\Auth\emails\forgot',
+        'emailActivation' => 'Views\Auth\emails\activation',
     ];
 
     /**
@@ -89,7 +89,7 @@ class Auth extends BaseConfig
      *
      * @var string
      */
-    public $viewLayout = 'Myth\Auth\Views\layout';
+    public $viewLayout = 'Views\Auth\layout';
 
     /**
      * --------------------------------------------------------------------
@@ -123,7 +123,7 @@ class Auth extends BaseConfig
      *
      * @var string[]
      */
-    public $personalFields = [];
+    public $personalFields = ['firstname', 'lastname'];
 
     /**
      * --------------------------------------------------------------------

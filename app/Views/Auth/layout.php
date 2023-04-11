@@ -25,14 +25,9 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-
-    <!-- Bootstrap core CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <style>
-        body {
-            padding-top: 5rem;
-        }
-    </style>
+    <link rel="stylesheet" href="css/theme.css">
+    <script src="js/uikit.min.js"></script>
+    <script src="js/uikit-icons.min.js"></script>
 
     <?= $this->renderSection('pageStyles') ?>
 </head>
