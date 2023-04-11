@@ -17,21 +17,21 @@
                     <div class="uk-margin">
                         <label for="firstname"><?=lang('Global.firstname')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.firstname')) : ?>tm-form-invalid<?php endif ?>" name="firstname" placeholder="<?=lang('Global.firstname')?>" value="<?= old('firstname') ?>">
+                            <input type="text" class="uk-input <?php if (session('errors.firstname')) : ?>tm-form-invalid<?php endif ?>" name="firstname" placeholder="<?=lang('Global.firstname')?>" value="<?= old('firstname') ?>" required>
                         </div>
                     </div>
 
                     <div class="uk-margin">
                         <label for="lastname"><?=lang('Global.lastname')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.lastname')) : ?>tm-form-invalid<?php endif ?>" name="lastname" placeholder="<?=lang('Global.lastname')?>" value="<?= old('lastname') ?>">
+                            <input type="text" class="uk-input <?php if (session('errors.lastname')) : ?>tm-form-invalid<?php endif ?>" name="lastname" placeholder="<?=lang('Global.lastname')?>" value="<?= old('lastname') ?>" required>
                         </div>
                     </div>
 
                     <div class="uk-margin">
                         <label for="email"><?=lang('Auth.email')?></label>
                         <div class="uk-form-controls">
-                            <input type="email" class="uk-input <?php if (session('errors.email')) : ?>tm-form-invalid<?php endif ?>" name="email" aria-describedby="emailHelp" placeholder="<?=lang('Auth.email')?>" value="<?= old('email') ?>">
+                            <input type="email" class="uk-input <?php if (session('errors.email')) : ?>tm-form-invalid<?php endif ?>" name="email" aria-describedby="emailHelp" placeholder="<?=lang('Auth.email')?>" value="<?= old('email') ?>" required>
                         </div>
                         <small id="emailHelp" class="form-text text-muted"><?=lang('Auth.weNeverShare')?></small>
                     </div>
@@ -39,34 +39,34 @@
                     <div class="uk-margin">
                         <label for="phone"><?=lang('Global.phone')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>" name="phone" placeholder="<?=lang('Global.phone')?>" value="<?= old('phone') ?>">
+                            <input type="text" class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>" name="phone" placeholder="<?=lang('Global.phone')?>" value="<?= old('phone') ?>" required>
                         </div>
                     </div>
 
                     <div class="uk-margin">
                         <label for="username"><?=lang('Auth.username')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.username')) : ?>tm-form-invalid<?php endif ?>" name="username" placeholder="<?=lang('Auth.username')?>" value="<?= old('username') ?>">
+                            <input type="text" class="uk-input <?php if (session('errors.username')) : ?>tm-form-invalid<?php endif ?>" name="username" placeholder="<?=lang('Auth.username')?>" value="<?= old('username') ?>" required>
                         </div>
                     </div>
 
                     <div class="uk-margin">
                         <label for="password"><?=lang('Auth.password')?></label>
                         <div class="uk-form-controls">
-                            <input type="password" name="password" class="uk-input <?php if (session('errors.password')) : ?>tm-form-invalid<?php endif ?>" placeholder="<?=lang('Auth.password')?>" autocomplete="off">
+                            <input type="password" name="password" class="uk-input <?php if (session('errors.password')) : ?>tm-form-invalid<?php endif ?>" placeholder="<?=lang('Auth.password')?>" autocomplete="off" required>
                         </div>
                     </div>
 
                     <div class="uk-margin">
                         <label for="pass_confirm"><?=lang('Auth.repeatPassword')?></label>
                         <div class="uk-form-controls">
-                            <input type="password" name="pass_confirm" class="uk-input <?php if (session('errors.pass_confirm')) : ?>tm-form-invalid<?php endif ?>" placeholder="<?=lang('Auth.repeatPassword')?>" autocomplete="off">
+                            <input type="password" name="pass_confirm" class="uk-input <?php if (session('errors.pass_confirm')) : ?>tm-form-invalid<?php endif ?>" placeholder="<?=lang('Auth.repeatPassword')?>" autocomplete="off" required>
                         </div>
                     </div>
 
-                    <br>
-
-                    <button type="submit" class="uk-button uk-button-primary"><?=lang('Auth.register')?></button>
+                    <div class="uk-margin">
+                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Auth.register')?></button>
+                    </div>
                 </form>
 
                 <hr>

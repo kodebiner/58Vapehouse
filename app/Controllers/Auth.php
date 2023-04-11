@@ -274,13 +274,17 @@ class Auth extends BaseController
      */
     public function forgotPassword()
     {
+        $data['config']         = $this->config;
+        $data['title']          = lang('Global.forgotPassword');
+        $data['description']    = '';
+
         if ($this->config->activeResetter === null) {
             return redirect()
                 ->route('login')
                 ->with('error', lang('Auth.forgotDisabled'));
         }
 
-        return $this->_render($this->config->views['forgot'], ['config' => $this->config]);
+        return $this->_render($this->config->views['forgot'], $data);
     }
 
     /**
@@ -347,18 +351,20 @@ class Auth extends BaseController
      */
     public function resetPassword()
     {
+        $token = $this->request->getGet('token');
+
+        $data['config']         = $this->config;
+        $data['title']          = lang('Auth.resetYourPassword');
+        $data['description']    = '';
+        $data['token']          = $token;
+
         if ($this->config->activeResetter === null) {
             return redirect()
                 ->route('login')
                 ->with('error', lang('Auth.forgotDisabled'));
         }
 
-        $token = $this->request->getGet('token');
-
-        return $this->_render($this->config->views['reset'], [
-            'config' => $this->config,
-            'token'  => $token,
-        ]);
+        return $this->_render($this->config->views['reset'], $data);
     }
 
     /**

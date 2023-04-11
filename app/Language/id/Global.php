@@ -5,7 +5,8 @@
  *
  */
 return [
-    'firstname'     => 'Nama Depan',
-    'lastname'      => 'Nama Belakang',
-    'phone'         => 'Nomor Telpon',
+    'firstname'         => 'Nama Depan',
+    'lastname'          => 'Nama Belakang',
+    'phone'             => 'Nomor Telpon',
+    'forgotPassword'    => 'Lupa Kata Sandi',
 ];
