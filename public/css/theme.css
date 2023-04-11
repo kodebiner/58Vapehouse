@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto+Mono&display=swap');
+
 html {
     font-family: ProximaNova, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 15px;
@@ -2028,7 +2030,8 @@ select.uk-form-width-xsmall {
 .uk-card-default {
     background-color: #fff;
     color: #666;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, .08)
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+    border-radius: 20px;
 }
 
 .uk-card-default .uk-card-title {
@@ -11034,22 +11037,6 @@ video) {
     font-display: swap
 }
 
-@font-face {
-    font-family: Montserrat;
-    src: url(../fonts/montserrat-600.woff2) format('woff2'), url(../fonts/montserrat-600.woff) format('woff');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap
-}
-
-@font-face {
-    font-family: 'Roboto Mono';
-    src: url(../fonts/roboto-mono-regular.woff2) format('woff2'), url(../fonts/roboto-mono-regular.woff) format('woff');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap
-}
-
 html {
     overflow-y: scroll
 }
@@ -11198,7 +11185,7 @@ body {
 .tm-h4,
 .tm-h5,
 .tm-h6 {
-    font-family: Montserrat;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -11325,4 +11312,8 @@ body {
     .tm-intro-image {
         margin-right: -75px
     }
+}
+
+.tm-form-invalid {
+    border: 1px solid #f0506e !important;
 }

@@ -16,7 +16,7 @@ class Auth extends BaseConfig
      *
      * @var string
      */
-    public $defaultUserGroup;
+    public $defaultUserGroup = 'guests';
 
     /**
      * --------------------------------------------------------------------
@@ -198,7 +198,7 @@ class Auth extends BaseConfig
      *
      * @var string|null Name of the ResetterInterface class
      */
-    public $activeResetter = null;
+    public $activeResetter = 'Myth\Auth\Authentication\Resetters\EmailResetter';
 
     /**
      * --------------------------------------------------------------------
@@ -213,7 +213,7 @@ class Auth extends BaseConfig
      *
      * @var bool
      */
-    public $allowRemembering = false;
+    public $allowRemembering = true;
 
     /**
      * --------------------------------------------------------------------
@@ -314,7 +314,7 @@ class Auth extends BaseConfig
      *
      * @var int
      */
-    public $minimumPasswordLength = 8;
+    public $minimumPasswordLength = 6;
 
     /**
      * --------------------------------------------------------------------

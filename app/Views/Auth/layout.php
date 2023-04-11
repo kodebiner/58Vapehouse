@@ -32,22 +32,14 @@
     <?= $this->renderSection('pageStyles') ?>
 </head>
 
-<body>
-
-<?= view('Myth\Auth\Views\_navbar') ?>
-
-<main role="main" class="container">
-	<?= $this->renderSection('main') ?>
-</main><!-- /.container -->
-
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-<?= $this->renderSection('pageScripts') ?>
+<body id="body" uk-height-viewport>
+    <main role="main">
+        <?= $this->renderSection('main') ?>
+    </main>
+    <footer role="footer" class="uk-position-z-index" style="background-color:#1e87f0; color:#fff;" uk-sticky="position: bottom; start: 0; end: #body">
+        <div class="uk-section-xsmall uk-text-center">
+            Developed by<br/><a class="uk-link-reset" href="https://binary111.com">PT. Kodebiner Teknologi Indonesia</a>
+        </div>
+    </footer>
 </body>
 </html>

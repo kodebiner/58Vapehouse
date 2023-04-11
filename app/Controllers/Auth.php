@@ -7,7 +7,7 @@ use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Session\Session;
-use Myth\Auth\Config\Auth as AuthConfig;
+use App\Config\Auth as AuthConfig;
 use App\Entities\User;
 use App\Models\UserModel;
 
@@ -57,6 +57,10 @@ class Auth extends BaseController
      */
     public function login()
     {
+        $data['config']         = $this->config;
+        $data['title']          = lang('Auth.loginTitle');
+        $data['description']    = '';
+
         // No need to show a login form if the user
         // is already logged in.
         if ($this->auth->check()) {
@@ -71,7 +75,7 @@ class Auth extends BaseController
         $_SESSION['redirect_url'] = session('redirect_url') ?? previous_url();
 
         // Display the login view.
-        return $this->_render($this->config->views['login'], ['config' => $this->config]);
+        return $this->_render($this->config->views['login'], $data);
     }
 
     /**
@@ -154,6 +158,10 @@ class Auth extends BaseController
      */
     public function register()
     {
+        $data['config']         = $this->config;
+        $data['title']          = lang('Auth.register');
+        $data['description']    = '';
+
         // check if already logged in.
         if ($this->auth->check()) {
             return redirect()->back();
@@ -167,7 +175,7 @@ class Auth extends BaseController
                 ->with('error', lang('Auth.registerDisabled'));
         }
 
-        return $this->_render($this->config->views['register'], ['config' => $this->config]);
+        return $this->_render($this->config->views['register'], $data);
     }
 
     /**
@@ -189,8 +197,10 @@ class Auth extends BaseController
 
         // Validate basics first since some password rules rely on these fields
         $rules = config('Validation')->registrationRules ?? [
-            'username' => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
-            'email'    => 'required|valid_email|is_unique[users.email]',
+            'username'  => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
+            'email'     => 'required|valid_email|is_unique[users.email]',
+            'firstname' => 'required',
+            'phone'     => 'required',
         ];
 
         if (! $this->validate($rules)) {

@@ -59,7 +59,7 @@ $routes->group('/', static function ($routes) {
 
 // Require login
 $routes->group('/', ['filter' => 'login'], function($routes) {
-    
+    $routes->get('', 'Home::index');
 });
 
 /*
