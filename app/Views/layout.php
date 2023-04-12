@@ -53,8 +53,8 @@
                         <div class="uk-inline">
                             <a class="uk-linnk-reset" type="button">
                                 <?php
-                                if ($account != null) {
-                                    $profile = $account['photo'];
+                                if (!empty($account->photo)) {
+                                    $profile = $account->photo;
                                 } else {
                                     $profile = 'user.png';
                                 }
