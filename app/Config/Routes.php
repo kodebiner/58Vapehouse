@@ -64,6 +64,15 @@ $routes->group('/', ['filter' => 'login'], function($routes) {
     
 });
 
+//user
+$routes->group('user', ['filter'=>'login'], function($routes){
+
+    $routes->get('', 'User::index', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->get('create', 'User::create', ['filter' => 'role:owner,supervisor']);
+    $routes->get('edit(:num)', 'User::edit', ['filter' => 'role:owner,supervisor,guests']);
+
+});
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

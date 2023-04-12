@@ -38,7 +38,7 @@ class User extends BaseController
         $data['users'] = $query->getResult();
 
 
-        return view('Views/admin/index', $data);
+        return view('Views/user', $data);
     }
 
     public function create()
