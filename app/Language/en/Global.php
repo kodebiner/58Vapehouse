@@ -9,4 +9,5 @@ return [
     'lastname'          => 'Last Name',
     'phone'             => 'Phone Number',
     'forgotPassword'    => 'Forgot Password',
+    'backHome'          => 'Back to Home',
 ];

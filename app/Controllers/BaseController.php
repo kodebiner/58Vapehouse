@@ -10,6 +10,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 use App\Models\UserModel;
+use App\Models\GconfigModel;
 
 /**
  * Class BaseController
@@ -62,12 +63,14 @@ abstract class BaseController extends Controller
 
         // Calling Model
         $this->userModel = new UserModel();
+        $this->ConfigModel = new GconfigModel();
 
         // Login Check
         $auth = service('authentication');
         if (!$auth->check()) {
             $this->userId = null;
             $fullname = '';
+            $this->user = null;
         }
         else {
             $this->userId = $auth->id();
@@ -75,12 +78,32 @@ abstract class BaseController extends Controller
             $fullname = $this->user->getname();
         }
 
+        // Load Config
+        $this->gconfig = $this->ConfigModel->first();
+
+        if (!empty($this->gconfig)) {
+            $gconfig = $this->gconfig;
+        } else {
+            $gconfig = [
+                'id'                => null,
+                'poinvalue'         => null,
+                'poinorder'         => null,
+                'memberdisc'        => null,
+                'memberdisctype'    => null,
+                'logo'              => null,
+                'bizname'           => null,
+                'ppn'               => null,
+            ];
+        }
+
 
         $this->data = [
 			'ismobile'	=> $this->agent->isMobile(),
 			'uri'		=> $this->uri,
             'uid'       => $this->userId,
+            'account'   => $this->user,
             'fullname'  => $fullname,
+            'gconfig'   => $gconfig,
 		];
     }
 }

@@ -32,6 +32,8 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 
+$routes->get('/', 'Home::index');
+
 // Myth/Auth Routes
 $routes->group('/', static function ($routes) {
     $config         = config(AuthConfig::class);
@@ -59,7 +61,7 @@ $routes->group('/', static function ($routes) {
 
 // Require login
 $routes->group('/', ['filter' => 'login'], function($routes) {
-    $routes->get('', 'Home::index');
+    
 });
 
 /*

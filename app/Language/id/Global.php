@@ -9,4 +9,5 @@ return [
     'lastname'          => 'Nama Belakang',
     'phone'             => 'Nomor Telpon',
     'forgotPassword'    => 'Lupa Kata Sandi',
+    'backHome'          => 'Kembali ke Beranda',
 ];

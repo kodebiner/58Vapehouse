@@ -57,6 +57,7 @@ class Auth extends BaseController
      */
     public function login()
     {
+        $data                   = $this->data;
         $data['config']         = $this->config;
         $data['title']          = lang('Auth.loginTitle');
         $data['description']    = '';
@@ -158,6 +159,7 @@ class Auth extends BaseController
      */
     public function register()
     {
+        $data                   = $this->data;
         $data['config']         = $this->config;
         $data['title']          = lang('Auth.register');
         $data['description']    = '';
@@ -274,6 +276,7 @@ class Auth extends BaseController
      */
     public function forgotPassword()
     {
+        $data                   = $this->data;
         $data['config']         = $this->config;
         $data['title']          = lang('Global.forgotPassword');
         $data['description']    = '';
@@ -353,6 +356,7 @@ class Auth extends BaseController
     {
         $token = $this->request->getGet('token');
 
+        $data                   = $this->data;
         $data['config']         = $this->config;
         $data['title']          = lang('Auth.resetYourPassword');
         $data['description']    = '';
