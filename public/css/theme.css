@@ -158,7 +158,7 @@ h4,
 h5,
 h6 {
     margin: 0 0 20px 0;
-    font-family: ProximaNova, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: 'Robotto Mono' , monospace;
     font-weight: 300;
     color: #222;
     text-transform: none
@@ -3779,7 +3779,7 @@ ul.uk-nav-sub {
 }
 
 .uk-nav-default>li>a {
-    color: #999
+    color: #000000
 }
 
 .uk-nav-default>li>a:hover {
@@ -7255,6 +7255,10 @@ video) {
     .uk-padding-large {
         padding: 70px
     }
+}
+
+.uk-padding-xlarge-left {
+    padding: 300px;
 }
 
 .uk-padding-remove {
@@ -11052,9 +11056,17 @@ body {
     bottom: 0;
     box-sizing: border-box;
     width: 240px !important;
-    padding: 40px 40px 60px 40px;
-    border-right: 1px #e5e5e5 solid;
-    overflow: auto
+    padding: 10px 40px 60px 40px;
+    overflow-y: scroll;
+}
+
+.tm-sidebar-left {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.tm-sidebar-left::-webkit-scrollbar {
+    display: none;
 }
 
 .tm-sidebar-right {
@@ -11081,8 +11093,8 @@ body {
 
 @media (min-width:1400px) {
     .tm-sidebar-left {
-        width: 300px !important;
-        padding: 45px 45px 60px 45px
+        width: 350px !important;
+        padding: 10px 45px 60px 45px
     }
     .tm-sidebar-right {
         left: calc(100% + 60px)
@@ -11093,7 +11105,7 @@ body {
 }
 
 .tm-navbar-container:not(.uk-navbar-transparent) {
-    background: linear-gradient(to left, #28a5f5, #1e87f0)
+    background: #ccc;
 }
 
 .tm-navbar-container .uk-navbar-item:not(.uk-logo),
@@ -11316,4 +11328,16 @@ body {
 
 .tm-form-invalid {
     border: 1px solid #f0506e !important;
+}
+
+li.tm-main-navbar>a>img {
+    position: relative;
+    top: -2px;
+    margin-right: 5px;
+}
+
+.tm-main-card {
+    border-top-left-radius: 40px;
+    background-color: #fff;
+    padding: 40px 40px;
 }

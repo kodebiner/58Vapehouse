@@ -37,7 +37,7 @@
     <body style="background-color:#ccc;">
 
         <!-- Header Section -->
-        <header class="uk-navbar-container tm-navbar-container uk-navbar-transparent" uk-sticky="media: 960;">
+        <header class="uk-navbar-container tm-navbar-container" uk-sticky="media: 960;">
             <div class="uk-container uk-container-expand">
                 <div uk-navbar>
                     <div class="uk-navbar-left">
@@ -73,23 +73,80 @@
 
         <!-- Navbar Section -->
         <nav class="tm-sidebar-left">
-            <ul class="uk-nav uk-nav-default tm-nav" uk-nav>
-                <li class="">
-                    <a href="<?= base_url('') ?>">Beranda</a>
+            <ul class="uk-nav uk-nav-default tm-nav">
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg">Beranda</a>
                 </li>
-                <li class="">
-                    <a href="<?= base_url('') ?>">Laporan</a>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/laporan.svg">Laporan</a>
                 </li>
-                <li class="">
-                    <a href="<?= base_url('') ?>">Riwayat Transaksi</a>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg">Riwayat Transaksi</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg">Pembayaran</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/product.svg">Produk</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg">Pengingat</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/pegawai.svg">Pegawai</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/inventori.svg">Inventaris</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/outlet.svg">Outlet</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/cash.svg">Kelola Kas</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/pelanggan.svg">Pelanggan</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
+                </li>
+                <li class="tm-main-navbar">
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
                 </li>
             </ul>
         </nav>
         <!-- Navbar Section end -->
 
         <!-- Main Section -->
-        <main role="main">
-            <?= $this->renderSection('main') ?>
+        <main class="tm" role="main">
+            <div class="uk-padding-xlarge-left uk-padding-remove-top uk-padding-remove-bottom uk-padding-remove-right">
+                <div class="uk-container uk-container-expand uk-padding-remove-right">
+                    <div class="tm-main-card">
+                        <?= $this->renderSection('main') ?>
+                    </div>
+                </div>
+            </div>
         </main>
         <!-- Main Section end -->
         
