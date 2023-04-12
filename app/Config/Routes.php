@@ -68,7 +68,8 @@ $routes->group('/', ['filter' => 'login'], function($routes) {
 $routes->group('user', ['filter'=>'login'], function($routes){
 
     $routes->get('', 'User::index', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->get('create', 'User::create', ['filter' => 'role:owner,supervisor']);
+    $routes->post('create', 'User::create', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->post('save', 'User::create', ['filter' => 'role:owner,supervisor,guests']);
     $routes->get('edit(:num)', 'User::edit', ['filter' => 'role:owner,supervisor,guests']);
 
 });

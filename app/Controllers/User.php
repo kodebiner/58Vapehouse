@@ -41,7 +41,7 @@ class User extends BaseController
         return view('Views/user', $data);
     }
 
-    public function create()
+    public function tambah()
 
     {
         $data = [
@@ -52,7 +52,7 @@ class User extends BaseController
         
     }
 
-    public function save()
+    public function create()
 
     {
         $authorize = $auth = service('authorization');
@@ -67,7 +67,7 @@ class User extends BaseController
 
         $authorize->addUserToGroup($user->id, $input['role']);
         
-        return redirect()->to('admin');
+        return redirect()->to('user');
    
     }
 
