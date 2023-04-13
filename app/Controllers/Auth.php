@@ -202,7 +202,8 @@ class Auth extends BaseController
             'username'  => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
             'email'     => 'required|valid_email|is_unique[users.email]',
             'firstname' => 'required',
-            'phone'     => 'required',
+            'lastname'  => 'required',
+            'phone'     => 'required|numeric',
         ];
 
         if (! $this->validate($rules)) {

@@ -7258,7 +7258,7 @@ video) {
 }
 
 .uk-padding-xlarge-left {
-    padding: 300px;
+    padding-left: 300px;
 }
 
 .uk-padding-remove {
@@ -11340,4 +11340,5 @@ li.tm-main-navbar>a>img {
     border-top-left-radius: 40px;
     background-color: #fff;
     padding: 40px 40px;
+    min-height: calc(100vh - 80px);
 }

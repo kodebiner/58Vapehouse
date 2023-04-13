@@ -139,8 +139,8 @@
         <!-- Navbar Section end -->
 
         <!-- Main Section -->
-        <main class="tm" role="main">
-            <div class="uk-padding-xlarge-left uk-padding-remove-top uk-padding-remove-bottom uk-padding-remove-right">
+        <main role="main">
+            <div class="uk-padding-xlarge-left">
                 <div class="uk-container uk-container-expand uk-padding-remove-right">
                     <div class="tm-main-card">
                         <?= $this->renderSection('main') ?>

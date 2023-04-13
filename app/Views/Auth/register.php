@@ -39,7 +39,7 @@
                     <div class="uk-margin">
                         <label for="phone"><?=lang('Global.phone')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>" name="phone" placeholder="<?=lang('Global.phone')?>" value="<?= old('phone') ?>" required>
+                            <input type="phone" class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>" name="phone" placeholder="<?=lang('Global.phone')?>" value="<?= old('phone') ?>" required>
                         </div>
                     </div>
 

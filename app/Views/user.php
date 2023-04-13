@@ -113,7 +113,9 @@
 
   <!-- Modal Edit -->
   <?php foreach ($users as $user) : ?>
-    <div uk-modal class="uk-flex uk-flex-top" id="editdata"></div>
+    <div class="uk-flex-top" id="editdata<?= $user->userid ?>" uk-modal>
+      <div class="uk-modal-dialog uk-modal-body"></div>
+    </div>
   <?php endforeach; ?>
   <!-- End Of Modal Edit -->
 </div>
