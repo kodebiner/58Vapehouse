@@ -93,7 +93,7 @@
                     <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg">Pengingat</a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/pegawai.svg">Pegawai</a>
+                    <a class="uk-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg">Pegawai</a>
                 </li>
                 <li class="tm-main-navbar">
                     <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/inventori.svg">Inventaris</a>

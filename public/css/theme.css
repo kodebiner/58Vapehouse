@@ -11194,6 +11194,9 @@ body {
     background-size: 100% 75%
 }
 
+.tm-h1,
+.tm-h2,
+.tm-h3,
 .tm-h4,
 .tm-h5,
 .tm-h6 {
@@ -11201,7 +11204,7 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: #999
+    color: #000
 }
 
 .tm-h4 {
@@ -11341,4 +11344,10 @@ li.tm-main-navbar>a>img {
     background-color: #fff;
     padding: 40px 40px;
     min-height: calc(100vh - 80px);
+}
+
+.tm-card-header {
+    display: flow-root;
+    padding: 15px 30px;
+    border-bottom: 1px solid #e5e5e5;
 }
