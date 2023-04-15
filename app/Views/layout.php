@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <base href="<?=base_url();?>">
-        <title></title>
-        <meta name="description" content="">
+        <title><?=$title?></title>
+        <meta name="description" content="<?=$description?>">
         <meta name="author" content="PT. Kodebiner Teknologi Indonesia">
         <link rel="icon" href="favicon/favicon.ico">
         <link rel="apple-touch-icon" sizes="16x16" href="favicon/apple-icon-16x16.png">
@@ -62,7 +62,7 @@
                                 <img src="img/<?=$profile?>" class="uk-object-cover uk-object-position-top-center uk-border-circle" width="50" height="50" style="aspect-ratio: 1 / 1; border: 2px solid #000;" alt="<?=$fullname?>" />
                             </a>
                             <div uk-dropdown>
-                                Lorem Ipsum
+                                <div class="uk-text-center uk-text-bold"><?=$fullname?></div>
                             </div>
                         </div>
                     </div>

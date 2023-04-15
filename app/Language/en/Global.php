@@ -10,4 +10,12 @@ return [
     'phone'             => 'Phone Number',
     'forgotPassword'    => 'Forgot Password',
     'backHome'          => 'Back to Home',
+
+    // Menu
+    'dashboard'         => 'Dashboard',
+
+    // Page Title
+    
+    // Page Description
+    'dashdesc'          => 'Global information about your business',
 ];
