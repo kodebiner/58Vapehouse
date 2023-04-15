@@ -146,9 +146,9 @@
               </div>
               
               <div class="uk-margin">
-                <label class="uk-form-label" for="no_hp">Nomer HP</label>
+                <label class="uk-form-label" for="phone">Nomer HP</label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" name="no_hp" id="no_hp" value="<?= $user->phone; ?>"/>
+                  <input type="text" class="uk-input" name="phone" id="phone" value="<?= $user->phone; ?>"/>
                 </div>
               </div>
 

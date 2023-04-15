@@ -57,25 +57,27 @@ class User extends BaseController
     {
         $authorize = $auth = service('authorization');
         $usersModel = new UserModel();
+        $data['users']= $usersModel;
         
-        $input = $this->request->getPost();
+       $input = $this->request->getPost();
 
+        $data =  [
 
-        $data = [
+        'phone'      => $this->request->getPost('phone'),
 
-            'username'   => $this->request->getPost('username'),
-            'email'      => $this->request->getPost('email'),
-            'phone'      => $this->request->getPost('phone'),
         ];
 
-        echo command('auth:create_user '.$input['username'].' '.$input['email']);
+        echo command('auth:create_user '.$input['username'].' '.$input['email'].' '.$input['phone']);
         echo command('auth:set_password '.$input['username'].' '.$input['password']);
 
         $user = $usersModel->where('username', $input['username'])->first();
 
         $authorize->addUserToGroup($user->id, $input['role']);
-        $usersModel->insert($data);
 
+        $usersModel->save($data);
+
+       
+        
         return redirect()->to('user');
    
     }
@@ -108,14 +110,12 @@ class User extends BaseController
                 'phone'      => $this->request->getPost('phone'),
             ];
 
-            
             $user = $usersModel->where('username', $input['username'])->first();
             //$authorize->inGroup($user->role, $user->Id);
             $authorize->removeUserFromGroup($this->request->getPost('id'), $this->request->getPost('group_id'));
             $authorize->addUserToGroup($this->request->getPost('id'), $this->request->getPost('role'));
-            
-            $usersModel->insert($id, $data);
-            
+
+            $usersModel->update($id, $data);
 
             //flash message
             session()->setFlashdata('message', 'Data Berhasil Diupdate');
@@ -142,53 +142,5 @@ class User extends BaseController
 
     }
 
-    public function ubahpass()
-    
-    {
-        $data = [
-
-            'title' => 'ubah password'
-        ];
-       
-        return view ('user/ubahpass', $data);
-
-    }
-
-    public function updatepass()
-
-    {
-        $this->builder->select('id, username, email, name, password_hash');
-        $query =   $this->builder->get();
-
-        $data['users'] = $query->getResult();
-
-        
-        //validasi
-        if(!$this->validate([
-            'passlama' => "required",
-            'passbaru' => "required|strong_password",
-            'konf_passbaru' => "required|matches['passbaru']",
-        ])){
-        return redirect()->to('/user/ubahpass')->withInput();
-
-        }
-
-        $this->_user->save([
-            // 'id' => $id,
-            'password_hash' => password_hash($this->request->getVar('passbaru'),PASSWORD_BCRYPT),
-        ]);
-
-        session()->setFlashdata('succes','Berhasil Mengubah Password');
-        return redirect()->to('user/ubahpass');
-                
-
-    }
-
-    
-    
-        
-     
-    
-    
 
 }
