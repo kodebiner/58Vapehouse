@@ -40,9 +40,9 @@
               </div>
 
               <div class="uk-margin">
-                <label class="uk-form-label" for="no_hp">Nomer HP</label>
+                <label class="uk-form-label" for="phone">Nomer HP</label>
                 <div class="uk-form-controls">
-                  <input type="phone" name="no_hp" id="no_hp" class="uk-input"/>
+                  <input type="phone" name="phone" id="phone" class="uk-input"/>
                 </div>
               </div>
 
@@ -88,6 +88,7 @@
       <tr>
         <th class="uk-text-center">No</th>
         <th class="uk-text-center">Nama</th>
+        <th class="uk-text-center">No HP</th>
         <th class="uk-text-center">Hak Akses</th>
         <th class="uk-text-center">Aksi</th>
       </tr>
@@ -98,10 +99,12 @@
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
           <td class="uk-text-center"><?= $user->username; ?></td>
+          <td class="uk-text-center"><?= $user->phone; ?></td>
           <td class="uk-text-center"><?= $user->name; ?></td>
           <td class="uk-text-center">
             <!-- Button Trigger Modal Edit -->
             <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $user->userid ?>">Ubah</button>
+            <a class="uk-button uk-button-default uk-button-danger" href="user/delete/<?= $user->userid ?>">Hapus</a>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
@@ -123,7 +126,7 @@
           </div>
 
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="<? base_url('/user/update/)'.$user->userid); ?>" method="post">
+            <form class="uk-form-stacked" role="form" action="user/update/<?= $user->userid ?>" method="post">
               <?= csrf_field() ?>
               <input type="hidden" name="id" value="<?= $user->userid; ?>">
               <input type="hidden" name="group_id" value="<?= $user->group_id; ?>">
@@ -145,14 +148,7 @@
               <div class="uk-margin">
                 <label class="uk-form-label" for="no_hp">Nomer HP</label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" name="no_hp" id="no_hp" value=""/>
-                </div>
-              </div>
-
-              <div class="uk-margin">
-                <label class="uk-form-label" for="password">Password</label>
-                <div class="uk-form-controls">
-                  <input type="password" class="uk-input" name="password" id="password" />
+                  <input type="text" class="uk-input" name="no_hp" id="no_hp" value="<?= $user->phone; ?>"/>
                 </div>
               </div>
 

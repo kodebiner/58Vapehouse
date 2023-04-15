@@ -29,7 +29,7 @@ class User extends BaseController
         // $data['users']= $users->findAll();
 
 
-        $this->builder->select('users.id as userid, username, email, name, group_id');
+        $this->builder->select('users.id as userid, username, email, phone, name, group_id');
         $this->builder->where('deleted_at', null);
         $this->builder->join('auth_groups_users', 'auth_groups_users.user_id = users.id');
         $this->builder->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id');
@@ -48,7 +48,7 @@ class User extends BaseController
             'title' => 'Form Tambah Data Admin'
         ];
 
-        return view('Views/admin/index', $data);
+        return view('Views/user', $data);
         
     }
 
@@ -60,13 +60,22 @@ class User extends BaseController
         
         $input = $this->request->getPost();
 
+
+        $data = [
+
+            'username'   => $this->request->getPost('username'),
+            'email'      => $this->request->getPost('email'),
+            'phone'      => $this->request->getPost('phone'),
+        ];
+
         echo command('auth:create_user '.$input['username'].' '.$input['email']);
         echo command('auth:set_password '.$input['username'].' '.$input['password']);
 
         $user = $usersModel->where('username', $input['username'])->first();
 
         $authorize->addUserToGroup($user->id, $input['role']);
-        
+        $usersModel->insert($data);
+
         return redirect()->to('user');
    
     }
@@ -78,7 +87,7 @@ class User extends BaseController
         $usersModel = new UserModel();
         $data['users']= $usersModel->find($id);
         
-        return view('Views/admin/index', $data);
+        return view('Views/user', $data);
     }
 
     public function update($id)
@@ -96,20 +105,22 @@ class User extends BaseController
                 'id'         => $this->request->getPost('id'),
                 'username'   => $this->request->getPost('username'),
                 'email'      => $this->request->getPost('email'),
-                'no_hp'      => $this->request->getPost('no_hp'),
+                'phone'      => $this->request->getPost('phone'),
             ];
 
+            
             $user = $usersModel->where('username', $input['username'])->first();
             //$authorize->inGroup($user->role, $user->Id);
             $authorize->removeUserFromGroup($this->request->getPost('id'), $this->request->getPost('group_id'));
             $authorize->addUserToGroup($this->request->getPost('id'), $this->request->getPost('role'));
-
-            $usersModel->update($id, $data);
+            
+            $usersModel->insert($id, $data);
+            
 
             //flash message
             session()->setFlashdata('message', 'Data Berhasil Diupdate');
 
-            return redirect()->to('admin');
+            return redirect()->to('user');
 
     }
 
@@ -127,7 +138,7 @@ class User extends BaseController
         ]);
         $usersModel->delete($id);
         session()->setFlashdata('message', 'Delete Data Pegawai Berhasil');
-        return redirect()->to('admin');
+        return redirect()->to('user');
 
     }
 

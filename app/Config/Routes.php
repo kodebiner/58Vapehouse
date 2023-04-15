@@ -64,14 +64,15 @@ $routes->group('/', ['filter' => 'login'], function($routes) {
     
 });
 
-//user
+// User Routes
 $routes->group('user', ['filter'=>'login'], function($routes){
 
     $routes->get('', 'User::index', ['filter' => 'role:owner,supervisor,guests']);
     $routes->post('create', 'User::create', ['filter' => 'role:owner,supervisor,guests']);
     $routes->post('save', 'User::create', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->get('edit(:num)', 'User::edit', ['filter' => 'role:owner,supervisor,guests']);
-
+    $routes->get('edit(:num)', 'User::edit/$1', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->post('update/(:num)', 'User::update/$1', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->get('delete/(:num)', 'User::delete/$1', ['filter' => 'role:owner,supervisor,guests']);
 });
 
 /*
