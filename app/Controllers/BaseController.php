@@ -101,6 +101,7 @@ abstract class BaseController extends Controller
 			'ismobile'	=> $this->agent->isMobile(),
 			'uri'		=> $this->uri,
             'uid'       => $this->userId,
+            'authorize' => service('authorization'),
             'account'   => $this->user,
             'fullname'  => $fullname,
             'gconfig'   => $gconfig,

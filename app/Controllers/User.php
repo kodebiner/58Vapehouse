@@ -21,22 +21,22 @@ class User extends BaseController
     public function index()
     {
         $GroupModel = new GroupModel();
+        $UserModel  = new UserModel();
         
-        $data           = $this->data;
-        $data['title']  = 'User List';
-        $data['roles']  = $GroupModel->findAll();
+        $data                   = $this->data;
+        $data['title']          = lang('Global.userList');
+        $data['description']    = lang('Global.userListDesc');
+        $data['roles']          = $GroupModel->findAll();
+        $data['users']          = $UserModel->findAll();
         // $users = new \Myth\Auth\Models\UserModel();
         // $data['users']= $users->findAll();
 
 
-        $this->builder->select('users.id as userid, username, email, phone, name, group_id');
-        $this->builder->where('deleted_at', null);
-        $this->builder->join('auth_groups_users', 'auth_groups_users.user_id = users.id');
-        $this->builder->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id');
-        $query =   $this->builder->get();
-
-        $data['users'] = $query->getResult();
-
+        // $this->builder->select('users.id as userid, username, email, phone, name, group_id');
+        // $this->builder->where('deleted_at', null);
+        // $this->builder->join('auth_groups_users', 'auth_groups_users.user_id = users.id');
+        // $this->builder->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id');
+        // $query =   $this->builder->get();
 
         return view('Views/user', $data);
     }

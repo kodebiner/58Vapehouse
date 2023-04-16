@@ -26,41 +26,74 @@
               <?= csrf_field() ?>
 
               <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="username">Nama</label>
+                <label class="uk-form-label" for="username"><?=lang('Auth.username')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="username" name="username" autofocus required />
+                  <input type="text" class="uk-input <?php if (session('errors.username')) : ?>tm-form-invalid<?php endif ?>" id="username" name="username" placeholder="<?=lang('Auth.username')?>" autofocus required />
                 </div>
               </div>
 
               <div class="uk-margin">
-                <label class="uk-form-label" for="email">Email</label>
+                <label class="uk-form-label" for="email"><?=lang('Auth.email')?></label>
                 <div class="uk-form-controls">
-                  <input type="email" name="email" id="email" required class="uk-input"/>
+                  <input type="email" name="email" id="email" placeholder="<?=lang('Auth.email')?>" required class="uk-input <?php if (session('errors.email')) : ?>tm-form-invalid<?php endif ?>"/>
+                </div>
+              </div>
+
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="firstname"><?=lang('Global.firstname')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input <?php if (session('errors.firstname')) : ?>tm-form-invalid<?php endif ?>" id="firstname" name="firstname" placeholder="<?=lang('Global.firstname')?>" autofocus required />
+                </div>
+              </div>
+
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="lastname"><?=lang('Global.lastname')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input <?php if (session('errors.lastname')) : ?>tm-form-invalid<?php endif ?>" id="lastname" name="lastname" placeholder="<?=lang('Global.lastname')?>" autofocus required />
                 </div>
               </div>
 
               <div class="uk-margin">
-                <label class="uk-form-label" for="phone">Nomer HP</label>
+                <label class="uk-form-label" for="phone"><?=lang('Global.phone')?></label>
                 <div class="uk-form-controls">
-                  <input type="phone" name="phone" id="phone" class="uk-input"/>
+                  <input type="phone" name="phone" id="phone" placeholder="<?=lang('Global.phone')?>" class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>"/>
                 </div>
               </div>
 
               <div class="uk-margin">
-                <label class="uk-form-label" for="password">Password</label>
+                <label class="uk-form-label" for="password"><?=lang('Auth.password')?></label>
                 <div class="uk-form-controls">
-                  <input type="password" name="password" id="password" required class="uk-input" />
+                  <input type="password" name="password" id="password" required class="uk-input <?php if (session('errors.password')) : ?>tm-form-invalid<?php endif ?>" />
                 </div>
               </div>
 
               <div class="uk-margin">
-                <label class="uk-form-label" for="role">Hak Akses</label>
+                <label class="uk-form-label" for="pass_confirm"><?=lang('Auth.repeatPassword')?></label>
+                <div class="uk-form-controls">
+                  <input type="password" name="pass_confirm" id="pass_confirm" required class="uk-input <?php if (session('errors.repeatPassword')) : ?>tm-form-invalid<?php endif ?>" />
+                </div>
+              </div>
+
+              <div class="uk-margin">
+                <label class="uk-form-label" for="role"><?=lang('Global.accessLevel')?></label>
                 <div class="uk-form-controls">
                   <select class="uk-select" name="role" required>
                     <option>Role</option>
-                    <?php foreach ($roles as $role) { ?>
-                      <option value="<?= $role->id; ?>"><?= $role->name; ?></option>
-                    <?php } ?>
+                    <?php
+                    foreach ($roles as $role) {
+                      if ($role->name != 'guests') {
+                        if ($authorize->inGroup('owner', $uid) === true) {
+                          if ($role->name != 'owner') {
+                            echo '<option value="'.$role->id.'">'.$role->name.'</option>';
+                          }
+                        } elseif ($authorize->inGroup('supervisor', $uid) === true) {
+                          if (($role->name != 'owner') && ($role->name != 'supervisor')) {
+                            echo '<option value="'.$role->id.'">'.$role->name.'</option>';
+                          }
+                        }                   
+                      }
+                    }
+                    ?>
                   </select>
                 </div>
               </div>
@@ -98,7 +131,7 @@
       <?php foreach ($users as $user) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center"><?= $user->username; ?></td>
+          <td class="uk-text-center"><?= $fullname; ?></td>
           <td class="uk-text-center"><?= $user->phone; ?></td>
           <td class="uk-text-center"><?= $user->name; ?></td>
           <td class="uk-text-center">
