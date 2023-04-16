@@ -131,7 +131,7 @@
       <?php foreach ($users as $user) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center"><?= $fullname; ?></td>
+          <td class="uk-text-center"><?= $user->name; ?></td>
           <td class="uk-text-center"><?= $user->phone; ?></td>
           <td class="uk-text-center"><?= $user->name; ?></td>
           <td class="uk-text-center">

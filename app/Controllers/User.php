@@ -9,13 +9,16 @@ class User extends BaseController
 {
 
     protected $db, $builder;
+    protected $auth;
+    protected $config;
 
     public function __construct()
     {
         $this->db      = \Config\Database::connect();
         $validation = \Config\Services::validation();
         $this->builder =   $this->db->table('users');
-        
+        $this->config = config('Auth');
+        $this->auth   = service('authentication');
     }
 
     public function index()
@@ -55,31 +58,59 @@ class User extends BaseController
     public function create()
 
     {
-        $authorize = $auth = service('authorization');
-        $usersModel = new UserModel();
-        $data['users']= $usersModel;
+        $authorize = service('authorization');
+
+        // Calling Entities
+        $newUser = new \App\Entities\User();
         
-       $input = $this->request->getPost();
+        // Calling Model
+        $UserModel = new UserModel();
+        
+        // Defining input
+        $input = $this->request->getPost();
 
-        $data =  [
-
-        'phone'      => $this->request->getPost('phone'),
-
+        // Validation basic form
+        $rules = [
+            'username'  => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
+            'email'     => 'required|valid_email|is_unique[users.email]',
+            'firstname' => 'required',
+            'lastname'  => 'required',
+            'phone'     => 'required|numeric|is_unique[users.phone]',
         ];
 
-        echo command('auth:create_user '.$input['username'].' '.$input['email'].' '.$input['phone']);
-        echo command('auth:set_password '.$input['username'].' '.$input['password']);
+        if (! $this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
 
-        $user = $usersModel->where('username', $input['username'])->first();
+        // Validation password
+        $rules = [
+            'password'     => 'required|strong_password',
+            'pass_confirm' => 'required|matches[password]',
+        ];
 
-        $authorize->addUserToGroup($user->id, $input['role']);
+        if (! $this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
 
-        $usersModel->save($data);
+        // New user data
+        $newUser->username  = $input['username'];
+        $newUser->email     = $input['email'];
+        $newUser->firstname = $input['firstname'];
+        $newUser->lastname  = $input['lastname'];
+        $newUser->phone     = $input['phone'];
+        $newUser->password  = $input['password'];
 
-       
-        
-        return redirect()->to('user');
-   
+        // Save new user
+        $UserModel->insert($newUser);
+
+        // Get new user id
+        $userId = $UserModel->getInsertID();
+
+        // Adding new user to group
+        $authorize->addUserToGroup($userId, $input['role']);
+
+        // Return back to index
+        return redirect()->to('user');   
     }
 
 
