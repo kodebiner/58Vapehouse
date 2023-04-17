@@ -9,7 +9,7 @@
 					<h1 class="uk-text-center"><?=lang('Auth.register')?></h1>
 				</div>
 
-                <?= view('Myth\Auth\Views\_message_block') ?>
+                <?= view('Views/Auth/_message_block') ?>
 
                 <form class="uk-form-stacked" action="<?= url_to('register') ?>" method="post">
                     <?= csrf_field() ?>

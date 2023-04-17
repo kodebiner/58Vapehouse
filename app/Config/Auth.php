@@ -31,7 +31,7 @@ class Auth extends BaseConfig
      *
      * @var string
      */
-    public $landingRoute = '/';
+    public $landingRoute = 'dashboard';
 
     /**
      * --------------------------------------------------------------------
@@ -236,7 +236,7 @@ class Auth extends BaseConfig
      *
      * @var bool
      */
-    public $silent = false;
+    public $silent = true;
 
     /**
      * --------------------------------------------------------------------
