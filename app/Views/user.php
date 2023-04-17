@@ -14,6 +14,8 @@
     </div>
     <!-- End Of Button Trigger Modal Add -->
 
+    <?= view('Views/Auth/_message_block') ?>
+
     <!-- Modal Add -->
     <div uk-modal class="uk-flex-top" id="tambahdata">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
@@ -136,8 +138,8 @@
           <td class="uk-text-center"><?= $user->name; ?></td>
           <td class="uk-text-center">
             <!-- Button Trigger Modal Edit -->
-            <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $user->userid ?>">Ubah</button>
-            <a class="uk-button uk-button-default uk-button-danger" href="user/delete/<?= $user->userid ?>">Hapus</a>
+            <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $user->id ?>">Ubah</button>
+            <a class="uk-button uk-button-default uk-button-danger" href="user/delete/<?= $user->id ?>">Hapus</a>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
@@ -151,7 +153,7 @@
 
   <!-- Modal Edit -->
   <?php foreach ($users as $user) : ?>
-    <div uk-modal class="uk-flex-top" id="editdata<?= $user->userid ?>">
+    <div uk-modal class="uk-flex-top" id="editdata<?= $user->id ?>">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
@@ -159,29 +161,29 @@
           </div>
 
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="user/update/<?= $user->userid ?>" method="post">
+            <form class="uk-form-stacked" role="form" action="user/update/<?= $user->id ?>" method="post">
               <?= csrf_field() ?>
-              <input type="hidden" name="id" value="<?= $user->userid; ?>">
+              <input type="hidden" name="id" value="<?= $user->id; ?>">
               <input type="hidden" name="group_id" value="<?= $user->group_id; ?>">
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="username">Nama</label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="username" name="username" value="<?= $user->username; ?>" autofocus required />
+                  <input type="text" class="uk-input" id="username" name="username" placeholder="<?= $user->username; ?>" autofocus />
                 </div>
               </div>
 
               <div class="uk-margin">
                 <label class="uk-form-label" for="email">Email</label>
                 <div class="uk-form-controls">
-                  <input type="email" class="uk-input" id="email" name="email" value="<?= $user->email; ?>" required />
+                  <input type="email" class="uk-input" id="email" name="email" placeholder="<?= $user->email; ?>" />
                 </div>
               </div>
               
               <div class="uk-margin">
                 <label class="uk-form-label" for="phone">Nomer HP</label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" name="phone" id="phone" value="<?= $user->phone; ?>"/>
+                  <input type="text" class="uk-input" name="phone" id="phone" placeholder="<?= $user->phone; ?>"/>
                 </div>
               </div>
 

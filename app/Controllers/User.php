@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\GroupUserModel;
 use Myth\Auth\Models\GroupModel;
 
 class User extends BaseController
@@ -42,17 +43,6 @@ class User extends BaseController
         // $query =   $this->builder->get();
 
         return view('Views/user', $data);
-    }
-
-    public function tambah()
-
-    {
-        $data = [
-            'title' => 'Form Tambah Data Admin'
-        ];
-
-        return view('Views/user', $data);
-        
     }
 
     public function create()
@@ -113,45 +103,85 @@ class User extends BaseController
         return redirect()->to('user');   
     }
 
-
-    public function edit($id)
-    {
-        //model initialize
-        $usersModel = new UserModel();
-        $data['users']= $usersModel->find($id);
-        
-        return view('Views/user', $data);
-    }
-
     public function update($id)
 
     {
-       
-        $usersModel = new UserModel();
-        $authorize = $auth = service('authorization');
-        $data['users']= $usersModel->find($id);
- 
+        $authorize = service('authorization');
+
+        // Calling Entities
+        $updateUser = new \App\Entities\User();
+        
+        // Calling Model
+        $UserModel      = new UserModel();
+        $GroupUserModel = new GroupUserModel();
+        $GroupModel     = new GroupModel();
+        
+        // Defining input
         $input = $this->request->getPost();
-    
-            //insert data into database
-            $data =  [
-                'id'         => $this->request->getPost('id'),
-                'username'   => $this->request->getPost('username'),
-                'email'      => $this->request->getPost('email'),
-                'phone'      => $this->request->getPost('phone'),
-            ];
 
-            $user = $usersModel->where('username', $input['username'])->first();
-            //$authorize->inGroup($user->role, $user->Id);
-            $authorize->removeUserFromGroup($this->request->getPost('id'), $this->request->getPost('group_id'));
-            $authorize->addUserToGroup($this->request->getPost('id'), $this->request->getPost('role'));
+        // Validation basic form
+        // $rules = [
+        //     'username'  => 'alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
+        //     'email'     => 'valid_email|is_unique[users.email]',
+        //     'firstname' => 'required',
+        //     'lastname'  => 'required',
+        //     'phone'     => 'numeric|is_unique[users.phone]',
+        // ];
+        if (isset($input['username'])) {
+            $rules['username']  = 'alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]';
+        }
+        if (isset($input['email'])) {
+            $rules['email']     = 'valid_email|is_unique[users.email]';
+        }
+        if (isset($input['phone'])) {
+            $rules['phone']     = 'numeric|is_unique[users.phone]';
+        }
 
-            $usersModel->update($id, $data);
+        if (! $this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
 
-            //flash message
-            session()->setFlashdata('message', 'Data Berhasil Diupdate');
+        // Data user update
+        if (isset($input['username'])) {
+            $updateUser->username  = $input['username'];
+        }
+        if (isset($input['email'])) {
+            $updateUser->email     = $input['email'];
+        }
+        // $updateUser->firstname = $input['firstname'];
+        // $updateUser->lastname  = $input['lastname'];
+        if (isset($input['phone'])) {
+            $updateUser->phone     = $input['phone'];
+        }
 
-            return redirect()->to('user');
+        // Updating
+        $UserModel->save($updateUser);
+
+        // Finding group
+        $groups = $GroupUserModel->where('user_id', $id)->find();
+
+        // Removing from group
+        foreach ($groups as $group) {
+            $authorize->removeUserFromGroup($id, $group['group_id']);
+        }
+
+        // Adding to group
+        $authorize->addUserToGroup($id, $input['role']);
+
+        // Redirect to user management
+        return redirect()->to('user');
+
+            // $user = $usersModel->where('username', $input['username'])->first();
+            // //$authorize->inGroup($user->role, $user->Id);
+            // $authorize->removeUserFromGroup($this->request->getPost('id'), $this->request->getPost('group_id'));
+            // $authorize->addUserToGroup($this->request->getPost('id'), $this->request->getPost('role'));
+
+            // $usersModel->update($id, $data);
+
+            // //flash message
+            // session()->setFlashdata('message', 'Data Berhasil Diupdate');
+
+            // return redirect()->to('user');
 
     }
 
