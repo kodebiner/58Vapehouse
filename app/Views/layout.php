@@ -34,18 +34,18 @@
         <!-- Extra Script Section end -->
 
     </head>
-    <body style="background-color:#ccc;">
+    <body style="background-color:#f3f3f3;">
 
         <!-- Header Section -->
         <header class="uk-navbar-container tm-navbar-container" uk-sticky="media: 960;">
             <div class="uk-container uk-container-expand">
                 <div uk-navbar>
-                    <div class="uk-navbar-left">
+                    <div class="uk-navbar-left uk-margin-large-left">
                         <a class="uk-navbar-item uk-logo" href="<?=base_url();?>" aria-label="<?=lang('Global.backHome')?>">
                             <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
                                 <img src="/img/<?=$gconfig['logo'];?>" alt="<?=$gconfig['bizname'];?>" width="70" height="70" style="aspect-ratio: 1/1;">
                             <?php } else { ?>
-                                <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" width="70" height="70" style="aspect-ratio: 1/1;">
+                                <img src="/img/58vape.png" alt="58 Vapehouse" width="70" height="70" style="aspect-ratio: 1/1;">
                             <?php } ?>
                         </a>
                     </div>
@@ -59,7 +59,7 @@
                                     $profile = 'user.png';
                                 }
                                 ?>
-                                <img src="img/<?=$profile?>" class="uk-object-cover uk-object-position-top-center uk-border-circle" width="50" height="50" style="aspect-ratio: 1 / 1; border: 2px solid #000;" alt="<?=$fullname?>" />
+                                <img src="img/<?= $profile ?>" class="uk-object-cover uk-object-position-top-center uk-border-circle" width="50" height="50" style="aspect-ratio: 1 / 1; border: 2px solid #000;" alt="<?=$fullname?>" />
                             </a>
                             <div uk-dropdown>
                                 <div class="uk-text-center uk-text-bold"><?=$fullname?></div>

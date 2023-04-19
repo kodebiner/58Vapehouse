@@ -11105,7 +11105,7 @@ body {
 }
 
 .tm-navbar-container:not(.uk-navbar-transparent) {
-    background: #ccc;
+    background: #f3f3f3;
 }
 
 .tm-navbar-container .uk-navbar-item:not(.uk-logo),
