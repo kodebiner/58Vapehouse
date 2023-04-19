@@ -176,14 +176,14 @@
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="firstname"><?=lang('Global.firstname')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="firstname" name="firstname" placeholder="<?= $user->username; ?>" autofocus />
+                  <input type="text" class="uk-input" id="firstname" name="firstname" placeholder="<?= $user->firstname; ?>" autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="username"><?=lang('Global.lastname')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="lastname" name="lastname" placeholder="<?= $user->username; ?>" autofocus />
+                  <input type="text" class="uk-input" id="lastname" name="lastname" placeholder="<?= $user->lastname; ?>" autofocus />
                 </div>
               </div>
 
@@ -198,6 +198,24 @@
                 <label class="uk-form-label" for="phone"><?=lang('Global.phone')?></label>
                 <div class="uk-form-controls">
                   <input type="text" class="uk-input" name="phone" id="phone" placeholder="<?= $user->phone; ?>"/>
+                </div>
+              </div>
+
+              <div class="uk-margin">
+                <button class="uk-button uk-button-default" type="button" uk-toggle="target: .reset-password"><?=lang('Auth.resetPassword')?></button>
+              </div>
+              
+              <div class="uk-margin reset-password" hidden>
+                <label class="uk-form-label" for="password"><?=lang('Auth.password')?></label>
+                <div class="uk-form-controls">
+                  <input type="password" class="uk-input" name="password" id="password" placeholder="<?=lang('Auth.password')?>" autocomplete="off"/>
+                </div>
+              </div>
+              
+              <div class="uk-margin reset-password" hidden>
+                <label class="uk-form-label" for="pass_confirm"><?=lang('Auth.repeatPassword')?></label>
+                <div class="uk-form-controls">
+                  <input type="password" class="uk-input" name="pass_confirm" id="pass_confirm" placeholder="<?=lang('Auth.repeatPassword')?>" autocomplete="off"/>
                 </div>
               </div>
 

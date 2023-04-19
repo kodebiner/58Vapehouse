@@ -149,12 +149,35 @@ class User extends BaseController
         } else {
             $updateUser->email  = $user->email;
         }
-        // $updateUser->firstname = $input['firstname'];
-        // $updateUser->lastname  = $input['lastname'];
+        if (!empty($input['firstname'])) {
+            $updateUser->firstname     = $input['firstname'];
+        } else {
+            $updateUser->firstname  = $user->firstname;
+        }
+        if (!empty($input['lastname'])) {
+            $updateUser->lastname     = $input['lastname'];
+        } else {
+            $updateUser->lastname  = $user->lastname;
+        }
         if (!empty($input['phone'])) {
             $updateUser->phone     = $input['phone'];
         } else {
             $updateUser->phone  = $user->phone;
+        }
+
+        // Reset password
+        if (!empty($input['password'])) {
+            $rules = [
+                'password'      => 'strong_password',
+                'pass_confirm'  => 'required|matches[password]'
+            ];
+
+            if (! $this->validate($rules)) {
+                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+            }
+
+            $updateUser->password   = $input['password'];
+            $updateUser->reset_at   = date('Y-m-d H:i:s');
         }
 
         // Updating user info
