@@ -24,23 +24,22 @@ class User extends BaseController
 
     public function index()
     {
+        // Calling Model
         $GroupModel = new GroupModel();
-        $UserModel  = new UserModel();
+
+        // Populating data
+        $this->builder->where('deleted_at', null);
+        $this->builder->join('auth_groups_users', 'auth_groups_users.user_id = users.id');
+        $this->builder->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id');
+        $this->builder->select('users.id as id, users.username as username, users.firstname as firstname, users.lastname as lastname, users.email as email, users.phone as phone, auth_groups.id as group_id, auth_groups.name as role');
+        $query =   $this->builder->get();
         
+        // Parsing data to view
         $data                   = $this->data;
-        $data['title']          = lang('Global.userList');
-        $data['description']    = lang('Global.userListDesc');
+        $data['title']          = lang('Global.employeeList');
+        $data['description']    = lang('Global.employeeListDesc');
         $data['roles']          = $GroupModel->findAll();
-        $data['users']          = $UserModel->findAll();
-        // $users = new \Myth\Auth\Models\UserModel();
-        // $data['users']= $users->findAll();
-
-
-        // $this->builder->select('users.id as userid, username, email, phone, name, group_id');
-        // $this->builder->where('deleted_at', null);
-        // $this->builder->join('auth_groups_users', 'auth_groups_users.user_id = users.id');
-        // $this->builder->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id');
-        // $query =   $this->builder->get();
+        $data['users']          = $query->getResult();
 
         return view('Views/user', $data);
     }
@@ -119,42 +118,46 @@ class User extends BaseController
         // Defining input
         $input = $this->request->getPost();
 
+        // Finding user
+        $user = $UserModel->find($id);
+
         // Validation basic form
-        // $rules = [
-        //     'username'  => 'alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
-        //     'email'     => 'valid_email|is_unique[users.email]',
-        //     'firstname' => 'required',
-        //     'lastname'  => 'required',
-        //     'phone'     => 'numeric|is_unique[users.phone]',
-        // ];
-        if (isset($input['username'])) {
+        if (!empty($input['username'])) {
             $rules['username']  = 'alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]';
         }
-        if (isset($input['email'])) {
+        if (!empty($input['email'])) {
             $rules['email']     = 'valid_email|is_unique[users.email]';
         }
-        if (isset($input['phone'])) {
+        if (!empty($input['phone'])) {
             $rules['phone']     = 'numeric|is_unique[users.phone]';
         }
-
+        $rules['role'] = 'required';
+        
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         // Data user update
-        if (isset($input['username'])) {
+        $updateUser->id = $id;
+        if (!empty($input['username'])) {
             $updateUser->username  = $input['username'];
+        } else {
+            $updateUser->username  = $user->username;
         }
-        if (isset($input['email'])) {
+        if (!empty($input['email'])) {
             $updateUser->email     = $input['email'];
+        } else {
+            $updateUser->email  = $user->email;
         }
         // $updateUser->firstname = $input['firstname'];
         // $updateUser->lastname  = $input['lastname'];
-        if (isset($input['phone'])) {
+        if (!empty($input['phone'])) {
             $updateUser->phone     = $input['phone'];
+        } else {
+            $updateUser->phone  = $user->phone;
         }
 
-        // Updating
+        // Updating user info
         $UserModel->save($updateUser);
 
         // Finding group

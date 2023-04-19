@@ -59,6 +59,7 @@ abstract class BaseController extends Controller
         // E.g.: $this->session = \Config\Services::session();
 
         $this->agent = $this->request->getUserAgent();
+        $this->locale = service('request')->getLocale();
         $this->uri = $this->request->uri;
 
         // Calling Model
@@ -77,6 +78,13 @@ abstract class BaseController extends Controller
             $this->user = $this->userModel->find($this->userId);
             $fullname = $this->user->getname();
         }
+
+        // Language check
+		if ($this->locale === 'id') {
+			$lang = 'id';
+		} else {
+			$lang = 'en';
+		}
 
         // Load Config
         $this->gconfig = $this->ConfigModel->first();
@@ -99,6 +107,7 @@ abstract class BaseController extends Controller
 
         $this->data = [
 			'ismobile'	=> $this->agent->isMobile(),
+            'lang'      => $lang,
 			'uri'		=> $this->uri,
             'uid'       => $this->userId,
             'authorize' => service('authorization'),

@@ -1,5 +1,5 @@
 <!doctype html>
-<html dir="ltr "lang="id" vocab="http://schema.org/">
+<html dir="ltr "lang="<?=$lang?>" vocab="http://schema.org/">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -75,40 +75,40 @@
         <nav class="tm-sidebar-left">
             <ul class="uk-nav uk-nav-default tm-nav">
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg">Beranda</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg"><?=lang('Global.dashboard');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/laporan.svg">Laporan</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/laporan.svg"><?=lang('Global.report');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg">Riwayat Transaksi</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg"><?=lang('Global.trxHistory');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg">Pembayaran</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg"><?=lang('Global.payment');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/product.svg">Produk</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/product.svg"><?=lang('Global.product');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg">Pengingat</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg"><?=lang('Global.reminder');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg">Pegawai</a>
+                    <a class="uk-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg"><?=lang('Global.employee');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/inventori.svg">Inventaris</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/inventori.svg"><?=lang('Global.inventory');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/outlet.svg">Outlet</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/outlet.svg"><?=lang('Global.outlet');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/cash.svg">Kelola Kas</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/cash.svg"><?=lang('Global.cashManagement');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/pelanggan.svg">Pelanggan</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/pelanggan.svg"><?=lang('Global.customer');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
+                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg"><?=lang('Global.website');?></a>
                 </li>
                 <li class="tm-main-navbar">
                     <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg">Website</a>
