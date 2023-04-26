@@ -10,6 +10,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 use App\Models\UserModel;
+use Myth\Auth\Models\GroupModel;
+use App\Models\GroupUserModel;
 use App\Models\GconfigModel;
 
 /**
@@ -64,6 +66,8 @@ abstract class BaseController extends Controller
 
         // Calling Model
         $this->userModel = new UserModel();
+        $this->GroupModel = new GroupModel();
+        $this->GroupUserModel = new GroupUserModel();
         $this->ConfigModel = new GconfigModel();
 
         // Login Check
@@ -77,6 +81,10 @@ abstract class BaseController extends Controller
             $this->userId = $auth->id();
             $this->user = $this->userModel->find($this->userId);
             $fullname = $this->user->getname();
+            
+            // Getting User Role
+            $GroupUser = $this->GroupUserModel->where('user_id', $this->userId)->first();
+            $role = $this->GroupModel->find($GroupUser['group_id']);
         }
 
         // Language check
@@ -85,6 +93,7 @@ abstract class BaseController extends Controller
 		} else {
 			$lang = 'en';
 		}
+
 
         // Load Config
         $this->gconfig = $this->ConfigModel->first();
@@ -105,6 +114,7 @@ abstract class BaseController extends Controller
         }
 
 
+        // Parsing View Data
         $this->data = [
 			'ismobile'	=> $this->agent->isMobile(),
             'lang'      => $lang,
@@ -115,5 +125,9 @@ abstract class BaseController extends Controller
             'fullname'  => $fullname,
             'gconfig'   => $gconfig,
 		];
+
+        if ($auth->check()) {
+            $this->data['role'] = $role->name;
+        }
     }
 }

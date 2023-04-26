@@ -103,7 +103,7 @@
               <hr>
 
               <div class="uk-margin">
-                <button type="submit" class="uk-button uk-button-primary">Tambah</button>
+                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
               </div>
             </form>
           </div>
@@ -157,7 +157,7 @@
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
-            <h5 class="uk-modal-title" id="editdata">Perbaharui Data</h5>
+            <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
           </div>
 
           <div class="uk-modal-body">
@@ -245,7 +245,7 @@
               <hr>
 
               <div class="uk-margin">
-                <button type="submit" class="uk-button uk-button-primary">Perbaharui</button>
+                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
               </div>
 
             </form>

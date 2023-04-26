@@ -5,6 +5,8 @@
  *
  */
 return [
+    'logout'            => 'Keluar',
+    'save'              => 'Simpan',
     'firstname'         => 'Nama Depan',
     'lastname'          => 'Nama Belakang',
     'phone'             => 'Nomor Telpon',
@@ -35,6 +37,7 @@ return [
 
     // Page Title
     'employeeList'      => 'Daftar Pegawai',
+    'updateData'        => 'Perbarui Data',
     
     // Page Description
     'dashdesc'          => 'Informasi global mengenai bisnis anda',

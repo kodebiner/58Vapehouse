@@ -5,6 +5,8 @@
  *
  */
 return [
+    'logout'            => 'Logout',
+    'save'              => 'Save',
     'firstname'         => 'First Name',
     'lastname'          => 'Last Name',
     'phone'             => 'Phone Number',
@@ -34,8 +36,9 @@ return [
     'customer'          => 'Customer',
     'website'           => 'Website',
 
-    // Page Title
+    // Title
     'employeeList'      => 'Employee List',
+    'updateData'        => 'Update Data',
     
     // Page Description
     'dashdesc'          => 'Global information about your business',

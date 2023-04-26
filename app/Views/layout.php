@@ -45,7 +45,7 @@
                             <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
                                 <img src="/img/<?=$gconfig['logo'];?>" alt="<?=$gconfig['bizname'];?>" width="70" height="70" style="aspect-ratio: 1/1;">
                             <?php } else { ?>
-                                <img src="/img/58vape.png" alt="58 Vapehouse" width="70" height="70" style="aspect-ratio: 1/1;">
+                                <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" width="70" height="70" style="aspect-ratio: 1/1;" uk-svg>
                             <?php } ?>
                         </a>
                     </div>
@@ -61,8 +61,18 @@
                                 ?>
                                 <img src="img/<?= $profile ?>" class="uk-object-cover uk-object-position-top-center uk-border-circle" width="50" height="50" style="aspect-ratio: 1 / 1; border: 2px solid #000;" alt="<?=$fullname?>" />
                             </a>
-                            <div uk-dropdown>
-                                <div class="uk-text-center uk-text-bold"><?=$fullname?></div>
+                            <div class="uk-width-medium" uk-dropdown="mode: click">
+                                <div class="uk-flex-middle uk-grid-small" uk-grid>
+                                    <div class="uk-width-auto">
+                                        <img src="img/<?= $profile ?>" class="uk-object-cover uk-object-position-top-center uk-border-circle" width="50" height="50" style="aspect-ratio: 1 / 1; border: 2px solid #000;" alt="<?=$fullname?>" /> 
+                                    </div>
+                                    <div class="uk-width-expand">
+                                        <div class="uk-text-bold"><?=$fullname?></div>
+                                        <div class="uk-text-meta" style="color: rgba(0, 0, 0, .5);"><?=$role;?></div>
+                                    </div>
+                                </div>
+                                <hr style="border-top-color: rgba(0, 0, 0, .5);"/>
+                                <a class="uk-button uk-button-danger" href="logout"><?=lang('Global.logout')?></a>
                             </div>
                         </div>
                     </div>
