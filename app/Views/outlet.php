@@ -72,6 +72,7 @@
         <th class="uk-text-center"><?=lang('Global.name')?></th>
         <th class="uk-text-center"><?=lang('Global.address')?></th>
         <th class="uk-text-center"><?=lang('Global.maps')?></th>
+        <th class="uk-text-center"><?=lang('Global.action')?></th>
       </tr>
     </thead>
     <tbody>
