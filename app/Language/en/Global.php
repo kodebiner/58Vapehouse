@@ -15,7 +15,7 @@ return [
     'action'            => 'Action',
     'accessLevel'       => 'Access Level',
     'name'              => 'Name',
-    'adress'            => 'Address',
+    'address'            => 'Address',
     'maps'              => 'Location',
 
 
