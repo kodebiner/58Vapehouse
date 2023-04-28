@@ -75,6 +75,16 @@ $routes->group('user', ['filter'=>'login'], function($routes){
     $routes->get('delete/(:num)', 'User::delete/$1', ['filter' => 'role:owner,supervisor,guests']);
 });
 
+//Outlet Routes
+$routes->group('outlet', ['filter'=>'login'], function($routes){
+
+    $routes->get('', 'Outlet::index', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->post('create', 'Outlet::create', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->get('edit(:num)', 'Outlet::edit/$1', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->post('update/(:num)', 'Outlet::update/$1', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->get('delete/(:num)', 'Outlet::delete/$1', ['filter' => 'role:owner,supervisor,guests']);
+});
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
