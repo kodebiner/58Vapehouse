@@ -15,12 +15,15 @@ return [
     'action'            => 'Action',
     'accessLevel'       => 'Access Level',
     'name'              => 'Name',
+    'adress'            => 'Address',
+    'maps'              => 'Location',
 
 
     // Button
     'edit'              => 'Edit',
     'delete'            => 'Delete',
     'addEmployee'       => 'Add Employee',
+    'addOutlet'         => 'Add Outlet',
 
     // Menu
     'dashboard'         => 'Dashboard',
@@ -38,6 +41,7 @@ return [
 
     // Title
     'employeeList'      => 'Employee List',
+    'outletList'        => 'Outlet List',
     'updateData'        => 'Update Data',
     
     // Page Description

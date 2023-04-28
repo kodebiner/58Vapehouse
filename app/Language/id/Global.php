@@ -15,11 +15,14 @@ return [
     'action'            => 'Aksi',
     'accessLevel'       => 'Hak Akses',
     'name'              => 'Nama',
+    'address'           => 'Alamat',
+    'maps'              => 'Lokasi',
 
     // Button
     'edit'              => 'Ubah',
     'delete'            => 'Hapus',
     'addEmployee'       => 'Tambah Pegawai',
+    'addOutlet'         => 'Tambah Outlet',
 
     // Menu
     'dashboard'         => 'Dasbor',
@@ -37,6 +40,7 @@ return [
 
     // Page Title
     'employeeList'      => 'Daftar Pegawai',
+    'outletList'        => 'Daftar Outlet',
     'updateData'        => 'Perbarui Data',
     
     // Page Description
