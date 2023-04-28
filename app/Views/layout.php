@@ -152,7 +152,7 @@
         <main role="main">
             <div class="uk-padding-xlarge-left">
                 <div class="uk-container uk-container-expand uk-padding-remove-right">
-                    <div class="tm-main-card">
+                    <div class="tm-main-card uk-panel uk-panel-scrollable" uk-height-viewport="offset-top: 80">
                         <?= $this->renderSection('main') ?>
                     </div>
                 </div>
