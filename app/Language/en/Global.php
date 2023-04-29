@@ -43,6 +43,7 @@ return [
     'employeeList'      => 'Employee List',
     'outletList'        => 'Outlet List',
     'updateData'        => 'Update Data',
+    'productList'       => 'List Product',
     
     // Page Description
     'dashdesc'          => 'Global information about your business',

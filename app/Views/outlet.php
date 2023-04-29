@@ -115,21 +115,21 @@
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="name" name="name" placeholder="<?= $outlet->name; ?>" autofocus />
+                  <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet->name; ?>"autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="address" name="address" placeholder="<?= $outlet->address; ?>" autofocus />
+                  <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet->address; ?>" autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="maps" name="maps" placeholder="<?= $outlet->maps; ?>" autofocus />
+                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet->maps; ?>" autofocus />
                 </div>
               </div>
 

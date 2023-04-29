@@ -52,15 +52,15 @@ public function create()
             $input = $this->request->getPost();
             $outlets = $OutletModel->findAll();
             $data = [
-                'nama'    => $input['name'],
-                'alamat'  => $input['addres'],
-                'area_id' => $input['maps'],
+                'name'    => $input['name'],
+                'address'  => $input['address'],
+                'maps' => $input['maps'],
             ];
         
             if (! $this->validate([
-                'nama' => "required|max_length[255]',",
-                'alamat'  => 'required',
-                'area'  => 'required|max_length[255]',
+                'name' => "required|max_length[255]',",
+                'address'  => 'required',
+                'maps'  => 'required|max_length[255]',
             ])) {
                 
                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -84,7 +84,7 @@ public function create()
 
             session()->setFlashdata('pesan','Data Berhasil Ditambahkan!');
 
-            return redirect()->to('user/outlet');
+            return redirect()->to('outlet');
     }
 
 public function update($id)
@@ -99,17 +99,18 @@ public function update($id)
             $validation =  \Config\Services::validation();
             $data = [
                 'id' => $id,
-                'nama'    => $input['nama'],
-                'alamat' => $input['alamat'],
-                'area_id' => $input['area'],
+                'name'    => $input['name'],
+                'address' => $input['address'],
+                'maps' => $input['maps'],
             ];
+
             // Validasi
             if (! $this->validate([
-                'nama' => "required|max_length[255]',",
-                'alamat' => "required|max_length[255]',",
-                'area' => "required|max_length[255]',",
+                'name' => "max_length[255]',",
+                'address' => "max_length[255]',",
+                'maps' => "max_length[255]',",
             ])) {
-                
+
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
             }
             // Simpan Data
@@ -117,7 +118,7 @@ public function update($id)
 
             session()->setFlashdata('edit','Data Berhasil Diubah!');
             // tampilkan form edit
-            return redirect()->to('user/outlet');
+            return redirect()->to('outlet');
    
     }
 
@@ -137,7 +138,7 @@ public function delete($id)
             }
         }
 
-        return redirect('user/outlet');
+        return redirect('outlet');
     }
 
 }
