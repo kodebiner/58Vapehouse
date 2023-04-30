@@ -24,6 +24,7 @@ return [
     'delete'            => 'Delete',
     'addEmployee'       => 'Add Employee',
     'addOutlet'         => 'Add Outlet',
+    'addProduct'        => 'Add Product',
 
     // Menu
     'dashboard'         => 'Dashboard',
@@ -48,4 +49,6 @@ return [
     // Page Description
     'dashdesc'          => 'Global information about your business',
     'employeeListDesc'  => 'List of all employee under you',
+    'outletListDesc'    => 'List of all your outlets',
+    'productListDesc'   => 'List of all your products',
 ];

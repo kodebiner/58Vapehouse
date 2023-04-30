@@ -97,7 +97,7 @@
                     <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg"><?=lang('Global.payment');?></a>
                 </li>
                 <li class="tm-main-navbar">
-                    <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/product.svg"><?=lang('Global.product');?></a>
+                    <a class="uk-h4" href="<?= base_url('product') ?>"><img src="img/layout/product.svg"><?=lang('Global.product');?></a>
                 </li>
                 <li class="tm-main-navbar">
                     <a class="uk-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg"><?=lang('Global.reminder');?></a>

@@ -5,12 +5,12 @@
 <div class="tm-card-header">
   <div uk-grid class="uk-width-1-1@m uk-flex-middle">
     <div class="uk-width-1-2@m">
-      <h3 class="tm-h3"><?=lang('Global.outletList')?></h3>
+      <h3 class="tm-h3"><?=lang('Global.productList')?></h3>
     </div>
 
     <!-- Button Trigger Modal Add -->
     <div class="uk-width-1-2@m uk-flex uk-flex uk-flex-right uk-text-left">
-      <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #tambahdata"><?=lang('Global.addOutlet')?></button>
+      <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #tambahdata"><?=lang('Global.addProduct')?></button>
     </div>
     <!-- End Of Button Trigger Modal Add -->
 
@@ -21,10 +21,10 @@
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
-            <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addOutlet')?></h5>
+            <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addProduct')?></h5>
           </div>
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/outlet/create" method="post">
+            <form class="uk-form-stacked" role="form" action="/product/create" method="post">
               <?= csrf_field() ?>
 
               <div class="uk-margin-bottom">
@@ -35,16 +35,16 @@
               </div>
 
               <div class="uk-margin">
-                <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
+                <label class="uk-form-label" for="category"><?=lang('Global.category')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.address')) : ?>tm-form-invalid<?php endif ?>" name="address" id="address" placeholder="<?=lang('Global.address')?>" required/>
+                  <input type="text" class="uk-input <?php if (session('errors.category')) : ?>tm-form-invalid<?php endif ?>" name="category" id="category" placeholder="<?=lang('Global.category')?>" required/>
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
+                <label class="uk-form-label" for="cash"><?=lang('Global.cash')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.maps')) : ?>tm-form-invalid<?php endif ?>" id="maps" name="maps" placeholder="<?=lang('Global.maps')?>" autofocus required />
+                  <input type="text" class="uk-input <?php if (session('errors.cash')) : ?>tm-form-invalid<?php endif ?>" id="cash" name="cash" placeholder="<?=lang('Global.cash')?>" autofocus required />
                 </div>
               </div>
 
@@ -70,23 +70,25 @@
       <tr>
         <th class="uk-text-center">No</th>
         <th class="uk-text-center"><?=lang('Global.name')?></th>
-        <th class="uk-text-center"><?=lang('Global.address')?></th>
-        <th class="uk-text-center"><?=lang('Global.maps')?></th>
+        <th class="uk-text-center"><?=lang('Global.category')?></th>
+        <th class="uk-text-center"><?=lang('Global.price')?></th>
+        <th class="uk-text-center"><?=lang('Global.stock')?></th>
+        <th class="uk-text-center"><?=lang('Global.brand')?></th>
         <th class="uk-text-center"><?=lang('Global.action')?></th>
       </tr>
     </thead>
     <tbody>
       <?php $i = 1 ; ?>
-      <?php foreach ($outlets as $outlet) : ?>
+      <?php foreach ($products as $product) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center"><?= $outlet->name; ?></td>
-          <td class="uk-text-center"><?= $outlet->address; ?></td>
-          <td class="uk-text-center"><?= $outlet->maps; ?></td>
+          <td class="uk-text-center"><?= $product->name; ?></td>
+          <td class="uk-text-center"><?= $category->name; ?></td>
+          <td class="uk-text-center"><?= $product->maps; ?></td>
           <td class="uk-text-center">
             <!-- Button Trigger Modal Edit -->
-            <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $outlet->id ?>"><?=lang('Global.edit')?></button>
-            <a class="uk-button uk-button-default uk-button-danger" href="outlet/delete/<?= $outlet->id ?>"><?=lang('Global.delete')?></a>
+            <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product->id ?>"><?=lang('Global.edit')?></button>
+            <a class="uk-button uk-button-default uk-button-danger" href="product/delete/<?= $product->id ?>"><?=lang('Global.delete')?></a>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
@@ -99,8 +101,8 @@
   </table>
 
   <!-- Modal Edit -->
-  <?php foreach ($outlets as $outlet) : ?>
-    <div uk-modal class="uk-flex-top" id="editdata<?= $outlet->id ?>">
+  <?php foreach ($products as $product) : ?>
+    <div uk-modal class="uk-flex-top" id="editdata<?= $product->id ?>">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
@@ -108,28 +110,28 @@
           </div>
 
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="outlet/update/<?= $outlet->id ?>" method="post">
+            <form class="uk-form-stacked" role="form" action="product/update/<?= $product->id ?>" method="post">
               <?= csrf_field() ?>
-              <input type="hidden" name="id" value="<?= $outlet->id; ?>">
+              <input type="hidden" name="id" value="<?= $product->id; ?>">
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet->name; ?>"autofocus />
+                  <input type="text" class="uk-input" id="name" name="name" value="<?= $product->name; ?>"autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet->address; ?>" autofocus />
+                  <input type="text" class="uk-input" id="address" name="address"  value="<?= $product->address; ?>" autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet->maps; ?>" autofocus />
+                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $product->maps; ?>" autofocus />
                 </div>
               </div>
 

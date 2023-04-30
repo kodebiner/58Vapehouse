@@ -23,6 +23,7 @@ return [
     'delete'            => 'Hapus',
     'addEmployee'       => 'Tambah Pegawai',
     'addOutlet'         => 'Tambah Outlet',
+    'addProduct'        => 'Tambah Produk',
 
     // Menu
     'dashboard'         => 'Dasbor',
@@ -42,8 +43,11 @@ return [
     'employeeList'      => 'Daftar Pegawai',
     'outletList'        => 'Daftar Outlet',
     'updateData'        => 'Perbarui Data',
+    'productList'       => 'Daftar Produk',
     
     // Page Description
     'dashdesc'          => 'Informasi global mengenai bisnis anda',
     'employeeListDesc'  => 'Daftar pegawai yang ada di bawah anda',
+    'outletListDesc'    => 'Daftar outlet yang anda miliki',
+    'productListDesc'   => 'Daftar produk yang anda miliki',
 ];

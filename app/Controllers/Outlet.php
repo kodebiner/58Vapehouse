@@ -33,7 +33,7 @@ public function index()
         $query =   $this->builder->get();
         $data                   = $this->data;
         $data['title']          = lang('Global.outlet');
-        $data['description']    = lang('Global.outletDesc');
+        $data['description']    = lang('Global.outletListDesc');
         $data['roles']          = $GroupModel->findAll();
         $data['outlets']          = $query->getResult();
 
