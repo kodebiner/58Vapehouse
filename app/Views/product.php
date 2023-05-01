@@ -48,6 +48,20 @@
                 </div>
               </div>
 
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="stock"><?=lang('Global.stock')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input <?php if (session('errors.stock')) : ?>tm-form-invalid<?php endif ?>" id="stock" name="stock" placeholder="<?=lang('Global.stock')?>" autofocus required />
+                </div>
+              </div>
+
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input <?php if (session('errors.brand')) : ?>tm-form-invalid<?php endif ?>" id="brand" name="brand" placeholder="<?=lang('Global.brand')?>" autofocus required />
+                </div>
+              </div>
+
               <hr>
 
               <div class="uk-margin">
@@ -71,7 +85,7 @@
         <th class="uk-text-center">No</th>
         <th class="uk-text-center"><?=lang('Global.name')?></th>
         <th class="uk-text-center"><?=lang('Global.category')?></th>
-        <th class="uk-text-center"><?=lang('Global.price')?></th>
+        <th class="uk-text-center"><?=lang('Global.cash')?></th>
         <th class="uk-text-center"><?=lang('Global.stock')?></th>
         <th class="uk-text-center"><?=lang('Global.brand')?></th>
         <th class="uk-text-center"><?=lang('Global.action')?></th>
@@ -84,7 +98,7 @@
           <td class="uk-text-center"><?= $i++; ?></td>
           <td class="uk-text-center"><?= $product->name; ?></td>
           <td class="uk-text-center"><?= $category->name; ?></td>
-          <td class="uk-text-center"><?= $product->maps; ?></td>
+          <td class="uk-text-center"><?= $cash->qty; ?></td>
           <td class="uk-text-center">
             <!-- Button Trigger Modal Edit -->
             <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product->id ?>"><?=lang('Global.edit')?></button>
@@ -122,16 +136,30 @@
               </div>
 
               <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
+                <label class="uk-form-label" for="category"><?=lang('Global.category')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="address" name="address"  value="<?= $product->address; ?>" autofocus />
+                  <input type="text" class="uk-input" id="category" name="category"  value="<?= $category->name; ?>" autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
+                <label class="uk-form-label" for="cash"><?=lang('Global.cash')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $product->maps; ?>" autofocus />
+                  <input type="text" class="uk-input" id="cash" name="cash"  value="<?= $cash->qty; ?>" autofocus />
+                </div>
+              </div>
+
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="stock"><?=lang('Global.stock')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input" id="stock" name="stock"  value="<?= $stock->qty; ?>" autofocus />
+                </div>
+              </div>
+
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input" id="brand" name="brand"  value="<?= $category->name; ?>" autofocus />
                 </div>
               </div>
 

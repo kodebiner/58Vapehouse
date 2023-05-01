@@ -10,7 +10,8 @@
 				</div>
 			</div>
 			<div class="uk-padding-small">
-
+                <?= view('Views/Auth/_message_block') ?>
+                
 				<form class="uk-form-stacked" action="<?= url_to('login') ?>" method="post">
 					<?= csrf_field() ?>
 
