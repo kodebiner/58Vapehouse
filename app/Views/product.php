@@ -92,58 +92,64 @@
             <h5 class="uk-modal-title" id="tambahcat" >Tambah Kategori</h5>
           </div>
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/product/createcat" method="post">
-              <?= csrf_field() ?>
-
-              <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
-                <thead class="uk-h5"> Daftar Kategori
+            <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
+              <thead class="uk-h5"> Daftar Kategori
+                <tr>
+                  <th class="uk-text-center">No</th>
+                  <th class="uk-text-center"><?=lang('Global.name')?></th>
+                  <th class="uk-text-center"><?=lang('Global.action')?></th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php $i = 1 ; ?>
+                <?php foreach ($category as $cate) : ?>
                   <tr>
-                    <th class="uk-text-center">No</th>
-                    <th class="uk-text-center"><?=lang('Global.name')?></th>
-                    <th class="uk-text-center"><?=lang('Global.action')?></th>
+                    <td class="uk-text-center"><?= $i++; ?></td>
+                    <td class="uk-text-center"><?= $cate['name']; ?></td>
+                    <td class="uk-text-center">
+                      <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editcat<?= $cate['id'] ?>"><?=lang('Global.edit')?></button>
+                      <a class="uk-button uk-button-default uk-button-danger" href="product/deletecat/<?= $cate['id'] ?>"><?=lang('Global.delete')?></a>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  <?php $i = 1 ; ?>
-                  <?php foreach ($category as $cate) : ?>
-                    <tr>
-                      <td class="uk-text-center"><?= $i++; ?></td>
-                      <td class="uk-text-center"><?= $cate['name']; ?></td>
-                      <td class="uk-text-center">
-                        <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editcat<?= $cate['id'] ?>"><?=lang('Global.edit')?></button>
-                        <a class="uk-button uk-button-default uk-button-danger" href="product/deletecat/<?= $cate['id'] ?>"><?=lang('Global.delete')?></a>
-                      </td>
-                    </tr>
-                  <?php endforeach; ?>
-                </tbody>
-              </table>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+              
+            <!-- Modal Edit Category -->
+            <?php foreach ($category as $cate) : ?>
+              <div uk-modal class="uk-flex-top" id="editcat<?= $cate['id'] ?>">
+                <div class="uk-modal-dialog uk-margin-auto-vertical">
+                  <div class="uk-modal-content">
+                    <div class="uk-modal-header">
+                      <h5 class="uk-modal-title" id="editcat"><?=lang('Global.updateData')?></h5>
+                    </div>
+                    <div class="uk-modal-body">
+                      <form class="uk-form-stacked" role="form" action="product/updatecat/<?= $cate['id'] ?>" method="post">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="id" value="<?= $cate['id']; ?>">
 
-              <!-- Modal Edit Category -->
-              <?php foreach ($category as $cate) : ?>
-                <div uk-modal class="uk-flex-top" id="editcat<?= $cate['id'] ?>">
-                  <div class="uk-modal-dialog uk-margin-auto-vertical">
-                    <div class="uk-modal-content">
-                      <div class="uk-modal-header">
-                        <h5 class="uk-modal-title" id="editcat"><?=lang('Global.updateData')?></h5>
-                      </div>
-                      <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="product/updatecat/<?= $cate['id'] ?>" method="post">
-                          <?= csrf_field() ?>
-                          <input type="hidden" name="id" value="<?= $cate['id']; ?>">
-
-                          <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
-                            <div class="uk-form-controls">
-                              <input type="text" class="uk-input" id="name" name="name" value="<?= $cate['name']; ?>"autofocus />
-                            </div>
+                        <div class="uk-margin-bottom">
+                          <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                          <div class="uk-form-controls">
+                            <input type="text" class="uk-input" id="name" name="name" value="<?= $cate['name']; ?>"autofocus />
                           </div>
-                        </form>
-                      </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="uk-margin">
+                          <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>
-              <?php endforeach; ?>
-              <!-- End Of Modal Edit Category -->
+              </div>
+            <?php endforeach; ?>
+            <!-- End Of Modal Edit Category -->
+            
+            <form class="uk-form-stacked" role="form" action="/product/createcat" method="post">
+              <?= csrf_field() ?>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>

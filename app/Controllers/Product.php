@@ -19,7 +19,7 @@ class Product extends BaseController
     protected $auth;
     protected $config;
 
-public function __construct()
+    public function __construct()
     {
         $this->db       = \Config\Database::connect();
         $validation     = \Config\Services::validation();
@@ -28,10 +28,9 @@ public function __construct()
         $this->builder  =   $this->db->table('cash');
         $this->config   = config('Auth');
         $this->auth     = service('authentication');
-        
     }
 
-public function index()
+    public function index()
 
     {
         // Calling Model        
@@ -54,11 +53,9 @@ public function index()
         $data['category']       = $category;
 
         return view('Views/product', $data);
-
     }
 
-public function create()
-
+    public function create()
     {  
             // calling Model
             $ProductModel = new ProductModel;
@@ -106,8 +103,7 @@ public function create()
             return redirect()->to('product')->withInput();
     }
 
-public function edit($id)
-
+    public function edit($id)
     {
 
         // ambil data yang akan diedit
@@ -142,13 +138,11 @@ public function edit($id)
                 "foto" => $namafoto,
             ]);
         }
-
         // tampilkan form edit
         return redirect()->to('product')->withInput();
     }
 
-public function delete($id)
-
+    public function delete($id)
     {
         // calling Model
         $ProductModel = new ProductModel();
@@ -166,10 +160,7 @@ public function delete($id)
         return redirect('product');
     }
 
-
-    
-public function createcat()
-
+    public function createcat()
     {
         // Calling Models
         $CategoryModel = new CategoryModel();
@@ -181,11 +172,9 @@ public function createcat()
         ];
         $CategoryModel->insert($data);
         return redirect()->to('product')->withInput();
-
     }
 
-public function editcat($id) 
-
+    public function editcat($id) 
     {
         // parsing data
         $CategoryModel = new CategoryModel();
@@ -204,11 +193,9 @@ public function editcat($id)
 
         // return
         return redirect()->to('product'); 
-
     }
 
-public function deletecat ($id)
-
+    public function deletecat ($id)
     {
         // parsing data
         $CategoryModel = new CategoryModel();
@@ -219,29 +206,45 @@ public function deletecat ($id)
 
         // return
         return redirect()->to('product');
-
     }
 
     public function createbrand()
-
     {
-        // Calling Model
-        $BrandModel = new BrandModel();
-        $input = $this->request->getPost();
+        // ambil data yang akan diedit
+        $products = new ProductModel();
+        $data['products'] = $products->where('id', $id)->first();
 
-        // Create Brand
-        $data = [
-            'name' => $input['name'],
-        ];
-        $BrandModel->save($data);
+        // ambil gambar
+        $foto = $this->request->getFile('foto');
+        // Hapus File Lama 
+        // unlink('img'.$this->request->getVar('namafotolama'));
 
-        // return
-        return redirect()->to('product');
+        //pindah file 
+        $foto->move('img'.$this->request->getVar('namafotolama'));
+        // ambil nama file
+        $namafoto = $foto->getName();
 
+        // lakukan validasi data 
+        $validation =  \Config\Services::validation();
+        $validation->setRules([
+            'id' => 'required',
+            'nama' => 'required',
+            'harga' => 'required',
+            //'foto' => 'required',
+        ]);
+        $isDataValid = $validation->withRequest($this->request)->run();
+        // jika data valid, maka simpan ke database
+        if($isDataValid){
+            $products->save([
+                "id" => $id,
+                "nama" => $this->request->getPost('nama'),
+                "harga" => $this->request->getPost('harga'),
+                "foto" => $namafoto,
+            ]);
+        }
     }
 
-public function editbrand($id) 
-
+    public function editbrand($id)
     {
         // parsing data
         $BrandModel = new BrandModel();
@@ -260,11 +263,9 @@ public function editbrand($id)
 
         // return
         return redirect()->to('product'); 
-
     }
 
-public function deletebrand($id)
-
+    public function deletebrand($id)
     {
         // parsing data
         $BrandModel = new BrandModel();
@@ -275,8 +276,5 @@ public function deletebrand($id)
 
         // return
         return redirect()->to('product');
-
     }
-
-
 }
