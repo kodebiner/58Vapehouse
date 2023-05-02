@@ -95,23 +95,29 @@ class Product extends BaseController
 
             // insert data product
             $ProductModel->insert($data);
-            
-            // insert id brand & product
-            // $category_id = $input['category'];
-            // $brand_id = $input['brand']; 
 
-            // $ProductModel->save($category_id,$brand_id);
-           
+            // Get inserted Product ID
+            $productId = $ProductModel->getInsertID();
             
-            // save variant
-            // $VariantModel = new VariantModel();
-            
-            // $data = [
-            //     'name'          => $input['varName'],
-            //     'hargadasar'    => $input['varBase'],
-            //     'hargamodal'    => $input['varCap'],
-            //     'margin'        => $
-            // ];
+            // insert variant
+            foreach ($input['varBase'] as $key => $value) {
+                $variant['productid'] = $productId;
+                $variant['hargadasar'] = $value;
+
+                foreach ($input['varName'] as $nameKey => $nameValue) {
+                    if($nameKey === $key) { $variant['name'] = $nameValue; }
+                }
+
+                foreach ($input['varCap'] as $capKey => $capValue) {
+                    if($capKey === $key) { $variant['hargamodal'] = $capValue; }
+                }
+
+                foreach ($input['varMargin'] as $marginKey => $marginValue) {
+                    if($marginKey === $key) { $variant['hargajual'] = $marginValue; }
+                }
+
+                $VariantModel->insert($variant);
+            }
 
             return redirect()->back();
     }
