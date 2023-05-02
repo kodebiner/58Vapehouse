@@ -105,7 +105,7 @@
                         <button class="uk-button uk-button-default uk-button-success" style="width: 100%; display: none;"></button>
                       </td>
                       <td class="uk-text-center">
-                        <a class="uk-button uk-button-default uk-button-danger" href="category/delete/<?= $product->id ?>"><?=lang('Global.delete')?></a>
+                        <a class="uk-button uk-button-default uk-button-danger" href="category/delete/<?= $category->id ?>"><?=lang('Global.delete')?></a>
                       </td>
                     </tr>
                   <?php endforeach; ?>
