@@ -15,8 +15,10 @@ return [
     'action'            => 'Action',
     'accessLevel'       => 'Access Level',
     'name'              => 'Name',
-    'address'            => 'Address',
+    'address'           => 'Address',
     'maps'              => 'Location',
+    'resetPassDesc'     => 'Fill it if you want to reset your password. Otherwise, leave it empty.',
+    'currentPass'       => 'Current Password',
 
 
     // Button
@@ -29,7 +31,7 @@ return [
     // Menu
     'dashboard'         => 'Dashboard',
     'report'            => 'Report',
-    'trxHistory'        => 'Transaction Hystory',
+    'trxHistory'        => 'Transaction History',
     'payment'           => 'Payment',
     'product'           => 'Product',
     'reminder'          => 'Reminder',
@@ -45,10 +47,13 @@ return [
     'outletList'        => 'Outlet List',
     'updateData'        => 'Update Data',
     'productList'       => 'List Product',
+    'userProfile'       => 'User Profile',
+    'businessInfo'      => 'Business Information',
     
     // Page Description
     'dashdesc'          => 'Global information about your business',
     'employeeListDesc'  => 'List of all employee under you',
     'outletListDesc'    => 'List of all your outlets',
     'productListDesc'   => 'List of all your products',
+    'userProfileDesc'   => 'Information about your profile',
 ];

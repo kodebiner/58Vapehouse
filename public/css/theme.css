@@ -11056,7 +11056,7 @@ body {
     bottom: 0;
     box-sizing: border-box;
     width: 240px !important;
-    padding: 10px 40px 60px 40px;
+    padding: 40px 40px 60px 40px;
     overflow-y: scroll;
 }
 
@@ -11094,7 +11094,7 @@ body {
 @media (min-width:1400px) {
     .tm-sidebar-left {
         width: 350px !important;
-        padding: 10px 45px 60px 45px
+        padding: 45px 45px 60px 45px
     }
     .tm-sidebar-right {
         left: calc(100% + 60px)
@@ -11341,7 +11341,6 @@ li.tm-main-navbar>a>img {
 
 .tm-main-card {
     border-top-left-radius: 40px;
-    background-color: #fff;
     padding: 40px 40px;
     min-height: calc(100vh - 80px);
 }
@@ -11350,4 +11349,9 @@ li.tm-main-navbar>a>img {
     display: flow-root;
     padding: 15px 30px;
     border-bottom: 1px solid #e5e5e5;
+}
+
+.tm-footer {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }

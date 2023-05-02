@@ -17,6 +17,8 @@ return [
     'name'              => 'Nama',
     'address'           => 'Alamat',
     'maps'              => 'Lokasi',
+    'resetPassDesc'     => 'Fill it if you want to reset your password. Otherwise, leave it empty.',
+    'currentPass'       => 'Password Saat Ini',
 
     // Button
     'edit'              => 'Ubah',
@@ -44,10 +46,13 @@ return [
     'outletList'        => 'Daftar Outlet',
     'updateData'        => 'Perbarui Data',
     'productList'       => 'Daftar Produk',
+    'userProfile'       => 'Profil Pengguna',
+    'businessInfo'      => 'Informasi Usaha',
     
     // Page Description
     'dashdesc'          => 'Informasi global mengenai bisnis anda',
     'employeeListDesc'  => 'Daftar pegawai yang ada di bawah anda',
     'outletListDesc'    => 'Daftar outlet yang anda miliki',
     'productListDesc'   => 'Daftar produk yang anda miliki',
+    'userProfileDesc'   => 'Informasi mengenai profil anda',
 ];

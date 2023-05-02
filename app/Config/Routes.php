@@ -65,6 +65,11 @@ $routes->group('/', ['filter' => 'login'], function($routes) {
     
 });
 
+// Account Routes
+$routes->group('account', ['filter'=>'login'], function($routes){
+    $routes->get('', 'Account::index', ['filter' => 'role:owner,supervisor,operator']);
+});
+
 // User Routes
 $routes->group('user', ['filter'=>'login'], function($routes){
 
