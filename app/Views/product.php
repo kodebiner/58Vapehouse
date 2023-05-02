@@ -3,21 +3,21 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header">
-  <div uk-grid class="uk-width-1-1@m uk-flex-middle">
+  <?= view('Views/Auth/_message_block') ?>
+
+  <div uk-grid class="uk-flex-middle">
     <div class="uk-width-1-2@m">
       <h3 class="tm-h3"><?=lang('Global.productList')?></h3>
     </div>
 
     <!-- Button Trigger Modal Add -->
-    <div class="uk-width-1-2@m uk-flex uk-flex uk-flex-right uk-text-left">
+    <div class="uk-width-1-2@m uk-text-right@m">
       <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #tambahdata"><?=lang('Global.addProduct')?></button>
     </div>
     <!-- End Of Button Trigger Modal Add -->
 
-    <?= view('Views/Auth/_message_block') ?>
-
     <!-- Modal Add -->
-    <div uk-modal class="uk-modal-container uk-flex-top" id="tambahdata">
+    <div uk-modal class="uk-flex-top" id="tambahdata">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
@@ -270,7 +270,7 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
+  <table class="uk-table uk-table-striped uk-table-hover uk-table-justify uk-table-middle uk-table-divider">
     <thead>
       <tr>
         <th class="uk-text-center">No</th>
@@ -288,13 +288,17 @@
           <td class="uk-text-center"><?= $product['name']; ?></td>
           <td class="uk-text-center"><?= $cate['name']; ?></td>
           <td class="uk-text-center"><?= $bran['name']; ?></td>
-          <td class="uk-text-center">
+          <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
             <!-- Button Trigger Modal Edit -->
-            <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product['id'] ?>"><?=lang('Global.edit')?></button>
+            <div>
+              <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product['id'] ?>"><?=lang('Global.edit')?></button>
+            </div>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
-            <a class="uk-button uk-button-default uk-button-danger" href="product/delete/<?= $product['id'] ?>"><?=lang('Global.delete')?></a>
+            <div>
+              <a class="uk-button uk-button-default uk-button-danger" href="product/delete/<?= $product['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
+            </div>
             <!-- End Of Button Delete -->
           </td>
         </tr>

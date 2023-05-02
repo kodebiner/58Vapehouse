@@ -27,6 +27,8 @@ return [
     'basePrice'         => 'Harga Dasar',
     'capitalPrice'      => 'Harga Modal',
     'margin'            => 'Margin',
+    'deleted'           => 'Data sudah terhapus',
+    'deleteConfirm'     => 'Anda yakin akan menghapus data tersebut?',
 
     // Button
     'edit'              => 'Ubah',

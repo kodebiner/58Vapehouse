@@ -230,8 +230,7 @@ class User extends BaseController
             'active'   => '0'
         ]);
         $usersModel->delete($id);
-        session()->setFlashdata('message', 'Delete Data Pegawai Berhasil');
-        return redirect()->to('user');
+        return redirect()->to('user')->with('message', lang('Global.deleted'));
 
     }
 

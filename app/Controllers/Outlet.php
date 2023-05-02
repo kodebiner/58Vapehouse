@@ -122,7 +122,7 @@ public function delete($id)
             }
         }
 
-        return redirect('outlet');
+        return redirect('outlet')->with('message', lang('Global.deleted'));
     }
 
 }

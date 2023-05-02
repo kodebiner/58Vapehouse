@@ -27,6 +27,8 @@ return [
     'basePrice'         => 'Base Price',
     'capitalPrice'      => 'Stock Price',
     'margin'            => 'Margin',
+    'deleted'           => 'Data has been deleted',
+    'deleteConfirm'     => 'Are you sure want to delete this data?',
 
 
     // Button

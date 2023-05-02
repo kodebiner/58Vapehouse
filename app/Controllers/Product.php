@@ -158,7 +158,7 @@ class Product extends BaseController
                 $StockModel->delete($stock_id);
             }
         }
-        return redirect('product');
+        return redirect('product')->with('message', lang('Global.deleted'));
     }
 
     public function createcat()
