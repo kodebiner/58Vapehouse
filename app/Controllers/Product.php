@@ -35,14 +35,24 @@ public function __construct()
 public function index()
 
     {
+        // Calling Model        
         $GroupModel = new GroupModel();
-        $query                  =   $this->builder->get();
+        $CategoryModel = new CategoryModel();
+        $ProductModel = new ProductModel();
+
+        // Populating Data
+        $products = $ProductModel->findAll();
+        $category = $CategoryModel->findAll();
+
+        // $query                  =   $this->builder->get();
+
+        // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.product');
         $data['description']    = lang('Global.productDesc');
         $data['roles']          = $GroupModel->findAll();
-        $data['products']       = $query->getResult();
-        $data['category']       = $query->getResult();
+        $data['products']       = $products;
+        $data['category']       = $category;
 
         return view('Views/product', $data);
 

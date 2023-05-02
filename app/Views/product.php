@@ -40,7 +40,7 @@
                   <input type="text" class="uk-input <?php if (session('errors.category')) : ?>tm-form-invalid<?php endif ?>" name="category" id="category" placeholder="<?=lang('Global.category')?>" required/>
                 </div>
                 <div class="uk-h6">
-                  Kategori belum tersedia? <a uk-toggle="target: #tambahkat">Buat Kategori</a>
+                  Kategori belum tersedia? <a uk-toggle="target: #tambahcat">Buat Kategori</a>
                 </div>
               </div>
 
@@ -84,11 +84,12 @@
     </div>
     <!-- End Of Modal Add -->
 
-    <div uk-modal class="uk-flex-top" id="tambahkat">
+    <!-- Modal Add Category -->
+    <div uk-modal class="uk-flex-top" id="tambahcat">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
-            <h5 class="uk-modal-title" id="tambahkat" >Tambah Kategori</h5>
+            <h5 class="uk-modal-title" id="tambahcat" >Tambah Kategori</h5>
           </div>
           <div class="uk-modal-body">
             <form class="uk-form-stacked" role="form" action="/product/createcat" method="post">
@@ -107,14 +108,42 @@
                   <?php foreach ($category as $cate) : ?>
                     <tr>
                       <td class="uk-text-center"><?= $i++; ?></td>
-                      <td class="uk-text-center"><?= $cate->name; ?></td>
+                      <td class="uk-text-center"><?= $cate['name']; ?></td>
                       <td class="uk-text-center">
-                        <a class="uk-button uk-button-default uk-button-danger" href="category/delete/<?= $category->id ?>"><?=lang('Global.delete')?></a>
+                        <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editcat<?= $cate['id'] ?>"><?=lang('Global.edit')?></button>
+                        <a class="uk-button uk-button-default uk-button-danger" href="product/deletecat/<?= $cate['id'] ?>"><?=lang('Global.delete')?></a>
                       </td>
                     </tr>
                   <?php endforeach; ?>
                 </tbody>
               </table>
+
+              <!-- Modal Edit Category -->
+              <?php foreach ($category as $cate) : ?>
+                <div uk-modal class="uk-flex-top" id="editcat<?= $cate['id'] ?>">
+                  <div class="uk-modal-dialog uk-margin-auto-vertical">
+                    <div class="uk-modal-content">
+                      <div class="uk-modal-header">
+                        <h5 class="uk-modal-title" id="editcat"><?=lang('Global.updateData')?></h5>
+                      </div>
+                      <div class="uk-modal-body">
+                        <form class="uk-form-stacked" role="form" action="product/updatecat/<?= $cate['id'] ?>" method="post">
+                          <?= csrf_field() ?>
+                          <input type="hidden" name="id" value="<?= $cate['id']; ?>">
+
+                          <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                            <div class="uk-form-controls">
+                              <input type="text" class="uk-input" id="name" name="name" value="<?= $cate['name']; ?>"autofocus />
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+              <!-- End Of Modal Edit Category -->
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
@@ -133,6 +162,8 @@
         </div>
       </div>
     </div>
+    <!-- End Of Modal Add Category -->
+
   </div>
 </div>
 <!-- End Of Page Heading -->
@@ -162,11 +193,10 @@
           <td class="uk-text-center">
             <!-- Button Trigger Modal Edit -->
             <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product->id ?>"><?=lang('Global.edit')?></button>
-            <a class="uk-button uk-button-default uk-button-danger" href="product/delete/<?= $product->id ?>"><?=lang('Global.delete')?></a>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
-
+            <a class="uk-button uk-button-default uk-button-danger" href="product/delete/<?= $product->id ?>"><?=lang('Global.delete')?></a>
             <!-- End Of Button Delete -->
           </td>
         </tr>
