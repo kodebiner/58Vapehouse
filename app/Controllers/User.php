@@ -28,11 +28,17 @@ class User extends BaseController
         $GroupModel = new GroupModel();
 
         // Populating data
+
         $this->builder->where('deleted_at', null);
         $this->builder->join('auth_groups_users', 'auth_groups_users.user_id = users.id');
         $this->builder->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id');
+        if ($this->data['role'] === 'supervisor') {
+            $this->builder->where('auth_groups.name', 'operator');
+        }
         $this->builder->select('users.id as id, users.username as username, users.firstname as firstname, users.lastname as lastname, users.email as email, users.phone as phone, auth_groups.id as group_id, auth_groups.name as role');
         $query =   $this->builder->get();
+
+        
         
         // Parsing data to view
         $data                   = $this->data;
