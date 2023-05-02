@@ -124,7 +124,7 @@
                       <h5 class="uk-modal-title" id="editcat"><?=lang('Global.updateData')?></h5>
                     </div>
                     <div class="uk-modal-body">
-                      <form class="uk-form-stacked" role="form" action="product/updatecat/<?= $cate['id'] ?>" method="post">
+                      <form class="uk-form-stacked" role="form" action="product/editcat<?= $cate['id'] ?>" method="post">
                         <?= csrf_field() ?>
                         <input type="hidden" name="id" value="<?= $cate['id']; ?>">
 
@@ -148,7 +148,7 @@
             <?php endforeach; ?>
             <!-- End Of Modal Edit Category -->
             
-            <form class="uk-form-stacked" role="form" action="/product/createcat" method="post">
+            <form class="uk-form-stacked" role="form" action="/product/createcat/" method="post">
               <?= csrf_field() ?>
 
               <div class="uk-margin-bottom">
