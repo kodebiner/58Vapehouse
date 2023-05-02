@@ -39,6 +39,9 @@
                 <div class="uk-form-controls">
                   <input type="text" class="uk-input <?php if (session('errors.category')) : ?>tm-form-invalid<?php endif ?>" name="category" id="category" placeholder="<?=lang('Global.category')?>" required/>
                 </div>
+                <div class="uk-h6">
+                  Kategori belum tersedia? <a uk-toggle="target: #tambahkat">Buat Kategori</a>
+                </div>
               </div>
 
               <div class="uk-margin-bottom">
@@ -73,6 +76,42 @@
       </div>
     </div>
     <!-- End Of Modal Add -->
+
+    <div uk-modal class="uk-flex-top" id="tambahkat">
+      <div class="uk-modal-dialog uk-margin-auto-vertical">
+        <div class="uk-modal-content">
+          <div class="uk-modal-header">
+            <h5 class="uk-modal-title" id="tambahkat" >Tambah Kategori</h5>
+          </div>
+          <div class="uk-modal-body">
+            <form class="uk-form-stacked" role="form" action="/category/create" method="post">
+              <?= csrf_field() ?>
+
+              <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
+                <thead>
+                  <tr>
+                    <th>
+                  </tr>
+                </thead>
+              </table>
+
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="uk-margin">
+                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <!-- End Of Page Heading -->
