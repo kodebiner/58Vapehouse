@@ -100,10 +100,12 @@
                   <?php foreach ($category as $cate) : ?>
                     <tr>
                       <td class="uk-text-center"><?= $i++; ?></td>
-                      <td class="uk-text-center"><?= $cate->name; ?></td>
+                      <td class="uk-text-center"><?= $cate->name; ?>
+                        <input class="uk-form-controls" style="display: none;"/>
+                        <button class="uk-button uk-button-default uk-button-success" style="width: 100%; display: none;"></button>
+                      </td>
                       <td class="uk-text-center">
-                        <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product->id ?>"><?=lang('Global.edit')?></button>
-                        <a class="uk-button uk-button-default uk-button-danger" href="product/delete/<?= $product->id ?>"><?=lang('Global.delete')?></a>
+                        <a class="uk-button uk-button-default uk-button-danger" href="category/delete/<?= $product->id ?>"><?=lang('Global.delete')?></a>
                       </td>
                     </tr>
                   <?php endforeach; ?>
