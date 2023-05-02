@@ -28,7 +28,6 @@ public function __construct()
         $this->builder  =   $this->db->table('cash');
         $this->config   = config('Auth');
         $this->auth     = service('authentication');
-        $input = $this->request->getPost();
         
     }
 
@@ -39,6 +38,7 @@ public function index()
         $GroupModel = new GroupModel();
         $CategoryModel = new CategoryModel();
         $ProductModel = new ProductModel();
+        $BrandModel = new BrandModel();
 
         // Populating Data
         $products = $ProductModel->findAll();
@@ -58,44 +58,34 @@ public function index()
 
     }
 
-    public function create()
+public function create()
 
     {  
             $ProductModel = new ProductModel;
             $CategoryModel = new CategoryModel;
             $StockModel = new StockModel;
-            $CashModel = new CashModel;
+            $VariantModel = new VariantModel;
             $BrandModel = new BrandModel;
             $input = $this->request->getPost();
-            $products = $ProductModel->findAll();
-
-            
-            // ambil gambar
-            // $photo  = $this->request->getFile('photo');
-
-            // //pindah file 
-            // $photo->move('img');
-            // // ambil nama file
-            // $namafoto = $photo->getName();
+    
 
             $data = [
                 'name'           => $input['name'],
                 'description'    => $input['description'],
-                // 'photo'          => $namafoto
+                
             ];
 
 
             $rule = [
-                'nama'    => 'required|max_length[255]|is_unique[product.nama]',
-                'harga'  => 'required|max_length[255]',
-                // 'foto'  => 'required|max_length[255|is_image|max_size[foto,2048]|mime_in[foto,img/jpg,img/svg,img/png,img/jpeg]',
+                'nama'          => 'required|max_length[255]|is_unique[product.nama]',
+                'description'   => 'required|max_length[255]',
+               
             ];
     
             if (! $this->validateData($data, $rule)) {
 
                 return redirect()->to('product');
            
-
             }
             
             $ProductModel->insert($data);
@@ -114,105 +104,51 @@ public function index()
             return redirect()->to('product')->withInput();
     }
 
-public function createcat()
-
-{
-    $CategoryModel = new CategoryModel();
-    $input = $this->request->getPost();
-
-    $data = [
-        'name' => $input['name'],
-    ];
-
-    $CategoryModel->save($data);
-
-    return redirect()->to('product')->withInput();
-
-}
-
-public function editcat($id) 
-
-{
-    // parsing data
-    $CategoryModel = new CategoryModel();
-    $data['category'] = $CategoryModel->where('id', $id)->first();
-
-    // inizialise
-    $input = $this->request->getPost();
-
-    // get data
-    $data = [ 
-        'name' => $input['name'],
-    ];
-    
-    // update data
-    $CategoryModel->update($data);
-
-    // return
-    return redirect()->to('product'); 
-
-}
-
-public function deletecat ($id)
-
-{
-    // parsing data
-    $CategoryModel = new CategoryModel();
-    $data['category'] = $CategoryModel->where('id', $id)->first();
-
-    // delete data
-    $CategoryModel->delete($id);
-
-    // return
-    return redirect()->to('product');
-
-}
-
 public function edit($id)
 
-{
+    {
 
+        
     
-   
-    // ambil data yang akan diedit
-    $products = new ProductModel();
-    $data['products'] = $products->where('id', $id)->first();
+        // ambil data yang akan diedit
+        $products = new ProductModel();
+        $data['products'] = $products->where('id', $id)->first();
 
-    
+        
 
-     // ambil gambar
-    $foto = $this->request->getFile('foto');
-    // Hapus File Lama 
-    // unlink('img'.$this->request->getVar('namafotolama'));
+        // ambil gambar
+        $foto = $this->request->getFile('foto');
+        // Hapus File Lama 
+        // unlink('img'.$this->request->getVar('namafotolama'));
 
-    //pindah file 
-    $foto->move('img'.$this->request->getVar('namafotolama'));
-    // ambil nama file
-    $namafoto = $foto->getName();
+        //pindah file 
+        $foto->move('img'.$this->request->getVar('namafotolama'));
+        // ambil nama file
+        $namafoto = $foto->getName();
 
-    
-    // lakukan validasi data 
-    $validation =  \Config\Services::validation();
-    $validation->setRules([
-        'id' => 'required',
-        'nama' => 'required',
-        'harga' => 'required',
-        //'foto' => 'required',
-    ]);
-    $isDataValid = $validation->withRequest($this->request)->run();
-    // jika data valid, maka simpan ke database
-    if($isDataValid){
-        $products->save([
-            "id" => $id,
-            "nama" => $this->request->getPost('nama'),
-            "harga" => $this->request->getPost('harga'),
-            "foto" => $namafoto,
+        
+        // lakukan validasi data 
+        $validation =  \Config\Services::validation();
+        $validation->setRules([
+            'id' => 'required',
+            'nama' => 'required',
+            'harga' => 'required',
+            //'foto' => 'required',
         ]);
-    }
+        $isDataValid = $validation->withRequest($this->request)->run();
+        // jika data valid, maka simpan ke database
+        if($isDataValid){
+            $products->save([
+                "id" => $id,
+                "nama" => $this->request->getPost('nama'),
+                "harga" => $this->request->getPost('harga'),
+                "foto" => $namafoto,
+            ]);
+        }
 
-    // tampilkan form edit
-    return redirect()->to('product')->withInput();
-}
+        // tampilkan form edit
+        return redirect()->to('product')->withInput();
+    }
 
 public function delete($id)
 
@@ -231,5 +167,116 @@ public function delete($id)
         }
         return redirect('product');
     }
+
+
+    
+public function createcat()
+
+    {
+        $CategoryModel = new CategoryModel();
+        $input = $this->request->getPost();
+
+        $data = [
+            'name' => $input['name'],
+        ];
+
+        $CategoryModel->save($data);
+
+        return redirect()->to('product')->withInput();
+
+    }
+
+public function editcat($id) 
+
+    {
+        // parsing data
+        $CategoryModel = new CategoryModel();
+        $data['category'] = $CategoryModel->where('id', $id)->first();
+
+        // inizialise
+        $input = $this->request->getPost();
+
+        // get data
+        $data = [ 
+            'name' => $input['name'],
+        ];
+        
+        // update data
+        $CategoryModel->update($data);
+
+        // return
+        return redirect()->to('product'); 
+
+    }
+
+public function deletecat ($id)
+
+    {
+        // parsing data
+        $CategoryModel = new CategoryModel();
+        $data['category'] = $CategoryModel->where('id', $id)->first();
+
+        // delete data
+        $CategoryModel->delete($id);
+
+        // return
+        return redirect()->to('product');
+
+    }
+
+    public function createbrand()
+
+    {
+        $BrandModel = new BrandModel();
+        $input = $this->request->getPost();
+
+        $data = [
+            'name' => $input['name'],
+        ];
+
+        $BrandModel->save($data);
+
+        return redirect()->to('product')->withInput();
+
+    }
+
+public function editbrand($id) 
+
+    {
+        // parsing data
+        $BrandModel = new BrandModel();
+        $data['brand'] = $BrandModel->where('id', $id)->first();
+
+        // inizialise
+        $input = $this->request->getPost();
+
+        // get data
+        $data = [ 
+            'name' => $input['name'],
+        ];
+        
+        // update data
+        $BrandModel->update($data);
+
+        // return
+        return redirect()->to('product'); 
+
+    }
+
+public function deletebrand($id)
+
+    {
+        // parsing data
+        $BrandModel = new BrandModel();
+        $data['brand'] = $BrandModel->where('id', $id)->first();
+
+        // delete data
+        $BrandModel->delete($id);
+
+        // return
+        return redirect()->to('product');
+
+    }
+
 
 }
