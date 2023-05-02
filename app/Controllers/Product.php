@@ -212,38 +212,16 @@ class Product extends BaseController
 
     public function createbrand()
     {
-        // ambil data yang akan diedit
-        $products = new ProductModel();
-        $data['products'] = $products->where('id', $id)->first();
-
-        // ambil gambar
-        $foto = $this->request->getFile('foto');
-        // Hapus File Lama 
-        // unlink('img'.$this->request->getVar('namafotolama'));
-
-        //pindah file 
-        $foto->move('img'.$this->request->getVar('namafotolama'));
-        // ambil nama file
-        $namafoto = $foto->getName();
-
-        // lakukan validasi data 
-        $validation =  \Config\Services::validation();
-        $validation->setRules([
-            'id' => 'required',
-            'nama' => 'required',
-            'harga' => 'required',
-            //'foto' => 'required',
-        ]);
-        $isDataValid = $validation->withRequest($this->request)->run();
-        // jika data valid, maka simpan ke database
-        if($isDataValid){
-            $products->save([
-                "id" => $id,
-                "nama" => $this->request->getPost('nama'),
-                "harga" => $this->request->getPost('harga'),
-                "foto" => $namafoto,
-            ]);
-        }
+        // Calling Models
+        $BrandModel = new BrandModel();
+        $input = $this->request->getPost();
+        
+        // create brand
+        $data = [
+            'name' => $input['name'],
+        ];
+        $BrandModel->insert($data);
+        return redirect()->to('product')->withInput();
     }
 
     public function editbrand($id)

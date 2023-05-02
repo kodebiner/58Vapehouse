@@ -116,6 +116,8 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
+
+<?php if (in_groups('owner')) : ?>
 <div class="uk-overflow-auto">
   <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
     <thead>
@@ -255,6 +257,9 @@
   <?php endforeach; ?>
   <!-- End Of Modal Edit -->
 </div>
+<?php endif ?>
 <!-- End Of Table Content -->
+
+
 
 <?= $this->endSection() ?>
