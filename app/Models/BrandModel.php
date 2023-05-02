@@ -6,7 +6,6 @@ class BrandModel extends Model
 {
     protected $allowedFields = [
         'name',
-
     ];
 
     protected $table      = 'brand';

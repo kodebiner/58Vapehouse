@@ -97,8 +97,10 @@ $routes->group('product', ['filter'=>'login'], function($routes){
     $routes->post('create', 'Product::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('createcat', 'Product::createcat', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('edit(:num)', 'Product::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('editcat(:num)', 'Product::editcat/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Product::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Product::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('deletecat/(:num)', 'Product::deletecat/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 

@@ -28,6 +28,7 @@ public function __construct()
         $this->builder  =   $this->db->table('cash');
         $this->config   = config('Auth');
         $this->auth     = service('authentication');
+        $input = $this->request->getPost();
         
     }
 
@@ -116,6 +117,44 @@ public function createcat()
     $CategoryModel->save($data);
 
     return redirect()->to('product')->withInput();
+
+}
+
+public function editcat($id) 
+
+{
+    // parsing data
+    $CategoryModel = new CategoryModel();
+    $data['category'] = $CategoryModel->where('id', $id)->first();
+
+    // inizialise
+    $input = $this->request->getPost();
+
+    // get data
+    $data = [ 
+        'name' => $input['name'],
+    ];
+    
+    // update data
+    $CategoryModel->update($data);
+
+    // return
+    return redirect()->to('product'); 
+
+}
+
+public function deletecat ($id)
+
+{
+    // parsing data
+    $CategoryModel = new CategoryModel();
+    $data['category'] = $CategoryModel->where('id', $id)->first();
+
+    // delete data
+    $CategoryModel->delete($id);
+
+    // return
+    return redirect()->to('product');
 
 }
 
