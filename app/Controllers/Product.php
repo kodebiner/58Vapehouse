@@ -40,8 +40,9 @@ class Product extends BaseController
         $BrandModel = new BrandModel();
 
         // Populating Data
-        $products = $ProductModel->findAll();
-        $category = $CategoryModel->findAll();
+        $products   = $ProductModel->findAll();
+        $category   = $CategoryModel->findAll();
+        $brand      = $BrandModel->findAll();
 
 
         // Parsing Data to View
@@ -51,6 +52,7 @@ class Product extends BaseController
         $data['roles']          = $GroupModel->findAll();
         $data['products']       = $products;
         $data['category']       = $category;
+        $data['brand']          = $brand;
 
         return view('Views/product', $data);
     }
@@ -119,7 +121,6 @@ class Product extends BaseController
         $foto->move('img'.$this->request->getVar('namafotolama'));
         // ambil nama file
         $namafoto = $foto->getName();
-        
         // lakukan validasi data 
         $validation =  \Config\Services::validation();
         $validation->setRules([

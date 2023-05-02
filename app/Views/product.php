@@ -63,6 +63,9 @@
                 <div class="uk-form-controls">
                   <input type="text" class="uk-input <?php if (session('errors.brand')) : ?>tm-form-invalid<?php endif ?>" id="brand" name="brand" placeholder="<?=lang('Global.brand')?>" autofocus required />
                 </div>
+                <div class="uk-h6">
+                  Brand belum tersedia? <a uk-toggle="target: #tambahbrand">Buat Brand</a>
+                </div>
               </div>
 
               <div class="uk-margin-bottom">
@@ -149,6 +152,92 @@
             <!-- End Of Modal Edit Category -->
             
             <form class="uk-form-stacked" role="form" action="/product/createcat/" method="post">
+              <?= csrf_field() ?>
+
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="uk-margin">
+                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Of Modal Add Category -->
+
+     <!-- Modal Add Brand -->
+     <div uk-modal class="uk-flex-top" id="tambahbrand">
+      <div class="uk-modal-dialog uk-margin-auto-vertical">
+        <div class="uk-modal-content">
+          <div class="uk-modal-header">
+            <h5 class="uk-modal-title" id="tambahbrand" >Tambah Brand</h5>
+          </div>
+          <div class="uk-modal-body">
+            <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
+              <thead class="uk-h5"> Daftar Brand
+                <tr>
+                  <th class="uk-text-center">No</th>
+                  <th class="uk-text-center"><?=lang('Global.name')?></th>
+                  <th class="uk-text-center"><?=lang('Global.action')?></th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php $i = 1 ; ?>
+                <?php foreach ($brand as $bran) : ?>
+                  <tr>
+                    <td class="uk-text-center"><?= $i++; ?></td>
+                    <td class="uk-text-center"><?= $bran['name']; ?></td>
+                    <td class="uk-text-center">
+                      <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editbrand<?= $bran['id'] ?>"><?=lang('Global.edit')?></button>
+                      <a class="uk-button uk-button-default uk-button-danger" href="product/deletebrand/<?= $bran['id'] ?>"><?=lang('Global.delete')?></a>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+              
+            <!-- Modal Edit Category -->
+            <?php foreach ($brand as $bran) : ?>
+              <div uk-modal class="uk-flex-top" id="editbrand<?= $bran['id'] ?>">
+                <div class="uk-modal-dialog uk-margin-auto-vertical">
+                  <div class="uk-modal-content">
+                    <div class="uk-modal-header">
+                      <h5 class="uk-modal-title" id="editbrand"><?=lang('Global.updateData')?></h5>
+                    </div>
+                    <div class="uk-modal-body">
+                      <form class="uk-form-stacked" role="form" action="product/editbrand<?= $bran['id'] ?>" method="post">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="id" value="<?= $bran['id']; ?>">
+
+                        <div class="uk-margin-bottom">
+                          <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                          <div class="uk-form-controls">
+                            <input type="text" class="uk-input" id="name" name="name" value="<?= $bran['name']; ?>"autofocus />
+                          </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="uk-margin">
+                          <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
+            <!-- End Of Modal Edit Category -->
+            
+            <form class="uk-form-stacked" role="form" action="/product/createbrand/" method="post">
               <?= csrf_field() ?>
 
               <div class="uk-margin-bottom">
