@@ -24,6 +24,9 @@ return [
     'currentPass'       => 'Password Saat Ini',
     'morecate'          => 'Ingin menambah Kategori?',
     'morebrand'         => 'Ingin menambah Merek?',
+    'basePrice'         => 'Harga Dasar',
+    'capitalPrice'      => 'Harga Modal',
+    'margin'            => 'Margin',
 
     // Button
     'edit'              => 'Ubah',
@@ -55,6 +58,8 @@ return [
     'updateData'        => 'Perbarui Data',
     'productList'       => 'Daftar Produk',
     'userProfile'       => 'Profil Pengguna',
+    'categoryList'      => 'Daftar Kategori',
+    'brandList'         => 'Daftar Merek',
     'businessInfo'      => 'Informasi Usaha',
     
     // Page Description

@@ -17,7 +17,7 @@
     <?= view('Views/Auth/_message_block') ?>
 
     <!-- Modal Add -->
-    <div uk-modal class="uk-flex-top" id="tambahdata">
+    <div uk-modal class="uk-modal-container uk-flex-top" id="tambahdata">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
@@ -50,20 +50,6 @@
               </div>
 
               <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.margin')) : ?>tm-form-invalid<?php endif ?>" id="margin" name="margin" placeholder="<?=lang('Global.margin')?>" autofocus required />
-                </div>
-              </div>
-
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="stock"><?=lang('Global.stock')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.stock')) : ?>tm-form-invalid<?php endif ?>" id="stock" name="stock" placeholder="<?=lang('Global.stock')?>" autofocus required />
-                </div>
-              </div>
-
-              <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
                 <div class="uk-form-controls">
                   <select class="uk-select" name="brand">
@@ -78,10 +64,19 @@
                 </div>
               </div>
 
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.variant')) : ?>tm-form-invalid<?php endif ?>" id="variant" name="variant" placeholder="<?=lang('Global.variant')?>" autofocus required />
+              <div id="variant" class="uk-margin-bottom">
+                <h4 class="tm-h4"><?=lang('Global.variant')?></h4>
+                <div class="uk-margin uk-child-width-1-5" uk-grid>
+                  <div class="uk-text-bold"><?=lang('Global.name')?></div>
+                  <div class="uk-text-bold"><?=lang('Global.basePrice')?></div>
+                  <div class="uk-text-bold"><?=lang('Global.capitalPrice')?></div>
+                  <div class="uk-text-bold"><?=lang('Global.margin')?></div>
+                </div>
+                <div class="uk-margin uk-child-width-1-5" uk-grid>
+                  <div><input type="text" class="uk-input" id="variant" name="varName[0]" /></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varBase[0]" required/></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varCap[0]" required/></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varMargin[0]" required/></div>
                 </div>
               </div>
 
@@ -102,11 +97,11 @@
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
-            <h5 class="uk-modal-title" id="tambahcat" >Tambah Kategori</h5>
+            <h5 class="uk-modal-title" id="tambahcat"><?=lang('Global.addCategory')?></h5>
           </div>
           <div class="uk-modal-body">
             <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
-              <thead class="uk-h5"> Daftar Kategori
+              <thead class="uk-h5"><?=lang('Global.categoryList')?>
                 <tr>
                   <th class="uk-text-center">No</th>
                   <th class="uk-text-center"><?=lang('Global.name')?></th>
@@ -188,11 +183,11 @@
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
-            <h5 class="uk-modal-title" id="tambahbrand" >Tambah Brand</h5>
+            <h5 class="uk-modal-title" id="tambahbrand"><?=lang('Global.addBrand')?></h5>
           </div>
           <div class="uk-modal-body">
             <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
-              <thead class="uk-h5"> Daftar Brand
+              <thead class="uk-h5"><?=lang('Global.brandList')?>
                 <tr>
                   <th class="uk-text-center">No</th>
                   <th class="uk-text-center"><?=lang('Global.name')?></th>
@@ -281,8 +276,6 @@
         <th class="uk-text-center">No</th>
         <th class="uk-text-center"><?=lang('Global.name')?></th>
         <th class="uk-text-center"><?=lang('Global.category')?></th>
-        <th class="uk-text-center"><?=lang('Global.margin')?></th>
-        <th class="uk-text-center"><?=lang('Global.stock')?></th>
         <th class="uk-text-center"><?=lang('Global.brand')?></th>
         <th class="uk-text-center"><?=lang('Global.action')?></th>
       </tr>
@@ -292,16 +285,16 @@
       <?php foreach ($products as $product) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center"><?= $product->name; ?></td>
-          <td class="uk-text-center"><?= $cate->name; ?></td>
-          <td class="uk-text-center"><?= $margin->qty; ?></td>
+          <td class="uk-text-center"><?= $product['name']; ?></td>
+          <td class="uk-text-center"><?= $cate['name']; ?></td>
+          <td class="uk-text-center"><?= $bran['name']; ?></td>
           <td class="uk-text-center">
             <!-- Button Trigger Modal Edit -->
-            <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product->id ?>"><?=lang('Global.edit')?></button>
+            <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product['id'] ?>"><?=lang('Global.edit')?></button>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
-            <a class="uk-button uk-button-default uk-button-danger" href="product/delete/<?= $product->id ?>"><?=lang('Global.delete')?></a>
+            <a class="uk-button uk-button-default uk-button-danger" href="product/delete/<?= $product['id'] ?>"><?=lang('Global.delete')?></a>
             <!-- End Of Button Delete -->
           </td>
         </tr>
@@ -311,7 +304,7 @@
 
   <!-- Modal Edit -->
   <?php foreach ($products as $product) : ?>
-    <div uk-modal class="uk-flex-top" id="editdata<?= $product->id ?>">
+    <div uk-modal class="uk-flex-top" id="editdata<?= $product['id'] ?>">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
@@ -319,42 +312,44 @@
           </div>
 
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="product/update/<?= $product->id ?>" method="post">
+            <form class="uk-form-stacked" role="form" action="product/update/<?= $product['id'] ?>" method="post">
               <?= csrf_field() ?>
-              <input type="hidden" name="id" value="<?= $product->id; ?>">
+              <input type="hidden" name="id" value="<?= $product['id']; ?>">
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="name" name="name" value="<?= $product->name; ?>"autofocus />
+                  <input type="text" class="uk-input" id="name" name="name" value="<?= $product['name']; ?>"autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="category"><?=lang('Global.category')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="category" name="category"  value="<?= $category->name; ?>" autofocus />
-                </div>
-              </div>
-
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="margin" name="margin"  value="<?= $margin->qty; ?>" autofocus />
-                </div>
-              </div>
-
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="stock"><?=lang('Global.stock')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="stock" name="stock"  value="<?= $stock->qty; ?>" autofocus />
+                  <input type="text" class="uk-input" id="category" name="category"  value="<?= $cate['name']; ?>" autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="brand" name="brand"  value="<?= $category->name; ?>" autofocus />
+                  <input type="text" class="uk-input" id="brand" name="brand"  value="<?= $bran['name']; ?>" autofocus />
+                </div>
+              </div>
+
+              <div id="variant" class="uk-margin-bottom">
+                <h4 class="tm-h4"><?=lang('Global.variant')?></h4>
+                <div class="uk-margin uk-child-width-1-5" uk-grid>
+                  <div class="uk-text-bold"><?=lang('Global.name')?></div>
+                  <div class="uk-text-bold"><?=lang('Global.basePrice')?></div>
+                  <div class="uk-text-bold"><?=lang('Global.capitalPrice')?></div>
+                  <div class="uk-text-bold"><?=lang('Global.margin')?></div>
+                </div>
+                <div class="uk-margin uk-child-width-1-5" uk-grid>
+                  <div><input type="text" class="uk-input" id="variant" name="varName[0]" /></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varBase[0]" required/></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varCap[0]" required/></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varMargin[0]" required/></div>
                 </div>
               </div>
 

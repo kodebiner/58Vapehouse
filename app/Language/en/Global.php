@@ -24,6 +24,9 @@ return [
     'currentPass'       => 'Current Password',
     'morecate'          => 'Need more Category?',
     'morebrand'         => 'Need more Brand?',
+    'basePrice'         => 'Base Price',
+    'capitalPrice'      => 'Stock Price',
+    'margin'            => 'Margin',
 
 
     // Button
@@ -56,6 +59,8 @@ return [
     'updateData'        => 'Update Data',
     'productList'       => 'List Product',
     'userProfile'       => 'User Profile',
+    'categoryList'      => 'Category List',
+    'brandList'         => 'Brand List',
     'businessInfo'      => 'Business Information',
     
     // Page Description
