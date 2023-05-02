@@ -44,7 +44,6 @@ public function index()
         $products = $ProductModel->findAll();
         $category = $CategoryModel->findAll();
 
-        // $query                  =   $this->builder->get();
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -61,6 +60,7 @@ public function index()
 public function create()
 
     {  
+            // calling Model
             $ProductModel = new ProductModel;
             $CategoryModel = new CategoryModel;
             $StockModel = new StockModel;
@@ -68,29 +68,28 @@ public function create()
             $BrandModel = new BrandModel;
             $input = $this->request->getPost();
     
-
+            // get data
             $data = [
                 'name'           => $input['name'],
                 'description'    => $input['description'],
-                
             ];
 
-
+            // rules
             $rule = [
                 'nama'          => 'required|max_length[255]|is_unique[product.nama]',
-                'description'   => 'required|max_length[255]',
-               
+                'description'   => 'required|max_length[255]',  
             ];
     
+            // Validation
             if (! $this->validateData($data, $rule)) {
-
                 return redirect()->to('product');
-           
             }
-            
-            $ProductModel->insert($data);
-            $product_id = $ProductModel->getInsertID();
 
+            // insert data product
+            $ProductModel->insert($data);
+
+            // insert stock
+            $product_id = $ProductModel->getInsertID();
             $category = $CategoryModel->findAll();
             foreach ($category as $cate) {
                 $stock = [
@@ -98,8 +97,11 @@ public function create()
                     'product_id'  => $product_id
                 ];
 
-                $StockModel->save($stock);
+                $StockModel->insert($stock);
             }
+
+            // insert data variant
+            $product_id = $ProductModel->getInsertID();
 
             return redirect()->to('product')->withInput();
     }
@@ -108,13 +110,9 @@ public function edit($id)
 
     {
 
-        
-    
         // ambil data yang akan diedit
         $products = new ProductModel();
         $data['products'] = $products->where('id', $id)->first();
-
-        
 
         // ambil gambar
         $foto = $this->request->getFile('foto');
@@ -125,7 +123,6 @@ public function edit($id)
         $foto->move('img'.$this->request->getVar('namafotolama'));
         // ambil nama file
         $namafoto = $foto->getName();
-
         
         // lakukan validasi data 
         $validation =  \Config\Services::validation();
@@ -153,11 +150,12 @@ public function edit($id)
 public function delete($id)
 
     {
+        // calling Model
         $ProductModel = new ProductModel();
         $StockModel = new StockModel();
-        $ProductModel->delete($id);
 
-        
+        // delete data
+        $ProductModel->delete($id);
         $stocks = $StockModel->findAll();
         foreach ($stocks as $stock) {
             if ($stock['product_id'] === $id) {
@@ -173,15 +171,15 @@ public function delete($id)
 public function createcat()
 
     {
+        // Calling Models
         $CategoryModel = new CategoryModel();
         $input = $this->request->getPost();
-
+        
+        // create categoroy
         $data = [
             'name' => $input['name'],
         ];
-
-        $CategoryModel->save($data);
-
+        $CategoryModel->insert($data);
         return redirect()->to('product')->withInput();
 
     }
@@ -227,16 +225,18 @@ public function deletecat ($id)
     public function createbrand()
 
     {
+        // Calling Model
         $BrandModel = new BrandModel();
         $input = $this->request->getPost();
 
+        // Create Brand
         $data = [
             'name' => $input['name'],
         ];
-
         $BrandModel->save($data);
 
-        return redirect()->to('product')->withInput();
+        // return
+        return redirect()->to('product');
 
     }
 
