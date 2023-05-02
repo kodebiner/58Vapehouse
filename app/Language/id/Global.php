@@ -17,8 +17,13 @@ return [
     'name'              => 'Nama',
     'address'           => 'Alamat',
     'maps'              => 'Lokasi',
+    'category'          => 'Kategori',
+    'brand'             => 'Merek',
+    'variant'           => 'Varian',
     'resetPassDesc'     => 'Fill it if you want to reset your password. Otherwise, leave it empty.',
     'currentPass'       => 'Password Saat Ini',
+    'morecate'          => 'Ingin menambah Kategori?',
+    'morebrand'         => 'Ingin menambah Merek?',
 
     // Button
     'edit'              => 'Ubah',
@@ -26,6 +31,9 @@ return [
     'addEmployee'       => 'Tambah Pegawai',
     'addOutlet'         => 'Tambah Outlet',
     'addProduct'        => 'Tambah Produk',
+    'addCategory'       => 'Tambah Kategori',
+    'addBrand'          => 'Tambah Merek',
+    'addVariant'        => 'Tambah Varian',
 
     // Menu
     'dashboard'         => 'Dasbor',

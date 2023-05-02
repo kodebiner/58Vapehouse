@@ -37,10 +37,15 @@
               <div class="uk-margin">
                 <label class="uk-form-label" for="category"><?=lang('Global.category')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.category')) : ?>tm-form-invalid<?php endif ?>" name="category" id="category" placeholder="<?=lang('Global.category')?>" required/>
+                  <select class="uk-select" name="category">
+                    <option><?=lang('Global.category')?></option>
+                    <?php foreach ($category as $cate) { ?>
+                      <option value="<?= $cate['id']; ?>"><?= $cate['name']; ?></option>
+                    <?php } ?>
+                  </select>
                 </div>
-                <div class="uk-h6">
-                  Kategori belum tersedia? <a uk-toggle="target: #tambahcat">Buat Kategori</a>
+                <div class="uk-h6 uk-margin-remove">
+                  <?=lang('Global.morecate')?><a uk-toggle="target: #tambahcat"><?=lang('Global.addCategory')?></a>
                 </div>
               </div>
 
@@ -61,10 +66,15 @@
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.brand')) : ?>tm-form-invalid<?php endif ?>" id="brand" name="brand" placeholder="<?=lang('Global.brand')?>" autofocus required />
+                  <select class="uk-select" name="brand">
+                    <option><?=lang('Global.brand')?></option>
+                    <?php foreach ($brand as $bran) { ?>
+                      <option value="<?= $bran['id']; ?>"><?= $bran['name']; ?></option>
+                    <?php } ?>
+                  </select>
                 </div>
-                <div class="uk-h6">
-                  Brand belum tersedia? <a uk-toggle="target: #tambahbrand">Buat Brand</a>
+                <div class="uk-h6 uk-margin-remove">
+                  <?=lang('Global.morebrand')?><a uk-toggle="target: #tambahbrand"><?=lang('Global.addBrand')?></a>
                 </div>
               </div>
 

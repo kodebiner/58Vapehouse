@@ -17,8 +17,13 @@ return [
     'name'              => 'Name',
     'address'           => 'Address',
     'maps'              => 'Location',
+    'category'          => 'Category',
+    'brand'             => 'Brand',
+    'variant'           => 'Variant',
     'resetPassDesc'     => 'Fill it if you want to reset your password. Otherwise, leave it empty.',
     'currentPass'       => 'Current Password',
+    'morecate'          => 'Need more Category?',
+    'morebrand'         => 'Need more Brand?',
 
 
     // Button
@@ -27,6 +32,9 @@ return [
     'addEmployee'       => 'Add Employee',
     'addOutlet'         => 'Add Outlet',
     'addProduct'        => 'Add Product',
+    'addCategory'       => 'Add Category',
+    'addBrand'          => 'Add Brand',
+    'addVariant'        => 'Add Variant',
 
     // Menu
     'dashboard'         => 'Dashboard',
