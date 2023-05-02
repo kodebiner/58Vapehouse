@@ -95,13 +95,15 @@ $routes->group('product', ['filter'=>'login'], function($routes){
 
     $routes->get('', 'Product::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Product::create', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('createcat', 'Product::createcat', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('createbrand', 'Product::createbrand', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('edit(:num)', 'Product::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('editcat(:num)', 'Product::editcat/$1', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('editbrand(:num)', 'Product::editbrand/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Product::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Product::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+    
+    $routes->post('createcat', 'Product::createcat', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('editcat(:num)', 'Product::editcat/$1', ['filter' => 'role:owner,supervisor,operator']);
+
+    $routes->post('createbrand', 'Product::createbrand', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('editbrand(:num)', 'Product::editbrand/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('deletebrand/(:num)', 'Product::deletebrand/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
