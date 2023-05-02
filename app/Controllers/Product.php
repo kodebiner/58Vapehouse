@@ -185,11 +185,12 @@ class Product extends BaseController
 
         // get data
         $data = [ 
+            'id' => $id,
             'name' => $input['name'],
         ];
         
         // update data
-        $CategoryModel->update($data);
+        $CategoryModel->save($data);
 
         // return
         return redirect()->to('product'); 
@@ -255,11 +256,12 @@ class Product extends BaseController
 
         // get data
         $data = [ 
+            'id' => $id,
             'name' => $input['name'],
         ];
         
         // update data
-        $BrandModel->update($data);
+        $BrandModel->save($data);
 
         // return
         return redirect()->to('product'); 
