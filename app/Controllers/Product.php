@@ -42,4 +42,125 @@ public function index()
         return view('Views/product', $data);
 
     }
+
+    public function create()
+
+    {  
+            $ProductModel = new ProductModel;
+            $CategoryModel = new CategoryModel;
+            $StockModel = new StockModel;
+            $CashModel = new CashModel;
+            // $BrandModel = new BrandModel;
+            $input = $this->request->getPost();
+            $products = $ProductModel->findAll();
+
+            
+            // ambil gambar
+            // $photo  = $this->request->getFile('photo');
+
+            // //pindah file 
+            // $photo->move('img');
+            // // ambil nama file
+            // $namafoto = $photo->getName();
+
+            $data = [
+                'name'           => $input['name'],
+                'description'    => $input['description'],
+                // 'photo'          => $namafoto
+            ];
+
+
+            $rule = [
+                'nama'    => 'required|max_length[255]|is_unique[product.nama]',
+                'harga'  => 'required|max_length[255]',
+                // 'foto'  => 'required|max_length[255|is_image|max_size[foto,2048]|mime_in[foto,img/jpg,img/svg,img/png,img/jpeg]',
+            ];
+    
+            if (! $this->validateData($data, $rule)) {
+
+                return redirect()->to('product');
+           
+
+            }
+            
+            $ProductModel->insert($data);
+            $product_id = $ProductModel->getInsertID();
+
+            $category = $CategoryModel->findAll();
+            foreach ($category as $cate) {
+                $stock = [
+                    'category_id' => $cate['id'],
+                    'product_id' => $product_id
+                ];
+
+                $StockModel->save($stock);
+            }
+
+            return redirect()->to('product')->withInput();
+    }
+
+public function edit($id)
+
+{
+
+    
+   
+    // ambil data yang akan diedit
+    $products = new ProductModel();
+    $data['products'] = $products->where('id', $id)->first();
+
+    
+
+     // ambil gambar
+    $foto = $this->request->getFile('foto');
+    // Hapus File Lama 
+    // unlink('img'.$this->request->getVar('namafotolama'));
+
+    //pindah file 
+    $foto->move('img'.$this->request->getVar('namafotolama'));
+    // ambil nama file
+    $namafoto = $foto->getName();
+
+    
+    // lakukan validasi data 
+    $validation =  \Config\Services::validation();
+    $validation->setRules([
+        'id' => 'required',
+        'nama' => 'required',
+        'harga' => 'required',
+        //'foto' => 'required',
+    ]);
+    $isDataValid = $validation->withRequest($this->request)->run();
+    // jika data valid, maka simpan ke database
+    if($isDataValid){
+        $products->save([
+            "id" => $id,
+            "nama" => $this->request->getPost('nama'),
+            "harga" => $this->request->getPost('harga'),
+            "foto" => $namafoto,
+        ]);
+    }
+
+    // tampilkan form edit
+    return redirect()->to('product')->withInput();
+}
+
+public function delete($id)
+
+    {
+        $ProductModel = new ProductModel();
+        $StockModel = new StockModel();
+        $ProductModel->delete($id);
+
+        
+        $stocks = $StockModel->findAll();
+        foreach ($stocks as $stock) {
+            if ($stock['product_id'] === $id) {
+                $stock_id = $stock['id'];
+                $StockModel->delete($stock_id);
+            }
+        }
+        return redirect('product');
+    }
+
 }
