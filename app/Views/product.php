@@ -90,9 +90,24 @@
               <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
                 <thead>
                   <tr>
-                    <th>
+                    <th class="uk-text-center">No</th>
+                    <th class="uk-text-center"><?=lang('Global.name')?></th>
+                    <th class="uk-text-center"><?=lang('Global.action')?></th>
                   </tr>
                 </thead>
+                <tbody>
+                  <?php $i = 1 ; ?>
+                  <?php foreach ($category as $cate) : ?>
+                    <tr>
+                      <td class="uk-text-center"><?= $i++; ?></td>
+                      <td class="uk-text-center"><?= $cate->name; ?></td>
+                      <td class="uk-text-center">
+                        <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product->id ?>"><?=lang('Global.edit')?></button>
+                        <a class="uk-button uk-button-default uk-button-danger" href="product/delete/<?= $product->id ?>"><?=lang('Global.delete')?></a>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
               </table>
 
               <div class="uk-margin-bottom">
