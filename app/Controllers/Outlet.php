@@ -67,22 +67,6 @@ public function create()
             }
             
             $OutletModel->insert($data);
-          
-            // save outlet & product id
-    
-            $outlet_id = $OutletModel->getInsertID();
-
-            $products = $ProductModel->findAll();
-            foreach ($products as $product) {
-                $stock = [
-                    'outlet_id' => $outlet_id,
-                    'product_id' => $product['id']
-                ];
-
-                $StockModel->save($stock);
-            }
-
-            session()->setFlashdata('pesan','Data Berhasil Ditambahkan!');
 
             return redirect()->to('outlet');
     }
