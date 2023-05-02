@@ -71,40 +71,41 @@ class Product extends BaseController
             $brand = $BrandModel->findAll();
             $input = $this->request->getPost();
     
-            // get data
-            $data = [
-                'name'           => $input['name'],
-                'description'    => $input['description'],
-            ];
-
-            // insert id brand & product
-            $category_id = $CategoryModel->getInsertID();
-            $brand_id = $BrandModel->getInsertID(); 
-            foreach ($category as $cate) {
-                $products = [
-                    'catid'  => $cate['id'],
-                    'branid' => $brand_id,
-                ];
-
-            }
-
+            
             // rules
             $rule = [
-                'nama'          => 'required|max_length[255]|is_unique[product.nama]',
-                'description'   => 'required|max_length[255]',  
+                'name'          => 'required|max_length[255]|is_unique[product.name]',
+                'description'   => 'required|max_length[255]',
+                'category'      => 'required',
+                'brand'         => 'required',
             ];
-    
+            
             // Validation
-            if (! $this->validateData($data, $rule)) {
-                return redirect()->to('product');
+            if (! $this->validate($rule)) {
+                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
             }
+            
+            // get data
+            $data = [
+                'name'          => $input['name'],
+                'description'   => $input['description'],
+                'catid'         => $input['category'],
+                'brandid'       => $input['brand'],
+            ];
 
             // insert data product
             $ProductModel->insert($data);
+            
+            // insert id brand & product
+            // $category_id = $input['category'];
+            // $brand_id = $input['brand']; 
 
+            // $ProductModel->save($category_id,$brand_id);
+           
+            
             // save variant
             // $VariantModel = new VariantModel();
-
+            
             // $data = [
             //     'name'          => $input['varName'],
             //     'hargadasar'    => $input['varBase'],
@@ -112,45 +113,43 @@ class Product extends BaseController
             //     'margin'        => $
             // ];
 
-            return redirect()->to('product')->withInput();
+            return redirect()->back();
     }
 
-    public function edit($id)
+    public function update($id)
     {
 
         // ambil data yang akan diedit
         $products = new ProductModel();
+        $input = $this->request->getPost();
         $data['products'] = $products->where('id', $id)->first();
 
-        // ambil gambar
-        $foto = $this->request->getFile('foto');
-        // Hapus File Lama 
-        // unlink('img'.$this->request->getVar('namafotolama'));
+        $rule = [
+            'name'          => 'required|max_length[255]|is_unique[product.name]',
+            'description'   => 'required|max_length[255]',
+            'category'      => 'required',
+            'brand'         => 'required',
+        ];
 
-        //pindah file 
-        $foto->move('img'.$this->request->getVar('namafotolama'));
-        // ambil nama file
-        $namafoto = $foto->getName();
-        // lakukan validasi data 
-        $validation =  \Config\Services::validation();
-        $validation->setRules([
-            'id' => 'required',
-            'nama' => 'required',
-            'harga' => 'required',
-            //'foto' => 'required',
-        ]);
-        $isDataValid = $validation->withRequest($this->request)->run();
-        // jika data valid, maka simpan ke database
-        if($isDataValid){
-            $products->save([
-                "id" => $id,
-                "nama" => $this->request->getPost('nama'),
-                "harga" => $this->request->getPost('harga'),
-                "foto" => $namafoto,
-            ]);
+        // Validation
+        if (! $this->validate($rule)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
+
+        // get data
+        $data = [
+            'id'            => $id,
+            'name'          => $input['name'],
+            'description'   => $input['description'],
+            'catid'         => $input['category'],
+            'brandid'       => $input['brand'],
+        ];
+
+        // insert data product
+        $products->save($data);
+        
         // tampilkan form edit
-        return redirect()->to('product')->withInput();
+        return redirect()->back();
     }
 
     public function delete($id)
@@ -161,13 +160,6 @@ class Product extends BaseController
 
         // delete data
         $ProductModel->delete($id);
-        $stocks = $StockModel->findAll();
-        foreach ($stocks as $stock) {
-            if ($stock['product_id'] === $id) {
-                $stock_id = $stock['id'];
-                $StockModel->delete($stock_id);
-            }
-        }
         return redirect('product')->with('message', lang('Global.deleted'));
     }
 

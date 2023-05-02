@@ -333,6 +333,13 @@
                   <input type="text" class="uk-input" id="name" name="name" value="<?= $product['name']; ?>"autofocus />
                 </div>
               </div>
+              
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="name"><?=lang('Global.description')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input" id="description" name="description" value="<?= $product['description']; ?>"autofocus />
+                </div>
+              </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="category"><?=lang('Global.category')?></label>
@@ -358,9 +365,9 @@
                 </div>
                 <div class="uk-margin uk-child-width-1-5" uk-grid>
                   <div><input type="text" class="uk-input" id="variant" name="varName[0]" /></div>
-                  <div><input type="number" class="uk-input" id="variant" name="varBase[0]" required/></div>
-                  <div><input type="number" class="uk-input" id="variant" name="varCap[0]" required/></div>
-                  <div><input type="number" class="uk-input" id="variant" name="varMargin[0]" required/></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varBase[0]" /></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varCap[0]" /></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varMargin[0]"/></div>
                 </div>
               </div>
 
