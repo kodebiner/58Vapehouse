@@ -45,9 +45,9 @@
               </div>
 
               <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="cash"><?=lang('Global.cash')?></label>
+                <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.cash')) : ?>tm-form-invalid<?php endif ?>" id="cash" name="cash" placeholder="<?=lang('Global.cash')?>" autofocus required />
+                  <input type="text" class="uk-input <?php if (session('errors.margin')) : ?>tm-form-invalid<?php endif ?>" id="margin" name="margin" placeholder="<?=lang('Global.margin')?>" autofocus required />
                 </div>
               </div>
 
@@ -62,6 +62,13 @@
                 <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
                 <div class="uk-form-controls">
                   <input type="text" class="uk-input <?php if (session('errors.brand')) : ?>tm-form-invalid<?php endif ?>" id="brand" name="brand" placeholder="<?=lang('Global.brand')?>" autofocus required />
+                </div>
+              </div>
+
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input <?php if (session('errors.variant')) : ?>tm-form-invalid<?php endif ?>" id="variant" name="variant" placeholder="<?=lang('Global.variant')?>" autofocus required />
                 </div>
               </div>
 
@@ -88,7 +95,7 @@
               <?= csrf_field() ?>
 
               <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
-                <thead>
+                <thead class="uk-h5"> Daftar Kategori
                   <tr>
                     <th class="uk-text-center">No</th>
                     <th class="uk-text-center"><?=lang('Global.name')?></th>
@@ -100,10 +107,7 @@
                   <?php foreach ($category as $cate) : ?>
                     <tr>
                       <td class="uk-text-center"><?= $i++; ?></td>
-                      <td class="uk-text-center"><?= $cate->name; ?>
-                        <input class="uk-form-controls" style="display: none;"/>
-                        <button class="uk-button uk-button-default uk-button-success" style="width: 100%; display: none;"></button>
-                      </td>
+                      <td class="uk-text-center"><?= $cate->name; ?></td>
                       <td class="uk-text-center">
                         <a class="uk-button uk-button-default uk-button-danger" href="category/delete/<?= $category->id ?>"><?=lang('Global.delete')?></a>
                       </td>
@@ -141,7 +145,7 @@
         <th class="uk-text-center">No</th>
         <th class="uk-text-center"><?=lang('Global.name')?></th>
         <th class="uk-text-center"><?=lang('Global.category')?></th>
-        <th class="uk-text-center"><?=lang('Global.cash')?></th>
+        <th class="uk-text-center"><?=lang('Global.margin')?></th>
         <th class="uk-text-center"><?=lang('Global.stock')?></th>
         <th class="uk-text-center"><?=lang('Global.brand')?></th>
         <th class="uk-text-center"><?=lang('Global.action')?></th>
@@ -154,7 +158,7 @@
           <td class="uk-text-center"><?= $i++; ?></td>
           <td class="uk-text-center"><?= $product->name; ?></td>
           <td class="uk-text-center"><?= $cate->name; ?></td>
-          <td class="uk-text-center"><?= $cash->qty; ?></td>
+          <td class="uk-text-center"><?= $margin->qty; ?></td>
           <td class="uk-text-center">
             <!-- Button Trigger Modal Edit -->
             <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product->id ?>"><?=lang('Global.edit')?></button>
@@ -199,9 +203,9 @@
               </div>
 
               <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="cash"><?=lang('Global.cash')?></label>
+                <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="cash" name="cash"  value="<?= $cash->qty; ?>" autofocus />
+                  <input type="text" class="uk-input" id="margin" name="margin"  value="<?= $margin->qty; ?>" autofocus />
                 </div>
               </div>
 
