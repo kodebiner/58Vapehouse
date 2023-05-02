@@ -84,7 +84,7 @@
             <h5 class="uk-modal-title" id="tambahkat" >Tambah Kategori</h5>
           </div>
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/category/create" method="post">
+            <form class="uk-form-stacked" role="form" action="/product/createcat" method="post">
               <?= csrf_field() ?>
 
               <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">

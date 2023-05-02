@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 use App\Models\ProductModel;
+use App\Models\BrandModel;
 use App\Models\CashModel;
 use App\Models\CategoryModel;
 use App\Models\VariantModel;
@@ -53,7 +54,7 @@ public function index()
             $CategoryModel = new CategoryModel;
             $StockModel = new StockModel;
             $CashModel = new CashModel;
-            // $BrandModel = new BrandModel;
+            $BrandModel = new BrandModel;
             $input = $this->request->getPost();
             $products = $ProductModel->findAll();
 
@@ -93,7 +94,7 @@ public function index()
             foreach ($category as $cate) {
                 $stock = [
                     'category_id' => $cate['id'],
-                    'product_id' => $product_id
+                    'product_id'  => $product_id
                 ];
 
                 $StockModel->save($stock);
@@ -101,6 +102,22 @@ public function index()
 
             return redirect()->to('product')->withInput();
     }
+
+public function createcat()
+
+{
+    $CategoryModel = new CategoryModel();
+    $input = $this->request->getPost();
+
+    $data = [
+        'name' => $input['name'],
+    ];
+
+    $CategoryModel->save($data);
+
+    return redirect()->to('product')->withInput();
+
+}
 
 public function edit($id)
 
