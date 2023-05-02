@@ -101,10 +101,12 @@ $routes->group('product', ['filter'=>'login'], function($routes){
     
     $routes->post('createcat', 'Product::createcat', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('editcat(:num)', 'Product::editcat/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('deletecat/(:num)', 'Product::deletecat/$1', ['filter' => 'role:owner,supervisor,operator']);
 
     $routes->post('createbrand', 'Product::createbrand', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('editbrand(:num)', 'Product::editbrand/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->Post('editbrand(:num)', 'Product::editbrand/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('deletebrand/(:num)', 'Product::deletebrand/$1', ['filter' => 'role:owner,supervisor,operator']);
+  
 });
 
 
