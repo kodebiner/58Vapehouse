@@ -23,6 +23,8 @@ public function __construct()
         $this->db       = \Config\Database::connect();
         $validation     = \Config\Services::validation();
         $this->builder  =   $this->db->table('product');
+        $this->builder  =   $this->db->table('category');
+        $this->builder  =   $this->db->table('cash');
         $this->config   = config('Auth');
         $this->auth     = service('authentication');
         
@@ -38,6 +40,7 @@ public function index()
         $data['description']    = lang('Global.productDesc');
         $data['roles']          = $GroupModel->findAll();
         $data['products']       = $query->getResult();
+        $data['category']       = $query->getResult();
 
         return view('Views/product', $data);
 

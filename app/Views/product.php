@@ -153,7 +153,7 @@
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
           <td class="uk-text-center"><?= $product->name; ?></td>
-          <td class="uk-text-center"><?= $category->name; ?></td>
+          <td class="uk-text-center"><?= $cate->name; ?></td>
           <td class="uk-text-center"><?= $cash->qty; ?></td>
           <td class="uk-text-center">
             <!-- Button Trigger Modal Edit -->
