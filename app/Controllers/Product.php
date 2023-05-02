@@ -65,6 +65,10 @@ class Product extends BaseController
             $StockModel = new StockModel;
             $VariantModel = new VariantModel;
             $BrandModel = new BrandModel;
+
+            // search all data
+            $category = $CategoryModel->findAll();
+            $brand = $BrandModel->findAll();
             $input = $this->request->getPost();
     
             // get data
@@ -72,6 +76,17 @@ class Product extends BaseController
                 'name'           => $input['name'],
                 'description'    => $input['description'],
             ];
+
+            // insert id brand & product
+            $category_id = $CategoryModel->getInsertID();
+            $brand_id = $BrandModel->getInsertID(); 
+            foreach ($category as $cate) {
+                $products = [
+                    'catid'  => $cate['id'],
+                    'branid' => $brand_id,
+                ];
+
+            }
 
             // rules
             $rule = [
@@ -87,20 +102,15 @@ class Product extends BaseController
             // insert data product
             $ProductModel->insert($data);
 
-            // insert stock
-            $product_id = $ProductModel->getInsertID();
-            $category = $CategoryModel->findAll();
-            foreach ($category as $cate) {
-                $stock = [
-                    'category_id' => $cate['id'],
-                    'product_id'  => $product_id
-                ];
+            // save variant
+            // $VariantModel = new VariantModel();
 
-                $StockModel->insert($stock);
-            }
-
-            // insert data variant
-            $product_id = $ProductModel->getInsertID();
+            // $data = [
+            //     'name'          => $input['varName'],
+            //     'hargadasar'    => $input['varBase'],
+            //     'hargamodal'    => $input['varCap'],
+            //     'margin'        => $
+            // ];
 
             return redirect()->to('product')->withInput();
     }

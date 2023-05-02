@@ -34,6 +34,13 @@
                 </div>
               </div>
 
+              <div class="uk-margin-bottom">
+                <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?=lang('Global.description')?>" autofocus required />
+                </div>
+              </div>
+
               <div class="uk-margin">
                 <label class="uk-form-label" for="category"><?=lang('Global.category')?></label>
                 <div class="uk-form-controls">
@@ -74,9 +81,9 @@
                 </div>
                 <div class="uk-margin uk-child-width-1-5" uk-grid>
                   <div><input type="text" class="uk-input" id="variant" name="varName[0]" /></div>
-                  <div><input type="number" class="uk-input" id="variant" name="varBase[0]" required/></div>
-                  <div><input type="number" class="uk-input" id="variant" name="varCap[0]" required/></div>
-                  <div><input type="number" class="uk-input" id="variant" name="varMargin[0]" required/></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varBase[0]" /></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varCap[0]"/></div>
+                  <div><input type="number" class="uk-input" id="variant" name="varMargin[0]" /></div>
                 </div>
               </div>
 
