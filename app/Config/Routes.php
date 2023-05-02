@@ -73,31 +73,31 @@ $routes->group('account', ['filter'=>'login'], function($routes){
 // User Routes
 $routes->group('user', ['filter'=>'login'], function($routes){
 
-    $routes->get('', 'User::index', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->post('create', 'User::create', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->get('edit(:num)', 'User::edit/$1', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->post('update/(:num)', 'User::update/$1', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->get('delete/(:num)', 'User::delete/$1', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->get('', 'User::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'User::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('edit(:num)', 'User::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'User::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'User::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 //Outlet Routes
 $routes->group('outlet', ['filter'=>'login'], function($routes){
 
-    $routes->get('', 'Outlet::index', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->post('create', 'Outlet::create', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->get('edit(:num)', 'Outlet::edit/$1', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->post('update/(:num)', 'Outlet::update/$1', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->get('delete/(:num)', 'Outlet::delete/$1', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->get('', 'Outlet::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Outlet::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('edit(:num)', 'Outlet::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'Outlet::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Outlet::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 //Product Routes
 $routes->group('product', ['filter'=>'login'], function($routes){
 
-    $routes->get('', 'Product::index', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->post('create', 'Product::create', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->get('edit(:num)', 'Product::edit/$1', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->post('update/(:num)', 'Product::update/$1', ['filter' => 'role:owner,supervisor,guests']);
-    $routes->get('delete/(:num)', 'Product::delete/$1', ['filter' => 'role:owner,supervisor,guests']);
+    $routes->get('', 'Product::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Product::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('edit(:num)', 'Product::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'Product::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Product::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 
