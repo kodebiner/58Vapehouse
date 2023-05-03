@@ -72,7 +72,6 @@
               </div>
 
               <div id="createVariant" class="uk-margin-bottom">
-                <div id="createVarCount" hidden></div>
                 <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
                 <div class="uk-text-right"><a onclick="createNewVariant()">+ Add More Variant</a></div>
                 <div class="uk-margin uk-margin-remove-top uk-child-width-1-5" uk-grid>
@@ -448,21 +447,105 @@
                 </div>
               </div>
 
-              <div id="variant" class="uk-margin-bottom">
-                <h4 class="tm-h4"><?=lang('Global.variant')?></h4>
+              <div id="editVariant" class="uk-margin-bottom">
+                <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
+                <div class="uk-text-right"><a onclick="createNewVariant()">+ Add More Variant</a></div>
                 <div class="uk-margin uk-child-width-1-5" uk-grid>
                   <div class="uk-text-bold"><?=lang('Global.name')?></div>
                   <div class="uk-text-bold"><?=lang('Global.basePrice')?></div>
                   <div class="uk-text-bold"><?=lang('Global.capitalPrice')?></div>
                   <div class="uk-text-bold"><?=lang('Global.margin')?></div>
                 </div>
+                <?php
+                foreach ($variants as $variant) {
+                  if ($variant['productid'] === $product['id']) {
+                ?>
                 <div class="uk-margin uk-child-width-1-5" uk-grid>
-                  <div><input type="text" class="uk-input" id="variant" name="varName[0]" /></div>
-                  <div><input type="number" class="uk-input" id="variant" name="varBase[0]" /></div>
-                  <div><input type="number" class="uk-input" id="variant" name="varCap[0]" /></div>
-                  <div><input type="number" class="uk-input" id="variant" name="varMargin[0]"/></div>
+                  <div id="editVarName<?=$variant['id']?>"><input type="text" class="uk-input" id="varName[<?=$variant['id']?>]" name="varName[<?=$variant['id']?>]" value="<?=$variant['name']?>" /></div>
+                  <div id="editVarBase<?=$variant['id']?>"><input type="number" class="uk-input" id="varBase[<?=$variant['id']?>]" name="varBase[<?=$variant['id']?>]" value="<?=$variant['hargadasar']?>" /></div>
+                  <div id="editVarCap<?=$variant['id']?>"><input type="number" class="uk-input" id="varCap[<?=$variant['id']?>]" name="varCap[<?=$variant['id']?>]" value="<?=$variant['hargamodal']?>" /></div>
+                  <div id="editVarMargin<?=$variant['id']?>"><input type="number" class="uk-input" id="varMargin[<?=$variant['id']?>]" name="varMargin[<?=$variant['id']?>]" value="<?=$variant['hargajual']?>"/></div>
                 </div>
+                <?php
+                  }
+                }
+                ?>                
               </div>
+              <script type="text/javascript">
+                var editCount = 0;
+                function createNewVariant() {
+                  editCount++;
+
+                  const editVariant = document.getElementById("editVariant");
+
+                  const newCreateVariant = document.createElement('div');
+                  newCreateVariant.setAttribute('id','create'+createCount);
+                  newCreateVariant.setAttribute('class','uk-margin uk-child-width-1-5');
+                  newCreateVariant.setAttribute('uk-grid','');
+
+                  const createVarName = document.createElement('div');
+                  createVarName.setAttribute('id','createVarName'+createCount);
+
+                  const createVarNameInput = document.createElement('input');
+                  createVarNameInput.setAttribute('type','text');
+                  createVarNameInput.setAttribute('class','uk-input');
+                  createVarNameInput.setAttribute('id','varName['+createCount+']');
+                  createVarNameInput.setAttribute('name','varName['+createCount+']');
+
+                  const createVarBase = document.createElement('div');
+                  createVarName.setAttribute('id','createVarBase'+createCount);
+
+                  const createVarBaseInput = document.createElement('input');
+                  createVarBaseInput.setAttribute('type','number');
+                  createVarBaseInput.setAttribute('class','uk-input');
+                  createVarBaseInput.setAttribute('id','varBase['+createCount+']');
+                  createVarBaseInput.setAttribute('name','varBase['+createCount+']');
+
+                  const createVarCap = document.createElement('div');
+                  createVarCap.setAttribute('id','createVarCap'+createCount);
+
+                  const createVarCapInput = document.createElement('input');
+                  createVarCapInput.setAttribute('type','number');
+                  createVarCapInput.setAttribute('class','uk-input');
+                  createVarCapInput.setAttribute('id','varCap['+createCount+']');
+                  createVarCapInput.setAttribute('name','varCap['+createCount+']');
+
+                  const createVarMargin = document.createElement('div');
+                  createVarMargin.setAttribute('id','createVarMargin'+createCount);
+
+                  const createVarMarginInput = document.createElement('input');
+                  createVarMarginInput.setAttribute('type','number');
+                  createVarMarginInput.setAttribute('class','uk-input');
+                  createVarMarginInput.setAttribute('id','varMargin['+createCount+']');
+                  createVarMarginInput.setAttribute('name','varMargin['+createCount+']');
+
+                  const createRemove = document.createElement('div');
+                  createRemove.setAttribute('id', 'remove'+createCount);
+                  createRemove.setAttribute('class', 'uk-text-center uk-text-bold uk-text-danger uk-flex uk-flex-middle');
+
+                  const createRemoveButton = document.createElement('a');
+                  createRemoveButton.setAttribute('onclick', 'createRemove('+createCount+')');
+                  createRemoveButton.setAttribute('class', 'uk-link-reset');
+                  createRemoveButton.innerHTML = 'X';
+
+                  createVarName.appendChild(createVarNameInput);
+                  newCreateVariant.appendChild(createVarName);
+                  createVarBase.appendChild(createVarBaseInput);
+                  newCreateVariant.appendChild(createVarBase);
+                  createVarCap.appendChild(createVarCapInput);
+                  newCreateVariant.appendChild(createVarCap);
+                  createRemove.appendChild(createRemoveButton);
+                  createVarMargin.appendChild(createVarMarginInput);
+                  newCreateVariant.appendChild(createVarMargin);
+                  newCreateVariant.appendChild(createRemove);
+                  createVariant.appendChild(newCreateVariant);
+                };
+
+                function createRemove(i) {
+                  const createRemoveElement = document.getElementById('create'+i);
+                  createRemoveElement.remove();
+                };
+              </script>
 
               <hr>
 

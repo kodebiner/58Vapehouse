@@ -96,7 +96,7 @@
                                         </li>
                                         <?php if ($role === 'owner') { ?>
                                         <li class="tm-main-navbar">
-                                            <a class="uk-h5" style="color:#000;">
+                                            <a href="business" class="uk-h5" style="color:#000;">
                                                 <img src="img/layout/outlet.svg" /><?=lang('Global.businessInfo')?>
                                             </a>
                                         </li>

@@ -9,6 +9,7 @@ use App\Models\CashModel;
 use App\Models\CategoryModel;
 use App\Models\VariantModel;
 use App\Models\StockModel;
+use App\Models\OutletModel;
 use App\Models\GroupUserModel;
 use Myth\Auth\Models\GroupModel;
 
@@ -38,11 +39,13 @@ class Product extends BaseController
         $CategoryModel = new CategoryModel();
         $ProductModel = new ProductModel();
         $BrandModel = new BrandModel();
+        $VariantModel = new VariantModel();
 
         // Populating Data
         $products   = $ProductModel->findAll();
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
+        $variant   = $VariantModel->findAll();
 
 
         // Parsing Data to View
@@ -53,6 +56,7 @@ class Product extends BaseController
         $data['products']       = $products;
         $data['category']       = $category;
         $data['brand']          = $brand;
+        $data['variants']       = $variant;
 
         return view('Views/product', $data);
     }
@@ -60,16 +64,14 @@ class Product extends BaseController
     public function create()
     {  
             // calling Model
-            $ProductModel = new ProductModel;
-            $CategoryModel = new CategoryModel;
-            $StockModel = new StockModel;
-            $VariantModel = new VariantModel;
-            $BrandModel = new BrandModel;
+            $ProductModel = new ProductModel();
+            $StockModel = new StockModel();
+            $VariantModel = new VariantModel();
+            $OutletModel = new OutletModel();
 
             // search all data
-            $category = $CategoryModel->findAll();
-            $brand = $BrandModel->findAll();
             $input = $this->request->getPost();
+            $outlets = $OutletModel->findAll();
     
             
             // rules
@@ -100,26 +102,39 @@ class Product extends BaseController
             $productId = $ProductModel->getInsertID();
             
             // insert variant
-            foreach ($input['varBase'] as $key => $value) {
+            foreach ($input['varBase'] as $baseKey => $baseValue) {
                 $variant['productid'] = $productId;
-                $variant['hargadasar'] = $value;
+                $variant['hargadasar'] = $baseValue;
 
                 foreach ($input['varName'] as $nameKey => $nameValue) {
-                    if($nameKey === $key) { $variant['name'] = $nameValue; }
+                    if($nameKey === $baseKey) { $variant['name'] = $nameValue; }
                 }
 
                 foreach ($input['varCap'] as $capKey => $capValue) {
-                    if($capKey === $key) { $variant['hargamodal'] = $capValue; }
+                    if($capKey === $baseKey) { $variant['hargamodal'] = $capValue; }
                 }
 
                 foreach ($input['varMargin'] as $marginKey => $marginValue) {
-                    if($marginKey === $key) { $variant['hargajual'] = $marginValue; }
+                    if($marginKey === $baseKey) { $variant['hargajual'] = $marginValue; }
                 }
 
                 $VariantModel->insert($variant);
+
+                // Getting variant ID
+                $variantid = $VariantModel->getInsertID();
+
+                // Update stock
+                foreach ($outlets as $outlet) {
+                    $stock = [
+                        'outletid'  => $outlet['id'],
+                        'variantid' => $variantid,
+                        'qty'       => '0'
+                    ];
+                    $StockModel->insert($stock);
+                }
             }
 
-            return redirect()->back();
+            return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function update($id)
@@ -154,8 +169,8 @@ class Product extends BaseController
         // insert data product
         $products->save($data);
         
-        // tampilkan form edit
-        return redirect()->back();
+        // redirect back
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function delete($id)
@@ -163,10 +178,25 @@ class Product extends BaseController
         // calling Model
         $ProductModel = new ProductModel();
         $StockModel = new StockModel();
+        $VariantModel = new VariantModel();
 
-        // delete data
+        // Populating & Removing Variants Data
+        $variants = $VariantModel->where('productid', $id)->find();
+        foreach ($variants as $varian) {
+            // Removing Stocks
+            $stocks = $StockModel->where('variantid', $varian['id'])->find();
+            foreach ($stocks as $stock) {
+                $StockModel->delete($stock['id']);
+            }
+
+            // Removing Variant
+            $VariantModel->delete($varian['id']);
+        }
+
+        // Removing Product Data
         $ProductModel->delete($id);
-        return redirect('product')->with('message', lang('Global.deleted'));
+
+        return redirect()->back()->with('error', lang('Global.deleted'));
     }
 
     public function createcat()
