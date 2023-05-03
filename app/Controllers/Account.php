@@ -17,4 +17,14 @@ class Account extends BaseController
 
         return view('Views/account', $data);
     }
+
+    public function business()
+    {
+        // Parsing data to view
+        $data                   = $this->data;
+        $data['title']          = lang('Global.businessInfo');
+        $data['description']    = lang('Global.businessInfoDesc');
+
+        return view('Views/business', $data);
+    }
 }
