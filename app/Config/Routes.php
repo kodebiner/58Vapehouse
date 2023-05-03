@@ -99,8 +99,8 @@ $routes->group('outlet', ['filter'=>'login'], function($routes){
 $routes->group('product', ['filter'=>'login'], function($routes){
 
     $routes->get('', 'Product::index', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('indexvar/(:num)', 'Product::indexvar/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Product::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('indexvar/(:num)', 'Product::indexvar/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('createvar/(:num)', 'Product::createvar/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('edit(:num)', 'Product::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Product::update/$1', ['filter' => 'role:owner,supervisor,operator']);

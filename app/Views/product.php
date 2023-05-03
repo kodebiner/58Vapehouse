@@ -239,7 +239,7 @@
             <?php endforeach; ?>
             <!-- End Of Modal Edit Category -->
             
-            <form class="uk-form-stacked" role="form" action="/product/createcat/" method="post">
+            <form class="uk-form-stacked" role="form" action="product/createcat" method="post">
               <?= csrf_field() ?>
 
               <div class="uk-margin-bottom">
@@ -325,7 +325,7 @@
             <?php endforeach; ?>
             <!-- End Of Modal Edit Category -->
             
-            <form class="uk-form-stacked" role="form" action="/product/createbrand/" method="post">
+            <form class="uk-form-stacked" role="form" action="product/createbrand" method="post">
               <?= csrf_field() ?>
 
               <div class="uk-margin-bottom">

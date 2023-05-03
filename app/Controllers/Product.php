@@ -32,7 +32,6 @@ class Product extends BaseController
     }
 
     public function index()
-
     {
         // Calling Model        
         $GroupModel     = new GroupModel();
@@ -60,8 +59,8 @@ class Product extends BaseController
 
         return view('Views/product', $data);
     }
-    public function indexvar($id)
 
+    public function indexvar($id)
     {
         // Calling Model        
         $GroupModel = new GroupModel();
@@ -71,7 +70,7 @@ class Product extends BaseController
         $VariantModel = new VariantModel();
 
         // Populating Data
-        $data['products'] = $ProductModel->where('id', $id)->first();
+        $data['products'] = $ProductModel->find($id);
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
         $variant   = $VariantModel->where('productid', $id)->find();
@@ -163,8 +162,7 @@ class Product extends BaseController
                 }
             }
 
-            return redirect()->to('variant');
-            // return redirect()->back()->with('message', lang('Global.saved'));
+            return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function createvar($id)
@@ -295,7 +293,7 @@ class Product extends BaseController
             'name' => $input['name'],
         ];
         $CategoryModel->insert($data);
-        return redirect()->to('product')->withInput();
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function editcat($id) 
@@ -330,7 +328,7 @@ class Product extends BaseController
         $CategoryModel->delete($id);
 
         // return
-        return redirect()->to('product');
+        return redirect()->back()->with('error', lang('Global.deleted'));
     }
 
     public function createbrand()
@@ -344,7 +342,7 @@ class Product extends BaseController
             'name' => $input['name'],
         ];
         $BrandModel->insert($data);
-        return redirect()->to('product')->withInput();
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function editbrand($id)
@@ -379,6 +377,6 @@ class Product extends BaseController
         $BrandModel->delete($id);
 
         // return
-        return redirect()->to('product');
+        return redirect()->back()->with('error', lang('Global.deleted'));
     }
 }
