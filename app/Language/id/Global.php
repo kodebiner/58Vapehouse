@@ -28,6 +28,7 @@ return [
     'capitalPrice'      => 'Harga Modal',
     'margin'            => 'Margin',
     'deleted'           => 'Data sudah terhapus',
+    'saved'             => 'Data sudah tersimpan',
     'deleteConfirm'     => 'Anda yakin akan menghapus data tersebut?',
 
     // Button
@@ -70,4 +71,5 @@ return [
     'outletListDesc'    => 'Daftar outlet yang anda miliki',
     'productListDesc'   => 'Daftar produk yang anda miliki',
     'userProfileDesc'   => 'Informasi mengenai profil anda',
+    'businessInfoDesc'  => 'Informasi mengenai bisnis anda',
 ];

@@ -28,6 +28,7 @@ return [
     'capitalPrice'      => 'Stock Price',
     'margin'            => 'Margin',
     'deleted'           => 'Data has been deleted',
+    'saved'             => 'Data has been saved',
     'deleteConfirm'     => 'Are you sure want to delete this data?',
 
 
@@ -71,4 +72,5 @@ return [
     'outletListDesc'    => 'List of all your outlets',
     'productListDesc'   => 'List of all your products',
     'userProfileDesc'   => 'Information about your profile',
+    'businessInfoDesc'  => 'Information about your business',
 ];
