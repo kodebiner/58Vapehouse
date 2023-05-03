@@ -9,7 +9,7 @@ class UpdateProduct extends Migration
     public function up()
     {
         $fields = [
-            'brandid'   => ['type' => 'int', 'constraint' => 11],
+            'brandid'   => ['type' => 'int', 'constraint' => 11, null => false],
         ];
         $this->forge->addColumn('product', $fields);
     }
