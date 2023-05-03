@@ -74,7 +74,7 @@ class Product extends BaseController
         $data['products'] = $ProductModel->where('id', $id)->first();
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
-        $variant   = $VariantModel->find(['id']);
+        $variant   = $VariantModel->where('productid', $id)->find();
 
 
         // Parsing Data to View
