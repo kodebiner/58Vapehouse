@@ -89,7 +89,7 @@ public function create()
                 $StockModel->insert($stock);
             }
 
-            return redirect()->to('outlet');
+            return redirect()->back()->with('message', lang('Global.saved'));
     }
 
 public function update($id)
@@ -122,8 +122,9 @@ public function update($id)
             $outlets->save($data);
 
             session()->setFlashdata('edit','Data Berhasil Diubah!');
+
             // tampilkan form edit
-            return redirect()->to('outlet');
+            return redirect()->back()->with('message', lang('Global.saved'));
    
     }
 
@@ -143,7 +144,7 @@ public function delete($id)
             }
         }
 
-        return redirect('outlet')->with('message', lang('Global.deleted'));
+        return redirect()->back()->with('error', lang('Global.deleted'));
     }
 
 }
