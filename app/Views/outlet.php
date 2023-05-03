@@ -80,19 +80,19 @@
       <?php foreach ($outlets as $outlet) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center"><?= $outlet->name; ?></td>
-          <td class="uk-text-center"><?= $outlet->address; ?></td>
-          <td class="uk-text-center"><?= $outlet->maps; ?></td>
+          <td class="uk-text-center"><?= $outlet['name']; ?></td>
+          <td class="uk-text-center"><?= $outlet['address']; ?></td>
+          <td class="uk-text-center"><?= $outlet['maps']; ?></td>
           <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
             <!-- Button Trigger Modal Edit -->
             <div>
-              <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $outlet->id ?>"><?=lang('Global.edit')?></button>
+              <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $outlet['id'] ?>"><?=lang('Global.edit')?></button>
             </div>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
             <div>
-              <a class="uk-button uk-button-default uk-button-danger" href="outlet/delete/<?= $outlet->id ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
+              <a class="uk-button uk-button-default uk-button-danger" href="outlet/delete/<?= $outlet['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
             </div>
             <!-- End Of Button Delete -->
           </td>
@@ -103,7 +103,7 @@
 
   <!-- Modal Edit -->
   <?php foreach ($outlets as $outlet) : ?>
-    <div uk-modal class="uk-flex-top" id="editdata<?= $outlet->id ?>">
+    <div uk-modal class="uk-flex-top" id="editdata<?= $outlet['id'] ?>">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
@@ -111,28 +111,28 @@
           </div>
 
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="outlet/update/<?= $outlet->id ?>" method="post">
+            <form class="uk-form-stacked" role="form" action="outlet/update/<?= $outlet['id'] ?>" method="post">
               <?= csrf_field() ?>
-              <input type="hidden" name="id" value="<?= $outlet->id; ?>">
+              <input type="hidden" name="id" value="<?= $outlet['id']; ?>">
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet->name; ?>"autofocus />
+                  <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet['name']; ?>"autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet->address; ?>" autofocus />
+                  <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet['address']; ?>" autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet->maps; ?>" autofocus />
+                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" autofocus />
                 </div>
               </div>
 

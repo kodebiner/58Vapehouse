@@ -2,149 +2,100 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;
 use App\Models\OutletModel;
-use App\Models\ProductModel;
-use App\Models\VariantModel;
-use App\Models\StockModel;
-use App\Models\GroupUserModel;
-use Myth\Auth\Models\GroupModel;
 
 class Outlet extends BaseController
 {
-
-    protected $db, $builder;
-    protected $auth;
-    protected $config;
-
-public function __construct()
+    public function index()
     {
-        $this->db      = \Config\Database::connect();
-        $validation = \Config\Services::validation();
-        $this->builder =   $this->db->table('outlet');
-        $this->config = config('Auth');
-        $this->auth   = service('authentication');
-        
-    }
+        // Calling Models
+        $OutletModel    = new OutletModel();
 
-public function index()
+        // Populating Data
+        $outlets    = $OutletModel->findAll();
 
-    {
-        $GroupModel = new GroupModel();
-        $query =   $this->builder->get();
+        // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.outlet');
         $data['description']    = lang('Global.outletListDesc');
-        $data['roles']          = $GroupModel->findAll();
-        $data['outlets']          = $query->getResult();
+        $data['outlets']        = $outlets;
 
         return view('Views/outlet', $data);
-
     }
 
-public function create()
-
+    public function create()
     {
-            $validation = \Config\Services::validation();
+        $validation = \Config\Services::validation();
 
-            // Calling Models
-            $OutletModel = new OutletModel;
-            $ProductModel = new ProductModel;
-            $StockModel = new StockModel;
-            $VariantModel = new VariantModel();
+        // Calling Models
+        $OutletModel    = new OutletModel;
 
-            // Populating data
-            $input = $this->request->getPost();
-            $outlets = $OutletModel->findAll();
-            $variants = $VariantModel->findAll();
+        // Populating data
+        $input      = $this->request->getPost();
+        $outlets    = $OutletModel->findAll();
 
-            $data = [
-                'name'    => $input['name'],
-                'address'  => $input['address'],
-                'maps' => $input['maps'],
-            ];
+        $data = [
+            'name'      => $input['name'],
+            'address'   => $input['address'],
+            'maps'      => $input['maps'],
+        ];
         
-            if (! $this->validate([
-                'name' => "required|max_length[255]',",
-                'address'  => 'required',
-                'maps'  => 'required|max_length[255]',
-            ])) {
+        if (! $this->validate([
+            'name'      => "required|max_length[255]',",
+            'address'   => 'required',
+            'maps'      => 'required|max_length[255]',
+        ])) {
                 
-               return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-            }
+           return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
             
-            // Inserting Outlet
-            $OutletModel->insert($data);
+        // Inserting Outlet
+        $OutletModel->insert($data);
 
-            //Getting Outlet ID
-            $outletID = $OutletMode->getInsertID();
+        //Getting Outlet ID
+        $outletID = $OutletModel->getInsertID();
 
-            // Adding stocks
-            foreach ($variants as $variant) {
-                $stock = [
-                    'outletid'  => $outletID,
-                    'variantid' => $variant['id'],
-                    'qty'       => '0'
-                ];
-                $StockModel->insert($stock);
-            }
-
-            return redirect()->back()->with('message', lang('Global.saved'));
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
-public function update($id)
-
+    public function update($id)
     {
-        // ambil data yang akan diedit
-        $outlets = new OutletModel();
-        $data['outlet'] = $outlets->where('id', $id)->first();
-        $input = $this->request->getPost();
-        
-        
-            $validation =  \Config\Services::validation();
-            $data = [
-                'id' => $id,
-                'name'    => $input['name'],
-                'address' => $input['address'],
-                'maps' => $input['maps'],
-            ];
+        // Calling Models
+        $outlets    = new OutletModel();
 
-            // Validasi
-            if (! $this->validate([
-                'name' => "max_length[255]',",
-                'address' => "max_length[255]',",
-                'maps' => "max_length[255]',",
-            ])) {
+        // Populating Data
+        $data['outlet'] = $outlets->where('id', $id)->first();
+        $input          = $this->request->getPost();
+        $validation     = \Config\Services::validation();
+
+        $data = [
+            'id'        => $id,
+            'name'      => $input['name'],
+            'address'   => $input['address'],
+            'maps'      => $input['maps'],
+        ];
+
+        // Validasi
+        if (! $this->validate([
+            'name'      => "max_length[255]',",
+            'address'   => "max_length[255]',",
+            'maps'      => "max_length[255]',",
+        ])) {
 
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-            }
-            // Simpan Data
-            $outlets->save($data);
+        }
+        // Simpan Data
+        $outlets->save($data);
 
-            session()->setFlashdata('edit','Data Berhasil Diubah!');
-
-            // tampilkan form edit
-            return redirect()->back()->with('message', lang('Global.saved'));
-   
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
-public function delete($id)
-
+    public function delete($id)
     {
         $outlets = new OutletModel();
-        $StockModel = new StockModel();
 
         $outlets->delete($id);
 
-        $stocks = $StockModel->findAll();
-        foreach ($stocks as $stock) {
-            if ($stock['outlet_id'] === $id) {
-                $stock_id = $stock['id'];
-                $StockModel->delete($stock_id);
-            }
-        }
-
         return redirect()->back()->with('error', lang('Global.deleted'));
     }
-
 }

@@ -20,6 +20,9 @@ return [
     'category'          => 'Kategori',
     'brand'             => 'Merek',
     'variant'           => 'Varian',
+    'debt'              => 'Kasbon',
+    'transaction'       => 'Transaksi',
+    'point'             => 'Poin',
     'resetPassDesc'     => 'Fill it if you want to reset your password. Otherwise, leave it empty.',
     'currentPass'       => 'Password Saat Ini',
     'morecate'          => 'Ingin menambah Kategori?',
@@ -30,6 +33,7 @@ return [
     'deleted'           => 'Data sudah terhapus',
     'saved'             => 'Data sudah tersimpan',
     'deleteConfirm'     => 'Anda yakin akan menghapus data tersebut?',
+    'description'       => 'Deskripsi',
 
     // Button
     'edit'              => 'Ubah',
@@ -40,6 +44,7 @@ return [
     'addCategory'       => 'Tambah Kategori',
     'addBrand'          => 'Tambah Merek',
     'addVariant'        => 'Tambah Varian',
+    'addCustomer'       => 'Tambah Pelanggan',
 
     // Menu
     'dashboard'         => 'Dasbor',
@@ -52,7 +57,7 @@ return [
     'inventory'         => 'Inventaris',
     'outlet'            => 'Outlet',
     'cashManagement'    => 'Pengelolaan Kas',
-    'customer'          => 'Pelanggal',
+    'customer'          => 'Pelanggan',
     'website'           => 'Website',
 
     // Page Title
@@ -63,6 +68,7 @@ return [
     'userProfile'       => 'Profil Pengguna',
     'categoryList'      => 'Daftar Kategori',
     'brandList'         => 'Daftar Merek',
+    'customerList'      => 'Daftar Pelanggan',
     'businessInfo'      => 'Informasi Usaha',
     
     // Page Description
@@ -70,6 +76,7 @@ return [
     'employeeListDesc'  => 'Daftar pegawai yang ada di bawah anda',
     'outletListDesc'    => 'Daftar outlet yang anda miliki',
     'productListDesc'   => 'Daftar produk yang anda miliki',
+    'customerListDesc'  => 'Daftar pelanggan yang and miliki',
     'userProfileDesc'   => 'Informasi mengenai profil anda',
     'businessInfoDesc'  => 'Informasi mengenai bisnis anda',
 ];

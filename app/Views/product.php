@@ -356,6 +356,7 @@
   <table class="uk-table uk-table-striped uk-table-hover uk-table-justify uk-table-middle uk-table-divider">
     <thead>
       <tr>
+        <th class="uk-text-center"></th>
         <th class="uk-text-center">No</th>
         <th class="uk-text-center"><?=lang('Global.name')?></th>
         <th class="uk-text-center"><?=lang('Global.category')?></th>
@@ -367,6 +368,7 @@
       <?php $i = 1 ; ?>
       <?php foreach ($products as $product) : ?>
         <tr>
+          <td class="uk-text-center" uk-toggle="target: #variantlist" uk-icon="triangle-right"></td>
           <td class="uk-text-center"><?= $i++; ?></td>
           <td class="uk-text-center"><?= $product['name']; ?></td>
           <td class="uk-text-center">

@@ -20,6 +20,9 @@ return [
     'category'          => 'Category',
     'brand'             => 'Brand',
     'variant'           => 'Variant',
+    'debt'              => 'Debt',
+    'transaction'       => 'Transcation',
+    'point'             => 'Point',
     'resetPassDesc'     => 'Fill it if you want to reset your password. Otherwise, leave it empty.',
     'currentPass'       => 'Current Password',
     'morecate'          => 'Need more Category?',
@@ -30,6 +33,7 @@ return [
     'deleted'           => 'Data has been deleted',
     'saved'             => 'Data has been saved',
     'deleteConfirm'     => 'Are you sure want to delete this data?',
+    'description'       => 'Description',
 
 
     // Button
@@ -41,6 +45,7 @@ return [
     'addCategory'       => 'Add Category',
     'addBrand'          => 'Add Brand',
     'addVariant'        => 'Add Variant',
+    'addCustomer'       => 'Add Customer',
 
     // Menu
     'dashboard'         => 'Dashboard',
@@ -64,6 +69,7 @@ return [
     'userProfile'       => 'User Profile',
     'categoryList'      => 'Category List',
     'brandList'         => 'Brand List',
+    'customerList'      => 'Customer List',
     'businessInfo'      => 'Business Information',
     
     // Page Description
@@ -71,6 +77,7 @@ return [
     'employeeListDesc'  => 'List of all employee under you',
     'outletListDesc'    => 'List of all your outlets',
     'productListDesc'   => 'List of all your products',
+    'customerListDesc'  => 'List of all your customer',
     'userProfileDesc'   => 'Information about your profile',
     'businessInfoDesc'  => 'Information about your business',
 ];

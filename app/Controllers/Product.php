@@ -35,17 +35,17 @@ class Product extends BaseController
 
     {
         // Calling Model        
-        $GroupModel = new GroupModel();
-        $CategoryModel = new CategoryModel();
-        $ProductModel = new ProductModel();
-        $BrandModel = new BrandModel();
-        $VariantModel = new VariantModel();
+        $GroupModel     = new GroupModel();
+        $CategoryModel  = new CategoryModel();
+        $ProductModel   = new ProductModel();
+        $BrandModel     = new BrandModel();
+        $VariantModel   = new VariantModel();
 
         // Populating Data
         $products   = $ProductModel->findAll();
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
-        $variant   = $VariantModel->findAll();
+        $variant    = $VariantModel->findAll();
 
 
         // Parsing Data to View

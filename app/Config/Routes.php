@@ -91,7 +91,6 @@ $routes->group('outlet', ['filter'=>'login'], function($routes){
 
     $routes->get('', 'Outlet::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Outlet::create', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('edit(:num)', 'Outlet::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Outlet::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Outlet::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
@@ -113,6 +112,15 @@ $routes->group('product', ['filter'=>'login'], function($routes){
     $routes->Post('editbrand(:num)', 'Product::editbrand/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('deletebrand/(:num)', 'Product::deletebrand/$1', ['filter' => 'role:owner,supervisor,operator']);
   
+});
+
+//Customer Routes
+$routes->group('customer', ['filter'=>'login'], function($routes){
+
+    $routes->get('', 'Customer::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Customer::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'CUstomer::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Customer::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 
