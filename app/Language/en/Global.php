@@ -59,10 +59,12 @@ return [
     'outlet'            => 'Outlet',
     'cashManagement'    => 'Cash Management',
     'customer'          => 'Customer',
+    'variant'           => 'variant',
     'website'           => 'Website',
 
     // Title
     'employeeList'      => 'Employee List',
+    'variantList'       => 'Variant List',
     'outletList'        => 'Outlet List',
     'updateData'        => 'Update Data',
     'productList'       => 'List Product',

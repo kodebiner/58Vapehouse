@@ -99,7 +99,9 @@ $routes->group('outlet', ['filter'=>'login'], function($routes){
 $routes->group('product', ['filter'=>'login'], function($routes){
 
     $routes->get('', 'Product::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('indexvar/(:num)', 'Product::indexvar/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Product::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('createvar/(:num)', 'Product::createvar/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('edit(:num)', 'Product::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Product::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Product::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
@@ -114,6 +116,13 @@ $routes->group('product', ['filter'=>'login'], function($routes){
   
 });
 
+// Variant Routes
+$routes->group('variant',['filter'=>'login'],function($routes){
+
+    $routes->get('', 'Product::indexvar', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('createvar', 'Product::createvar', ['filter' => 'role:owner,supervisor,operator']);
+});
+
 //Customer Routes
 $routes->group('customer', ['filter'=>'login'], function($routes){
 
@@ -122,6 +131,7 @@ $routes->group('customer', ['filter'=>'login'], function($routes){
     $routes->post('update/(:num)', 'CUstomer::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Customer::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
+
 
 
 /*
