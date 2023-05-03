@@ -14,7 +14,7 @@
 
 <!-- Content -->
 <div class="uk-margin">
-    <form class="uk-form-horizontal">
+    <form class="uk-form-horizontal" method="post" role="form" action="account/update">
         <div class="uk-child-width-1-2@m" uk-grid>
             <div>
                 <div class="uk-margin">
