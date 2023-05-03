@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use App\Models\OutletModel;
 use App\Models\ProductModel;
+use App\Models\VariantModel;
 use App\Models\StockModel;
 use App\Models\GroupUserModel;
 use Myth\Auth\Models\GroupModel;
@@ -43,14 +44,20 @@ public function index()
 
 public function create()
 
-    {  
-
+    {
             $validation = \Config\Services::validation();
+
+            // Calling Models
             $OutletModel = new OutletModel;
             $ProductModel = new ProductModel;
             $StockModel = new StockModel;
+            $VariantModel = new VariantModel();
+
+            // Populating data
             $input = $this->request->getPost();
             $outlets = $OutletModel->findAll();
+            $variants = $VariantModel->findAll();
+
             $data = [
                 'name'    => $input['name'],
                 'address'  => $input['address'],
@@ -66,7 +73,21 @@ public function create()
                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
             }
             
+            // Inserting Outlet
             $OutletModel->insert($data);
+
+            //Getting Outlet ID
+            $outletID = $OutletMode->getInsertID();
+
+            // Adding stocks
+            foreach ($variants as $variant) {
+                $stock = [
+                    'outletid'  => $outletID,
+                    'variantid' => $variant['id'],
+                    'qty'       => '0'
+                ];
+                $StockModel->insert($stock);
+            }
 
             return redirect()->to('outlet');
     }
