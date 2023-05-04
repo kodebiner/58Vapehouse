@@ -135,9 +135,6 @@
                                 <a class="uk-h4 tm-h4" href="<?= base_url('product') ?>"><img src="img/layout/product.svg"><?=lang('Global.product');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('variant') ?>"><img src="img/layout/product.svg"><?=lang('Global.variant');?></a>
-                            </li>
-                            <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg"><?=lang('Global.reminder');?></a>
                             </li>
                             <li class="tm-main-navbar">

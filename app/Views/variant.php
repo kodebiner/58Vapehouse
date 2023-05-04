@@ -7,7 +7,7 @@
 
   <div uk-grid class="uk-flex-middle">
     <div class="uk-width-1-2@m">
-      <h3 class="tm-h3"><?=lang('Global.variantList')?></h3>
+      <h3 class="tm-h3"><?=lang('Global.variantList')?> <?= $products['name']; ?></h3>
     </div>
 
     <!-- Button Trigger Modal Add -->
