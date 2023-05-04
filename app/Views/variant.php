@@ -24,7 +24,7 @@
             <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addVariant')?></h5>
           </div>
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/variant/create" method="post">
+            <form class="uk-form-stacked" role="form" action="/product/createvar/<?= $products['id']; ?>" method="post">
               <?= csrf_field() ?>
 
               <div class="uk-margin-bottom">
@@ -54,10 +54,7 @@
                   <input type="text" class="uk-input <?php if (session('errors.margin')) : ?>tm-form-invalid<?php endif ?>" id="margin" name="margin" placeholder="<?=lang('Global.margin')?>" autofocus required />
                 </div>
               </div>
-
-
               <hr>
-
               <div class="uk-margin">
                 <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
               </div>

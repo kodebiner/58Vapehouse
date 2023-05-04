@@ -146,7 +146,6 @@ class Product extends BaseController
         $VariantModel = new VariantModel();
 
         // Populating Data
-        $data['products'] = $ProductModel->find($id);
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
         $variant   = $VariantModel->where('productid', $id)->find();
@@ -161,6 +160,7 @@ class Product extends BaseController
         $data['category']       = $category;
         $data['brand']          = $brand;
         $data['variants']       = $variant;
+        $data['products']       = $ProductModel->find($id);
 
         return view('Views/variant', $data);
     }
@@ -168,18 +168,23 @@ class Product extends BaseController
     public function createvar($id)
     {
            // calling Model
-           $ProductModel = new ProductModel();
-           $VariantModel = new VariantModel();
-           $OutletModel = new OutletModel();
+           $ProductModel    = new ProductModel();
+           $VariantModel    = new VariantModel();
+           $OutletModel     = new OutletModel();
+           $StockModel      = new StockModel();
 
            // search all data
-           $input = $this->request->getPost();
+           $products = $ProductModel->where('id',$id)->first();
            $outlets = $OutletModel->findAll();
-   
+           $input = $this->request->getPost();
+
+            //populating data
+        $data = $this->data;
+        $data['products'] = $products;
            
            // rules
            $rule = [
-               'name'         => 'required|max_length[255]|is_unique[product.name]',
+               'name'         => 'required|max_length[255]',
                'hargadasar'   => 'required|max_length[255]',
                'hargamodal'   => 'required',
                'margin'       => 'required',
@@ -192,16 +197,28 @@ class Product extends BaseController
            
            // get data
            $data = [
+                'productid'   => $id, 
                'name'         => $input['name'],
                'hargadasar'   => $input['hargadasar'],
                'hargamodal'   => $input['hargamodal'],
-               'margin'       => $input['margin'],
+               'hargajual'    => $input['margin'],
            ];
 
            // insert data product
            $VariantModel->insert($data);
 
-           return redirect()->to('variant');
+           $variantid = $VariantModel->getInsertID();
+
+           foreach ($outlets as $outlet) {
+                $stocks = [
+                    'outletid'  => $outlet['id'],
+                    'variantid' => $variantid,
+                    'qty'       => '0',
+
+                ];
+                $StockModel->insert($stocks);
+           }
+           return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function update($id)
