@@ -100,7 +100,7 @@
 
             <!-- Button Delete -->
             <div>
-              <a class="uk-button uk-button-default uk-button-danger" href="variant/delete/<?= $variant['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
+              <a class="uk-button uk-button-default uk-button-danger" href="product/deletevar/<?= $variant['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
             </div>
             <!-- End Of Button Delete -->
           </td>
@@ -119,7 +119,7 @@
           </div>
 
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="variant/update/<?= $variant['id']; ?>" method="post">
+            <form class="uk-form-stacked" role="form" action="product/editvar/<?= $variant['id']; ?>" method="post">
               <?= csrf_field() ?>
               <input type="hidden" name="id" value="<?= $variant['id']; ?>">
 
@@ -131,23 +131,23 @@
               </div>
 
               <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
+                <label class="uk-form-label" for="hargadasar"><?=lang('Global.basePrice')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="address" name="address"  value="<?= $variant['hargadasar']; ?>" autofocus />
+                  <input type="text" class="uk-input" id="hargadasar" name="hargadasar"  value="<?= $variant['hargadasar']; ?>" autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
+                <label class="uk-form-label" for="hargammodal"><?=lang('Global.capitalPrice')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $variant['hargamodal']; ?>" autofocus />
+                  <input type="text" class="uk-input" id="hargamodal" name="hargamodal"  value="<?= $variant['hargamodal']; ?>" autofocus />
                 </div>
               </div>
               
               <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
+                <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $variant['hargajual']; ?>" autofocus />
+                  <input type="text" class="uk-input" id="margin" name="margin"  value="<?= $variant['hargajual']; ?>" autofocus />
                 </div>
               </div>
 

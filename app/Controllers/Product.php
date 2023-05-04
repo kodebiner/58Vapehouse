@@ -179,8 +179,8 @@ class Product extends BaseController
            $input = $this->request->getPost();
 
             //populating data
-        $data = $this->data;
-        $data['products'] = $products;
+            $data = $this->data;
+            $data['products'] = $products;
            
            // rules
            $rule = [
@@ -206,7 +206,6 @@ class Product extends BaseController
 
            // insert data product
            $VariantModel->insert($data);
-
            $variantid = $VariantModel->getInsertID();
 
            foreach ($outlets as $outlet) {
@@ -271,6 +270,67 @@ class Product extends BaseController
         
         // redirect back
         return redirect()->back()->with('message', lang('Global.saved'));
+    }
+
+    public function editvar($id){
+
+        // calling model
+        $ProductModel   = new ProductModel();
+        $StockModel     = new StockModel();
+        $VariantModel   = new VariantModel();
+
+        // initialize
+        $data['variants']        = $VariantModel->where('productid',$id)->first();
+        $products                = $ProductModel->findAll();
+        $stocks                  = $StockModel->where('variantid',$id);
+        $input                   = $this->request->getPost();
+
+        //update variant
+        foreach ( $products as $product) {
+        $variants =  [
+                'id'            => $id,
+                'name'          => $input['name'],
+                'hargadasar'    => $input['hargadasar'],
+                'hargamodal'    => $input['hargamodal'],
+                'hargajual'     => $input['margin'],
+                ];
+            }
+
+        // saving variant
+        $VariantModel->save($variants); 
+
+        // get variant id
+        $variantid = $VariantModel->getInsertID();
+
+        // saving stocks
+        foreach ( $stocks as $stock) {
+            $var =  [
+                'variantid' => $variantid,
+                'qty'       => '0',
+            ];
+            $StockModel->save($var); 
+        }
+
+        // redirect back
+        return redirect()->back()->with('message', lang('Global.saved'));
+    }
+  
+
+    public function deletevar($id)
+    {
+
+         // calling Model
+         $StockModel = new StockModel();
+         $VariantModel = new VariantModel();
+ 
+         // Populating & Removing Variants Data
+         $stocks = $StockModel->where('variantid', $id)->find();
+         foreach ($stocks as $stock) {
+            $StockModel->delete($stock['id']);
+         }
+         $VariantModel->delete($id);
+
+         return redirect()->back()->with('error', lang('Global.deleted'));
     }
 
     public function delete($id)
