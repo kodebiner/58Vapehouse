@@ -11355,3 +11355,7 @@ li.tm-main-navbar>a>img {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+.uk-footer-container:not(.uk-navbar-transparent) {
+    background: #f8f8f8
+}

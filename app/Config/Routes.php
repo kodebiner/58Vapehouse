@@ -133,6 +133,12 @@ $routes->group('customer', ['filter'=>'login'], function($routes){
     $routes->get('delete/(:num)', 'Customer::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
+//Transaction Routes
+$routes->group('transaction', ['filter'=>'login'], function($routes){
+
+    $routes->get('', 'Transaction::index', ['filter' => 'role:owner,supervisor,operator']);
+});
+
 
 
 /*
