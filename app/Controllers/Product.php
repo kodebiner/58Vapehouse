@@ -41,11 +41,21 @@ class Product extends BaseController
         $VariantModel   = new VariantModel();
 
         // Populating Data
-        $products   = $ProductModel->findAll();
+        $products   = $ProductModel->findAll(); // Hapus kalau sudah implementasi filter
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
         $variant    = $VariantModel->findAll();
 
+        // Checking filter
+        $input = $this->request->getPost();
+        // if (!empty($input)) {
+        //     if (!empty($input['brand'])) {
+        //         $products = $ProductModel->where('catid', $input['category'])->find();
+        //     }
+            
+        // } else {
+        //     $products   = $ProductModel->findAll();
+        // }
 
         // Parsing Data to View
         $data                   = $this->data;
