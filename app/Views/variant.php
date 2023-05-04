@@ -16,6 +16,15 @@
     </div>
     <!-- End Of Button Trigger Modal Add -->
 
+    <!-- filter button -->
+    <div class="uk-margin">
+      <form class="uk-search uk-search-default" action="">
+          <span class="uk-search-icon-flip" uk-search-icon></span>
+          <input class="uk-search-input" type="submit" placeholder="Search" aria-label="Search">
+      </form>
+    </div>
+    <!-- end of filter button -->
+
     <!-- Modal Add -->
     <div uk-modal class="uk-flex-top" id="tambahdata">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
