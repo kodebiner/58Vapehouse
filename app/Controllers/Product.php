@@ -60,35 +60,6 @@ class Product extends BaseController
         return view('Views/product', $data);
     }
 
-    public function indexvar($id)
-    {
-        // Calling Model        
-        $GroupModel = new GroupModel();
-        $CategoryModel = new CategoryModel();
-        $ProductModel = new ProductModel();
-        $BrandModel = new BrandModel();
-        $VariantModel = new VariantModel();
-
-        // Populating Data
-        $data['products'] = $ProductModel->find($id);
-        $category   = $CategoryModel->findAll();
-        $brand      = $BrandModel->findAll();
-        $variant   = $VariantModel->where('productid', $id)->find();
-
-
-        // Parsing Data to View
-        $data                   = $this->data;
-        $data['title']          = lang('Global.product');
-        $data['description']    = lang('Global.productDesc');
-        $data['roles']          = $GroupModel->findAll();
-        $data['products']       = $data;
-        $data['category']       = $category;
-        $data['brand']          = $brand;
-        $data['variants']       = $variant;
-
-        return view('Views/variant', $data);
-    }
-
     public function create()
     {  
             // calling Model
@@ -163,6 +134,35 @@ class Product extends BaseController
             }
 
             return redirect()->back()->with('message', lang('Global.saved'));
+    }
+
+    public function indexvar($id)
+    {
+        // Calling Model        
+        $GroupModel = new GroupModel();
+        $CategoryModel = new CategoryModel();
+        $ProductModel = new ProductModel();
+        $BrandModel = new BrandModel();
+        $VariantModel = new VariantModel();
+
+        // Populating Data
+        $data['products'] = $ProductModel->find($id);
+        $category   = $CategoryModel->findAll();
+        $brand      = $BrandModel->findAll();
+        $variant   = $VariantModel->where('productid', $id)->find();
+
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = lang('Global.product');
+        $data['description']    = lang('Global.productDesc');
+        $data['roles']          = $GroupModel->findAll();
+        $data['products']       = $data;
+        $data['category']       = $category;
+        $data['brand']          = $brand;
+        $data['variants']       = $variant;
+
+        return view('Views/variant', $data);
     }
 
     public function createvar($id)
