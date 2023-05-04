@@ -34,6 +34,16 @@ return [
     'saved'             => 'Data has been saved',
     'deleteConfirm'     => 'Are you sure want to delete this data?',
     'description'       => 'Description',
+    'bizName'           => 'Business Name',
+    'poinValue'         => 'Poin Value',
+    'poinValueDesc'     => 'Amount of points earned for every transaction milestone',
+    'poinOrder'         => 'Poin Order',
+    'poinOrderDesc'     => 'Amount of transaction milestone to earn points',
+    'discount'          => 'Discount',
+    'discountType'      => 'Discount Type',
+    'memberDiscount'    => 'Member Discount',
+    'tax'               => 'Tax',
+    'vat'               => 'VAT',
 
 
     // Button

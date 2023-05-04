@@ -34,6 +34,16 @@ return [
     'saved'             => 'Data sudah tersimpan',
     'deleteConfirm'     => 'Anda yakin akan menghapus data tersebut?',
     'description'       => 'Deskripsi',
+    'bizName'           => 'Nama Bisnis',
+    'poinValue'         => 'Nilai Poin',
+    'poinValueDesc'     => 'Jumlah poin yang didapat setiap pencapaian jumlah transaksi',
+    'poinOrder'         => 'Poin Order',
+    'poinOrderDesc'     => 'Jumlah transaksi yang diperlukan untuk mendapatkan poin',
+    'discount'          => 'Diskon',
+    'discountType'      => 'Tipe Diskon',
+    'memberDiscount'    => 'Diskon Member',
+    'tax'               => 'Pajak',
+    'vat'               => 'PpN',
 
     // Button
     'edit'              => 'Ubah',

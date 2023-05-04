@@ -3,9 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use App\Models\GroupUserModel;
-use Myth\Auth\Models\GroupModel;
-use App\Config\Auth as AuthConfig;
+use App\Models\GconfigModel;
 
 class Account extends BaseController
 {
@@ -100,11 +98,28 @@ class Account extends BaseController
 
     public function business()
     {
+        // Calling Models
+        $ConfigModel = new GconfigModel();
+
+        //Checking data availability
+        $checkConfig = $ConfigModel->find('1');
+        if (!$checkConfig) {
+            $newConfig = [
+                'ppn'               => '0',
+            ];
+            $ConfigModel->insert($newConfig);
+        }
+
+        // Populating data
+        $gConfig = $ConfigModel->find('1');
+
         // Parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.businessInfo');
         $data['description']    = lang('Global.businessInfoDesc');
+        $data['gconfig']        = $gConfig;
 
+        // Rendering view
         return view('Views/business', $data);
     }
 }
