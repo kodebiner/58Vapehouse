@@ -38,6 +38,8 @@
 
         <!-- Header Section -->
         <header class="uk-navbar-container tm-navbar-container" style="background-color:#1e87f0;">
+            <?= view('Views/Auth/_message_block') ?>
+            
             <div class="uk-container uk-container-expand">
                 <div class="uk-flex-middle" uk-navbar>
 
@@ -61,7 +63,7 @@
                     
                     <!-- Navbar Right -->
                     <div class="uk-navbar-right">
-                        <a class="uk-navbar-toggle" href="#offcanvas2" uk-icon="cart" width="35" height="35" uk-toggle role="button" aria-label="Open menu" style="color: #fff;"></a>
+                        <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="35" height="35" style="color: #fff;"></a>
                     </div>
                     <!-- Navbar Right End -->
 
@@ -117,13 +119,64 @@
         </div>
         <!-- Left Sidebar Section end -->
 
-        <!-- Right Sidebar Section -->
-        <div id="offcanvas2" uk-offcanvas="flip: true; overlay: true;">
-            <div class="uk-offcanvas-bar uk-padding-remove" role="dialog" aria-modal="true">
-                <?= $this->renderSection('trxdetail') ?>
+        <!-- Modal Detail Transaction -->
+        <div uk-modal class="uk-flex-top" id="tambahdata">
+            <div class="uk-modal-dialog uk-margin-auto-vertical">
+                <div class="uk-modal-content">
+                    <div class="uk-modal-header">
+                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.detailOrder');?></h5>
+                    </div>
+                    <div class="uk-modal-body">
+                        <form class="uk-form-stacked" role="form" action="/transaction/create" method="post">
+                            <?= csrf_field() ?>
+
+                            <div class="uk-margin-bottom">
+                                <div class="uk-form-controls">
+                                    <select class="uk-select" name="member">
+                                        <option><?=lang('Global.customer')?></option>
+                                        <?php foreach ($customers as $customer) { ?>
+                                            <option value="<?= $customer['id']; ?>"><?= $customer['name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="uk-overflow-auto">
+                                <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($transactions as $transaction) : ?>
+                                            <tr>
+                                                <td class="uk-text-center"><?= $transaction['name']; ?></td>
+                                                <td class="uk-text-center">Rp <?= $transaction['value']; ?>,-</td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                                <div class="uk-form-controls">
+                                <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="uk-margin">
+                                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Right Sidebar Section End -->
+        <!-- Modal Detail Transaction End -->
 
         <!-- Main Section -->
         <main role="main">
