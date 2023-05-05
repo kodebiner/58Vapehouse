@@ -27,6 +27,7 @@ class Product extends BaseController
         $this->builder  =   $this->db->table('product');
         $this->builder  =   $this->db->table('category');
         $this->builder  =   $this->db->table('cash');
+        $this->builder  =   $this->db->table('stock');
         $this->config   = config('Auth');
         $this->auth     = service('authentication');
     }
@@ -148,29 +149,38 @@ class Product extends BaseController
 
     public function indexvar($id)
     {
+
         // Calling Model        
-        $GroupModel = new GroupModel();
-        $CategoryModel = new CategoryModel();
-        $ProductModel = new ProductModel();
-        $BrandModel = new BrandModel();
-        $VariantModel = new VariantModel();
+        $GroupModel     = new GroupModel();
+        $CategoryModel  = new CategoryModel();
+        $ProductModel   = new ProductModel();
+        $BrandModel     = new BrandModel();
+        $VariantModel   = new VariantModel();
+        $StockModel     = new StockModel();
 
         // Populating Data
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
-        $variant   = $VariantModel->where('productid', $id)->find();
-
+        $stock      = $StockModel->findAll(); 
+        $variant    = $VariantModel->where('productid', $id)->find();
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.product');
         $data['description']    = lang('Global.productDesc');
         $data['roles']          = $GroupModel->findAll();
+        $data['stock']          = $stock;
         $data['products']       = $data;
         $data['category']       = $category;
         $data['brand']          = $brand;
         $data['variants']       = $variant;
         $data['products']       = $ProductModel->find($id);
+
+        foreach ( $stock as $stok) {  
+
+        $jml[] = $stok['qty'];
+        $jumlah = array_sum($jml);
+        } 
 
         return view('Views/variant', $data);
     }
@@ -184,9 +194,9 @@ class Product extends BaseController
            $StockModel      = new StockModel();
 
            // search all data
-           $products = $ProductModel->where('id',$id)->first();
-           $outlets = $OutletModel->findAll();
-           $input = $this->request->getPost();
+           $products    = $ProductModel->where('id',$id)->first();
+           $outlets     = $OutletModel->findAll();
+           $input       = $this->request->getPost();
 
             //populating data
             $data = $this->data;
@@ -207,7 +217,7 @@ class Product extends BaseController
            
            // get data
            $data = [
-                'productid'   => $id, 
+               'productid'    => $id, 
                'name'         => $input['name'],
                'hargadasar'   => $input['hargadasar'],
                'hargamodal'   => $input['hargamodal'],
