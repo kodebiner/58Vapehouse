@@ -12,7 +12,7 @@
 
     <!-- Button Trigger Modal Add -->
     <div class="uk-width-1-2@m uk-text-right@m">
-      <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #tambahdata"><?=lang('Global.addOutlet')?></button>
+      <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #tambahdata"><?=lang('Global.addstock')?></button>
     </div>
     <!-- End Of Button Trigger Modal Add -->
 
@@ -69,7 +69,7 @@
     <thead>
       <tr>
         <th class="uk-text-center">No</th>
-        <th class="uk-text-center"><?=lang('Global.product')?></th>
+        <th class="uk-text-center"><?=lang('Global.outlet')?></th>
         <th class="uk-text-center"><?=lang('Global.variant')?></th>
         <th class="uk-text-center"><?=lang('Global.stock')?></th>
         <th class="uk-text-center"><?=lang('Global.action')?></th>
@@ -80,11 +80,20 @@
       <?php foreach ($stocks as $stock) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center"><?= $stock['outletid']; ?></td>
           <td class="uk-text-center">
-           <?php foreach ($variants as $variant ) { ?>
-            echo $variant['name'];
-            <?php } ?>
+            <?php foreach ($outlets as $outlet ) {
+                if ( $stock['outletid']=== $outlet['id']){
+                    echo $outlet['name'];
+                }
+                } ?>
+          </td>
+          <td class="uk-text-center">
+           <?php foreach ($variants as $variant ) { 
+            if($stock['variantid'] === $variant['id']){
+                echo $variant['name'];
+                 }
+             } 
+             ?>
         </td>
           <td class="uk-text-center"><?= $stock['qty']; ?></td>
           <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
@@ -106,8 +115,8 @@
   </table>
 
   <!-- Modal Edit -->
-  <?php foreach ($outlets as $outlet) : ?>
-    <div uk-modal class="uk-flex-top" id="editdata<?= $outlet['id'] ?>">
+  <?php foreach ($stocks as $stock) : ?>
+    <div uk-modal class="uk-flex-top" id="editdata<?= $stock['id'] ?>">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
           <div class="uk-modal-header">
@@ -115,28 +124,28 @@
           </div>
 
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="outlet/update/<?= $outlet['id'] ?>" method="post">
+            <form class="uk-form-stacked" role="form" action="stock/update/<?= $stock['id'] ?>" method="post">
               <?= csrf_field() ?>
-              <input type="hidden" name="id" value="<?= $outlet['id']; ?>">
+              <input type="hidden" name="id" value="<?= $stock['id']; ?>">
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet['name']; ?>"autofocus />
+                  <input type="text" class="uk-input" id="name" name="name" value="<?= $stock['id']; ?>"autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet['address']; ?>" autofocus />
+                  <input type="text" class="uk-input" id="address" name="address"  value="<?= $stock['variantid']; ?>" autofocus />
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" autofocus />
+                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $stock['outletid']; ?>" autofocus />
                 </div>
               </div>
 

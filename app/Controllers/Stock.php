@@ -34,12 +34,14 @@ class Stock extends BaseController
             $StockModel     = new StockModel;
             $VariantModel   = new VariantModel;
             $ProductModel   = new ProductModel;
+            $OutletModel    = new OutletModel;
             
             // Find Data
             $stocks         = $StockModel->findAll();
-            $variants        = $VariantModel->findAll();
+            $variants       = $VariantModel->findAll();
             $products       = $ProductModel->findAll();
-            
+            $outlets        = $OutletModel->findAll();
+
             // Parsing data to view
             $data                   = $this->data;
             $data['title']          = lang('Global.stockList');
@@ -47,6 +49,7 @@ class Stock extends BaseController
             $data['stocks']         = $stocks;
             $data['variants']       = $variants;
             $data['products']       = $products;
+            $data['outlets']        = $outlets;
 
             return view ('Views/stock', $data);
         }
