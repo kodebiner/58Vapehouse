@@ -48,6 +48,7 @@ return [
     'memberDiscount'    => 'Member Discount',
     'tax'               => 'Tax',
     'vat'               => 'VAT',
+    'stock'             => 'stock',
 
 
     // Button
@@ -60,6 +61,7 @@ return [
     'addBrand'          => 'Add Brand',
     'addVariant'        => 'Add Variant',
     'addCustomer'       => 'Add Customer',
+    'addStock'          => 'Add Stock',
 
     // Menu
     'dashboard'         => 'Dashboard',
@@ -86,6 +88,7 @@ return [
     'categoryList'      => 'Category List',
     'brandList'         => 'Brand List',
     'customerList'      => 'Customer List',
+    'stockList'         => 'Stock List',
     'businessInfo'      => 'Business Information',
     
     // Page Description
@@ -93,6 +96,7 @@ return [
     'employeeListDesc'  => 'List of all employee under you',
     'outletListDesc'    => 'List of all your outlets',
     'productListDesc'   => 'List of all your products',
+    'stockListDesc'     => 'List of all your products',
     'customerListDesc'  => 'List of all your customer',
     'userProfileDesc'   => 'Information about your profile',
     'businessInfoDesc'  => 'Information about your business',

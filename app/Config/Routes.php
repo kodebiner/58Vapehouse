@@ -126,16 +126,22 @@ $routes->group('product', ['filter'=>'login'], function($routes){
 
 //Customer Routes
 $routes->group('customer', ['filter'=>'login'], function($routes){
-
     $routes->get('', 'Customer::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Customer::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'CUstomer::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Customer::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
+//Customer Stock
+$routes->group('stock', ['filter'=>'login'], function($routes){
+    $routes->get('', 'Stock::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Stock::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'Stock::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Stock::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+});
+
 //Transaction Routes
 $routes->group('transaction', ['filter'=>'login'], function($routes){
-
     $routes->get('', 'Transaction::index', ['filter' => 'role:owner,supervisor,operator']);
 });
 

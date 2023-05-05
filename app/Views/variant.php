@@ -93,31 +93,39 @@
     </thead>
     <tbody>
         <?php $i = 1 ; ?>
-        <?php foreach ($stock as $stok) : ?>
-          <?php foreach ($variants as $variant) { ?>
-            <tr>
-              <td class="uk-text-center"><?= $i++; ?></td>
-              <td class="uk-text-center"><?= $variant['name']; ?></td>
-              <td class="uk-text-center"><?= $variant['hargamodal'] ?></td>
-              <td class="uk-text-center"><?= $variant['hargadasar'] ?></td>
-              <td class="uk-text-center"><?= $variant['hargajual'] ?></td>
-              <td class="uk-text-center"><?= $stok['qty'] ?></td>
-              <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
-                <!-- Button Trigger Modal Edit -->
-                <div>
-                  <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $variant['id'] ?>"><?=lang('Global.edit')?></button>
-                </div>
-                <!-- End Of Button Trigger Modal Edit -->
+        <?php foreach ($variants as $variant) { ?>
+          <tr>
+            <td class="uk-text-center"><?= $i++; ?></td>
+            <td><?=$variant['name']?></td>
+            <td><?=$variant['hargadasar']?></td>
+            <td><?=$variant['hargamodal']?></td>            
+            <td><?=$variant['hargajual']?></td>
+            <td>
+              <?php
+              $qty = 0;
+              foreach ($stock as $stok) {
+                if ($stok['variantid'] === $variant['id']) {
+                  $qty += (int)$stok['qty'];
+                }
+              }
+              echo $qty;
+              ?>
+            </td>
+            <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
+              <!-- Button Trigger Modal Edit -->
+              <div>
+                  <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $stok['variantid'] ?>"><?=lang('Global.edit')?></button>
+              </div>
+              <!-- End Of Button Trigger Modal Edit -->
 
-                <!-- Button Delete -->
-                <div>
-                  <a class="uk-button uk-button-default uk-button-danger" href="product/deletevar/<?= $variant['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
-                </div>
-                <!-- End Of Button Delete -->
-              </td>
-            </tr>
-          <?php  } ?>
-        <?php endforeach; ?>
+              <!-- Button Delete -->
+              <div>
+                <a class="uk-button uk-button-default uk-button-danger" href="product/deletevar/<?= $stok['variantid'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
+              </div>
+              <!-- End Of Button Delete -->
+            </td>
+          </tr>
+        <?php } ?>
     </tbody>
   </table>
 

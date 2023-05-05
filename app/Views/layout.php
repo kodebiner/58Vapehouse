@@ -144,7 +144,7 @@
                                 <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg"><?=lang('Global.employee');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/inventori.svg"><?=lang('Global.inventory');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('stock') ?>"><img src="img/layout/inventori.svg"><?=lang('Global.inventory');?></a>
                             </li>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg"><?=lang('Global.outlet');?></a>
@@ -187,7 +187,7 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg"><?=lang('Global.employee');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/inventori.svg"><?=lang('Global.inventory');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('stock') ?>"><img src="img/layout/inventori.svg"><?=lang('Global.inventory');?></a>
                     </li>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg"><?=lang('Global.outlet');?></a>
