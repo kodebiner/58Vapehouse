@@ -176,12 +176,6 @@ class Product extends BaseController
         $data['variants']       = $variant;
         $data['products']       = $ProductModel->find($id);
 
-        foreach ( $stock as $stok) {  
-
-        $jml[] = $stok['qty'];
-        $jumlah = array_sum($jml);
-        } 
-
         return view('Views/variant', $data);
     }
 
