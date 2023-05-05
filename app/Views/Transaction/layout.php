@@ -70,8 +70,8 @@
         </header>
         <!-- Header Section end -->
 
-        <!-- Sidebar Section -->
-        <div id="offcanvas" uk-offcanvas="mode: push; overlay: true">
+        <!-- Left Sidebar Section -->
+        <div id="offcanvas" uk-offcanvas="overlay: true;">
             <div class="uk-offcanvas-bar" role="dialog" aria-modal="true">
                 <nav>
                     <ul class="uk-nav uk-nav-default tm-nav">
@@ -89,9 +89,6 @@
                         </li>
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('product') ?>"><img src="img/layout/product.svg"><?=lang('Global.product');?></a>
-                        </li>
-                        <li class="tm-main-navbar">
-                            <a class="uk-h4 tm-h4" href="<?= base_url('variant') ?>"><img src="img/layout/product.svg"><?=lang('Global.variant');?></a>
                         </li>
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg"><?=lang('Global.reminder');?></a>
@@ -118,7 +115,15 @@
                 </nav>
             </div>
         </div>
-        <!-- Sidebar Section end -->
+        <!-- Left Sidebar Section end -->
+
+        <!-- Right Sidebar Section -->
+        <div id="offcanvas2" uk-offcanvas="flip: true; overlay: true;">
+            <div class="uk-offcanvas-bar uk-padding-remove" role="dialog" aria-modal="true">
+                <?= $this->renderSection('trxdetail') ?>
+            </div>
+        </div>
+        <!-- Right Sidebar Section End -->
 
         <!-- Main Section -->
         <main role="main">
@@ -136,18 +141,18 @@
         <footer class="tm-footer" style="background-color:#1e87f0;">
             <div class="">
                 <div class="uk-container uk-container-expand">
-                    <div class="uk-text-center uk-flex-middle" uk-grid style="color: #fff;">
-                        <div class="uk-width-1-3@m">
-                            <div width="40" height="40" uk-icon="file-text"></div>
-                            <div class="uk-h3 uk-margin-small" style="color: #fff;">Katalog</div>
+                    <div class="uk-text-center uk-flex-middle uk-flex-center" uk-grid style="color: #fff;">
+                        <div class="uk-width-1-5@m">
+                            <div width="30" height="30" uk-icon="file-text"></div>
+                            <div class="uk-h4 uk-margin-small" style="color: #fff;"><?=lang('Global.catalog');?></div>
                         </div>
-                        <div class="uk-width-1-3@m">
-                            <div width="40" height="40" uk-icon="star"></div>
-                            <div class="uk-h3 uk-margin-small" style="color: #fff;">Favorite</div>
+                        <div class="uk-width-1-5@m">
+                            <div width="30" height="30" uk-icon="star"></div>
+                            <div class="uk-h4 uk-margin-small" style="color: #fff;"><?=lang('Global.favorite');?></div>
                         </div>
-                        <div class="uk-width-1-3@m">
-                            <div width="40" height="40" uk-icon="file-edit"></div>
-                            <div class="uk-h3 uk-margin-small" style="color: #fff;">Manual</div>
+                        <div class="uk-width-1-5@m">
+                            <div width="30" height="30" uk-icon="file-edit"></div>
+                            <div class="uk-h4 uk-margin-small" style="color: #fff;"><?=lang('Global.manual');?></div>
                         </div>
                     </div>
                 </div>
