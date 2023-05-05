@@ -88,7 +88,7 @@ return [
     'categoryList'      => 'Category List',
     'brandList'         => 'Brand List',
     'customerList'      => 'Customer List',
-    'stockList'         => 'Stock List',
+    'stockList'         => 'Stock Management',
     'businessInfo'      => 'Business Information',
     
     // Page Description

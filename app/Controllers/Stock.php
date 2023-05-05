@@ -78,7 +78,7 @@ class Stock extends BaseController
 
     {
         {
-            // ambil data yang akan diedit
+            // Calling Model
             $stocks = new StockModel();
             $OutletModel = new OutletModel;
             $ProductModel = new ProductModel;
