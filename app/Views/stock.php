@@ -69,30 +69,34 @@
     <thead>
       <tr>
         <th class="uk-text-center">No</th>
-        <th class="uk-text-center"><?=lang('Global.name')?></th>
-        <th class="uk-text-center"><?=lang('Global.address')?></th>
-        <th class="uk-text-center"><?=lang('Global.maps')?></th>
+        <th class="uk-text-center"><?=lang('Global.product')?></th>
+        <th class="uk-text-center"><?=lang('Global.variant')?></th>
+        <th class="uk-text-center"><?=lang('Global.stock')?></th>
         <th class="uk-text-center"><?=lang('Global.action')?></th>
       </tr>
     </thead>
     <tbody>
       <?php $i = 1 ; ?>
-      <?php foreach ($outlets as $outlet) : ?>
+      <?php foreach ($stocks as $stock) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center"><?= $outlet['name']; ?></td>
-          <td class="uk-text-center"><?= $outlet['address']; ?></td>
-          <td class="uk-text-center"><?= $outlet['maps']; ?></td>
+          <td class="uk-text-center"><?= $stock['outletid']; ?></td>
+          <td class="uk-text-center">
+           <?php foreach ($variants as $variant ) { ?>
+            echo $variant['name'];
+            <?php } ?>
+        </td>
+          <td class="uk-text-center"><?= $stock['qty']; ?></td>
           <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
             <!-- Button Trigger Modal Edit -->
             <div>
-              <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $outlet['id'] ?>"><?=lang('Global.edit')?></button>
+              <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $stock['id'] ?>"><?=lang('Global.edit')?></button>
             </div>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
             <div>
-              <a class="uk-button uk-button-default uk-button-danger" href="outlet/delete/<?= $outlet['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
+              <a class="uk-button uk-button-default uk-button-danger" href="stock/delete/<?= $stock['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
             </div>
             <!-- End Of Button Delete -->
           </td>

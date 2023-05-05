@@ -7,6 +7,7 @@ use App\Models\ProductModel;
 use App\Models\OutletModel;
 use App\Models\AreaModel;
 use App\Models\StockModel;
+use App\Models\VariantModel;
 
 class Stock extends BaseController
 
@@ -31,12 +32,12 @@ class Stock extends BaseController
         {
             // Calling Model
             $StockModel     = new StockModel;
-            $OutletModel    = new OutletModel;
+            $VariantModel   = new VariantModel;
             $ProductModel   = new ProductModel;
             
             // Find Data
             $stocks         = $StockModel->findAll();
-            $outlets        = $OutletModel->findAll();
+            $variants        = $VariantModel->findAll();
             $products       = $ProductModel->findAll();
             
             // Parsing data to view
@@ -44,61 +45,36 @@ class Stock extends BaseController
             $data['title']          = lang('Global.stockList');
             $data['description']    = lang('Global.stockListDesc');
             $data['stocks']         = $stocks;
-            $data['outlets']        = $outlets;
+            $data['variants']       = $variants;
             $data['products']       = $products;
 
             return view ('Views/stock', $data);
         }
 
-    public function tampil ($id)
 
+    public function create()
+    
     {
-            // Calling Model 
-            $StockModel     = new StockModel;
-            $OutletModel    = new OutletModel;
-            $ProductModel   = new ProductModel;
-
-            // Finding Data
-            $products   = $ProductModel->findAll();
-            $stocks     = $StockModel->where('outlet_id', $id)->find();
-            $outlets    = $OutletModel->find($id);
-
-            // Parsing Data To View
-            $data               = $this->data;
-            $data['title']      = 'Form Tambah Stock';            
-            $data['stocks']     = $stocks;
-            $data['outlets']    = $outlets;           
-            $data['products']   = $products;
-
-            return view ('user/kelolastock',$data);
-    }
-
-
-    public function editstock($id)
-
-    {
-        {
             // Calling Model
-            $stocks = new StockModel();
-            $OutletModel = new OutletModel;
-            $ProductModel = new ProductModel;
+            $StockModel      = new StockModel();
+            $VariantModel    = new VariantModel;
+            $ProductModel    = new ProductModel;
             
-            $input = $this->request->getPost(); 
-            
-            $outlets = $OutletModel->findAll();
-            $data['outlets'] = $outlets;
+            // Finding Data
+            $stocks          = $StockModel->findAll();
+            $variant         = $VariantModel->findAll();
+            $products        = $ProductModel->findAll();
 
-            $products = $ProductModel->findAll();
-            $data['products'] = $products;
+            // initialize
+            $input = $this->request->getPost(); 
+
+            // parsing data to view
+            $data['stocks']      = $stocks;
+            $data['variants']    = $variant;
+            $data['products']    = $products;
 
           
-            
-            $data['stocks'] = $stocks->where('id', $id)->first();
-            
-           
-
             $data = [
-                'id' =>$id,
                 'stock'    => $input['stock'],
             ];
             // Validasi
@@ -108,13 +84,31 @@ class Stock extends BaseController
                 
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
             }
-            // Simpan Data
+
+            // Save Data
             $stocks->save($data);
-            
-            session()->setFlashdata('edit','Data Berhasil Diubah!');
+    
             // Kembali Ke Tampilan awal
+            session()->setFlashdata('edit','Data Berhasil Diubah!');
             return redirect()->back();
-        }
-   
     }
+
+    public function edit($id) 
+    {
+        $StockModel     = new StockModel();
+        $ProductModel   = new ProductModel();
+        $VariantModel   = new VariantModel();
+
+        $stock      = $StockModel->where( 'id', $id)->first();
+        $product    = $ProductModel->findAll();
+
+    }
+
+    public function delete()
+
+    {
+
+    }
+
+
 }
