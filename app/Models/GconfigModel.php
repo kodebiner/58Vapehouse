@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class GconfigModel extends Model
 {
     protected $allowedFields = [
-        'pointorder','poinvalue','memberdisc','memberdisctype','logo','bizname','ppn',
+        'poinorder','poinvalue','memberdisc','memberdisctype','logo','bizname','ppn',
 
     ];
 
