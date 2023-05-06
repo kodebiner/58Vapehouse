@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\OutletModel;
+use App\Models\ProductModel;
+use App\Models\StockModel;
+use App\Models\VariantModel;
 
 class Outlet extends BaseController
 {
@@ -29,10 +32,13 @@ class Outlet extends BaseController
 
         // Calling Models
         $OutletModel    = new OutletModel;
+        $StockModel     = new StockModel;
+        $VariantModel   = new VariantModel;
 
         // Populating data
         $input      = $this->request->getPost();
         $outlets    = $OutletModel->findAll();
+        $stocks     = $StockModel->findAll();
 
         $data = [
             'name'      => $input['name'],
@@ -55,6 +61,16 @@ class Outlet extends BaseController
         //Getting Outlet ID
         $outletID = $OutletModel->getInsertID();
 
+        $variants   = $VariantModel->findAll();
+        foreach ($variants as $variant ){
+            $stock = [
+                'outletid'  => $outletID,
+                'variantid' => $variant['id'],
+                'qty'       => '0',
+
+            ];
+            $StockModel->save($stock);
+        }
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
@@ -92,10 +108,20 @@ class Outlet extends BaseController
 
     public function delete($id)
     {
-        $outlets = new OutletModel();
+        $OutletModel   = new OutletModel();
+        $StockModel     = new StockModel;
 
-        $outlets->delete($id);
+        
+        $stocks = $StockModel->where('outletid',$id)->find();
+        foreach ($stocks as $stock) {
+        $StockModel->delete($stock['id']);
+        }
+
+        $OutletModel->delete($id);
+
 
         return redirect()->back()->with('error', lang('Global.deleted'));
+
+        
     }
 }

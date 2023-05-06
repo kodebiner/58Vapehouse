@@ -21,9 +21,9 @@ class Stock extends BaseController
         {
             $this->db      = \Config\Database::connect();
             $validation    = \Config\Services::validation();
-            $this->builder =   $this->db->table('stock');
-            $this->config = config('Auth');
-            $this->auth   = service('authentication');
+            $this->builder = $this->db->table('stock');
+            $this->config  = config('Auth');
+            $this->auth    = service('authentication');
         }
 
 
@@ -59,7 +59,7 @@ class Stock extends BaseController
     
     {
             // Calling Model
-            $StockModel      = new StockModel();
+            $StockModel      = new StockModel;
             $VariantModel    = new VariantModel;
             $ProductModel    = new ProductModel;
             
@@ -89,7 +89,7 @@ class Stock extends BaseController
             }
 
             // Save Data
-            $stocks->save($data);
+            $StockModel->save($data);
     
             // Kembali Ke Tampilan awal
             session()->setFlashdata('edit','Data Berhasil Diubah!');
