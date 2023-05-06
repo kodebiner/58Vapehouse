@@ -102,26 +102,23 @@ class Outlet extends BaseController
         }
         // Simpan Data
         $outlets->save($data);
-
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function delete($id)
     {
+        // Calling Model
         $OutletModel   = new OutletModel();
         $StockModel     = new StockModel;
 
-        
+        // Delete Stock
         $stocks = $StockModel->where('outletid',$id)->find();
         foreach ($stocks as $stock) {
         $StockModel->delete($stock['id']);
         }
 
+        // Delete Outlet
         $OutletModel->delete($id);
-
-
         return redirect()->back()->with('error', lang('Global.deleted'));
-
-        
     }
 }

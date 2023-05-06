@@ -62,6 +62,7 @@ return [
     'addVariant'        => 'Add Variant',
     'addCustomer'       => 'Add Customer',
     'addStock'          => 'Add Stock',
+    'addRestock'        => 'Restock',
 
     // Menu
     'dashboard'         => 'Dashboard',

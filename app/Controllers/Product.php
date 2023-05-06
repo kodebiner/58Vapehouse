@@ -197,6 +197,7 @@ class Product extends BaseController
            $VariantModel    = new VariantModel();
            $OutletModel     = new OutletModel();
            $StockModel      = new StockModel();
+           $TotalStockModel = new TotalStockModel();
 
            // search all data
            $products    = $ProductModel->where('id',$id)->first();
@@ -241,6 +242,15 @@ class Product extends BaseController
 
                 ];
                 $StockModel->insert($stocks);
+
+                $totalStock = [
+                    'variantid'     => $variantid,
+                    'hargadasar'    => 'hargadasar',
+                    'hargamodal'    => 'hargamodal',
+                    'qty'           => '0',
+                ];
+                $TotalStockModel->insert($totalStock);
+                
            }
            return redirect()->back()->with('message', lang('Global.saved'));
     }

@@ -7,6 +7,7 @@ use App\Models\ProductModel;
 use App\Models\OutletModel;
 use App\Models\AreaModel;
 use App\Models\StockModel;
+use App\Models\TotalStockModel;
 use App\Models\VariantModel;
 
 class Stock extends BaseController
@@ -55,18 +56,18 @@ class Stock extends BaseController
         }
 
 
-    public function create()
+    public function create($id)
     
     {
             // Calling Model
-            $StockModel      = new StockModel;
-            $VariantModel    = new VariantModel;
-            $ProductModel    = new ProductModel;
+            $StockModel     = new StockModel;
+            $VariantModel   = new VariantModel;
+            $TotalModel     = new TotalStockModel;
             
             // Finding Data
-            $stocks          = $StockModel->findAll();
-            $variant         = $VariantModel->findAll();
-            $products        = $ProductModel->findAll();
+            $stocks          = $StockModel->findAll;
+            $variant         = $VariantModel->findAll;
+            $Totals          = $TotalModel->findAll;
 
             // initialize
             $input = $this->request->getPost(); 
@@ -74,13 +75,15 @@ class Stock extends BaseController
             // parsing data to view
             $data['stocks']      = $stocks;
             $data['variants']    = $variant;
-            $data['products']    = $products;
+            $data['total']       = $Totals;
 
-          
-            $data = [
-                'stock'    => $input['stock'],
+            $stok = $stocks->where('variantid',$id)->where('outletid',$id)->first();
+            $stk = [
+                'id'     => $id,
+                'qty'    => $input['qty'],
             ];
-            // Validasi
+
+            // Validation
             if (! $this->validate([
                 'stock' => "required|max_length[255]',",
             ])) {
@@ -88,8 +91,26 @@ class Stock extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
             }
 
-            // Save Data
-            $StockModel->save($data);
+            // Save Data Stok
+            $StockModel->save($stk);
+
+            //update total stock & variant
+
+            $variant = $StockModel->getInsertId();
+            $variants = $VariantModel->where('productid', $id)->find();
+            foreach ($variants as $varian) {
+            // Removing Stocks
+            $stocks = $StockModel->where('variantid', $varian['id'])->find();
+            foreach ($stocks as $stock) {
+                $StockModel->delete($stock['id']);
+            }
+
+            
+
+
+
+
+
     
             // Kembali Ke Tampilan awal
             session()->setFlashdata('edit','Data Berhasil Diubah!');
