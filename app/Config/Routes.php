@@ -74,6 +74,7 @@ $routes->group('account', ['filter'=>'login'], function($routes){
 // Business Routes
 $routes->group('business', ['filter'=>'login'], function($routes){
     $routes->get('', 'Account::business', ['filter' => 'role:owner']);
+    $routes->post('save', 'Account::updatebusiness', ['filter' => 'role:owner']);
 });
 
 // User Routes

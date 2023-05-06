@@ -122,4 +122,41 @@ class Account extends BaseController
         // Rendering view
         return view('Views/business', $data);
     }
+
+    public function updatebusiness()
+    {
+        // Calling Models
+        $ConfigModel = new GconfigModel();
+
+        // Populating data
+        $input = $this->request->getPost();
+
+        // Validating data
+        $rule = [
+            'name'              => 'required|alpha_numeric_punct',
+            'poinvalue'         => 'required|decimal',
+            'poinorder'         => 'required|decimal',
+            'memberdisctype'    => 'required',
+            'memberdisc'        => 'required|decimal',
+            'ppn'               => 'required|decimal',
+        ];
+        if (! $this->validate($rule)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Updating data
+        $gConfig = [
+            'id'                => '1',
+            'poinvalue'         => $input['poinvalue'],
+            'poinorder'         => $input['poinorder'],
+            'memberdisc'        => $input['memberdisc'],
+            'memberdisctype'    => $input['memberdisctype'],
+            'bizname'           => $input['name'],
+            'ppn'               => $input['ppn'],
+        ];
+        $ConfigModel->save($gConfig);
+
+        // Redirection
+        return redirect()->back()->with('message', lang('Global.saved'));
+    }
 }

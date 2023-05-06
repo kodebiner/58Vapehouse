@@ -60,10 +60,14 @@
                 <div class="uk-margin">
                     <label class="uk-form-label" for="ppn"><?=lang('Global.vat')?></label>
                     <div class="uk-form-controls">
-                        <input class="uk-input uk-form-width-xsmall" id="ppn" name="ppn" type="number" value="<?=$gconfig['memberdisc']?>" required> %
+                        <input class="uk-input uk-form-width-xsmall" id="ppn" name="ppn" type="number" value="<?=$gconfig['ppn']?>" required> %
                     </div>
                 </div>
             </div>
+        </div>
+        <hr class="uk-divider-icon" />
+        <div class="uk-text-right">
+            <button class="uk-button uk-button-primary" role="button" type="submit"><?=lang('Global.save')?></button>
         </div>
     </form>
 </div>
