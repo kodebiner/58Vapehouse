@@ -9,6 +9,7 @@ use App\Models\CashModel;
 use App\Models\CategoryModel;
 use App\Models\VariantModel;
 use App\Models\StockModel;
+use App\Models\TotalStockModel;
 use App\Models\OutletModel;
 use App\Models\GroupUserModel;
 use Myth\Auth\Models\GroupModel;
@@ -76,6 +77,7 @@ class Product extends BaseController
             // calling Model
             $ProductModel = new ProductModel();
             $StockModel = new StockModel();
+            $TotalStockModel = new TotalStockModel();
             $VariantModel = new VariantModel();
             $OutletModel = new OutletModel();
 
@@ -142,6 +144,15 @@ class Product extends BaseController
                     ];
                     $StockModel->insert($stock);
                 }
+
+                // Create Total Stock
+                $totalStock = [
+                    'variantid'     => $variantid,
+                    'hargadasar'    => $baseValue,
+                    'hargamodal'    => $capValue,
+                    'qty'           => '0',
+                ];
+                $TotalStockModel->insert($totalStock);
             }
 
             return redirect()->back()->with('message', lang('Global.saved'));
