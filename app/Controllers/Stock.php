@@ -57,7 +57,6 @@ class Stock extends BaseController
 
 
     public function create($id)
-    
     {
             // Calling Model
             $StockModel     = new StockModel;
@@ -65,19 +64,16 @@ class Stock extends BaseController
             $TotalModel     = new TotalStockModel;
             
             // Finding Data
-            $stocks          = $StockModel->findAll;
-            $variant         = $VariantModel->findAll;
-            $Totals          = $TotalModel->findAll;
 
             // initialize
             $input = $this->request->getPost(); 
 
             // parsing data to view
-            $data['stocks']      = $stocks;
-            $data['variants']    = $variant;
-            $data['total']       = $Totals;
+            $data['stocks']      = $StockModel;
+            $data['variants']    = $VariantModel;
+            $data['total']       = $TotalModel;
 
-            $stok = $stocks->where('variantid',$id)->where('outletid',$id)->first();
+            $stocks = $StockModel->where('variantid',$id)->where('outletid',$id)->first();
             $stk = [
                 'id'     => $id,
                 'qty'    => $input['qty'],
@@ -95,43 +91,26 @@ class Stock extends BaseController
             $StockModel->save($stk);
 
             //update total stock & variant
-
-            $variant = $StockModel->getInsertId();
-            $variants = $VariantModel->where('productid', $id)->find();
-            foreach ($variants as $varian) {
-            // Removing Stocks
-            $stocks = $StockModel->where('variantid', $varian['id'])->find();
-            foreach ($stocks as $stock) {
-                $StockModel->delete($stock['id']);
+            $variant = $VariantModel->findAll();
+            foreach ($stocks as $stock){
+            $varian     = $VariantModel->where($variant['id']===$stock['variantid'])->find();
+            $var        = [
+                'id'            => $varian,
+                'hargadasar'    => 'hargadasar',
+                'hargamodal'    => 'hargamodal',
+            ];
             }
+            $VariantModel->save($varian);
 
-            
-
-
-
-
-
-    
-            // Kembali Ke Tampilan awal
-            session()->setFlashdata('edit','Data Berhasil Diubah!');
-            return redirect()->back();
+            // return
+            return redirect()->back()->with('message', lang('Global.saved'));
     }
 
-    public function edit($id) 
-    {
-        $StockModel     = new StockModel();
-        $ProductModel   = new ProductModel();
-        $VariantModel   = new VariantModel();
-
-        $stock      = $StockModel->where( 'id', $id)->first();
-        $product    = $ProductModel->findAll();
-
-    }
 
     public function delete()
 
     {
-
+        
     }
 
 

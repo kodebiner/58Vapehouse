@@ -232,6 +232,8 @@ class Product extends BaseController
 
            // insert data product
            $VariantModel->insert($data);
+
+           
            $variantid = $VariantModel->getInsertID();
 
            foreach ($outlets as $outlet) {

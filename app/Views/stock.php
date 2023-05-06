@@ -24,13 +24,26 @@
             <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addRestock')?></h5>
           </div>
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/stock/create" method="post">
+            <form class="uk-form-stacked" role="form" action="/stock/create/$id" method="post">
               <?= csrf_field() ?>
 
-              <div class="uk-modal-header uk-margin-small">
-                <h4 class="uk-text-bold uk-margin-small-top"><?=lang('Global.product')?><?=lang('Global.variant')?></h4>
-              </div>
+              <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
+                <div class="uk-form-controls">
+                  <select class="uk-select" name="product">
+                    <option><?=lang('Global.product')?></option>
+                    <?php foreach ($products as $product) { ?>
+                      <option value="<?= $product['id']; ?>"><?= $product['name']; ?></option>
+                    <?php } ?>
+                  </select>
+                </div>
 
+
+              <div class="uk-margin">
+                <label class="uk-form-label" for="address"><?=lang('Global.basePrice')?></label>
+                <div class="uk-form-controls">
+                  <input type="text" class="uk-input <?php if (session('errors.basePrice')) : ?>tm-form-invalid<?php endif ?>" name="hargadasar" id="hargadasar" placeholder="<?=lang('Global.basePrice')?>" required/>
+                </div>
+              </div>
               <div class="uk-margin">
                 <label class="uk-form-label" for="address"><?=lang('Global.basePrice')?></label>
                 <div class="uk-form-controls">

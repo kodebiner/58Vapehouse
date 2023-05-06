@@ -145,7 +145,11 @@ $routes->group('transaction', ['filter'=>'login'], function($routes){
     $routes->get('', 'Transaction::index', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-
+// Restock Routes
+$routes->group('stock', ['filter'=>'login'], function($routes){
+    $routes->get('', 'Stock::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create/(:num)', 'Stock::create/$1', ['filter' => 'role:owner,supervisor,operator']);
+});
 
 /*
  * --------------------------------------------------------------------
