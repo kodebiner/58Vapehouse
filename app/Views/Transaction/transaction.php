@@ -11,21 +11,29 @@
                     }
                 }
             ?>
-                <div>
-                    <div class="uk-card uk-card-hover uk-card-default uk-card-large">
-                        <div class="uk-card-header">
-                            <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
-                        </div>
-                        <div class="uk-card-body">
-                            <div class=""><?= $productPhoto ?></div>
-                        </div>
-                        <div class="uk-card-footer">
-                            <div class="tm-h3 uk-text-center">
-                                <div>Rp <?= $variant['hargamodal'] + $variant['hargajual'] ?>,-</div>
-                            </div>
+            <div>
+                <div class="uk-card uk-card-hover uk-card-default uk-card-large" onclick="createNewOrder()">
+                    <div class="uk-card-header">
+                        <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
+                    </div>
+                    <div class="uk-card-body">
+                        <div class=""><?= $productPhoto ?></div>
+                    </div>
+                    <div class="uk-card-footer">
+                        <div class="tm-h3 uk-text-center">
+                            <div>Rp <?= $variant['hargamodal'] + $variant['hargajual'] ?>,-</div>
                         </div>
                     </div>
                 </div>
+            </div>
         <?php endforeach; ?>
+        <script type="text/javascript">
+            var createCount = 0;
+            function createNewOrder() {
+                createCount++;
+
+                const createOrder = document.getElementById("createOrder");
+            }
+        </script>
     </div>
 <?= $this->endSection() ?>

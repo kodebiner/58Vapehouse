@@ -33,6 +33,7 @@ return [
     'morebrand'         => 'Ingin menambah Merek?',
     'basePrice'         => 'Harga Dasar',
     'capitalPrice'      => 'Harga Modal',
+    'price'             => 'Harga Jual',
     'margin'            => 'Margin',
     'deleted'           => 'Data sudah terhapus',
     'saved'             => 'Data sudah tersimpan',

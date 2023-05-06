@@ -353,40 +353,58 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-striped uk-table-hover uk-table-justify uk-table-middle uk-table-divider">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
     <thead>
       <tr>
         <th class="uk-text-center"></th>
         <th class="uk-text-center">No</th>
-        <th class="uk-text-center"><?=lang('Global.name')?></th>
-        <th class="uk-text-center"><?=lang('Global.category')?></th>
-        <th class="uk-text-center"><?=lang('Global.brand')?></th>
+        <th><?=lang('Global.name')?></th>
+        <th><?=lang('Global.category')?></th>
+        <th><?=lang('Global.price')?></th>
+        <th><?=lang('Global.stock')?></th>
+        <th><?=lang('Global.brand')?></th>
         <th class="uk-text-center"><?=lang('Global.action')?></th>
       </tr>
     </thead>
     <tbody>
       <?php $i = 1 ; ?>
       <?php foreach ($products as $product) : ?>
-        <tr>
-          <td class="uk-text-center" uk-toggle="target: #variantlist" uk-icon="triangle-right"></td>
+        <tr class="uk-background-muted">
+          <td class="uk-flex uk-flex-center">
+            <a class="uk-icon-link uk-icon" uk-toggle="target: #variantlist-<?= $product['id']; ?>" uk-icon="triangle-down"></a>
+          </td>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center"><?= $product['name']; ?></td>
-          <td class="uk-text-center">
+          <td><?= $product['name']; ?></td>
+          <td>
             <?php
-            foreach ($category as $cat) {
-              if ($cat['id'] === $product['catid']) {
-                echo $cat['name'];
+              foreach ($category as $cat) {
+                if ($cat['id'] === $product['catid']) {
+                  echo $cat['name'];
+                }
               }
-            }
             ?>
           </td>
-          <td class="uk-text-center">
+          <td></td>
+          <td>
             <?php
-            foreach ($brand as $merek) {
-              if ($merek['id'] === $product['brandid']) {
-                echo $merek['name'];
+              $toqty = 0;
+              foreach ($stocks as $stock) {
+                foreach ($variants as $variant) {
+                  if (($variant['productid'] === $product['id']) && ($stock['variantid'] === $variant['id'])) {
+                    $toqty += $stock['qty'];
+                  }
+                }
               }
-            }
+              echo $toqty;
+            ?>
+          </td>
+          <td>
+            <?php
+              foreach ($brand as $merek) {
+                if ($merek['id'] === $product['brandid']) {
+                  echo $merek['name'];
+                }
+              }
             ?>
           </td>
           <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
@@ -403,6 +421,44 @@
             <!-- End Of Button Delete -->
           </td>
         </tr>
+        <tr id="variantlist-<?= $product['id']; ?>" hidden>
+          <td></td>
+          <td></td>
+          <td class="tm-h5"><?=lang('Global.variant')?></td>
+          <td></td>
+          <td class="tm-h5"><?=lang('Global.price')?></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <?php
+          foreach ($variants as $variant) {
+            if ($variant['productid'] === $product['id']) {
+              ?>
+                <tr id="variantlist-<?= $product['id']; ?>" style="border-top: none;" hidden>
+                  <td></td>
+                  <td></td>
+                  <td><?=$variant['name']?></td>
+                  <td></td>
+                  <td><?=$variant['hargamodal'] + $variant['hargajual']?></td>
+                  <td>
+                    <?php
+                    $qty = 0;
+                    foreach ($stocks as $stock) {
+                      if ($stock['variantid'] === $variant['id']) {
+                        $qty += (int)$stock['qty'];
+                      }
+                    }
+                    echo $qty;
+                    ?>
+                  </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              <?php
+            }
+          }
+        ?>
       <?php endforeach; ?>
     </tbody>
   </table>

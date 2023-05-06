@@ -41,12 +41,14 @@ class Product extends BaseController
         $ProductModel   = new ProductModel();
         $BrandModel     = new BrandModel();
         $VariantModel   = new VariantModel();
+        $StockModel     = new StockModel();
 
         // Populating Data
         $products   = $ProductModel->findAll(); // Hapus kalau sudah implementasi filter
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
         $variant    = $VariantModel->findAll();
+        $stock      = $StockModel->findAll();
 
         // Checking filter
         $input = $this->request->getPost();
@@ -68,6 +70,7 @@ class Product extends BaseController
         $data['category']       = $category;
         $data['brand']          = $brand;
         $data['variants']       = $variant;
+        $data['stocks']         = $stock;
 
         return view('Views/product', $data);
     }

@@ -33,6 +33,7 @@ return [
     'morebrand'         => 'Need more Brand?',
     'basePrice'         => 'Base Price',
     'capitalPrice'      => 'Stock Price',
+    'price'             => 'Selling Price',
     'margin'            => 'Margin',
     'deleted'           => 'Data has been deleted',
     'saved'             => 'Data has been saved',

@@ -165,13 +165,12 @@
                                 <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
                                 </div>
                             </div>
-
-                            <hr>
-
-                            <div class="uk-margin">
-                                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-                            </div>
                         </form>
+                    </div>
+                    <div class="uk-modal-footer" style="border-top: 0;">
+                        <div class="uk-margin uk-flex uk-flex-center">
+                            <button type="submit" class="uk-button uk-button-primary uk-button-large uk-text-center" style="border-radius: 8px; width: 540px;"><?=lang('Global.pay')?></button>
+                        </div>
                     </div>
                 </div>
             </div>
