@@ -11359,3 +11359,13 @@ li.tm-main-navbar>a>img {
 .uk-footer-container:not(.uk-navbar-transparent) {
     background: #f8f8f8
 }
+
+.tm-outlet {
+    display: flex;
+    color: #000 !important;
+    background-color: #ccc;
+    padding: 10px;
+    align-items: center;
+    column-gap: 0.25em;
+    text-decoration: none !important;
+}

@@ -65,6 +65,11 @@
                         </div>
                     <?php } ?>
                     <div class="uk-navbar-right">
+                        <?php if ($ismobile === false) { ?>
+                        <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">
+                            <a class="tm-h4 tm-outlet" type="button"><img src="img/layout/union.svg" style="position: relative; top: -2px; margin-right: 5px;" /> Lorem Ipsum <span uk-icon="triangle-down"></span></a>
+                        </div>
+                        <?php } ?>
                         <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">
                             <a class="uk-link-reset" type="button">
                                 <?php
