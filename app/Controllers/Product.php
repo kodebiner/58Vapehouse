@@ -48,7 +48,11 @@ class Product extends BaseController
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
         $variant    = $VariantModel->findAll();
-        $stock      = $StockModel->findAll();
+        if ($this->data['outletPick'] === null) {
+            $stock      = $StockModel->findAll();
+        } else {
+            $stock      = $StockModel->where('outletid', $this->data['outletPick'])->find();
+        }
 
         // Checking filter
         $input = $this->request->getPost();

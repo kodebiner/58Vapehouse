@@ -61,6 +61,7 @@ abstract class BaseController extends Controller
 
         // E.g.: $this->session = \Config\Services::session();
 
+        $session = \Config\Services::session();
         $this->agent = $this->request->getUserAgent();
         $this->locale = service('request')->getLocale();
         $this->uri = $this->request->uri;
@@ -115,6 +116,14 @@ abstract class BaseController extends Controller
             ];
         }
 
+        // Determining outlet sessionn
+        $outletSes = $session->get('outlet');
+        if ($outletSes != null) {
+            $outletPick = $outletSes;
+        } else {
+            $outletPick = null;
+        }
+
 
         // Parsing View Data
         $this->data = [
@@ -127,6 +136,7 @@ abstract class BaseController extends Controller
             'fullname'      => $fullname,
             'baseoutlets'   => $this->OutletModel->findAll(),
             'gconfig'       => $gconfig,
+            'outletPick'    => $outletPick,
 		];
 
         if ($auth->check()) {

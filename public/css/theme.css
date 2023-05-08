@@ -11373,3 +11373,9 @@ li.tm-main-navbar>a>img {
 .tm-outlet-dropdown > ul > li {
     color: #000 !important;
 }
+
+.tm-outlet-picker-selector {
+    white-space: nowrap;
+    width: 210px;
+    overflow: hidden;
+}

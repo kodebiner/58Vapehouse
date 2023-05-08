@@ -121,13 +121,32 @@
                         </script>
                         <?php if ($ismobile === false) { ?>
                         <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">
-                            <a class="tm-h4 tm-outlet" type="button"><img src="img/layout/union.svg" style="position: relative; top: -2px; margin-right: 5px;" /> Lorem Ipsum <span uk-icon="triangle-down"></span></a>
+                            <?php
+                            if ($outletPick === null) {
+                                $viewOutlet = lang('Global.allOutlets');
+                            } else {
+                                foreach ($baseoutlets as $baseoutlet) {
+                                    if ($baseoutlet['id'] === $outletPick) {
+                                        $viewOutlet = $baseoutlet['name'];
+                                    }
+                                }
+                            }
+                            ?>
+                            <a class="tm-h4 tm-outlet" type="button"><img src="img/layout/union.svg" style="position: relative; top: -2px; margin-right: 5px;" /> <span class="tm-outlet-picker-selector"><?=$viewOutlet?></span> <span uk-icon="triangle-down"></span></a>
                             <div class="uk-width-large tm-outlet-dropdown" uk-dropdown="mode: click;">
                                 <ul class="uk-list">
-                                    <li class="uk-h4 tm-h4"><?=lang('Global.allOutlets')?></li>
+                                    <?php if ($outletPick === null) { ?>
+                                        <li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> <?=lang('Global.allOutlets')?></li>
+                                    <?php } else { ?>
+                                        <li class="uk-h4 tm-h4"><a href="outlet/pick/0" class="uk-link-reset"><?=lang('Global.allOutlets')?></a></li>
+                                    <?php } ?>
                                     <?php
-                                    foreach ($baseoutlets as $outlet) {
-                                        echo '<li class="uk-h4 tm-h4">'.$outlet['name'].'</li>';
+                                    foreach ($baseoutlets as $baseoutlet) {
+                                        if ($outletPick === $baseoutlet['id']) {
+                                            echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$baseoutlet['name'].'</li>';
+                                        } else {
+                                            echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$baseoutlet['id'].'" class="uk-link-reset">'.$baseoutlet['name'].'</a></li>';
+                                        }
                                     }
                                     ?>
                                 </ul>
@@ -179,6 +198,42 @@
                     </div>
                 </div>
             </div>
+            <?php if ($ismobile === true) { ?>
+            <div class="uk-container uk-container-expand">
+                <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">
+                    <?php
+                    if ($outletPick === null) {
+                        $viewOutlet = lang('Global.allOutlets');
+                    } else {
+                        foreach ($baseoutlets as $baseoutlet) {
+                            if ($baseoutlet['id'] === $outletPick) {
+                                $viewOutlet = $baseoutlet['name'];
+                            }
+                        }
+                    }
+                    ?>
+                    <a class="tm-h4 tm-outlet" type="button"><img src="img/layout/union.svg" style="position: relative; top: -2px; margin-right: 5px;" /> <span class="tm-outlet-picker-selector"><?=$viewOutlet?></span> <span uk-icon="triangle-down"></span></a>
+                    <div class="uk-width-large tm-outlet-dropdown" uk-dropdown="mode: click;">
+                        <ul class="uk-list">
+                            <?php if ($outletPick === null) { ?>
+                                <li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> <?=lang('Global.allOutlets')?></li>
+                            <?php } else { ?>
+                                <li class="uk-h4 tm-h4"><a href="outlet/pick/0" class="uk-link-reset"><?=lang('Global.allOutlets')?></a></li>
+                            <?php } ?>
+                            <?php
+                            foreach ($baseoutlets as $baseoutlet) {
+                                if ($outletPick === $baseoutlet['id']) {
+                                    echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$baseoutlet['name'].'</li>';
+                                } else {
+                                    echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$baseoutlet['id'].'" class="uk-link-reset">'.$baseoutlet['name'].'</a></li>';
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
         </header>
         <!-- Header Section end -->
 

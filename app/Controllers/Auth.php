@@ -60,7 +60,7 @@ class Auth extends BaseController
         $data                   = $this->data;
         $data['config']         = $this->config;
         $data['title']          = lang('Auth.loginTitle');
-        $data['description']    = '';
+        $data['description']    = lang('Auth.loginTitle');
 
         // No need to show a login form if the user
         // is already logged in.
@@ -162,7 +162,7 @@ class Auth extends BaseController
         $data                   = $this->data;
         $data['config']         = $this->config;
         $data['title']          = lang('Auth.register');
-        $data['description']    = '';
+        $data['description']    = lang('Auth.register');
 
         // check if already logged in.
         if ($this->auth->check()) {

@@ -94,6 +94,7 @@ $routes->group('outlet', ['filter'=>'login'], function($routes){
     $routes->post('create', 'Outlet::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Outlet::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Outlet::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('pick/(:num)', 'Home::outletses/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 //Product Routes
