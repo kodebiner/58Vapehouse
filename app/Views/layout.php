@@ -65,9 +65,73 @@
                         </div>
                     <?php } ?>
                     <div class="uk-navbar-right">
+                        <div id="tm-fullscreen" class="uk-navbar-item">
+                            <a id="tm-open-fullscreen" class="tm-h4 tm-outlet" uk-icon="expand" onclick="openFullscreen()"></a>
+                        </div>
+                        <script type="text/javascript">
+                            var elem = document.documentElement;
+
+                            function openFullscreen() {
+                                if (elem.requestFullscreen) {
+                                    elem.requestFullscreen();
+                                } else if (elem.webkitRequestFullscreen) { // Safari
+                                    elem.webkitRequestFullscreen();
+                                } else if (elem.msRequestFullscreen) { // IE11
+                                    elem.msRequestFullscreen();
+                                }
+
+                                const fullscreenContainer = document.getElementById('tm-fullscreen');
+                                const openButton = document.getElementById('tm-open-fullscreen');
+
+                                // add close button
+                                const closeButton = document.createElement('a');
+                                closeButton.setAttribute('id', 'tm-close-fullscreen')
+                                closeButton.setAttribute('class', 'tm-h4 tm-outlet');
+                                closeButton.setAttribute('uk-icon', 'shrink');
+                                closeButton.setAttribute('onclick', 'closeFullscreen()');
+                                fullscreenContainer.appendChild(closeButton);
+
+                                // remove open button
+                                openButton.remove();
+                            }
+
+                            function closeFullscreen() {
+                                if (document.exitFullscreen) {
+                                    document.exitFullscreen();
+                                } else if (document.webkitExitFullscreen) { // Safari
+                                    document.webkitExitFullscreen();
+                                } else if (document.msExitFullscreen) { // IE11
+                                    document.msExitFullscreen();
+                                }
+
+                                const fullscreenContainer = document.getElementById('tm-fullscreen');
+                                const closeButton = document.getElementById('tm-close-fullscreen');
+
+                                // add open button
+                                const openButton = document.createElement('a');
+                                openButton.setAttribute('id', 'tm-open-fullscreen')
+                                openButton.setAttribute('class', 'tm-h4 tm-outlet');
+                                openButton.setAttribute('uk-icon', 'expand');
+                                openButton.setAttribute('onclick', 'openFullscreen()');
+                                fullscreenContainer.appendChild(openButton);
+
+                                // remove close button
+                                closeButton.remove();
+                            }
+                        </script>
                         <?php if ($ismobile === false) { ?>
                         <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">
                             <a class="tm-h4 tm-outlet" type="button"><img src="img/layout/union.svg" style="position: relative; top: -2px; margin-right: 5px;" /> Lorem Ipsum <span uk-icon="triangle-down"></span></a>
+                            <div class="uk-width-large tm-outlet-dropdown" uk-dropdown="mode: click;">
+                                <ul class="uk-list">
+                                    <li class="uk-h4 tm-h4"><?=lang('Global.allOutlets')?></li>
+                                    <?php
+                                    foreach ($baseoutlets as $outlet) {
+                                        echo '<li class="uk-h4 tm-h4">'.$outlet['name'].'</li>';
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
                         </div>
                         <?php } ?>
                         <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">

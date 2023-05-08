@@ -11369,3 +11369,7 @@ li.tm-main-navbar>a>img {
     column-gap: 0.25em;
     text-decoration: none !important;
 }
+
+.tm-outlet-dropdown > ul > li {
+    color: #000 !important;
+}

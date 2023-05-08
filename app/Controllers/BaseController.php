@@ -13,6 +13,7 @@ use App\Models\UserModel;
 use Myth\Auth\Models\GroupModel;
 use App\Models\GroupUserModel;
 use App\Models\GconfigModel;
+use App\Models\OutletModel;
 
 /**
  * Class BaseController
@@ -69,6 +70,7 @@ abstract class BaseController extends Controller
         $this->GroupModel = new GroupModel();
         $this->GroupUserModel = new GroupUserModel();
         $this->ConfigModel = new GconfigModel();
+        $this->OutletModel = new OutletModel();
 
         // Login Check
         $auth = service('authentication');
@@ -116,14 +118,15 @@ abstract class BaseController extends Controller
 
         // Parsing View Data
         $this->data = [
-			'ismobile'	=> $this->agent->isMobile(),
-            'lang'      => $lang,
-			'uri'		=> $this->uri,
-            'uid'       => $this->userId,
-            'authorize' => service('authorization'),
-            'account'   => $this->user,
-            'fullname'  => $fullname,
-            'gconfig'   => $gconfig,
+			'ismobile'	    => $this->agent->isMobile(),
+            'lang'          => $lang,
+			'uri'		    => $this->uri,
+            'uid'           => $this->userId,
+            'authorize'     => service('authorization'),
+            'account'       => $this->user,
+            'fullname'      => $fullname,
+            'baseoutlets'   => $this->OutletModel->findAll(),
+            'gconfig'       => $gconfig,
 		];
 
         if ($auth->check()) {

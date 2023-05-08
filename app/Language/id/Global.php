@@ -49,6 +49,7 @@ return [
     'memberDiscount'    => 'Diskon Member',
     'tax'               => 'Pajak',
     'vat'               => 'PpN',
+    'allOutlets'        => 'Semua Outlet',
 
     // Button
     'edit'              => 'Ubah',

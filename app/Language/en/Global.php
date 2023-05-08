@@ -49,7 +49,7 @@ return [
     'memberDiscount'    => 'Member Discount',
     'tax'               => 'Tax',
     'vat'               => 'VAT',
-    'stock'             => 'stock',
+    'allOutlets'        => 'All Outlets',
 
 
     // Button
