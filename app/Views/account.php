@@ -65,7 +65,7 @@
                             UIkit.upload('.js-upload', {
                                 url: 'upload/profile',
                                 multiple: false,
-                                name: 'uploads[]',
+                                name: 'uploads',
                                 method: 'POST',
                                 type: 'json',
 
