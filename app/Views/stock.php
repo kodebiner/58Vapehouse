@@ -1,4 +1,9 @@
 <?= $this->extend('layout') ?>
+
+<?= $this->section('extraScript') ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<?= $this->endSection() ?>
+
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
@@ -26,8 +31,72 @@
           <div class="uk-modal-body">
             <form class="uk-form-stacked" role="form" action="/stock/create/$id" method="post">
               <?= csrf_field() ?>
+              
+              <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
+                <div class="uk-form-controls">
+                  <select class="uk-select" name="outlet">
+                    <option><?=lang('Global.outlet')?></option>
+                    <?php
+                    foreach ($outlets as $outlet) {
+                      if ($outlet['id'] === $outletPick) {
+                        $checked = 'selected';
+                      } else {
+                        $checked = '';
+                      }
+                    ?>
+                      <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                    <?php
+                    }
+                    ?>
+                  </select>
+                </div>
 
-              <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
+                <!-- ajax -->
+
+                    <!-- select oulet -->
+                <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
+                <div class="uk-form-controls">
+                  <select class="uk-select" name="outlet" id="sel_out">
+                    <option><?=lang('Global.outlet')?></option>
+                    <?php
+                    foreach ($outlets as $outlet) {
+                      if ($outlet['id'] === $outletPick) {
+                        $checked = 'selected';
+                      } else {
+                        $checked = '';
+                      }
+                    ?>
+                      <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                    <?php
+                    }
+                    ?>
+                  </select>
+                </div>
+                
+                <!-- select Product -->
+                <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
+                <div class="uk-form-controls">
+                  <select class="uk-select" name="product" id="sel_pro">
+                    <option><?=lang('Global.product')?></option>
+                    <?php
+                    foreach ($products as $product) {
+                      echo '<option value="'.$product['id'].'">'.$product['name'].'</option>';
+                    }
+                    ?>
+                  </select>
+                </div>
+                
+                <!-- select variant -->
+                <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
+                <div class="uk-form-controls">
+                  <select class="uk-select" name="variant" id="sel_variant">
+                    <option id="default_var"><?=lang('Global.variant')?></option>
+                  </select>
+                </div>
+
+                <!-- end of ajax -->
+
+                <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
                 <div class="uk-form-controls">
                   <select class="uk-select" name="product">
                     <option><?=lang('Global.product')?></option>
@@ -37,13 +106,16 @@
                   </select>
                 </div>
 
-
-              <div class="uk-margin">
-                <label class="uk-form-label" for="address"><?=lang('Global.basePrice')?></label>
+              <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.basePrice')) : ?>tm-form-invalid<?php endif ?>" name="hargadasar" id="hargadasar" placeholder="<?=lang('Global.basePrice')?>" required/>
+                  <select class="uk-select" name="variant">
+                    <option><?=lang('Global.variant')?></option>
+                    <?php foreach ($variants as $variant) { ?>
+                      <option value="<?= $variant['id']; ?>"><?= $variant['name']; ?></option>
+                    <?php } ?>
+                  </select>
                 </div>
-              </div>
+
               <div class="uk-margin">
                 <label class="uk-form-label" for="address"><?=lang('Global.basePrice')?></label>
                 <div class="uk-form-controls">
@@ -119,5 +191,78 @@
   <!-- End Table Content -->
 </div>
 <!-- End Of Table Content -->
+
+<script>
+
+  $(document).ready(function(){
+
+// Country change
+$("#sel_pro").change(function(){
+
+     // Selected country id
+     var productid = $(this).val();
+
+     // Empty state and city dropdown
+     //$('#sel_variant').find('option').not(':first').remove();
+
+     // Fetch country states
+     $.ajax({
+          url: 'coba',
+          type: 'post',
+          data: {request:'getPro',productid:productid},
+          dataType: 'json',
+          success:function(response){
+
+            console.log('success', arguments);
+
+            var len = response.length;
+            var variant = arguments[0][0];
+
+            let option = '<option>Variant</option>';
+
+            variant.forEach(itter);
+
+            document.getElementById('sel_variant').innerHTML = option;
+
+            function itter(value) {
+              option += '<option value="'+value.id+'">'+value.name+'</option>';
+            }
+          }
+     });
+});
+
+// State change
+$('#sel_variant').change(function(){
+
+     // Selected state id
+     var variant = $(this).val();
+
+     // Empty city dropdown
+     $('#sel_variant').find('option').not(':first').remove();
+
+     // Fetch state cities
+     $.ajax({
+          url: 'Coba.php',
+          type: 'post',
+          data: {request:'getVariant',variantid:variantid},
+          dataType: 'json',
+          success:function(response){
+
+                var len = response.length;
+
+                // Add data to city dropdown
+                for( var i = 0; i<len; i++){
+                      var variantid = response[i]['id'];
+                      var name = response[i]['name'];
+
+                      $("#sel_variant").append("<option value='"+ variantid +"' >"+ name +"</option>");
+
+                }
+          }
+     });
+
+});
+});
+</script>
 
 <?= $this->endSection() ?>

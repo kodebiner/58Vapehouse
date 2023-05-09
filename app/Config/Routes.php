@@ -62,7 +62,7 @@ $routes->group('/', static function ($routes) {
 
 // Require login
 $routes->group('/', ['filter' => 'login'], function($routes) {
-    
+    $routes->post('coba', 'Coba::ajax', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Upload Routes

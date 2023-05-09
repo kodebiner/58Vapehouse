@@ -38,16 +38,23 @@ class Stock extends BaseController
             $OutletModel    = new OutletModel;
             
             // Find Data
-            $stocks         = $StockModel->findAll();
-            $variants       = $VariantModel->findAll();
+            $data           = $this->data;
             $products       = $ProductModel->findAll();
             $outlets        = $OutletModel->findAll();
+            $variants       = $VariantModel->findAll();
+
+
+            if ($this->data['outletPick'] === null) {
+                $stock      = $StockModel->findAll();
+            } else {
+                $stock      = $StockModel->where('outletid', $this->data['outletPick'])->find();
+            }
+
 
             // Parsing data to view
-            $data                   = $this->data;
             $data['title']          = lang('Global.stockList');
             $data['description']    = lang('Global.stockListDesc');
-            $data['stocks']         = $stocks;
+            $data['stocks']         = $stock;
             $data['variants']       = $variants;
             $data['products']       = $products;
             $data['outlets']        = $outlets;
@@ -91,16 +98,14 @@ class Stock extends BaseController
             $StockModel->save($stk);
 
             //update total stock & variant
-            $variant = $VariantModel->findAll();
-            foreach ($stocks as $stock){
-            $varian     = $VariantModel->where($variant['id']===$stock['variantid'])->find();
+            $varian     = $VariantModel->where($VariantModel['id']===$stocks['variantid'])->find();
             $var        = [
                 'id'            => $varian,
                 'hargadasar'    => 'hargadasar',
                 'hargamodal'    => 'hargamodal',
             ];
-            }
-            $VariantModel->save($varian);
+  
+            $VariantModel->save($var);
 
             // return
             return redirect()->back()->with('message', lang('Global.saved'));
@@ -113,5 +118,6 @@ class Stock extends BaseController
         
     }
 
+ 
 
 }

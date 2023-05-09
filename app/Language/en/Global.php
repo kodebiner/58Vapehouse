@@ -83,6 +83,7 @@ return [
     'customer'          => 'Customer',
     'variant'           => 'variant',
     'website'           => 'Website',
+    'stock'             => 'stock',
 
     // Title
     'employeeList'      => 'Employee List',
