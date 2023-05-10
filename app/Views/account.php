@@ -1,4 +1,9 @@
 <?= $this->extend('layout') ?>
+
+<?= $this->section('extraScript') ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<?= $this->endSection() ?>
+
 <?= $this->section('main') ?>
 <!-- Page Heading -->
 <div class="tm-card-header">
@@ -49,7 +54,7 @@
                 </div>
                 <div class="uk-margin">
                     <label class="uk-form-label" for="phone"><?=lang('Global.photo')?></label>
-                    <div class="uk-form-controls">
+                    <div id="image-container" class="uk-form-controls">
                         <div class="js-upload uk-placeholder uk-text-center">
                             <span uk-icon="icon: cloud-upload"></span>
                             <span class="uk-text-middle"><?=lang('Global.photoUploadDesc')?></span>
@@ -59,7 +64,7 @@
                             </div>
                         </div>
                         <progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
-                        <script>
+                        <script type="text/javascript">
                             var bar = document.getElementById('js-progressbar');
 
                             UIkit.upload('.js-upload', {
@@ -85,6 +90,31 @@
                                 },
                                 complete: function () {
                                     console.log('complete', arguments);
+                                    
+                                    var filename = arguments[0].response;
+                                    var imgContainer = document.getElementById('image-container');
+
+                                    var displayContainer = document.createElement('div');
+                                    displayContainer.setAttribute('id', 'display-container');
+                                    displayContainer.setAttribute('class', 'uk-inline');
+
+                                    var displayImg = document.createElement('img');
+                                    displayImg.setAttribute('src', 'img/profile/'+filename);
+                                    displayImg.setAttribute('width', '300');
+                                    displayImg.setAttribute('height', '300');
+
+                                    var closeContainer = document.createElement('div');
+                                    closeContainer.setAttribute('class', 'uk-position-small uk-position-top-right');
+
+                                    var closeButton = document.createElement('a');
+                                    closeButton.setAttribute('class', 'tm-img-remove uk-border-circle');
+                                    closeButton.setAttribute('onClick', 'removeImg');
+                                    closeButton.setAttribute('uk-icon', 'close');
+
+                                    closeContainer.appendChild(closeButton);
+                                    displayContainer.appendChild(displayImg);
+                                    displayContainer.appendChild(closeContainer);
+                                    imgContainer.appendChild(displayContainer);
                                 },
 
                                 loadStart: function (e) {
@@ -110,13 +140,13 @@
                                 },
 
                                 completeAll: function () {
-                                    console.log('completeAll', arguments);
+                                    console.log('completeAll', arguments);                                   
 
                                     setTimeout(function () {
                                         bar.setAttribute('hidden', 'hidden');
                                     }, 1000);
 
-                                    alert('Upload Completed');
+                                    alert('<?=lang('Global.uploadComplete')?>');
                                 }
                             });
                         </script>

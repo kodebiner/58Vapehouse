@@ -8,7 +8,7 @@ class Upload extends BaseController
 {
     public function profile()
     {
-        $image      = \Config\Services::image('imagick');
+        $image      = \Config\Services::image();
         $validation = \Config\Services::validation();
         $input = $this->request->getFile('uploads');
 
@@ -29,17 +29,23 @@ class Upload extends BaseController
             $truename = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
             $input->move(FCPATH.'/img/profile/', $filename);
 
+            // Getting Uploaded file
+            $filepath = site_url().'img/profile/'.$filename;
+
             // Resizing Profile
             $image->withFile(FCPATH.'/img/profile/'.$filename)
                 ->fit(300, 300, 'center')
+                ->crop(300, 300, 0, 0)
                 ->flatten(255, 255, 255)
                 ->convert(IMAGETYPE_JPEG)
                 ->save(FCPATH.'/img/profile/'.$truename.'.jpg');
-            unlink(FCPATH.'/img/profile/'.$filename);
+            if ($filename != $truename.'.jpg') {
+                unlink(FCPATH.'/img/profile/'.$filename);
+            }
 
             // Returning file
-            //$returnFile = $truename.'jpg';
-            die(json_encode($truename));
+            $returnFile = $truename.'.jpg';
+            die(json_encode($returnFile));
         }
     }
 }

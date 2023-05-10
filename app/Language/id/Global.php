@@ -14,6 +14,7 @@ return [
     'photoUploadDesc'   => 'Tarik dan lepas file disini atau',
     'selectOne'         => 'pilih satu',
     'invalidMime'       => 'Tipe file tidak sesuai',
+    'uploadComplete'    => 'Proses pengunggahan selesai',
     'forgotPassword'    => 'Lupa Kata Sandi',
     'backHome'          => 'Kembali ke Beranda',
     'action'            => 'Aksi',

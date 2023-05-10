@@ -11379,3 +11379,9 @@ li.tm-main-navbar>a>img {
     width: 210px;
     overflow: hidden;
 }
+
+.tm-img-remove {
+    background-color: #f0506e;
+    padding: 5px;
+    color: #fff;
+}

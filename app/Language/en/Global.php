@@ -14,6 +14,7 @@ return [
     'photoUploadDesc'   => 'Drag and drop file(s) here or',
     'selectOne'         => 'selecting one',
     'invalidMime'       => 'Invalid file type',
+    'uploadComplete'    => 'Upload complete',
     'forgotPassword'    => 'Forgot Password',
     'backHome'          => 'Back to Home',
     'action'            => 'Action',
