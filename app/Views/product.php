@@ -2,7 +2,7 @@
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
-<div class="tm-card-header">
+<div class="tm-card-header uk-light">
   <?= view('Views/Auth/_message_block') ?>
 
   <div uk-grid class="uk-flex-middle">
@@ -12,7 +12,7 @@
 
     <!-- Button Trigger Modal Add -->
     <div class="uk-width-1-2@m uk-text-right@m">
-      <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #tambahdata"><?=lang('Global.addProduct')?></button>
+      <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addProduct')?></button>
     </div>
     <!-- End Of Button Trigger Modal Add -->
 
@@ -353,7 +353,7 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
     <thead>
       <tr>
         <th class="uk-text-center"></th>
@@ -369,7 +369,7 @@
     <tbody>
       <?php $i = 1 ; ?>
       <?php foreach ($products as $product) : ?>
-        <tr class="uk-background-muted">
+        <tr class="">
           <td class="uk-flex uk-flex-center">
             <a class="uk-icon-link uk-icon" uk-toggle="target: #variantlist-<?= $product['id']; ?>" uk-icon="triangle-down"></a>
           </td>
@@ -410,13 +410,13 @@
           <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
             <!-- Button Trigger Modal Edit -->
             <div>
-              <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editdata<?= $product['id'] ?>"><?=lang('Global.edit')?></button>
+              <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #editdata<?= $product['id'] ?>"><?=lang('Global.edit')?></button>
             </div>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
             <div>
-              <a class="uk-button uk-button-default uk-button-danger" href="product/delete/<?= $product['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
+              <a class="uk-button uk-button-default uk-button-danger uk-preserve-color" href="product/delete/<?= $product['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
             </div>
             <!-- End Of Button Delete -->
           </td>
@@ -505,14 +505,17 @@
                 </div>
               </div>
 
+              <div class="uk-margin-bottom">
+                <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
+                <div class="uk-h6 uk-margin-remove">
+                  <?=lang('Global.editVar')?><a href="/product/indexvar/<?= $product['id']; ?>"><?=lang('Global.manageVar')?></a>
+                </div>
+              </div>
+
               <hr>
 
               <div class="uk-margin">
                 <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-              </div>
-
-              <div class="uk-margin">
-                <a href="/product/indexvar/<?= $product['id']; ?>" class="uk-button uk-button-primary"><?=lang('Global.edit')?></a>
               </div>
 
             </form>

@@ -6,7 +6,7 @@
 
 <?= $this->section('main') ?>
 <!-- Page Heading -->
-<div class="tm-card-header">
+<div class="tm-card-header uk-light">
   <div uk-grid class="uk-width-1-1@m uk-flex-middle">
     <div class="uk-width-1-2@m">
       <h3 class="tm-h3"><?=lang('Global.userProfile')?></h3>
@@ -19,7 +19,7 @@
 
 <!-- Content -->
 <div class="uk-margin">
-    <form class="uk-form-horizontal" method="post" role="form" action="account/update">
+    <form class="uk-form-horizontal uk-light" method="post" role="form" action="account/update">
         <div class="uk-child-width-1-2@m" uk-grid>
             <div>
                 <div class="uk-margin">
@@ -161,21 +161,21 @@
                     </div>
                     <div class="uk-card-body">
                         <div class="uk-margin">
-                            <label class="uk-form-label" for="oldPass"><?=lang('Global.currentPass')?></label>
+                            <label class="uk-form-label uk-preserve-color" for="oldPass"><?=lang('Global.currentPass')?></label>
                             <div class="uk-form-controls">
-                                <input class="uk-input" id="oldPass" name="oldPass" type="password">
+                                <input class="uk-input uk-preserve-color" id="oldPass" name="oldPass" type="password">
                             </div>
                         </div>
                         <div class="uk-margin">
-                            <label class="uk-form-label" for="newPass"><?=lang('Auth.newPassword')?></label>
+                            <label class="uk-form-label uk-preserve-color" for="newPass"><?=lang('Auth.newPassword')?></label>
                             <div class="uk-form-controls">
-                                <input class="uk-input" id="newPass" name="newPass" type="password">
+                                <input class="uk-input uk-preserve-color" id="newPass" name="newPass" type="password">
                             </div>
                         </div>
                         <div class="uk-margin">
-                            <label class="uk-form-label" for="newPassConf"><?=lang('Auth.newPasswordRepeat')?></label>
+                            <label class="uk-form-label uk-preserve-color" for="newPassConf"><?=lang('Auth.newPasswordRepeat')?></label>
                             <div class="uk-form-controls">
-                                <input class="uk-input" id="newnewPassConfPass" name="newPassConf" type="password">
+                                <input class="uk-input uk-preserve-color" id="newnewPassConfPass" name="newPassConf" type="password">
                             </div>
                         </div>
                     </div>
@@ -184,7 +184,7 @@
         </div>
         <hr class="uk-divider-icon"/>
         <div class="uk-margin uk-text-right">
-            <button class="uk-button uk-button-primary uk-button-large" type="submit"><?=lang('Global.save')?></button>
+            <button class="uk-button uk-button-primary uk-button-large uk-preserve-color" type="submit"><?=lang('Global.save')?></button>
         </div>
     </form>
 </div>

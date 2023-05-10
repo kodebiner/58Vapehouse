@@ -5,7 +5,7 @@
         <?= view('Views/Auth/_permission_message') ?>
     </div>
     <div class="uk-position-small uk-position-bottom">
-        <a href="transaction" class="uk-button uk-button-primary uk-button-large uk-width-1-1 uk-light"><span class="uk-h3 tm-h3"><?=lang('Global.transaction')?></span></a>
+        <a href="transaction" class="uk-button uk-button-primary uk-button-large uk-width-1-1 uk-light" style="border-radius: 10px;"><span class="uk-h3 tm-h3"><?=lang('Global.transaction')?></span></a>
     </div>
 </div>
 <?= $this->endSection() ?>

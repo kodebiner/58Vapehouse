@@ -34,15 +34,15 @@
         <!-- Extra Script Section end -->
 
     </head>
-    <body style="background-color:#f3f3f3;">
+    <body style="background-color: #000;">
 
         <!-- Header Section -->
-        <header class="uk-navbar-container tm-navbar-container" uk-sticky="media: 960;">
+        <header class="uk-navbar-container tm-navbar-container" uk-sticky="media: 960;" style="background-color: #000;">
             <div class="uk-container uk-container-expand">
                 <div uk-navbar>
                     <?php if ($ismobile === true) { ?>
                         <div class="uk-navbar-left">
-                            <a class="uk-navbar-toggle" href="#offcanvas" uk-navbar-toggle-icon uk-toggle role="button" aria-label="Open menu" style="color: #000;"></a>
+                            <a class="uk-navbar-toggle" href="#offcanvas" uk-navbar-toggle-icon uk-toggle role="button" aria-label="Open menu" style="color: #fff;"></a>
                         </div>
                         <div class="uk-navbar-center">
                             <a class="uk-navbar-item uk-logo" href="<?=base_url();?>" aria-label="<?=lang('Global.backHome')?>">
@@ -178,13 +178,13 @@
                                 <div>
                                     <ul class="uk-nav uk-nav-default tm-nav">
                                         <li class="tm-main-navbar">
-                                            <a href="account" class="uk-h5" style="color:#000;">
+                                            <a href="account" class="uk-h5" style="color: #000;">
                                                 <img src="img/layout/pelanggan.svg" /><?=lang('Global.userProfile')?>
                                             </a>
                                         </li>
                                         <?php if ($role === 'owner') { ?>
                                         <li class="tm-main-navbar">
-                                            <a href="business" class="uk-h5" style="color:#000;">
+                                            <a href="business" class="uk-h5" style="color: #000;">
                                                 <img src="img/layout/outlet.svg" /><?=lang('Global.businessInfo')?>
                                             </a>
                                         </li>
@@ -242,45 +242,42 @@
             <div id="offcanvas" uk-offcanvas="mode: push; overlay: true">
                 <div class="uk-offcanvas-bar" role="dialog" aria-modal="true">
                     <nav>
-                        <ul class="uk-nav uk-nav-default tm-nav">
+                        <ul class="uk-nav uk-nav-default tm-nav uk-light">
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg"><?=lang('Global.dashboard');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/laporan.svg"><?=lang('Global.report');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg"><?=lang('Global.trxHistory');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg"><?=lang('Global.payment');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('product') ?>"><img src="img/layout/product.svg"><?=lang('Global.product');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('product') ?>"><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('variant') ?>"><img src="img/layout/product.svg"><?=lang('Global.variant');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg" uk-svg><?=lang('Global.reminder');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg"><?=lang('Global.reminder');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg"><?=lang('Global.employee');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('stock') ?>"><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('stock') ?>"><img src="img/layout/inventori.svg"><?=lang('Global.inventory');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg"><?=lang('Global.outlet');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashManagement');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/cash.svg"><?=lang('Global.cashManagement');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg"><?=lang('Global.customer');?></a>
-                            </li>
-                            <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg"><?=lang('Global.website');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
                             </li>
                         </ul>
                     </nav>
@@ -288,42 +285,42 @@
             </div>
         <?php } else { ?>
             <nav class="tm-sidebar-left">
-                <ul class="uk-nav uk-nav-default tm-nav">
+                <ul class="uk-nav uk-nav-default tm-nav uk-light">
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg"><?=lang('Global.dashboard');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/laporan.svg"><?=lang('Global.report');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg"><?=lang('Global.trxHistory');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg"><?=lang('Global.payment');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('product') ?>"><img src="img/layout/product.svg"><?=lang('Global.product');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('product') ?>"><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg"><?=lang('Global.reminder');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg" uk-svg><?=lang('Global.reminder');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg"><?=lang('Global.employee');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('stock') ?>"><img src="img/layout/inventori.svg"><?=lang('Global.inventory');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('stock') ?>"><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg"><?=lang('Global.outlet');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/cash.svg"><?=lang('Global.cashManagement');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashManagement');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg"><?=lang('Global.customer');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg"><?=lang('Global.website');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
                     </li>
                 </ul>
             </nav>
@@ -345,13 +342,13 @@
             ?>
             <div class="<?=$mainPadding?>">
                 <div class="<?=$mainContainer?>">
-                    <div class="<?=$mainCard?>uk-panel uk-panel-scrollable" style="background-color: #fff;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
+                    <div class="<?=$mainCard?>uk-panel uk-panel-scrollable" style="background-color: #363636;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
                         <?= $this->renderSection('main') ?>
                     </div>
                 </div>
             </div>
             <!-- Footer Section -->
-            <footer class="tm-footer" style="background-color:#f3f3f3;">
+            <footer class="tm-footer" style="background-color: #000; color: #fff;">
                 <?php
                 if ($ismobile === true) {
                     $footerPadding = '';

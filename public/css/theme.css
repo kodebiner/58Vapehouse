@@ -742,6 +742,7 @@ a.uk-link-reset {
 }
 
 *+.uk-table {
+    background: #363636;
     margin-top: 20px
 }
 
@@ -751,7 +752,7 @@ a.uk-link-reset {
     vertical-align: bottom;
     font-size: 12px;
     font-weight: 400;
-    color: #999;
+    color: #fff;
     text-transform: uppercase
 }
 
@@ -771,7 +772,7 @@ a.uk-link-reset {
 .uk-table caption {
     font-size: 14px;
     text-align: left;
-    color: #999
+    color: #fff
 }
 
 .uk-table-middle,
@@ -787,7 +788,7 @@ a.uk-link-reset {
 
 .uk-table-striped tbody tr:nth-of-type(odd),
 .uk-table-striped>tr:nth-of-type(odd) {
-    background: #f8f8f8;
+    background: #fff;
     border-top: 1px solid #e5e5e5;
     border-bottom: 1px solid #e5e5e5
 }
@@ -3047,7 +3048,7 @@ select.uk-form-width-xsmall {
     box-sizing: border-box;
     width: 270px;
     padding: 20px 20px;
-    background: #fff;
+    background: #000;
     overflow-y: auto
 }
 
@@ -3779,7 +3780,7 @@ ul.uk-nav-sub {
 }
 
 .uk-nav-default>li>a {
-    color: #000000
+    color: #000
 }
 
 .uk-nav-default>li>a:hover {
@@ -6298,7 +6299,6 @@ iframe[uk-cover] {
 .uk-panel-scrollable {
     height: 170px;
     padding: 10px;
-    border: 1px solid #e5e5e5;
     overflow: auto;
     resize: both
 }
@@ -7678,7 +7678,7 @@ video) {
 .uk-section-secondary:not(.uk-preserve-color),
 .uk-tile-primary:not(.uk-preserve-color),
 .uk-tile-secondary:not(.uk-preserve-color) {
-    color: rgba(255, 255, 255, .8)
+    color: rgba(255, 255, 255)
 }
 
 .tm-navbar-container:not(.uk-navbar-transparent) .uk-link,
@@ -8670,7 +8670,7 @@ video) {
 .uk-card-secondary>:not([class*=uk-card-media]) .uk-input,
 .uk-card-secondary>:not([class*=uk-card-media]) .uk-select,
 .uk-card-secondary>:not([class*=uk-card-media]) .uk-textarea,
-.uk-light .uk-input,
+.uk-light .uk-input:not([class*=uk-preserve-color]),
 .uk-light .uk-select,
 .uk-light .uk-textarea,
 .uk-overlay-primary .uk-input,
@@ -8971,7 +8971,7 @@ video) {
 .uk-card-primary>:not([class*=uk-card-media]) .uk-form-label,
 .uk-card-secondary.uk-card-body .uk-form-label,
 .uk-card-secondary>:not([class*=uk-card-media]) .uk-form-label,
-.uk-light .uk-form-label,
+.uk-light .uk-form-label:not([class*=uk-preserve-color]),
 .uk-overlay-primary .uk-form-label,
 .uk-section-primary:not(.uk-preserve-color) .uk-form-label,
 .uk-section-secondary:not(.uk-preserve-color) .uk-form-label,
@@ -9013,7 +9013,7 @@ video) {
 .uk-card-primary>:not([class*=uk-card-media]) .uk-button-default,
 .uk-card-secondary.uk-card-body .uk-button-default,
 .uk-card-secondary>:not([class*=uk-card-media]) .uk-button-default,
-.uk-light .uk-button-default,
+.uk-light .uk-button-default:not([class*=uk-preserve-color]),
 .uk-overlay-primary .uk-button-default,
 .uk-section-primary:not(.uk-preserve-color) .uk-button-default,
 .uk-section-secondary:not(.uk-preserve-color) .uk-button-default,
@@ -9072,7 +9072,7 @@ video) {
 .uk-card-primary>:not([class*=uk-card-media]) .uk-button-primary,
 .uk-card-secondary.uk-card-body .uk-button-primary,
 .uk-card-secondary>:not([class*=uk-card-media]) .uk-button-primary,
-.uk-light .uk-button-primary,
+.uk-light .uk-button-primary:not([class*=uk-preserve-color]),
 .uk-overlay-primary .uk-button-primary,
 .uk-section-primary:not(.uk-preserve-color) .uk-button-primary,
 .uk-section-secondary:not(.uk-preserve-color) .uk-button-primary,
@@ -10909,7 +10909,7 @@ video) {
 .uk-tile-secondary:not(.uk-preserve-color) .tm-h4,
 .uk-tile-secondary:not(.uk-preserve-color) .tm-h5,
 .uk-tile-secondary:not(.uk-preserve-color) .tm-h6 {
-    color: rgba(255, 255, 255, .7)
+    color: rgba(255, 255, 255)
 }
 
 @media print {
@@ -11204,7 +11204,7 @@ body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: #000
+    color: #222
 }
 
 .tm-h4 {
@@ -11333,7 +11333,7 @@ body {
     border: 1px solid #f0506e !important;
 }
 
-li.tm-main-navbar>a>img {
+li.tm-main-navbar>a>svg {
     position: relative;
     top: -2px;
     margin-right: 5px;

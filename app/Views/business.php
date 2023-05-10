@@ -1,7 +1,7 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('main') ?>
 <!-- Page Heading -->
-<div class="tm-card-header">
+<div class="tm-card-header uk-light">
   <div uk-grid class="uk-width-1-1@m uk-flex-middle">
     <div class="uk-width-1-2@m">
       <h3 class="tm-h3"><?=lang('Global.businessInfo')?></h3>
@@ -14,7 +14,7 @@
 
 <!-- Content -->
 <div class="uk-margin">
-    <form class="uk-form-horizontal" role="form" method="post" action="business/save">
+    <form class="uk-form-horizontal uk-light" role="form" method="post" action="business/save">
         <div class="uk-child-width-1-2@m uk-grid-row-small" uk-grid>
             <div>
                 <div class="uk-margin">
@@ -67,7 +67,7 @@
         </div>
         <hr class="uk-divider-icon" />
         <div class="uk-text-right">
-            <button class="uk-button uk-button-primary" role="button" type="submit"><?=lang('Global.save')?></button>
+            <button class="uk-button uk-button-primary uk-preserve-color" role="button" type="submit"><?=lang('Global.save')?></button>
         </div>
     </form>
 </div>
