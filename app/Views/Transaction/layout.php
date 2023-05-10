@@ -127,7 +127,7 @@
                         <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.detailOrder');?></h5>
                     </div>
                     <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="/transaction/create" method="post">
+                        <form class="uk-form-stacked" name="order" role="form" action="/transaction/create" method="post">
                             <?= csrf_field() ?>
 
                             <div class="uk-margin-bottom">
@@ -142,7 +142,7 @@
                             </div>
 
                             <div class="uk-overflow-auto">
-                                <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
+                                <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" id="instab">
                                     <thead>
                                         <tr>
                                             <th></th>

@@ -157,17 +157,17 @@
                             <a class="uk-link-reset" type="button">
                                 <?php
                                 if (!empty($account->photo)) {
-                                    $profile = $account->photo;
+                                    $profile = 'img/profile/'.$account->photo;
                                 } else {
-                                    $profile = 'user.png';
+                                    $profile = 'img/user.png';
                                 }
                                 ?>
-                                <img src="img/<?= $profile ?>" class="uk-object-cover uk-object-position-top-center uk-border-circle" width="40" height="40" style="aspect-ratio: 1 / 1; border: 2px solid #000;" alt="<?=$fullname?>" />
+                                <img src="<?= $profile ?>" class="uk-object-cover uk-object-position-top-center uk-border-circle" width="40" height="40" style="aspect-ratio: 1 / 1; border: 2px solid #000;" alt="<?=$fullname?>" />
                             </a>
                             <div class="uk-width-medium" uk-dropdown="mode: click">
                                 <div class="uk-flex-middle uk-grid-small" uk-grid>
                                     <div class="uk-width-auto">
-                                        <img src="img/<?= $profile ?>" class="uk-object-cover uk-object-position-top-center uk-border-circle" width="40" height="40" style="aspect-ratio: 1 / 1; border: 2px solid #000;" alt="<?=$fullname?>" /> 
+                                        <img src="<?= $profile ?>" class="uk-object-cover uk-object-position-top-center uk-border-circle" width="40" height="40" style="aspect-ratio: 1 / 1; border: 2px solid #000;" alt="<?=$fullname?>" /> 
                                     </div>
                                     <div class="uk-width-expand">
                                         <div class="uk-h4 uk-margin-remove" style="color: #000;"><?=$fullname?></div>

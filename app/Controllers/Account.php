@@ -59,6 +59,8 @@ class Account extends BaseController
         $updateUser->email      = $input['email'];
         $updateUser->firstname  = $input['firstname'];
         $updateUser->lastname   = $input['lastname'];
+        $updateUser->phone      = $input['phone'];
+        $updateUser->photo      = $input['photo'];
 
         // Validating new password
         if (!empty($input['newPass'])) {

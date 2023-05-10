@@ -53,8 +53,9 @@
                     </div>
                 </div>
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="phone"><?=lang('Global.photo')?></label>
+                    <label class="uk-form-label" for="photo"><?=lang('Global.photo')?></label>
                     <div id="image-container" class="uk-form-controls">
+                        <input id="photo" name="photo" value="<?=$account->photo?>" hidden />
                         <div class="js-upload uk-placeholder uk-text-center">
                             <span uk-icon="icon: cloud-upload"></span>
                             <span class="uk-text-middle"><?=lang('Global.photoUploadDesc')?></span>
@@ -92,6 +93,9 @@
                                     console.log('complete', arguments);
                                     
                                     var filename = arguments[0].response;
+
+                                    document.getElementById('photo').value = filename;
+
                                     var imgContainer = document.getElementById('image-container');
 
                                     var displayContainer = document.createElement('div');
