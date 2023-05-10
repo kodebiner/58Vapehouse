@@ -2,10 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;
 use App\Models\ProductModel;
 use App\Models\OutletModel;
-use App\Models\AreaModel;
 use App\Models\StockModel;
 use App\Models\TotalStockModel;
 use App\Models\VariantModel;
@@ -43,13 +41,11 @@ class Stock extends BaseController
             $outlets        = $OutletModel->findAll();
             $variants       = $VariantModel->findAll();
 
-
             if ($this->data['outletPick'] === null) {
                 $stock      = $StockModel->findAll();
             } else {
                 $stock      = $StockModel->where('outletid', $this->data['outletPick'])->find();
             }
-
 
             // Parsing data to view
             $data['title']          = lang('Global.stockList');
@@ -63,32 +59,46 @@ class Stock extends BaseController
         }
 
 
-    public function create($id)
+    public function restock()
     {
             // Calling Model
             $StockModel     = new StockModel;
             $VariantModel   = new VariantModel;
             $TotalModel     = new TotalStockModel;
-            
-            // Finding Data
 
             // initialize
-            $input = $this->request->getPost(); 
+            $input = $this->request->getPost();
+            $stockall = $StockModel->findAll();
 
-            // parsing data to view
-            $data['stocks']      = $StockModel;
-            $data['variants']    = $VariantModel;
-            $data['total']       = $TotalModel;
+            // Finding Total Stock
+            $Stocks = $StockModel->where('variantid', $input['variant'])->find();
+            $totalstock = 0;
+            foreach ($Stocks as $stock) {
+                $totalstock += $stock['qty'];
+            }
 
-            $stocks = $StockModel->where('variantid',$id)->where('outletid',$id)->first();
+            // Finding new pric
+            $variant = $VariantModel->find($input['variant']);
+            $hargadasar = (($variant['hargadasar']*$totalstock)+($input['hargadasar']*$input['qty']))/($totalstock+$input['qty']);
+            $hargamodal = (($variant['hargamodal']*$totalstock)+($input['hargamodal']*$input['qty']))/($totalstock+$input['qty']);
+
+            // Updating variant
+            $var        = [
+                'id'            => $input['variant'],
+                'hargadasar'    => $hargadasar,
+                'hargamodal'    => $hargamodal,
+            ];  
+            $VariantModel->save($var);
+
+            $stocks = $StockModel->where('variantid',$input['variant'])->where('outletid',$input['outlet'])->first();
             $stk = [
-                'id'     => $id,
+                'id'     => $stocks['id'],
                 'qty'    => $input['qty'],
             ];
 
             // Validation
             if (! $this->validate([
-                'stock' => "required|max_length[255]',",
+                'qty' => "required|max_length[255]',",
             ])) {
                 
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -97,27 +107,9 @@ class Stock extends BaseController
             // Save Data Stok
             $StockModel->save($stk);
 
-            //update total stock & variant
-            $varian     = $VariantModel->where($VariantModel['id']===$stocks['variantid'])->find();
-            $var        = [
-                'id'            => $varian,
-                'hargadasar'    => 'hargadasar',
-                'hargamodal'    => 'hargamodal',
-            ];
-  
-            $VariantModel->save($var);
-
             // return
             return redirect()->back()->with('message', lang('Global.saved'));
     }
-
-
-    public function delete()
-
-    {
-        
-    }
-
  
 
 }

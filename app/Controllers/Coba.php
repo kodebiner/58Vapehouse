@@ -18,7 +18,7 @@ class Coba extends BaseController
             $request = $_POST['request'];
         }
 
-        // Fetch state list by country_id
+        // Fetch Product List By Product Id
         if($request == 'getPro'){
 
             $productid = 0;
@@ -27,6 +27,21 @@ class Coba extends BaseController
             }
 
             $variant = $VariantModel->where('productid', $productid)->find();
+
+            echo json_encode(array($variant));
+            exit;
+        }
+
+
+        // Fetch Product List By Product Id
+        if($request == 'getVariant'){
+
+            $variantid = 0;
+            if(isset($_POST['variantid']) && is_numeric($_POST['variantid'])){
+                $variantid = $_POST['variantid'];
+            }
+
+            $variant = $VariantModel->where('id', $variantid)->find();
 
             echo json_encode(array($variant));
             exit;

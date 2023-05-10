@@ -29,28 +29,8 @@
             <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addRestock')?></h5>
           </div>
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/stock/create/$id" method="post">
+            <form class="uk-form-stacked" role="form" action="/stock/restock/" method="post">
               <?= csrf_field() ?>
-              
-              <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
-                <div class="uk-form-controls">
-                  <select class="uk-select" name="outlet">
-                    <option><?=lang('Global.outlet')?></option>
-                    <?php
-                    foreach ($outlets as $outlet) {
-                      if ($outlet['id'] === $outletPick) {
-                        $checked = 'selected';
-                      } else {
-                        $checked = '';
-                      }
-                    ?>
-                      <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
-                    <?php
-                    }
-                    ?>
-                  </select>
-                </div>
-
                 <!-- ajax -->
 
                     <!-- select oulet -->
@@ -95,26 +75,6 @@
                 </div>
 
                 <!-- end of ajax -->
-
-                <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
-                <div class="uk-form-controls">
-                  <select class="uk-select" name="product">
-                    <option><?=lang('Global.product')?></option>
-                    <?php foreach ($products as $product) { ?>
-                      <option value="<?= $product['id']; ?>"><?= $product['name']; ?></option>
-                    <?php } ?>
-                  </select>
-                </div>
-
-              <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
-                <div class="uk-form-controls">
-                  <select class="uk-select" name="variant">
-                    <option><?=lang('Global.variant')?></option>
-                    <?php foreach ($variants as $variant) { ?>
-                      <option value="<?= $variant['id']; ?>"><?= $variant['name']; ?></option>
-                    <?php } ?>
-                  </select>
-                </div>
 
               <div class="uk-margin">
                 <label class="uk-form-label" for="address"><?=lang('Global.basePrice')?></label>
@@ -207,8 +167,8 @@ $("#sel_pro").change(function(){
 
      // Fetch country states
      $.ajax({
-          url: 'coba',
           type: 'post',
+          url: 'coba',
           data: {request:'getPro',productid:productid},
           dataType: 'json',
           success:function(response){
@@ -231,37 +191,42 @@ $("#sel_pro").change(function(){
      });
 });
 
-// State change
-$('#sel_variant').change(function(){
+// Country change
+$("#sel_variant").change(function(){
 
-     // Selected state id
-     var variant = $(this).val();
+     // Selected country id
+     var variantid = $(this).val();
 
-     // Empty city dropdown
-     $('#sel_variant').find('option').not(':first').remove();
+     // Empty state and city dropdown
+     //$('#sel_variant').find('option').not(':first').remove();
 
-     // Fetch state cities
+     // Fetch country states
      $.ajax({
-          url: 'Coba.php',
           type: 'post',
+          url: 'coba',
           data: {request:'getVariant',variantid:variantid},
           dataType: 'json',
           success:function(response){
 
-                var len = response.length;
+            console.log('success', arguments);
 
-                // Add data to city dropdown
-                for( var i = 0; i<len; i++){
-                      var variantid = response[i]['id'];
-                      var name = response[i]['name'];
+            var len = response.length;
+            var variant = arguments[0][0];
 
-                      $("#sel_variant").append("<option value='"+ variantid +"' >"+ name +"</option>");
+            // let option = '<option>Variant</option>';
 
-                }
+            variant.forEach(itter);
+
+            document.getElementById('sel_variant').innerHTML = option;
+
+            function itter(value) {
+              option += '<option value="'+value.id+'">'+value.name+'</option>';
+            }
           }
      });
-
 });
+
+
 });
 </script>
 

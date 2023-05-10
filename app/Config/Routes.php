@@ -62,6 +62,7 @@ $routes->group('/', static function ($routes) {
 
 // Require login
 $routes->group('/', ['filter' => 'login'], function($routes) {
+    $routes->get('coba', 'Coba::ajax', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('coba', 'Coba::ajax', ['filter' => 'role:owner,supervisor,operator']);
 });
 
@@ -155,7 +156,7 @@ $routes->group('transaction', ['filter'=>'login'], function($routes){
 // Restock Routes
 $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->get('', 'Stock::index', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('create/(:num)', 'Stock::create/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('restock', 'Stock::restock', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 /*
