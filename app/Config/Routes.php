@@ -159,6 +159,14 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->post('restock', 'Stock::restock', ['filter' => 'role:owner,supervisor,operator']);
 });
 
+//Customer Stock
+$routes->group('stockmove', ['filter'=>'login'], function($routes){
+    $routes->get('', 'Stockmove::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Stockmove::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'Stockmove::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Stockmove::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+});
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

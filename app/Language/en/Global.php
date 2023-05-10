@@ -56,7 +56,9 @@ return [
     'memberDiscount'    => 'Member Discount',
     'tax'               => 'Tax',
     'vat'               => 'VAT',
-    'allOutlets'        => 'All Outlets',
+    'origin'            => 'Origin',
+    'destination'       => 'Destination',
+    'quantity'          => 'Quantity',
 
 
     // Button
@@ -71,6 +73,7 @@ return [
     'addCustomer'       => 'Add Customer',
     'addStock'          => 'Add Stock',
     'addRestock'        => 'Restock',
+    'addStockMove'      => 'Add Movement',
 
     // Menu
     'dashboard'         => 'Dashboard',
@@ -84,9 +87,10 @@ return [
     'outlet'            => 'Outlet',
     'cashManagement'    => 'Cash Management',
     'customer'          => 'Customer',
-    'variant'           => 'variant',
+    'variant'           => 'Variant',
     'website'           => 'Website',
-    'stock'             => 'stock',
+    'stock'             => 'Stock',
+    'stockMove'         => 'Stock Movement',
 
     // Title
     'employeeList'      => 'Employee List',
@@ -99,6 +103,7 @@ return [
     'brandList'         => 'Brand List',
     'customerList'      => 'Customer List',
     'stockList'         => 'Stock Management',
+    'stockMoveList'     => 'Stock Movement List',
     'businessInfo'      => 'Business Information',
     
     // Page Description

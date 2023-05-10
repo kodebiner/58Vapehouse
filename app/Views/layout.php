@@ -311,6 +311,9 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('stock') ?>"><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?></a>
                     </li>
                     <li class="tm-main-navbar">
+                        <a class="uk-h4 tm-h4" href="<?= base_url('stockmove') ?>"><img src="img/layout/inventori.svg"><?=lang('Global.stockMove');?></a>
+                    </li>
+                    <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                     </li>
                     <li class="tm-main-navbar">
