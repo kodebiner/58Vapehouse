@@ -68,7 +68,6 @@ class Stock extends BaseController
 
             // initialize
             $input = $this->request->getPost();
-            $stockall = $StockModel->findAll();
 
             // Finding Total Stock
             $Stocks = $StockModel->where('variantid', $input['variant'])->find();

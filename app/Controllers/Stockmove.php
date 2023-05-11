@@ -55,13 +55,61 @@ Class Stockmove extends BaseController{
         $Stock      = new StockModel;
         $StockMove  = new StockmovementModel;
 
-        
-   
+        // initialize
+        $input = $this->request->getPost();
 
+        // rules
+        $rule = [
+            'variant'            => 'required|max_length[255]',
+            'origin'             => 'required|max_length[255]',
+            'destination'        => 'required',
+            'qty'                => 'required',
+        ];
+                
+        // Validation
+        if (! $this->validate($rule)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+                
+        // Input Data
+        $data = [
+            'variantid'     => $input['variant'],
+            'origin'        => $input['origin'],
+            'destination'   => $input['destination'],
+            'qty'           => $input['qty'],
+        ];
+    
+        // insert data Stockmove
+        $StockMove->insert($data);
 
+        // Minus Stock
+        $Stocks = $Stock->where('variantid', $input['variant'])->where('outletid',$input['origin'])->find(); 
+        $minstock=$input['qty'];
+        foreach ($Stocks as $stock) {
+            $hasilmin = $stock['qty'] -= $minstock;
+            $stok = [
+                'id'    => $stock['id'],
+                'qty'   => $hasilmin,
+            ];
+        }
+
+        $Stock->save($stok);
+
+        // Plus Stock
+        $Stocks = $Stock->where('variantid', $input['variant'])->where('outletid',$input['destination'])->find();
+        $plusstock = $input['qty'];
+        foreach ($Stocks as $stock) {
+            $hasilplus = $stock['qty'] += $plusstock;
+            
+            $stok = [
+                'id'    => $stock['id'],
+                'qty'   =>  $hasilplus,
+            ];
+        }
+        $Stock->save($stok);
+
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
-
-
 }
 
 ?>
