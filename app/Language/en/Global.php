@@ -56,6 +56,7 @@ return [
     'memberDiscount'    => 'Member Discount',
     'tax'               => 'Tax',
     'vat'               => 'VAT',
+    'allOutlets'        => 'All Outlets',
     'origin'            => 'Origin',
     'destination'       => 'Destination',
     'quantity'          => 'Quantity',

@@ -69,6 +69,7 @@ $routes->group('/', ['filter' => 'login'], function($routes) {
 // Upload Routes
 $routes->group('upload', ['filter' => 'login'], function($routes) {
     $routes->post('profile', 'Upload::profile', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('removeprofile', 'Upload::removeprofile', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Account Routes

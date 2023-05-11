@@ -57,6 +57,9 @@ return [
     'tax'               => 'Pajak',
     'vat'               => 'PpN',
     'allOutlets'        => 'Semua Outlet',
+    'origin'            => 'Asal',
+    'destination'       => 'Tujuan',
+    'quantity'          => 'Jumlah',
 
     // Button
     'edit'              => 'Ubah',

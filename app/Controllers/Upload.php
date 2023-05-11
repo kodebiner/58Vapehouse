@@ -48,4 +48,11 @@ class Upload extends BaseController
             die(json_encode($returnFile));
         }
     }
+
+    public function removeprofile()
+    {
+        $input = $this->request->getPost('photo');
+        unlink(FCPATH.'/img/profile/'.$input);
+        die(json_encode(array('message' => lang('Global.deleted'))));
+    }
 }

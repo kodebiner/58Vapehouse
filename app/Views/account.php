@@ -55,6 +55,7 @@
                 <div class="uk-margin">
                     <label class="uk-form-label" for="photo"><?=lang('Global.photo')?></label>
                     <div id="image-container" class="uk-form-controls">
+                    <input id="oldphoto" name="oldphoto" value="<?=$account->photo?>" hidden />
                         <input id="photo" name="photo" value="<?=$account->photo?>" hidden />
                         <div class="js-upload uk-placeholder uk-text-center">
                             <span uk-icon="icon: cloud-upload"></span>
@@ -65,97 +66,125 @@
                             </div>
                         </div>
                         <progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
-                        <script type="text/javascript">
-                            var bar = document.getElementById('js-progressbar');
-
-                            UIkit.upload('.js-upload', {
-                                url: 'upload/profile',
-                                multiple: false,
-                                name: 'uploads',
-                                method: 'POST',
-                                type: 'json',
-
-                                beforeSend: function () {
-                                    console.log('beforeSend', arguments);
-                                },
-                                beforeAll: function () {
-                                    console.log('beforeAll', arguments);
-                                },
-                                load: function () {
-                                    console.log('load', arguments);
-                                },
-                                error: function () {
-                                    console.log('error', arguments);
-                                    var error = arguments[0].xhr.response.message.uploads;
-                                    alert(error);
-                                },
-                                complete: function () {
-                                    console.log('complete', arguments);
-                                    
-                                    var filename = arguments[0].response;
-
-                                    document.getElementById('photo').value = filename;
-
-                                    var imgContainer = document.getElementById('image-container');
-
-                                    var displayContainer = document.createElement('div');
-                                    displayContainer.setAttribute('id', 'display-container');
-                                    displayContainer.setAttribute('class', 'uk-inline');
-
-                                    var displayImg = document.createElement('img');
-                                    displayImg.setAttribute('src', 'img/profile/'+filename);
-                                    displayImg.setAttribute('width', '300');
-                                    displayImg.setAttribute('height', '300');
-
-                                    var closeContainer = document.createElement('div');
-                                    closeContainer.setAttribute('class', 'uk-position-small uk-position-top-right');
-
-                                    var closeButton = document.createElement('a');
-                                    closeButton.setAttribute('class', 'tm-img-remove uk-border-circle');
-                                    closeButton.setAttribute('onClick', 'removeImg');
-                                    closeButton.setAttribute('uk-icon', 'close');
-
-                                    closeContainer.appendChild(closeButton);
-                                    displayContainer.appendChild(displayImg);
-                                    displayContainer.appendChild(closeContainer);
-                                    imgContainer.appendChild(displayContainer);
-                                },
-
-                                loadStart: function (e) {
-                                    console.log('loadStart', arguments);
-
-                                    bar.removeAttribute('hidden');
-                                    bar.max = e.total;
-                                    bar.value = e.loaded;
-                                },
-
-                                progress: function (e) {
-                                    console.log('progress', arguments);
-
-                                    bar.max = e.total;
-                                    bar.value = e.loaded;
-                                },
-
-                                loadEnd: function (e) {
-                                    console.log('loadEnd', arguments);
-
-                                    bar.max = e.total;
-                                    bar.value = e.loaded;
-                                },
-
-                                completeAll: function () {
-                                    console.log('completeAll', arguments);                                   
-
-                                    setTimeout(function () {
-                                        bar.setAttribute('hidden', 'hidden');
-                                    }, 1000);
-
-                                    alert('<?=lang('Global.uploadComplete')?>');
-                                }
-                            });
-                        </script>
                     </div>
                 </div>
+                <script type="text/javascript">
+                    var bar = document.getElementById('js-progressbar');
+
+                    UIkit.upload('.js-upload', {
+                        url: 'upload/profile',
+                        multiple: false,
+                        name: 'uploads',
+                        method: 'POST',
+                        type: 'json',
+
+                        beforeSend: function () {
+                            console.log('beforeSend', arguments);
+                        },
+                        beforeAll: function () {
+                            console.log('beforeAll', arguments);
+                        },
+                        load: function () {
+                            console.log('load', arguments);
+                        },
+                        error: function () {
+                            console.log('error', arguments);
+                            var error = arguments[0].xhr.response.message.uploads;
+                            alert(error);
+                        },
+                        complete: function () {
+                            console.log('complete', arguments);
+                            
+                            var filename = arguments[0].response;
+
+                            if (document.getElementById('display-container')) {
+                                document.getElementById('display-container').remove();
+                            };
+
+                            document.getElementById('photo').value = filename;
+
+                            var imgContainer = document.getElementById('image-container');
+
+                            var displayContainer = document.createElement('div');
+                            displayContainer.setAttribute('id', 'display-container');
+                            displayContainer.setAttribute('class', 'uk-inline');
+
+                            var displayImg = document.createElement('img');
+                            displayImg.setAttribute('src', 'img/profile/'+filename);
+                            displayImg.setAttribute('width', '300');
+                            displayImg.setAttribute('height', '300');
+
+                            var closeContainer = document.createElement('div');
+                            closeContainer.setAttribute('class', 'uk-position-small uk-position-top-right');
+
+                            var closeButton = document.createElement('a');
+                            closeButton.setAttribute('class', 'tm-img-remove uk-border-circle');
+                            closeButton.setAttribute('onClick', 'removeImg()');
+                            closeButton.setAttribute('uk-icon', 'close');
+
+                            closeContainer.appendChild(closeButton);
+                            displayContainer.appendChild(displayImg);
+                            displayContainer.appendChild(closeContainer);
+                            imgContainer.appendChild(displayContainer);
+                        },
+
+                        loadStart: function (e) {
+                            console.log('loadStart', arguments);
+
+                            bar.removeAttribute('hidden');
+                            bar.max = e.total;
+                            bar.value = e.loaded;
+                        },
+
+                        progress: function (e) {
+                            console.log('progress', arguments);
+
+                            bar.max = e.total;
+                            bar.value = e.loaded;
+                        },
+
+                        loadEnd: function (e) {
+                            console.log('loadEnd', arguments);
+
+                            bar.max = e.total;
+                            bar.value = e.loaded;
+                        },
+
+                        completeAll: function () {
+                            console.log('completeAll', arguments);                                   
+
+                            setTimeout(function () {
+                                bar.setAttribute('hidden', 'hidden');
+                            }, 1000);
+
+                            alert('<?=lang('Global.uploadComplete')?>');
+                        }
+                    });
+
+                    function removeImg() {                                
+                        $.ajax ({
+                            type: 'post',
+                            url: 'upload/removeprofile',
+                            data: {'photo': document.getElementById('photo').value},
+                            dataType: 'json',
+
+                            error: function() {
+                                console.log('error', arguments);
+                            },
+
+                            success:function() {
+                                console.log('success', arguments);
+
+                                var pesan = arguments[0].message;
+
+                                document.getElementById('display-container').remove();
+                                document.getElementById('photo').value = '';
+
+                                alert(pesan);
+                            }
+                        });
+                    };
+                </script>
             </div>
             <div>
                 <div class="uk-card uk-card-default">
@@ -179,7 +208,7 @@
                         <div class="uk-margin">
                             <label class="uk-form-label uk-preserve-color" for="newPassConf"><?=lang('Auth.newPasswordRepeat')?></label>
                             <div class="uk-form-controls">
-                                <input class="uk-input uk-preserve-color" id="newnewPassConfPass" name="newPassConf" type="password">
+                                <input class="uk-input uk-preserve-color" id="newPassConf" name="newPassConf" type="password">
                             </div>
                         </div>
                     </div>
