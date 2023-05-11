@@ -242,8 +242,8 @@
             <div id="offcanvas" uk-offcanvas="mode: push; overlay: true">
                 <div class="uk-offcanvas-bar" role="dialog" aria-modal="true">
                     <nav>
-                        <ul class="uk-nav uk-nav-default tm-nav uk-light">
-                            <li class="tm-main-navbar">
+                        <ul class="uk-nav uk-nav-default tm-nav uk-light" uk-nav>
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                             </li>
                             <li class="tm-main-navbar">
@@ -264,8 +264,16 @@
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
                             </li>
-                            <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('stock') ?>"><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?></a>
+                            <li class="tm-main-navbar uk-parent">
+                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
+                                <ul class="uk-nav-sub">
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
+                                    </li>
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
@@ -285,7 +293,7 @@
             </div>
         <?php } else { ?>
             <nav class="tm-sidebar-left">
-                <ul class="uk-nav uk-nav-default tm-nav uk-light">
+                <ul class="uk-nav uk-nav-default tm-nav uk-light" uk-nav>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                     </li>
@@ -307,11 +315,16 @@
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
                     </li>
-                    <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('stock') ?>"><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?></a>
-                    </li>
-                    <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('stockmove') ?>"><img src="img/layout/inventori.svg"><?=lang('Global.stockMove');?></a>
+                    <li class="tm-main-navbar uk-parent">
+                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
+                        <ul class="uk-nav-sub">
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
+                            </li>
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>

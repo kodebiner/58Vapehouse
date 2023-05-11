@@ -352,6 +352,37 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
+<div class="uk-child-width-1-5@m uk-margin" uk-grid>
+  <div class="">
+    <form class="uk-search uk-search-default">
+      <span uk-search-icon></span>
+      <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
+    </form>
+  </div>
+
+  <div class="">
+    <div class="uk-form-controls">
+      <select class="uk-select" name="category">
+        <option><?=lang('Global.category')?></option>
+        <?php foreach ($category as $cate) { ?>
+          <option value="<?= $cate['id']; ?>"><?= $cate['name']; ?></option>
+        <?php } ?>
+      </select>
+    </div>
+  </div>
+
+  <div class="">
+    <div class="uk-form-controls">
+      <select class="uk-select" name="brand">
+        <option><?=lang('Global.brand')?></option>
+        <?php foreach ($brand as $bran) { ?>
+          <option value="<?= $bran['id']; ?>"><?= $bran['name']; ?></option>
+        <?php } ?>
+      </select>
+    </div>
+  </div>
+</div>
+
 <div class="uk-overflow-auto">
   <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
     <thead>
@@ -462,6 +493,24 @@
       <?php endforeach; ?>
     </tbody>
   </table>
+
+  <!-- Table Pagination -->
+  <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
+    <li><a href="#"><span uk-pagination-previous></span></a></li>
+    <li><a href="#">1</a></li>
+    <li class="uk-disabled"><span>…</span></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li><a href="#">6</a></li>
+    <li><a href="#">7</a></li>
+    <li><a href="#">8</a></li>
+    <li><a href="#">9</a></li>
+    <li><a href="#">10</a></li>
+    <li class="uk-disabled"><span>…</span></li>
+    <li><a href="#">20</a></li>
+    <li><a href="#"><span uk-pagination-next></span></a></li>
+  </ul>
+  <!-- Table Pagination End-->
 
   <!-- Modal Edit -->
   <?php foreach ($products as $product) : ?>

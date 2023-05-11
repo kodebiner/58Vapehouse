@@ -181,7 +181,7 @@ h6 {
 *+h4,
 *+h5,
 *+h6 {
-    margin-top: 40px
+    margin-top: 10px
 }
 
 .uk-h1,
@@ -3740,7 +3740,7 @@ select.uk-form-width-xsmall {
 }
 
 ul.uk-nav-sub {
-    padding: 5px 0 5px 15px
+    padding: 5px 0 5px 32px
 }
 
 .uk-nav-sub ul {
@@ -3809,7 +3809,7 @@ ul.uk-nav-sub {
 }
 
 .uk-nav-default .uk-nav-sub a {
-    color: #999
+    color: #fff
 }
 
 .uk-nav-default .uk-nav-sub a:hover {

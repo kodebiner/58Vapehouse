@@ -7,7 +7,7 @@
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
-<div class="tm-card-header">
+<div class="tm-card-header uk-light">
   <?= view('Views/Auth/_message_block') ?>
 
   <div uk-grid class="uk-flex-middle">
@@ -17,7 +17,7 @@
 
     <!-- Button Trigger Modal Add -->
     <div class="uk-width-1-2@m uk-text-right@m">
-      <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #tambahdata"><?=lang('Global.addRestock')?></button>
+      <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addRestock')?></button>
     </div>
     <!-- End Of Button Trigger Modal Add -->
 
@@ -113,8 +113,15 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
+<div class="uk-margin">
+  <form class="uk-search uk-search-default">
+    <span uk-search-icon></span>
+    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
+  </form>
+</div>
+
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-striped uk-table-hover uk-table-justify uk-table-middle uk-table-divider">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
     <thead>
       <tr>
         <th class="uk-text-center">No</th>
@@ -149,6 +156,24 @@
     </tbody>
   </table>
   <!-- End Table Content -->
+  
+  <!-- Table Pagination -->
+  <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
+    <li><a href="#"><span uk-pagination-previous></span></a></li>
+    <li><a href="#">1</a></li>
+    <li class="uk-disabled"><span>…</span></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li><a href="#">6</a></li>
+    <li><a href="#">7</a></li>
+    <li><a href="#">8</a></li>
+    <li><a href="#">9</a></li>
+    <li><a href="#">10</a></li>
+    <li class="uk-disabled"><span>…</span></li>
+    <li><a href="#">20</a></li>
+    <li><a href="#"><span uk-pagination-next></span></a></li>
+  </ul>
+  <!-- Table Pagination End-->
 </div>
 <!-- End Of Table Content -->
 

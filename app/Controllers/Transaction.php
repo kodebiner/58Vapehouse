@@ -41,7 +41,7 @@ class Transaction extends BaseController
         $data['products']       = $products;
         $data['variants']       = $variants;
 
-        return view('Views/Transaction/transaction', $data);
+        return view('Views/transaction', $data);
     }
 
     

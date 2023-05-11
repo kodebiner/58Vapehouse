@@ -98,8 +98,16 @@
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
                         </li>
-                        <li class="tm-main-navbar">
-                            <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?></a>
+                        <li class="tm-main-navbar uk-parent">
+                            <a class="uk-h4 tm-h4" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
+                            <ul class="uk-nav-sub">
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
@@ -182,7 +190,43 @@
             <div class="tm-main">
                 <div class="uk-container uk-container-expand uk-padding-remove-horizontal">
                     <div class="uk-panel uk-panel-scrollable" style="background-color: #363636;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
-                        <?= $this->renderSection('main') ?>
+                        <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                            <?php foreach ($variants as $variant) : ?>
+                                <?php
+                                    foreach ($products as $product) {
+                                        if ($product['id'] === $variant['productid']) {
+                                            $productName = $product['name'];
+                                            $productPhoto = $product['photo'];
+                                        }
+                                    }
+                                ?>
+                                <div onClick="createNewOrder">
+                                    <div class="uk-card uk-card-hover uk-card-default">
+                                        <div class="uk-card-header">
+                                            <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
+                                        </div>
+                                        <div class="uk-card-body">
+                                            <div class=""><?= $productPhoto ?></div>
+                                        </div>
+                                        <div class="uk-card-footer">
+                                            <div class="tm-h3 uk-text-center">
+                                                <div>Rp <?= $variant['hargamodal'] + $variant['hargajual'] ?>,-</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                            
+                            <script>
+                                function createNewOrder(){
+
+                                    const createOrder = document.getElementById("instab");
+                                    newCreateOrder.setAttribute('id','create'+createCount);
+                                    newCreateOrder.setAttribute('class','uk-margin uk-child-width-1-5');
+                                    newCreateOrder.setAttribute('uk-grid','');
+                                }
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -64,6 +64,13 @@
 <!-- End of Page Heading -->
 
 <!-- Table Of Content -->
+<div class="uk-margin">
+  <form class="uk-search uk-search-default">
+    <span uk-search-icon></span>
+    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
+  </form>
+</div>
+
 <div class="uk-overflow-auto">
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
@@ -106,6 +113,24 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <!-- Table Pagination -->
+    <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
+        <li><a href="#"><span uk-pagination-previous></span></a></li>
+        <li><a href="#">1</a></li>
+        <li class="uk-disabled"><span>…</span></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#">6</a></li>
+        <li><a href="#">7</a></li>
+        <li><a href="#">8</a></li>
+        <li><a href="#">9</a></li>
+        <li><a href="#">10</a></li>
+        <li class="uk-disabled"><span>…</span></li>
+        <li><a href="#">20</a></li>
+        <li><a href="#"><span uk-pagination-next></span></a></li>
+    </ul>
+    <!-- Table Pagination End-->
 
   <!-- Modal Edit -->
     <?php foreach ($customers as $customer) : ?>
