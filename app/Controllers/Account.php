@@ -43,8 +43,10 @@ class Account extends BaseController
         $input = $this->request->getPost();
 
         // Remove old photo
-        if ($input['oldphoto'] != $input['photo']) {
-            unlink(FCPATH.'/img/profile/'.$input['oldphoto']);
+        if (!empty($this->user->photo)) {
+            if ($input['oldphoto'] != $input['photo']) {
+                unlink(FCPATH.'/img/profile/'.$input['oldphoto']);
+            }
         }
 
         // Validation basic data

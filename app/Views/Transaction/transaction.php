@@ -11,7 +11,7 @@
                     }
                 }
             ?>
-            <div onClick="createNewOrder">
+            <div class="tm-trx-product" onClick="createNewOrder()">
                 <div class="uk-card uk-card-hover uk-card-default">
                     <div class="uk-card-header">
                         <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
@@ -29,7 +29,7 @@
         <?php endforeach; ?>
         
         <script>
-            function createNewOrder(){
+            function createNewOrder() {
 
                 const createOrder = document.getElementById("instab");
                 newCreateOrder.setAttribute('id','create'+createCount);

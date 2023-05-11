@@ -11385,3 +11385,7 @@ li.tm-main-navbar>a>svg {
     padding: 5px;
     color: #fff;
 }
+
+.tm-trx-product {
+    cursor: pointer;
+}
