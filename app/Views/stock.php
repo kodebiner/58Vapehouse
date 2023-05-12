@@ -29,7 +29,7 @@
             <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addRestock')?></h5>
           </div>
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/stock/restock/" method="post">
+            <form class="uk-form-stacked" role="form" action="/stock/restock" method="post">
               <?= csrf_field() ?>
                 <!-- ajax -->
 
