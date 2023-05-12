@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Files\File;
+use App\Models\UserModel;
 
 class Upload extends BaseController
 {
@@ -43,16 +43,43 @@ class Upload extends BaseController
                 unlink(FCPATH.'/img/profile/'.$filename);
             }
 
-            // Returning file
+            // Getting True Filename
             $returnFile = $truename.'.jpg';
+
+            // Calling Models
+            $UserModel = new UserModel();
+            
+            // Calling Entities
+            $updateUser = new \App\Entities\User();
+    
+            // Updating User Profile
+            $updateUser->id         = $this->data['uid'];
+            $updateUser->photo      = $returnFile;
+            $UserModel->save($updateUser);
+
+            // Returning Message
             die(json_encode($returnFile));
         }
     }
 
     public function removeprofile()
     {
+        // Calling Models
+        $UserModel = new UserModel();
+        
+        // Calling Entities
+        $updateUser = new \App\Entities\User();
+
+        // Updating User Profile
+        $updateUser->id         = $this->data['uid'];
+        $updateUser->photo      = NULL;
+        $UserModel->save($updateUser);
+
+        // Removing File
         $input = $this->request->getPost('photo');
         unlink(FCPATH.'/img/profile/'.$input);
+
+        // Return Message
         die(json_encode(array('message' => lang('Global.deleted'))));
     }
 }

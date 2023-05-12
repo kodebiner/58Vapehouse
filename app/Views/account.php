@@ -55,8 +55,7 @@
                 <div class="uk-margin">
                     <label class="uk-form-label" for="photo"><?=lang('Global.photo')?></label>
                     <div id="image-container" class="uk-form-controls">
-                    <input id="oldphoto" name="oldphoto" value="<?=$account->photo?>" hidden />
-                        <input id="photo" name="photo" value="<?=$account->photo?>" hidden />
+                        <input id="photo" value="<?=$account->photo?>" hidden />
                         <div class="js-upload uk-placeholder uk-text-center">
                             <span uk-icon="icon: cloud-upload"></span>
                             <span class="uk-text-middle"><?=lang('Global.photoUploadDesc')?></span>
@@ -66,6 +65,14 @@
                             </div>
                         </div>
                         <progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
+                        <?php if ($account->photo != NULL) { ?>
+                            <div id="display-container" class="uk-inline">
+                                <img src="img/profile/<?=$account->photo?>" width="300" height="300" />
+                                <div class="uk-position-small uk-position-top-right">
+                                    <a class="tm-img-remove uk-border-circle" onclick="removeImg()" uk-icon="close"></a>
+                                </div>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <script type="text/javascript">

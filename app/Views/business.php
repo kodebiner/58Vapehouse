@@ -43,10 +43,10 @@
                     <label class="uk-form-label" for="memberdisctype"><?=lang('Global.discountType')?></label>
                     <div class="uk-form-controls">
                         <div class="uk-margin-small">
-                            <label><input class="uk-radio" id="memberdisctype" name="memberdisctype" type="radio" value="0" <?php if ($gconfig['memberdisctype'] === '0') {echo 'checked';} ?> required> Rp</label>
+                            <label><input class="uk-radio" id="memberdisctype" name="memberdiscrp" type="radio" value="0" <?php if ($gconfig['memberdisctype'] === '0') {echo 'checked';} ?> required> Rp</label>
                         </div>
                         <div class="uk-margin-small">
-                            <label><input class="uk-radio" id="memberdisctype" name="memberdisctype" type="radio" value="1" <?php if ($gconfig['memberdisctype'] === '1') {echo 'checked';} ?>> %</label>
+                            <label><input class="uk-radio" id="memberdisctype" name="memberdiscpercent" type="radio" value="1" <?php if ($gconfig['memberdisctype'] === '1') {echo 'checked';} ?>> %</label>
                         </div>
                     </div>
                 </div>
@@ -61,6 +61,16 @@
                     <label class="uk-form-label" for="ppn"><?=lang('Global.vat')?></label>
                     <div class="uk-form-controls">
                         <input class="uk-input uk-form-width-xsmall" id="ppn" name="ppn" type="number" value="<?=$gconfig['ppn']?>" required> %
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-header">
+                        <h4 class="uk-card-title tm-h4 uk-preserve-color">Business Logo</h4>
+                    </div>
+                    <div class="uk-card-body">
+                        
                     </div>
                 </div>
             </div>

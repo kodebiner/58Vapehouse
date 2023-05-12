@@ -32,7 +32,6 @@ class Account extends BaseController
 
     public function updateaccount()
     {
-
         // Calling Models
         $UserModel = new UserModel();
         
@@ -41,13 +40,6 @@ class Account extends BaseController
 
         // Populating data
         $input = $this->request->getPost();
-
-        // Remove old photo
-        if (!empty($this->user->photo)) {
-            if ($input['oldphoto'] != $input['photo']) {
-                unlink(FCPATH.'/img/profile/'.$input['oldphoto']);
-            }
-        }
 
         // Validation basic data
         $rule = [
@@ -67,7 +59,6 @@ class Account extends BaseController
         $updateUser->firstname  = $input['firstname'];
         $updateUser->lastname   = $input['lastname'];
         $updateUser->phone      = $input['phone'];
-        $updateUser->photo      = $input['photo'];
 
         // Validating new password
         if (!empty($input['newPass'])) {
