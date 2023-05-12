@@ -70,13 +70,18 @@ Class Stockmove extends BaseController{
         if (! $this->validate($rule)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
-                
+
+        // date time stamp
+        $date=date_create();
+        $tanggal = date_format($date,'Y-m-d H:i:s');
+          
         // Input Data
         $data = [
             'variantid'     => $input['variant'],
             'origin'        => $input['origin'],
             'destination'   => $input['destination'],
             'qty'           => $input['qty'],
+            'date'          => $tanggal,
         ];
     
         // insert data Stockmove

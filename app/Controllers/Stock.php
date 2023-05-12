@@ -77,7 +77,7 @@ class Stock extends BaseController
             }
 
             // Finding new pric
-            $variant = $VariantModel->find($input['variant']);
+            $variant    = $VariantModel->find($input['variant']);
             $hargadasar = (($variant['hargadasar']*$totalstock)+($input['hargadasar']*$input['qty']))/($totalstock+$input['qty']);
             $hargamodal = (($variant['hargamodal']*$totalstock)+($input['hargamodal']*$input['qty']))/($totalstock+$input['qty']);
 
@@ -86,22 +86,22 @@ class Stock extends BaseController
                 'id'            => $input['variant'],
                 'hargadasar'    => $hargadasar,
                 'hargamodal'    => $hargamodal,
+                
             ];  
             $VariantModel->save($var);
 
+            // date time stamp
+            $date=date_create();
+            $tanggal = date_format($date,'Y-m-d H:i:s');
+
             $stocks = $StockModel->where('variantid',$input['variant'])->where('outletid',$input['outlet'])->first();
             $stk = [
-                'id'     => $stocks['id'],
-                'qty'    => $input['qty'],
+                'id'         => $stocks['id'],
+                'qty'        => $input['qty'],
+                'restock'    => $tanggal,
             ];
 
-            // Validation
-            if (! $this->validate([
-                'qty' => "required|max_length[255]',",
-            ])) {
-                
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-            }
+
 
             // Save Data Stok
             $StockModel->save($stk);
