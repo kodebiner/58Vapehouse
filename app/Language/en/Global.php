@@ -60,7 +60,8 @@ return [
     'origin'            => 'Origin',
     'destination'       => 'Destination',
     'quantity'          => 'Quantity',
-
+    'date'              => 'Date',
+    'note'              => 'Note',
 
     // Button
     'edit'              => 'Edit',
@@ -74,7 +75,8 @@ return [
     'addCustomer'       => 'Add Customer',
     'addStock'          => 'Add Stock',
     'addRestock'        => 'Restock',
-    'addStockMove'      => 'Add Movement',
+    'addStockMove'      => 'Add Stock Movement',
+    'addStockAdj'       => 'Add Stock Adjustment',
 
     // Menu
     'dashboard'         => 'Dashboard',
@@ -92,6 +94,7 @@ return [
     'website'           => 'Website',
     'stock'             => 'Stock',
     'stockMove'         => 'Stock Movement',
+    'stockAdj'          => 'Stock Adjustment',
 
     // Title
     'employeeList'      => 'Employee List',
@@ -103,8 +106,9 @@ return [
     'categoryList'      => 'Category List',
     'brandList'         => 'Brand List',
     'customerList'      => 'Customer List',
-    'stockList'         => 'Stock Management',
-    'stockMoveList'     => 'Stock Movement List',
+    'stockList'         => 'Stock List',
+    'stockmoveList'     => 'Stock Movement List',
+    'stockadjList'      => 'Stock Adjustment List',
     'businessInfo'      => 'Business Information',
     
     // Page Description
@@ -112,7 +116,9 @@ return [
     'employeeListDesc'  => 'List of all employee under you',
     'outletListDesc'    => 'List of all your outlets',
     'productListDesc'   => 'List of all your products',
-    'stockListDesc'     => 'List of all your products',
+    'stockListDesc'     => 'List of all your stocks',
+    'stockmoveListDesc' => 'List of all your stock movements',
+    'stockadjListDesc'  => 'List of all your stock adjustments',
     'customerListDesc'  => 'List of all your customer',
     'userProfileDesc'   => 'Information about your profile',
     'businessInfoDesc'  => 'Information about your business',

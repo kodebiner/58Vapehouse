@@ -44,7 +44,7 @@ class Product extends BaseController
         $StockModel     = new StockModel();
 
         // Populating Data
-        $products   = $ProductModel->findAll(); // Hapus kalau sudah implementasi filter
+        $products   = $ProductModel->orderBy('id', 'DESC')->findAll(); // Hapus kalau sudah implementasi filter
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
         $variant    = $VariantModel->findAll();

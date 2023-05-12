@@ -12,7 +12,7 @@ class Customer extends BaseController
         $MemberModel             = new MemberModel();
 
         // Populating Data
-        $customers              = $MemberModel->findAll();
+        $customers              = $MemberModel->orderBy('id', 'DESC')->findAll();
 
         // Parsing Data to View
         $data                   = $this->data;

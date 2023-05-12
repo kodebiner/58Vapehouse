@@ -273,6 +273,9 @@
                                     <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
                                     </li>
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="tm-main-navbar">
@@ -323,6 +326,9 @@
                             </li>
                             <li class="uk-h5 tm-h5">
                                 <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
+                            </li>
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
                             </li>
                         </ul>
                     </li>

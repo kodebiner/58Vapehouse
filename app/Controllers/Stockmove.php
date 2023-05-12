@@ -34,8 +34,8 @@ Class Stockmove extends BaseController{
 
         // Parsing Data To View
         $data                   = $this->data;
-        $data['title']          = lang('Global.stockMove');
-        $data['description']    = lang('Global.stockMoveDesc');
+        $data['title']          = lang('Global.stockmoveList');
+        $data['description']    = lang('Global.stockmoveListDesc');
         $data['products']       = $Product->findAll();
         $data['variants']       = $Variant->findAll();
         $data['outlets']        = $Outlet->findAll();

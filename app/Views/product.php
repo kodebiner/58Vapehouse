@@ -352,6 +352,7 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
+<!-- Search Box -->
 <div class="uk-child-width-1-5@m uk-margin" uk-grid>
   <div class="">
     <form class="uk-search uk-search-default">
@@ -359,6 +360,7 @@
       <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
     </form>
   </div>
+  <!-- Search Box End -->
 
   <div class="">
     <div class="uk-form-controls">

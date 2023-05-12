@@ -60,6 +60,8 @@ return [
     'origin'            => 'Asal',
     'destination'       => 'Tujuan',
     'quantity'          => 'Jumlah',
+    'date'              => 'Tanggal',
+    'note'              => 'Catatan',
 
     // Button
     'edit'              => 'Ubah',
@@ -71,6 +73,10 @@ return [
     'addBrand'          => 'Tambah Merek',
     'addVariant'        => 'Tambah Varian',
     'addCustomer'       => 'Tambah Pelanggan',
+    'addStock'          => 'Tambah Stock',
+    'addRestock'        => 'Restock',
+    'addStockMove'      => 'Tambah Perpindahan Stock',
+    'addStockAdj'       => 'Tambah Penyesuaian Stock',
 
     // Menu
     'dashboard'         => 'Dasbor',
@@ -85,6 +91,9 @@ return [
     'cashManagement'    => 'Pengelolaan Kas',
     'customer'          => 'Pelanggan',
     'website'           => 'Website',
+    'stock'             => 'Stock',
+    'stockMove'         => 'Perpindahan Stock',
+    'stockAdj'          => 'Penyesuaian Stock',
 
     // Page Title
     'employeeList'      => 'Daftar Pegawai',
@@ -95,6 +104,9 @@ return [
     'categoryList'      => 'Daftar Kategori',
     'brandList'         => 'Daftar Merek',
     'customerList'      => 'Daftar Pelanggan',
+    'stockList'         => 'Daftar Stock',
+    'stockmoveList'     => 'Daftar Pemindahan Stock',
+    'stockadjList'      => 'Daftar Penyesuaian Stock',
     'businessInfo'      => 'Informasi Usaha',
     
     // Page Description
@@ -102,6 +114,9 @@ return [
     'employeeListDesc'  => 'Daftar pegawai yang ada di bawah anda',
     'outletListDesc'    => 'Daftar outlet yang anda miliki',
     'productListDesc'   => 'Daftar produk yang anda miliki',
+    'stockListDesc'     => 'Daftar stock yang anda miliki',
+    'stockmoveListDesc' => 'Daftar perpindahan stock yang anda miliki',
+    'stockadjListDesc'  => 'Daftar penyesuaian stock yang and miliki',
     'customerListDesc'  => 'Daftar pelanggan yang and miliki',
     'userProfileDesc'   => 'Informasi mengenai profil anda',
     'businessInfoDesc'  => 'Informasi mengenai bisnis anda',

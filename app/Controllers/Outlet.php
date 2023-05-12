@@ -15,7 +15,7 @@ class Outlet extends BaseController
         $OutletModel    = new OutletModel();
 
         // Populating Data
-        $outlets    = $OutletModel->findAll();
+        $outlets    = $OutletModel->orderBy('id', 'DESC')->findAll();
 
         // Parsing Data to View
         $data                   = $this->data;

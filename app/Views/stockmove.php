@@ -12,7 +12,7 @@
 
   <div uk-grid class="uk-flex-middle">
     <div class="uk-width-1-2@m">
-      <h3 class="tm-h3"><?=lang('Global.stockMove')?></h3>
+      <h3 class="tm-h3"><?=lang('Global.stockmoveList')?></h3>
     </div>
 
     <!-- Button Trigger Modal Add -->
@@ -29,65 +29,73 @@
             <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addStockMove')?></h5>
           </div>
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/stockmove/create" method="post">
+            <form class="uk-form-stacked" role="form" action="/StockMove/create" method="post">
               <?= csrf_field() ?>
               
               <!-- ajax -->
-              <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
-                <div class="uk-form-controls">
-                  <select class="uk-select" name="product" id="sel_pro">
-                    <option><?=lang('Global.product')?></option>
-                    <?php
-                    foreach ($products as $product) {
-                      echo '<option value="'.$product['id'].'">'.$product['name'].'</option>';
-                    }
-                    ?>
-                  </select>
-                </div>
-
-                <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
-                <div class="uk-form-controls">
-                  <select class="uk-select" name="variant" id="sel_variant">
-                    <option id="default_var"><?=lang('Global.variant')?></option>
-                  </select>
-                </div>
-
-                <label class="uk-form-label" for="origin"><?=lang('Global.origin')?></label>
-                <div class="uk-form-controls">
-                  <select class="uk-select" name="origin" id="sel_out">
-                    <option><?=lang('Global.origin')?></option>
-                    <?php
-                    foreach ($outlets as $outlet) {
-                      if ($outlet['id'] === $outletPick) {
-                        $checked = 'selected';
-                      } else {
-                        $checked = '';
+              <div class="uk-margin">
+                <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
+                  <div class="uk-form-controls">
+                    <select class="uk-select" name="product" id="sel_pro">
+                      <option><?=lang('Global.product')?></option>
+                      <?php
+                      foreach ($products as $product) {
+                        echo '<option value="'.$product['id'].'">'.$product['name'].'</option>';
                       }
-                    ?>
-                      <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
-                    <?php
-                    }
-                    ?>
-                  </select>
+                      ?>
+                    </select>
+                  </div>
                 </div>
 
-                <label class="uk-form-label" for="destination"><?=lang('Global.destination')?></label>
-                <div class="uk-form-controls">
-                  <select class="uk-select" name="destination" id="sel_out">
-                    <option><?=lang('Global.destination')?></option>
-                    <?php
-                    foreach ($outlets as $outlet) {
-                      if ($outlet['id'] === $outletPick) {
-                        $checked = 'selected';
-                      } else {
-                        $checked = '';
+                <div class="uk-margin">
+                  <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
+                  <div class="uk-form-controls">
+                    <select class="uk-select" name="variant" id="sel_variant">
+                      <option id="default_var"><?=lang('Global.variant')?></option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="uk-margin">
+                  <label class="uk-form-label" for="origin"><?=lang('Global.origin')?></label>
+                  <div class="uk-form-controls">
+                    <select class="uk-select" name="origin" id="sel_out">
+                      <option><?=lang('Global.origin')?></option>
+                      <?php
+                      foreach ($outlets as $outlet) {
+                        if ($outlet['id'] === $outletPick) {
+                          $checked = 'selected';
+                        } else {
+                          $checked = '';
+                        }
+                      ?>
+                        <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                      <?php
                       }
-                    ?>
-                      <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
-                    <?php
-                    }
-                    ?>
-                  </select>
+                      ?>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="uk-margin">
+                  <label class="uk-form-label" for="destination"><?=lang('Global.destination')?></label>
+                  <div class="uk-form-controls">
+                    <select class="uk-select" name="destination" id="sel_out">
+                      <option><?=lang('Global.destination')?></option>
+                      <?php
+                      foreach ($outlets as $outlet) {
+                        if ($outlet['id'] === $outletPick) {
+                          $checked = 'selected';
+                        } else {
+                          $checked = '';
+                        }
+                      ?>
+                        <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                      <?php
+                      }
+                      ?>
+                    </select>
+                  </div>
                 </div>
                 <!-- End Of Ajax -->
                          
@@ -156,6 +164,24 @@
       <?php endforeach; ?>
     </tbody>
   </table>
+  
+  <!-- Table Pagination -->
+  <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
+    <li><a href="#"><span uk-pagination-previous></span></a></li>
+    <li><a href="#">1</a></li>
+    <li class="uk-disabled"><span>…</span></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li><a href="#">6</a></li>
+    <li><a href="#">7</a></li>
+    <li><a href="#">8</a></li>
+    <li><a href="#">9</a></li>
+    <li><a href="#">10</a></li>
+    <li class="uk-disabled"><span>…</span></li>
+    <li><a href="#">20</a></li>
+    <li><a href="#"><span uk-pagination-next></span></a></li>
+  </ul>
+  <!-- Table Pagination End-->
 </div>
 <!-- End Of Table Content -->
 

@@ -16,15 +16,6 @@
     </div>
     <!-- End Of Button Trigger Modal Add -->
 
-    <!-- filter button -->
-    <div class="uk-margin">
-      <form class="uk-search uk-search-default" action="">
-          <span class="uk-search-icon-flip" uk-search-icon></span>
-          <input class="uk-search-input" type="submit" placeholder="Search" aria-label="Search">
-      </form>
-    </div>
-    <!-- end of filter button -->
-
     <!-- Modal Add -->
     <div uk-modal class="uk-flex-top" id="tambahdata">
       <div class="uk-modal-dialog uk-margin-auto-vertical">
@@ -78,6 +69,16 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
+
+<!-- Search Box -->
+<div class="uk-margin">
+  <form class="uk-search uk-search-default">
+    <span uk-search-icon></span>
+    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
+  </form>
+</div>
+<!-- Search Box End -->
+
 <div class="uk-overflow-auto">
   <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
     <thead>

@@ -42,9 +42,9 @@ class Stock extends BaseController
             $variants       = $VariantModel->findAll();
 
             if ($this->data['outletPick'] === null) {
-                $stock      = $StockModel->findAll();
+                $stock      = $StockModel->orderBy('id', 'DESC')->findAll();
             } else {
-                $stock      = $StockModel->where('outletid', $this->data['outletPick'])->find();
+                $stock      = $StockModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
             }
 
             // Parsing data to view

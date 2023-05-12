@@ -116,12 +116,14 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
+<!-- Search Box -->
 <div class="uk-margin">
   <form class="uk-search uk-search-default">
     <span uk-search-icon></span>
     <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
   </form>
 </div>
+<!-- Search Box End -->
 
 <?php if (in_groups('owner')) : ?>
 <div class="uk-overflow-auto">
