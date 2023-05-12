@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 use App\Models\GconfigModel;
+use App\Models\ProductModel;
 
 class Upload extends BaseController
 {
@@ -141,6 +142,147 @@ class Upload extends BaseController
         // Removing File
         $input = $this->request->getPost('logo');
         unlink(FCPATH.'img/'.$input);
+
+        // Return Message
+        die(json_encode(array('message' => lang('Global.deleted'))));
+    }
+
+    public function productcreate()
+    {
+        $image      = \Config\Services::image();
+        $validation = \Config\Services::validation();
+        $input = $this->request->getFile('uploads');
+
+        // Validation Rules
+        $rules = [
+            'uploads'   => 'uploaded[uploads]|is_image[uploads]|max_size[uploads,2048]|ext_in[uploads,png,jpg,jpeg]',
+        ];
+
+        // Validating
+        if (! $this->validate($rules)) {
+            http_response_code(400);
+            die(json_encode(array('message' => $this->validator->getErrors())));
+        }
+
+        if ($input->isValid() && ! $input->hasMoved()) {
+            // Saving uploaded file
+            $filename = $input->getRandomName();
+            $truename = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
+            $input->move(FCPATH.'/img/product/', $filename);
+
+            // Resizing Product Image
+            $image->withFile(FCPATH.'/img/product/'.$filename)
+                ->fit(300, 300, 'center')
+                ->crop(300, 300, 0, 0)
+                ->flatten(255, 255, 255)
+                ->convert(IMAGETYPE_JPEG)
+                ->save(FCPATH.'/img/product/'.$truename.'.jpg');
+            
+            // Creating Thumbnail
+            $image->withFile(FCPATH.'/img/product/'.$filename)
+                ->fit(300, 300, 'center')
+                ->crop(300, 300, 0, 0)
+                ->flatten(255, 255, 255)
+                ->convert(IMAGETYPE_JPEG)
+                ->save(FCPATH.'/img/product/thumb-'.$truename.'.jpg', 40);
+            
+            // Removing uploaded if it's not the same filename
+            if ($filename != $truename.'.jpg') {
+                unlink(FCPATH.'/img/product/'.$filename);
+            }
+
+            // Getting True Filename
+            $returnFile = $truename.'.jpg';
+
+            // Returning Message
+            die(json_encode($returnFile));
+        }
+    }
+
+    public function removeproductcreate()
+    {
+        // Removing File
+        $input = $this->request->getPost('photo');
+        unlink(FCPATH.'img/product/thumb-'.$input);
+        unlink(FCPATH.'img/product/'.$input);
+
+        // Return Message
+        die(json_encode(array('message' => lang('Global.deleted'))));
+    }
+
+    public function productedit($id)
+    {
+        $image      = \Config\Services::image();
+        $validation = \Config\Services::validation();
+        $input = $this->request->getFile('uploads');
+
+        // Validation Rules
+        $rules = [
+            'uploads'   => 'uploaded[uploads]|is_image[uploads]|max_size[uploads,2048]|ext_in[uploads,png,jpg,jpeg]',
+        ];
+
+        // Validating
+        if (! $this->validate($rules)) {
+            http_response_code(400);
+            die(json_encode(array('message' => $this->validator->getErrors())));
+        }
+
+        if ($input->isValid() && ! $input->hasMoved()) {
+            // Saving uploaded file
+            $filename = $input->getRandomName();
+            $truename = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
+            $input->move(FCPATH.'/img/product/', $filename);
+
+            // Resizing Product Image
+            $image->withFile(FCPATH.'/img/product/'.$filename)
+                ->fit(300, 300, 'center')
+                ->crop(300, 300, 0, 0)
+                ->flatten(255, 255, 255)
+                ->convert(IMAGETYPE_JPEG)
+                ->save(FCPATH.'/img/product/'.$truename.'.jpg');
+            
+            // Creating Thumbnail
+            $image->withFile(FCPATH.'/img/product/'.$filename)
+                ->fit(300, 300, 'center')
+                ->crop(300, 300, 0, 0)
+                ->flatten(255, 255, 255)
+                ->convert(IMAGETYPE_JPEG)
+                ->save(FCPATH.'/img/product/thumb-'.$truename.'.jpg', 40);
+            
+            // Removing uploaded if it's not the same filename
+            if ($filename != $truename.'.jpg') {
+                unlink(FCPATH.'/img/product/'.$filename);
+            }
+
+            // Getting True Filename
+            $returnFile = $truename.'.jpg';
+
+            // Calling Models
+            $ProductModel = new ProductModel();
+
+            // Updating 
+
+            // Returning Message
+            die(json_encode($returnFile));
+        }
+    }
+
+    public function removeproductedit()
+    {
+        // Calling Models
+        $UserModel = new UserModel();
+        
+        // Calling Entities
+        $updateUser = new \App\Entities\User();
+
+        // Updating User Profile
+        $updateUser->id         = $this->data['uid'];
+        $updateUser->photo      = NULL;
+        $UserModel->save($updateUser);
+
+        // Removing File
+        $input = $this->request->getPost('photo');
+        unlink(FCPATH.'/img/profile/'.$input);
 
         // Return Message
         die(json_encode(array('message' => lang('Global.deleted'))));

@@ -81,6 +81,142 @@
                 </div>
               </div>
 
+              <div id="image-container-create" class="uk-margin">
+                <label class="uk-form-label" for="photocreate"><?=lang('Global.photo')?></label>
+                  <div id="image-container" class="uk-form-controls">
+                      <input id="photocreate" name="photo" value="" hidden />
+                      <input id="photocreatethumb" name="thumbnail" value="" hidden />
+                      <div class="js-upload-create uk-placeholder uk-text-center">
+                          <span uk-icon="icon: cloud-upload"></span>
+                          <span class="uk-text-middle"><?=lang('Global.photoUploadDesc')?></span>
+                          <div uk-form-custom>
+                              <input type="file">
+                              <span class="uk-link uk-preserve-color"><?=lang('Global.selectOne')?></span>
+                          </div>
+                      </div>
+                      <progress id="js-progressbar-create" class="uk-progress" value="0" max="100" hidden></progress>
+                  </div>
+              </div>
+              <script type="text/javascript">
+                  var bar = document.getElementById('js-progressbar-create');
+
+                  UIkit.upload('.js-upload-create', {
+                      url: 'upload/productcreate',
+                      multiple: false,
+                      name: 'uploads',
+                      method: 'POST',
+                      type: 'json',
+
+                      beforeSend: function () {
+                          console.log('beforeSend', arguments);
+                      },
+                      beforeAll: function () {
+                          console.log('beforeAll', arguments);
+                      },
+                      load: function () {
+                          console.log('load', arguments);
+                      },
+                      error: function () {
+                          console.log('error', arguments);
+                          var error = arguments[0].xhr.response.message.uploads;
+                          alert(error);
+                      },
+                      complete: function () {
+                          console.log('complete', arguments);
+                          
+                          var filename = arguments[0].response;
+
+                          if (document.getElementById('display-container-create')) {
+                              document.getElementById('display-container-create').remove();
+                          };
+
+                          document.getElementById('photocreate').value = filename;
+                          document.getElementById('photocreatethumb').value = 'thumb-'+filename;
+
+                          var imgContainer = document.getElementById('image-container-create');
+
+                          var displayContainer = document.createElement('div');
+                          displayContainer.setAttribute('id', 'display-container-create');
+                          displayContainer.setAttribute('class', 'uk-inline');
+
+                          var displayImg = document.createElement('img');
+                          displayImg.setAttribute('src', 'img/product/thumb-'+filename);
+                          displayImg.setAttribute('width', '150');
+                          displayImg.setAttribute('height', '150');
+
+                          var closeContainer = document.createElement('div');
+                          closeContainer.setAttribute('class', 'uk-position-small uk-position-top-right');
+
+                          var closeButton = document.createElement('a');
+                          closeButton.setAttribute('class', 'tm-img-remove uk-border-circle');
+                          closeButton.setAttribute('onClick', 'removeImgCreate()');
+                          closeButton.setAttribute('uk-icon', 'close');
+
+                          closeContainer.appendChild(closeButton);
+                          displayContainer.appendChild(displayImg);
+                          displayContainer.appendChild(closeContainer);
+                          imgContainer.appendChild(displayContainer);
+                      },
+
+                      loadStart: function (e) {
+                          console.log('loadStart', arguments);
+
+                          bar.removeAttribute('hidden');
+                          bar.max = e.total;
+                          bar.value = e.loaded;
+                      },
+
+                      progress: function (e) {
+                          console.log('progress', arguments);
+
+                          bar.max = e.total;
+                          bar.value = e.loaded;
+                      },
+
+                      loadEnd: function (e) {
+                          console.log('loadEnd', arguments);
+
+                          bar.max = e.total;
+                          bar.value = e.loaded;
+                      },
+
+                      completeAll: function () {
+                          console.log('completeAll', arguments);                                   
+
+                          setTimeout(function () {
+                              bar.setAttribute('hidden', 'hidden');
+                          }, 1000);
+
+                          alert('<?=lang('Global.uploadComplete')?>');
+                      }
+                  });
+
+                  function removeImgCreate() {                                
+                      $.ajax ({
+                          type: 'post',
+                          url: 'upload/removeproductcreate',
+                          data: {'photo': document.getElementById('photocreate').value},
+                          dataType: 'json',
+
+                          error: function() {
+                              console.log('error', arguments);
+                          },
+
+                          success:function() {
+                              console.log('success', arguments);
+
+                              var pesan = arguments[0].message;
+
+                              document.getElementById('display-container-create').remove();
+                              document.getElementById('photocreate').value = '';
+                              document.getElementById('photocreatethumb').value = '';
+
+                              alert(pesan);
+                          }
+                      });
+                  };
+              </script>
+
               <div id="createVariant" class="uk-margin-bottom">
                 <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
                 <div class="uk-text-right"><a onclick="createNewVariant()">+ Add More Variant</a></div>
@@ -565,6 +701,139 @@
                   <input type="text" class="uk-input" id="brand" name="brand"  value="<?= $bran['name']; ?>" autofocus />
                 </div>
               </div>
+
+              <div id="image-container-edit-<?=$product['id']?>" class="uk-margin">
+                <label class="uk-form-label" for="photocreate"><?=lang('Global.photo')?></label>
+                  <div id="image-container-<?=$product['id']?>" class="uk-form-controls">
+                      <input id="photoedit<?=$product['id']?>" value="" hidden />
+                      <div class="js-upload-edit-<?=$product['id']?> uk-placeholder uk-text-center">
+                          <span uk-icon="icon: cloud-upload"></span>
+                          <span class="uk-text-middle"><?=lang('Global.photoUploadDesc')?></span>
+                          <div uk-form-custom>
+                              <input type="file">
+                              <span class="uk-link uk-preserve-color"><?=lang('Global.selectOne')?></span>
+                          </div>
+                      </div>
+                      <progress id="js-progressbar-edit-<?=$product['id']?>" class="uk-progress" value="0" max="100" hidden></progress>
+                  </div>
+              </div>
+              <script type="text/javascript">
+                  var bar = document.getElementById('js-progressbar-edit-<?=$product['id']?>');
+
+                  UIkit.upload('.js-upload-edit-<?=$product['id']?>', {
+                      url: 'upload/productedit/<?=$product['id']?>',
+                      multiple: false,
+                      name: 'uploads',
+                      method: 'POST',
+                      type: 'json',
+
+                      beforeSend: function () {
+                          console.log('beforeSend', arguments);
+                      },
+                      beforeAll: function () {
+                          console.log('beforeAll', arguments);
+                      },
+                      load: function () {
+                          console.log('load', arguments);
+                      },
+                      error: function () {
+                          console.log('error', arguments);
+                          var error = arguments[0].xhr.response.message.uploads;
+                          alert(error);
+                      },
+                      complete: function () {
+                          console.log('complete', arguments);
+                          
+                          var filename = arguments[0].response;
+
+                          if (document.getElementById('display-container-edit-<?=$product['id']?>')) {
+                              document.getElementById('display-container-edit-<?=$product['id']?>').remove();
+                          };
+
+                          document.getElementById('photoedit<?=$product['id']?>').value = filename;
+
+                          var imgContainer = document.getElementById('image-container-edit-<?=$product['id']?>');
+
+                          var displayContainer = document.createElement('div');
+                          displayContainer.setAttribute('id', 'display-container-edit-<?=$product['id']?>');
+                          displayContainer.setAttribute('class', 'uk-inline');
+
+                          var displayImg = document.createElement('img');
+                          displayImg.setAttribute('src', 'img/product/thumb-'+filename);
+                          displayImg.setAttribute('width', '150');
+                          displayImg.setAttribute('height', '150');
+
+                          var closeContainer = document.createElement('div');
+                          closeContainer.setAttribute('class', 'uk-position-small uk-position-top-right');
+
+                          var closeButton = document.createElement('a');
+                          closeButton.setAttribute('class', 'tm-img-remove uk-border-circle');
+                          closeButton.setAttribute('onClick', 'removeImgEdit<?=$product['id']?>()');
+                          closeButton.setAttribute('uk-icon', 'close');
+
+                          closeContainer.appendChild(closeButton);
+                          displayContainer.appendChild(displayImg);
+                          displayContainer.appendChild(closeContainer);
+                          imgContainer.appendChild(displayContainer);
+                      },
+
+                      loadStart: function (e) {
+                          console.log('loadStart', arguments);
+
+                          bar.removeAttribute('hidden');
+                          bar.max = e.total;
+                          bar.value = e.loaded;
+                      },
+
+                      progress: function (e) {
+                          console.log('progress', arguments);
+
+                          bar.max = e.total;
+                          bar.value = e.loaded;
+                      },
+
+                      loadEnd: function (e) {
+                          console.log('loadEnd', arguments);
+
+                          bar.max = e.total;
+                          bar.value = e.loaded;
+                      },
+
+                      completeAll: function () {
+                          console.log('completeAll', arguments);                                   
+
+                          setTimeout(function () {
+                              bar.setAttribute('hidden', 'hidden');
+                          }, 1000);
+
+                          alert('<?=lang('Global.uploadComplete')?>');
+                      }
+                  });
+
+                  function removeImgEdit<?=$product['id']?>() {                                
+                      $.ajax ({
+                          type: 'post',
+                          url: 'upload/removeproduedit',
+                          data: {'photo': document.getElementById('photoedit<?=$product['id']?>').value},
+                          dataType: 'json',
+
+                          error: function() {
+                              console.log('error', arguments);
+                          },
+
+                          success:function() {
+                              console.log('success', arguments);
+
+                              var pesan = arguments[0].message;
+
+                              document.getElementById('display-container-edit-<?=$product['id']?>').remove();
+                              document.getElementById('photoedit<?=$product['id']?>').value = '';
+
+                              alert(pesan);
+                          }
+                      });
+                  };
+              </script>
 
               <div class="uk-margin-bottom">
                 <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>

@@ -72,6 +72,10 @@ $routes->group('upload', ['filter' => 'login'], function($routes) {
     $routes->post('removeprofile', 'Upload::removeprofile', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('logo', 'Upload::logo', ['filter' => 'role:owner']);
     $routes->post('removelogo', 'Upload::removelogo', ['filter' => 'role:owner']);
+    $routes->post('productcreate', 'Upload::productcreate', ['filter' => 'role:owner,supervisor']);
+    $routes->post('removeproductcreate', 'Upload::removeproductcreate', ['filter' => 'role:owner,supervisor']);
+    $routes->post('productedit/(:num)', 'Upload::productedit/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->post('removeproductedit', 'Upload::removeproductedit', ['filter' => 'role:owner,supervisor']);
 });
 
 // Account Routes
