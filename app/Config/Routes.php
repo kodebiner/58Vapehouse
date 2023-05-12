@@ -70,6 +70,8 @@ $routes->group('/', ['filter' => 'login'], function($routes) {
 $routes->group('upload', ['filter' => 'login'], function($routes) {
     $routes->post('profile', 'Upload::profile', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('removeprofile', 'Upload::removeprofile', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('logo', 'Upload::logo', ['filter' => 'role:owner']);
+    $routes->post('removelogo', 'Upload::removelogo', ['filter' => 'role:owner']);
 });
 
 // Account Routes

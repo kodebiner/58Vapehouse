@@ -130,3 +130,4 @@ nb-configuration.xml
 /.php-cs-fixer.php
 
 public/img/profile/*
+public/img/logo.*

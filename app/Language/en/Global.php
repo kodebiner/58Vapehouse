@@ -110,6 +110,7 @@ return [
     'stockmoveList'     => 'Stock Movement List',
     'stockadjList'      => 'Stock Adjustment List',
     'businessInfo'      => 'Business Information',
+    'bizLogo'           => 'Business Logo',
     
     // Page Description
     'dashdesc'          => 'Global information about your business',

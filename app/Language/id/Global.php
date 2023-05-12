@@ -108,6 +108,7 @@ return [
     'stockmoveList'     => 'Daftar Pemindahan Stock',
     'stockadjList'      => 'Daftar Penyesuaian Stock',
     'businessInfo'      => 'Informasi Usaha',
+    'bizLogo'           => 'Logo Usaha',
     
     // Page Description
     'dashdesc'          => 'Informasi global mengenai bisnis anda',
