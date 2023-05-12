@@ -1,4 +1,10 @@
 <?= $this->extend('layout') ?>
+
+<?= $this->section('extraScript') ?>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<?= $this->endSection() ?>
+
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
@@ -357,7 +363,7 @@
   <div class="">
     <form class="uk-search uk-search-default">
       <span uk-search-icon></span>
-      <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
+      <input id="myInput" class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
     </form>
   </div>
   <!-- Search Box End -->
@@ -386,7 +392,7 @@
 </div>
 
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="myTable">
     <thead>
       <tr>
         <th class="uk-text-center"></th>
@@ -399,7 +405,7 @@
         <th class="uk-text-center"><?=lang('Global.action')?></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="myTable">
       <?php $i = 1 ; ?>
       <?php foreach ($products as $product) : ?>
         <tr class="">
@@ -578,5 +584,18 @@
   <!-- End Of Modal Edit -->
 </div>
 <!-- End Of Table Content -->
+
+<script>
+  // ajax
+  $(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+    
+</script>
 
 <?= $this->endSection() ?>
