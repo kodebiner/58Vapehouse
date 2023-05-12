@@ -1,8 +1,12 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+  
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> -->
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -392,7 +396,7 @@
 </div>
 
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="myTable">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example">
     <thead>
       <tr>
         <th class="uk-text-center"></th>
@@ -405,7 +409,7 @@
         <th class="uk-text-center"><?=lang('Global.action')?></th>
       </tr>
     </thead>
-    <tbody id="myTable">
+    <tbody>
       <?php $i = 1 ; ?>
       <?php foreach ($products as $product) : ?>
         <tr class="">
@@ -503,7 +507,7 @@
   </table>
 
   <!-- Table Pagination -->
-  <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
+  <!-- <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
     <li><a href="#"><span uk-pagination-previous></span></a></li>
     <li><a href="#">1</a></li>
     <li class="uk-disabled"><span>…</span></li>
@@ -517,8 +521,8 @@
     <li class="uk-disabled"><span>…</span></li>
     <li><a href="#">20</a></li>
     <li><a href="#"><span uk-pagination-next></span></a></li>
-  </ul>
-  <!-- Table Pagination End-->
+  </ul> --> -->
+  <!-- Table Pagination End
 
   <!-- Modal Edit -->
   <?php foreach ($products as $product) : ?>
@@ -587,14 +591,18 @@
 
 <script>
   // ajax
-  $(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#myTable tr").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-      });
-    });
+  // $(document).ready(function(){
+  // $("#myInput").on("keyup", function() {
+  //       var value = $(this).val().toLowerCase();
+  //       $("#myTable tr").filter(function() {
+  //         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+  //       });
+  //     });
+  //   });
+
+  $(document).ready(function () {
+    $('#example').DataTable();
+});
     
 </script>
 
