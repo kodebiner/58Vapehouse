@@ -57,9 +57,9 @@
                         <div class="uk-navbar-left">
                             <a class="uk-navbar-item uk-logo" href="<?=base_url();?>" aria-label="<?=lang('Global.backHome')?>">
                                 <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
-                                    <img src="/img/<?=$gconfig['logo'];?>" alt="<?=$gconfig['bizname'];?>" width="70" height="70" style="aspect-ratio: 1/1;">
+                                    <img src="/img/<?=$gconfig['logo'];?>" alt="<?=$gconfig['bizname'];?>" style="height: 70px;">
                                 <?php } else { ?>
-                                    <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" width="70" height="70" style="aspect-ratio: 1/1;">
+                                    <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 70px;">
                                 <?php } ?>
                             </a>
                         </div>
