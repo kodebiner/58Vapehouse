@@ -889,6 +889,85 @@ a.uk-link-reset {
     border-bottom: 1px solid #e5e5e5
 }
 
+.uk-table thead>tr>th.sorting_asc:before,
+.uk-table thead>tr>th.sorting_desc:after,
+.uk-table thead>tr>td.sorting_asc:before,
+.uk-table thead>tr>td.sorting_desc:after {
+    opacity: .6;
+}
+
+.uk-table thead>tr>th.sorting:before,
+.uk-table thead>tr>th.sorting:after,
+.uk-table thead>tr>th.sorting_asc:before,
+.uk-table thead>tr>th.sorting_asc:after,
+.uk-table thead>tr>th.sorting_desc:before,
+.uk-table thead>tr>th.sorting_desc:after,
+.uk-table thead>tr>th.sorting_asc_disabled:before,
+.uk-table thead>tr>th.sorting_asc_disabled:after,
+.uk-table thead>tr>th.sorting_desc_disabled:before,
+.uk-table thead>tr>th.sorting_desc_disabled:after,
+.uk-table thead>tr>td.sorting:before,
+.uk-table thead>tr>td.sorting:after,
+.uk-table thead>tr>td.sorting_asc:before,
+.uk-table thead>tr>td.sorting_asc:after,
+.uk-table thead>tr>td.sorting_desc:before,
+.uk-table thead>tr>td.sorting_desc:after,
+.uk-table thead>tr>td.sorting_asc_disabled:before,
+.uk-table thead>tr>td.sorting_asc_disabled:after,
+.uk-table thead>tr>td.sorting_desc_disabled:before,
+.uk-table thead>tr>td.sorting_desc_disabled:after {
+    position: absolute;
+    display: block;
+    opacity: .125;
+    right: 10px;
+    line-height: 9px;
+    font-size: .8em;
+}
+
+.uk-table thead>tr>th.sorting,
+.uk-table thead>tr>th.sorting_asc,
+.uk-table thead>tr>th.sorting_desc,
+.uk-table thead>tr>th.sorting_asc_disabled,
+.uk-table thead>tr>th.sorting_desc_disabled,
+.uk-table thead>tr>td.sorting,
+.uk-table thead>tr>td.sorting_asc,
+.uk-table thead>tr>td.sorting_desc,
+.uk-table thead>tr>td.sorting_asc_disabled,
+.uk-table thead>tr>td.sorting_desc_disabled {
+    cursor: pointer;
+    position: relative;
+}
+
+.uk-table thead>tr>th.sorting:before,
+.uk-table thead>tr>th.sorting_asc:before,
+.uk-table thead>tr>th.sorting_desc:before,
+.uk-table thead>tr>th.sorting_asc_disabled:before,
+.uk-table thead>tr>th.sorting_desc_disabled:before,
+.uk-table thead>tr>td.sorting:before,
+.uk-table thead>tr>td.sorting_asc:before,
+.uk-table thead>tr>td.sorting_desc:before,
+.uk-table thead>tr>td.sorting_asc_disabled:before,
+.uk-table thead>tr>td.sorting_desc_disabled:before {
+    bottom: 50%;
+    content: "▲";
+    content: "▲"/"";
+}
+
+.uk-table thead>tr>th.sorting:after,
+.uk-table thead>tr>th.sorting_asc:after,
+.uk-table thead>tr>th.sorting_desc:after,
+.uk-table thead>tr>th.sorting_asc_disabled:after,
+.uk-table thead>tr>th.sorting_desc_disabled:after,
+.uk-table thead>tr>td.sorting:after,
+.uk-table thead>tr>td.sorting_asc:after,
+.uk-table thead>tr>td.sorting_desc:after,
+.uk-table thead>tr>td.sorting_asc_disabled:after,
+.uk-table thead>tr>td.sorting_desc_disabled:after {
+    top: 50%;
+    content: "▼";
+    content: "▼"/"";
+}
+
 .uk-icon {
     margin: 0;
     border: none;
@@ -2567,7 +2646,7 @@ select.uk-form-width-xsmall {
 }
 
 .uk-search-default {
-    width: 240px
+    width: 268px
 }
 
 .uk-search-default .uk-search-input {

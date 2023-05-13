@@ -69,27 +69,26 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
-
 <!-- Search Box -->
 <div class="uk-margin">
   <form class="uk-search uk-search-default">
     <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
+    <input class="uk-search-input" id="inputVar" onkeyup="searchVar()" type="text" placeholder="Search" aria-label="Search">
   </form>
 </div>
 <!-- Search Box End -->
 
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="tableVar">
     <thead>
       <tr>
-        <th class="uk-text-center">No</th>
-        <th class="uk-text-center"><?=lang('Global.name')?></th>
-        <th class="uk-text-center"><?=lang('Global.basePrice')?></th>
-        <th class="uk-text-center"><?=lang('Global.capitalPrice')?></th>
-        <th class="uk-text-center"><?=lang('Global.margin')?></th>
-        <th class="uk-text-center"><?=lang('Global.stock')?></th>
-        <th class="uk-text-center"><?=lang('Global.action')?></th>
+        <th class="uk-text-center uk-width-small">No</th>
+        <th class="uk-text-center uk-width-large"><?=lang('Global.name')?></th>
+        <th class="uk-text-center uk-width-medium"><?=lang('Global.basePrice')?></th>
+        <th class="uk-text-center uk-width-medium"><?=lang('Global.capitalPrice')?></th>
+        <th class="uk-text-center uk-width-medium"><?=lang('Global.margin')?></th>
+        <th class="uk-text-center uk-width-small"><?=lang('Global.stock')?></th>
+        <th class="uk-text-center uk-width-large"><?=lang('Global.action')?></th>
       </tr>
     </thead>
     <tbody>
@@ -205,5 +204,28 @@
   <!-- End Of Modal Edit -->
 </div>
 <!-- End Of Table Content -->
+
+<!-- Search Engine Script -->
+<script>
+  function searchVar() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("inputVar");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tableVar");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }       
+    }
+  }
+</script>
+<!-- Search Engine Script End -->
 
 <?= $this->endSection() ?>
