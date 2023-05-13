@@ -38,6 +38,8 @@ table.dataTable thead th, table.dataTable thead td {
 .uk-text-center {
     text-align: left !important;
 }
+
+
 </style>
 
 <?= $this->endSection() ?>

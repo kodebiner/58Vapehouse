@@ -1,4 +1,8 @@
 <?= $this->extend('layout') ?>
+
+<?= $this->section('extraScript') ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<?= $this->endSection() ?>
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
@@ -29,6 +33,19 @@
                             
                             <!-- ajax -->
                             <div class="uk-margin">
+                                <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
+                                <div class="uk-form-controls">
+                                    <select class="uk-select" name="Outlet">
+                                        <option><?=lang('Global.outlet')?></option>
+                                        <?php
+                                        foreach ($outlets as $outlet) {
+                                            echo '<option value="'.$outlet['id'].'">'.$outlet['name'].'</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="uk-margin">
                                 <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
                                 <div class="uk-form-controls">
                                     <select class="uk-select" name="product" id="sel_pro">
@@ -56,6 +73,14 @@
                                 <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
                                 <div class="uk-form-controls">
                                     <input type="text" class="uk-input <?php if (session('errors.quantity')) : ?>tm-form-invalid<?php endif ?>" name="qty" id="qty" placeholder="<?=lang('Global.quantity')?>" required/>
+                                </div>
+                            </div>
+                            <!-- End Of Ajax -->
+                                        
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="note"><?=lang('Global.note')?></label>
+                                <div class="uk-form-controls">
+                                    <input type="text" class="uk-input <?php if (session('errors.note')) : ?>tm-form-invalid<?php endif ?>" name="note" id="note" placeholder="<?=lang('Global.note')?>" required/>
                                 </div>
                             </div>
 
@@ -118,6 +143,7 @@
                         } ?>
                     </td>
                     <td class=""><?= $stokadj['qty']; ?></td>
+                    <td class=""><?= $stokadj['note']; ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
