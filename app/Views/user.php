@@ -120,21 +120,21 @@
 <div class="uk-margin">
   <form class="uk-search uk-search-default">
     <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
+    <input class="uk-search-input" id="inputUser" onkeyup="searchUser()" type="text" placeholder="Search" aria-label="Search">
   </form>
 </div>
 <!-- Search Box End -->
 
 <?php if (in_groups('owner')) : ?>
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="tableUser">
     <thead>
       <tr>
-        <th class="uk-text-center">No</th>
-        <th class="uk-text-center"><?=lang('Global.name')?></th>
-        <th class="uk-text-center"><?=lang('Global.phone')?></th>
-        <th class="uk-text-center"><?=lang('Global.accessLevel')?></th>
-        <th class="uk-text-center"><?=lang('Global.action')?></th>
+        <th class="uk-text-center uk-width-small">No</th>
+        <th class="uk-width-large"><?=lang('Global.name')?></th>
+        <th class="uk-width-medium"><?=lang('Global.phone')?></th>
+        <th class="uk-width-medium"><?=lang('Global.accessLevel')?></th>
+        <th class="uk-text-center uk-width-large"><?=lang('Global.action')?></th>
       </tr>
     </thead>
     <tbody>
@@ -142,9 +142,9 @@
       <?php foreach ($users as $user) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center"><?= $user->firstname.' '.$user->lastname; ?></td>
-          <td class="uk-text-center"><?= $user->phone; ?></td>
-          <td class="uk-text-center"><?= $user->role; ?></td>
+          <td class=""><?= $user->firstname.' '.$user->lastname; ?></td>
+          <td class=""><?= $user->phone; ?></td>
+          <td class=""><?= $user->role; ?></td>
           <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
             <!-- Button Trigger Modal Edit -->
             <div>
@@ -289,6 +289,27 @@
 <?php endif ?>
 <!-- End Of Table Content -->
 
-
+<!-- Search Engine Script -->
+<script>
+  function searchUser() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("inputUser");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tableUser");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }       
+    }
+  }
+</script>
+<!-- Search Engine Script End -->
 
 <?= $this->endSection() ?>

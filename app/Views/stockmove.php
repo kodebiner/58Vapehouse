@@ -122,15 +122,24 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
+<!-- Search Box -->
+<div class="uk-margin">
+  <form class="uk-search uk-search-default">
+    <span uk-search-icon></span>
+    <input class="uk-search-input" id="inputSMove" onkeyup="searchSMove()" type="text" placeholder="Search" aria-label="Search">
+  </form>
+</div>
+<!-- Search Box End -->
+
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="tableSMove">
     <thead>
       <tr>
-        <th class="uk-text-center">No</th>
-        <th class="uk-text-center"><?=lang('Global.variant')?></th>
-        <th class="uk-text-center"><?=lang('Global.origin')?></th>
-        <th class="uk-text-center"><?=lang('Global.destination')?></th>
-        <th class="uk-text-center"><?=lang('Global.quantity')?></th>
+        <th class="uk-text-center uk-width-small">No</th>
+        <th class="uk-width-medium"><?=lang('Global.variant')?></th>
+        <th class="uk-width-medium"><?=lang('Global.origin')?></th>
+        <th class="uk-width-medium"><?=lang('Global.destination')?></th>
+        <th class="uk-text-center uk-width-small"><?=lang('Global.quantity')?></th>
       </tr>
     </thead>
     <tbody>
@@ -138,21 +147,21 @@
       <?php foreach ($stockmoves as $stockmove) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center">
+          <td class="">
             <?php foreach ($variants as $variant) {
               if ($variant['id'] === $stockmove['variantid']) {
                 echo $variant['name'];
               }
             } ?>
           </td>
-          <td class="uk-text-center">
+          <td class="">
             <?php foreach ($outlets as $outlet) {
               if ($outlet['id'] === $stockmove['origin']) {
                 echo $outlet['name'];
               }
             } ?>
           </td>
-          <td class="uk-text-center">
+          <td class="">
             <?php foreach ($outlets as $outlet) {
               if ($outlet['id'] === $stockmove['destination']) {
                 echo $outlet['name'];
@@ -186,6 +195,29 @@
 <!-- End Of Table Content -->
 
 <!-- Script -->
+
+<!-- Search Engine Script -->
+<script>
+  function searchVar() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("inputVar");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tableVar");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }       
+    }
+  }
+</script>
+<!-- Search Engine Script End -->
 
 <script>
     $(document).ready(function(){

@@ -68,20 +68,20 @@
 <div class="uk-margin">
   <form class="uk-search uk-search-default">
     <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
+    <input class="uk-search-input" id="inputOutlet" onkeyup="searchOutlet()" type="text" placeholder="Search" aria-label="Search">
   </form>
 </div>
 <!-- Search Box End -->
 
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="tableOutlet">
     <thead>
       <tr>
-        <th class="uk-text-center">No</th>
-        <th class="uk-text-center"><?=lang('Global.name')?></th>
-        <th class="uk-text-center"><?=lang('Global.address')?></th>
-        <th class="uk-text-center"><?=lang('Global.maps')?></th>
-        <th class="uk-text-center"><?=lang('Global.action')?></th>
+        <th class="uk-text-center uk-width-small">No</th>
+        <th class="uk-width-large"><?=lang('Global.name')?></th>
+        <th class="uk-width-medium"><?=lang('Global.address')?></th>
+        <th class="uk-width-medium"><?=lang('Global.maps')?></th>
+        <th class="uk-text-center uk-width-large"><?=lang('Global.action')?></th>
       </tr>
     </thead>
     <tbody>
@@ -89,9 +89,9 @@
       <?php foreach ($outlets as $outlet) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center"><?= $outlet['name']; ?></td>
-          <td class="uk-text-center"><?= $outlet['address']; ?></td>
-          <td class="uk-text-center"><?= $outlet['maps']; ?></td>
+          <td><?= $outlet['name']; ?></td>
+          <td><?= $outlet['address']; ?></td>
+          <td><?= $outlet['maps']; ?></td>
           <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
             <!-- Button Trigger Modal Edit -->
             <div>
@@ -178,5 +178,28 @@
   <!-- End Of Modal Edit -->
 </div>
 <!-- End Of Table Content -->
+
+<!-- Search Engine Script -->
+<script>
+  function searchOutlet() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("inputOutlet");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tableOutlet");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }       
+    }
+  }
+</script>
+<!-- Search Engine Script End -->
 
 <?= $this->endSection() ?>
