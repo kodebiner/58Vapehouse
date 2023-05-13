@@ -532,7 +532,7 @@
 </div>
 
 <div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
     <thead>
       <tr>
         <th class="uk-text-center"></th>

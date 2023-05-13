@@ -1,7 +1,45 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> -->
+<style>
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+    color: white;
+
+}
+
+.dataTables_wrapper .dataTables_length select {
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    padding: 5px;
+    background-color: white;
+    padding: 4px;
+}
+
+input[type="search" i] {
+    appearance: auto;
+    box-sizing: border-box;
+    padding: 1px 2px;
+    color: white;
+}
+
+table.dataTable thead th, table.dataTable thead td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+
+.uk-text-center {
+    text-align: left !important;
+}
+</style>
+
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -113,17 +151,9 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
-<!-- Search Box -->
-<div class="uk-margin">
-  <form class="uk-search uk-search-default">
-    <span uk-search-icon></span>
-    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
-  </form>
-</div>
-<!-- Search Box End -->
 
-<div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
+<div class="uk-overflow-auto uk-margin">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
     <thead>
       <tr>
         <th class="uk-text-center">No</th>
@@ -158,103 +188,87 @@
     </tbody>
   </table>
   <!-- End Table Content -->
-  
-  <!-- Table Pagination -->
-  <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
-    <li><a href="#"><span uk-pagination-previous></span></a></li>
-    <li><a href="#">1</a></li>
-    <li class="uk-disabled"><span>…</span></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li><a href="#">6</a></li>
-    <li><a href="#">7</a></li>
-    <li><a href="#">8</a></li>
-    <li><a href="#">9</a></li>
-    <li><a href="#">10</a></li>
-    <li class="uk-disabled"><span>…</span></li>
-    <li><a href="#">20</a></li>
-    <li><a href="#"><span uk-pagination-next></span></a></li>
-  </ul>
-  <!-- Table Pagination End-->
-</div>
-<!-- End Of Table Content -->
 
 <script>
 
   $(document).ready(function(){
+    // Country change
+    $("#sel_pro").change(function(){
 
-// Country change
-$("#sel_pro").change(function(){
+        // Selected country id
+        var productid = $(this).val();
 
-     // Selected country id
-     var productid = $(this).val();
+        // Empty state and city dropdown
+        //$('#sel_variant').find('option').not(':first').remove();
 
-     // Empty state and city dropdown
-     //$('#sel_variant').find('option').not(':first').remove();
+        // Fetch country states
+        $.ajax({
+              type: 'post',
+              url: 'coba',
+              data: {request:'getPro',productid:productid},
+              dataType: 'json',
+              success:function(response){
 
-     // Fetch country states
-     $.ajax({
-          type: 'post',
-          url: 'coba',
-          data: {request:'getPro',productid:productid},
-          dataType: 'json',
-          success:function(response){
+                console.log('success', arguments);
 
-            console.log('success', arguments);
+                var len = response.length;
+                var variant = arguments[0][0];
 
-            var len = response.length;
-            var variant = arguments[0][0];
+                let option = '<option>Variant</option>';
 
-            let option = '<option>Variant</option>';
+                variant.forEach(itter);
 
-            variant.forEach(itter);
+                document.getElementById('sel_variant').innerHTML = option;
 
-            document.getElementById('sel_variant').innerHTML = option;
+                function itter(value) {
+                  option += '<option value="'+value.id+'">'+value.name+'</option>';
+                }
+              }
+        });
+    });
 
-            function itter(value) {
-              option += '<option value="'+value.id+'">'+value.name+'</option>';
-            }
-          }
-     });
-});
+    // Country change
+    $("#sel_variant").change(function(){
 
-// Country change
-$("#sel_variant").change(function(){
+        // Selected country id
+        var variantid = $(this).val();
 
-     // Selected country id
-     var variantid = $(this).val();
+        // Empty state and city dropdown
+        //$('#sel_variant').find('option').not(':first').remove();
 
-     // Empty state and city dropdown
-     //$('#sel_variant').find('option').not(':first').remove();
+        // Fetch country states
+        $.ajax({
+                    type: 'post',
+                    url: 'coba',
+                    data: {request:'getVariant',variantid:variantid},
+                    dataType: 'json',
+                    success:function(response){
 
-     // Fetch country states
-     $.ajax({
-          type: 'post',
-          url: 'coba',
-          data: {request:'getVariant',variantid:variantid},
-          dataType: 'json',
-          success:function(response){
+                      console.log('success', arguments);
 
-            console.log('success', arguments);
+                      var len = response.length;
+                      var variant = arguments[0][0];
 
-            var len = response.length;
-            var variant = arguments[0][0];
+                      // let option = '<option>Variant</option>';
 
-            // let option = '<option>Variant</option>';
+                      variant.forEach(itter);
 
-            variant.forEach(itter);
+                      document.getElementById('sel_variant').innerHTML = option;
 
-            document.getElementById('sel_variant').innerHTML = option;
+                      function itter(value) {
+                        option += '<option value="'+value.id+'">'+value.name+'</option>';
+                      }
+                    }
+              });
+          });
+    });
 
-            function itter(value) {
-              option += '<option value="'+value.id+'">'+value.name+'</option>';
-            }
-          }
-     });
-});
+    $(document).ready(function () {
+    $('#example').DataTable({
+      responsive: true
+    });
+    });
 
-
-});
 </script>
 
 <?= $this->endSection() ?>
