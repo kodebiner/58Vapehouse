@@ -28,14 +28,24 @@
                         <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addStockAdj')?></h5>
                     </div>
                     <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="/StockAdjustment/create" method="post">
+                        <form class="uk-form-stacked" role="form" action="/stockadjustment/create" method="post">
                             <?= csrf_field() ?>
                             
                             <!-- ajax -->
                             <div class="uk-margin">
+                                <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
+                                <div class="uk-form-controls">
+                                    <select class="uk-select" name="type">
+                                        <option name="type" value="0" >Plus</option>
+                                        <option name="type" value="1" >Minus</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="uk-margin">
                                 <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
                                 <div class="uk-form-controls">
-                                    <select class="uk-select" name="Outlet">
+                                    <select class="uk-select" name="outlet">
                                         <option><?=lang('Global.outlet')?></option>
                                         <?php
                                         foreach ($outlets as $outlet) {
@@ -45,6 +55,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
                                 <div class="uk-form-controls">
@@ -108,7 +119,6 @@
                 <th class=""><?=lang('Global.date')?></th>
                 <th class=""><?=lang('Global.product')?></th>
                 <th class=""><?=lang('Global.outlet')?></th>
-                <th class=""><?=lang('Global.stock')?></th>
                 <th class=""><?=lang('Global.quantity')?></th>
                 <th class=""><?=lang('Global.note')?></th>
             </tr>
@@ -122,8 +132,8 @@
                     <td class="">
                         <?php foreach ($products as $product) : ?>
                             <?php foreach ($variants as $variant) {
-                                if ($variant['id'] === $product['variantid']) {
-                                    echo ($product['name']-$variant['name']);
+                                if ($variant['id'] === $product['id']) {
+                                    echo ($product['name']);
                                 }
                             } ?>
                         <?php endforeach;?>
@@ -132,13 +142,6 @@
                         <?php foreach ($outlets as $outlet) {
                         if ($outlet['id'] === $stokadj['outletid']) {
                             echo $outlet['name'];
-                        }
-                        } ?>
-                    </td>
-                    <td class="">
-                        <?php foreach ($stocks as $stok) {
-                        if ($stok['id'] === $stokadj['stockid']) {
-                            echo $stok['qty'];
                         }
                         } ?>
                     </td>

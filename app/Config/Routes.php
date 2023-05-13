@@ -177,6 +177,7 @@ $routes->group('stockmove', ['filter'=>'login'], function($routes){
 //Stock Adjustment
 $routes->group('stockadjustment', ['filter'=>'login'], function($routes){
     $routes->get('', 'StockAdjustment::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'StockAdjustment::create', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 /*

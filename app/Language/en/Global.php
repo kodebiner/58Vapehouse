@@ -62,6 +62,7 @@ return [
     'quantity'          => 'Quantity',
     'date'              => 'Date',
     'note'              => 'Note',
+    'type'              => 'Sum',
 
     // Button
     'edit'              => 'Edit',

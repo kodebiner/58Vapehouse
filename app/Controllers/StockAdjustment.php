@@ -36,6 +36,62 @@ Class StockAdjustment extends BaseController{
         return view ('Views/stockadjustment', $data);
 
     }
+
+    public function create(){
+
+        // Calling Model
+        $ProductModel           = new ProductModel;
+        $VariantModel           = new VariantModel;
+        $OutletModel            = new OutletModel;
+        $StockAdjModel          = new StockAdjustmentModel();
+        $StockModel             = new StockModel;
+        
+        // initialize
+        $input = $this->request->getPost();
+  
+        // // Date
+        $tanggal = date("Y-m-d H:i:s");
+
+        if ((int)$input['type'] === 0){
+            $hasil = "+".$input['qty'];    
+        } else {
+            $hasil = "-".$input['qty'];
+        }
+
+        $Stocks = $StockModel->where('variantid',$input['variant'])->where('outletid',$input['outlet'])->first();
+        // Stock Adjusment 
+        $adj = [
+            'variantid' => $input['variant'],
+            'outletid'  => $input['outlet'],
+            'stockid'   => $Stocks['id'],
+            'type'      => $input['type'],
+            'date'      => date("Y-m-d H:i:s"),
+            'qty'       => $hasil,
+            'note'      => $input['note'],
+        ];
+        
+        $StockAdjModel->insert($adj);
+        
+        // Update Stock
+        $Stocks = $StockModel->where('variantid', $input['variant'])->where('outletid',$input['outlet'])->first();
+        $totalstock = $Stocks['qty'];
+
+        if ((int)$input['type'] === 0) {
+                $totalstock += $input['qty'];
+        } else {
+                $totalstock -= $input['qty']; 
+        }
+
+            $stok = [
+                'id'     => $Stocks['id'],
+                'qty'    => $totalstock,
+            ];  
+        $StockModel->save($stok);
+        
+        // return
+        return redirect()->back()->with('message', lang('Global.saved'));
+    }
+
 }
 
 ?>
