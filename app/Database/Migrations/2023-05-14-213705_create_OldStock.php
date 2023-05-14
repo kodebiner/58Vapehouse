@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateTotalStock extends Migration
+class CreateOldStock extends Migration
 {
     public function up()
     {
@@ -13,15 +13,15 @@ class CreateTotalStock extends Migration
             'variantid'         => ['type' => 'INT', 'constraint' => 11],
             'hargadasar'        => ['type' => 'VARCHAR', 'constraint' => 255],
             'hargamodal'        => ['type' => 'VARCHAR', 'constraint' => 255],
-            'qty'               => ['type' => 'VARCHAR', 'constraint' => 255, 'default' => '0'],
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('totalstock', true);
+        $this->forge->createTable('oldstock', true);
     }
 
     public function down()
     {
         $this->forge->dropTable('totalstock', true);
+        $this->forge->dropTable('oldstock', true);
     }
 }

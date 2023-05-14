@@ -2,14 +2,14 @@
 
 use CodeIgniter\Model;
 
-class TotalStockModel extends Model
+class OldStockModel extends Model
 {
     protected $allowedFields = [
-        'variantid','hargadasar','hargamodal','qty',
+        'variantid','hargadasar','hargamodal',
 
     ];
 
-    protected $table      = 'totalstock';
+    protected $table      = 'oldstock';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType     = 'array';
