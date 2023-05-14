@@ -187,8 +187,6 @@
                                     }, 1000);
 
                                     alert('<?=lang('Global.uploadComplete')?>');
-
-                                    location.reload();
                                 }
                             });
 
@@ -212,8 +210,6 @@
                                         document.getElementById('logo').value = '';
 
                                         alert(pesan);
-
-                                        location.reload();
                                     }
                                 });
                             };

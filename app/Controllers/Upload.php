@@ -50,6 +50,11 @@ class Upload extends BaseController
             
             // Calling Entities
             $updateUser = new \App\Entities\User();
+
+            // Removing old file
+            if ($this->data['account']->photo != NULL) {
+                unlink(FCPATH.'/img/profile/'.$this->data['account']->photo);
+            }
     
             // Updating User Profile
             $updateUser->id         = $this->data['uid'];
@@ -260,29 +265,41 @@ class Upload extends BaseController
             // Calling Models
             $ProductModel = new ProductModel();
 
-            // Updating 
+            // Updating Product Photo
+            $product = $ProductModel->find($id);
+            if (!empty($product['photo'])) {
+                unlink(FCPATH.'/img/product/'.$product['photo']);
+                unlink(FCPATH.'/img/product/'.$product['thumbnail']);
+            }
+            $update = [
+                'id'        => $id,
+                'photo'     => $truename.'.jpg',
+                'thumbnail' => 'thumb-'.$truename.'.jpg'
+            ];
+            $ProductModel->save($update);
 
             // Returning Message
             die(json_encode($returnFile));
         }
     }
 
-    public function removeproductedit()
+    public function removeproductedit($id)
     {
         // Calling Models
-        $UserModel = new UserModel();
-        
-        // Calling Entities
-        $updateUser = new \App\Entities\User();
+        $ProductModel = new ProductModel();
 
-        // Updating User Profile
-        $updateUser->id         = $this->data['uid'];
-        $updateUser->photo      = NULL;
-        $UserModel->save($updateUser);
+        // Updating product
+        $update = [
+            'id'        => $id,
+            'photo'     => NULL,
+            'thumbnail' => NULL
+        ];
+        $ProductModel->save($update);
 
         // Removing File
         $input = $this->request->getPost('photo');
-        unlink(FCPATH.'/img/profile/'.$input);
+        unlink(FCPATH.'/img/product/'.$input);
+        unlink(FCPATH.'/img/product/thumb-'.$input);
 
         // Return Message
         die(json_encode(array('message' => lang('Global.deleted'))));

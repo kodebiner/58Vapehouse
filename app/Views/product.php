@@ -705,7 +705,7 @@
               <div id="image-container-edit-<?=$product['id']?>" class="uk-margin">
                 <label class="uk-form-label" for="photocreate"><?=lang('Global.photo')?></label>
                   <div id="image-container-<?=$product['id']?>" class="uk-form-controls">
-                      <input id="photoedit<?=$product['id']?>" value="" hidden />
+                      <input id="photoedit<?=$product['id']?>" value="<?= $product['photo']; ?>" hidden />
                       <div class="js-upload-edit-<?=$product['id']?> uk-placeholder uk-text-center">
                           <span uk-icon="icon: cloud-upload"></span>
                           <span class="uk-text-middle"><?=lang('Global.photoUploadDesc')?></span>
@@ -715,6 +715,14 @@
                           </div>
                       </div>
                       <progress id="js-progressbar-edit-<?=$product['id']?>" class="uk-progress" value="0" max="100" hidden></progress>
+                      <?php if (!empty($product['thumbnail'])) { ?>
+                        <div id="display-container-edit-<?=$product['id']?>" class="uk-inline">
+                          <img src="img/product/<?=$product['thumbnail']?>" width="150" height="150" />
+                          <div class="uk-position-small uk-position-top-right">
+                            <a class="tm-img-remove uk-border-circle" uk-icon="close" onclick="removeImgEdit<?=$product['id']?>()"></a>
+                          </div>
+                        </div>
+                      <?php } ?>
                   </div>
               </div>
               <script type="text/javascript">
@@ -813,7 +821,7 @@
                   function removeImgEdit<?=$product['id']?>() {                                
                       $.ajax ({
                           type: 'post',
-                          url: 'upload/removeproduedit',
+                          url: 'upload/removeproductedit/<?=$product['id']?>',
                           data: {'photo': document.getElementById('photoedit<?=$product['id']?>').value},
                           dataType: 'json',
 
