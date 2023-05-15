@@ -31,7 +31,6 @@
                         <form class="uk-form-stacked" role="form" action="/stockadjustment/create" method="post">
                             <?= csrf_field() ?>
                             
-                            <!-- ajax -->
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
                                 <div class="uk-form-controls">
@@ -78,7 +77,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <!-- End Of Ajax -->
                                         
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
@@ -86,7 +84,6 @@
                                     <input type="text" class="uk-input <?php if (session('errors.quantity')) : ?>tm-form-invalid<?php endif ?>" name="qty" id="qty" placeholder="<?=lang('Global.quantity')?>" required/>
                                 </div>
                             </div>
-                            <!-- End Of Ajax -->
                                         
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="note"><?=lang('Global.note')?></label>
