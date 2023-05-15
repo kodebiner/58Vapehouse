@@ -42,6 +42,8 @@ return [
     'capitalPrice'      => 'Harga Modal',
     'price'             => 'Harga Jual',
     'margin'            => 'Margin',
+    'cashin'            => 'Uang Masuk',
+    'cashout'           => 'Uang Keluar',
     'deleted'           => 'Data sudah terhapus',
     'saved'             => 'Data sudah tersimpan',
     'deleteConfirm'     => 'Anda yakin akan menghapus data tersebut? ',
@@ -62,6 +64,7 @@ return [
     'quantity'          => 'Jumlah',
     'date'              => 'Tanggal',
     'note'              => 'Catatan',
+    'type'              => 'Tipe',
 
     // Button
     'edit'              => 'Ubah',
@@ -77,6 +80,7 @@ return [
     'addRestock'        => 'Restock',
     'addStockMove'      => 'Tambah Perpindahan Stock',
     'addStockAdj'       => 'Tambah Penyesuaian Stock',
+    'addCashMan'        => 'Tambah Pengelolaan Kas',
 
     // Menu
     'dashboard'         => 'Dasbor',
@@ -107,6 +111,7 @@ return [
     'stockList'         => 'Daftar Stock',
     'stockmoveList'     => 'Daftar Pemindahan Stock',
     'stockadjList'      => 'Daftar Penyesuaian Stock',
+    'cashmanList'       => 'Daftar Pengelolaan Kas',
     'businessInfo'      => 'Informasi Usaha',
     'bizLogo'           => 'Logo Usaha',
     
@@ -119,6 +124,7 @@ return [
     'stockmoveListDesc' => 'Daftar perpindahan stock yang anda miliki',
     'stockadjListDesc'  => 'Daftar penyesuaian stock yang and miliki',
     'customerListDesc'  => 'Daftar pelanggan yang and miliki',
+    'cashmanListDesc'   => 'Daftar pengelolaan kas yang anda miliki',
     'userProfileDesc'   => 'Informasi mengenai profil anda',
     'businessInfoDesc'  => 'Informasi mengenai bisnis anda',
 ];

@@ -42,6 +42,8 @@ return [
     'capitalPrice'      => 'Stock Price',
     'price'             => 'Selling Price',
     'margin'            => 'Margin',
+    'cashin'            => 'Cash In',
+    'cashout'           => 'Cash Out',
     'deleted'           => 'Data has been deleted',
     'saved'             => 'Data has been saved',
     'deleteConfirm'     => 'Are you sure want to delete this data? ',
@@ -62,7 +64,7 @@ return [
     'quantity'          => 'Quantity',
     'date'              => 'Date',
     'note'              => 'Note',
-    'type'              => 'Sum',
+    'type'              => 'Type',
 
     // Button
     'edit'              => 'Edit',
@@ -78,6 +80,7 @@ return [
     'addRestock'        => 'Restock',
     'addStockMove'      => 'Add Stock Movement',
     'addStockAdj'       => 'Add Stock Adjustment',
+    'addCashMan'        => 'Add Cash Management',
 
     // Menu
     'dashboard'         => 'Dashboard',
@@ -110,6 +113,7 @@ return [
     'stockList'         => 'Stock List',
     'stockmoveList'     => 'Stock Movement List',
     'stockadjList'      => 'Stock Adjustment List',
+    'cashmanList'       => 'Cash Management List',
     'businessInfo'      => 'Business Information',
     'bizLogo'           => 'Business Logo',
     
@@ -122,6 +126,7 @@ return [
     'stockmoveListDesc' => 'List of all your stock movements',
     'stockadjListDesc'  => 'List of all your stock adjustments',
     'customerListDesc'  => 'List of all your customer',
+    'cashmanListDesc'   => 'List of all your cash management',
     'userProfileDesc'   => 'Information about your profile',
     'businessInfoDesc'  => 'Information about your business',
 ];
