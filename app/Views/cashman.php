@@ -104,11 +104,11 @@
         <thead>
             <tr>
                 <th class="uk-text-center uk-width-small">No</th>
-                <th class="uk-width-large"><?=lang('Global.description')?></th>
+                <th class="uk-width-medium"><?=lang('Global.description')?></th>
                 <th class="uk-width-medium"><?=lang('Global.outlet')?></th>
-                <th class="uk-width-medium"><?=lang('Global.type')?></th>
-                <th class="uk-width-small"><?=lang('Global.date')?></th>
-                <th class="uk-width-medium"><?=lang('Global.employee')?></th>
+                <th class="uk-width-small"><?=lang('Global.type')?></th>
+                <th class="uk-width-large"><?=lang('Global.date')?></th>
+                <th class="uk-width-small"><?=lang('Global.employee')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.quantity')?></th>
                 <th class="uk-text-center uk-width-large"><?=lang('Global.action')?></th>
             </tr>
