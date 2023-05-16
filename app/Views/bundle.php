@@ -41,6 +41,19 @@
                                 </div>
                             </div>
 
+                            <!-- select oulet -->
+                            <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
+                                <div class="uk-form-controls">
+                                    <select class="uk-select" name="variant" id="sel_out">
+                                        <option><?=lang('Global.variant')?></option>
+                                        <?php foreach ($variants as $variant) { ?>
+                                        <option value="<?= $variant['id']; ?>"><?= $variant['name']; ?></option>
+                                         <?php  } ?>
+                                    </select>
+                                </div>
+                            </div>
+
                             <hr>
 
                             <div class="uk-margin">

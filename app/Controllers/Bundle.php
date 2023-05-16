@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\BundledetailModel;
 use App\Models\BundleModel;
+use App\Models\VariantModel;
 
 
 class Bundle extends BaseController
@@ -10,21 +12,26 @@ class Bundle extends BaseController
     public function index()
     {
         // Calling Models
-        $bundleModel = new BundleModel;
+        $bundleModel        = new BundleModel;
+        $variantModel       = new VariantModel;
+        $bundleDetailModel  = new BundledetailModel;
 
-
-        // get outlet
+        // get data 
         if ($this->data['outletPick'] === null) {
             $bundles      = $bundleModel->findAll();
         } else {
             $bundles      = $bundleModel->where('outletid', $this->data['outletPick'])->find();
         }
 
+        $bundleDetails    = $bundleDetailModel->findAll();
+        $variants         = $variantModel->findAll();
         // Parsing Data to View
-        $data                   = $this->data;
-        $data['title']          = lang('Global.Bundle');
-        $data['description']    = lang('Global.bundleListDesc');
-        $data['bundles']        = $bundles;
+        $data                           = $this->data;
+        $data['title']                  = lang('Global.Bundle');
+        $data['description']            = lang('Global.bundleListDesc');
+        $data['bundles']                = $bundles;
+        $data['variants']               = $variants;
+        $data['bundleDetails']          = $bundleDetails;
 
 
         return view('Views/bundle', $data);
@@ -34,8 +41,9 @@ class Bundle extends BaseController
     {
 
         // Calling Models
-        $bundleModel = new BundleModel;
-        
+        $bundleModel        = new BundleModel;
+        $bundleDetailModel  = new BundledetailModel;
+
         // get outlet
         if ($this->data['outletPick'] === null) {
             $bundle      = $bundleModel->findAll();
@@ -53,7 +61,7 @@ class Bundle extends BaseController
 
         ];
 
-        // validation
+        // validation bundle
         if (! $this->validate([
             'name'      =>  "required|max_length[255]',",
             'price'      =>  'required',
@@ -65,18 +73,41 @@ class Bundle extends BaseController
         // Inserting CashFlow
         $bundleModel->insert($data);
 
+        // get bundle id
+        $bundleId = $bundleModel->getInsertId();
+
+        $detail   = [
+            'bundleid'  => $bundleId,
+            'variantid' => $input['variant'],
+        ];
+
+        // validation bundle detail
+        if (! $this->validate([
+            'bundleid'   =>  'required',
+            'variantid'  =>  'required',
+            ])
+        ) 
+        {        
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // insert bundle detail
+        $$bundleDetailModel->insert($detail);
+
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function update($id) {
 
         // Calling Models
-        $bundleModel = new BundleModel;
+        $bundleModel        = new BundleModel;
+        $bundleDetailModel  = new BundledetailModel;
+
 
         // initialize
         $input = $this->request->getpost();
 
-        // saved data
+        // get data
         $data = [
             'id'        => $id,
             'name'      => $input['name'],
@@ -97,6 +128,21 @@ class Bundle extends BaseController
         // save data
         $bundleModel->save($data);
 
+        $detail = [
+            'bundleid'  => $id,
+            'variantid' => $input['variantid'],
+        ];
+
+        // validation
+        if (! $this->validate([
+            'bundleid'      =>  "required",
+            'variantid'     =>  'required',
+            ])
+        )
+        {      
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
         return redirect()->back()->with('massage', lang('global.saved'));
 
     }
@@ -104,9 +150,12 @@ class Bundle extends BaseController
     public function delete($id) {
 
         // calling model
-        $bundleModel = new bundleModel;
+        $bundleModel        = new bundleModel;
+        $bundleDetailModel  = new BundleModel;
 
         // deleted
+        $detail =  $bundleDetailModel->where('bundleid,$id')->first();
+        $bundleDetailModel->delete($id);
         $bundleModel->delete($id);
         return redirect()->back()->with('error', lang('Global.deleted'));
 
