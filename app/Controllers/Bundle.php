@@ -30,96 +30,85 @@ class CashMan extends BaseController
         return view('Views/bundle', $data);
     }
 
-    // public function create()
-    // {
+    public function create()
+    {
 
-    //     // Calling Models
-    //     $bundleModel = new BundleModel;
+        // Calling Models
+        $bundleModel = new BundleModel;
         
-    //     // get outlet
-    //     if ($this->data['outletPick'] === null) {
-    //         $bundle      = $bundleModel->findAll();
-    //     } else {
-    //         $bundle      = $bundleModel->where('outletid', $this->data['outletPick'])->find();
-    //     }
+        // get outlet
+        if ($this->data['outletPick'] === null) {
+            $bundle      = $bundleModel->findAll();
+        } else {
+            $bundle      = $bundleModel->where('outletid', $this->data['outletPick'])->find();
+        }
         
-    //     // initialize
-    //     $input          = $this->request->getPost();
+        // initialize
+        $input          = $this->request->getPost();
 
-    //     // save data
-    //     $data = [
-    //         'name'      => $input['name'],
-    //         'price'     => $input['price'],
+        // save data
+        $data = [
+            'name'      => $input['name'],
+            'price'     => $input['price'],
 
-    //     ];
+        ];
 
-    //     // validation
-    //     if (! $this->validate([
-    //         'name'      =>  "required|max_length[255]',",
-    //         'type'      =>  'required',
-    //         'qty'       =>  "required"
-    //     ])) {
+        // validation
+        if (! $this->validate([
+            'name'      =>  "required|max_length[255]',",
+            'price'      =>  'required',
+        ])) {
                 
-    //        return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-    //     }
+           return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
             
-    //     // Inserting CashFlow
-    //     $CashModel->insert($data);
+        // Inserting CashFlow
+        $bundleModel->insert($data);
 
-    //     return redirect()->back()->with('message', lang('Global.saved'));
-    // }
+        return redirect()->back()->with('message', lang('Global.saved'));
+    }
 
-    // public function update($id) {
+    public function update($id) {
 
-    //     // calling Model
-    //     $CashModel      = new CashModel;
-    //     $OutletModel    = new OutletModel;
+        // Calling Models
+        $bundleModel = new BundleModel;
 
-    //     // get user id
-    //     $auth = service('authentication');
-    //     $userId = $auth->id();
+        // initialize
+        $input = $this->request->getpost();
 
-    //     // initialize
-    //     $input = $this->request->getpost();
+        // saved data
+        $data = [
+            'id'        => $id,
+            'name'      => $input['name'],
+            'price'     => $input['price'],
 
-    //     // saved data
-    //     $data = [
-    //         'id'        => $id,
-    //         'userid'    => $userId,
-    //         'name'      => $input['name'],
-    //         'outletid'  => $input['outlet'],
-    //         'type'      => $input['type'],
-    //         'qty'       => $input['qty'],
-    //         'date'      => date("Y-m-d H:i:s"),
+        ];
 
-    //     ];
+        // validation
+        if (! $this->validate([
+            'name'      =>  "required|max_length[255]',",
+            'price'     =>  'required',
+            ])
+        )
+        {      
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
 
-    //     // validation
-    //     if (! $this->validate([
-    //         'name'      =>  "required|max_length[255]',",
-    //         'type'      =>  'required',
-    //         'qty'       =>  "required"
-    //             ])
-    //         )
-    //     {      
-    //         return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-    //     }
+        // save data
+        $bundleModel->save($data);
 
-    //     // save data
-    //     $CashModel->save($data);
+        return redirect()->back()->with('massage', lang('global.saved'));
 
-    //     return redirect()->back()->with('massage', lang('global.saved'));
+    }
 
-    // }
+    public function delete($id) {
 
-    // public function delete($id) {
+        // calling model
+        $bundleModel = new bundleModel;
 
-    //     // calling model
-    //     $CashModel = new CashModel;
+        // deleted
+        $bundleModel->delete($id);
+        return redirect()->back()->with('error', lang('Global.deleted'));
 
-    //     // deleted
-    //     $CashModel->delete($id);
-    //     return redirect()->back()->with('error', lang('Global.deleted'));
-
-    // }
+    }
 }
