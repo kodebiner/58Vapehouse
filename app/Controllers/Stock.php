@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Models\ProductModel;
 use App\Models\OutletModel;
 use App\Models\StockModel;
-use App\Models\TotalStockModel;
+use App\Models\OldStockModel;
 use App\Models\VariantModel;
 
 class Stock extends BaseController
@@ -64,7 +64,7 @@ class Stock extends BaseController
             // Calling Model
             $StockModel     = new StockModel;
             $VariantModel   = new VariantModel;
-            $TotalModel     = new TotalStockModel;
+            $OldStockModel  = new OldStockModel;
 
             // initialize
             $input = $this->request->getPost();
@@ -76,10 +76,19 @@ class Stock extends BaseController
                 $totalstock += $stock['qty'];
             }
 
-            // Finding new pric
+            // Finding new price
             $variant    = $VariantModel->find($input['variant']);
             $hargadasar = (($variant['hargadasar']*$totalstock)+($input['hargadasar']*$input['qty']))/($totalstock+$input['qty']);
             $hargamodal = (($variant['hargamodal']*$totalstock)+($input['hargamodal']*$input['qty']))/($totalstock+$input['qty']);
+
+            // Update Old Variant Price
+            $oldstock = $OldStockModel->where('variantid', $variant['id'])->first();
+            $updateoldstock = [
+                'id'            => $oldstock['id'],
+                'hargadasar'    => $variant['hargadasar'],
+                'hargamodal'    => $variant['hargamodal']
+            ];
+            $OldStockModel->save($updateoldstock);
 
             // Updating variant
             $var        = [
@@ -100,8 +109,6 @@ class Stock extends BaseController
                 'qty'        => $input['qty'],
                 'restock'    => $tanggal,
             ];
-
-
 
             // Save Data Stok
             $StockModel->save($stk);

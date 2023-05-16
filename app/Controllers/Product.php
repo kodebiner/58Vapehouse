@@ -9,7 +9,7 @@ use App\Models\CashModel;
 use App\Models\CategoryModel;
 use App\Models\VariantModel;
 use App\Models\StockModel;
-use App\Models\TotalStockModel;
+use App\Models\OldStockModel;
 use App\Models\OutletModel;
 use App\Models\GroupUserModel;
 use Myth\Auth\Models\GroupModel;
@@ -199,69 +199,67 @@ class Product extends BaseController
 
     public function createvar($id)
     {
-           // calling Model
-           $ProductModel    = new ProductModel();
-           $VariantModel    = new VariantModel();
-           $OutletModel     = new OutletModel();
-           $StockModel      = new StockModel();
-           $TotalStockModel = new TotalStockModel();
+        // calling Model
+        $ProductModel    = new ProductModel();
+        $VariantModel    = new VariantModel();
+        $OutletModel     = new OutletModel();
+        $StockModel      = new StockModel();
+        $OldStockModel   = new OldStockModel();
 
-           // search all data
-           $products    = $ProductModel->where('id',$id)->first();
-           $outlets     = $OutletModel->findAll();
-           $input       = $this->request->getPost();
+        // search all data
+        $products    = $ProductModel->where('id',$id)->first();
+        $outlets     = $OutletModel->findAll();
+        $input       = $this->request->getPost();
 
             //populating data
             $data = $this->data;
             $data['products'] = $products;
-           
-           // rules
-           $rule = [
-               'name'         => 'required|max_length[255]',
-               'hargadasar'   => 'required|max_length[255]',
-               'hargamodal'   => 'required',
-               'margin'       => 'required',
-           ];
-           
-           // Validation
-           if (! $this->validate($rule)) {
-               return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-           }
-           
-           // get data
-           $data = [
-               'productid'    => $id, 
-               'name'         => $input['name'],
-               'hargadasar'   => $input['hargadasar'],
-               'hargamodal'   => $input['hargamodal'],
-               'hargajual'    => $input['margin'],
-           ];
+        
+        // rules
+        $rule = [
+            'name'         => 'required|max_length[255]',
+            'hargadasar'   => 'required|max_length[255]',
+            'hargamodal'   => 'required',
+            'margin'       => 'required',
+        ];
+        
+        // Validation
+        if (! $this->validate($rule)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+        
+        // get data
+        $data = [
+            'productid'    => $id, 
+            'name'         => $input['name'],
+            'hargadasar'   => $input['hargadasar'],
+            'hargamodal'   => $input['hargamodal'],
+            'hargajual'    => $input['margin'],
+        ];
 
-           // insert data product
-           $VariantModel->insert($data);
+        // insert data product
+        $VariantModel->insert($data);
+        
+        $variantid = $VariantModel->getInsertID();
 
-           
-           $variantid = $VariantModel->getInsertID();
+        foreach ($outlets as $outlet) {
+            $stocks = [
+                'outletid'  => $outlet['id'],
+                'variantid' => $variantid,
+                'qty'       => '0',
 
-           foreach ($outlets as $outlet) {
-                $stocks = [
-                    'outletid'  => $outlet['id'],
-                    'variantid' => $variantid,
-                    'qty'       => '0',
+            ];
+            $StockModel->insert($stocks);                
+        }
 
-                ];
-                $StockModel->insert($stocks);
-
-                $totalStock = [
-                    'variantid'     => $variantid,
-                    'hargadasar'    => 'hargadasar',
-                    'hargamodal'    => 'hargamodal',
-                    'qty'           => '0',
-                ];
-                $TotalStockModel->insert($totalStock);
-                
-           }
-           return redirect()->back()->with('message', lang('Global.saved'));
+        $oldstock = [
+            'variantid'     => $variantid,
+            'hargamodal'    => '0',
+            'hargadasar'    => '0'
+        ];
+        $OldStockModel->insert($oldstock);
+        
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function update($id)
