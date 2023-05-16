@@ -50,20 +50,9 @@
                             </div>
 
                             <div class="uk-margin-bottom">
-                                <label class="uk-form-label" for="name"><?=lang('Global.description')?></label>
+                                <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
                                 <div class="uk-form-controls">
-                                    <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.description')?>" autofocus required />
-                                </div>
-                            </div>
-                            
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
-                                <div class="uk-form-controls">
-                                    <select class="uk-select" name="type">
-                                        <option><?=lang('Global.type')?></option>
-                                        <option name="type" value="0" ><?=lang('Global.cashin')?></option>
-                                        <option name="type" value="1" ><?=lang('Global.cashout')?></option>
-                                    </select>
+                                    <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?=lang('Global.description')?>" autofocus required />
                                 </div>
                             </div>
 
@@ -71,6 +60,14 @@
                                 <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
                                 <div class="uk-form-controls">
                                     <input type="text" class="uk-input <?php if (session('errors.qty')) : ?>tm-form-invalid<?php endif ?>" name="qty" id="qty" placeholder="<?=lang('Global.quantity')?>" required/>
+                                </div>
+                            </div>
+                            
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
+                                <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
+                                    <label><input class="uk-radio" type="radio" name="type" value="0"> <?=lang('Global.cashin')?></label>
+                                    <label><input class="uk-radio" type="radio" name="type" value="1"> <?=lang('Global.cashout')?></label>
                                 </div>
                             </div>
 
@@ -118,7 +115,7 @@
             <?php foreach ($cashmans as $cash) : ?>
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
-                    <td><?= $cash['name']; ?></td>
+                    <td><?= $cash['description']; ?></td>
                     <td>
                         <?php foreach ($outlets as $outlet) {
                             if ($outlet['id'] === $cash['outletid']) {
@@ -212,9 +209,9 @@
                             </div>
 
                             <div class="uk-margin-bottom">
-                                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                                <label class="uk-form-label" for="description"><?=lang('Global.name')?></label>
                                 <div class="uk-form-controls">
-                                    <input type="text" class="uk-input" id="name" name="name" value="<?= $cash['name']; ?>"autofocus />
+                                    <input type="text" class="uk-input" id="description" name="description" value="<?= $cash['description']; ?>"autofocus />
                                 </div>
                             </div>
                             

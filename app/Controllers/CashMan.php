@@ -16,13 +16,12 @@ class CashMan extends BaseController
         $UserModel              = new UserModel;
 
         // Populating Data
-        $cashman                = $CashModel->orderBy('id', 'DESC')->findAll();
         $outlets                = $OutletModel->findAll();
         $users                  = $UserModel->findAll();
 
         // get outlet
         if ($this->data['outletPick'] === null) {
-            $cashman      = $CashModel->findAll();
+            $cashman      = $CashModel->orderBy('id', 'DESC')->findAll();
         } else {
             $cashman      = $CashModel->where('outletid', $this->data['outletPick'])->find();
         }
@@ -68,19 +67,19 @@ class CashMan extends BaseController
 
         // save data
         $data = [
-            'outletid'  => $input['outlet'],
-            'name'      => $input['name'],
-            'type'      => $input['type'],
-            'qty'       => $input['qty'],
-            'userid'    => $userId,
-            'date'      => $dates,
+            'outletid'          => $input['outlet'],
+            'description'       => $input['description'],
+            'type'              => $input['type'],
+            'qty'               => $input['qty'],
+            'userid'            => $userId,
+            'date'              => $dates,
         ];
 
         // validation
         if (! $this->validate([
-            'name'      =>  "required|max_length[255]',",
-            'type'      =>  'required',
-            'qty'       =>  "required"
+            'description'       =>  "required|max_length[255]',",
+            'type'              =>  'required',
+            'qty'               =>  "required"
         ])) {
                 
            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -107,21 +106,21 @@ class CashMan extends BaseController
 
         // saved data
         $data = [
-            'id'        => $id,
-            'userid'    => $userId,
-            'name'      => $input['name'],
-            'outletid'  => $input['outlet'],
-            'type'      => $input['type'],
-            'qty'       => $input['qty'],
-            'date'      => date("Y-m-d H:i:s"),
+            'id'                => $id,
+            'userid'            => $userId,
+            'description'       => $input['description'],
+            'outletid'          => $input['outlet'],
+            'type'              => $input['type'],
+            'qty'               => $input['qty'],
+            'date'              => date("Y-m-d H:i:s"),
 
         ];
 
         // validation
         if (! $this->validate([
-            'name'      =>  "required|max_length[255]',",
-            'type'      =>  'required',
-            'qty'       =>  "required"
+            'description'       =>  "required|max_length[255]',",
+            'type'              =>  'required',
+            'qty'               =>  "required"
                 ])
             )
         {      
