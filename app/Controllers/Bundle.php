@@ -78,7 +78,7 @@ class Bundle extends BaseController
                 
            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
-            
+
         // Inserting CashFlow
         $bundleModel->insert($data);
 

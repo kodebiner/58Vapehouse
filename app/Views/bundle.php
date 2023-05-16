@@ -41,23 +41,19 @@
                                 </div>
                             </div>
 
-                            <!-- select variant -->
-                            <div class="uk-margin-bottom">
-                              <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
+                            <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
                               <div class="uk-form-controls">
-                                <select class="uk-select" name="variant">
-                                  <option value=""> 
-                                    <?php foreach($variants as $variant) {
-                                      foreach($products as $product ) {
-                                        if ($product['id'] === $variant['productid']) {
-                                          echo $variant['name'];
-                                        }
-                                      }
-                                    } ?>
-                                    </option>
+                                <select class="uk-select" name="variant" >
+                                  <option><?=lang('Global.variant')?></option>
+                                  <?php
+                                  foreach ($variants as $variant) {
+                                    foreach ($products as $product) {
+                                    echo '<option value="'.$variant['id'].'">'.$variant['name']."-".$product['name'].'</option>';
+                                    }
+                                  }
+                                  ?>
                                 </select>
                               </div>
-                            </div>
 
                             <hr>
 
