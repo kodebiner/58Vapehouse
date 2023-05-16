@@ -34,16 +34,16 @@
                                     <select class="uk-select" name="outlet" id="sel_out">
                                         <option><?=lang('Global.outlet')?></option>
                                         <?php
-                                        foreach ($outlets as $outlet) {
-                                        if ($outlet['id'] === $outletPick) {
-                                            $checked = 'selected';
-                                        } else {
-                                            $checked = '';
-                                        }
-                                        ?>
-                                        <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
-                                        <?php
-                                        }
+                                            foreach ($outlets as $outlet) {
+                                                if ($outlet['id'] === $outletPick) {
+                                                    $checked = 'selected';
+                                                } else {
+                                                    $checked = '';
+                                                }
+                                                ?>
+                                                <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                                                <?php
+                                            }
                                         ?>
                                     </select>
                                 </div>
@@ -60,7 +60,7 @@
                                 <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
                                 <div class="uk-form-controls">
                                     <select class="uk-select" name="type">
-                                        <option><?=lang('Global.cash')?></option>
+                                        <option><?=lang('Global.type')?></option>
                                         <option name="type" value="0" ><?=lang('Global.cashin')?></option>
                                         <option name="type" value="1" ><?=lang('Global.cashout')?></option>
                                     </select>
@@ -108,7 +108,7 @@
                 <th class="uk-width-medium"><?=lang('Global.outlet')?></th>
                 <th class="uk-width-medium"><?=lang('Global.type')?></th>
                 <th class="uk-width-small"><?=lang('Global.date')?></th>
-                <th class="uk-width-medium"><?=lang('Global.user')?></th>
+                <th class="uk-width-medium"><?=lang('Global.employee')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.quantity')?></th>
                 <th class="uk-text-center uk-width-large"><?=lang('Global.action')?></th>
             </tr>
@@ -180,8 +180,8 @@
     <!-- Table Pagination End-->
 
     <!-- Modal Edit -->
-    <?php foreach ($outlets as $outlet) : ?>
-        <div uk-modal class="uk-flex-top" id="editdata<?= $outlet['id'] ?>">
+    <?php foreach ($cashmans as $cash) : ?>
+        <div uk-modal class="uk-flex-top" id="editdata<?= $cash['id'] ?>">
             <div class="uk-modal-dialog uk-margin-auto-vertical">
                 <div class="uk-modal-content">
                     <div class="uk-modal-header">
@@ -189,28 +189,41 @@
                     </div>
 
                     <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="outlet/update/<?= $outlet['id'] ?>" method="post">
+                        <form class="uk-form-stacked" role="form" action="cashman/update/<?= $cash['id'] ?>" method="post">
                             <?= csrf_field() ?>
-                            <input type="hidden" name="id" value="<?= $outlet['id']; ?>">
+                            <input type="hidden" name="id" value="<?= $cash['id']; ?>">
+                            
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
+                                <div class="uk-form-controls">
+                                    <select class="uk-select" name="outlet">
+                                        <option disabled><?=lang('Global.outlet')?></option>
+                                        <?php foreach ($outlets as $outlet) { ?>
+                                            <option value="<?= $outlet['id']; ?>" <?php if ($outlet['id'] === $cash['outletid']) {echo 'selected';} ?>><?= $outlet['name']; ?></option>
+                                        <?php }?>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                                 <div class="uk-form-controls">
-                                    <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet['name']; ?>"autofocus />
+                                    <input type="text" class="uk-input" id="name" name="name" value="<?= $cash['name']; ?>"autofocus />
+                                </div>
+                            </div>
+                            
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
+                                <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
+                                    <label><input class="uk-radio" type="radio" name="type" value="0" <?php if ($cash['type'] === '0') { echo 'checked'; } ?>> <?=lang('Global.cashin')?></label>
+                                    <label><input class="uk-radio" type="radio" name="type" value="1" <?php if ($cash['type'] === '1') { echo 'checked'; } ?>> <?=lang('Global.cashout')?></label>
                                 </div>
                             </div>
 
-                            <div class="uk-margin-bottom">
-                                <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
                                 <div class="uk-form-controls">
-                                    <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet['address']; ?>" autofocus />
-                                </div>
-                            </div>
-
-                            <div class="uk-margin-bottom">
-                                <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
-                                <div class="uk-form-controls">
-                                    <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" autofocus />
+                                    <input type="text" class="uk-input" id="qty" name="qty" value="<?= $cash['qty']; ?>"autofocus />
                                 </div>
                             </div>
 

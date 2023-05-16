@@ -110,8 +110,9 @@ class CashMan extends BaseController
             'id'        => $id,
             'userid'    => $userId,
             'name'      => $input['name'],
-            'outletid'  => $input['outletid'],
+            'outletid'  => $input['outlet'],
             'type'      => $input['type'],
+            'qty'       => $input['qty'],
             'date'      => date("Y-m-d H:i:s"),
 
         ];
@@ -140,8 +141,8 @@ class CashMan extends BaseController
         $CashModel = new CashModel;
 
         // deleted
-        $cash = $CashModel->where('id',$id)->first();
-        $CashModel->delete($cash);
+        $OutletModel->delete($id);
+        return redirect()->back()->with('error', lang('Global.deleted'));
 
     }
 }

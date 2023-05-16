@@ -657,8 +657,8 @@
     <li class="uk-disabled"><span>…</span></li>
     <li><a href="#">20</a></li>
     <li><a href="#"><span uk-pagination-next></span></a></li>
-  </ul> --> -->
-  <!-- Table Pagination End
+  </ul> -->
+  <!-- Table Pagination End -->
 
   <!-- Modal Edit -->
   <?php foreach ($products as $product) : ?>

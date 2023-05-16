@@ -185,6 +185,8 @@ $routes->group('stockadjustment', ['filter'=>'login'], function($routes){
 $routes->group('cashman', ['filter'=>'login'], function($routes){
     $routes->get('', 'CashMan::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'CashMan::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'CashMan::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'CashMan::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 /*
