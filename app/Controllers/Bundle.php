@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\BundledetailModel;
 use App\Models\BundleModel;
 use App\Models\VariantModel;
+use App\Models\ProductModel;
 
 
 class Bundle extends BaseController
@@ -14,6 +15,7 @@ class Bundle extends BaseController
         // Calling Models
         $bundleModel        = new BundleModel;
         $variantModel       = new VariantModel;
+        $productModel       = new ProductModel;
         $bundleDetailModel  = new BundledetailModel;
 
         // get data 
@@ -25,12 +27,15 @@ class Bundle extends BaseController
 
         $bundleDetails    = $bundleDetailModel->findAll();
         $variants         = $variantModel->findAll();
+        $products         = $productModel->findAll();
+
         // Parsing Data to View
         $data                           = $this->data;
         $data['title']                  = lang('Global.Bundle');
         $data['description']            = lang('Global.bundleListDesc');
         $data['bundles']                = $bundles;
         $data['variants']               = $variants;
+        $data['products']               = $products;
         $data['bundleDetails']          = $bundleDetails;
 
 
@@ -43,8 +48,12 @@ class Bundle extends BaseController
         // Calling Models
         $bundleModel        = new BundleModel;
         $bundleDetailModel  = new BundledetailModel;
+        $variantModel       = new VariantModel;
+        $productModel       = new ProductModel;
 
         // get outlet
+        $variants         = $variantModel->findAll();
+        $products         = $productModel->findAll();
         if ($this->data['outletPick'] === null) {
             $bundle      = $bundleModel->findAll();
         } else {

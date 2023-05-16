@@ -41,17 +41,22 @@
                                 </div>
                             </div>
 
-                            <!-- select oulet -->
+                            <!-- select variant -->
                             <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
-                                <div class="uk-form-controls">
-                                    <select class="uk-select" name="variant" id="sel_out">
-                                        <option><?=lang('Global.variant')?></option>
-                                        <?php foreach ($variants as $variant) { ?>
-                                        <option value="<?= $variant['id']; ?>"><?= $variant['name']; ?></option>
-                                         <?php  } ?>
-                                    </select>
-                                </div>
+                              <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
+                              <div class="uk-form-controls">
+                                <select class="uk-select" name="variant">
+                                  <option value=""> 
+                                    <?php foreach($variants as $variant) {
+                                      foreach($products as $product ) {
+                                        if ($product['id'] === $variant['productid']) {
+                                          echo $variant['name'];
+                                        }
+                                      }
+                                    } ?>
+                                    </option>
+                                </select>
+                              </div>
                             </div>
 
                             <hr>
