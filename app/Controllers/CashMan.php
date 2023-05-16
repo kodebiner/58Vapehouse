@@ -33,27 +33,43 @@ class CashMan extends BaseController
 
     public function create()
     {
-        $validation = \Config\Services::validation();
 
         // Calling Models
         $CashModel      = new CashModel;
+        $OutletModel    = new OutletModel;
 
         // Populating data
+        $outlets        = $OutletModel->findAll();
+        
+        // get outlet
+        if ($this->data['outletPick'] === null) {
+            $cashman      = $CashModel->findAll();
+        } else {
+            $cashman      = $CashModel->where('outletid', $this->data['outletPick'])->find();
+        }
+        
+        // get user id
+        $auth = service('authentication');
+        $userId = $auth->id();
+
+
+        // initialize
         $input          = $this->request->getPost();
-        $cashmans       = $CashModel->findAll();
 
         // Date
         $dates = date("Y-m-d H:i:s");
 
-        // Type Cashin / Cashout
-        // masih bingung perhitungan untuk cash karena berhubungan dengan pencatatan keuangan lainnya
-
+        // save data
         $data = [
+            'outletid'  => $input['outlet'],
             'name'      => $input['name'],
             'type'      => $input['type'],
-            'qty'       => '0',
+            'qty'       => $input['qty'],
+            'userid'    => $userId,
+            'date'      => $dates,
         ];
-        
+
+        // validation
         if (! $this->validate([
             'name'      => "required|max_length[255]',",
             'type'     => 'required',
@@ -62,9 +78,24 @@ class CashMan extends BaseController
            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
             
-        // Inserting Customer
+        // Inserting CashFlow
         $CashModel->insert($data);
 
         return redirect()->back()->with('message', lang('Global.saved'));
+    }
+
+    public function update($id) {
+
+        // calling Model
+        $CashModel      = new CashModel;
+        $OutletModel    = new OutletModel;
+
+        // initialize
+        $input = $this->request->getpost();
+
+        
+
+
+
     }
 }

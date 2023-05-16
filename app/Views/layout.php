@@ -330,6 +330,9 @@
                             <li class="uk-h5 tm-h5">
                                 <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
                             </li>
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
+                            </li>
                         </ul>
                     </li>
                     <li class="tm-main-navbar">

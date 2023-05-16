@@ -99,6 +99,7 @@ return [
     'stock'             => 'Stock',
     'stockMove'         => 'Stock Movement',
     'stockAdj'          => 'Stock Adjustment',
+    'stockCycle'        => 'Stock Cycle',
 
     // Title
     'employeeList'      => 'Employee List',
@@ -113,6 +114,7 @@ return [
     'stockList'         => 'Stock List',
     'stockmoveList'     => 'Stock Movement List',
     'stockadjList'      => 'Stock Adjustment List',
+    'stockCycleList'    => 'Stock Cycle List',
     'cashmanList'       => 'Cash Management List',
     'businessInfo'      => 'Business Information',
     'bizLogo'           => 'Business Logo',

@@ -153,6 +153,7 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->post('create', 'Stock::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Stock::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Stock::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('stockcycle', 'Stock::stockcycle', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 //Transaction Routes

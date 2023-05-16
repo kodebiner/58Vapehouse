@@ -24,8 +24,30 @@
                         <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addCashMan')?></h5>
                     </div>
                     <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="/cashman/create" method="post">
+                        <form class="uk-form-stacked" role="form" action="cashman/create" method="post">
                             <?= csrf_field() ?>
+
+                            <!-- select oulet -->
+                            <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
+                                <div class="uk-form-controls">
+                                    <select class="uk-select" name="outlet" id="sel_out">
+                                        <option><?=lang('Global.outlet')?></option>
+                                        <?php
+                                        foreach ($outlets as $outlet) {
+                                        if ($outlet['id'] === $outletPick) {
+                                            $checked = 'selected';
+                                        } else {
+                                            $checked = '';
+                                        }
+                                        ?>
+                                        <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="name"><?=lang('Global.description')?></label>
@@ -38,7 +60,7 @@
                                 <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
                                 <div class="uk-form-controls">
                                     <select class="uk-select" name="type">
-                                        <option><?=lang('Global.type')?></option>
+                                        <option><?=lang('Global.cash')?></option>
                                         <option name="type" value="0" ><?=lang('Global.cashin')?></option>
                                         <option name="type" value="1" ><?=lang('Global.cashout')?></option>
                                     </select>
@@ -104,20 +126,33 @@
                             }
                         } ?>
                     </td>
-                    <td><?= $cash['type']; ?></td>
+                    <td>
+                        <?php if ($cash['type'] === '0' ) { 
+                            echo lang('Global.cashin');
+                        } elseif ($cash['type'] === '1' ) { 
+                            echo lang('Global.cashout');}
+                        ?>
+                            
+                    </td>
                     <td><?= $cash['date']; ?></td>
                     <td>
                         <?php foreach ($users as $user) {
-                            if ($user['id'] === $cash['userid']) {
-                                echo $user['name'];
+                            if ($user->id === $cash['userid']) {
+                                echo $user->name;
                             }
                         } ?>
                     </td>
                     <td class="uk-text-center"><?= $cash['qty']; ?></td>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
+                        <!-- Button Trigger Modal Edit -->
+                        <div>
+                            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #editdata<?= $cash['id'] ?>"><?=lang('Global.edit')?></button>
+                        </div>
+                        <!-- End Of Button Trigger Modal Edit -->
+
                         <!-- Button Delete -->
                         <div>
-                            <a class="uk-button uk-button-default uk-button-danger uk-preserve-color" href="outlet/delete/<?= $outlet['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
+                            <a class="uk-button uk-button-default uk-button-danger uk-preserve-color" href="cashman/delete/<?= $cash['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
                         </div>
                         <!-- End Of Button Delete -->
                     </td>
@@ -143,6 +178,55 @@
         <li><a href="#"><span uk-pagination-next></span></a></li>
     </ul>
     <!-- Table Pagination End-->
+
+    <!-- Modal Edit -->
+    <?php foreach ($outlets as $outlet) : ?>
+        <div uk-modal class="uk-flex-top" id="editdata<?= $outlet['id'] ?>">
+            <div class="uk-modal-dialog uk-margin-auto-vertical">
+                <div class="uk-modal-content">
+                    <div class="uk-modal-header">
+                        <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
+                    </div>
+
+                    <div class="uk-modal-body">
+                        <form class="uk-form-stacked" role="form" action="outlet/update/<?= $outlet['id'] ?>" method="post">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="id" value="<?= $outlet['id']; ?>">
+
+                            <div class="uk-margin-bottom">
+                                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                                <div class="uk-form-controls">
+                                    <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet['name']; ?>"autofocus />
+                                </div>
+                            </div>
+
+                            <div class="uk-margin-bottom">
+                                <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
+                                <div class="uk-form-controls">
+                                    <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet['address']; ?>" autofocus />
+                                </div>
+                            </div>
+
+                            <div class="uk-margin-bottom">
+                                <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
+                                <div class="uk-form-controls">
+                                    <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" autofocus />
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="uk-margin">
+                                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+  <?php endforeach; ?>
+  <!-- End Of Modal Edit -->
 </div>
 <!-- End Of Table Content -->
 

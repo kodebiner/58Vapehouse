@@ -116,6 +116,36 @@ class Stock extends BaseController
             // return
             return redirect()->back()->with('message', lang('Global.saved'));
     }
+
+    public function stockcycle() {
+
+        // Calling Model
+        $StockModel = new StockModel;
+        $VariantModel = new VariantModel;
+
+        // Find Data
+        $data           = $this->data;
+        $variants       = $VariantModel->findAll();
+        
+
+
+         if ($this->data['outletPick'] === null) {
+             $stock      = $StockModel->orderBy('id', 'DESC')->findAll();
+         } else {
+             $stock      = $StockModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
+         }
+
+         // Parsing data to view
+         $data['title']          = lang('Global.stockCycle');
+         $data['description']    = lang('Global.stockCycleDesc');
+         $data['stocks']         = $stock;
+         $data['variants']       = $variants;
+
+
+         return view ('Views/stockcycle', $data);
+        
+
+    }
  
 
 }
