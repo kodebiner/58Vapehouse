@@ -141,7 +141,7 @@ class CashMan extends BaseController
         $CashModel = new CashModel;
 
         // deleted
-        $OutletModel->delete($id);
+        $CashModel->delete($id);
         return redirect()->back()->with('error', lang('Global.deleted'));
 
     }
