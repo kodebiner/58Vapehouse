@@ -134,7 +134,13 @@
                         ?>
                             
                     </td>
-                    <td><?= $cash['date']; ?></td>
+                    <td>
+                        <?php  
+                            $date = $cash['date'];
+                            $new_date = date('l, d-F-Y H:i:s');
+                            echo $new_date;  
+                        ?>
+                    </td>
                     <td>
                         <?php foreach ($users as $user) {
                             if ($user->id === $cash['userid']) {
