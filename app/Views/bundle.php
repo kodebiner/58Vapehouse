@@ -41,19 +41,66 @@
                                 </div>
                             </div>
 
-                            <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
-                              <div class="uk-form-controls">
-                                <select class="uk-select" name="variant" >
-                                  <option><?=lang('Global.variant')?></option>
-                                  <?php
-                                  foreach ($variants as $variant) {
-                                    foreach ($products as $product) {
-                                    echo '<option value="'.$variant['id'].'">'.$variant['name']."-".$product['name'].'</option>';
-                                    }
-                                  }
-                                  ?>
-                                </select>
-                              </div>
+                            <div id="createBundle" class="uk-margin-bottom">
+                                <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.bundle')?></h4>
+                                <div class="uk-text-right">
+                                    <a onclick="createNewBundle()">+ Add More Bundle</a>
+                                </div>
+                                <div class="uk-margin uk-margin-remove-top"></div>
+                                <div id="create0" class="uk-margin">
+                                    <div id="createBundle0">
+                                        <select id="bundle[0]" name="bundle[0]" class="uk-select">
+                                            <option><?=lang('Global.bundle')?></option>
+                                                <?php
+                                                    foreach ($variants as $variant) {
+                                                        foreach ($products as $product) {
+                                                            echo '<option value="'.$variant['id'].'">'.$variant['name']."-".$product['name'].'</option>';
+                                                        }
+                                                    }
+                                                ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                var createCount = 0;
+                                function createNewBundle() {
+                                    createCount++;
+
+                                    const createBundle = document.getElementById("createBundle");
+
+                                    const newCreateBundle = document.createElement('div');
+                                    newCreateBundle.setAttribute('id','create'+createCount);
+                                    newCreateBundle.setAttribute('class','uk-margin');
+                                    newCreateBundle.setAttribute('','');
+
+                                    const createBundle = document.createElement('div');
+                                    createBundle.setAttribute('id','createBundle'+createCount);
+
+                                    const createBundleOption = document.createElement('select');
+                                    createBundleOption.setAttribute('class','uk-select');
+                                    createBundleOption.setAttribute('id','bundle['+createCount+']');
+                                    createBundleOption.setAttribute('name','bundle['+createCount+']');
+
+                                    const createRemove = document.createElement('div');
+                                    createRemove.setAttribute('id', 'remove'+createCount);
+                                    createRemove.setAttribute('class', 'uk-text-center uk-text-bold uk-text-danger uk-flex uk-flex-middle');
+
+                                    const createRemoveButton = document.createElement('a');
+                                    createRemoveButton.setAttribute('onclick', 'createRemove('+createCount+')');
+                                    createRemoveButton.setAttribute('class', 'uk-link-reset');
+                                    createRemoveButton.innerHTML = 'X';
+
+                                    createBundle.appendChild(createBundleOption);
+                                    newCreateVariant.appendChild(createBundle);
+                                    createRemove.appendChild(createRemoveButton);
+                                    };
+
+                                    function createRemove(i) {
+                                    const createRemoveElement = document.getElementById('create'+i);
+                                    createRemoveElement.remove();
+                                };
+                            </script>
 
                             <hr>
 

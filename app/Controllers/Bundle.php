@@ -31,7 +31,7 @@ class Bundle extends BaseController
 
         // Parsing Data to View
         $data                           = $this->data;
-        $data['title']                  = lang('Global.Bundle');
+        $data['title']                  = lang('Global.bundle');
         $data['description']            = lang('Global.bundleListDesc');
         $data['bundles']                = $bundles;
         $data['variants']               = $variants;

@@ -132,6 +132,7 @@ return [
     'stockadjListDesc'  => 'List of all your stock adjustments',
     'customerListDesc'  => 'List of all your customer',
     'cashmanListDesc'   => 'List of all your cash management',
+    'bundleListDesc'    => 'List of all your bundle',
     'userProfileDesc'   => 'Information about your profile',
     'businessInfoDesc'  => 'Information about your business',
 ];

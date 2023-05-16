@@ -128,6 +128,7 @@ return [
     'stockadjListDesc'  => 'Daftar penyesuaian stock yang and miliki',
     'customerListDesc'  => 'Daftar pelanggan yang and miliki',
     'cashmanListDesc'   => 'Daftar pengelolaan kas yang anda miliki',
+    'bundleListDesc'    => 'Daftar bundel yang anda miliki',
     'userProfileDesc'   => 'Informasi mengenai profil anda',
     'businessInfoDesc'  => 'Informasi mengenai bisnis anda',
 ];
