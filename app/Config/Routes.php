@@ -193,6 +193,8 @@ $routes->group('cashman', ['filter'=>'login'], function($routes){
 $routes->group('bundle', ['filter'=>'login'], function($routes){
     $routes->get('', 'Bundle::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Bundle::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'Bundle::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Bundle::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 /*
