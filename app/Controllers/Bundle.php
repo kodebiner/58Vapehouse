@@ -73,7 +73,7 @@ class Bundle extends BaseController
         // validation bundle
         if (! $this->validate([
             'name'      =>  "required|max_length[255]',",
-            'price'      =>  'required',
+            'price'     =>  'required',
         ])) {
                 
            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -83,25 +83,15 @@ class Bundle extends BaseController
         $bundleModel->insert($data);
 
         // get bundle id
-        $bundleId = $bundleModel->getInsertId();
+        $bundleId = $bundleModel->getInsertID();
 
-        $detail   = [
+        $detail  = [
             'bundleid'  => $bundleId,
             'variantid' => $input['variant'],
         ];
 
-        // validation bundle detail
-        if (! $this->validate([
-            'bundleid'   =>  'required',
-            'variantid'  =>  'required',
-            ])
-        ) 
-        {        
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
         // insert bundle detail
-        $$bundleDetailModel->insert($detail);
+        $bundleDetailModel->insert($detail);
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }
