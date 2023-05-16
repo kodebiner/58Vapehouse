@@ -11,7 +11,7 @@ class CashMan extends BaseController
     public function index()
     {
         // Calling Models
-        $CashModel              = new CashModel();
+        $CashModel              = new CashModel;
         $OutletModel            = new OutletModel;
         $UserModel              = new UserModel;
 
@@ -19,6 +19,13 @@ class CashMan extends BaseController
         $cashman                = $CashModel->orderBy('id', 'DESC')->findAll();
         $outlets                = $OutletModel->findAll();
         $users                  = $UserModel->findAll();
+
+        // get outlet
+        if ($this->data['outletPick'] === null) {
+            $cashman      = $CashModel->findAll();
+        } else {
+            $cashman      = $CashModel->where('outletid', $this->data['outletPick'])->find();
+        }
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -71,8 +78,9 @@ class CashMan extends BaseController
 
         // validation
         if (! $this->validate([
-            'name'      => "required|max_length[255]',",
-            'type'     => 'required',
+            'name'      =>  "required|max_length[255]',",
+            'type'      =>  'required',
+            'qty'       =>  "required"
         ])) {
                 
            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -90,12 +98,50 @@ class CashMan extends BaseController
         $CashModel      = new CashModel;
         $OutletModel    = new OutletModel;
 
+        // get user id
+        $auth = service('authentication');
+        $userId = $auth->id();
+
         // initialize
         $input = $this->request->getpost();
 
-        
+        // saved data
+        $data = [
+            'id'        => $id,
+            'userid'    => $userId,
+            'name'      => $input['name'],
+            'outletid'  => $input['outletid'],
+            'type'      => $input['type'],
+            'date'      => date("Y-m-d H:i:s"),
 
+        ];
 
+        // validation
+        if (! $this->validate([
+            'name'      =>  "required|max_length[255]',",
+            'type'      =>  'required',
+            'qty'       =>  "required"
+                ])
+            )
+        {      
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // save data
+        $CashModel->save($data);
+
+        return redirect()->back()->with('massage', lang('global.saved'));
+
+    }
+
+    public function delete($id) {
+
+        // calling model
+        $CashModel = new CashModel;
+
+        // deleted
+        $cash = $CashModel->where('id',$id)->first();
+        $CashModel->delete($cash);
 
     }
 }
