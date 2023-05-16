@@ -81,6 +81,7 @@ return [
     'addStockMove'      => 'Add Stock Movement',
     'addStockAdj'       => 'Add Stock Adjustment',
     'addCashMan'        => 'Add Cash Management',
+    'addBundle'         => 'Add Bundle',
 
     // Menu
     'dashboard'         => 'Dashboard',
@@ -100,6 +101,7 @@ return [
     'stockMove'         => 'Stock Movement',
     'stockAdj'          => 'Stock Adjustment',
     'stockCycle'        => 'Stock Cycle',
+    'bundle'            => 'Bundle',
 
     // Title
     'employeeList'      => 'Employee List',
@@ -116,6 +118,7 @@ return [
     'stockadjList'      => 'Stock Adjustment List',
     'stockCycleList'    => 'Stock Cycle List',
     'cashmanList'       => 'Cash Management List',
+    'bundleList'        => 'Bundle List',
     'businessInfo'      => 'Business Information',
     'bizLogo'           => 'Business Logo',
     

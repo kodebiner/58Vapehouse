@@ -81,6 +81,7 @@ return [
     'addStockMove'      => 'Tambah Perpindahan Stock',
     'addStockAdj'       => 'Tambah Penyesuaian Stock',
     'addCashMan'        => 'Tambah Pengelolaan Kas',
+    'addBundle'         => 'Tambah Bundel',
 
     // Menu
     'dashboard'         => 'Dasbor',
@@ -98,6 +99,7 @@ return [
     'stock'             => 'Stock',
     'stockMove'         => 'Perpindahan Stock',
     'stockAdj'          => 'Penyesuaian Stock',
+    'bundle'            => 'Bundel',
 
     // Page Title
     'employeeList'      => 'Daftar Pegawai',
@@ -112,6 +114,7 @@ return [
     'stockmoveList'     => 'Daftar Pemindahan Stock',
     'stockadjList'      => 'Daftar Penyesuaian Stock',
     'cashmanList'       => 'Daftar Pengelolaan Kas',
+    'bundleList'        => 'Daftar Bundel',
     'businessInfo'      => 'Informasi Usaha',
     'bizLogo'           => 'Logo Usaha',
     

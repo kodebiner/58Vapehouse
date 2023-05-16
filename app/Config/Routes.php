@@ -189,6 +189,12 @@ $routes->group('cashman', ['filter'=>'login'], function($routes){
     $routes->get('delete/(:num)', 'CashMan::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
+//Bundle
+$routes->group('bundle', ['filter'=>'login'], function($routes){
+    $routes->get('', 'Bundle::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Bundle::create', ['filter' => 'role:owner,supervisor,operator']);
+});
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

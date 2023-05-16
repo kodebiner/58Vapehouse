@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Models\BundleModel;
 
 
-class CashMan extends BaseController
+class Bundle extends BaseController
 {
     public function index()
     {
