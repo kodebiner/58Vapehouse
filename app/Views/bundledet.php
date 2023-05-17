@@ -193,7 +193,7 @@
             <td class=""><?= $ProdName.' - '.$varname ?></td>
             <td class="uk-text-center">
               <!-- Button Delete -->
-                <a class="uk-button uk-button-default uk-button-danger uk-preserve-color" href="bundle/deletebund/<?= $variant['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
+                <a class="uk-button uk-button-default uk-button-danger uk-preserve-color" href="bundle/deletebund/<?= $bundled['variantid'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
               <!-- End Of Button Delete -->
             </td>
           </tr>

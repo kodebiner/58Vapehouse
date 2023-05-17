@@ -147,9 +147,6 @@ class Bundle extends BaseController
         $bundleModel        = new bundleModel;
         $bundleDetailModel  = new bundledetailModel;
 
-        // $bundle = $bundleDetailModel->where('id',$id)->findAll();
-        // dd($bundle);
-
         // deleted
         $detail =  $bundleDetailModel->where('bundleid',$id)->first();
         $bundleDetailModel->delete($detail);
@@ -185,47 +182,35 @@ class Bundle extends BaseController
         return view('Views/bundledet', $data);
     }
 
-    public function createbund()
+    public function createbund($id)
     {
 
-        // Calling Models
-        $bundleModel        = new BundleModel;
         $bundleDetailModel  = new BundledetailModel;
         
         // initialize
         $input          = $this->request->getPost();
 
-        // save data
-        $data = [
-            'name'      => $input['name'],
-            'price'     => $input['price'],
-
-        ];
-
-        // validation bundle
-        if (! $this->validate([
-            'name'      =>  "required|max_length[255]',",
-            'price'     =>  'required',
-        ])) {
-                
-           return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
-        // Inserting Bundle
-        $bundleModel->insert($data);
-
-        // get bundle id
-        $bundleId = $bundleModel->getInsertID();
-
-        // Creating Bundle Detail
+        // save data detail bundle
         foreach ($input['variantid'] as $variant) {
             $detail = [
-                'bundleid'  => $bundleId,
+                'bundleid'  => $id,
                 'variantid' => $variant
             ];
             $bundleDetailModel->insert($detail);
         }
 
         return redirect()->back()->with('message', lang('Global.saved'));
+    }
+
+    public function deletebund($id){
+
+        // calling Model
+        $bundleDetailModel  = new bundledetailModel;
+
+        $bundle = $bundleDetailModel->where('variantid',$id)->first();
+        // // deleted
+        $bundleDetailModel->delete($bundle);
+
+        return redirect()->back()->with('message', lang('Global.delete'));
     }
 }
