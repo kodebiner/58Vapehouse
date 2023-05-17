@@ -36,9 +36,6 @@
 
                 <div id="createBundle" class="uk-margin-bottom">
                     <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
-                    <div class="uk-text-right">
-                        <a onclick="createNewBundle()">+ Add More Variant</a>
-                    </div>
                     <?php
                         $combProducts = [];
                         foreach ($variants as $variant) {
@@ -74,68 +71,6 @@
                                 minLength: 2
                             });
                         });
-
-                        var variantidx = 0;
-                        function createNewBundle() {
-                            variantidx ++;
-                            const bundlecontainer = document.getElementById('createBundle');
-
-                            const variantcontainer = document.createElement('div');
-                            variantcontainer.setAttribute('id', 'variantcontainer'+variantidx);
-                            variantcontainer.setAttribute('class', 'uk-margin-small');
-                            variantcontainer.setAttribute('uk-grid', '');
-
-                            const formcontainer = document.createElement('div');
-                            formcontainer.setAttribute('class', 'uk-width-5-6');
-
-                            const variantname = document.createElement('input');
-                            variantname.setAttribute('id', 'productvariantname'+variantidx);
-                            variantname.setAttribute('class', 'uk-input');
-
-                            const variantid = document.createElement('input');
-                            variantid.setAttribute('id', 'variantid'+variantidx);
-                            variantid.setAttribute('name', 'variantid['+variantidx+']');
-                            variantid.setAttribute('hidden', '');
-
-                            const closecontainer = document.createElement('div');
-                            closecontainer.setAttribute('class', 'uk-width-1-6 uk-flex uk-flex-middle');
-
-                            const closebutton = document.createElement('a');
-                            closebutton.setAttribute('class', 'uk-text-danger');
-                            closebutton.setAttribute('onclick', 'removeVariant('+variantidx+')');
-                            closebutton.setAttribute('uk-icon', 'close');
-
-                            formcontainer.appendChild(variantname);
-                            formcontainer.appendChild(variantid);
-                            closecontainer.appendChild(closebutton);
-                            variantcontainer.appendChild(formcontainer);
-                            variantcontainer.appendChild(closecontainer);
-                            bundlecontainer.appendChild(variantcontainer);
-
-                            $(function() {
-                                var combProductArr = [
-                                    <?php
-                                    foreach ($combProducts as $combProduct) {
-                                        foreach ($combProduct as $key => $value) {
-                                            echo '{label:"'.$value.'", idx:'.$key.'},';
-                                        }
-                                    }
-                                    ?>
-                                ];
-                                $("#productvariantname"+variantidx).autocomplete({
-                                    source: combProductArr,
-                                    select: function(e, i) {
-                                        $('#variantid'+variantidx).val(i.item.idx);
-                                    },
-                                    minLength: 2
-                                });
-                            });
-                        };
-                                        
-                        function removeVariant(i) {
-                            variant = document.getElementById('variantcontainer'+i);
-                            variant.remove();
-                        }
                     </script>
                 </div>
 
