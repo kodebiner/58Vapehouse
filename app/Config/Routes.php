@@ -191,10 +191,18 @@ $routes->group('cashman', ['filter'=>'login'], function($routes){
 
 //Bundle
 $routes->group('bundle', ['filter'=>'login'], function($routes){
+    // bundle
     $routes->get('', 'Bundle::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Bundle::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Bundle::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Bundle::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+
+    // bundle detail
+    $routes->get('indexbund/(:num)', 'Bundle::indexbund/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('createbund/(:num)', 'Bundle::createbund/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('createbund/(:num)', 'Bundle::createbund/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('editbund/(:num)', 'Bundle::editbund/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('deletebund/(:num)', 'Bundle::deletebund/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 /*

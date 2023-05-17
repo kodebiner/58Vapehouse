@@ -248,14 +248,21 @@
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="name" name="name" value="<?= $bundle['name']; ?>"autofocus />
+                  <input type="text" class="uk-input" id="name" name="name" value="<?= $bundle['name']; ?>"/>
                 </div>
               </div>
 
               <div class="uk-margin-bottom">
                 <label class="uk-form-label" for="price"><?=lang('Global.price')?></label>
                 <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="price" name="price"  value="<?= $bundle['price']; ?>" autofocus />
+                  <input type="text" class="uk-input" id="price" name="price"  value="<?= $bundle['price']; ?>"/>
+                </div>
+              </div>
+
+              <div class="uk-margin-bottom">
+                <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.bundledetail')?></h4>
+                <div class="uk-h6 uk-margin-remove">
+                  <?=lang('Global.editBundDet')?><a href="bundle/indexbund/<?= $bundle['id']; ?>"><?=lang('Global.manageBundDet')?></a>
                 </div>
               </div>
 

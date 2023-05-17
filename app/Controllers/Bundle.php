@@ -20,7 +20,7 @@ class Bundle extends BaseController
 
         // get data 
         if ($this->data['outletPick'] === null) {
-            $bundles      = $bundleModel->findAll();
+            $bundles      = $bundleModel->orderBy('id', 'DESC')->findAll();
         } else {
             $bundles      = $bundleModel->where('outletid', $this->data['outletPick'])->find();
         }
@@ -156,5 +156,76 @@ class Bundle extends BaseController
         $bundleModel->delete($id);
         return redirect()->back()->with('error', lang('Global.deleted'));
 
+    }
+
+    public function indexbund($id)
+    {
+
+        // Calling Model
+        $BundleModel            = new BundleModel();
+        $BundledetailModel      = new BundledetailModel();
+        $ProductModel           = new ProductModel();
+        $VariantModel           = new VariantModel();
+
+        // Populating Data
+        $bundledet      = $BundledetailModel->where('bundleid', $id)->find();
+        $bundle         = $BundleModel->findAll();
+        $product        = $ProductModel->findAll(); 
+        $variant        = $VariantModel->findAll();
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = lang('Global.bundledetail');
+        $data['description']    = lang('Global.bundledetailListDesc');
+        $data['bundledet']      = $bundledet;
+        $data['bundles']        = $BundleModel->find($id);
+        $data['variants']       = $variant;
+        $data['products']       = $product;
+
+        return view('Views/bundledet', $data);
+    }
+
+    public function createbund()
+    {
+
+        // Calling Models
+        $bundleModel        = new BundleModel;
+        $bundleDetailModel  = new BundledetailModel;
+        
+        // initialize
+        $input          = $this->request->getPost();
+
+        // save data
+        $data = [
+            'name'      => $input['name'],
+            'price'     => $input['price'],
+
+        ];
+
+        // validation bundle
+        if (! $this->validate([
+            'name'      =>  "required|max_length[255]',",
+            'price'     =>  'required',
+        ])) {
+                
+           return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Inserting Bundle
+        $bundleModel->insert($data);
+
+        // get bundle id
+        $bundleId = $bundleModel->getInsertID();
+
+        // Creating Bundle Detail
+        foreach ($input['variantid'] as $variant) {
+            $detail = [
+                'bundleid'  => $bundleId,
+                'variantid' => $variant
+            ];
+            $bundleDetailModel->insert($detail);
+        }
+
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 }
