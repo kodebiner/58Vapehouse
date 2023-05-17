@@ -889,13 +889,6 @@ a.uk-link-reset {
     border-bottom: 1px solid #e5e5e5
 }
 
-.uk-table thead>tr>th.sorting_asc:before,
-.uk-table thead>tr>th.sorting_desc:after,
-.uk-table thead>tr>td.sorting_asc:before,
-.uk-table thead>tr>td.sorting_desc:after {
-    opacity: .6;
-}
-
 .uk-table thead>tr>th.sorting:before,
 .uk-table thead>tr>th.sorting:after,
 .uk-table thead>tr>th.sorting_asc:before,
@@ -922,6 +915,13 @@ a.uk-link-reset {
     right: 10px;
     line-height: 9px;
     font-size: .8em;
+}
+
+.uk-table thead>tr>th.sorting_asc::before,
+.uk-table thead>tr>th.sorting_desc::after,
+.uk-table thead>tr>td.sorting_asc::before,
+.uk-table thead>tr>td.sorting_desc::after {
+    opacity: .6;
 }
 
 .uk-table thead>tr>th.sorting,
