@@ -48,17 +48,6 @@ class Bundle extends BaseController
         // Calling Models
         $bundleModel        = new BundleModel;
         $bundleDetailModel  = new BundledetailModel;
-        $variantModel       = new VariantModel;
-        $productModel       = new ProductModel;
-
-        // get outlet
-        $variants         = $variantModel->findAll();
-        $products         = $productModel->findAll();
-        if ($this->data['outletPick'] === null) {
-            $bundle      = $bundleModel->findAll();
-        } else {
-            $bundle      = $bundleModel->where('outletid', $this->data['outletPick'])->find();
-        }
         
         // initialize
         $input          = $this->request->getPost();
@@ -79,19 +68,20 @@ class Bundle extends BaseController
            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Inserting CashFlow
+        // Inserting Bundle
         $bundleModel->insert($data);
 
         // get bundle id
         $bundleId = $bundleModel->getInsertID();
 
-        $detail  = [
-            'bundleid'  => $bundleId,
-            'variantid' => $input['variant'],
-        ];
-
-        // insert bundle detail
-        $bundleDetailModel->insert($detail);
+        // Creating Bundle Detail
+        foreach ($input['variantid'] as $variant) {
+            $detail = [
+                'bundleid'  => $bundleId,
+                'variantid' => $variant
+            ];
+            $bundleDetailModel->insert($detail);
+        }
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }
