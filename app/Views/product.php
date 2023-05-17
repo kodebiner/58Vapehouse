@@ -255,7 +255,7 @@
                   createVarNameInput.setAttribute('name','varName['+createCount+']');
 
                   const createVarBase = document.createElement('div');
-                  createVarName.setAttribute('id','createVarBase'+createCount);
+                  createVarBase.setAttribute('id','createVarBase'+createCount);
 
                   const createVarBaseInput = document.createElement('input');
                   createVarBaseInput.setAttribute('type','number');

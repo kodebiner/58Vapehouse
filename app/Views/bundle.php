@@ -1,4 +1,11 @@
 <?= $this->extend('layout') ?>
+
+<?= $this->section('extraScript') ?>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<?= $this->endSection() ?>
+
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
@@ -30,14 +37,14 @@
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                                 <div class="uk-form-controls">
-                                    <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                                    <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" required />
                                 </div>
                             </div>
 
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="price"><?=lang('Global.price')?></label>
                                 <div class="uk-form-controls">
-                                    <input type="text" class="uk-input <?php if (session('errors.price')) : ?>tm-form-invalid<?php endif ?>" id="price" name="price" placeholder="<?=lang('Global.price')?>" autofocus required />
+                                    <input type="text" class="uk-input <?php if (session('errors.price')) : ?>tm-form-invalid<?php endif ?>" id="price" name="price" placeholder="<?=lang('Global.price')?>" required />
                                 </div>
                             </div>
 
@@ -46,61 +53,105 @@
                                 <div class="uk-text-right">
                                     <a onclick="createNewBundle()">+ Add More Bundle</a>
                                 </div>
-                                <div class="uk-margin uk-margin-remove-top"></div>
-                                <div id="create0" class="uk-margin">
-                                    <div id="createBundle0">
-                                        <select id="bundle[0]" name="bundle[0]" class="uk-select">
-                                            <option><?=lang('Global.bundle')?></option>
-                                            <?php
-                                              foreach ($variants as $variant) {
-                                                foreach ($products as $product) {
-                                                  echo '<option value="'.$variant['id'].'">'.$product['name']." - ".$variant['name'].'</option>';
-                                                }
-                                              }
-                                            ?>
-                                        </select>
-                                    </div>
+                                <?php
+                                $combProducts = [];
+                                foreach ($variants as $variant) {
+                                  foreach ($products as $product) {
+                                    if ($variant['productid'] === $product['id']) {
+                                      $combProducts[] = [$variant['id'] => $product['name'].' - '.$variant['name']];
+                                    }
+                                  }
+                                }
+                                ?>
+                                <div id="variantcontainer0" class="uk-margin-small" uk-grid>
+                                  <div class="uk-width-5-6">
+                                    <input class="uk-input" id="productvariantname0" required/>
+                                    <input id="variantid0" name="variantid[0]" hidden/>
+                                  </div>
                                 </div>
+                                <script type="text/javascript">
+                                  $(function() {
+                                    var combProduct = [
+                                      <?php
+                                        foreach ($combProducts as $combProduct) {
+                                          foreach ($combProduct as $key => $value) {
+                                            echo '{label:"'.$value.'", idx:'.$key.'},';
+                                          }
+                                        }
+                                      ?>
+                                    ];
+                                    $("#productvariantname0").autocomplete({
+                                      source: combProduct,
+                                      select: function(e, i) {
+                                        $('#variantid0').val(i.item.idx);
+                                      },
+                                      minLength: 2
+                                    });
+                                  });
+
+                                  var variantidx = 0;
+                                  function createNewBundle() {
+                                    variantidx ++;
+                                    const bundlecontainer = document.getElementById('createBundle');
+
+                                    const variantcontainer = document.createElement('div');
+                                    variantcontainer.setAttribute('id', 'variantcontainer'+variantidx);
+                                    variantcontainer.setAttribute('class', 'uk-margin-small');
+                                    variantcontainer.setAttribute('uk-grid', '');
+
+                                    const formcontainer = document.createElement('div');
+                                    formcontainer.setAttribute('class', 'uk-width-5-6');
+
+                                    const variantname = document.createElement('input');
+                                    variantname.setAttribute('id', 'productvariantname'+variantidx);
+                                    variantname.setAttribute('class', 'uk-input');
+
+                                    const variantid = document.createElement('input');
+                                    variantid.setAttribute('id', 'variantid'+variantidx);
+                                    variantid.setAttribute('name', 'variantid['+variantidx+']');
+                                    variantid.setAttribute('hidden', '');
+
+                                    const closecontainer = document.createElement('div');
+                                    closecontainer.setAttribute('class', 'uk-width-1-6 uk-flex uk-flex-middle');
+
+                                    const closebutton = document.createElement('a');
+                                    closebutton.setAttribute('class', 'uk-text-danger');
+                                    closebutton.setAttribute('onclick', 'removeVariant('+variantidx+')');
+                                    closebutton.setAttribute('uk-icon', 'close');
+
+                                    formcontainer.appendChild(variantname);
+                                    formcontainer.appendChild(variantid);
+                                    closecontainer.appendChild(closebutton);
+                                    variantcontainer.appendChild(formcontainer);
+                                    variantcontainer.appendChild(closecontainer);
+                                    bundlecontainer.appendChild(variantcontainer);
+
+                                    $(function() {
+                                      var combProductArr = [
+                                        <?php
+                                        foreach ($combProducts as $combProduct) {
+                                          foreach ($combProduct as $key => $value) {
+                                            echo '{label:"'.$value.'", idx:'.$key.'},';
+                                          }
+                                        }
+                                        ?>
+                                      ];
+                                      $("#productvariantname"+variantidx).autocomplete({
+                                        source: combProductArr,
+                                        select: function(e, i) {
+                                          $('#variantid'+variantidx).val(i.item.idx);
+                                        },
+                                        minLength: 2
+                                      });
+                                    });
+                                  };
+                                  
+                                  function removeVariant(i) {
+                                    variant = document.getElementById('variantcontainer'+i);
+                                    variant.remove();
+                                  }
+                                </script>
                             </div>
-                            <script type="text/javascript">
-                                var createCount = 0;
-                                function createNewBundle() {
-                                    createCount++;
-
-                                    const createBundle = document.getElementById("createBundle");
-
-                                    const newCreateBundle = document.createElement('div');
-                                    newCreateBundle.setAttribute('id','create'+createCount);
-                                    newCreateBundle.setAttribute('class','uk-margin');
-                                    newCreateBundle.setAttribute('','');
-
-                                    const createBundle = document.createElement('div');
-                                    createBundle.setAttribute('id','createBundle'+createCount);
-
-                                    const createBundleOption = document.createElement('select');
-                                    createBundleOption.setAttribute('class','uk-select');
-                                    createBundleOption.setAttribute('id','bundle['+createCount+']');
-                                    createBundleOption.setAttribute('name','bundle['+createCount+']');
-
-                                    const createRemove = document.createElement('div');
-                                    createRemove.setAttribute('id', 'remove'+createCount);
-                                    createRemove.setAttribute('class', 'uk-text-center uk-text-bold uk-text-danger uk-flex uk-flex-middle');
-
-                                    const createRemoveButton = document.createElement('a');
-                                    createRemoveButton.setAttribute('onclick', 'createRemove('+createCount+')');
-                                    createRemoveButton.setAttribute('class', 'uk-link-reset');
-                                    createRemoveButton.innerHTML = 'X';
-
-                                    createBundle.appendChild(createBundleOption);
-                                    newCreateVariant.appendChild(createBundle);
-                                    createRemove.appendChild(createRemoveButton);
-                                    };
-
-                                    function createRemove(i) {
-                                    const createRemoveElement = document.getElementById('create'+i);
-                                    createRemoveElement.remove();
-                                };
-                            </script>
 
                             <hr>
 
