@@ -96,7 +96,7 @@ class Bundle extends BaseController
         // initialize
         $input = $this->request->getpost();
 
-        // get data
+        // Get Input Data
         $data = [
             'id'        => $id,
             'name'      => $input['name'],
@@ -114,13 +114,18 @@ class Bundle extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // save data
+        // Save Bundle
         $bundleModel->save($data);
 
-        $detail = [
-            'bundleid'  => $id,
-            'variantid' => $input['variantid'],
-        ];
+        
+        // Creating Bundle Detail
+        foreach ($input['variantid'] as $variant) {
+            $detail = [
+                'bundleid'  => $id,
+                'variantid' => $variant
+            ];
+            $bundleDetailModel->insert($detail);
+        }
 
         // validation
         if (! $this->validate([
@@ -140,11 +145,14 @@ class Bundle extends BaseController
 
         // calling model
         $bundleModel        = new bundleModel;
-        $bundleDetailModel  = new BundleModel;
+        $bundleDetailModel  = new bundledetailModel;
+
+        // $bundle = $bundleDetailModel->where('id',$id)->findAll();
+        // dd($bundle);
 
         // deleted
-        $detail =  $bundleDetailModel->where('bundleid,$id')->first();
-        $bundleDetailModel->delete($id);
+        $detail =  $bundleDetailModel->where('bundleid',$id)->first();
+        $bundleDetailModel->delete($detail);
         $bundleModel->delete($id);
         return redirect()->back()->with('error', lang('Global.deleted'));
 
