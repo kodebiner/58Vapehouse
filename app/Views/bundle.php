@@ -51,13 +51,13 @@
                                     <div id="createBundle0">
                                         <select id="bundle[0]" name="bundle[0]" class="uk-select">
                                             <option><?=lang('Global.bundle')?></option>
-                                                <?php
-                                                    foreach ($variants as $variant) {
-                                                        foreach ($products as $product) {
-                                                            echo '<option value="'.$variant['id'].'">'.$variant['name']."-".$product['name'].'</option>';
-                                                        }
-                                                    }
-                                                ?>
+                                            <?php
+                                              foreach ($variants as $variant) {
+                                                foreach ($products as $product) {
+                                                  echo '<option value="'.$variant['id'].'">'.$product['name']." - ".$variant['name'].'</option>';
+                                                }
+                                              }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
