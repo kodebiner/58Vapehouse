@@ -84,7 +84,7 @@ class Product extends BaseController
             // calling Model
             $ProductModel = new ProductModel();
             $StockModel = new StockModel();
-            $TotalStockModel = new TotalStockModel();
+            $OldStockModel = new OldStockModel();
             $VariantModel = new VariantModel();
             $OutletModel = new OutletModel();
 
@@ -157,9 +157,8 @@ class Product extends BaseController
                     'variantid'     => $variantid,
                     'hargadasar'    => $baseValue,
                     'hargamodal'    => $capValue,
-                    'qty'           => '0',
                 ];
-                $TotalStockModel->insert($totalStock);
+                $OldStockModel->insert($totalStock);
             }
 
             return redirect()->back()->with('message', lang('Global.saved'));
