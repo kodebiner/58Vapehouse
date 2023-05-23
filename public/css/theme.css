@@ -11474,3 +11474,20 @@ li.tm-main-navbar>a>svg {
     cursor: pointer;
     z-index:9999 !important;
 }
+
+.tm-trx-tab::before {
+    border-bottom: none;
+}
+
+.tm-trx-tab > li > a,
+.tm-trx-tab > li > a > .uk-h4 {
+    color: #fff;
+}
+
+.tm-trx-tab > .uk-active > a,
+.tm-trx-tab > .uk-active > a > .uk-h4 {
+    border-bottom: none;
+    background-color: #ccc;
+    color: #000;
+    border-radius: 10px;
+}
