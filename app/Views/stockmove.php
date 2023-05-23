@@ -2,6 +2,7 @@
 
 <?= $this->section('extraScript') ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -122,17 +123,8 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
-<!-- Search Box -->
-<div class="uk-margin">
-  <form class="uk-search uk-search-default">
-    <span uk-search-icon></span>
-    <input class="uk-search-input" id="inputSMove" onkeyup="searchSMove()" type="text" placeholder="Search" aria-label="Search">
-  </form>
-</div>
-<!-- Search Box End -->
-
-<div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="tableSMove">
+<div class="uk-overflow-auto uk-margin">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
     <thead>
       <tr>
         <th class="uk-text-center uk-width-small">No</th>
@@ -173,24 +165,6 @@
       <?php endforeach; ?>
     </tbody>
   </table>
-  
-  <!-- Table Pagination -->
-  <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
-    <li><a href="#"><span uk-pagination-previous></span></a></li>
-    <li><a href="#">1</a></li>
-    <li class="uk-disabled"><span>…</span></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li><a href="#">6</a></li>
-    <li><a href="#">7</a></li>
-    <li><a href="#">8</a></li>
-    <li><a href="#">9</a></li>
-    <li><a href="#">10</a></li>
-    <li class="uk-disabled"><span>…</span></li>
-    <li><a href="#">20</a></li>
-    <li><a href="#"><span uk-pagination-next></span></a></li>
-  </ul>
-  <!-- Table Pagination End-->
 </div>
 <!-- End Of Table Content -->
 
@@ -198,24 +172,9 @@
 
 <!-- Search Engine Script -->
 <script>
-  function searchVar() {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("inputVar");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("tableVar");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[1];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }       
-    }
-  }
+  $(document).ready(function () {
+    $('#example').DataTable();
+  });
 </script>
 <!-- Search Engine Script End -->
 

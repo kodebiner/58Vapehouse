@@ -1,4 +1,10 @@
 <?= $this->extend('layout') ?>
+
+<?= $this->section('extraScript') ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<?= $this->endSection() ?>
+
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
@@ -64,24 +70,15 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
-<!-- Search Box -->
-<div class="uk-margin">
-  <form class="uk-search uk-search-default">
-    <span uk-search-icon></span>
-    <input class="uk-search-input" id="inputOutlet" onkeyup="searchOutlet()" type="text" placeholder="Search" aria-label="Search">
-  </form>
-</div>
-<!-- Search Box End -->
-
-<div class="uk-overflow-auto">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="tableOutlet">
+<div class="uk-overflow-auto uk-margin">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
     <thead>
       <tr>
         <th class="uk-text-center uk-width-small">No</th>
         <th class="uk-width-large"><?=lang('Global.name')?></th>
         <th class="uk-width-medium"><?=lang('Global.address')?></th>
         <th class="uk-width-medium"><?=lang('Global.maps')?></th>
-        <th class="uk-text-center uk-width-large"><?=lang('Global.action')?></th>
+        <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
       </tr>
     </thead>
     <tbody>
@@ -95,13 +92,13 @@
           <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
             <!-- Button Trigger Modal Edit -->
             <div>
-              <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #editdata<?= $outlet['id'] ?>"><?=lang('Global.edit')?></button>
+              <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $outlet['id'] ?>"></a>
             </div>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
             <div>
-              <a class="uk-button uk-button-default uk-button-danger uk-preserve-color" href="outlet/delete/<?= $outlet['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
+              <a uk-icon="trash" class="uk-icon-button-delete" href="outlet/delete/<?= $outlet['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
             </div>
             <!-- End Of Button Delete -->
           </td>
@@ -109,24 +106,6 @@
       <?php endforeach; ?>
     </tbody>
   </table>
-
-  <!-- Table Pagination -->
-  <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
-    <li><a href="#"><span uk-pagination-previous></span></a></li>
-    <li><a href="#">1</a></li>
-    <li class="uk-disabled"><span>…</span></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li><a href="#">6</a></li>
-    <li><a href="#">7</a></li>
-    <li><a href="#">8</a></li>
-    <li><a href="#">9</a></li>
-    <li><a href="#">10</a></li>
-    <li class="uk-disabled"><span>…</span></li>
-    <li><a href="#">20</a></li>
-    <li><a href="#"><span uk-pagination-next></span></a></li>
-  </ul>
-  <!-- Table Pagination End-->
 
   <!-- Modal Edit -->
   <?php foreach ($outlets as $outlet) : ?>
@@ -168,7 +147,6 @@
               <div class="uk-margin">
                 <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
               </div>
-
             </form>
           </div>
         </div>
@@ -181,25 +159,9 @@
 
 <!-- Search Engine Script -->
 <script>
-  function searchOutlet() {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("inputOutlet");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("tableOutlet");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[1];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }       
-    }
-  }
+  $(document).ready(function () {
+    $('#example').DataTable();
+  });
 </script>
 <!-- Search Engine Script End -->
-
 <?= $this->endSection() ?>

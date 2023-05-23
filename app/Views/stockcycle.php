@@ -1,5 +1,10 @@
 <?= $this->extend('layout') ?>
 
+<?= $this->section('extraScript') ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<?= $this->endSection() ?>
+
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
@@ -15,8 +20,8 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
-<div class="uk-overflow-auto">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
+<div class="uk-overflow-auto uk-margin">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
         <thead>
             <tr>
                 <th class="uk-text-center">No</th>
@@ -45,26 +50,15 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    
-    <!-- Table Pagination -->
-    <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
-        <li><a href="#"><span uk-pagination-previous></span></a></li>
-        <li><a href="#">1</a></li>
-        <li class="uk-disabled"><span>…</span></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li><a href="#">6</a></li>
-        <li><a href="#">7</a></li>
-        <li><a href="#">8</a></li>
-        <li><a href="#">9</a></li>
-        <li><a href="#">10</a></li>
-        <li class="uk-disabled"><span>…</span></li>
-        <li><a href="#">20</a></li>
-        <li><a href="#"><span uk-pagination-next></span></a></li>
-    </ul>
-    <!-- Table Pagination End-->
 </div>
 <!-- End Of Table Content -->
 
+<!-- Search Engine Script -->
+<script>
+  $(document).ready(function () {
+    $('#example').DataTable();
+  });
+</script>
+<!-- Search Engine Script End -->
 
 <?= $this->endSection() ?>

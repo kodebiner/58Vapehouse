@@ -1,7 +1,7 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" /> -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -342,8 +342,8 @@
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td class="uk-text-center"><?= $cate['name']; ?></td>
                     <td class="uk-text-center">
-                      <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editcat<?= $cate['id'] ?>"><?=lang('Global.edit')?></button>
-                      <a class="uk-button uk-button-default uk-button-danger" href="product/deletecat/<?= $cate['id'] ?>"><?=lang('Global.delete')?></a>
+                      <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editcat<?= $cate['id'] ?>"></a>
+                      <a class="uk-icon-button-delete" uk-icon="trash" href="product/deletecat/<?= $cate['id'] ?>"></a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
@@ -428,8 +428,8 @@
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td class="uk-text-center"><?= $bran['name']; ?></td>
                     <td class="uk-text-center">
-                      <button type="button" class="uk-button uk-button-primary" uk-toggle="target: #editbrand<?= $bran['id'] ?>"><?=lang('Global.edit')?></button>
-                      <a class="uk-button uk-button-default uk-button-danger" href="product/deletebrand/<?= $bran['id'] ?>"><?=lang('Global.delete')?></a>
+                      <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editbrand<?= $bran['id'] ?>"></a>
+                      <a class="uk-icon-button-delete" uk-icon="trash" href="product/deletebrand/<?= $bran['id'] ?>"></a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
@@ -496,40 +496,7 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
-<!-- Search Box -->
-<div class="uk-child-width-1-5@m uk-margin" uk-grid>
-  <div class="">
-    <form class="uk-search uk-search-default">
-      <span uk-search-icon></span>
-      <input id="myInput" class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
-    </form>
-  </div>
-  <!-- Search Box End -->
-
-  <div class="">
-    <div class="uk-form-controls">
-      <select class="uk-select" name="category">
-        <option><?=lang('Global.category')?></option>
-        <?php foreach ($category as $cate) { ?>
-          <option value="<?= $cate['id']; ?>"><?= $cate['name']; ?></option>
-        <?php } ?>
-      </select>
-    </div>
-  </div>
-
-  <div class="">
-    <div class="uk-form-controls">
-      <select class="uk-select" name="brand">
-        <option><?=lang('Global.brand')?></option>
-        <?php foreach ($brand as $bran) { ?>
-          <option value="<?= $bran['id']; ?>"><?= $bran['name']; ?></option>
-        <?php } ?>
-      </select>
-    </div>
-  </div>
-</div>
-
-<div class="uk-overflow-auto">
+<div class="uk-overflow-auto uk-margin">
   <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
     <thead>
       <tr>
@@ -611,7 +578,7 @@
 
             <!-- Button Delete -->
             <div>
-              <a uk-icon="trash" class="uk-icon-button-delete" href="product/delete/<?= $product['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
+              <a class="uk-icon-button-delete" uk-icon="trash" href="product/delete/<?= $product['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
             </div>
             <!-- End Of Button Delete -->
           </td>
@@ -960,21 +927,11 @@
 <?php } ?>
 <!-- End of Products Detail -->
 
+<!-- Search Engine Script -->
 <script>
-  // ajax
-  // $(document).ready(function(){
-  // $("#myInput").on("keyup", function() {
-  //       var value = $(this).val().toLowerCase();
-  //       $("#myTable tr").filter(function() {
-  //         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-  //       });
-  //     });
-  //   });
-
   $(document).ready(function () {
     $('#example').DataTable();
-});
-    
+  });
 </script>
-
+<!-- Search Engine Script End -->
 <?= $this->endSection() ?>

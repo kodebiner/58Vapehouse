@@ -1,47 +1,8 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
-
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> -->
-<style>
-.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
-    color: white;
-
-}
-
-.dataTables_wrapper .dataTables_length select {
-    border: 1px solid #aaa;
-    border-radius: 3px;
-    padding: 5px;
-    background-color: white;
-    padding: 4px;
-}
-
-input[type="search" i] {
-    appearance: auto;
-    box-sizing: border-box;
-    padding: 1px 2px;
-    color: white;
-}
-
-table.dataTable thead th, table.dataTable thead td {
-    padding: 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-    color: white;
-}
-
-
-.uk-text-center {
-    text-align: left !important;
-}
-
-
-</style>
-
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -71,50 +32,48 @@ table.dataTable thead th, table.dataTable thead td {
           <div class="uk-modal-body">
             <form class="uk-form-stacked" role="form" action="/stock/restock" method="post">
               <?= csrf_field() ?>
-                <!-- ajax -->
-
-                    <!-- select oulet -->
-                <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
-                <div class="uk-form-controls">
-                  <select class="uk-select" name="outlet" id="sel_out">
-                    <option><?=lang('Global.outlet')?></option>
-                    <?php
-                    foreach ($outlets as $outlet) {
-                      if ($outlet['id'] === $outletPick) {
-                        $checked = 'selected';
-                      } else {
-                        $checked = '';
-                      }
-                    ?>
-                      <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
-                    <?php
+              <!-- ajax -->
+              <!-- select oulet -->
+              <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
+              <div class="uk-form-controls">
+                <select class="uk-select" name="outlet" id="sel_out">
+                  <option><?=lang('Global.outlet')?></option>
+                  <?php
+                  foreach ($outlets as $outlet) {
+                    if ($outlet['id'] === $outletPick) {
+                      $checked = 'selected';
+                    } else {
+                      $checked = '';
                     }
-                    ?>
-                  </select>
-                </div>
+                  ?>
+                    <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                  <?php
+                  }
+                  ?>
+                </select>
+              </div>
                 
-                <!-- select Product -->
-                <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
-                <div class="uk-form-controls">
-                  <select class="uk-select" name="product" id="sel_pro">
-                    <option><?=lang('Global.product')?></option>
-                    <?php
-                    foreach ($products as $product) {
-                      echo '<option value="'.$product['id'].'">'.$product['name'].'</option>';
-                    }
-                    ?>
-                  </select>
-                </div>
+              <!-- select Product -->
+              <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
+              <div class="uk-form-controls">
+                <select class="uk-select" name="product" id="sel_pro">
+                  <option><?=lang('Global.product')?></option>
+                  <?php
+                  foreach ($products as $product) {
+                    echo '<option value="'.$product['id'].'">'.$product['name'].'</option>';
+                  }
+                  ?>
+                </select>
+              </div>
                 
-                <!-- select variant -->
-                <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
-                <div class="uk-form-controls">
-                  <select class="uk-select" name="variant" id="sel_variant">
-                    <option id="default_var"><?=lang('Global.variant')?></option>
-                  </select>
-                </div>
-
-                <!-- end of ajax -->
+              <!-- select variant -->
+              <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
+              <div class="uk-form-controls">
+                <select class="uk-select" name="variant" id="sel_variant">
+                  <option id="default_var"><?=lang('Global.variant')?></option>
+                </select>
+              </div>
+              <!-- end of ajax -->
 
               <div class="uk-margin">
                 <label class="uk-form-label" for="address"><?=lang('Global.basePrice')?></label>
@@ -153,7 +112,6 @@ table.dataTable thead th, table.dataTable thead td {
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
-
 <div class="uk-overflow-auto uk-margin">
   <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
     <thead>
@@ -171,106 +129,107 @@ table.dataTable thead th, table.dataTable thead td {
           <td class="uk-text-center"><?= $i++; ?></td>
           <td class="uk-text-center">
             <?php foreach ($outlets as $outlet ) {
-                if ( $stock['outletid']=== $outlet['id']){
-                    echo $outlet['name'];
-                }
-                } ?>
+              if ($stock['outletid']=== $outlet['id']){
+                echo $outlet['name'];
+              }
+            } ?>
           </td>
           <td class="uk-text-center">
-           <?php foreach ($variants as $variant ) { 
-            if($stock['variantid'] === $variant['id']){
+            <?php foreach ($variants as $variant ) { 
+              if($stock['variantid'] === $variant['id']){
                 echo $variant['name'];
-                 }
-             } 
-             ?>
-        </td>
+              }
+            } 
+            ?>
+          </td>
           <td class="uk-text-center"><?= $stock['qty']; ?></td>
         </tr>
       <?php endforeach; ?>
     </tbody>
   </table>
   <!-- End Table Content -->
+</div>
 
 <script>
-
   $(document).ready(function(){
     // Country change
     $("#sel_pro").change(function(){
 
-        // Selected country id
-        var productid = $(this).val();
+      // Selected country id
+      var productid = $(this).val();
 
-        // Empty state and city dropdown
-        //$('#sel_variant').find('option').not(':first').remove();
+      // Empty state and city dropdown
+      //$('#sel_variant').find('option').not(':first').remove();
 
-        // Fetch country states
-        $.ajax({
-              type: 'post',
-              url: 'coba',
-              data: {request:'getPro',productid:productid},
-              dataType: 'json',
-              success:function(response){
+      // Fetch country states
+      $.ajax({
+        type: 'post',
+        url: 'coba',
+        data: {request:'getPro',productid:productid},
+        dataType: 'json',
+        success:function(response){
 
-                console.log('success', arguments);
+          console.log('success', arguments);
 
-                var len = response.length;
-                var variant = arguments[0][0];
+          var len = response.length;
+          var variant = arguments[0][0];
 
-                let option = '<option>Variant</option>';
+          let option = '<option>Variant</option>';
 
-                variant.forEach(itter);
+          variant.forEach(itter);
 
-                document.getElementById('sel_variant').innerHTML = option;
+          document.getElementById('sel_variant').innerHTML = option;
 
-                function itter(value) {
-                  option += '<option value="'+value.id+'">'+value.name+'</option>';
-                }
-              }
-        });
+          function itter(value) {
+            option += '<option value="'+value.id+'">'+value.name+'</option>';
+          }
+        }
+      });
     });
 
     // Country change
     $("#sel_variant").change(function(){
 
-        // Selected country id
-        var variantid = $(this).val();
+      // Selected country id
+      var variantid = $(this).val();
 
-        // Empty state and city dropdown
-        //$('#sel_variant').find('option').not(':first').remove();
+      // Empty state and city dropdown
+      //$('#sel_variant').find('option').not(':first').remove();
 
-        // Fetch country states
-        $.ajax({
-                    type: 'post',
-                    url: 'coba',
-                    data: {request:'getVariant',variantid:variantid},
-                    dataType: 'json',
-                    success:function(response){
+      // Fetch country states
+      $.ajax({
+        type: 'post',
+        url: 'coba',
+        data: {request:'getVariant',variantid:variantid},
+        dataType: 'json',
+        success:function(response){
 
-                      console.log('success', arguments);
+          console.log('success', arguments);
 
-                      var len = response.length;
-                      var variant = arguments[0][0];
+          var len = response.length;
+          var variant = arguments[0][0];
 
-                      // let option = '<option>Variant</option>';
+          // let option = '<option>Variant</option>';
 
-                      variant.forEach(itter);
+          variant.forEach(itter);
 
-                      document.getElementById('sel_variant').innerHTML = option;
+          document.getElementById('sel_variant').innerHTML = option;
 
-                      function itter(value) {
-                        option += '<option value="'+value.id+'">'+value.name+'</option>';
-                      }
-                    }
-              });
-          });
+          function itter(value) {
+            option += '<option value="'+value.id+'">'+value.name+'</option>';
+          }
+        }
+      });
     });
-
-    $(document).ready(function () {
-    $('#example').DataTable({
-      responsive: true
-    });
-    });
-
+  });
 </script>
+
+<!-- Search Engine Script -->
+<script>
+  $(document).ready(function () {
+    $('#example').DataTable();
+  });
+</script>
+<!-- Search Engine Script End -->
 
 <?= $this->endSection() ?>
