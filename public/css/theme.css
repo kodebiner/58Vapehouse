@@ -1034,8 +1034,8 @@ button.uk-icon:not(:disabled) {
     width: 36px;
     height: 36px;
     border-radius: 500px;
-    background: #f8f8f8;
-    color: #999;
+    background: #1e87f0 !important;
+    color: #fff !important;
     vertical-align: middle;
     display: inline-flex;
     justify-content: center;
@@ -1045,8 +1045,8 @@ button.uk-icon:not(:disabled) {
 }
 
 .uk-icon-button:hover {
-    background-color: #ebebeb;
-    color: #666
+    background-color: #097cee !important;
+    color: #fff !important;
 }
 
 .uk-active>.uk-icon-button,
@@ -1054,6 +1054,33 @@ button.uk-icon:not(:disabled) {
     background-color: #dfdfdf;
     color: #666
 }
+
+.uk-icon-button-delete {
+    box-sizing: border-box;
+    width: 36px;
+    height: 36px;
+    border-radius: 500px;
+    background: #f0506e !important;
+    color: #fff !important;
+    vertical-align: middle;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: .1s ease-in-out;
+    transition-property: color, background-color
+}
+
+.uk-icon-button-delete:hover {
+    background-color: #eb183e !important;
+    color: #fff !important;
+}
+
+.uk-active>.uk-icon-button-delete,
+.uk-icon-button-delete:active {
+    background-color: #dfdfdf;
+    color: #666
+}
+
 
 .uk-range {
     -webkit-appearance: none;

@@ -534,7 +534,7 @@
     <thead>
       <tr>
         <th class="uk-text-center"></th>
-        <th class="uk-text-center">No</th>
+        <th class="uk-text-center"><?=lang('Global.favorite')?></th>
         <th><?=lang('Global.name')?></th>
         <th><?=lang('Global.category')?></th>
         <th><?=lang('Global.price')?></th>
@@ -544,13 +544,16 @@
       </tr>
     </thead>
     <tbody>
-      <?php $i = 1 ; ?>
       <?php foreach ($products as $product) : ?>
         <tr class="">
           <td class="uk-flex uk-flex-center">
             <a class="uk-icon-link uk-icon" uk-toggle="target: #product-<?= $product['id']; ?>" uk-icon="search"></a>
           </td>
-          <td class="uk-text-center"><?= $i++; ?></td>
+          <td class="uk-text-center">
+            <form class="" action="product/favorite/<?= $product['id'] ?>" method="post" id="myForm">
+              <input class="uk-checkbox" type="checkbox" name="favorite" id="favorite-<?=$product['id']?>">
+            </form>
+          </td>
           <td><?= $product['name']; ?></td>
           <td>
             <?php
@@ -602,13 +605,13 @@
           <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
             <!-- Button Trigger Modal Edit -->
             <div>
-              <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #editdata<?= $product['id'] ?>"><?=lang('Global.edit')?></button>
+              <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $product['id'] ?>"></a>
             </div>
             <!-- End Of Button Trigger Modal Edit -->
 
             <!-- Button Delete -->
             <div>
-              <a class="uk-button uk-button-default uk-button-danger uk-preserve-color" href="product/delete/<?= $product['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"><?=lang('Global.delete')?></a>
+              <a uk-icon="trash" class="uk-icon-button-delete" href="product/delete/<?= $product['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
             </div>
             <!-- End Of Button Delete -->
           </td>
@@ -617,23 +620,26 @@
     </tbody>
   </table>
 
-  <!-- Table Pagination -->
-  <!-- <ul class="uk-pagination uk-flex-right uk-margin-medium-top uk-light" uk-margin>
-    <li><a href="#"><span uk-pagination-previous></span></a></li>
-    <li><a href="#">1</a></li>
-    <li class="uk-disabled"><span>…</span></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li><a href="#">6</a></li>
-    <li><a href="#">7</a></li>
-    <li><a href="#">8</a></li>
-    <li><a href="#">9</a></li>
-    <li><a href="#">10</a></li>
-    <li class="uk-disabled"><span>…</span></li>
-    <li><a href="#">20</a></li>
-    <li><a href="#"><span uk-pagination-next></span></a></li>
-  </ul> -->
-  <!-- Table Pagination End -->
+  <!-- Ajax Favorite -->
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.uk-checkbox').change(function() {
+        var formData = $('#myForm').serialize();
+        console.log('Posting the following: ', formData);
+        
+        $.ajax({
+          url: 'product/favorite/<?= $product['id'] ?>',
+          data: formData,
+          type: 'post',
+          dataType: 'json',
+          success: function(data) {
+            //  ... do something with the data...
+          }
+        });
+      });
+    });
+  </script>
+  <!-- Ajax Favorite End -->
 
   <!-- Modal Edit -->
   <?php foreach ($products as $product) : ?>
@@ -910,22 +916,22 @@
             ?>
             <div class="uk-h3 tm-h3">Total Stock <span class="<?=$stockClass?>"><?=$toqty?></span></div>
             <h6 class="uk-h4 tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h6>
-            <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
+            <table class="uk-table uk-table-justify uk-table-middle" style="background-color: #fff;">
               <thead>
                 <tr>
-                  <th></th>
-                  <th><?=lang('Global.stock')?></th>
-                  <th><?=lang('Global.price')?></th>
+                  <th class="uk-width-medium"></th>
+                  <th class="uk-text-center uk-width-small" style="color: #000;"><?=lang('Global.stock')?></th>
+                  <th class="uk-width-large" style="color: #000;"><?=lang('Global.price')?></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody style="color: #000;">
                 <?php
                 foreach ($variants as $variant) {
                   if ($variant['productid'] === $product['id']) {
                 ?>
                 <tr>
-                  <td><?=$variant['name']?></td>
-                  <td>
+                  <td class="uk-text-bold"><?=$variant['name']?></td>
+                  <td class="uk-text-center">
                     <?php
                     $varstock = 0;
                     foreach ($stocks as $stock) {
