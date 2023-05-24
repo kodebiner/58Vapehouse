@@ -21,93 +21,93 @@
             <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addStockAdj')?></button>
         </div>
         <!-- End Of Button Trigger Modal Add -->
-
-        <!-- Modal Add -->
-        <div uk-modal class="uk-flex-top" id="tambahdata">
-            <div class="uk-modal-dialog uk-margin-auto-vertical">
-                <div class="uk-modal-content">
-                    <div class="uk-modal-header">
-                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addStockAdj')?></h5>
-                    </div>
-                    <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="/stockadjustment/create" method="post">
-                            <?= csrf_field() ?>
-                            
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
-                                <div class="uk-form-controls">
-                                    <select class="uk-select" name="type">
-                                        <option name="type" value="0" >Plus</option>
-                                        <option name="type" value="1" >Minus</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
-                                <div class="uk-form-controls">
-                                    <select class="uk-select" name="outlet">
-                                        <option><?=lang('Global.outlet')?></option>
-                                        <?php
-                                        foreach ($outlets as $outlet) {
-                                            echo '<option value="'.$outlet['id'].'">'.$outlet['name'].'</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
-                                <div class="uk-form-controls">
-                                    <select class="uk-select" name="product" id="sel_pro">
-                                        <option><?=lang('Global.product')?></option>
-                                        <?php
-                                        foreach ($products as $product) {
-                                            echo '<option value="'.$product['id'].'">'.$product['name'].'</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
-                                <div class="uk-form-controls">
-                                    <select class="uk-select" name="variant" id="sel_variant">
-                                        <option id="default_var"><?=lang('Global.variant')?></option>
-                                    </select>
-                                </div>
-                            </div>
-                                        
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
-                                <div class="uk-form-controls">
-                                    <input type="text" class="uk-input <?php if (session('errors.quantity')) : ?>tm-form-invalid<?php endif ?>" name="qty" id="qty" placeholder="<?=lang('Global.quantity')?>" required/>
-                                </div>
-                            </div>
-                                        
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="note"><?=lang('Global.note')?></label>
-                                <div class="uk-form-controls">
-                                    <input type="text" class="uk-input <?php if (session('errors.note')) : ?>tm-form-invalid<?php endif ?>" name="note" id="note" placeholder="<?=lang('Global.note')?>" required/>
-                                </div>
-                            </div>
-
-                            <hr>
-                                        
-                            <div class="uk-margin">
-                                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Of Modal Add -->
     </div>
 </div>
 <!-- End Of Page Heading -->
+
+<!-- Modal Add -->
+<div uk-modal class="uk-flex-top" id="tambahdata">
+    <div class="uk-modal-dialog uk-margin-auto-vertical">
+        <div class="uk-modal-content">
+            <div class="uk-modal-header">
+                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addStockAdj')?></h5>
+            </div>
+            <div class="uk-modal-body">
+                <form class="uk-form-stacked" role="form" action="/stockadjustment/create" method="post">
+                    <?= csrf_field() ?>
+                            
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select" name="type">
+                                <option name="type" value="0" >Plus</option>
+                                <option name="type" value="1" >Minus</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select" name="outlet">
+                                <option><?=lang('Global.outlet')?></option>
+                                <?php
+                                foreach ($outlets as $outlet) {
+                                    echo '<option value="'.$outlet['id'].'">'.$outlet['name'].'</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select" name="product" id="sel_pro">
+                                <option><?=lang('Global.product')?></option>
+                                <?php
+                                foreach ($products as $product) {
+                                    echo '<option value="'.$product['id'].'">'.$product['name'].'</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select" name="variant" id="sel_variant">
+                                <option id="default_var"><?=lang('Global.variant')?></option>
+                            </select>
+                        </div>
+                    </div>
+                                        
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input <?php if (session('errors.quantity')) : ?>tm-form-invalid<?php endif ?>" name="qty" id="qty" placeholder="<?=lang('Global.quantity')?>" required/>
+                        </div>
+                    </div>
+                                        
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="note"><?=lang('Global.note')?></label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input <?php if (session('errors.note')) : ?>tm-form-invalid<?php endif ?>" name="note" id="note" placeholder="<?=lang('Global.note')?>" required/>
+                        </div>
+                    </div>
+
+                    <hr>
+                                        
+                    <div class="uk-margin">
+                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Of Modal Add -->
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
@@ -129,13 +129,19 @@
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td class=""><?= $stokadj['date']; ?></td>
                     <td class="">
-                        <?php foreach ($products as $product) : ?>
-                            <?php foreach ($variants as $variant) {
-                                if ($variant['id'] === $product['id']) {
-                                    echo ($product['name']);
+                        <?php 
+                            foreach ($variants as $variant) {
+                                if ($variant['id'] === $stokadj['variantid']) {
+                                    $varName = $variant['name'];
+                                    foreach ($products as $product) {
+                                        if ($variant['productid'] === $product['id']) {
+                                            $ProdName = $product['name'];
+                                        }
+                                    }
                                 }
-                            } ?>
-                        <?php endforeach;?>
+                            }
+                        ?>
+                        <?= $ProdName.' - '.$varName ?>
                     </td>
                     <td class="">
                         <?php foreach ($outlets as $outlet) {
