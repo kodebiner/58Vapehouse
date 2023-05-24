@@ -518,7 +518,7 @@
           </td>
           <td class="uk-text-center">
             <form class="" action="product/favorite/<?= $product['id'] ?>" method="post" id="myForm">
-              <input class="uk-checkbox" type="checkbox" name="favorite" id="favorite-<?=$product['id']?>">
+              <input class="uk-checkbox" value="1" type="checkbox" name="favorite" id="favorite">
             </form>
           </td>
           <td><?= $product['name']; ?></td>
@@ -591,16 +591,18 @@
   <script type="text/javascript">
     $(document).ready(function() {
       $('.uk-checkbox').change(function() {
-        var formData = $('#myForm').serialize();
-        console.log('Posting the following: ', formData);
-        
+        var formData = $('#myForm').val();
+        $("#myForm").submit(function (event) {
+          favorite: $("#favorite").val()
+        });
+        console.log(formData);
         $.ajax({
           url: 'product/favorite/<?= $product['id'] ?>',
           data: formData,
           type: 'post',
           dataType: 'json',
           success: function(data) {
-            //  ... do something with the data...
+            alert(data);
           }
         });
       });

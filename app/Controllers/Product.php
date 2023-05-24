@@ -497,4 +497,24 @@ class Product extends BaseController
         // return
         return redirect()->back()->with('error', lang('Global.deleted'));
     }
+
+    public function favorite($id)
+    {
+        // Calling Model
+        $ProductModel = new ProductModel();
+
+        // initialize
+        $input      = $this->request->getPost();
+        $products = $ProductModel->where('id',$id)->first();
+
+        $data = [
+            'id'        => $products,
+            'favorite'  => $input['favorite'],
+        ];
+
+        dd($data);
+
+        $ProductModel->save($data);
+    
+    }
 }
