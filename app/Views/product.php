@@ -589,28 +589,28 @@
 </div>
 <!-- End Of Table Content -->
 
-  <!-- Ajax Favorite -->
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('.uk-checkbox').change(function() {
-        var formData = $('#myForm').val();
-        $("#myForm").submit(function (event) {
-          favorite: $("#favorite").val()
-        });
-        console.log(formData);
-        $.ajax({
-          url: 'product/favorite/<?= $product['id'] ?>',
-          data: formData,
-          type: 'post',
-          dataType: 'json',
-          success: function(data) {
-            alert(data);
-          }
-        });
+<!-- Ajax Favorite -->
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.uk-checkbox').change(function() {
+      var formData = $('#myForm').val();
+      $("#myForm").submit(function (event) {
+        favorite: $("#favorite").val()
+      });
+      console.log(formData);
+      $.ajax({
+        url: 'product/favorite/<?= $product['id'] ?>',
+        data: formData,
+        type: 'post',
+        dataType: 'json',
+        success: function(data) {
+          alert(data);
+        }
       });
     });
-  </script>
-  <!-- Ajax Favorite End -->
+  });
+</script>
+<!-- Ajax Favorite End -->
 
 <!-- Modal Edit -->
 <?php foreach ($products as $product) : ?>
