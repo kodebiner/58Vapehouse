@@ -105,6 +105,7 @@ return [
     'stockCycle'        => 'Stock Cycle',
     'bundle'            => 'Bundle',
     'bundledetail'      => 'Bundle Detail',
+    'presence'          => 'presence',
 
     // Title
     'employeeList'              => 'Employee List',

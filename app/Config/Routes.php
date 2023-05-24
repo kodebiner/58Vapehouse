@@ -115,6 +115,7 @@ $routes->group('product', ['filter'=>'login'], function($routes){
 
     //product
     $routes->get('', 'Product::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('favorite/(:num)', 'Product::favorite/1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Product::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('edit(:num)', 'Product::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Product::update/$1', ['filter' => 'role:owner,supervisor,operator']);
@@ -204,6 +205,16 @@ $routes->group('bundle', ['filter'=>'login'], function($routes){
     $routes->post('editbund/(:num)', 'Bundle::editbund/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('deletebund/(:num)', 'Bundle::deletebund/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
+
+// Presence
+$routes->group('presence', ['filter'=>'login'], function($routes){
+    // presence
+    $routes->get('', 'presence::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'presence::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'presence::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'presence::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+});
+
 
 /*
  * --------------------------------------------------------------------
