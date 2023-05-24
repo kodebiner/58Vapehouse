@@ -58,7 +58,6 @@ class Presence extends BaseController
         $file = $folderPath . $fileName;
         file_put_contents($file, $image_base64);
     
-  
 
         // get user id
         $auth = service('authentication');

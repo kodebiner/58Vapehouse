@@ -102,9 +102,7 @@
                 x.innerHTML = "An unknown error occurred."
                 break;
             }
-        }
-
-        
+        }       
     }
 
     function klik(){
@@ -117,45 +115,6 @@
         
     }
 
-   
-    
-    // function check() {
-    //     $("form").submit(function(){
-    //         $(".status").val(0);
-    //     });
-    // }
-    
-
-
-
-    // $(document).ready(function () {
-    //     $("form").submit(function (event){
-    //         var $input = $(this).find("input[name=whatever]");
-    //         if (!$input.val()) 
-    //         // Value is falsey (i.e. null), lets set a new one
-    //         $input.val("whatever you want");
-   
-    //         var formData = {
-    //         photo   : $(".image-tag").val(),
-    //         geoloc  : $(".loc").val(),
-    //         status  : $(".status").val(),
-    //         };
-
-    //         $.ajax({
-    //         type        : "POST",
-    //         url         : "presence/create",
-    //         data        : formData,
-    //         dataType    : "json",
-    //         encode      : true,
-    //         }).done(function (data) {
-    //         console.log(data);
-    //         });
-
-    //         event.preventDefault();
-    //     });
-    // });
-    
-    
 </script>
 <!-- Search Engine Script End -->
 
