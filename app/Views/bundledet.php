@@ -23,72 +23,72 @@
       <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addProduct')?></button>
     </div>
     <!-- End Of Button Trigger Modal Add -->
-
-    <!-- Modal Add -->
-    <div uk-modal class="uk-flex-top" id="tambahdata">
-      <div class="uk-modal-dialog uk-margin-auto-vertical">
-        <div class="uk-modal-content">
-          <div class="uk-modal-header">
-            <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addVariant')?></h5>
-          </div>
-          <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="bundle/createbund/<?= $bundles['id']; ?>" method="post">
-              <?= csrf_field() ?>
-
-                <div id="createBundle" class="uk-margin-bottom">
-                    <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
-                    <?php
-                        $combProducts = [];
-                        foreach ($variants as $variant) {
-                            foreach ($products as $product) {
-                                if ($variant['productid'] === $product['id']) {
-                                    $combProducts[] = [$variant['id'] => $product['name'].' - '.$variant['name']];
-                                }
-                            }
-                        }
-                    ?>
-                    <div id="variantcontainer0" class="uk-margin-small" uk-grid>
-                        <div class="uk-width-5-6">
-                            <input class="uk-input" id="productvariantname0" required/>
-                            <input id="variantid0" name="variantid[0]" hidden/>
-                        </div>
-                    </div>
-                    <script type="text/javascript">
-                        $(function() {
-                            var combProduct = [
-                                <?php
-                                    foreach ($combProducts as $combProduct) {
-                                        foreach ($combProduct as $key => $value) {
-                                            echo '{label:"'.$value.'", idx:'.$key.'},';
-                                        }
-                                    }
-                                ?>
-                            ];
-                            $("#productvariantname0").autocomplete({
-                                source: combProduct,
-                                select: function(e, i) {
-                                    $('#variantid0').val(i.item.idx);
-                                },
-                                minLength: 2
-                            });
-                        });
-                    </script>
-                </div>
-
-              <hr>
-
-              <div class="uk-margin">
-                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Of Modal Add -->
   </div>
 </div>
 <!-- End Of Page Heading -->
+
+<!-- Modal Add -->
+<div uk-modal class="uk-flex-top" id="tambahdata">
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
+    <div class="uk-modal-content">
+      <div class="uk-modal-header">
+        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addVariant')?></h5>
+      </div>
+      <div class="uk-modal-body">
+        <form class="uk-form-stacked" role="form" action="bundle/createbund/<?= $bundles['id']; ?>" method="post">
+          <?= csrf_field() ?>
+
+            <div id="createBundle" class="uk-margin-bottom">
+                <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
+                <?php
+                    $combProducts = [];
+                    foreach ($variants as $variant) {
+                        foreach ($products as $product) {
+                            if ($variant['productid'] === $product['id']) {
+                                $combProducts[] = [$variant['id'] => $product['name'].' - '.$variant['name']];
+                            }
+                        }
+                    }
+                ?>
+                <div id="variantcontainer0" class="uk-margin-small" uk-grid>
+                    <div class="uk-width-5-6">
+                        <input class="uk-input" id="productvariantname0" required/>
+                        <input id="variantid0" name="variantid[0]" hidden/>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(function() {
+                        var combProduct = [
+                            <?php
+                                foreach ($combProducts as $combProduct) {
+                                    foreach ($combProduct as $key => $value) {
+                                        echo '{label:"'.$value.'", idx:'.$key.'},';
+                                    }
+                                }
+                            ?>
+                        ];
+                        $("#productvariantname0").autocomplete({
+                            source: combProduct,
+                            select: function(e, i) {
+                                $('#variantid0').val(i.item.idx);
+                            },
+                            minLength: 2
+                        });
+                    });
+                </script>
+            </div>
+
+          <hr>
+
+          <div class="uk-margin">
+            <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Of Modal Add -->
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
@@ -104,16 +104,16 @@
         <?php $i = 1 ; ?>
         <?php foreach ($bundledet as $bundled) : ?>
             <?php 
-                foreach ($variants as $variant) {
-                    if ($variant['id'] === $bundled['variantid']) {
-                        $varname = $variant['name'];
-                        foreach ($products as $product) {
-                            if ($variant['productid'] === $product['id']) {
-                                $ProdName = $product['name'];
-                            }
-                        }
+              foreach ($variants as $variant) {
+                if ($variant['id'] === $bundled['variantid']) {
+                  $varname = $variant['name'];
+                  foreach ($products as $product) {
+                    if ($variant['productid'] === $product['id']) {
+                      $ProdName = $product['name'];
                     }
+                  }
                 }
+              }
             ?>
           <tr>
             <td class="uk-text-center"><?= $i++; ?></td>

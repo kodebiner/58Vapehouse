@@ -21,53 +21,53 @@
       <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addOutlet')?></button>
     </div>
     <!-- End Of Button Trigger Modal Add -->
-
-    <!-- Modal Add -->
-    <div uk-modal class="uk-flex-top" id="tambahdata">
-      <div class="uk-modal-dialog uk-margin-auto-vertical">
-        <div class="uk-modal-content">
-          <div class="uk-modal-header">
-            <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addOutlet')?></h5>
-          </div>
-          <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/outlet/create" method="post">
-              <?= csrf_field() ?>
-
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
-                </div>
-              </div>
-
-              <div class="uk-margin">
-                <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.address')) : ?>tm-form-invalid<?php endif ?>" name="address" id="address" placeholder="<?=lang('Global.address')?>" required/>
-                </div>
-              </div>
-
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.maps')) : ?>tm-form-invalid<?php endif ?>" id="maps" name="maps" placeholder="<?=lang('Global.maps')?>" autofocus required />
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="uk-margin">
-                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Of Modal Add -->
   </div>
 </div>
 <!-- End Of Page Heading -->
+
+<!-- Modal Add -->
+<div uk-modal class="uk-flex-top" id="tambahdata">
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
+    <div class="uk-modal-content">
+      <div class="uk-modal-header">
+        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addOutlet')?></h5>
+      </div>
+      <div class="uk-modal-body">
+        <form class="uk-form-stacked" role="form" action="/outlet/create" method="post">
+          <?= csrf_field() ?>
+
+          <div class="uk-margin-bottom">
+            <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+            <div class="uk-form-controls">
+              <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+            </div>
+          </div>
+
+          <div class="uk-margin">
+            <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
+            <div class="uk-form-controls">
+              <input type="text" class="uk-input <?php if (session('errors.address')) : ?>tm-form-invalid<?php endif ?>" name="address" id="address" placeholder="<?=lang('Global.address')?>" required/>
+            </div>
+          </div>
+
+          <div class="uk-margin-bottom">
+            <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
+            <div class="uk-form-controls">
+              <input type="text" class="uk-input <?php if (session('errors.maps')) : ?>tm-form-invalid<?php endif ?>" id="maps" name="maps" placeholder="<?=lang('Global.maps')?>" autofocus required />
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="uk-margin">
+            <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Of Modal Add -->
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
@@ -106,56 +106,56 @@
       <?php endforeach; ?>
     </tbody>
   </table>
+</div>
+<!-- End Of Table Content -->
 
-  <!-- Modal Edit -->
-  <?php foreach ($outlets as $outlet) : ?>
-    <div uk-modal class="uk-flex-top" id="editdata<?= $outlet['id'] ?>">
-      <div class="uk-modal-dialog uk-margin-auto-vertical">
-        <div class="uk-modal-content">
-          <div class="uk-modal-header">
-            <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
-          </div>
+<!-- Modal Edit -->
+<?php foreach ($outlets as $outlet) : ?>
+  <div uk-modal class="uk-flex-top" id="editdata<?= $outlet['id'] ?>">
+    <div class="uk-modal-dialog uk-margin-auto-vertical">
+      <div class="uk-modal-content">
+        <div class="uk-modal-header">
+          <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
+        </div>
 
-          <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="outlet/update/<?= $outlet['id'] ?>" method="post">
-              <?= csrf_field() ?>
-              <input type="hidden" name="id" value="<?= $outlet['id']; ?>">
+        <div class="uk-modal-body">
+          <form class="uk-form-stacked" role="form" action="outlet/update/<?= $outlet['id'] ?>" method="post">
+            <?= csrf_field() ?>
+            <input type="hidden" name="id" value="<?= $outlet['id']; ?>">
 
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet['name']; ?>"autofocus />
-                </div>
+            <div class="uk-margin-bottom">
+              <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+              <div class="uk-form-controls">
+                <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet['name']; ?>"autofocus />
               </div>
+            </div>
 
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet['address']; ?>" autofocus />
-                </div>
+            <div class="uk-margin-bottom">
+              <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
+              <div class="uk-form-controls">
+                <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet['address']; ?>" autofocus />
               </div>
+            </div>
 
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" autofocus />
-                </div>
+            <div class="uk-margin-bottom">
+              <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
+              <div class="uk-form-controls">
+                <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" autofocus />
               </div>
+            </div>
 
-              <hr>
+            <hr>
 
-              <div class="uk-margin">
-                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-              </div>
-            </form>
-          </div>
+            <div class="uk-margin">
+              <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-  <?php endforeach; ?>
-  <!-- End Of Modal Edit -->
-</div>
-<!-- End Of Table Content -->
+  </div>
+<?php endforeach; ?>
+<!-- End Of Modal Edit -->
 
 <!-- Search Engine Script -->
 <script>

@@ -21,58 +21,58 @@
       <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addVariant')?></button>
     </div>
     <!-- End Of Button Trigger Modal Add -->
-
-    <!-- Modal Add -->
-    <div uk-modal class="uk-flex-top" id="tambahdata">
-      <div class="uk-modal-dialog uk-margin-auto-vertical">
-        <div class="uk-modal-content">
-          <div class="uk-modal-header">
-            <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addVariant')?></h5>
-          </div>
-          <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/product/createvar/<?= $products['id']; ?>" method="post">
-              <?= csrf_field() ?>
-
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
-                </div>
-              </div>
-
-              <div class="uk-margin">
-                <label class="uk-form-label" for="hargadasar"><?=lang('Global.basePrice')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.basePrice')) : ?>tm-form-invalid<?php endif ?>" name="hargadasar" id="hargadasar" placeholder="<?=lang('Global.basePrice')?>" required/>
-                </div>
-              </div>
-
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="hargamodal"><?=lang('Global.capitalPrice')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.capitalPrice')) : ?>tm-form-invalid<?php endif ?>" id="hargamodal" name="hargamodal" placeholder="<?=lang('Global.capitalPrice')?>" autofocus required />
-                </div>
-              </div>
-
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input <?php if (session('errors.margin')) : ?>tm-form-invalid<?php endif ?>" id="margin" name="margin" placeholder="<?=lang('Global.margin')?>" autofocus required />
-                </div>
-              </div>
-              <hr>
-              <div class="uk-margin">
-                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Of Modal Add -->
   </div>
 </div>
 <!-- End Of Page Heading -->
+
+<!-- Modal Add -->
+<div uk-modal class="uk-flex-top" id="tambahdata">
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
+    <div class="uk-modal-content">
+      <div class="uk-modal-header">
+        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addVariant')?></h5>
+      </div>
+      <div class="uk-modal-body">
+        <form class="uk-form-stacked" role="form" action="/product/createvar/<?= $products['id']; ?>" method="post">
+          <?= csrf_field() ?>
+
+          <div class="uk-margin-bottom">
+            <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+            <div class="uk-form-controls">
+              <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+            </div>
+          </div>
+
+          <div class="uk-margin">
+            <label class="uk-form-label" for="hargadasar"><?=lang('Global.basePrice')?></label>
+            <div class="uk-form-controls">
+              <input type="text" class="uk-input <?php if (session('errors.basePrice')) : ?>tm-form-invalid<?php endif ?>" name="hargadasar" id="hargadasar" placeholder="<?=lang('Global.basePrice')?>" required/>
+            </div>
+          </div>
+
+          <div class="uk-margin-bottom">
+            <label class="uk-form-label" for="hargamodal"><?=lang('Global.capitalPrice')?></label>
+            <div class="uk-form-controls">
+              <input type="text" class="uk-input <?php if (session('errors.capitalPrice')) : ?>tm-form-invalid<?php endif ?>" id="hargamodal" name="hargamodal" placeholder="<?=lang('Global.capitalPrice')?>" autofocus required />
+            </div>
+          </div>
+
+          <div class="uk-margin-bottom">
+            <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
+            <div class="uk-form-controls">
+              <input type="text" class="uk-input <?php if (session('errors.margin')) : ?>tm-form-invalid<?php endif ?>" id="margin" name="margin" placeholder="<?=lang('Global.margin')?>" autofocus required />
+            </div>
+          </div>
+          <hr>
+          <div class="uk-margin">
+            <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Of Modal Add -->
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
@@ -125,64 +125,64 @@
         <?php } ?>
     </tbody>
   </table>
+</div>
+<!-- End Of Table Content -->
 
-  <!-- Modal Edit -->
-  <?php foreach ($variants as $variant) : ?>
-    <div uk-modal class="uk-flex-top" id="editdata<?= $variant['id']; ?>">
-      <div class="uk-modal-dialog uk-margin-auto-vertical">
-        <div class="uk-modal-content">
-          <div class="uk-modal-header">
-            <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
-          </div>
+<!-- Modal Edit -->
+<?php foreach ($variants as $variant) : ?>
+  <div uk-modal class="uk-flex-top" id="editdata<?= $variant['id']; ?>">
+    <div class="uk-modal-dialog uk-margin-auto-vertical">
+      <div class="uk-modal-content">
+        <div class="uk-modal-header">
+          <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
+        </div>
 
-          <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="product/editvar/<?= $variant['id']; ?>" method="post">
-              <?= csrf_field() ?>
-              <input type="hidden" name="id" value="<?= $variant['id']; ?>">
+        <div class="uk-modal-body">
+          <form class="uk-form-stacked" role="form" action="product/editvar/<?= $variant['id']; ?>" method="post">
+            <?= csrf_field() ?>
+            <input type="hidden" name="id" value="<?= $variant['id']; ?>">
 
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="name" name="name" value="<?= $variant['name']; ?>"autofocus />
-                </div>
+            <div class="uk-margin-bottom">
+              <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+              <div class="uk-form-controls">
+                <input type="text" class="uk-input" id="name" name="name" value="<?= $variant['name']; ?>"autofocus />
               </div>
+            </div>
 
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="hargadasar"><?=lang('Global.basePrice')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="hargadasar" name="hargadasar"  value="<?= $variant['hargadasar']; ?>" autofocus />
-                </div>
+            <div class="uk-margin-bottom">
+              <label class="uk-form-label" for="hargadasar"><?=lang('Global.basePrice')?></label>
+              <div class="uk-form-controls">
+                <input type="text" class="uk-input" id="hargadasar" name="hargadasar"  value="<?= $variant['hargadasar']; ?>" autofocus />
               </div>
+            </div>
 
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="hargammodal"><?=lang('Global.capitalPrice')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="hargamodal" name="hargamodal"  value="<?= $variant['hargamodal']; ?>" autofocus />
-                </div>
+            <div class="uk-margin-bottom">
+              <label class="uk-form-label" for="hargammodal"><?=lang('Global.capitalPrice')?></label>
+              <div class="uk-form-controls">
+                <input type="text" class="uk-input" id="hargamodal" name="hargamodal"  value="<?= $variant['hargamodal']; ?>" autofocus />
               </div>
-              
-              <div class="uk-margin-bottom">
-                <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
-                <div class="uk-form-controls">
-                  <input type="text" class="uk-input" id="margin" name="margin"  value="<?= $variant['hargajual']; ?>" autofocus />
-                </div>
+            </div>
+            
+            <div class="uk-margin-bottom">
+              <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
+              <div class="uk-form-controls">
+                <input type="text" class="uk-input" id="margin" name="margin"  value="<?= $variant['hargajual']; ?>" autofocus />
               </div>
+            </div>
 
-              <hr>
+            <hr>
 
-              <div class="uk-margin">
-                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-              </div>
+            <div class="uk-margin">
+              <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+            </div>
 
-            </form>
-          </div>
+          </form>
         </div>
       </div>
     </div>
-  <?php endforeach; ?>
-  <!-- End Of Modal Edit -->
-</div>
-<!-- End Of Table Content -->
+  </div>
+<?php endforeach; ?>
+<!-- End Of Modal Edit -->
 
 <!-- Search Engine Script -->
 <script>

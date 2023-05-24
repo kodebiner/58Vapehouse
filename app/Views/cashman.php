@@ -21,76 +21,76 @@
             <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addCashMan')?></button>
         </div>
         <!-- End Of Button Trigger Modal Add -->
-
-        <!-- Modal Add -->
-        <div uk-modal class="uk-flex-top" id="tambahdata">
-            <div class="uk-modal-dialog uk-margin-auto-vertical">
-                <div class="uk-modal-content">
-                    <div class="uk-modal-header">
-                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addCashMan')?></h5>
-                    </div>
-                    <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="cashman/create" method="post">
-                            <?= csrf_field() ?>
-
-                            <!-- select oulet -->
-                            <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
-                                <div class="uk-form-controls">
-                                    <select class="uk-select" name="outlet" id="sel_out">
-                                        <option><?=lang('Global.outlet')?></option>
-                                        <?php
-                                            foreach ($outlets as $outlet) {
-                                                if ($outlet['id'] === $outletPick) {
-                                                    $checked = 'selected';
-                                                } else {
-                                                    $checked = '';
-                                                }
-                                                ?>
-                                                <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
-                                                <?php
-                                            }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="uk-margin-bottom">
-                                <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
-                                <div class="uk-form-controls">
-                                    <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?=lang('Global.description')?>" autofocus required />
-                                </div>
-                            </div>
-
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
-                                <div class="uk-form-controls">
-                                    <input type="text" class="uk-input <?php if (session('errors.qty')) : ?>tm-form-invalid<?php endif ?>" name="qty" id="qty" placeholder="<?=lang('Global.quantity')?>" required/>
-                                </div>
-                            </div>
-                            
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
-                                <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
-                                    <label><input class="uk-radio" type="radio" name="type" value="0"> <?=lang('Global.cashin')?></label>
-                                    <label><input class="uk-radio" type="radio" name="type" value="1"> <?=lang('Global.cashout')?></label>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <div class="uk-margin">
-                                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Of Modal Add -->
     </div>
 </div>
 <!-- End Of Page Heading -->
+
+<!-- Modal Add -->
+<div uk-modal class="uk-flex-top" id="tambahdata">
+    <div class="uk-modal-dialog uk-margin-auto-vertical">
+        <div class="uk-modal-content">
+            <div class="uk-modal-header">
+                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addCashMan')?></h5>
+            </div>
+            <div class="uk-modal-body">
+                <form class="uk-form-stacked" role="form" action="cashman/create" method="post">
+                    <?= csrf_field() ?>
+
+                    <!-- select oulet -->
+                    <div class="uk-margin-bottom">
+                    <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select" name="outlet" id="sel_out">
+                                <option><?=lang('Global.outlet')?></option>
+                                <?php
+                                    foreach ($outlets as $outlet) {
+                                        if ($outlet['id'] === $outletPick) {
+                                            $checked = 'selected';
+                                        } else {
+                                            $checked = '';
+                                        }
+                                        ?>
+                                        <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                                        <?php
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?=lang('Global.description')?>" autofocus required />
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input <?php if (session('errors.qty')) : ?>tm-form-invalid<?php endif ?>" name="qty" id="qty" placeholder="<?=lang('Global.quantity')?>" required/>
+                        </div>
+                    </div>
+                            
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
+                        <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
+                            <label><input class="uk-radio" type="radio" name="type" value="0"> <?=lang('Global.cashin')?></label>
+                            <label><input class="uk-radio" type="radio" name="type" value="1"> <?=lang('Global.cashout')?></label>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="uk-margin">
+                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Of Modal Add -->
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
@@ -131,9 +131,10 @@
                     <td>
                         <?php  
                             $date = $cash['date'];
-                            $new_date = date('l, d-F-Y H:i:s');
-                            echo $new_date;  
+                            $newDate = date("l, d F Y | H:i:s", strtotime($date));
+                            $cash['date'] = $newDate;
                         ?>
+                        <?= $cash['date']; ?>
                     </td>
                     <td>
                         <?php foreach ($users as $user) {
@@ -160,70 +161,70 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+</div>
+<!-- End Of Table Content -->
 
-    <!-- Modal Edit -->
-    <?php foreach ($cashmans as $cash) : ?>
-        <div uk-modal class="uk-flex-top" id="editdata<?= $cash['id'] ?>">
-            <div class="uk-modal-dialog uk-margin-auto-vertical">
-                <div class="uk-modal-content">
-                    <div class="uk-modal-header">
-                        <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
-                    </div>
+<!-- Modal Edit -->
+<?php foreach ($cashmans as $cash) : ?>
+    <div uk-modal class="uk-flex-top" id="editdata<?= $cash['id'] ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-content">
+                <div class="uk-modal-header">
+                    <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
+                </div>
 
-                    <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="cashman/update/<?= $cash['id'] ?>" method="post">
-                            <?= csrf_field() ?>
-                            <input type="hidden" name="id" value="<?= $cash['id']; ?>">
-                            
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
-                                <div class="uk-form-controls">
-                                    <select class="uk-select" name="outlet">
-                                        <option disabled><?=lang('Global.outlet')?></option>
-                                        <?php foreach ($outlets as $outlet) { ?>
-                                            <option value="<?= $outlet['id']; ?>" <?php if ($outlet['id'] === $cash['outletid']) {echo 'selected';} ?>><?= $outlet['name']; ?></option>
-                                        <?php }?>
-                                    </select>
-                                </div>
+                <div class="uk-modal-body">
+                    <form class="uk-form-stacked" role="form" action="cashman/update/<?= $cash['id'] ?>" method="post">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="id" value="<?= $cash['id']; ?>">
+                        
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
+                            <div class="uk-form-controls">
+                                <select class="uk-select" name="outlet">
+                                    <option disabled><?=lang('Global.outlet')?></option>
+                                    <?php foreach ($outlets as $outlet) { ?>
+                                        <option value="<?= $outlet['id']; ?>" <?php if ($outlet['id'] === $cash['outletid']) {echo 'selected';} ?>><?= $outlet['name']; ?></option>
+                                    <?php }?>
+                                </select>
                             </div>
+                        </div>
 
-                            <div class="uk-margin-bottom">
-                                <label class="uk-form-label" for="description"><?=lang('Global.name')?></label>
-                                <div class="uk-form-controls">
-                                    <input type="text" class="uk-input" id="description" name="description" value="<?= $cash['description']; ?>"autofocus />
-                                </div>
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="description"><?=lang('Global.name')?></label>
+                            <div class="uk-form-controls">
+                                <input type="text" class="uk-input" id="description" name="description" value="<?= $cash['description']; ?>"autofocus />
                             </div>
-                            
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
-                                <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
-                                    <label><input class="uk-radio" type="radio" name="type" value="0" <?php if ($cash['type'] === '0') { echo 'checked'; } ?>> <?=lang('Global.cashin')?></label>
-                                    <label><input class="uk-radio" type="radio" name="type" value="1" <?php if ($cash['type'] === '1') { echo 'checked'; } ?>> <?=lang('Global.cashout')?></label>
-                                </div>
+                        </div>
+                        
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
+                            <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
+                                <label><input class="uk-radio" type="radio" name="type" value="0" <?php if ($cash['type'] === '0') { echo 'checked'; } ?>> <?=lang('Global.cashin')?></label>
+                                <label><input class="uk-radio" type="radio" name="type" value="1" <?php if ($cash['type'] === '1') { echo 'checked'; } ?>> <?=lang('Global.cashout')?></label>
                             </div>
+                        </div>
 
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
-                                <div class="uk-form-controls">
-                                    <input type="text" class="uk-input" id="qty" name="qty" value="<?= $cash['qty']; ?>"autofocus />
-                                </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
+                            <div class="uk-form-controls">
+                                <input type="text" class="uk-input" id="qty" name="qty" value="<?= $cash['qty']; ?>"autofocus />
                             </div>
+                        </div>
 
-                            <hr>
+                        <hr>
 
-                            <div class="uk-margin">
-                                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-                            </div>
+                        <div class="uk-margin">
+                            <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                        </div>
 
-                        </form>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-  <?php endforeach; ?>
-  <!-- End Of Modal Edit -->
-</div>
-<!-- End Of Table Content -->
+    </div>
+<?php endforeach; ?>
+<!-- End Of Modal Edit -->
 
 <!-- Search Engine Script -->
 <script>
