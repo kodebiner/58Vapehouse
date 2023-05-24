@@ -116,6 +116,7 @@ $routes->group('product', ['filter'=>'login'], function($routes){
     //product
     $routes->get('', 'Product::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('favorite/(:num)', 'Product::favorite/1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('favorite/(:num)', 'Product::favorite/1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Product::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('edit(:num)', 'Product::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Product::update/$1', ['filter' => 'role:owner,supervisor,operator']);

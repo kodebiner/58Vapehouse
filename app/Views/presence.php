@@ -73,14 +73,11 @@
             document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
         } );
 
-        // $(".status").val(1);
-
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition, showError);
         } else { 
             x.innerHTML = "Geolocation is not supported by this browser.";
         }
-        
 
         function showPosition(position) {
             var pos = position.coords.latitude +','+position.coords.longitude;

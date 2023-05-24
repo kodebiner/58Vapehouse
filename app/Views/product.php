@@ -518,7 +518,7 @@
           </td>
           <td class="uk-text-center">
             <form class="" action="product/favorite/<?= $product['id'] ?>" method="post" id="myForm">
-              <input class="uk-checkbox" value="1" type="checkbox" name="favorite" id="favorite">
+              <input class="uk-checkbox" value="0" type="checkbox" name="favorite" id="favorite">
             </form>
           </td>
           <td><?= $product['name']; ?></td>
@@ -590,22 +590,31 @@
   <!-- Ajax Favorite -->
   <script type="text/javascript">
     $(document).ready(function() {
-      $('.uk-checkbox').change(function() {
-        var formData = $('#myForm').val();
-        $("#myForm").submit(function (event) {
-          favorite: $("#favorite").val()
+          //set initial state.
+        $('#favorite').val($(this).is(':checked'));
+        let favorite = [];
+        $('#favorite').change(function() {
+          $('#favorite').val($(this).is(':checked'));
+           favorite.push($('#favorite').val("1"));
         });
-        console.log(formData);
-        $.ajax({
-          url: 'product/favorite/<?= $product['id'] ?>',
-          data: formData,
-          type: 'post',
-          dataType: 'json',
-          success: function(data) {
-            alert(data);
+
+        $('#favorite').click(function() {
+          if (!$(this).is(':checked')) {
+            $('#favorite').change(function() {
+              favorite.push($('#favorite').val("0"));
+            });
           }
         });
-      });
+
+        favorite = favorite.toString();  
+           $.ajax({  
+                url:"insert.php",  
+                method:"POST",  
+                data:{favorite:favorite},  
+                success:function(data){  
+                     alert (data);  
+                }  
+           });  
     });
   </script>
   <!-- Ajax Favorite End -->

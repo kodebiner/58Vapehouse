@@ -512,9 +512,9 @@ class Product extends BaseController
             'favorite'  => $input['favorite'],
         ];
 
-        dd($data);
+
 
         $ProductModel->save($data);
-    
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 }
