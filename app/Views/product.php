@@ -518,7 +518,14 @@
           </td>
           <td class="uk-text-center">
             <form class="" action="product/favorite/<?= $product['id'] ?>" method="post" id="myForm">
-              <input class="uk-checkbox" value="0" type="checkbox" name="favorite" id="favorite">
+              <?php
+              if ($product['favorite'] === '0') {
+                $checked = '';
+              } else {
+                $checked = 'checked';
+              }
+              ?>
+              <input class="uk-checkbox" type="checkbox" name="favorite" id="favorite-<?=$product['id']?>" <?=$checked?>>
             </form>
           </td>
           <td><?= $product['name']; ?></td>
@@ -591,33 +598,31 @@
 
   <!-- Ajax Favorite -->
   <script type="text/javascript">
+    <?php foreach ($products as $product) { ?>
     $(document).ready(function() {
           //set initial state.
-        $('#favorite').val($(this).is(':checked'));
-        let favorite = [];
-        $('#favorite').change(function() {
-          $('#favorite').val($(this).is(':checked'));
-           favorite.push($('#favorite').val("1"));
-        });
-
-        $('#favorite').click(function() {
-          if (!$(this).is(':checked')) {
-            $('#favorite').change(function() {
-              favorite.push($('#favorite').val("0"));
-            });
-          }
-        });
-
-        favorite = favorite.toString();  
-           $.ajax({  
-                url:"insert.php",  
-                method:"POST",  
-                data:{favorite:favorite},  
-                success:function(data){  
-                     alert (data);  
-                }  
-           });  
+      $('#favorite-<?=$product['id']?>').change(function() {
+        var checked<?=$product['id']?> = document.getElementById('favorite-<?=$product['id']?>').checked;
+        if (checked<?=$product['id']?> == true) {
+          var data = { 'favorite' : '1', };
+        } else {
+          var data = { 'favorite' : '0', };
+        }
+        $.ajax({
+          url:"product/favorite/<?=$product['id']?>",
+          method:"POST",
+          data: data,
+          dataType: "json",
+          error:function() {
+            console.log('error', arguments);
+          },
+          success:function() {
+            console.log('success', arguments);
+          },
+        })
+      });
     });
+    <?php } ?>
   </script>
   <!-- Ajax Favorite End -->
 

@@ -210,9 +210,9 @@ class Product extends BaseController
         $outlets     = $OutletModel->findAll();
         $input       = $this->request->getPost();
 
-            //populating data
-            $data = $this->data;
-            $data['products'] = $products;
+        //populating data
+        $data = $this->data;
+        $data['products'] = $products;
         
         // rules
         $rule = [
@@ -504,17 +504,16 @@ class Product extends BaseController
         $ProductModel = new ProductModel();
 
         // initialize
-        $input      = $this->request->getPost();
-        $products = $ProductModel->where('id',$id)->first();
+        $input      = $this->request->getPost('favorite');
 
         $data = [
-            'id'        => $products,
-            'favorite'  => $input['favorite'],
+            'id'        => $id,
+            'favorite'  => $input,
         ];
 
 
 
         $ProductModel->save($data);
-        return redirect()->back()->with('message', lang('Global.saved'));
+        die(json_encode(array($input)));
     }
 }
