@@ -67,6 +67,7 @@ return [
     'type'              => 'Type',
     'manageBundDet'     => 'Manage Bundle Detail',
     'editBundDet'       => 'Want to manage Bundle details? ',
+    'imgres'            => 'Your captured image will appear here',
 
     // Button
     'edit'              => 'Edit',
@@ -84,6 +85,8 @@ return [
     'addStockAdj'       => 'Add Stock Adjustment',
     'addCashMan'        => 'Add Cash Management',
     'addBundle'         => 'Add Bundle',
+    'checkin'           => 'Check In',
+    'checkout'          => 'Check Out',
 
     // Menu
     'dashboard'         => 'Dashboard',

@@ -1790,6 +1790,32 @@ select.uk-form-width-xsmall {
     border-color: #e5e5e5
 }
 
+.uk-button-success {
+    background-color: #198754;
+    color: #fff;
+    border: 1px solid transparent
+}
+
+.uk-button-success:hover {
+    background-color: #157347;
+    color: #fff
+}
+
+.uk-button-success.uk-active,
+.uk-button-success:active {
+    background-color: #146c43;
+    color: #fff
+}
+
+.uk-button-success:disabled,
+.uk-button-default:disabled,
+.uk-button-primary:disabled,
+.uk-button-secondary:disabled {
+    background-color: transparent;
+    color: #999;
+    border-color: #e5e5e5
+}
+
 .uk-button-small {
     padding: 0 15px;
     line-height: 28px;

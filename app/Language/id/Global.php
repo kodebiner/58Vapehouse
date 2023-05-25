@@ -67,6 +67,7 @@ return [
     'type'              => 'Tipe',
     'manageBundDet'     => 'Kelola Rincian Bundel',
     'editBundDet'       => 'Ingin mengelola rincian Bundel? ',
+    'imgres'            => 'Foto anda akan berada disini',
 
     // Button
     'edit'              => 'Ubah',
@@ -84,6 +85,8 @@ return [
     'addStockAdj'       => 'Tambah Penyesuaian Stock',
     'addCashMan'        => 'Tambah Pengelolaan Kas',
     'addBundle'         => 'Tambah Bundel',
+    'checkin'           => 'Masuk',
+    'checkout'          => 'Keluar',
 
     // Menu
     'dashboard'         => 'Dasbor',

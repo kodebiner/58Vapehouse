@@ -75,7 +75,7 @@
         <div id="offcanvas" uk-offcanvas="overlay: true;">
             <div class="uk-offcanvas-bar" role="dialog" aria-modal="true">
                 <nav>
-                    <ul class="uk-nav uk-nav-default tm-nav uk-light">
+                    <ul class="uk-nav uk-nav-default tm-nav uk-light" uk-nav>
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                         </li>
@@ -103,6 +103,9 @@
                             <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg" uk-svg><?=lang('Global.reminder');?></a>
                         </li>
                         <li class="tm-main-navbar">
+                            <a class="uk-h4 tm-h4" href="<?= base_url('presence') ?>"><img src="img/layout/presensi.svg" uk-svg><?=lang('Global.presence');?></a>
+                        </li>
+                        <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
                         </li>
                         <li class="tm-main-navbar uk-parent">
@@ -113,6 +116,12 @@
                                 </li>
                                 <li class="uk-h5 tm-h5">
                                     <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
                                 </li>
                             </ul>
                         </li>

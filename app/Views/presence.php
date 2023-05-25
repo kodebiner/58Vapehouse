@@ -4,9 +4,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
-<style type="text/css">
+<!-- <style type="text/css">
     #results { padding:20px; border:1px solid; background:#ccc; }
-</style>
+</style> -->
 <?= $this->endSection(); ?>
 
 <?= $this->section('main') ?>
@@ -25,28 +25,44 @@
 
 <!-- Content -->
 <div class="uk-container uk-margin">
-    <div class="uk-text-center uk-light">
-        <h1 class="tm-h2">Take Picture</h1>
-    </div>
     <form class="uk-form-stacked" method="POST" action="presence/create">
-        <div class="" uk-grid>
-            <div class="uk-width-1-2@m uk-card uk-card-default">
-                <div class="uk-flex uk-flex-center" id="my_camera">
-                    <input type="hidden" name="image" class="image-tag">
-                    <input type="hidden" name="geoloc" class="loc">
-                    <input type="hidden" name="status" value="0" class="status">
-                </div>
-                <div class="uk-text-center">
-                    <input type="button" value="Take Snapshot" onClick="take_snapshot()">
+        <div class="uk-child-width-1-2@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-body">
+            <div>
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-body">
+                        <div class="uk-flex uk-flex-center">
+                            <div id="my_camera"></div>
+                        </div>
+                    </div>
+                    <div class="uk-card-footer uk-height-small uk-flex uk-flex-middle uk-flex-center">
+                        <div class="uk-flex uk-flex-center">
+                            <input type="hidden" name="image" class="image-tag">
+                            <input type="hidden" name="geoloc" class="loc">
+                            <input type="hidden" name="status" value="0" class="status">
+                            <input class="uk-button uk-button-primary" type="button" value="Take Snapshot" onClick="take_snapshot()">
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="uk-width-1-2@m uk-margin">
-                <h3 class="tm-h4">Your captured image will appear here...</h3>
-                <div id="results"></div>
+            <div>
+                <div class="uk-card uk-card-default">
+                    <div class="uk-card-body">
+                        <div class="uk-flex uk-flex-center">
+                            <div id="results"></div>
+                        </div>
+                    </div>
+                    <div class="uk-card-footer uk-height-small uk-flex uk-flex-middle uk-flex-center">
+                        <div class="tm-h4 uk-text-center"><?=lang('Global.imgres')?></div>
+                    </div>
+                </div>
             </div>
-            <div class="uk-margin-bottom">
-                <button class="uk-button uk-button-success" Onclick="klik()" id="#btn"><?=lang('Global.checkin')?></button>
-                <button class="uk-button uk-button-danger"  Onclick="klik2()" id="#btn2"><?=lang('Global.checkout')?></button>
+        </div>
+        <div class="uk-child-width-auto uk-flex-center uk-flex uk-flex-center uk-margin-large-top" uk-grid>
+            <div>
+                <button class="uk-button uk-button-success uk-button-large" Onclick="klik()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkin')?></button>
+            </div>
+            <div>
+                <button class="uk-button uk-button-danger uk-button-large"  Onclick="klik2()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkout')?></button>
             </div>
         </div>
     </form>
@@ -64,8 +80,6 @@
   
     Webcam.attach( '#my_camera' );
 
-
-  
     function take_snapshot() {
         Webcam.snap( function(data_uri) {
             $(".image-tag").val(data_uri);
@@ -103,12 +117,10 @@
 
     function klik(){
         $(".status").val("1");
-        
     }
 
     function klik2(){
         $(".status").val("0");
-        
     }
 </script>
 <!-- Camera Script End -->
