@@ -28,6 +28,9 @@
         <link rel="stylesheet" href="css/theme.css">
         <script src="js/uikit.min.js"></script>
         <script src="js/uikit-icons.min.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
         <style type="text/css">
             .dummyproduct{fill:#666666;}
         </style>
@@ -155,14 +158,27 @@
                             <?= csrf_field() ?>
 
                             <div class="uk-margin-bottom">
-                                <div class="uk-form-controls">
-                                    <select class="uk-select" name="member">
-                                        <option><?=lang('Global.customer')?></option>
-                                        <?php foreach ($customers as $customer) { ?>
-                                            <option value="<?= $customer['id']; ?>"><?= $customer['name']; ?></option>
-                                        <?php } ?>
-                                    </select>
+                                <h4 class="uk-margin-remove"><?=lang('Global.customer')?></h4>
+                                <div class="uk-margin-small">
+                                    <div class="uk-width-1-1">
+                                        <input class="uk-input" id="customername" required/>
+                                    </div>
                                 </div>
+
+                                <script type="text/javascript">
+                                    $(function() {
+                                        var customerList = [
+                                            <?php
+                                                foreach ($customers as $customer) {
+                                                    echo '"'.$customer['name'].'",';
+                                                }
+                                            ?>
+                                        ];
+                                        $("#customername").autocomplete({
+                                            source: customerList
+                                        });
+                                    });
+                                </script>
                             </div>
 
                             <div class="uk-overflow-auto">
@@ -184,16 +200,52 @@
                             </div>
 
                             <div class="uk-margin">
+                                <h4 class="uk-h4"><?=lang('Global.subtotal')?></h4>
+                                <div class="uk-h4">
+                                    <?php foreach ($transactions as $transaction) : ?>
+                                        <?php foreach ($trxdetails as $trxdet) {
+                                            if ($transaction['id'] === $trxdet['transactionid']) {
+                                                echo $trxdet['value'];
+                                            }
+                                        } ?>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+
+                            <div class="uk-margin">
+                                <h4 class="uk-margin-remove"><?=lang('Global.discount')?></h4>
+                                <div class="uk-margin-small" uk-grid>
+                                    <div class="uk-width-3-5">
+                                        <input class="uk-input" id="discount" name="discount" placeholder="<?=lang('Global.discount')?>" />
+                                    </div>
+                                    <?php 
+                                        foreach ($transactions as $transaction) {
+                                            if ($transaction['disctype'] === '0' ) {
+                                                echo lang('Global.percent');
+                                            } elseif ($cash['type'] === '1' ) { 
+                                                echo lang('Global.amount');}
+                                        } 
+                                    ?>
+                                    <div class="uk-width-1-5">
+                                        <input class="uk-button uk-button-primary" type="radio" name="type" value="0"> <?=lang('Global.cashin')?>
+                                    </div>
+                                    <div class="uk-width-1-5">
+                                        <input class="uk-radio" type="radio" name="type" value="0"> <?=lang('Global.cashin')?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="uk-margin">
                                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                                 <div class="uk-form-controls">
-                                <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                                    <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="uk-modal-footer" style="border-top: 0;">
                         <div class="uk-margin uk-flex uk-flex-center">
-                            <button type="submit" class="uk-button uk-button-primary uk-button-large uk-text-center" style="border-radius: 8px; width: 540px;"><?=lang('Global.pay')?></button>
+                            <button type="submit" class="uk-button uk-button-primary uk-button-large uk-text-center tm-h2" style="color: #fff; border-radius: 8px; width: 540px;"><?=lang('Global.pay')?></button>
                         </div>
                     </div>
                 </div>

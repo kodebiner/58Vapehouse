@@ -68,6 +68,7 @@ return [
     'manageBundDet'     => 'Manage Bundle Detail',
     'editBundDet'       => 'Want to manage Bundle details? ',
     'imgres'            => 'Your captured image will appear here',
+    'subtotal'          => 'Subtotal',
 
     // Button
     'edit'              => 'Edit',
@@ -87,6 +88,9 @@ return [
     'addBundle'         => 'Add Bundle',
     'checkin'           => 'Check In',
     'checkout'          => 'Check Out',
+    'pay'               => 'Pay',
+    'percent'           => '%',
+    'amount'            => 'Amount',
 
     // Menu
     'dashboard'         => 'Dashboard',

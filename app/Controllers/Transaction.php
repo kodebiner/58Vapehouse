@@ -22,6 +22,7 @@ class Transaction extends BaseController
         $ProductModel           = new ProductModel();
         $VariantModel           = new VariantModel();
         $TransactionModel       = new TransactionModel();
+        $TrxdetailModel         = new TransactionModel();
 
         // Populating Data
         $outlets            = $OutletModel->findAll();
@@ -31,6 +32,7 @@ class Transaction extends BaseController
         $products           = $ProductModel->findAll();
         $variants           = $VariantModel->findAll();
         $transactions       = $TransactionModel->findAll();
+        $trxdetails         = $TrxdetailModel->findAll();
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -40,6 +42,7 @@ class Transaction extends BaseController
         $data['customers']      = $customers;
         $data['products']       = $products;
         $data['variants']       = $variants;
+        $data['trxdetails']     = $trxdetails;
 
         return view('Views/transaction', $data);
     }

@@ -68,6 +68,7 @@ return [
     'manageBundDet'     => 'Kelola Rincian Bundel',
     'editBundDet'       => 'Ingin mengelola rincian Bundel? ',
     'imgres'            => 'Foto anda akan berada disini',
+    'subtotal'          => 'Subtotal',
 
     // Button
     'edit'              => 'Ubah',
@@ -87,6 +88,9 @@ return [
     'addBundle'         => 'Tambah Bundel',
     'checkin'           => 'Masuk',
     'checkout'          => 'Keluar',
+    'pay'               => 'Bayar',
+    'percent'           => '%',
+    'amount'            => 'Jumlah',
 
     // Menu
     'dashboard'         => 'Dasbor',

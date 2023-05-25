@@ -28,7 +28,7 @@
     <form class="uk-form-stacked" method="POST" action="presence/create">
         <div class="uk-child-width-1-2@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-body">
             <div>
-                <div class="uk-card uk-card-default">
+                <div class="uk-card uk-card-default uk-card-small">
                     <div class="uk-card-body">
                         <div class="uk-flex uk-flex-center">
                             <div id="my_camera"></div>
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div>
-                <div class="uk-card uk-card-default">
+                <div class="uk-card uk-card-default uk-card-small">
                     <div class="uk-card-body">
                         <div class="uk-flex uk-flex-center">
                             <div id="results"></div>
