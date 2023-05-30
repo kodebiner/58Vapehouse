@@ -2,9 +2,11 @@
 
 <?= $this->section('extraScript') ?>
 <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" /> -->
-
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -655,16 +657,69 @@
             </div>
 
             <div class="uk-margin-bottom">
-              <label class="uk-form-label" for="category"><?=lang('Global.category')?></label>
-              <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="category" name="category"  value="<?= $cate['name']; ?>" autofocus />
-              </div>
+              <h4 class="uk-margin-remove"><?=lang('Global.category')?></h4>
+                <div class="uk-margin-small">
+                    <div class="uk-width-1-1">
+                       <input class="uk-input" name="category<?=$product['id']?>" id="category<?=$product['id']?>" required/>
+                       <input id="catid<?=$product['id']?>" name="catid<?=$product['id']?>" hidden/> 
+                     </div>
+                </div>
+
+                <script type="text/javascript">
+                  $(function() {
+                    var category = [
+                      <?php
+                      foreach ($category as $cat) {
+                        echo '{label:"'.$cat['name'].'",idx:'.(int)$cat['id'].'},';
+                      }
+                      ?>
+                    ];
+                    $("#category<?=$product['id']?>").autocomplete({
+                      source: category,
+                      select: function (e, i) {
+                        $("#catid<?=$product['id']?>").val(i.item.idx); // save selected id to hidden input
+                      },
+                      minLength: 2
+                    });
+                  });
+                </script>
             </div>
+
+            <div class="uk-margin-bottom">
+              <h4 class="uk-margin-remove"><?=lang('Global.brand')?></h4>
+                <div class="uk-margin-small">
+                    <div class="uk-width-1-1">
+                       <input class="uk-input" name="brand<?=$product['id']?>" id="brand<?=$product['id']?>" required/>
+                       <input id="brandid<?=$product['id']?>" name="brandid<?=$product['id']?>" hidden/> 
+                     </div>
+                </div>
+
+                <script type="text/javascript">
+                  $(function() {
+                    var brand = [
+                      <?php
+                      foreach ($brand as $bran) {
+                        echo '{label:"'.$bran['name'].'",idx:'.(int)$bran['id'].'},';
+                      }
+                      ?>
+                    ];
+                  $("#brand<?=$product['id']?>").autocomplete({
+                    source: brand,
+                    select: function (e, i) {
+                        $("#brandid<?=$product['id']?>").val(i.item.idx); // save selected id to hidden input
+                      },
+                      minLength: 2
+                      });
+                    });
+                </script>
+            </div>
+
+              
 
             <div class="uk-margin-bottom">
               <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
               <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="brand" name="brand"  value="<?= $bran['name']; ?>" autofocus />
+                <!-- <input type="text" class="uk-input" id="brand" name="brand"  value="<?= $bran['id']; ?>" autofocus /> -->
               </div>
             </div>
 

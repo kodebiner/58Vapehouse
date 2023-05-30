@@ -277,10 +277,10 @@ class Product extends BaseController
 
         // rules validation
         $rule = [
-            'name'          => 'required|max_length[255]|is_unique[product.name]',
+            'name'          => 'required|max_length[255]',
             'description'   => 'required|max_length[255]',
-            'category'      => 'required',
-            'brand'         => 'required',
+            //'category'      => 'required',
+            // 'brand'         => 'required',
         ];
 
         // Validation
@@ -292,22 +292,13 @@ class Product extends BaseController
         $data = [
             'id'            => $id,
             'name'          => $input['name'],
-            'hargadasar'    => $input['hargadasar'],
-            'hargamodal'    => $input['hargamodal'],
-            'margin'        => $input['margin'],
+            'description'   => $input['description'],
+            'brandid'       => $input['brandid'.$id],
+            'catid'         => $input['catid'.$id],
         ];
 
         // insert data product
         $ProductModel->save($data);
-
-        //get product id
-        $productId = $ProductModel->getInsertID();
-
-        //update variant
-        foreach ($input['varBase'] as $baseKey => $baseValue){
-            $variant['productid']   = $productId;
-            $variant['hargadasar']  = $baseValue;
-        }
         
         // redirect back
         return redirect()->back()->with('message', lang('Global.saved'));
