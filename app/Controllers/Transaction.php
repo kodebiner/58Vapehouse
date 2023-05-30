@@ -46,4 +46,17 @@ class Transaction extends BaseController
 
         return view('Views/transaction', $data);
     }
+
+    public function create() 
+    {
+        // Calling Models
+        $TransactionModel = new TransactionModel;
+        
+
+        // Populating Data
+
+
+        // Insert Data
+
+    }
 }
