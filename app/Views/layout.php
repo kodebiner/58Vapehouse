@@ -364,6 +364,9 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('cashman') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashManagement');?></a>
                     </li>
                     <li class="tm-main-navbar">
+                        <a class="uk-h4 tm-h4" href="<?= base_url('cashmove') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashMovement');?></a>
+                    </li>
+                    <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
                     </li>
                     <li class="tm-main-navbar">

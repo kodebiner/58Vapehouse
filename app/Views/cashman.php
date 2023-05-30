@@ -59,9 +59,9 @@
                     </div>
 
                     <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
+                        <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?=lang('Global.description')?>" autofocus required />
+                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
                         </div>
                     </div>
 
@@ -69,14 +69,6 @@
                         <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
                         <div class="uk-form-controls">
                             <input type="text" class="uk-input <?php if (session('errors.qty')) : ?>tm-form-invalid<?php endif ?>" name="qty" id="qty" placeholder="<?=lang('Global.quantity')?>" required/>
-                        </div>
-                    </div>
-                            
-                    <div class="uk-margin">
-                        <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
-                        <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
-                            <label><input class="uk-radio" type="radio" name="type" value="0"> <?=lang('Global.cashin')?></label>
-                            <label><input class="uk-radio" type="radio" name="type" value="1"> <?=lang('Global.cashout')?></label>
                         </div>
                     </div>
 
@@ -98,11 +90,8 @@
         <thead>
             <tr>
                 <th class="uk-text-center uk-width-small">No</th>
-                <th class="uk-width-medium"><?=lang('Global.description')?></th>
+                <th class="uk-width-medium"><?=lang('Global.name')?></th>
                 <th class="uk-width-medium"><?=lang('Global.outlet')?></th>
-                <th class="uk-width-small"><?=lang('Global.type')?></th>
-                <th class="uk-width-large"><?=lang('Global.date')?></th>
-                <th class="uk-width-small"><?=lang('Global.employee')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.quantity')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
             </tr>
@@ -112,34 +101,11 @@
             <?php foreach ($cashmans as $cash) : ?>
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
-                    <td><?= $cash['description']; ?></td>
+                    <td><?= $cash['name']; ?></td>
                     <td>
                         <?php foreach ($outlets as $outlet) {
                             if ($outlet['id'] === $cash['outletid']) {
                                 echo $outlet['name'];
-                            }
-                        } ?>
-                    </td>
-                    <td>
-                        <?php if ($cash['type'] === '0' ) { 
-                            echo lang('Global.cashin');
-                        } elseif ($cash['type'] === '1' ) { 
-                            echo lang('Global.cashout');}
-                        ?>
-                            
-                    </td>
-                    <td>
-                        <?php  
-                            $date = $cash['date'];
-                            $newDate = date("l, d F Y | H:i:s", strtotime($date));
-                            $cash['date'] = $newDate;
-                        ?>
-                        <?= $cash['date']; ?>
-                    </td>
-                    <td>
-                        <?php foreach ($users as $user) {
-                            if ($user->id === $cash['userid']) {
-                                echo $user->name;
                             }
                         } ?>
                     </td>
@@ -152,9 +118,9 @@
                         <!-- End Of Button Trigger Modal Edit -->
 
                         <!-- Button Delete -->
-                        <div>
+                        <!-- <div>
                             <a uk-icon="trash" class="uk-icon-button-delete" href="cashman/delete/<?= $cash['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
-                        </div>
+                        </div> -->
                         <!-- End Of Button Delete -->
                     </td>
                 </tr>
@@ -191,26 +157,19 @@
                         </div>
 
                         <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="description"><?=lang('Global.name')?></label>
+                            <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="description" name="description" value="<?= $cash['description']; ?>"autofocus />
+                                <input type="text" class="uk-input" id="name" name="name" value="<?= $cash['name']; ?>"autofocus />
                             </div>
                         </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label" for="type"><?=lang('Global.type')?></label>
-                            <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
-                                <label><input class="uk-radio" type="radio" name="type" value="0" <?php if ($cash['type'] === '0') { echo 'checked'; } ?>> <?=lang('Global.cashin')?></label>
-                                <label><input class="uk-radio" type="radio" name="type" value="1" <?php if ($cash['type'] === '1') { echo 'checked'; } ?>> <?=lang('Global.cashout')?></label>
-                            </div>
-                        </div>
+                    
 
-                        <div class="uk-margin">
+                        <!-- <div class="uk-margin">
                             <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
                             <div class="uk-form-controls">
                                 <input type="text" class="uk-input" id="qty" name="qty" value="<?= $cash['qty']; ?>"autofocus />
                             </div>
-                        </div>
+                        </div> -->
 
                         <hr>
 

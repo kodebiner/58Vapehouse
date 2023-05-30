@@ -169,7 +169,7 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->post('restock', 'Stock::restock', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Stock Movement
+//Stock Stock Movement
 $routes->group('stockmove', ['filter'=>'login'], function($routes){
     $routes->get('', 'StockMove::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'StockMove::create', ['filter' => 'role:owner,supervisor,operator']);
@@ -188,7 +188,12 @@ $routes->group('cashman', ['filter'=>'login'], function($routes){
     $routes->get('', 'CashMan::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'CashMan::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'CashMan::update/$1', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('delete/(:num)', 'CashMan::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+});
+
+//Cash Movement
+$routes->group('cashmove', ['filter'=>'login'], function($routes){
+    $routes->get('', 'CashMove::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'CashMove::create', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 //Bundle

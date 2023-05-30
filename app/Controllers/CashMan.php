@@ -17,7 +17,6 @@ class CashMan extends BaseController
 
         // Populating Data
         $outlets                = $OutletModel->findAll();
-        $users                  = $UserModel->findAll();
 
         // get outlet
         if ($this->data['outletPick'] === null) {
@@ -32,7 +31,6 @@ class CashMan extends BaseController
         $data['description']    = lang('Global.cashmanListDesc');
         $data['cashmans']       = $cashman;
         $data['outlets']        = $outlets;
-        $data['users']          = $users;
 
         return view('Views/cashman', $data);
     }
@@ -54,31 +52,20 @@ class CashMan extends BaseController
             $cashman      = $CashModel->where('outletid', $this->data['outletPick'])->find();
         }
         
-        // get user id
-        $auth = service('authentication');
-        $userId = $auth->id();
-
-
         // initialize
         $input          = $this->request->getPost();
-
-        // Date
-        $dates = date("Y-m-d H:i:s");
 
         // save data
         $data = [
             'outletid'          => $input['outlet'],
-            'description'       => $input['description'],
-            'type'              => $input['type'],
+            'name'              => $input['name'],
             'qty'               => $input['qty'],
-            'userid'            => $userId,
-            'date'              => $dates,
-        ];
 
+        ];
+        
         // validation
         if (! $this->validate([
-            'description'       =>  "required|max_length[255]',",
-            'type'              =>  'required',
+            'name'              =>  "required|max_length[255]',",
             'qty'               =>  "required"
         ])) {
                 
@@ -91,15 +78,10 @@ class CashMan extends BaseController
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
-    public function update($id) {
-
+    public function update($id) 
+    {
         // calling Model
         $CashModel      = new CashModel;
-        $OutletModel    = new OutletModel;
-
-        // get user id
-        $auth = service('authentication');
-        $userId = $auth->id();
 
         // initialize
         $input = $this->request->getpost();
@@ -107,20 +89,15 @@ class CashMan extends BaseController
         // saved data
         $data = [
             'id'                => $id,
-            'userid'            => $userId,
-            'description'       => $input['description'],
-            'outletid'          => $input['outlet'],
-            'type'              => $input['type'],
-            'qty'               => $input['qty'],
-            'date'              => date("Y-m-d H:i:s"),
-
+            'name'              => $input['name'],
+            // 'outletid'          => $input['outlet'],
+            // 'qty'               => $input['qty'],
         ];
 
         // validation
         if (! $this->validate([
-            'description'       =>  "required|max_length[255]',",
-            'type'              =>  'required',
-            'qty'               =>  "required"
+            'name'              =>  "required|max_length[255]',",
+            // 'qty'               =>  "required"
                 ])
             )
         {      
@@ -134,14 +111,4 @@ class CashMan extends BaseController
 
     }
 
-    public function delete($id) {
-
-        // calling model
-        $CashModel = new CashModel;
-
-        // deleted
-        $CashModel->delete($id);
-        return redirect()->back()->with('error', lang('Global.deleted'));
-
-    }
 }

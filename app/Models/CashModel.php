@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class CashModel extends Model
 {
     protected $allowedFields = [
-        'outletid','description','qty','userid','type','date',
+        'outletid','name','qty',
 
     ];
 
