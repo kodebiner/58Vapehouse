@@ -69,6 +69,10 @@ return [
     'editBundDet'       => 'Want to manage Bundle details? ',
     'imgres'            => 'Your captured image will appear here',
     'subtotal'          => 'Subtotal',
+    'paymethod'         => 'Payment Method',
+    'amountpaid'        => 'Amount Paid',
+    'yourpoint'         => 'Available point is',
+    'total'             => 'Total',
 
     // Button
     'edit'              => 'Edit',
@@ -91,7 +95,7 @@ return [
     'checkout'          => 'Check Out',
     'pay'               => 'Pay',
     'percent'           => '%',
-    'amount'            => 'Amount',
+    'rp'                => 'Rp',
 
     // Menu
     'dashboard'         => 'Dashboard',

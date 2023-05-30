@@ -23,6 +23,7 @@ class Transaction extends BaseController
         $VariantModel           = new VariantModel();
         $TransactionModel       = new TransactionModel();
         $TrxdetailModel         = new TransactionModel();
+        $TrxpaymentModel        = new TransactionModel();
 
         // Populating Data
         $outlets            = $OutletModel->findAll();
@@ -33,16 +34,19 @@ class Transaction extends BaseController
         $variants           = $VariantModel->findAll();
         $transactions       = $TransactionModel->findAll();
         $trxdetails         = $TrxdetailModel->findAll();
+        $trxpayments        = $TrxpaymentModel->findAll();
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.transaction');
         $data['description']    = lang('Global.transactionListDesc');
         $data['transactions']   = $transactions;
+        $data['payments']       = $payments;
         $data['customers']      = $customers;
         $data['products']       = $products;
         $data['variants']       = $variants;
         $data['trxdetails']     = $trxdetails;
+        $data['trxpayments']    = $trxpayments;
 
         return view('Views/transaction', $data);
     }

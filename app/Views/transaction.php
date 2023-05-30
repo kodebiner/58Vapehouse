@@ -153,15 +153,15 @@
                     <div class="uk-modal-header">
                         <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.detailOrder');?></h5>
                     </div>
-                    <div class="uk-modal-body">
-                        <form class="uk-form-stacked" name="order" role="form" action="/transaction/create" method="post">
-                            <?= csrf_field() ?>
-
+                    <form class="uk-form-stacked" name="order" role="form" action="/transaction/create" method="post">
+                        <?= csrf_field() ?>
+                        
+                        <div class="uk-modal-body">
                             <div class="uk-margin-bottom">
                                 <h4 class="uk-margin-remove"><?=lang('Global.customer')?></h4>
                                 <div class="uk-margin-small">
                                     <div class="uk-width-1-1">
-                                        <input class="uk-input" id="customername" required/>
+                                        <input class="uk-input" id="customerid" name="customerid" />
                                     </div>
                                 </div>
 
@@ -170,34 +170,30 @@
                                         var customerList = [
                                             <?php
                                                 foreach ($customers as $customer) {
-                                                    echo '"'.$customer['name'].'",';
+                                                    echo '{label:"'.$customer['name'].'",idx:'.$customer['id'].'},';
                                                 }
                                             ?>
                                         ];
-                                        $("#customername").autocomplete({
-                                            source: customerList
+                                        $("#customerid").autocomplete({
+                                            source: customerList,
+                                            select: function(e, i) {
+                                                $("#customerid").val(i.item.idx);
+                                                var customers = <?php echo json_encode($customers); ?>;
+                                                for (var x = 0; x < customers.length; x++) {
+                                                    if (customers[x]['id'] == i.item.idx) {
+                                                        document.getElementById('custpoin').removeAttribute('hidden');
+                                                        document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> ' + customers[x]['poin'];
+                                                        document.getElementById('poin').setAttribute('max', customers[x]['poin']);
+                                                    }
+                                                }
+                                            },
+                                            minLength: 2
                                         });
                                     });
                                 </script>
                             </div>
 
-                            <div class="uk-overflow-auto">
-                                <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" id="instab">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($transactions as $transaction) : ?>
-                                            <tr>
-                                                <td class="uk-text-center"><?= $transaction['name']; ?></td>
-                                                <td class="uk-text-center">Rp <?= $transaction['value']; ?>,-</td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <div class=""></div>
 
                             <div class="uk-margin">
                                 <h4 class="uk-h4"><?=lang('Global.subtotal')?></h4>
@@ -214,40 +210,60 @@
 
                             <div class="uk-margin">
                                 <h4 class="uk-margin-remove"><?=lang('Global.discount')?></h4>
-                                <div class="uk-margin-small" uk-grid>
-                                    <div class="uk-width-3-5">
-                                        <input class="uk-input" id="discount" name="discount" placeholder="<?=lang('Global.discount')?>" />
+                                <div class="uk-margin-small uk-flex-middle" uk-grid>
+                                    <div class="uk-width-expand">
+                                        <input class="uk-input" id="discvalue" name="discvalue" placeholder="<?=lang('Global.discount')?>" />
                                     </div>
-                                    <?php 
-                                        foreach ($transactions as $transaction) {
-                                            if ($transaction['disctype'] === '0' ) {
-                                                echo lang('Global.percent');
-                                            } elseif ($cash['type'] === '1' ) { 
-                                                echo lang('Global.amount');}
-                                        } 
-                                    ?>
-                                    <div class="uk-width-1-5">
-                                        <input class="uk-button uk-button-primary" type="radio" name="type" value="0"> <?=lang('Global.cashin')?>
-                                    </div>
-                                    <div class="uk-width-1-5">
-                                        <input class="uk-radio" type="radio" name="type" value="0"> <?=lang('Global.cashin')?>
+                                    <div class="switch-field uk-flex uk-flex-middle uk-width-auto">
+                                        <input type="radio" id="radio-one" name="disctype" value="0" checked/>
+                                        <label for="radio-one"><?=lang('Global.rp')?></label>
+                                        <input type="radio" id="radio-two" name="disctype" value="1" />
+                                        <label for="radio-two"><?=lang('Global.percent')?></label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="uk-margin">
-                                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
-                                <div class="uk-form-controls">
-                                    <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                                <h4 class="uk-margin-remove"><?=lang('Global.paymethod')?></h4>
+                                <div class="uk-form-controls uk-margin-small">
+                                    <select class="uk-select" name="payment" required>
+                                        <option><?=lang('Global.paymethod')?></option>
+                                            <?php foreach ($payments as $payment) { ?>
+                                                <option value="<?= $payment['id']; ?>"><?= $payment['name']; ?></option>
+                                            <?php } ?>
+                                    </select>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="uk-modal-footer" style="border-top: 0;">
-                        <div class="uk-margin uk-flex uk-flex-center">
-                            <button type="submit" class="uk-button uk-button-primary uk-button-large uk-text-center tm-h2" style="color: #fff; border-radius: 8px; width: 540px;"><?=lang('Global.pay')?></button>
+                            
+                            <div id="custpoin" class="uk-margin" hidden>
+                                <h4 class="uk-margin-remove"><?=lang('Global.point')?></h4>
+                                    <h5 id="curpoin" class="uk-margin-remove"></h5>
+                                <div class="uk-form-controls uk-margin-small">
+                                    <input type="number" class="uk-input" id="poin" name="poin" min="0" max="" placeholder="<?=lang('Global.point')?>"/>
+                                </div>
+                            </div>
+
+                            <div class="uk-margin">
+                                <h4 class="uk-margin-remove"><?=lang('Global.amountpaid')?></h4>
+                                <div class="uk-form-controls uk-margin-small">
+                                    <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.amountpaid')?>" required />
+                                </div>
+                            </div>                           
                         </div>
-                    </div>
+                        <div class="uk-modal-footer" style="border-top: 0;">
+                            <div class="uk-margin">
+                                <div class="uk-width-1-1 uk-text-center">
+                                    <div class="uk-flex-top tm-h3"><?=lang('Global.total')?></div>
+                                </div>
+                                <div class="uk-width-1-1 uk-text-center">
+                                    <div class="tm-h2 uk-text-bold">Rp</div>
+                                </div>
+                            </div>
+                            <div class="uk-margin uk-flex uk-flex-center">
+                                <button type="submit" class="uk-button uk-button-primary uk-button-large uk-text-center tm-h2" style="color: #fff; border-radius: 8px; width: 540px;"><?=lang('Global.pay')?></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -69,6 +69,10 @@ return [
     'editBundDet'       => 'Ingin mengelola rincian Bundel? ',
     'imgres'            => 'Foto anda akan berada disini',
     'subtotal'          => 'Subtotal',
+    'paymethod'         => 'Metode Pembayaran',
+    'amountpaid'        => 'Jumlah Yang Dibayarkan',
+    'yourpoint'         => 'Poin yang tersedia sebesar',
+    'total'             => 'Total',
 
     // Button
     'edit'              => 'Ubah',
@@ -90,7 +94,7 @@ return [
     'checkout'          => 'Keluar',
     'pay'               => 'Bayar',
     'percent'           => '%',
-    'amount'            => 'Jumlah',
+    'rp'                => 'Rp',
 
     // Menu
     'dashboard'         => 'Dasbor',
