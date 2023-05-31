@@ -193,7 +193,9 @@
                                 </script>
                             </div>
 
-                            <div class=""></div>
+                            <div class="uk-margin">
+                                <h4 class="uk-h4" id="test"></h4>
+                            </div>
 
                             <div class="uk-margin">
                                 <h4 class="uk-h4"><?=lang('Global.subtotal')?></h4>
@@ -286,7 +288,7 @@
                                                 }
                                             }
                                         ?>
-                                        <div onClick="createNewOrder">
+                                        <div id="cardbtn">
                                             <div class="uk-card uk-card-hover uk-card-default">
                                                 <div class="uk-card-header">
                                                     <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
@@ -343,12 +345,24 @@
                                     <?php endforeach; ?>
                                     
                                     <script>
-                                        function createNewOrder(){
+                                        // function createNewOrder(){
 
-                                            const createOrder = document.getElementById("instab");
-                                            newCreateOrder.setAttribute('id','create'+createCount);
-                                            newCreateOrder.setAttribute('class','uk-margin uk-child-width-1-5');
-                                            newCreateOrder.setAttribute('uk-grid','');
+                                        //     const createOrder = document.getElementById("instab");
+                                        //     newCreateOrder.setAttribute('id','create'+createCount);
+                                        //     newCreateOrder.setAttribute('class','uk-margin uk-child-width-1-5');
+                                        //     newCreateOrder.setAttribute('uk-grid','');
+                                        // }
+
+                                        let variant = document.getElementById("cardbtn");
+                                        for (let i = 0; i < variant.length; i++) {
+                                            variant += variant[i] + "<br>";
+                                        }
+                                        document.getElementById("cardbtn").addEventListener("click", add);
+                                        function add() {
+                                            $.get("transaction/index", function(data, status){
+                                            alert("Data: " + data + "\nStatus: " + status);
+                                        });
+                                            document.getElementById("test").innerHTML = 'Basic-Lala rp 50000';
                                         }
                                     </script>
                                 </div>
