@@ -457,11 +457,8 @@
                                                           if ($bundle['id'] === $bundet['bundleid']){ 
                                                              foreach ($variants as $variant){ 
                                                                  foreach ($products as $product) {
-                                                                     if (($variant['id'] === $bundet['variantid']) && ($product['id'] === $variant['productid']))  {
-                                                                      
-                                                                        ?>
-                                                               
-                                                                    <div class="tm-h1 uk-text-bolder uk-text-center"> <?= $product['name']?> - <?=$variant['name']?> </br> </div>
+                                                                     if (($variant['id'] === $bundet['variantid']) && ($product['id'] === $variant['productid'])) {?>
+                                                                    <div class="tm-h1 uk-text-bolder uk-text-center"> <?= $product['name']?> - <?=$variant['name']?> </br></div>
                                                                     <?php    
                                                                         }
                                                                     } 
@@ -470,11 +467,11 @@
                                                         }
                                                         ?>                         
                                                 </div>
-                                                    <div class="uk-card-footer">
-                                                        <div class="tm-h3 uk-text-center">
-                                                            <div>Rp <?= $bundle['price'] ?>,-</div>
-                                                        </div> 
-                                                    </div>
+                                                <div class="uk-card-footer">
+                                                    <div class="tm-h3 uk-text-center">
+                                                        <div>Rp <?= $bundle['price'] ?>,-</div>
+                                                    </div> 
+                                                </div>
                                             </div>
                                         </div>
                                     <?php endforeach; ?> 
