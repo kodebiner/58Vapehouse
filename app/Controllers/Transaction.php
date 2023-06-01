@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\BundledetailModel;
+use App\Models\BundleModel;
 use App\Models\OutletModel;
 use App\Models\UserModel;
 use App\Models\MemberModel;
@@ -15,6 +17,8 @@ class Transaction extends BaseController
     public function index()
     {
         // Calling Models
+        $BundleModel            = new BundleModel();
+        $BundledetModel         = new BundledetailModel();
         $OutletModel            = new OutletModel();
         $UserModel              = new UserModel();
         $MemberModel            = new MemberModel();
@@ -26,6 +30,8 @@ class Transaction extends BaseController
         $TrxpaymentModel        = new TransactionModel();
 
         // Populating Data
+        $bundles            = $BundleModel->findAll();
+        $bundets            = $BundledetModel->findAll();
         $outlets            = $OutletModel->findAll();
         $users              = $UserModel->findAll();
         $customers          = $MemberModel->findAll();
@@ -40,6 +46,8 @@ class Transaction extends BaseController
         $data                   = $this->data;
         $data['title']          = lang('Global.transaction');
         $data['description']    = lang('Global.transactionListDesc');
+        $data['bundles']        = $bundles;
+        $data['bundets']        = $bundets;
         $data['transactions']   = $transactions;
         $data['payments']       = $payments;
         $data['customers']      = $customers;

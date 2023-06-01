@@ -368,6 +368,7 @@
                                     </script>
                                 </div>
                             </li>
+                            <!-- Favorite List -->
                             <li>
                             <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                     <?php foreach ($variants as $variant) : ?>
@@ -438,12 +439,43 @@
                                     endforeach;
                                     ?>
                                     
-                                    <script>
-  
-                                    </script>
                                 </div>
                             </li>
-                            <li>Ipsum</li>
+                            <!-- End Favorite list -->
+
+                            <!-- Bundle List -->
+                            <li>
+                                <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                    <?php foreach ($bundles as $bundle) : ?>
+                                        <div id="cardbtn">
+                                            <div class="uk-card uk-card-hover uk-card-default">
+                                                <div class="uk-card-header">
+                                                    <div class="tm-h1 uk-text-bolder uk-text-center"><?= $bundle['name']; ?></div>
+                                                </div>
+                                                <div class="uk-card-body">
+                                                        <?php foreach ($bundets as $bundet) { 
+                                                          if ($bundle['id'] === $bundet['bundleid']){ 
+                                                             foreach ($variants as $variant){ 
+                                                                if ($variant['id'] === $bundet['variantid']){?>
+                                                                    <div class="tm-h1 uk-text-bolder uk-text-center"> <?= $product['name']?> - <?=$variant['name']?> </br> </div>
+                                                                    <?php    
+                                                                    } 
+                                                                } 
+                                                            }
+                                                        }
+                                                        ?>                         
+                                                </div>
+                                                    <div class="uk-card-footer">
+                                                        <div class="tm-h3 uk-text-center">
+                                                            <div>Rp <?= $bundle['price'] ?>,-</div>
+                                                        </div> 
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?> 
+                                </div>            
+                            </li>
+                            <!-- End Bundle List -->
                         </ul>
                     </div>
                 </div>
