@@ -456,9 +456,14 @@
                                                         <?php foreach ($bundets as $bundet) { 
                                                           if ($bundle['id'] === $bundet['bundleid']){ 
                                                              foreach ($variants as $variant){ 
-                                                                if ($variant['id'] === $bundet['variantid']){?>
+                                                                 foreach ($products as $product) {
+                                                                     if (($variant['id'] === $bundet['variantid']) && ($product['id'] === $variant['productid']))  {
+                                                                      
+                                                                        ?>
+                                                               
                                                                     <div class="tm-h1 uk-text-bolder uk-text-center"> <?= $product['name']?> - <?=$variant['name']?> </br> </div>
                                                                     <?php    
+                                                                        }
                                                                     } 
                                                                 } 
                                                             }
