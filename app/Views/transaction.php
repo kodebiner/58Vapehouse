@@ -288,7 +288,7 @@
                                                 }
                                             }
                                         ?>
-                                        <div id="cardbtn">
+                                        <div id="cardbtn" value="<?=$variant['id']?>" >
                                             <div class="uk-card uk-card-hover uk-card-default">
                                                 <div class="uk-card-header">
                                                     <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
@@ -353,18 +353,26 @@
                                         //     newCreateOrder.setAttribute('uk-grid','');
                                         // }
 
-                                        const vari = []; 
-                                        let variant = document.getElementById("cardbtn");
-                                        for (let i = 0; i < variant.length; i++) {
-                                            variant += variant[i] + "<br>";
-                                        }
-                                        document.getElementById("cardbtn").addEventListener("click", add);
-                                        function add() {
-                                            $.get("transaction", function(data, status){
-                                            alert("Data: " + data + "\nStatus: " + status);
-                                        });
-                                            document.getElementById("test").innerHTML = '';
-                                        }
+                                        // const
+                                        //     display = document.querySelector("#test"),
+                                        //     buttons = document.querySelectorAll("#cardbtn<?=$variant['id']?>");
+
+                                        // buttons.forEach(button => button.addEventListener("click", alterDisplayValue(button)));
+
+                                        // function alterDisplayValue(button) {
+                                        //     return function() {
+                                        //         display.value = button.value;
+                                        //     }
+                                        // };                          
+                    
+                               
+                                        // document.getElementById("#cardbtn<?=$variant['id']?>").addEventListener("click", add);
+                                        // function add() {
+                                        //     $.get("transaction", function(data, status){
+                                        //     alert("Data: " + data + "\nStatus: " + status);
+                                        // });
+                                        //     document.getElementById("test").innerHTML = '';
+                                        // }
                                     </script>
                                 </div>
                             </li>
@@ -377,9 +385,10 @@
                                                 
                                                 if (($product['id'] === $variant['productid']) && ($product['favorite'] === '1')) {
                                                     $productName = $product['name'];
+                                                    $productName = $product['name'];
                                                     $productPhoto = $product['thumbnail'];
                                         ?>
-                                        <div id="cardbtn">
+                                        <div id="cardbtnfav">
                                             <div class="uk-card uk-card-hover uk-card-default">
                                                 <div class="uk-card-header">
                                                     <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
@@ -484,6 +493,39 @@
             </div>
         </main>
         <!-- Main Section end -->
+
+        <!-- This Javascript Function -->
+        <script>
+
+
+            $(document).ready(function() {
+
+            $("#cardbtn").click(function() {                
+                $.ajax({    //create an ajax request to display.php
+                    type: "GET",
+                    url: "transaction",
+                    async: false,             
+                    dataType: "html",   //expect html to be returned             
+                    success: function(response){                    
+                        // $("#responsecontainer").html(response); 
+                        alert(response);
+                    }
+                    });
+                });
+            
+
+
+            let btns = document.querySelectorAll("#cardbtnfav");
+            for (let i = 0; i< btns.length; i++){
+                btns[i].onclick = function(e){
+                    alert('click');
+                }
+            }
+
+            });
+
+        </script>
+        <!-- This End Of Javascript Function -->
 
         <!-- Footer Section -->
         <footer class="tm-footer" style="background-color:#000;">
