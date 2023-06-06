@@ -344,69 +344,99 @@
                                         </div>
 
                                         <script type="text/javascript">
-                                            var count = 0;
+                                            var count = 1;
                                             function createNewOrder<?=$variant['id']?>() {
                                                 const products = document.getElementById('products');
                                                 
                                                 const productgrid = document.createElement('div');
                                                 productgrid.setAttribute('id', 'product<?=$variant['id']?>');
-                                                productgrid.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle');
+                                                productgrid.setAttribute('class', 'uk-margin-small  uk-child-width-auto');
                                                 productgrid.setAttribute('uk-grid', '');
+
+                                                const addcontainer = document.createElement('div');
+                                                addcontainer.setAttribute('class', 'uk-flex uk-flex-middle');
                                                 
                                                 const productqtyinputadd = document.createElement('div');
                                                 productqtyinputadd.setAttribute('id','addqty<?=$variant['id']?>');
-                                                productqtyinputadd.setAttribute('class','tm-h2 pointerbutton');
+                                                productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
                                                 productqtyinputadd.innerHTML = '+';
+
+                                                const delcontainer = document.createElement('div');
+                                                delcontainer.setAttribute('class', 'uk-flex uk-flex-middle');
                                                 
                                                 const productqtyinputdel = document.createElement('div');
                                                 productqtyinputdel.setAttribute('id','delqty<?=$variant['id']?>');
-                                                productqtyinputdel.setAttribute('class','tm-h2 uk-padding-remove pointerbutton');
+                                                productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
                                                 productqtyinputdel.innerHTML = '-';
 
+                                                const quantitycontainer = document.createElement('div');
+                                                quantitycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle');
+
                                                 const productqty = document.createElement('div');
-                                                productqty.setAttribute('id', 'qty<?=$variant['id']?>');
-                                                productqty.setAttribute('class', 'tm-h2 uk-width-1-6 uk-text-center uk-padding-remove');
-                                                productqty.innerHTML = count;
+
+                                                const inputqty = document.createElement('input');
+                                                inputqty.setAttribute('type', 'number');
+                                                inputqty.setAttribute('id', "qty[<?=$variant['id']?>]");
+                                                inputqty.setAttribute('name', "qty[<?=$variant['id']?>]");
+                                                inputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
+                                                inputqty.setAttribute('min', '1');
+                                                inputqty.setAttribute('value', count);
 
                                                 const handleIncrement = () => {
                                                     count++;
-                                                    productqty.innerHTML = count;
+                                                    inputqty.value = count;
                                                 };
 
                                                 const handleDecrement = () => {
                                                     count--;
-                                                    productqty.innerHTML = count;
+                                                    if (inputqty.value == '1') {
+                                                        productgrid.remove();
+                                                    } else {
+                                                        inputqty.value = count;
+                                                    }
                                                 };
 
                                                 productqtyinputadd.addEventListener("click", handleIncrement);
                                                 productqtyinputdel.addEventListener("click", handleDecrement);
 
+                                                const namecontainer = document.createElement('div');
+                                                namecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+
                                                 const productname = document.createElement('div');
                                                 productname.setAttribute('id', 'name<?=$variant['id']?>');
-                                                productname.setAttribute('class', 'tm-h2 uk-width-1-2');
+                                                productname.setAttribute('class', 'tm-h2');
                                                 productname.innerHTML = '<?=$ProdName?>';
+
+                                                const pricecontainer = document.createElement('div');
+                                                pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
 
                                                 const productprice = document.createElement('div');
                                                 productprice.setAttribute('id', 'price<?=$variant['id']?>');
-                                                productprice.setAttribute('class', 'tm-h2 uk-width-1-6 uk-text-center');
+                                                productprice.setAttribute('class', 'tm-h2');
                                                 productprice.innerHTML = '<?=$Price?>';
 
-                                                const createRemove = document.createElement('div');
-                                                createRemove.setAttribute('id', 'remove<?=$variant['id']?>');
-                                                createRemove.setAttribute('class', 'uk-width-1-6 uk-text-center uk-text-bold uk-text-danger uk-flex uk-flex-middle');
+                                                // const createRemove = document.createElement('div');
+                                                // createRemove.setAttribute('id', 'remove<?=$variant['id']?>');
+                                                // createRemove.setAttribute('class', 'uk-width-1-6 uk-text-center uk-text-bold uk-text-danger uk-flex uk-flex-middle');
 
-                                                const createRemoveButton = document.createElement('a');
-                                                //createRemoveButton.setAttribute('onclick', 'createRemove('<?=$variant['id']?>')');
-                                                createRemoveButton.setAttribute('class', 'uk-link-reset');
-                                                createRemoveButton.innerHTML = 'X';
+                                                // const createRemoveButton = document.createElement('a');
+                                                // //createRemoveButton.setAttribute('onclick', 'createRemove('<?=$variant['id']?>')');
+                                                // createRemoveButton.setAttribute('class', 'uk-link-reset');
+                                                // createRemoveButton.innerHTML = 'X';
 
-                                                productgrid.appendChild(productqtyinputadd);
-                                                productgrid.appendChild(productqty);
-                                                productgrid.appendChild(productqtyinputdel);
-                                                productgrid.appendChild(productname);
-                                                productgrid.appendChild(productprice);
-                                                createRemove.appendChild(createRemoveButton);
-                                                productgrid.appendChild(createRemove);
+                                                addcontainer.appendChild(productqtyinputadd);
+                                                productqty.appendChild(inputqty);
+                                                quantitycontainer.appendChild(productqty);
+                                                delcontainer.appendChild(productqtyinputdel);
+                                                productgrid.appendChild(addcontainer);
+                                                productgrid.appendChild(quantitycontainer);
+                                                productgrid.appendChild(delcontainer);
+                                                namecontainer.appendChild(productname);
+                                                productgrid.appendChild(namecontainer);
+                                                pricecontainer.appendChild(productprice);
+                                                productgrid.appendChild(pricecontainer);
+                                                // createRemove.appendChild(createRemoveButton);
+                                                // productgrid.appendChild(createRemove);
                                                 products.appendChild(productgrid);
 
                                                 // const CreateOrder = document.getElementById("CreateOrder");
