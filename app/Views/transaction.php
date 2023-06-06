@@ -194,11 +194,6 @@
                             </div>
 
                             <div id="products"></div>
-                            <!-- <div class="uk-margin uk-child-width-1-4" id="create0" uk-grid>
-                                <div id="createQty0"></div>
-                                <div id="createProdName0"></div>
-                                <div id="createPrice0"></div>
-                            </div> -->
 
                             <div class="uk-margin">
                                 <h4 class="uk-h4"><?=lang('Global.subtotal')?></h4>
@@ -349,27 +344,51 @@
                                         </div>
 
                                         <script type="text/javascript">
+                                            var count = 0;
                                             function createNewOrder<?=$variant['id']?>() {
                                                 const products = document.getElementById('products');
                                                 
                                                 const productgrid = document.createElement('div');
                                                 productgrid.setAttribute('id', 'product<?=$variant['id']?>');
-                                                productgrid.setAttribute('class', 'uk-margin-small');
+                                                productgrid.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle');
                                                 productgrid.setAttribute('uk-grid', '');
+                                                
+                                                const productqtyinputadd = document.createElement('div');
+                                                productqtyinputadd.setAttribute('id','addqty<?=$variant['id']?>');
+                                                productqtyinputadd.setAttribute('class','tm-h2 pointerbutton');
+                                                productqtyinputadd.innerHTML = '+';
+                                                
+                                                const productqtyinputdel = document.createElement('div');
+                                                productqtyinputdel.setAttribute('id','delqty<?=$variant['id']?>');
+                                                productqtyinputdel.setAttribute('class','tm-h2 uk-padding-remove pointerbutton');
+                                                productqtyinputdel.innerHTML = '-';
 
                                                 const productqty = document.createElement('div');
                                                 productqty.setAttribute('id', 'qty<?=$variant['id']?>');
-                                                productqty.setAttribute('class', 'uk-width-1-6');
-                                                productqty.innerHTML = '1';
+                                                productqty.setAttribute('class', 'tm-h2 uk-width-1-6 uk-text-center uk-padding-remove');
+                                                productqty.innerHTML = count;
+
+                                                const handleIncrement = () => {
+                                                    count++;
+                                                    productqty.innerHTML = count;
+                                                };
+
+                                                const handleDecrement = () => {
+                                                    count--;
+                                                    productqty.innerHTML = count;
+                                                };
+
+                                                productqtyinputadd.addEventListener("click", handleIncrement);
+                                                productqtyinputdel.addEventListener("click", handleDecrement);
 
                                                 const productname = document.createElement('div');
                                                 productname.setAttribute('id', 'name<?=$variant['id']?>');
-                                                productname.setAttribute('class', 'uk-width-2-6');
+                                                productname.setAttribute('class', 'tm-h2 uk-width-1-2');
                                                 productname.innerHTML = '<?=$ProdName?>';
 
                                                 const productprice = document.createElement('div');
                                                 productprice.setAttribute('id', 'price<?=$variant['id']?>');
-                                                productprice.setAttribute('class', 'uk-width-2-6');
+                                                productprice.setAttribute('class', 'tm-h2 uk-width-1-6 uk-text-center');
                                                 productprice.innerHTML = '<?=$Price?>';
 
                                                 const createRemove = document.createElement('div');
@@ -381,7 +400,9 @@
                                                 createRemoveButton.setAttribute('class', 'uk-link-reset');
                                                 createRemoveButton.innerHTML = 'X';
 
+                                                productgrid.appendChild(productqtyinputadd);
                                                 productgrid.appendChild(productqty);
+                                                productgrid.appendChild(productqtyinputdel);
                                                 productgrid.appendChild(productname);
                                                 productgrid.appendChild(productprice);
                                                 createRemove.appendChild(createRemoveButton);
@@ -417,6 +438,10 @@
                                                 // createProdName.appendChild($ProdName);
                                                 // createPrice.appendChild($Price);
                                                 // createRemove.appendChild(createRemoveButton);
+                                            }
+                                            function createRemove(i) {
+                                                const createRemoveElement = document.getElementById('create'+i);
+                                                createRemoveElement.remove();
                                             }
                                         </script>
                                     <?php endforeach; ?>

@@ -11706,3 +11706,7 @@ li.tm-main-navbar>a>svg {
 #CreateOrder {
     cursor:pointer;
 }
+
+.pointerbutton {
+    cursor:pointer;
+}
