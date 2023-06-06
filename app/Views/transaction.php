@@ -193,9 +193,12 @@
                                 </script>
                             </div>
 
-                            <div class="uk-margin">
-                                <h4 class="uk-h4" id="test"></h4>
-                            </div>
+                            <div id="products"></div>
+                            <!-- <div class="uk-margin uk-child-width-1-4" id="create0" uk-grid>
+                                <div id="createQty0"></div>
+                                <div id="createProdName0"></div>
+                                <div id="createPrice0"></div>
+                            </div> -->
 
                             <div class="uk-margin">
                                 <h4 class="uk-h4"><?=lang('Global.subtotal')?></h4>
@@ -283,15 +286,17 @@
                                         <?php
                                             foreach ($products as $product) {
                                                 if ($product['id'] === $variant['productid']) {
-                                                    $productName = $product['name'];
-                                                    $productPhoto = $product['thumbnail'];
+                                                    $productName    = $product['name'];
+                                                    $productPhoto   = $product['thumbnail'];
+                                                    $Price          = $variant['hargamodal'] + $variant['hargajual'];
+                                                    $ProdName       = $productName.' - '. $variant['name'];
                                                 }
                                             }
                                         ?>
-                                        <div id="cardbtn" value="<?=$variant['id']?>" >
-                                            <div class="uk-card uk-card-hover uk-card-default">
+                                        <div id="CreateOrder">
+                                            <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrder<?=$variant['id']?>()">
                                                 <div class="uk-card-header">
-                                                    <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
+                                                    <div class="tm-h1 uk-text-bolder uk-text-center"><?= $ProdName ?></div>
                                                 </div>
                                                 <div class="uk-card-body">
                                                     <?php if (!empty($productPhoto)) { ?>
@@ -337,11 +342,83 @@
                                                 </div>
                                                 <div class="uk-card-footer">
                                                     <div class="tm-h3 uk-text-center">
-                                                        <div>Rp <?= $variant['hargamodal'] + $variant['hargajual'] ?>,-</div>
+                                                        <div>Rp <?= $Price ?>,-</div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <script type="text/javascript">
+                                            function createNewOrder<?=$variant['id']?>() {
+                                                const products = document.getElementById('products');
+                                                
+                                                const productgrid = document.createElement('div');
+                                                productgrid.setAttribute('id', 'product<?=$variant['id']?>');
+                                                productgrid.setAttribute('class', 'uk-margin-small');
+                                                productgrid.setAttribute('uk-grid', '');
+
+                                                const productqty = document.createElement('div');
+                                                productqty.setAttribute('id', 'qty<?=$variant['id']?>');
+                                                productqty.setAttribute('class', 'uk-width-1-6');
+                                                productqty.innerHTML = '1';
+
+                                                const productname = document.createElement('div');
+                                                productname.setAttribute('id', 'name<?=$variant['id']?>');
+                                                productname.setAttribute('class', 'uk-width-2-6');
+                                                productname.innerHTML = '<?=$ProdName?>';
+
+                                                const productprice = document.createElement('div');
+                                                productprice.setAttribute('id', 'price<?=$variant['id']?>');
+                                                productprice.setAttribute('class', 'uk-width-2-6');
+                                                productprice.innerHTML = '<?=$Price?>';
+
+                                                const createRemove = document.createElement('div');
+                                                createRemove.setAttribute('id', 'remove<?=$variant['id']?>');
+                                                createRemove.setAttribute('class', 'uk-width-1-6 uk-text-center uk-text-bold uk-text-danger uk-flex uk-flex-middle');
+
+                                                const createRemoveButton = document.createElement('a');
+                                                //createRemoveButton.setAttribute('onclick', 'createRemove('<?=$variant['id']?>')');
+                                                createRemoveButton.setAttribute('class', 'uk-link-reset');
+                                                createRemoveButton.innerHTML = 'X';
+
+                                                productgrid.appendChild(productqty);
+                                                productgrid.appendChild(productname);
+                                                productgrid.appendChild(productprice);
+                                                createRemove.appendChild(createRemoveButton);
+                                                productgrid.appendChild(createRemove);
+                                                products.appendChild(productgrid);
+
+                                                // const CreateOrder = document.getElementById("CreateOrder");
+
+                                                // const newCreateOrder = document.createElement('div');
+                                                // newCreateOrder.setAttribute('id','create'+createCount);
+                                                // newCreateOrder.setAttribute('class','uk-margin uk-child-width-1-4');
+                                                // newCreateOrder.setAttribute('uk-grid','');
+
+                                                // const createQty = document.createElement('div');
+                                                // createQty.setAttribute('id','createQty'+createCount);
+
+                                                // const createProdName = document.createElement('div');
+                                                // createProdName.setAttribute('id','createProdName'+createCount);
+
+                                                // const createPrice = document.createElement('div');
+                                                // createPrice.setAttribute('id','createPrice'+createCount);
+
+                                                // const createRemove = document.createElement('div');
+                                                // createRemove.setAttribute('id', 'remove'+createCount);
+                                                // createRemove.setAttribute('class', 'uk-text-center uk-text-bold uk-text-danger uk-flex uk-flex-middle');
+
+                                                // const createRemoveButton = document.createElement('a');
+                                                // createRemoveButton.setAttribute('onclick', 'createRemove('+createCount+')');
+                                                // createRemoveButton.setAttribute('class', 'uk-link-reset');
+                                                // createRemoveButton.innerHTML = 'X';
+
+                                                // createQty.appendChild($Price);
+                                                // createProdName.appendChild($ProdName);
+                                                // createPrice.appendChild($Price);
+                                                // createRemove.appendChild(createRemoveButton);
+                                            }
+                                        </script>
                                     <?php endforeach; ?>
                                     
                                     <script>
@@ -378,7 +455,7 @@
                             </li>
                             <!-- Favorite List -->
                             <li>
-                            <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                     <?php foreach ($variants as $variant) : ?>
                                         <?php
                                             foreach ($products as $product) {
@@ -389,7 +466,7 @@
                                                     $productPhoto = $product['thumbnail'];
                                         ?>
                                         <div id="cardbtnfav">
-                                            <div class="uk-card uk-card-hover uk-card-default">
+                                            <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrder()">
                                                 <div class="uk-card-header">
                                                     <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
                                                 </div>
@@ -456,8 +533,8 @@
                             <li>
                                 <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                     <?php foreach ($bundles as $bundle) : ?>
-                                        <div id="cardbtn">
-                                            <div class="uk-card uk-card-hover uk-card-default">
+                                        <div id="CreateOrder">
+                                            <div class="uk-card uk-card-hover uk-card-default" >
                                                 <div class="uk-card-header">
                                                     <div class="tm-h1 uk-text-bolder uk-text-center"><?= $bundle['name']; ?></div>
                                                 </div>
@@ -495,23 +572,21 @@
         <!-- Main Section end -->
 
         <!-- This Javascript Function -->
-        <script>
-
-
+        <script type="text/javascript">
             $(document).ready(function() {
 
-            $("#cardbtn").click(function() {                
-                $.ajax({    //create an ajax request to display.php
-                    type: "GET",
-                    url: "transaction",
-                    async: false,             
-                    dataType: "html",   //expect html to be returned             
-                    success: function(response){                    
-                        // $("#responsecontainer").html(response); 
-                        alert(response);
-                    }
-                    });
-                });
+            // $("#cardbtn").click(function() {                
+            //     $.ajax({    //create an ajax request to display.php
+            //         type: "GET",
+            //         url: "transaction",
+            //         async: false,             
+            //         dataType: "html",   //expect html to be returned             
+            //         success: function(response){                    
+            //             // $("#responsecontainer").html(response); 
+            //             alert(response);
+            //         }
+            //         });
+            //     });
             
 
 
