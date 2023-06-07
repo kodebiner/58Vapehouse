@@ -202,7 +202,7 @@
                             <div id="bundles"></div>
 
                             <div class="uk-margin">
-                                <h4 class="uk-h4"><?=lang('Global.subtotal')?></h4>
+                                <h4 id="subtotal" class="uk-h4"><?=lang('Global.subtotal')?></h4>
                                 <div class="uk-h4">
                                     <?php foreach ($transactions as $transaction) : ?>
                                         <?php foreach ($trxdetails as $trxdet) {
@@ -400,6 +400,8 @@
                                                             inputqty.value = count;
                                                             var price = count * <?=$Price?>;
                                                             productprice.innerHTML = price;
+                                                            productprice.setAttribute('value',price);
+                                                            subtotal.innerHTML=price;
                                                         }
                                                     };
                                                     
@@ -431,17 +433,61 @@
                                                     const productprice = document.createElement('div');
                                                     productprice.setAttribute('id', 'price<?=$variant['id']?>');
                                                     productprice.setAttribute('class', 'tm-h2');
-                                                    productprice.setAttribute('name', 'price');
+                                                    productprice.setAttribute('name', 'price[]');
+                                                    productprice.setAttribute('value',showprice())
                                                     productprice.innerHTML = <?=$Price?>;
 
                                                     function showprice() {
                                                         var qty = inputqty.value;
                                                         var price = qty * <?=$Price?>;
+                                                        return price;
                                                         productprice.innerHTML = price;
                                                     }
 
                                                     inputqty.onchange = function() {showprice()};
 
+                                                    productsub = document.getElementById('subtotal');
+                                                    const subtotal = document.createElement('div');
+                                                    subtotal.setAttribute('id','subtotal');
+                                                    subtotal.setAttribute('class','tm-h2');
+                                                    subtotal.setAttribute('name','subtotal');
+                                                    subtotal.innerHTML=subt();
+
+                                                    function subt (){
+                                                        const tot = document.querySelectorAll("#price<?=$variant['id']?>");
+                                                        for (let i = 0; i < tot.length; i++) {
+                                                            let sub = tot[i];
+                                                            let subval = sub.value;
+                                                            console.log(subval);
+                                                        }
+                                                    }
+
+                                                
+                                                    // var input = document.getElementsByName('price[]');
+                                                    // let tot = [];
+                                                    //     for (var i = 0; i < input.length; i++) {
+                                                    //         var a = input[i];
+                                                    //         let k = a.value;
+                                                    //         tot.push(k);
+                                                    //         console.log(tot);
+                                                    //     }
+        
+                                                    // let array = [productprice.value];
+                                                    // let sum = 0;
+                                                    // array.forEach(item => {
+                                                    //     sum += item;
+                                                    // });
+
+                                                    // function subttl(){
+                                                    // var tot = document.getElementById('price<?=$variant['id']?>').value;
+                                                    // let sum = 0;
+                                                    //     array.forEach(total => {
+                                                    //     sum += total;
+                                                    //     });
+                                                    //     console.log(sum);
+                                                    // }
+
+                                                
                                                     addcontainer.appendChild(productqtyinputadd);
                                                     productqty.appendChild(inputqty);
                                                     quantitycontainer.appendChild(productqty);
@@ -454,11 +500,14 @@
                                                     pricecontainer.appendChild(productprice);
                                                     productgrid.appendChild(pricecontainer);
                                                     products.appendChild(productgrid);
+                                                    productsub.appendChild(subtotal);
                                                 }
                                                 function createRemove(i) {
                                                     const createRemoveElement = document.getElementById('create'+i);
                                                     createRemoveElement.remove();
                                                 }
+
+
                                             </script>
                                         <?php endforeach; ?>
                                     <?php endforeach; ?>
@@ -582,7 +631,7 @@
                                                 function createNewOrderBundle<?= $bundle['id'] ?>() {
                                                     let stock = <?=$stock['qty']?>;
 
-                                                    const bundles = document.getElementById('bundles');
+                                                    const products = document.getElementById('products');
                                                     
                                                     const bundlegrid = document.createElement('div');
                                                     bundlegrid.setAttribute('id', 'bundle<?= $bundle['id'] ?>');
@@ -682,7 +731,7 @@
                                                     bundlegrid.appendChild(bundlenamecontainer);
                                                     bpricecontainer.appendChild(bundleprice);
                                                     bundlegrid.appendChild(bpricecontainer);
-                                                    bundles.appendChild(bundlegrid);
+                                                    products.appendChild(bundlegrid);
                                                 }
                                             </script>
                                         <?php endforeach; ?>
