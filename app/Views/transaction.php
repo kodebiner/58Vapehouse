@@ -440,15 +440,6 @@
 
                                                 inputqty.onchange = function() {showprice()};
 
-                                                // const createRemove = document.createElement('div');
-                                                // createRemove.setAttribute('id', 'remove<?=$variant['id']?>');
-                                                // createRemove.setAttribute('class', 'uk-width-1-6 uk-text-center uk-text-bold uk-text-danger uk-flex uk-flex-middle');
-
-                                                // const createRemoveButton = document.createElement('a');
-                                                // //createRemoveButton.setAttribute('onclick', 'createRemove('<?=$variant['id']?>')');
-                                                // createRemoveButton.setAttribute('class', 'uk-link-reset');
-                                                // createRemoveButton.innerHTML = 'X';
-
                                                 addcontainer.appendChild(productqtyinputadd);
                                                 productqty.appendChild(inputqty);
                                                 quantitycontainer.appendChild(productqty);
@@ -460,39 +451,7 @@
                                                 productgrid.appendChild(namecontainer);
                                                 pricecontainer.appendChild(productprice);
                                                 productgrid.appendChild(pricecontainer);
-                                                // createRemove.appendChild(createRemoveButton);
-                                                // productgrid.appendChild(createRemove);
                                                 products.appendChild(productgrid);
-
-                                                // const CreateOrder = document.getElementById("CreateOrder");
-
-                                                // const newCreateOrder = document.createElement('div');
-                                                // newCreateOrder.setAttribute('id','create'+createCount);
-                                                // newCreateOrder.setAttribute('class','uk-margin uk-child-width-1-4');
-                                                // newCreateOrder.setAttribute('uk-grid','');
-
-                                                // const createQty = document.createElement('div');
-                                                // createQty.setAttribute('id','createQty'+createCount);
-
-                                                // const createProdName = document.createElement('div');
-                                                // createProdName.setAttribute('id','createProdName'+createCount);
-
-                                                // const createPrice = document.createElement('div');
-                                                // createPrice.setAttribute('id','createPrice'+createCount);
-
-                                                // const createRemove = document.createElement('div');
-                                                // createRemove.setAttribute('id', 'remove'+createCount);
-                                                // createRemove.setAttribute('class', 'uk-text-center uk-text-bold uk-text-danger uk-flex uk-flex-middle');
-
-                                                // const createRemoveButton = document.createElement('a');
-                                                // createRemoveButton.setAttribute('onclick', 'createRemove('+createCount+')');
-                                                // createRemoveButton.setAttribute('class', 'uk-link-reset');
-                                                // createRemoveButton.innerHTML = 'X';
-
-                                                // createQty.appendChild($Price);
-                                                // createProdName.appendChild($ProdName);
-                                                // createPrice.appendChild($Price);
-                                                // createRemove.appendChild(createRemoveButton);
                                             }
                                             function createRemove(i) {
                                                 const createRemoveElement = document.getElementById('create'+i);
@@ -501,37 +460,7 @@
                                         </script>
                                     <?php endforeach; ?>
                                     <?php endforeach; ?>
-                                    
-                                    <script>
-                                        // function createNewOrder(){
-
-                                        //     const createOrder = document.getElementById("instab");
-                                        //     newCreateOrder.setAttribute('id','create'+createCount);
-                                        //     newCreateOrder.setAttribute('class','uk-margin uk-child-width-1-5');
-                                        //     newCreateOrder.setAttribute('uk-grid','');
-                                        // }
-
-                                        // const
-                                        //     display = document.querySelector("#test"),
-                                        //     buttons = document.querySelectorAll("#cardbtn<?=$variant['id']?>");
-
-                                        // buttons.forEach(button => button.addEventListener("click", alterDisplayValue(button)));
-
-                                        // function alterDisplayValue(button) {
-                                        //     return function() {
-                                        //         display.value = button.value;
-                                        //     }
-                                        // };                          
-                    
-                               
-                                        // document.getElementById("#cardbtn<?=$variant['id']?>").addEventListener("click", add);
-                                        // function add() {
-                                        //     $.get("transaction", function(data, status){
-                                        //     alert("Data: " + data + "\nStatus: " + status);
-                                        // });
-                                        //     document.getElementById("test").innerHTML = '';
-                                        // }
-                                    </script>
+                                
                                 </div>
                             </li>
                             <!-- Favorite List -->
@@ -546,8 +475,8 @@
                                                     $productName = $product['name'];
                                                     $productPhoto = $product['thumbnail'];
                                         ?>
-                                        <div id="cardbtnfav">
-                                            <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrder()">
+                                        <div  id="CreateOrder">
+                                            <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrder<?=$variant['id']?>()">
                                                 <div class="uk-card-header">
                                                     <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
                                                 </div>
