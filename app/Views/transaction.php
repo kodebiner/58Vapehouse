@@ -54,7 +54,11 @@
                     <!-- Navbar Center -->
                     <div class="uk-navbar-center">
                         <a class="uk-navbar-item uk-logo" href="<?=base_url();?>" aria-label="<?=lang('Global.backHome')?>">
-                            <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
+                            <?php
+
+                                                                                                use App\Controllers\Stock;
+
+ if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
                                 <img src="/img/<?=$gconfig['logo'];?>" alt="<?=$gconfig['bizname'];?>" style="height: 70px;">
                             <?php } else { ?>
                                 <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 70px;">
@@ -287,7 +291,7 @@
                                                     $ProdName       = $productName.' - '. $variant['name'];
                                                 }
                                             }
-                                        ?>
+                                            ?>
                                         <div id="CreateOrder">
                                             <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrder<?=$variant['id']?>()">
                                                 <div class="uk-card-header">
@@ -336,16 +340,17 @@
                                                     <?php } ?>
                                                 </div>
                                                 <div class="uk-card-footer">
-                                                    <div class="tm-h3 uk-text-center">
-                                                        <div>Rp <?= $Price ?>,-</div>
-                                                    </div>
+                                                        <div class="tm-h1 uk-text-bolder uk-text-center"><?= $Price ?></div>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        
+                                    <?php foreach ($stocks as $stock) :?>
                                         <script type="text/javascript">
                                             var count = 1;
                                             function createNewOrder<?=$variant['id']?>() {
+                                                let stock = <?=$stock['qty']?>;
+                                                
                                                 const products = document.getElementById('products');
                                                 
                                                 const productgrid = document.createElement('div');
@@ -372,7 +377,7 @@
                                                 const quantitycontainer = document.createElement('div');
                                                 quantitycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle');
 
-                                                const productqty = document.createElement('div');
+                                                const productqty = document.createElement('div');                                               
 
                                                 const inputqty = document.createElement('input');
                                                 inputqty.setAttribute('type', 'number');
@@ -380,19 +385,30 @@
                                                 inputqty.setAttribute('name', "qty[<?=$variant['id']?>]");
                                                 inputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
                                                 inputqty.setAttribute('min', '1');
+                                                inputqty.setAttribute('max', stock);
                                                 inputqty.setAttribute('value', count);
-
+                                                inputqty.setAttribute('onchange', 'showprice()');
+                                                let total = '<?=$Price?>';
                                                 const handleIncrement = () => {
                                                     count++;
-                                                    inputqty.value = count;
+                                                    if (inputqty.value == stock) {
+                                                        inputqty.value = stock;
+                                                        alert('Stock tidak mencukupi');
+                                                    } else {
+                                                        inputqty.value = count;
+                                                        var price = count * <?=$Price?>;
+                                                        productprice.innerHTML = price;
+                                                    }
                                                 };
-
+                                                
                                                 const handleDecrement = () => {
                                                     count--;
                                                     if (inputqty.value == '1') {
                                                         productgrid.remove();
                                                     } else {
                                                         inputqty.value = count;
+                                                        var price = count * <?=$Price?>;
+                                                        productprice.innerHTML = price;
                                                     }
                                                 };
 
@@ -409,11 +425,20 @@
 
                                                 const pricecontainer = document.createElement('div');
                                                 pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
-
+                                                
                                                 const productprice = document.createElement('div');
                                                 productprice.setAttribute('id', 'price<?=$variant['id']?>');
                                                 productprice.setAttribute('class', 'tm-h2');
-                                                productprice.innerHTML = '<?=$Price?>';
+                                                productprice.setAttribute('name', 'price');
+                                                productprice.innerHTML = <?=$Price?>;
+
+                                                function showprice() {
+                                                    var qty = inputqty.value;
+                                                    var price = qty * <?=$Price?>;
+                                                    productprice.innerHTML = price;
+                                                }
+
+                                                inputqty.onchange = function() {showprice()};
 
                                                 // const createRemove = document.createElement('div');
                                                 // createRemove.setAttribute('id', 'remove<?=$variant['id']?>');
@@ -474,6 +499,7 @@
                                                 createRemoveElement.remove();
                                             }
                                         </script>
+                                    <?php endforeach; ?>
                                     <?php endforeach; ?>
                                     
                                     <script>

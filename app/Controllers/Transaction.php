@@ -9,6 +9,7 @@ use App\Models\UserModel;
 use App\Models\MemberModel;
 use App\Models\PaymentModel;
 use App\Models\ProductModel;
+use App\Models\StockModel;
 use App\Models\VariantModel;
 use App\Models\TransactionModel;
 
@@ -25,6 +26,7 @@ class Transaction extends BaseController
         $PaymentModel           = new PaymentModel();
         $ProductModel           = new ProductModel();
         $VariantModel           = new VariantModel();
+        $StockModel             = new StockModel();
         $TransactionModel       = new TransactionModel();
         $TrxdetailModel         = new TransactionModel();
         $TrxpaymentModel        = new TransactionModel();
@@ -38,6 +40,7 @@ class Transaction extends BaseController
         $payments           = $PaymentModel->findAll();
         $products           = $ProductModel->findAll();
         $variants           = $VariantModel->findAll();
+        $stocks             = $StockModel->findAll();
         $transactions       = $TransactionModel->findAll();
         $trxdetails         = $TrxdetailModel->findAll();
         $trxpayments        = $TrxpaymentModel->findAll();
@@ -53,6 +56,7 @@ class Transaction extends BaseController
         $data['customers']      = $customers;
         $data['products']       = $products;
         $data['variants']       = $variants;
+        $data['stocks']         = $stocks;
         $data['trxdetails']     = $trxdetails;
         $data['trxpayments']    = $trxpayments;
 
