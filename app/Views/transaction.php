@@ -151,7 +151,7 @@
         <!-- Left Sidebar Section end -->
 
         <!-- Modal Detail Transaction -->
-        <div uk-modal class="uk-flex-top" id="tambahdata">
+        <div uk-modal class="uk-flex-top" id="tambahdata" >
             <div class="uk-modal-dialog uk-margin-auto-vertical">
                 <div class="uk-modal-content">
                     <div class="uk-modal-header">
@@ -451,18 +451,28 @@
                                                     subtotal.setAttribute('id','subtotal');
                                                     subtotal.setAttribute('class','tm-h2');
                                                     subtotal.setAttribute('name','subtotal');
-                                                    subtotal.innerHTML=subt();
+                                                    subtotal.setAttribute('onload','update()');
+                                                    subtotal.innerHTML= subto;
 
-                                                    function subt (){
-                                                        const tot = document.querySelectorAll("#price<?=$variant['id']?>");
-                                                        for (let i = 0; i < tot.length; i++) {
-                                                            let sub = tot[i];
-                                                            let subval = sub.value;
-                                                            console.log(subval);
-                                                        }
+                                                    // function subt (){
+                                                    //     const tot = document.querySelectorAll("#price<?=$variant['id']?>");
+                                                    //     for (let i = 0; i < tot.length; i++) {
+                                                    //         let sub = tot[i];
+                                                    //         let subval = sub.value;
+                                                    //         console.log(subval);
+                                                    //     }
+                                                    // }
+                                                    var subto; //define a global variable
+                                                    function update(){
+                                                        subto = document.getElementById("price<?=$variant['id'];?>").innerHTML; //update the global variable
+                                                        
                                                     }
-
-                                                
+                                                    function tot (){
+                                                    document.addEventListener("DOMContentLoaded", function(event) { 
+                                                        var msg = document.getElementById("name<?=$variant['id'];?>").innerText;
+                                                        return msg;
+                                                    });
+                                                    }
                                                     // var input = document.getElementsByName('price[]');
                                                     // let tot = [];
                                                     //     for (var i = 0; i < input.length; i++) {
@@ -801,6 +811,32 @@
             </ul>
         </footer>
         <!-- Footer Section end -->
-        
+        <script>
+            // var products = document.getElementById('products');
+
+            // products.onchange = function() {
+            //     var subtotal = new array();
+            //     function addprice() {
+            //         var price = document.getElementByName('price[]');
+            //         subtotal.push(price.value);
+            //     }
+
+            //     alert(subtotal);
+            // };
+
+                
+            
+
+            function subtot(){
+            var elements = document.getElementsByName("price[]");
+            var prices = '';
+                for(var i = 0; i < elements.length; i++) {
+                    prices += elements[i].value;
+                    return prices;
+                }
+            }
+            
+           
+        </script>
     </body>
 </html>
