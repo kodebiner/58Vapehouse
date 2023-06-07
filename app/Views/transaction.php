@@ -547,7 +547,7 @@
                                             $BunName = $bundle['name']; 
                                             $BunPrice = $bundle['price'];
                                         ?>
-                                        <div id="CreateOrderBundle">
+                                        <div id="CreateOrder">
                                             <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrderBundle<?= $bundle['id'] ?>()">
                                                 <div class="uk-card-header">
                                                     <div class="tm-h1 uk-text-bolder uk-text-center"><?= $BunName; ?></div>
@@ -645,11 +645,14 @@
                                                     bundleqtyinputdel.addEventListener("click", handleDecrements);
 
                                                     const bundlenamecontainer = document.createElement('div');
-                                                    namecontainer.setAttribute('class', 'uk-flex uk-flex-top');
+                                                    bundlenamecontainer.setAttribute('class', 'uk-flex uk-flex-top');
 
                                                     const bundlename = document.createElement('div');
                                                     bundlename.setAttribute('class', 'tm-h2');
                                                     bundlename.innerHTML = '<?= $BunName ?>';
+
+                                                    const listname = document.createElement('ul');
+                                                    listname.setAttribute('class', 'uk-list');
 
                                                     const bpricecontainer = document.createElement('div');
                                                     bpricecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
@@ -674,6 +677,7 @@
                                                     bundlegrid.appendChild(addbundlecontainer);
                                                     bundlegrid.appendChild(bundleqtycontainer);
                                                     bundlegrid.appendChild(delbundlecontainer);
+                                                    bundlenamecontainer.appendChild(listname);
                                                     bundlenamecontainer.appendChild(bundlename);
                                                     bundlegrid.appendChild(bundlenamecontainer);
                                                     bpricecontainer.appendChild(bundleprice);

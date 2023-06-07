@@ -702,14 +702,14 @@
                       }
                       ?>
                     ];
-                  $("#brand<?=$product['id']?>").autocomplete({
-                    source: brand,
-                    select: function (e, i) {
+                    $("#brand<?=$product['id']?>").autocomplete({
+                      source: brand,
+                      select: function (e, i) {
                         $("#brandid<?=$product['id']?>").val(i.item.idx); // save selected id to hidden input
                       },
                       minLength: 2
-                      });
                     });
+                  });
                 </script>
             </div>
 
