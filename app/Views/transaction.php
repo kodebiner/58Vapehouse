@@ -612,20 +612,24 @@
                                                     <div class="tm-h1 uk-text-bolder uk-text-center"><?= $BunName; ?></div>
                                                 </div>
                                                 <div class="uk-card-body">
-                                                    <?php foreach ($bundets as $bundet) {
-                                                        if ($bundle['id'] === $bundet['bundleid']) {
-                                                            foreach ($variants as $variant) {
-                                                                if ($variant['id'] === $bundet['variantid']) {
-                                                                    foreach ($products as $product) {
-                                                                        if ($product['id'] === $variant['productid']) {
-                                                                            $CombName = $product['name'].' - '.$variant['name'];
-                                                                            echo '<div class="tm-h1 uk-text-bolder uk-text-center">'.$CombName.'</div>';
+                                                    <div class="uk-height-medium uk-flex uk-flex-middle uk-flex-center">
+                                                        <div>
+                                                            <?php foreach ($bundets as $bundet) {
+                                                                if ($bundle['id'] === $bundet['bundleid']) {
+                                                                    foreach ($variants as $variant) {
+                                                                        if ($variant['id'] === $bundet['variantid']) {
+                                                                            foreach ($products as $product) {
+                                                                                if ($product['id'] === $variant['productid']) {
+                                                                                    $CombName = $product['name'].' - '.$variant['name'];
+                                                                                    echo '<div class="tm-h1 uk-text-center">'.$CombName.'</div>';
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
-                                                            }
-                                                        }
-                                                    } ?>
+                                                            } ?>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="uk-card-footer">
                                                     <div class="tm-h3 uk-text-center">
