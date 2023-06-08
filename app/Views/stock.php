@@ -113,12 +113,12 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
+  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example">
     <thead>
       <tr>
         <th class="uk-text-center">No</th>
-        <th class="uk-text-center"><?=lang('Global.outlet')?></th>
-        <th class="uk-text-center"><?=lang('Global.variant')?></th>
+        <th class=""><?=lang('Global.outlet')?></th>
+        <th class=""><?=lang('Global.product')?></th>
         <th class="uk-text-center"><?=lang('Global.stock')?></th>
       </tr>
     </thead>
@@ -127,17 +127,19 @@
       <?php foreach ($stocks as $stock) : ?>
         <tr>
           <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-center">
+          <td class="">
             <?php foreach ($outlets as $outlet ) {
               if ($stock['outletid']=== $outlet['id']){
                 echo $outlet['name'];
               }
             } ?>
           </td>
-          <td class="uk-text-center">
-            <?php foreach ($variants as $variant ) { 
-              if($stock['variantid'] === $variant['id']){
-                echo $variant['name'];
+          <td class="">
+            <?php foreach ($variants as $variant ) {
+              foreach ($products as $product) {
+                if(($stock['variantid'] === $variant['id']) && ($product['id'] === $variant['productid'])) {
+                  echo $product['name'].' - '.$variant['name'];
+                }
               }
             } 
             ?>
