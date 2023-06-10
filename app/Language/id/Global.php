@@ -73,6 +73,8 @@ return [
     'amountpaid'        => 'Jumlah Yang Dibayarkan',
     'yourpoint'         => 'Poin yang tersedia sebesar',
     'total'             => 'Total',
+    'chooseoutlet'      => 'Pilih Outlet Dahulu',
+    'alertstock'        => 'Stock tidak mencukupi',
 
     // Button
     'edit'              => 'Ubah',

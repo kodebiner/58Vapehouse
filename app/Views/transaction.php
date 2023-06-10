@@ -198,8 +198,6 @@
                             </div>
 
                             <div id="products"></div>
-                            <div id="favorites"></div>
-                            <div id="bundles"></div>
 
                             <div class="uk-margin">
                                 <h4 id="subtotal" class="uk-h4"><?=lang('Global.subtotal')?></h4>
@@ -281,504 +279,504 @@
                 <div class="uk-container uk-container-expand uk-padding-remove-horizontal">
                     <div class="uk-panel uk-panel-scrollable" style="background-color: #363636;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
                         <?php if ($outletPick === null) { ?>
-                        <div class="uk-h2 uk-text-center">Pilih outlet dahulu</div>
+                            <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.chooseoutlet')?></div>
                         <?php } else { ?>
-                        <div class="uk-h2 uk-text-center">
-                            <?php
-                            foreach ($baseoutlets as $baseoutlet) {
-                                if ($baseoutlet['id'] === $outletPick) {
-                                    echo $baseoutlet['name'];
-                                }
-                            }
-                            ?>
-                        </div>
-                        <ul class="uk-switcher switcher-class">
-                            <li>
-                                <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
-                                    <?php foreach ($variants as $variant) : ?>
-                                        <?php
-                                            foreach ($products as $product) {
-                                                if ($product['id'] === $variant['productid']) {
-                                                    $productName    = $product['name'];
-                                                    $productPhoto   = $product['thumbnail'];
-                                                    $Price          = $variant['hargamodal'] + $variant['hargajual'];
-                                                    $ProdName       = $productName.' - '. $variant['name'];
+                            <div class="tm-h1 uk-text-center tm-text-large">
+                                <?php
+                                    foreach ($baseoutlets as $baseoutlet) {
+                                        if ($baseoutlet['id'] === $outletPick) {
+                                            echo $baseoutlet['name'];
+                                        }
+                                    }
+                                ?>
+                            </div>
+                            <ul class="uk-switcher switcher-class">
+                                <li>
+                                    <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                        <?php foreach ($variants as $variant) : ?>
+                                            <?php
+                                                foreach ($products as $product) {
+                                                    if ($product['id'] === $variant['productid']) {
+                                                        $productName    = $product['name'];
+                                                        $productPhoto   = $product['thumbnail'];
+                                                        $Price          = $variant['hargamodal'] + $variant['hargajual'];
+                                                        $ProdName       = $productName.' - '. $variant['name'];
+                                                    }
                                                 }
-                                            }
-                                            ?>
-                                        <div id="CreateOrder">
-                                            <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrder<?=$variant['id']?>()">
-                                                <div class="uk-card-header">
-                                                    <div class="tm-h1 uk-text-bolder uk-text-center"><?= $ProdName ?></div>
-                                                </div>
-                                                <div class="uk-card-body">
-                                                    <?php if (!empty($productPhoto)) { ?>
-                                                        <img class="uk-width-1-1" src="img/product/<?= $productPhoto ?>" />
-                                                    <?php } else { ?>
-                                                        <svg x="0px" y="0px" viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
-                                                            <g>
-                                                                <defs>
-                                                                    <rect id="SVGID_1_" y="0" width="300" height="300"/>
-                                                                </defs>
-                                                                <clipPath id="SVGID_00000065759931020451687440000009539297437584060839_">
-                                                                    <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
-                                                                </clipPath>
-                                                                <g style="clip-path:url(#SVGID_00000065759931020451687440000009539297437584060839_);">
-                                                                    <path class="dummyproduct" d="M10.43,99.92c-10.73-27.36,4.25-69.85,30.19-85.78C51.01,7.77,77-5.17,108.81,30.24
-                                                                        c-2.16,0.65-4.26,1.55-6.29,2.7c-3.02,1.75-5.49,4.04-7.57,6.58C83.12,26.95,67.17,17.08,49.17,28.13
-                                                                        C34,37.46,23.24,60.45,23.28,79.62c-0.03,5.15,0.77,10.05,2.42,14.32l4.75,11.66c6.41,15.42,12.34,29.6,12.34,46.6
-                                                                        c-0.03,11.87-2.89,25.14-10.44,41.17c-1.05,2.23-1.96,5.97-1.96,9.8c0,2.31,0.29,4.66,1.16,6.73c1.13,2.73,3.09,4.44,5.9,5.59
-                                                                        c2.16,0.28,10.31,0.86,17.02-5.79c6.56-6.54,13.06-21.9,6.78-58.08C50.43,89.07,75.8,68.22,87.2,62.18
-                                                                        c15.23-8.09,33.99-5.98,45.6,5.15c3.3,3.14,3.38,8.34,0.23,11.6c-3.13,3.26-8.35,3.37-11.59,0.23c-5.55-5.31-16.45-7.86-26.56-2.5
-                                                                        c-8.25,4.37-26.43,20.18-17.46,72.17c6.01,34.86,2.08,59.32-11.64,72.76c-13.81,13.43-31.7,10.1-32.45,9.95l-0.67-0.13l-0.63-0.24
-                                                                        c-7.34-2.73-12.76-7.95-15.68-15.08c-4.14-10.12-2.41-22.24,1.16-29.72c15.27-32.43,8.34-49.15-2.2-74.47L10.43,99.92z"/>
-                                                                    <g>
-                                                                        <path class="dummyproduct" d="M289.03,204.6L222.63,89.6c0,0-8.25-9.16-7.65-8.69l-10.29-6.98l-72.37-38.31
-                                                                            c-7.64-4.21-17.21-3.87-25.53,0.91c-6.82,3.93-11.33,10.31-12.87,17.21c14.44-4.1,30.01-1.11,40.99,8.29
-                                                                            c7.23,0.26,14.23,3.89,18.08,10.64c6.07,10.47,2.46,23.86-7.98,29.88c-10.47,6.04-23.89,2.46-29.92-8.01
-                                                                            c-2.57-4.48-3.27-9.48-2.52-14.24c-8.67-4.82-20.11,2.86-20.51,5.7c-0.51,3.49-1.94,54.29-1.94,54.29s0.98,10.4,1.08,11.45
-                                                                            c0.21,0.64,3.82,11.58,3.82,11.58l66.4,114.96c4.06,7.05,10.6,12.07,18.43,14.18c7.8,2.1,15.98,1.03,22.98-3.03l75.14-43.35
-                                                                            C292.39,237.71,297.39,219.1,289.03,204.6z M210.47,157.72l-6.24,6.9c-3.34-3.82-7.36-5.93-11.95-6.25
-                                                                            c-2.17-0.16-4.25,0-6.22,0.36l-4.6-8.04C191.65,146.98,201.33,149.28,210.47,157.72z M166.64,189.62c-0.76-0.98-1.46-2-2.1-3.11
-                                                                            c-0.8-1.4-1.42-2.78-1.96-4.18c-2.24-7.52-0.14-16.05,5.35-23.07c0.61-0.7,1.29-1.38,1.99-1.97l4.57,7.98
-                                                                            c-0.08,0.13-0.17,0.27-0.25,0.38c-4.51,5.03-5.96,11.66-3.05,16.74c2.99,5.22,9.6,7.28,16.39,5.77l4.98,8.7
-                                                                            C182.41,199.07,172.43,196.42,166.64,189.62z M182.01,224.96l6.55-6.26c6.45,6.06,13.24,8.32,20.42,6.89l4.7,8.22
-                                                                            C202.67,237.11,192.12,234.18,182.01,224.96z M220.06,237.4l-50.01-87.43l5.74-3.28l50,87.43L220.06,237.4z M226.2,226.44
-                                                                            c-0.29,0.25-0.55,0.46-0.85,0.69l-4.53-7.92c0.51-0.43,0.96-0.9,1.4-1.35c2.16-1.94,3.64-4,4.5-6.25
-                                                                            c2.1-4.48,2.31-9.32,0.06-13.25c-3.65-6.39-12.44-8.43-21.03-5.49l-4.84-8.41c14.3-3.2,27.1-0.45,32.68,9.28
-                                                                            C239,203.19,235.61,215.91,226.2,226.44z"/>
+                                                ?>
+                                            <div id="CreateOrder">
+                                                <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrder<?=$variant['id']?>()">
+                                                    <div class="uk-card-header">
+                                                        <div class="tm-h1 uk-text-bolder uk-text-center"><?= $ProdName ?></div>
+                                                    </div>
+                                                    <div class="uk-card-body">
+                                                        <?php if (!empty($productPhoto)) { ?>
+                                                            <img class="uk-width-1-1" src="img/product/<?= $productPhoto ?>" />
+                                                        <?php } else { ?>
+                                                            <svg x="0px" y="0px" viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
+                                                                <g>
+                                                                    <defs>
+                                                                        <rect id="SVGID_1_" y="0" width="300" height="300"/>
+                                                                    </defs>
+                                                                    <clipPath id="SVGID_00000065759931020451687440000009539297437584060839_">
+                                                                        <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                                                                    </clipPath>
+                                                                    <g style="clip-path:url(#SVGID_00000065759931020451687440000009539297437584060839_);">
+                                                                        <path class="dummyproduct" d="M10.43,99.92c-10.73-27.36,4.25-69.85,30.19-85.78C51.01,7.77,77-5.17,108.81,30.24
+                                                                            c-2.16,0.65-4.26,1.55-6.29,2.7c-3.02,1.75-5.49,4.04-7.57,6.58C83.12,26.95,67.17,17.08,49.17,28.13
+                                                                            C34,37.46,23.24,60.45,23.28,79.62c-0.03,5.15,0.77,10.05,2.42,14.32l4.75,11.66c6.41,15.42,12.34,29.6,12.34,46.6
+                                                                            c-0.03,11.87-2.89,25.14-10.44,41.17c-1.05,2.23-1.96,5.97-1.96,9.8c0,2.31,0.29,4.66,1.16,6.73c1.13,2.73,3.09,4.44,5.9,5.59
+                                                                            c2.16,0.28,10.31,0.86,17.02-5.79c6.56-6.54,13.06-21.9,6.78-58.08C50.43,89.07,75.8,68.22,87.2,62.18
+                                                                            c15.23-8.09,33.99-5.98,45.6,5.15c3.3,3.14,3.38,8.34,0.23,11.6c-3.13,3.26-8.35,3.37-11.59,0.23c-5.55-5.31-16.45-7.86-26.56-2.5
+                                                                            c-8.25,4.37-26.43,20.18-17.46,72.17c6.01,34.86,2.08,59.32-11.64,72.76c-13.81,13.43-31.7,10.1-32.45,9.95l-0.67-0.13l-0.63-0.24
+                                                                            c-7.34-2.73-12.76-7.95-15.68-15.08c-4.14-10.12-2.41-22.24,1.16-29.72c15.27-32.43,8.34-49.15-2.2-74.47L10.43,99.92z"/>
+                                                                        <g>
+                                                                            <path class="dummyproduct" d="M289.03,204.6L222.63,89.6c0,0-8.25-9.16-7.65-8.69l-10.29-6.98l-72.37-38.31
+                                                                                c-7.64-4.21-17.21-3.87-25.53,0.91c-6.82,3.93-11.33,10.31-12.87,17.21c14.44-4.1,30.01-1.11,40.99,8.29
+                                                                                c7.23,0.26,14.23,3.89,18.08,10.64c6.07,10.47,2.46,23.86-7.98,29.88c-10.47,6.04-23.89,2.46-29.92-8.01
+                                                                                c-2.57-4.48-3.27-9.48-2.52-14.24c-8.67-4.82-20.11,2.86-20.51,5.7c-0.51,3.49-1.94,54.29-1.94,54.29s0.98,10.4,1.08,11.45
+                                                                                c0.21,0.64,3.82,11.58,3.82,11.58l66.4,114.96c4.06,7.05,10.6,12.07,18.43,14.18c7.8,2.1,15.98,1.03,22.98-3.03l75.14-43.35
+                                                                                C292.39,237.71,297.39,219.1,289.03,204.6z M210.47,157.72l-6.24,6.9c-3.34-3.82-7.36-5.93-11.95-6.25
+                                                                                c-2.17-0.16-4.25,0-6.22,0.36l-4.6-8.04C191.65,146.98,201.33,149.28,210.47,157.72z M166.64,189.62c-0.76-0.98-1.46-2-2.1-3.11
+                                                                                c-0.8-1.4-1.42-2.78-1.96-4.18c-2.24-7.52-0.14-16.05,5.35-23.07c0.61-0.7,1.29-1.38,1.99-1.97l4.57,7.98
+                                                                                c-0.08,0.13-0.17,0.27-0.25,0.38c-4.51,5.03-5.96,11.66-3.05,16.74c2.99,5.22,9.6,7.28,16.39,5.77l4.98,8.7
+                                                                                C182.41,199.07,172.43,196.42,166.64,189.62z M182.01,224.96l6.55-6.26c6.45,6.06,13.24,8.32,20.42,6.89l4.7,8.22
+                                                                                C202.67,237.11,192.12,234.18,182.01,224.96z M220.06,237.4l-50.01-87.43l5.74-3.28l50,87.43L220.06,237.4z M226.2,226.44
+                                                                                c-0.29,0.25-0.55,0.46-0.85,0.69l-4.53-7.92c0.51-0.43,0.96-0.9,1.4-1.35c2.16-1.94,3.64-4,4.5-6.25
+                                                                                c2.1-4.48,2.31-9.32,0.06-13.25c-3.65-6.39-12.44-8.43-21.03-5.49l-4.84-8.41c14.3-3.2,27.1-0.45,32.68,9.28
+                                                                                C239,203.19,235.61,215.91,226.2,226.44z"/>
+                                                                        </g>
                                                                     </g>
                                                                 </g>
-                                                            </g>
-                                                        </svg>
-                                                    <?php } ?>
+                                                            </svg>
+                                                        <?php } ?>
+                                                    </div>
+                                                    <div class="uk-card-footer">
+                                                        <div class="tm-h1 uk-text-bolder uk-text-center">Rp <?= $Price ?>,-</div>
+                                                    </div>
                                                 </div>
-                                                <div class="uk-card-footer">
-                                                    <div class="tm-h1 uk-text-bolder uk-text-center">Rp <?= $Price ?>,-</div>
-                                                </div>
-                                            </div>
-                                        </div>                                        
-                                        
-                                        <script type="text/javascript">
-                                            var count = 1;
-                                            function createNewOrder<?=$variant['id']?>() {
-                                                <?php
-                                                foreach ($stocks as $stock) {
-                                                    if (($stock['variantid'] === $variant['id']) && ($stock['outletid'] === $outletPick)) {
-                                                        echo 'let stock = '.$stock['qty'].';';
-                                                        if ($stock['qty'] === '0') {
-                                                            echo 'alert("Stock tidak tersedia")';
-                                                        } else {
-                                                ?>
-
-                                                let minstock = 1;
-                                                let minval = count;
-
-                                                const products = document.getElementById('products');
-                                                
-                                                const productgrid = document.createElement('div');
-                                                productgrid.setAttribute('id', 'product<?=$variant['id']?>');
-                                                productgrid.setAttribute('class', 'uk-margin-small  uk-child-width-auto');
-                                                productgrid.setAttribute('uk-grid', '');
-
-                                                const addcontainer = document.createElement('div');
-                                                addcontainer.setAttribute('class', 'uk-flex uk-flex-middle');
-                                                
-                                                const productqtyinputadd = document.createElement('div');
-                                                productqtyinputadd.setAttribute('id','addqty<?=$variant['id']?>');
-                                                productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
-                                                productqtyinputadd.innerHTML = '+';
-
-                                                const delcontainer = document.createElement('div');
-                                                delcontainer.setAttribute('class', 'uk-flex uk-flex-middle');
-                                                
-                                                const productqtyinputdel = document.createElement('div');
-                                                productqtyinputdel.setAttribute('id','delqty<?=$variant['id']?>');
-                                                productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
-                                                productqtyinputdel.innerHTML = '-';
-
-                                                const quantitycontainer = document.createElement('div');
-                                                quantitycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle');
-
-                                                const productqty = document.createElement('div');                                               
-
-                                                const inputqty = document.createElement('input');
-                                                inputqty.setAttribute('type', 'number');
-                                                inputqty.setAttribute('id', "qty[<?=$variant['id']?>]");
-                                                inputqty.setAttribute('name', "qty[<?=$variant['id']?>]");
-                                                inputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
-                                                inputqty.setAttribute('min', minstock);
-                                                inputqty.setAttribute('max', stock);
-                                                inputqty.setAttribute('value', minval);
-                                                inputqty.setAttribute('onchange', 'showprice()');
-                                                let total = '<?=$Price?>';
-                                                const handleIncrement = () => {
-                                                    count++;
-                                                    if (inputqty.value == stock) {
-                                                        inputqty.value = stock;
-                                                        alert('Stock tidak mencukupi');
-                                                    } else if (inputqty.value == 0) {
-                                                        productprice.setAttribute('value', 0);
-                                                        productprice.innerHTML= 0;
-                                                    } else {
-                                                        inputqty.value = count;
-                                                        var price = count * <?=$Price?>;
-                                                        productprice.innerHTML = price;
-                                                        productprice.setAttribute('value',price);
-                                                        subtotal.innerHTML=price;
-                                                    }
-                                                };
-                                                
-                                                const handleDecrement = () => {
-                                                    count--;
-                                                    if (inputqty.value == '1') {
-                                                        productgrid.remove();
-                                                    } else {
-                                                        inputqty.value = count;
-                                                        var price = count * <?=$Price?>;
-                                                        productprice.innerHTML = price;
-                                                    }
-                                                };
-
-                                                productqtyinputadd.addEventListener("click", handleIncrement);
-                                                productqtyinputdel.addEventListener("click", handleDecrement);
-
-                                                const namecontainer = document.createElement('div');
-                                                namecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
-
-                                                const productname = document.createElement('div');
-                                                productname.setAttribute('id', 'name<?=$variant['id']?>');
-                                                productname.setAttribute('class', 'tm-h2');
-                                                productname.innerHTML = '<?=$ProdName?>';
-
-                                                const pricecontainer = document.createElement('div');
-                                                pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
-                                                
-                                                const productprice = document.createElement('div');
-                                                productprice.setAttribute('id', 'price<?=$variant['id']?>');
-                                                productprice.setAttribute('class', 'tm-h2');
-                                                productprice.setAttribute('name', 'price[]');
-                                                productprice.setAttribute('value', showprice())
-                                                productprice.innerHTML = showprice();
-
-                                                function showprice() {
-                                                    var qty = inputqty.value;
-                                                    var price = qty * <?=$Price?>;
-                                                    return price;
-                                                    productprice.innerHTML = price;
-                                                }
-
-                                                inputqty.onchange = function() {showprice()};
-
-                                                productsub = document.getElementById('subtotal');
-                                                const subtotal = document.createElement('div');
-                                                subtotal.setAttribute('id','subtotal');
-                                                subtotal.setAttribute('class','tm-h2');
-                                                subtotal.setAttribute('name','subtotal');
-                                                subtotal.setAttribute('onload','update()');
-                                                subtotal.innerHTML= subto;
-
-                                                // function subt (){
-                                                //     const tot = document.querySelectorAll("#price<?=$variant['id']?>");
-                                                //     for (let i = 0; i < tot.length; i++) {
-                                                //         let sub = tot[i];
-                                                //         let subval = sub.value;
-                                                //         console.log(subval);
-                                                //     }
-                                                // }
-                                                var subto; //define a global variable
-                                                function update(){
-                                                    subto = document.getElementById("price<?=$variant['id'];?>").innerHTML; //update the global variable
-                                                    
-                                                }
-                                                function tot (){
-                                                document.addEventListener("DOMContentLoaded", function(event) { 
-                                                    var msg = document.getElementById("name<?=$variant['id'];?>").innerText;
-                                                    return msg;
-                                                });
-                                                }
-                                                // var input = document.getElementsByName('price[]');
-                                                // let tot = [];
-                                                //     for (var i = 0; i < input.length; i++) {
-                                                //         var a = input[i];
-                                                //         let k = a.value;
-                                                //         tot.push(k);
-                                                //         console.log(tot);
-                                                //     }
-    
-                                                // let array = [productprice.value];
-                                                // let sum = 0;
-                                                // array.forEach(item => {
-                                                //     sum += item;
-                                                // });
-
-                                                // function subttl(){
-                                                // var tot = document.getElementById('price<?=$variant['id']?>').value;
-                                                // let sum = 0;
-                                                //     array.forEach(total => {
-                                                //     sum += total;
-                                                //     });
-                                                //     console.log(sum);
-                                                // }
-
+                                            </div>                                        
                                             
-                                                addcontainer.appendChild(productqtyinputadd);
-                                                productqty.appendChild(inputqty);
-                                                quantitycontainer.appendChild(productqty);
-                                                delcontainer.appendChild(productqtyinputdel);
-                                                productgrid.appendChild(addcontainer);
-                                                productgrid.appendChild(quantitycontainer);
-                                                productgrid.appendChild(delcontainer);
-                                                namecontainer.appendChild(productname);
-                                                productgrid.appendChild(namecontainer);
-                                                pricecontainer.appendChild(productprice);
-                                                productgrid.appendChild(pricecontainer);
-                                                products.appendChild(productgrid);
-                                                productsub.appendChild(subtotal);
+                                            <script type="text/javascript">
+                                                var count = 1;
+                                                function createNewOrder<?=$variant['id']?>() {
+                                                    <?php
+                                                    foreach ($stocks as $stock) {
+                                                        if (($stock['variantid'] === $variant['id']) && ($stock['outletid'] === $outletPick)) {
+                                                            echo 'let stock = '.$stock['qty'].';';
+                                                            if ($stock['qty'] === '0') {
+                                                                echo 'alert("Stock tidak tersedia")';
+                                                            } else {
+                                                    ?>
 
-                                                <?php
+                                                    let minstock = 1;
+                                                    let minval = count;
+
+                                                    const products = document.getElementById('products');
+                                                    
+                                                    const productgrid = document.createElement('div');
+                                                    productgrid.setAttribute('id', 'product<?=$variant['id']?>');
+                                                    productgrid.setAttribute('class', 'uk-margin-small  uk-child-width-auto');
+                                                    productgrid.setAttribute('uk-grid', '');
+
+                                                    const addcontainer = document.createElement('div');
+                                                    addcontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                    
+                                                    const productqtyinputadd = document.createElement('div');
+                                                    productqtyinputadd.setAttribute('id','addqty<?=$variant['id']?>');
+                                                    productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
+                                                    productqtyinputadd.innerHTML = '+';
+
+                                                    const delcontainer = document.createElement('div');
+                                                    delcontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                    
+                                                    const productqtyinputdel = document.createElement('div');
+                                                    productqtyinputdel.setAttribute('id','delqty<?=$variant['id']?>');
+                                                    productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
+                                                    productqtyinputdel.innerHTML = '-';
+
+                                                    const quantitycontainer = document.createElement('div');
+                                                    quantitycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle');
+
+                                                    const productqty = document.createElement('div');                                               
+
+                                                    const inputqty = document.createElement('input');
+                                                    inputqty.setAttribute('type', 'number');
+                                                    inputqty.setAttribute('id', "qty[<?=$variant['id']?>]");
+                                                    inputqty.setAttribute('name', "qty[<?=$variant['id']?>]");
+                                                    inputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
+                                                    inputqty.setAttribute('min', minstock);
+                                                    inputqty.setAttribute('max', stock);
+                                                    inputqty.setAttribute('value', minval);
+                                                    inputqty.setAttribute('onchange', 'showprice()');
+                                                    let total = '<?=$Price?>';
+                                                    const handleIncrement = () => {
+                                                        count++;
+                                                        if (inputqty.value == stock) {
+                                                            inputqty.value = stock;
+                                                            alert('<?=lang('Global.alertstock')?>');
+                                                        } else if (inputqty.value == 0) {
+                                                            productprice.setAttribute('value', 0);
+                                                            productprice.innerHTML= 0;
+                                                        } else {
+                                                            inputqty.value = count;
+                                                            var price = count * <?=$Price?>;
+                                                            productprice.innerHTML = price;
+                                                            productprice.setAttribute('value',price);
+                                                            subtotal.innerHTML=price;
+                                                        }
+                                                    };
+                                                    
+                                                    const handleDecrement = () => {
+                                                        count--;
+                                                        if (inputqty.value == '1') {
+                                                            productgrid.remove();
+                                                        } else {
+                                                            inputqty.value = count;
+                                                            var price = count * <?=$Price?>;
+                                                            productprice.innerHTML = price;
+                                                        }
+                                                    };
+
+                                                    productqtyinputadd.addEventListener("click", handleIncrement);
+                                                    productqtyinputdel.addEventListener("click", handleDecrement);
+
+                                                    const namecontainer = document.createElement('div');
+                                                    namecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+
+                                                    const productname = document.createElement('div');
+                                                    productname.setAttribute('id', 'name<?=$variant['id']?>');
+                                                    productname.setAttribute('class', 'tm-h2');
+                                                    productname.innerHTML = '<?=$ProdName?>';
+
+                                                    const pricecontainer = document.createElement('div');
+                                                    pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                    
+                                                    const productprice = document.createElement('div');
+                                                    productprice.setAttribute('id', 'price<?=$variant['id']?>');
+                                                    productprice.setAttribute('class', 'tm-h2');
+                                                    productprice.setAttribute('name', 'price[]');
+                                                    productprice.setAttribute('value', showprice())
+                                                    productprice.innerHTML = showprice();
+
+                                                    function showprice() {
+                                                        var qty = inputqty.value;
+                                                        var price = qty * <?=$Price?>;
+                                                        return price;
+                                                        productprice.innerHTML = price;
+                                                    }
+
+                                                    inputqty.onchange = function() {showprice()};
+
+                                                    productsub = document.getElementById('subtotal');
+                                                    const subtotal = document.createElement('div');
+                                                    subtotal.setAttribute('id','subtotal');
+                                                    subtotal.setAttribute('class','tm-h2');
+                                                    subtotal.setAttribute('name','subtotal');
+                                                    subtotal.setAttribute('onload','update()');
+                                                    subtotal.innerHTML= subto;
+
+                                                    // function subt (){
+                                                    //     const tot = document.querySelectorAll("#price<?=$variant['id']?>");
+                                                    //     for (let i = 0; i < tot.length; i++) {
+                                                    //         let sub = tot[i];
+                                                    //         let subval = sub.value;
+                                                    //         console.log(subval);
+                                                    //     }
+                                                    // }
+                                                    var subto; //define a global variable
+                                                    function update(){
+                                                        subto = document.getElementById("price<?=$variant['id'];?>").innerHTML; //update the global variable
+                                                        
+                                                    }
+                                                    function tot (){
+                                                    document.addEventListener("DOMContentLoaded", function(event) { 
+                                                        var msg = document.getElementById("name<?=$variant['id'];?>").innerText;
+                                                        return msg;
+                                                    });
+                                                    }
+                                                    // var input = document.getElementsByName('price[]');
+                                                    // let tot = [];
+                                                    //     for (var i = 0; i < input.length; i++) {
+                                                    //         var a = input[i];
+                                                    //         let k = a.value;
+                                                    //         tot.push(k);
+                                                    //         console.log(tot);
+                                                    //     }
+        
+                                                    // let array = [productprice.value];
+                                                    // let sum = 0;
+                                                    // array.forEach(item => {
+                                                    //     sum += item;
+                                                    // });
+
+                                                    // function subttl(){
+                                                    // var tot = document.getElementById('price<?=$variant['id']?>').value;
+                                                    // let sum = 0;
+                                                    //     array.forEach(total => {
+                                                    //     sum += total;
+                                                    //     });
+                                                    //     console.log(sum);
+                                                    // }
+
+                                                
+                                                    addcontainer.appendChild(productqtyinputadd);
+                                                    productqty.appendChild(inputqty);
+                                                    quantitycontainer.appendChild(productqty);
+                                                    delcontainer.appendChild(productqtyinputdel);
+                                                    productgrid.appendChild(addcontainer);
+                                                    productgrid.appendChild(quantitycontainer);
+                                                    productgrid.appendChild(delcontainer);
+                                                    namecontainer.appendChild(productname);
+                                                    productgrid.appendChild(namecontainer);
+                                                    pricecontainer.appendChild(productprice);
+                                                    productgrid.appendChild(pricecontainer);
+                                                    products.appendChild(productgrid);
+                                                    productsub.appendChild(subtotal);
+
+                                                    <?php
+                                                            }
                                                         }
                                                     }
+                                                    ?>
                                                 }
-                                                ?>
-                                            }
-                                            function createRemove(i) {
-                                                const createRemoveElement = document.getElementById('create'+i);
-                                                createRemoveElement.remove();
-                                            }
+                                                function createRemove(i) {
+                                                    const createRemoveElement = document.getElementById('create'+i);
+                                                    createRemoveElement.remove();
+                                                }
 
 
-                                        </script>
-                                    <?php endforeach; ?>
-                                </div>
-                            </li>
-                            <!-- Favorite List -->
-                            <li>
-                                <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
-                                    <?php foreach ($variants as $variant) : ?>
-                                        <?php
-                                            foreach ($products as $product) {
-                                                
-                                                if (($product['id'] === $variant['productid']) && ($product['favorite'] === '1')) {
-                                                    $productName = $product['name'];
-                                                    $productName = $product['name'];
-                                                    $productPhoto = $product['thumbnail'];
-                                        ?>
-                                        <div  id="CreateOrder">
-                                            <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrder<?=$variant['id']?>()">
-                                                <div class="uk-card-header">
-                                                    <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
-                                                </div>
-                                                <div class="uk-card-body">
-                                                    <?php if (!empty($productPhoto)) { ?>
-                                                        <img class="uk-width-1-1" src="img/product/<?= $productPhoto ?>" />
-                                                    <?php } else { ?>
-                                                        <svg x="0px" y="0px" viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
-                                                            <g>
-                                                                <defs>
-                                                                    <rect id="SVGID_1_" y="0" width="300" height="300"/>
-                                                                </defs>
-                                                                <clipPath id="SVGID_00000065759931020451687440000009539297437584060839_">
-                                                                    <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
-                                                                </clipPath>
-                                                                <g style="clip-path:url(#SVGID_00000065759931020451687440000009539297437584060839_);">
-                                                                    <path class="dummyproduct" d="M10.43,99.92c-10.73-27.36,4.25-69.85,30.19-85.78C51.01,7.77,77-5.17,108.81,30.24
-                                                                        c-2.16,0.65-4.26,1.55-6.29,2.7c-3.02,1.75-5.49,4.04-7.57,6.58C83.12,26.95,67.17,17.08,49.17,28.13
-                                                                        C34,37.46,23.24,60.45,23.28,79.62c-0.03,5.15,0.77,10.05,2.42,14.32l4.75,11.66c6.41,15.42,12.34,29.6,12.34,46.6
-                                                                        c-0.03,11.87-2.89,25.14-10.44,41.17c-1.05,2.23-1.96,5.97-1.96,9.8c0,2.31,0.29,4.66,1.16,6.73c1.13,2.73,3.09,4.44,5.9,5.59
-                                                                        c2.16,0.28,10.31,0.86,17.02-5.79c6.56-6.54,13.06-21.9,6.78-58.08C50.43,89.07,75.8,68.22,87.2,62.18
-                                                                        c15.23-8.09,33.99-5.98,45.6,5.15c3.3,3.14,3.38,8.34,0.23,11.6c-3.13,3.26-8.35,3.37-11.59,0.23c-5.55-5.31-16.45-7.86-26.56-2.5
-                                                                        c-8.25,4.37-26.43,20.18-17.46,72.17c6.01,34.86,2.08,59.32-11.64,72.76c-13.81,13.43-31.7,10.1-32.45,9.95l-0.67-0.13l-0.63-0.24
-                                                                        c-7.34-2.73-12.76-7.95-15.68-15.08c-4.14-10.12-2.41-22.24,1.16-29.72c15.27-32.43,8.34-49.15-2.2-74.47L10.43,99.92z"/>
-                                                                    <g>
-                                                                        <path class="dummyproduct" d="M289.03,204.6L222.63,89.6c0,0-8.25-9.16-7.65-8.69l-10.29-6.98l-72.37-38.31
-                                                                            c-7.64-4.21-17.21-3.87-25.53,0.91c-6.82,3.93-11.33,10.31-12.87,17.21c14.44-4.1,30.01-1.11,40.99,8.29
-                                                                            c7.23,0.26,14.23,3.89,18.08,10.64c6.07,10.47,2.46,23.86-7.98,29.88c-10.47,6.04-23.89,2.46-29.92-8.01
-                                                                            c-2.57-4.48-3.27-9.48-2.52-14.24c-8.67-4.82-20.11,2.86-20.51,5.7c-0.51,3.49-1.94,54.29-1.94,54.29s0.98,10.4,1.08,11.45
-                                                                            c0.21,0.64,3.82,11.58,3.82,11.58l66.4,114.96c4.06,7.05,10.6,12.07,18.43,14.18c7.8,2.1,15.98,1.03,22.98-3.03l75.14-43.35
-                                                                            C292.39,237.71,297.39,219.1,289.03,204.6z M210.47,157.72l-6.24,6.9c-3.34-3.82-7.36-5.93-11.95-6.25
-                                                                            c-2.17-0.16-4.25,0-6.22,0.36l-4.6-8.04C191.65,146.98,201.33,149.28,210.47,157.72z M166.64,189.62c-0.76-0.98-1.46-2-2.1-3.11
-                                                                            c-0.8-1.4-1.42-2.78-1.96-4.18c-2.24-7.52-0.14-16.05,5.35-23.07c0.61-0.7,1.29-1.38,1.99-1.97l4.57,7.98
-                                                                            c-0.08,0.13-0.17,0.27-0.25,0.38c-4.51,5.03-5.96,11.66-3.05,16.74c2.99,5.22,9.6,7.28,16.39,5.77l4.98,8.7
-                                                                            C182.41,199.07,172.43,196.42,166.64,189.62z M182.01,224.96l6.55-6.26c6.45,6.06,13.24,8.32,20.42,6.89l4.7,8.22
-                                                                            C202.67,237.11,192.12,234.18,182.01,224.96z M220.06,237.4l-50.01-87.43l5.74-3.28l50,87.43L220.06,237.4z M226.2,226.44
-                                                                            c-0.29,0.25-0.55,0.46-0.85,0.69l-4.53-7.92c0.51-0.43,0.96-0.9,1.4-1.35c2.16-1.94,3.64-4,4.5-6.25
-                                                                            c2.1-4.48,2.31-9.32,0.06-13.25c-3.65-6.39-12.44-8.43-21.03-5.49l-4.84-8.41c14.3-3.2,27.1-0.45,32.68,9.28
-                                                                            C239,203.19,235.61,215.91,226.2,226.44z"/>
+                                            </script>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </li>
+                                <!-- Favorite List -->
+                                <li>
+                                    <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                        <?php foreach ($variants as $variant) : ?>
+                                            <?php
+                                                foreach ($products as $product) {
+                                                    
+                                                    if (($product['id'] === $variant['productid']) && ($product['favorite'] === '1')) {
+                                                        $productName = $product['name'];
+                                                        $productName = $product['name'];
+                                                        $productPhoto = $product['thumbnail'];
+                                            ?>
+                                            <div  id="CreateOrder">
+                                                <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrder<?=$variant['id']?>()">
+                                                    <div class="uk-card-header">
+                                                        <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
+                                                    </div>
+                                                    <div class="uk-card-body">
+                                                        <?php if (!empty($productPhoto)) { ?>
+                                                            <img class="uk-width-1-1" src="img/product/<?= $productPhoto ?>" />
+                                                        <?php } else { ?>
+                                                            <svg x="0px" y="0px" viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
+                                                                <g>
+                                                                    <defs>
+                                                                        <rect id="SVGID_1_" y="0" width="300" height="300"/>
+                                                                    </defs>
+                                                                    <clipPath id="SVGID_00000065759931020451687440000009539297437584060839_">
+                                                                        <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                                                                    </clipPath>
+                                                                    <g style="clip-path:url(#SVGID_00000065759931020451687440000009539297437584060839_);">
+                                                                        <path class="dummyproduct" d="M10.43,99.92c-10.73-27.36,4.25-69.85,30.19-85.78C51.01,7.77,77-5.17,108.81,30.24
+                                                                            c-2.16,0.65-4.26,1.55-6.29,2.7c-3.02,1.75-5.49,4.04-7.57,6.58C83.12,26.95,67.17,17.08,49.17,28.13
+                                                                            C34,37.46,23.24,60.45,23.28,79.62c-0.03,5.15,0.77,10.05,2.42,14.32l4.75,11.66c6.41,15.42,12.34,29.6,12.34,46.6
+                                                                            c-0.03,11.87-2.89,25.14-10.44,41.17c-1.05,2.23-1.96,5.97-1.96,9.8c0,2.31,0.29,4.66,1.16,6.73c1.13,2.73,3.09,4.44,5.9,5.59
+                                                                            c2.16,0.28,10.31,0.86,17.02-5.79c6.56-6.54,13.06-21.9,6.78-58.08C50.43,89.07,75.8,68.22,87.2,62.18
+                                                                            c15.23-8.09,33.99-5.98,45.6,5.15c3.3,3.14,3.38,8.34,0.23,11.6c-3.13,3.26-8.35,3.37-11.59,0.23c-5.55-5.31-16.45-7.86-26.56-2.5
+                                                                            c-8.25,4.37-26.43,20.18-17.46,72.17c6.01,34.86,2.08,59.32-11.64,72.76c-13.81,13.43-31.7,10.1-32.45,9.95l-0.67-0.13l-0.63-0.24
+                                                                            c-7.34-2.73-12.76-7.95-15.68-15.08c-4.14-10.12-2.41-22.24,1.16-29.72c15.27-32.43,8.34-49.15-2.2-74.47L10.43,99.92z"/>
+                                                                        <g>
+                                                                            <path class="dummyproduct" d="M289.03,204.6L222.63,89.6c0,0-8.25-9.16-7.65-8.69l-10.29-6.98l-72.37-38.31
+                                                                                c-7.64-4.21-17.21-3.87-25.53,0.91c-6.82,3.93-11.33,10.31-12.87,17.21c14.44-4.1,30.01-1.11,40.99,8.29
+                                                                                c7.23,0.26,14.23,3.89,18.08,10.64c6.07,10.47,2.46,23.86-7.98,29.88c-10.47,6.04-23.89,2.46-29.92-8.01
+                                                                                c-2.57-4.48-3.27-9.48-2.52-14.24c-8.67-4.82-20.11,2.86-20.51,5.7c-0.51,3.49-1.94,54.29-1.94,54.29s0.98,10.4,1.08,11.45
+                                                                                c0.21,0.64,3.82,11.58,3.82,11.58l66.4,114.96c4.06,7.05,10.6,12.07,18.43,14.18c7.8,2.1,15.98,1.03,22.98-3.03l75.14-43.35
+                                                                                C292.39,237.71,297.39,219.1,289.03,204.6z M210.47,157.72l-6.24,6.9c-3.34-3.82-7.36-5.93-11.95-6.25
+                                                                                c-2.17-0.16-4.25,0-6.22,0.36l-4.6-8.04C191.65,146.98,201.33,149.28,210.47,157.72z M166.64,189.62c-0.76-0.98-1.46-2-2.1-3.11
+                                                                                c-0.8-1.4-1.42-2.78-1.96-4.18c-2.24-7.52-0.14-16.05,5.35-23.07c0.61-0.7,1.29-1.38,1.99-1.97l4.57,7.98
+                                                                                c-0.08,0.13-0.17,0.27-0.25,0.38c-4.51,5.03-5.96,11.66-3.05,16.74c2.99,5.22,9.6,7.28,16.39,5.77l4.98,8.7
+                                                                                C182.41,199.07,172.43,196.42,166.64,189.62z M182.01,224.96l6.55-6.26c6.45,6.06,13.24,8.32,20.42,6.89l4.7,8.22
+                                                                                C202.67,237.11,192.12,234.18,182.01,224.96z M220.06,237.4l-50.01-87.43l5.74-3.28l50,87.43L220.06,237.4z M226.2,226.44
+                                                                                c-0.29,0.25-0.55,0.46-0.85,0.69l-4.53-7.92c0.51-0.43,0.96-0.9,1.4-1.35c2.16-1.94,3.64-4,4.5-6.25
+                                                                                c2.1-4.48,2.31-9.32,0.06-13.25c-3.65-6.39-12.44-8.43-21.03-5.49l-4.84-8.41c14.3-3.2,27.1-0.45,32.68,9.28
+                                                                                C239,203.19,235.61,215.91,226.2,226.44z"/>
+                                                                        </g>
                                                                     </g>
                                                                 </g>
-                                                            </g>
-                                                        </svg>
-                                                    <?php } ?>
-                                                </div>
-                                                <div class="uk-card-footer">
-                                                    <div class="tm-h3 uk-text-center">
-                                                        <div>Rp <?= $variant['hargamodal'] + $variant['hargajual'] ?>,-</div>
+                                                            </svg>
+                                                        <?php } ?>
+                                                    </div>
+                                                    <div class="uk-card-footer">
+                                                        <div class="tm-h3 uk-text-center">
+                                                            <div>Rp <?= $variant['hargamodal'] + $variant['hargajual'] ?>,-</div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php
+                                        <?php
+                                                    }
                                                 }
-                                            }
-                                    endforeach;
-                                    ?>
-                                </div>
-                            </li>
-                            <!-- End Favorite list -->
-
-                            <!-- Bundle List -->
-                            <li>
-                                <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
-                                    <?php foreach ($bundles as $bundle) : ?>
-                                        <?php 
-                                            $BunName = $bundle['name']; 
-                                            $BunPrice = $bundle['price'];
+                                        endforeach;
                                         ?>
-                                        <div id="CreateOrder">
-                                            <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrderBundle<?= $bundle['id'] ?>()">
-                                                <div class="uk-card-header">
-                                                    <div class="tm-h1 uk-text-bolder uk-text-center"><?= $BunName; ?></div>
-                                                </div>
-                                                <div class="uk-card-body">
-                                                    <div class="uk-height-medium uk-flex uk-flex-middle uk-flex-center">
-                                                        <div>
-                                                            <?php foreach ($bundets as $bundet) {
-                                                                if ($bundle['id'] === $bundet['bundleid']) {
-                                                                    foreach ($variants as $variant) {
-                                                                        if ($variant['id'] === $bundet['variantid']) {
-                                                                            foreach ($products as $product) {
-                                                                                if ($product['id'] === $variant['productid']) {
-                                                                                    $CombName = $product['name'].' - '.$variant['name'];
-                                                                                    echo '<div class="tm-h1 uk-text-center" id="combname">'.$CombName.'</div>';
+                                    </div>
+                                </li>
+                                <!-- End Favorite list -->
+
+                                <!-- Bundle List -->
+                                <li>
+                                    <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                        <?php foreach ($bundles as $bundle) : ?>
+                                            <?php 
+                                                $BunName = $bundle['name']; 
+                                                $BunPrice = $bundle['price'];
+                                            ?>
+                                            <div id="CreateOrder">
+                                                <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrderBundle<?= $bundle['id'] ?>()">
+                                                    <div class="uk-card-header">
+                                                        <div class="tm-h1 uk-text-bolder uk-text-center"><?= $BunName; ?></div>
+                                                    </div>
+                                                    <div class="uk-card-body">
+                                                        <div class="uk-height-medium uk-flex uk-flex-middle uk-flex-center">
+                                                            <div>
+                                                                <?php foreach ($bundets as $bundet) {
+                                                                    if ($bundle['id'] === $bundet['bundleid']) {
+                                                                        foreach ($variants as $variant) {
+                                                                            if ($variant['id'] === $bundet['variantid']) {
+                                                                                foreach ($products as $product) {
+                                                                                    if ($product['id'] === $variant['productid']) {
+                                                                                        $CombName = $product['name'].' - '.$variant['name'];
+                                                                                        echo '<div class="tm-h1 uk-text-center" id="combname">'.$CombName.'</div>';
+                                                                                    }
                                                                                 }
                                                                             }
                                                                         }
                                                                     }
-                                                                }
-                                                            } ?>
+                                                                } ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="uk-card-footer">
+                                                        <div class="tm-h3 uk-text-center">
+                                                            <div>Rp <?= $BunPrice; ?>,-</div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="uk-card-footer">
-                                                    <div class="tm-h3 uk-text-center">
-                                                        <div>Rp <?= $BunPrice; ?>,-</div>
-                                                    </div>
-                                                </div>
                                             </div>
-                                        </div>
 
-                                        <?php foreach ($stocks as $stock) :?>
-                                            <script type="text/javascript">
-                                                var count = 1;
-                                                function createNewOrderBundle<?= $bundle['id'] ?>() {
-                                                    let stock = <?=$stock['qty']?>;
+                                            <?php foreach ($stocks as $stock) :?>
+                                                <script type="text/javascript">
+                                                    var count = 1;
+                                                    function createNewOrderBundle<?= $bundle['id'] ?>() {
+                                                        let stock = <?=$stock['qty']?>;
 
-                                                    const products = document.getElementById('products');
-                                                    
-                                                    const bundlegrid = document.createElement('div');
-                                                    bundlegrid.setAttribute('id', 'bundle<?= $bundle['id'] ?>');
-                                                    bundlegrid.setAttribute('class', 'uk-margin-small  uk-child-width-auto');
-                                                    bundlegrid.setAttribute('uk-grid', '');
+                                                        const products = document.getElementById('products');
+                                                        
+                                                        const bundlegrid = document.createElement('div');
+                                                        bundlegrid.setAttribute('id', 'bundle<?= $bundle['id'] ?>');
+                                                        bundlegrid.setAttribute('class', 'uk-margin-small  uk-child-width-auto');
+                                                        bundlegrid.setAttribute('uk-grid', '');
 
-                                                    const addbundlecontainer = document.createElement('div');
-                                                    addbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
-                                                    
-                                                    const bunldeqtyinputadd = document.createElement('div');
-                                                    bunldeqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
-                                                    bunldeqtyinputadd.innerHTML = '+';
+                                                        const addbundlecontainer = document.createElement('div');
+                                                        addbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                        
+                                                        const bunldeqtyinputadd = document.createElement('div');
+                                                        bunldeqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
+                                                        bunldeqtyinputadd.innerHTML = '+';
 
-                                                    const delbundlecontainer = document.createElement('div');
-                                                    delbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
-                                                    
-                                                    const bundleqtyinputdel = document.createElement('div');
-                                                    bundleqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
-                                                    bundleqtyinputdel.innerHTML = '-';
+                                                        const delbundlecontainer = document.createElement('div');
+                                                        delbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                        
+                                                        const bundleqtyinputdel = document.createElement('div');
+                                                        bundleqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
+                                                        bundleqtyinputdel.innerHTML = '-';
 
-                                                    const bundleqtycontainer = document.createElement('div');
-                                                    bundleqtycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle');
+                                                        const bundleqtycontainer = document.createElement('div');
+                                                        bundleqtycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle');
 
-                                                    const bundleqty = document.createElement('div');                                               
+                                                        const bundleqty = document.createElement('div');                                               
 
-                                                    const bundleinputqty = document.createElement('input');
-                                                    bundleinputqty.setAttribute('type', 'number');
-                                                    bundleinputqty.setAttribute('id', "bqty[<?= $bundle['id'] ?>]");
-                                                    bundleinputqty.setAttribute('name', "bqty[<?= $bundle['id'] ?>]");
-                                                    bundleinputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
-                                                    bundleinputqty.setAttribute('min', '1');
-                                                    bundleinputqty.setAttribute('max', stock);
-                                                    bundleinputqty.setAttribute('value', count);
-                                                    bundleinputqty.setAttribute('onchange', 'showbprice()');
-                                                    let total = '<?= $BunPrice ?>';
-                                                    const handleIncrements = () => {
-                                                        count++;
-                                                        if (bundleinputqty.value == stock) {
-                                                            bundleinputqty.value = stock;
-                                                            alert('Stock tidak mencukupi');
-                                                        } else {
-                                                            bundleinputqty.value = count;
-                                                            var bprice = count * <?= $BunPrice ?>;
+                                                        const bundleinputqty = document.createElement('input');
+                                                        bundleinputqty.setAttribute('type', 'number');
+                                                        bundleinputqty.setAttribute('id', "bqty[<?= $bundle['id'] ?>]");
+                                                        bundleinputqty.setAttribute('name', "bqty[<?= $bundle['id'] ?>]");
+                                                        bundleinputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
+                                                        bundleinputqty.setAttribute('min', '1');
+                                                        bundleinputqty.setAttribute('max', stock);
+                                                        bundleinputqty.setAttribute('value', count);
+                                                        bundleinputqty.setAttribute('onchange', 'showbprice()');
+                                                        let total = '<?= $BunPrice ?>';
+                                                        const handleIncrements = () => {
+                                                            count++;
+                                                            if (bundleinputqty.value == stock) {
+                                                                bundleinputqty.value = stock;
+                                                                alert('<?=lang('Global.alertstock')?>');
+                                                            } else {
+                                                                bundleinputqty.value = count;
+                                                                var bprice = count * <?= $BunPrice ?>;
+                                                                bundleprice.innerHTML = bprice;
+                                                            }
+                                                        };
+                                                        
+                                                        const handleDecrements = () => {
+                                                            count--;
+                                                            if (bundleinputqty.value == '1') {
+                                                                bundlegrid.remove();
+                                                            } else {
+                                                                bundleinputqty.value = count;
+                                                                var bprice = count * <?= $BunPrice ?>;
+                                                                bundleprice.innerHTML = bprice;
+                                                            }
+                                                        };
+
+                                                        bunldeqtyinputadd.addEventListener("click", handleIncrements);
+                                                        bundleqtyinputdel.addEventListener("click", handleDecrements);
+
+                                                        const bundlenamecontainer = document.createElement('div');
+                                                        bundlenamecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+
+                                                        const bundlename = document.createElement('div');
+                                                        bundlename.setAttribute('class', 'tm-h2');
+                                                        bundlename.innerHTML = '<?= $BunName ?>';
+
+                                                        const bpricecontainer = document.createElement('div');
+                                                        bpricecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                        
+                                                        const bundleprice = document.createElement('div');
+                                                        bundleprice.setAttribute('class', 'tm-h2');
+                                                        bundleprice.setAttribute('name', 'bprice');
+                                                        bundleprice.innerHTML = <?= $BunPrice ?>;
+
+                                                        function showbprice() {
+                                                            var bqty = bundleinputqty.value;
+                                                            var bprice = bundleqty * <?= $BunPrice ?>;
                                                             bundleprice.innerHTML = bprice;
                                                         }
-                                                    };
-                                                    
-                                                    const handleDecrements = () => {
-                                                        count--;
-                                                        if (bundleinputqty.value == '1') {
-                                                            bundlegrid.remove();
-                                                        } else {
-                                                            bundleinputqty.value = count;
-                                                            var bprice = count * <?= $BunPrice ?>;
-                                                            bundleprice.innerHTML = bprice;
-                                                        }
-                                                    };
 
-                                                    bunldeqtyinputadd.addEventListener("click", handleIncrements);
-                                                    bundleqtyinputdel.addEventListener("click", handleDecrements);
+                                                        bundleinputqty.onchange = function() {showbprice()};
 
-                                                    const bundlenamecontainer = document.createElement('div');
-                                                    bundlenamecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
-
-                                                    const bundlename = document.createElement('div');
-                                                    bundlename.setAttribute('class', 'tm-h2');
-                                                    bundlename.innerHTML = '<?= $BunName ?>';
-
-                                                    const bpricecontainer = document.createElement('div');
-                                                    bpricecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
-                                                    
-                                                    const bundleprice = document.createElement('div');
-                                                    bundleprice.setAttribute('class', 'tm-h2');
-                                                    bundleprice.setAttribute('name', 'bprice');
-                                                    bundleprice.innerHTML = <?= $BunPrice ?>;
-
-                                                    function showbprice() {
-                                                        var bqty = bundleinputqty.value;
-                                                        var bprice = bundleqty * <?= $BunPrice ?>;
-                                                        bundleprice.innerHTML = bprice;
+                                                        addbundlecontainer.appendChild(bunldeqtyinputadd);
+                                                        bundleqty.appendChild(bundleinputqty);
+                                                        bundleqtycontainer.appendChild(bundleqty);
+                                                        delbundlecontainer.appendChild(bundleqtyinputdel);
+                                                        bundlegrid.appendChild(addbundlecontainer);
+                                                        bundlegrid.appendChild(bundleqtycontainer);
+                                                        bundlegrid.appendChild(delbundlecontainer);
+                                                        bundlenamecontainer.appendChild(bundlename);
+                                                        bundlegrid.appendChild(bundlenamecontainer);
+                                                        bpricecontainer.appendChild(bundleprice);
+                                                        bundlegrid.appendChild(bpricecontainer);
+                                                        products.appendChild(bundlegrid);
                                                     }
-
-                                                    bundleinputqty.onchange = function() {showbprice()};
-
-                                                    addbundlecontainer.appendChild(bunldeqtyinputadd);
-                                                    bundleqty.appendChild(bundleinputqty);
-                                                    bundleqtycontainer.appendChild(bundleqty);
-                                                    delbundlecontainer.appendChild(bundleqtyinputdel);
-                                                    bundlegrid.appendChild(addbundlecontainer);
-                                                    bundlegrid.appendChild(bundleqtycontainer);
-                                                    bundlegrid.appendChild(delbundlecontainer);
-                                                    bundlenamecontainer.appendChild(bundlename);
-                                                    bundlegrid.appendChild(bundlenamecontainer);
-                                                    bpricecontainer.appendChild(bundleprice);
-                                                    bundlegrid.appendChild(bpricecontainer);
-                                                    products.appendChild(bundlegrid);
-                                                }
-                                            </script>
-                                        <?php endforeach; ?>
-                                    <?php endforeach; ?> 
-                                </div>            
-                            </li>
-                            <!-- End Bundle List -->
-                        </ul>
+                                                </script>
+                                            <?php endforeach; ?>
+                                        <?php endforeach; ?> 
+                                    </div>            
+                                </li>
+                                <!-- End Bundle List -->
+                            </ul>
                         <?php } ?>
                     </div>
                 </div>

@@ -73,6 +73,8 @@ return [
     'amountpaid'        => 'Amount Paid',
     'yourpoint'         => 'Available point is',
     'total'             => 'Total',
+    'chooseoutlet'      => 'Choose an Outlet first',
+    'alertstock'        => 'Insufficient stock',
 
     // Button
     'edit'              => 'Edit',
