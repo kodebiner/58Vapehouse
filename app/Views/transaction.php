@@ -54,11 +54,7 @@
                     <!-- Navbar Center -->
                     <div class="uk-navbar-center">
                         <a class="uk-navbar-item uk-logo" href="<?=base_url();?>" aria-label="<?=lang('Global.backHome')?>">
-                            <?php
-
-                                                                                                use App\Controllers\Stock;
-
- if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
+                            <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
                                 <img src="/img/<?=$gconfig['logo'];?>" alt="<?=$gconfig['bizname'];?>" style="height: 70px;">
                             <?php } else { ?>
                                 <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 70px;">
@@ -279,16 +275,24 @@
                 <div class="uk-container uk-container-expand uk-padding-remove-horizontal">
                     <div class="uk-panel uk-panel-scrollable" style="background-color: #363636;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
                         <?php if ($outletPick === null) { ?>
-                            <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.chooseoutlet')?></div>
+                            <div class="uk-margin uk-flex uk-flex-center">
+                                <div class="uk-width-1-6 uk-card uk-card-default uk-card-small uk-card-body">
+                                    <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.chooseoutlet')?></div>
+                                </div>
+                            </div>
                         <?php } else { ?>
-                            <div class="tm-h1 uk-text-center tm-text-large">
-                                <?php
-                                    foreach ($baseoutlets as $baseoutlet) {
-                                        if ($baseoutlet['id'] === $outletPick) {
-                                            echo $baseoutlet['name'];
-                                        }
-                                    }
-                                ?>
+                            <div class="uk-margin uk-flex uk-flex-center">
+                                <div class="uk-width-1-5 uk-card uk-card-default uk-card-small uk-card-body">
+                                    <div class="tm-h1 uk-text-center tm-text-large">
+                                        <?php
+                                            foreach ($baseoutlets as $baseoutlet) {
+                                                if ($baseoutlet['id'] === $outletPick) {
+                                                    echo $baseoutlet['name'];
+                                                }
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
                             </div>
                             <ul class="uk-switcher switcher-class">
                                 <li>
@@ -550,6 +554,7 @@
                                         <?php endforeach; ?>
                                     </div>
                                 </li>
+                                
                                 <!-- Favorite List -->
                                 <li>
                                     <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
