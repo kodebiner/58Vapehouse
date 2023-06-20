@@ -221,7 +221,7 @@
                                         <input type="radio" id="radio-two" name="disctype" value="1" />
                                         <label for="radio-two"><?=lang('Global.percent')?></label>
                                     </div>
-                                    <p id="result"></p>
+                                    
                                 </div>
                             </div>
 
@@ -236,6 +236,44 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <!-- payment -->
+                            <div class="uk-margin-bottom">
+                                <h4 class="uk-margin-remove"><?=lang('Global.paymethod')?></h4>
+                                <div class="uk-margin-small">
+                                    <div class="uk-width-1-1">
+                                        <input class="uk-input" id="cashid" name="cashid" />
+                                    </div>
+                                </div>
+
+                                <script type="text/javascript">
+                                    $(function() {
+                                        var customerList = [
+                                            <?php
+                                                foreach ($customers as $customer) {
+                                                    echo '{label:"'.$customer['name'].'",idx:'.$customer['id'].'},';
+                                                }
+                                            ?>
+                                        ];
+                                        $("#customerid").autocomplete({
+                                            source: customerList,
+                                            select: function(e, i) {
+                                                $("#customerid").val(i.item.idx);
+                                                var customers = <?php echo json_encode($customers); ?>;
+                                                for (var x = 0; x < customers.length; x++) {
+                                                    if (customers[x]['id'] == i.item.idx) {
+                                                        document.getElementById('custpoin').removeAttribute('hidden');
+                                                        document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> ' + customers[x]['poin'];
+                                                        document.getElementById('poin').setAttribute('max', customers[x]['poin']);
+                                                    }
+                                                }
+                                            },
+                                            minLength: 2
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            <!-- end payment -->
                             
                             <div id="custpoin" class="uk-margin" hidden>
                                 <h4 class="uk-margin-remove"><?=lang('Global.point')?></h4>
@@ -245,12 +283,36 @@
                                 </div>
                             </div>
 
+                            <div class="uk-margin" id="split" hidden>
+                                <h4 class="uk-margin-remove uk-text-bold uk-text-small"><?=lang('Global.splitbill')?></h4>
+                                <div class="uk-form-controls uk-margin-small">
+                                    <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.firstpay')?>" required />
+                                    <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                                        <label><input class="uk-radio" type="radio" name="radio2" checked>Cash</label>
+                                        <label><input class="uk-radio" type="radio" name="radio2"> BRI</label>
+                                        <label><input class="uk-radio" type="radio" name="radio2"> Gopay</label>
+                                        <label><input class="uk-radio" type="radio" name="radio2"> QRIS</label>
+                                    </div>
+                                </div>
+                                <div class="uk-form-controls uk-margin-small">
+                                    <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.secpay')?>" required />
+                                    <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                                        <label><input class="uk-radio" type="radio" name="radio2" checked>Cash</label>
+                                        <label><input class="uk-radio" type="radio" name="radio2"> BRI</label>
+                                        <label><input class="uk-radio" type="radio" name="radio2"> Gopay</label>
+                                        <label><input class="uk-radio" type="radio" name="radio2"> QRIS</label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="uk-margin">
                                 <h4 class="uk-margin-remove"><?=lang('Global.amountpaid')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
                                     <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.amountpaid')?>" required />
                                 </div>
-                            </div>                           
+                            </div>
+
+
                         </div>
                         <div class="uk-modal-footer" style="border-top: 0;">
                             <div class="uk-margin">
@@ -270,6 +332,57 @@
             </div>
         </div>
         <!-- Modal Detail Transaction End -->
+
+        <!-- This is the modal split -->
+        <div id="modal-example" uk-modal>
+            <div class="uk-modal-dialog uk-modal-body">
+            <div class="uk-modal-header">
+                <h2 class="uk-modal-title">Split Bill</h2>
+            </div>
+                <form class="uk-form-stacked" name="order" role="form" action="/transaction/create" method="post">
+                    <?= csrf_field() ?>
+                    <div class="uk-modal-body">
+                        <div class="uk-margin-bottom">
+                            <h4 class="uk-margin-remove" id="splittotal"><?=lang('Global.total')?> Rp</h4>
+                        </div>
+                        <div class="uk-margin-bottom">
+                            <h4 class="uk-margin-remove"><?=lang('Global.firstpay')?></h4>
+                            <div class="uk-margin-small">
+                                <div class="uk-width-1-1">
+                                    <input class="uk-input" id="customerid" name="customerid" />
+                                </div>
+                                <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                                    <label><input class="uk-radio" type="radio" name="radio2" checked>Cash</label>
+                                    <label><input class="uk-radio" type="radio" name="radio2"> BRI</label>
+                                    <label><input class="uk-radio" type="radio" name="radio2"> Gopay</label>
+                                    <label><input class="uk-radio" type="radio" name="radio2"> QRIS</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="uk-margin-bottom">
+                            <h4 class="uk-margin-remove"><?=lang('Global.secpay')?></h4>
+                            <div class="uk-margin-small">
+                                <div class="uk-width-1-1">
+                                    <input class="uk-input" id="customerid" name="customerid" />
+                                </div>
+                                <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                                    <label><input class="uk-radio" type="radio" name="radio2" checked>Cash</label>
+                                    <label><input class="uk-radio" type="radio" name="radio2"> BRI</label>
+                                    <label><input class="uk-radio" type="radio" name="radio2"> Gopay</label>
+                                    <label><input class="uk-radio" type="radio" name="radio2"> QRIS</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="products"></div>
+                        <div class="uk-modal-footer uk-text-right">
+                            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                            <a href="#tambahdata" class="uk-button uk-button-primary" uk-toggle>Save</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- end modal split -->
 
         <!-- Main Section -->
         <main role="main">
@@ -778,105 +891,57 @@
                     document.getElementById('subtotal').innerHTML = 0;
                 } else {
                     var subtotal = subarr.reduce(function(a, b){ return a + b; });
-
                     document.getElementById('subtotal').innerHTML = subtotal;
-                    x = subtotal;
+                    document.getElementById('finalprice').innerHTML = subtotal;
+                    document.getElementById("splittotal").innerHTML = 'Total Rp.'+subtotal+',-';
                 }
-                console.log(x);
+
             });
             
-            
-            // document.querySelector('#discvalue');
-            // document.getElementById("radio-one").addEventListener('click', function (e){
-            //     let target = e.target;
-            //     let massage;
+            document.getElementById('poin').addEventListener("change", point);
 
-            //     switch (target.id){
-            //         case'radio-one': massage = 'rupiah';
-            //             break;
-            //         case'radio-two': massage = 'persen';
-            //             break;
-            //     }
+            function point () {
+                var poin = document.getElementById('poin').value;
+                var priceori = document.getElementById('finalprice').value;
+                var lastpoin = priceori - poin;
+                document.getElementById('finalprice').innerHTML = lastpoin;
 
-            //     result.textContent = massage;
-
-            // });
-
-            document.getElementById('radio-two').addEventListener("click", myFunction);
-
-            function myFunction() {
-                var total = document.getElementById('subtotal').innerHTML;
-                var disc = document.getElementById('discvalue').value;
-                var discprice = (total * disc )/ 100;
-                var endprice = total - discprice;
-                console.log(endprice);
-
-            document.getElementById("finalprice").innerHTML = 'Rp'+endprice+'.';
             }
 
+            
             document.getElementById('radio-one').addEventListener("click", rpFunction);
 
             function rpFunction() {
                 var total = document.getElementById('subtotal').innerHTML;
                 var disc = document.getElementById('discvalue').value;
                 var endprice = total - disc;
-                console.log(endprice);
-
-            document.getElementById("finalprice").innerHTML = 'Rp.'+endprice;
+                var	reverse = endprice.toString().split('').reverse().join(''),
+                result 	= reverse.match(/\d{1,3}/g);
+                result	= result.join('.').split('').reverse().join('');
+                document.getElementById("finalprice").innerHTML = 'Rp.'+result+',-';
+                document.getElementById("splittotal").innerHTML = 'Total Rp.'+result+',-';
+                document.getElementById("finalprice").value = endprice;
+                console.log(document.getElementById("finalprice").value);
             }
 
+            document.getElementById('radio-two').addEventListener("click", myFunction);
 
-            document.getElementById('subtotal').addEventListener("change", iFunction);
-
-            function iFunction() {
-            document.getElementById("finalprice").innerHTML = "Hello World";
-            }
-
-            // var final = document.getElementById("finalprice");
-            
-            // final.onchange = function() {myFunction()};
-
-            // function myFunction() {
-            //     var y = document.getElementById("subtotal").innerText;
-            //     var x = document.getElementById("finalprice");
-            //     document.getElementById("finalprice").innerHTML = finalprice;
-            // }
-            let select =  document.getElementById("subtotal").innerText;
-            let result =  document.getElementById("finalprice").innerText;
-            // console.log(result);
-            document.getElementById("subtotal").addEventListener('change', function () {
-                for (i = 0; i < select.length; i++){
-                    hasil = Number(select[i].innerText);
-                    console.log(hasil);
+            function myFunction() {
+                var total = document.getElementById('subtotal').innerHTML;
+                var disc = document.getElementById('discvalue').value;
+                if (disc <= 100) {
+                    var discprice = (total * disc )/ 100;
+                    var endprice = total - discprice;
+                    var	reverse = endprice.toString().split('').reverse().join(''),
+                    result 	= reverse.match(/\d{1,3}/g);
+                    result	= result.join('.').split('').reverse().join('');
+                    document.getElementById("finalprice").innerHTML = 'Rp.'+result+',-';
+                    document.getElementById("splittotal").innerHTML = 'Total Rp.'+result+',-';
+                } else {
+                    rpFunction();
                 }
-                result.innerHTML = select;
-            });
 
-
-            // document.getElementById('finalprice').addEventListener('change', function () {
-            //     var subtotal = document.getElementById('finalprice');
-                
-            //     subtotal.innerHTML= finalprice;
-            //     console.log(finalprice);
-            //     // var harga = [];
-                
-            //     // for (i = 0; i < subtotal.length; i++){
-            //     //     hargai = Number(subtotal[i].innerText);
-            //     //     harga.push(hargai);
-            //     // }
-            // });
-            
-            
-            // var subtotals = document.getElementById('subtotal').innerText;
-            // var subtotal = document.getElementById('finalprice');
-            
-            // subtotals.addEventListener('change', function () {
-            //     console.log(subtotal.textContent = this.value);
-            
-            // });
-         
-            // var total = subtotal.innerText;
-            // console.log(total);
+            }
         </script>
     </body>
 </html>

@@ -75,6 +75,9 @@ return [
     'total'             => 'Total',
     'chooseoutlet'      => 'Choose an Outlet first',
     'alertstock'        => 'Insufficient stock',
+    'splitbill'         => 'Splitbill?',
+    'firstpay'          => 'First payment',
+    'secpay'            => 'Second payment',
 
     // Button
     'edit'              => 'Edit',
