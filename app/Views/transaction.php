@@ -221,6 +221,7 @@
                                         <input type="radio" id="radio-two" name="disctype" value="1" />
                                         <label for="radio-two"><?=lang('Global.percent')?></label>
                                     </div>
+                                    <p id="result"></p>
                                 </div>
                             </div>
 
@@ -257,7 +258,7 @@
                                     <div class="uk-flex-top tm-h3"><?=lang('Global.total')?></div>
                                 </div>
                                 <div class="uk-width-1-1 uk-text-center">
-                                    <div class="tm-h2 uk-text-bold">Rp</div>
+                                    <div class="tm-h2 uk-text-bold" id="finalprice">Rp</div>
                                 </div>
                             </div>
                             <div class="uk-margin uk-flex uk-flex-center">
@@ -735,37 +736,6 @@
         </main>
         <!-- Main Section end -->
 
-        <!-- This Javascript Function -->
-        <script type="text/javascript">
-            $(document).ready(function() {
-
-            // $("#cardbtn").click(function() {                
-            //     $.ajax({    //create an ajax request to display.php
-            //         type: "GET",
-            //         url: "transaction",
-            //         async: false,             
-            //         dataType: "html",   //expect html to be returned             
-            //         success: function(response){                    
-            //             // $("#responsecontainer").html(response); 
-            //             alert(response);
-            //         }
-            //         });
-            //     });
-            
-
-
-            let btns = document.querySelectorAll("#cardbtnfav");
-            for (let i = 0; i< btns.length; i++){
-                btns[i].onclick = function(e){
-                    alert('click');
-                }
-            }
-
-            });
-
-        </script>
-        <!-- This End Of Javascript Function -->
-
         <!-- Footer Section -->
         <footer class="tm-footer" style="background-color:#000;">
             <ul class="uk-flex-around tm-trx-tab" uk-tab uk-switcher="connect: .switcher-class; active: 1;">
@@ -791,6 +761,10 @@
         </footer>
         <!-- Footer Section end -->
         <script>
+
+
+           
+
             $('#products').on('DOMSubtreeModified', function() {
                 var prices = document.querySelectorAll("div[name='price[]']");
                 var subarr = [];
@@ -806,8 +780,103 @@
                     var subtotal = subarr.reduce(function(a, b){ return a + b; });
 
                     document.getElementById('subtotal').innerHTML = subtotal;
+                    x = subtotal;
                 }
+                console.log(x);
             });
+            
+            
+            // document.querySelector('#discvalue');
+            // document.getElementById("radio-one").addEventListener('click', function (e){
+            //     let target = e.target;
+            //     let massage;
+
+            //     switch (target.id){
+            //         case'radio-one': massage = 'rupiah';
+            //             break;
+            //         case'radio-two': massage = 'persen';
+            //             break;
+            //     }
+
+            //     result.textContent = massage;
+
+            // });
+
+            document.getElementById('radio-two').addEventListener("click", myFunction);
+
+            function myFunction() {
+                var total = document.getElementById('subtotal').innerHTML;
+                var disc = document.getElementById('discvalue').value;
+                var discprice = (total * disc )/ 100;
+                var endprice = total - discprice;
+                console.log(endprice);
+
+            document.getElementById("finalprice").innerHTML = 'Rp'+endprice+'.';
+            }
+
+            document.getElementById('radio-one').addEventListener("click", rpFunction);
+
+            function rpFunction() {
+                var total = document.getElementById('subtotal').innerHTML;
+                var disc = document.getElementById('discvalue').value;
+                var endprice = total - disc;
+                console.log(endprice);
+
+            document.getElementById("finalprice").innerHTML = 'Rp.'+endprice;
+            }
+
+
+            document.getElementById('subtotal').addEventListener("change", iFunction);
+
+            function iFunction() {
+            document.getElementById("finalprice").innerHTML = "Hello World";
+            }
+
+            // var final = document.getElementById("finalprice");
+            
+            // final.onchange = function() {myFunction()};
+
+            // function myFunction() {
+            //     var y = document.getElementById("subtotal").innerText;
+            //     var x = document.getElementById("finalprice");
+            //     document.getElementById("finalprice").innerHTML = finalprice;
+            // }
+            let select =  document.getElementById("subtotal").innerText;
+            let result =  document.getElementById("finalprice").innerText;
+            // console.log(result);
+            document.getElementById("subtotal").addEventListener('change', function () {
+                for (i = 0; i < select.length; i++){
+                    hasil = Number(select[i].innerText);
+                    console.log(hasil);
+                }
+                result.innerHTML = select;
+            });
+
+
+            // document.getElementById('finalprice').addEventListener('change', function () {
+            //     var subtotal = document.getElementById('finalprice');
+                
+            //     subtotal.innerHTML= finalprice;
+            //     console.log(finalprice);
+            //     // var harga = [];
+                
+            //     // for (i = 0; i < subtotal.length; i++){
+            //     //     hargai = Number(subtotal[i].innerText);
+            //     //     harga.push(hargai);
+            //     // }
+            // });
+            
+            
+            // var subtotals = document.getElementById('subtotal').innerText;
+            // var subtotal = document.getElementById('finalprice');
+            
+            // subtotals.addEventListener('change', function () {
+            //     console.log(subtotal.textContent = this.value);
+            
+            // });
+         
+            // var total = subtotal.innerText;
+            // console.log(total);
         </script>
     </body>
 </html>
