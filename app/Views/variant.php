@@ -28,7 +28,7 @@
 <!-- Modal Add -->
 <div uk-modal class="uk-flex-top" id="tambahdata">
   <div class="uk-modal-dialog uk-margin-auto-vertical">
-    <div class="uk-modal-content">
+    <div class="uk-modal-container">
       <div class="uk-modal-header">
         <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addVariant')?></h5>
       </div>
@@ -132,7 +132,7 @@
 <?php foreach ($variants as $variant) : ?>
   <div uk-modal class="uk-flex-top" id="editdata<?= $variant['id']; ?>">
     <div class="uk-modal-dialog uk-margin-auto-vertical">
-      <div class="uk-modal-content">
+      <div class="uk-modal-container">
         <div class="uk-modal-header">
           <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
         </div>
