@@ -253,7 +253,7 @@
                                 <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('payment') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
                             </li>
                             <li class="tm-main-navbar uk-parent">
                                 <a class="uk-h4 tm-h4" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
@@ -318,7 +318,7 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('payment') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
                     </li>
                     <li class="tm-main-navbar uk-parent">
                         <a class="uk-h4 tm-h4" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>

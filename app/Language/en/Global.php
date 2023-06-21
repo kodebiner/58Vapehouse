@@ -78,6 +78,8 @@ return [
     'splitbill'         => 'Splitbill?',
     'firstpay'          => 'First payment',
     'secpay'            => 'Second payment',
+    'payment'           => 'Payment List',
+    'cash'              => 'Cash',
 
     // Button
     'edit'              => 'Edit',
@@ -98,6 +100,7 @@ return [
     'addBundle'         => 'Add Bundle',
     'checkin'           => 'Check In',
     'checkout'          => 'Check Out',
+    'addPay'            => 'Add Payment',
     'pay'               => 'Pay',
     'percent'           => '%',
     'rp'                => 'Rp',

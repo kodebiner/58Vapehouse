@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class PaymentModel extends Model
 {
     protected $allowedFields = [
-        'cashid','name',
+        'cashid','name','outletid',
 
     ];
 

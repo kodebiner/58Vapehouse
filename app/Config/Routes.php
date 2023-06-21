@@ -196,6 +196,12 @@ $routes->group('cashmove', ['filter'=>'login'], function($routes){
     $routes->post('create', 'CashMove::create', ['filter' => 'role:owner,supervisor,operator']);
 });
 
+//Payment
+$routes->group('payment', ['filter'=>'login'], function($routes){
+    $routes->get('', 'Payment::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Payment::create', ['filter' => 'role:owner,supervisor,operator']);
+});
+
 //Bundle
 $routes->group('bundle', ['filter'=>'login'], function($routes){
     // bundle
