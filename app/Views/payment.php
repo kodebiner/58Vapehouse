@@ -130,12 +130,10 @@
                     </td>
                     <td class="uk-text-center">
                         <?php 
-                         foreach ($payments as $payment){
-                            foreach ($cash as $cas){
-                                if ($cas['id']===$payment['cashid']){
+                        foreach ($cash as $cas){
+                                if ($cas['id'] == $payment['cashid']){
                                     echo $cas['name'];
                                 }
-                            }
                          }
                         ?>    
                     </td>

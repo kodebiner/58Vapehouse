@@ -75,7 +75,7 @@ return [
     'total'             => 'Total',
     'chooseoutlet'      => 'Choose an Outlet first',
     'alertstock'        => 'Insufficient stock',
-    'splitbill'         => 'Splitbill?',
+    'splitbill'         => 'Splitbill',
     'firstpay'          => 'First payment',
     'secpay'            => 'Second payment',
     'payment'           => 'Payment List',

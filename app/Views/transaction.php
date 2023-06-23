@@ -236,44 +236,6 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <!-- payment -->
-                            <div class="uk-margin-bottom">
-                                <h4 class="uk-margin-remove"><?=lang('Global.paymethod')?></h4>
-                                <div class="uk-margin-small">
-                                    <div class="uk-width-1-1">
-                                        <input class="uk-input" id="cashid" name="cashid" />
-                                    </div>
-                                </div>
-
-                                <script type="text/javascript">
-                                    $(function() {
-                                        var customerList = [
-                                            <?php
-                                                foreach ($customers as $customer) {
-                                                    echo '{label:"'.$customer['name'].'",idx:'.$customer['id'].'},';
-                                                }
-                                            ?>
-                                        ];
-                                        $("#customerid").autocomplete({
-                                            source: customerList,
-                                            select: function(e, i) {
-                                                $("#customerid").val(i.item.idx);
-                                                var customers = <?php echo json_encode($customers); ?>;
-                                                for (var x = 0; x < customers.length; x++) {
-                                                    if (customers[x]['id'] == i.item.idx) {
-                                                        document.getElementById('custpoin').removeAttribute('hidden');
-                                                        document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> ' + customers[x]['poin'];
-                                                        document.getElementById('poin').setAttribute('max', customers[x]['poin']);
-                                                    }
-                                                }
-                                            },
-                                            minLength: 2
-                                        });
-                                    });
-                                </script>
-                            </div>
-                            <!-- end payment -->
                             
                             <div id="custpoin" class="uk-margin" hidden>
                                 <h4 class="uk-margin-remove"><?=lang('Global.point')?></h4>
@@ -305,13 +267,14 @@
                                 </div>
                             </div>
 
-                            <div class="uk-margin">
+                            <div class="uk-margin" id="amount">
                                 <h4 class="uk-margin-remove"><?=lang('Global.amountpaid')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
                                     <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.amountpaid')?>" required />
                                 </div>
                             </div>
 
+                            <h4 class="uk-margin-remove uk-text-bold uk-text-small" id="splitbill"> Want To Split Bill ?</h4>
 
                         </div>
                         <div class="uk-modal-footer" style="border-top: 0;">
@@ -927,6 +890,13 @@
                 }
 
             });
+
+            document.getElementById('splitbill').addEventListener("click",bill);
+            function bill(){
+                document.getElementById('split').removeAttribute('hidden');
+                document.getElementById('amount').setAttribute('hidden','hidden');
+                document.getElementById('splitbill').setAttribute('hidden','hidden');
+            }
             
             document.getElementById('poin').addEventListener("change", point);
             function point () {

@@ -46,7 +46,6 @@ class Payment extends BaseController
 
         // Populating data
         $outlets        = $OutletModel->findAll();
-        
         // initialize
         $input          = $this->request->getPost();
 
@@ -58,28 +57,24 @@ class Payment extends BaseController
 
         ];
         // validation
+
         if (! $this->validate([
-            'name'              =>  "required|max_length[255]',",
-            'cashid'            =>  "required"
-        ])) {
-                
-           return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+            'outletid' => "required",
+            'name'  => 'required',       
+            ]))
+        {
+            foreach ($outlets as $outlets){
+                    $data = [
+                        'outletid' => $outlets['id'],
+                        'name'     => $input['name'],
+                        'cashid'   => $input['cashid'],
+                    ];
+                }
+            
         }
 
-        if ($data['outletid'] === null ){
-            $outlets      = $OutletModel->find(['id']);
-            // foreach ($outlets as $out){
-            //     $o = [
-            //         'outletid' => $this->request->getVar('id'),
-            //     ];
-            // }
-        } 
-        dd($outlets);
-        
         $PaymentModel->insert($data);
  
-            
-
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
