@@ -436,9 +436,21 @@
                                                 <div class="uk-modal-dialog uk-margin-auto-vertical">
                                                     <div class="uk-modal-container">
                                                         <div class="uk-modal-header">
-                                                            <h2 class="uk-modal-title"><?= $productName ?></h2>
+                                                            <div class="uk-modal-title tm-h2"><?= $productName ?></div>
                                                         </div>
                                                         <div class="uk-modal-body">
+                                                            <div class="uk-child-width-1-3 uk-text-center" uk-grid>
+                                                                <div>
+                                                                    <div class="uk-h4"><?=lang('Global.variant')?></div>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="uk-h4"><?=lang('Global.price')?></div>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="uk-h4"><?=lang('Global.stock')?></div>
+                                                                </div>
+                                                            </div>
+
                                                             <div class="uk-child-width-1-1" uk-grid>
                                                                 <div id="CreateOrder">
                                                                     <?php foreach ($variants as $variant) {
@@ -450,16 +462,20 @@
                                                                             <div class="uk-card uk-card-hover uk-card-default uk-card-body uk-margin" onclick="createNewOrder<?= $variant['id'] ?>()">
                                                                                 <div class="uk-child-width-1-3" uk-grid>
                                                                                     <div>
-                                                                                        <div class="tm-h3"><?= $VarName; ?></div>
+                                                                                        <div class="uk-h4 uk-text-center"><?= $VarName; ?></div>
                                                                                     </div>
                                                                                     <div>
-                                                                                        <div class="tm-h3"><?= $Price; ?></div>
+                                                                                        <div class="uk-h4 uk-text-center"><?= $Price; ?></div>
                                                                                     </div>
+                                                                                    <div>
+                                                                                        <?php foreach ($stocks as $stock) {
+                                                                                            if (($stock['variantid'] === $variant['id']) && ($stock['outletid'] === $outletPick)) {
+                                                                                                $stok = $stock['qty']; ?>
 
-                                                                                    <!-- Stok Belum jadi karena belum berhasil membaca outlet sehingga data stok muncul semua -->
-                                                                                    <!-- <div>
-                                                                                        <div class="tm-h3">STOK</div>
-                                                                                    </div> -->
+                                                                                                <div class="uk-h4 uk-text-center"><?= $stok; ?></div>
+                                                                                            <?php } ?>
+                                                                                        <?php } ?>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                         
