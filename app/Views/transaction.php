@@ -436,21 +436,9 @@
                                                 <div class="uk-modal-dialog uk-margin-auto-vertical">
                                                     <div class="uk-modal-container">
                                                         <div class="uk-modal-header">
-                                                            <div class="uk-modal-title tm-h2"><?= $productName ?></div>
+                                                            <div class="uk-modal-title tm-h2 uk-text-center"><?= $productName ?></div>
                                                         </div>
                                                         <div class="uk-modal-body">
-                                                            <div class="uk-child-width-1-3 uk-text-center" uk-grid>
-                                                                <div>
-                                                                    <div class="uk-h4"><?=lang('Global.variant')?></div>
-                                                                </div>
-                                                                <div>
-                                                                    <div class="uk-h4"><?=lang('Global.price')?></div>
-                                                                </div>
-                                                                <div>
-                                                                    <div class="uk-h4"><?=lang('Global.stock')?></div>
-                                                                </div>
-                                                            </div>
-
                                                             <div class="uk-child-width-1-1" uk-grid>
                                                                 <div id="CreateOrder">
                                                                     <?php foreach ($variants as $variant) {
@@ -459,20 +447,20 @@
                                                                             $Price   = $variant['hargamodal'] + $variant['hargajual'];
                                                                             $ProdName   = $productName.' - '. $variant['name']; ?>
 
-                                                                            <div class="uk-card uk-card-hover uk-card-default uk-card-body uk-margin" onclick="createNewOrder<?= $variant['id'] ?>()">
-                                                                                <div class="uk-child-width-1-3" uk-grid>
+                                                                            <div class="uk-card uk-card-hover uk-card-default uk-card-body uk-margin cardvar" onclick="createNewOrder<?= $variant['id'] ?>()">
+                                                                                <div class="uk-child-width-1-3 uk-light" uk-grid>
                                                                                     <div>
                                                                                         <div class="uk-h4 uk-text-center"><?= $VarName; ?></div>
                                                                                     </div>
                                                                                     <div>
-                                                                                        <div class="uk-h4 uk-text-center"><?= $Price; ?></div>
+                                                                                        <div class="uk-h4 uk-text-center">Rp <?= $Price; ?>,-</div>
                                                                                     </div>
                                                                                     <div>
                                                                                         <?php foreach ($stocks as $stock) {
                                                                                             if (($stock['variantid'] === $variant['id']) && ($stock['outletid'] === $outletPick)) {
                                                                                                 $stok = $stock['qty']; ?>
 
-                                                                                                <div class="uk-h4 uk-text-center"><?= $stok; ?></div>
+                                                                                                <div class="uk-h4 uk-text-center"><?= $stok; ?> pcs</div>
                                                                                             <?php } ?>
                                                                                         <?php } ?>
                                                                                     </div>
@@ -628,7 +616,7 @@
                                 <!-- End Catalog List -->
                                 
                                 <!-- Favorite List -->
-                                <!-- <li>
+                                <li>
                                     <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                         <?php foreach ($variants as $variant) : ?>
                                             <?php
@@ -699,11 +687,11 @@
                                         endforeach;
                                         ?>
                                     </div>
-                                </li> -->
+                                </li>
                                 <!-- End Favorite list -->
 
                                 <!-- Bundle List -->
-                                <!-- <li>
+                                <li>
                                     <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                         <?php foreach ($bundles as $bundle) : ?>
                                             <?php 
@@ -851,7 +839,7 @@
                                             <?php endforeach; ?>
                                         <?php endforeach; ?> 
                                     </div>            
-                                </li> -->
+                                </li>
                                 <!-- End Bundle List -->
                             </ul>
                         <?php } ?>
