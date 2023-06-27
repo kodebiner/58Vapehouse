@@ -11722,3 +11722,7 @@ li.tm-main-navbar>a>svg {
     background-color: #0f7ae5 !important;
     color: #fff !important;
 }
+
+.pointertext {
+    cursor: pointer;
+}

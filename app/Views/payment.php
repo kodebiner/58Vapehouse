@@ -43,9 +43,6 @@
                             <select class="uk-select" name="outlet" id="sel_out">
                                 <option value="0"><?=lang('Global.outlet')?></option>
                                 <?php
-
-                                        use App\Controllers\Outlet;
-
                                     foreach ($outlets as $outlet) {
                                         if ($outlet['id'] === $outletPick) {
                                             $checked = 'selected';
@@ -66,6 +63,23 @@
                         <div class="uk-form-controls">
                             <select class="uk-select"  name="cashid" id="sel_out">
                                 <option><?=lang('Global.cash')?></option>
+                                <?php foreach ($cash as $cas) { ?>
+                                    <?php foreach ($outlets as $outlet) { 
+                                        if ($cas['outletid'] === $outlet['id']) {
+                                            $WalletName = $cas['name'].'-'.$outlet['name'];
+                                            $checked = 'selected';
+                                        } else {
+                                            $checked = '';
+                                        }
+                                    } ?>
+                                    <option value="<?= $cas['id']; ?>" <?=$checked?>><?= $WalletName; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <!-- <label class="uk-form-label" for="cashid"><?=lang('Global.cash')?></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select"  name="cashid" id="sel_out">
+                                <option><?=lang('Global.cash')?></option>
                                 <?php
                                     foreach ($cash as $cas) {
                                         foreach ($outlets as $outlet) {
@@ -81,7 +95,7 @@
                                     }
                                 ?>
                             </select>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="uk-margin-bottom">

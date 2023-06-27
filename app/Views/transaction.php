@@ -302,7 +302,7 @@
                                 </div>
                             </div>
 
-                            <h4 class="uk-margin-remove uk-text-bold uk-text-small" id="splitbill"> Want To Split Bill ?</h4>
+                            <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="splitbill"> Want To Split Bill ?</a>
 
                         </div>
                         <div class="uk-modal-footer" style="border-top: 0;">
@@ -323,57 +323,6 @@
             </div>
         </div>
         <!-- Modal Detail Transaction End -->
-
-        <!-- This is the modal split -->
-        <div id="modal-example" uk-modal>
-            <div class="uk-modal-dialog uk-modal-body">
-            <div class="uk-modal-header">
-                <h2 class="uk-modal-title">Split Bill</h2>
-            </div>
-                <form class="uk-form-stacked" name="order" role="form" action="/transaction/create" method="post">
-                    <?= csrf_field() ?>
-                    <div class="uk-modal-body">
-                        <div class="uk-margin-bottom">
-                            <h4 class="uk-margin-remove" id="splittotal"><?=lang('Global.total')?> Rp</h4>
-                        </div>
-                        <div class="uk-margin-bottom">
-                            <h4 class="uk-margin-remove"><?=lang('Global.firstpay')?></h4>
-                            <div class="uk-margin-small">
-                                <div class="uk-width-1-1">
-                                    <input class="uk-input" id="customerid" name="customerid" />
-                                </div>
-                                <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                    <label><input class="uk-radio" type="radio" name="radio2" checked>Cash</label>
-                                    <label><input class="uk-radio" type="radio" name="radio2"> BRI</label>
-                                    <label><input class="uk-radio" type="radio" name="radio2"> Gopay</label>
-                                    <label><input class="uk-radio" type="radio" name="radio2"> QRIS</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="uk-margin-bottom">
-                            <h4 class="uk-margin-remove"><?=lang('Global.secpay')?></h4>
-                            <div class="uk-margin-small">
-                                <div class="uk-width-1-1">
-                                    <input class="uk-input" id="customerid" name="customerid" />
-                                </div>
-                                <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                    <label><input class="uk-radio" type="radio" name="radio2" checked>Cash</label>
-                                    <label><input class="uk-radio" type="radio" name="radio2"> BRI</label>
-                                    <label><input class="uk-radio" type="radio" name="radio2"> Gopay</label>
-                                    <label><input class="uk-radio" type="radio" name="radio2"> QRIS</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="products"></div>
-                        <div class="uk-modal-footer uk-text-right">
-                            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-                            <a href="#tambahdata" class="uk-button uk-button-primary" uk-toggle>Save</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- end modal split -->
 
         <!-- Main Section -->
         <main role="main">
