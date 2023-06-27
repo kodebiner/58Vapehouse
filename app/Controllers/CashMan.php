@@ -55,25 +55,23 @@ class CashMan extends BaseController
         // initialize
         $input          = $this->request->getPost();
 
-        // save data
-        $data = [
-            'outletid'          => $input['outlet'],
-            'name'              => $input['name'],
-            'qty'               => $input['qty'],
-
-        ];
-        
-        // validation
-        if (! $this->validate([
-            'name'              =>  "required|max_length[255]',",
-            'qty'               =>  "required"
-        ])) {
-                
-           return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        if ($input['outlet'] ==="0"){
+            foreach ($outlets as $outlet){
+                $data = [
+                    'outletid'          => $outlet['id'],
+                    'name'              => $input['name'],
+                    'qty'               => $input['qty'],
+                ];
+                $CashModel->insert($data);
+            }
+        }else{
+            $data = [
+                'outletid'          => $input['outlet'],
+                'name'              => $input['name'],
+                'qty'               => $input['qty'],
+            ];
+            $CashModel->insert($data);
         }
-            
-        // Inserting CashFlow
-        $CashModel->insert($data);
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }
@@ -90,8 +88,7 @@ class CashMan extends BaseController
         $data = [
             'id'                => $id,
             'name'              => $input['name'],
-            // 'outletid'          => $input['outlet'],
-            // 'qty'               => $input['qty'],
+            'outletid'          => $input['outlet'],
         ];
 
         // validation

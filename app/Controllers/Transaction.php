@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\BundledetailModel;
 use App\Models\BundleModel;
+use App\Models\CashModel;
 use App\Models\OutletModel;
 use App\Models\UserModel;
 use App\Models\MemberModel;
@@ -20,6 +21,7 @@ class Transaction extends BaseController
         // Calling Models
         $BundleModel            = new BundleModel();
         $BundledetModel         = new BundledetailModel();
+        $CashModel              = new CashModel();
         $OutletModel            = new OutletModel();
         $UserModel              = new UserModel();
         $MemberModel            = new MemberModel();
@@ -34,6 +36,7 @@ class Transaction extends BaseController
         // Populating Data
         $bundles            = $BundleModel->findAll();
         $bundets            = $BundledetModel->findAll();
+        $Cash               = $CashModel->findAll();
         $outlets            = $OutletModel->findAll();
         $users              = $UserModel->findAll();
         $customers          = $MemberModel->findAll();
@@ -51,7 +54,9 @@ class Transaction extends BaseController
         $data['description']    = lang('Global.transactionListDesc');
         $data['bundles']        = $bundles;
         $data['bundets']        = $bundets;
+        $data['cash']           = $Cash;
         $data['transactions']   = $transactions;
+        $data['outlets']        = $outlets;
         $data['payments']       = $payments;
         $data['customers']      = $customers;
         $data['products']       = $products;

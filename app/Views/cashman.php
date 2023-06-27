@@ -41,7 +41,7 @@
                     <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select" name="outlet" id="sel_out">
-                                <option><?=lang('Global.outlet')?></option>
+                                <option value="0"><?=lang('Global.outlet')?></option>
                                 <?php
                                     foreach ($outlets as $outlet) {
                                         if ($outlet['id'] === $outletPick) {

@@ -230,8 +230,8 @@
                                 <div class="uk-form-controls uk-margin-small">
                                     <select class="uk-select" name="payment" required>
                                         <option><?=lang('Global.paymethod')?></option>
-                                            <?php foreach ($payments as $payment) { ?>
-                                                <option value="<?= $payment['id']; ?>"><?= $payment['name']; ?></option>
+                                            <?php foreach ($cash as $cas) { ?>
+                                                <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
                                             <?php } ?>
                                     </select>
                                 </div>
@@ -250,19 +250,49 @@
                                 <div class="uk-form-controls uk-margin-small">
                                     <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.firstpay')?>" required />
                                     <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                        <label><input class="uk-radio" type="radio" name="radio2" checked>Cash</label>
-                                        <label><input class="uk-radio" type="radio" name="radio2"> BRI</label>
-                                        <label><input class="uk-radio" type="radio" name="radio2"> Gopay</label>
-                                        <label><input class="uk-radio" type="radio" name="radio2"> QRIS</label>
+                                    <?php
+                                            foreach ($cash as $cas) {
+                                                foreach ($outlets as $outlet) {
+                                                    if ($outlet['id'] === $cas['outletid']) {
+                                                        $checked = 'selected';
+                                                    } else {
+                                                        $checked = '';
+                                                    }
+                                                }
+                                        ?>
+                                            <label for="">
+                                                <input value="<?= $cas['id']; ?>" 
+                                                <?php foreach ($payments as $payment) { ?>
+                                                <?php if ($cas['id'] === $payment['cashid']) {echo 'selected';} ?> 
+                                                <?php }?>
+                                                class="uk-radio" type="radio" name="radio2"><?= $cas['name']; ?>
+                                            </input>
+                                            </label>                                        
+                                        <?php
+                                            }
+                                        ?>
                                     </div>
                                 </div>
-                                <div class="uk-form-controls uk-margin-small">
+                            </div>
+
+                            <div class="uk-margin" id="split2" hidden>
+                            <div class="uk-form-controls uk-margin-small">
                                     <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.secpay')?>" required />
                                     <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                        <label><input class="uk-radio" type="radio" name="radio2" checked>Cash</label>
-                                        <label><input class="uk-radio" type="radio" name="radio2"> BRI</label>
-                                        <label><input class="uk-radio" type="radio" name="radio2"> Gopay</label>
-                                        <label><input class="uk-radio" type="radio" name="radio2"> QRIS</label>
+                                    <?php
+                                            foreach ($cash as $cas) {
+                                                foreach ($outlets as $outlet) {
+                                                    if ($outlet['id'] === $cas['outletid']) {
+                                                        $checked = 'selected';
+                                                    } else {
+                                                        $checked = '';
+                                                    }
+                                                }
+                                        ?>
+                                            <label for=""><input value="<?= $cas['id']; ?>" <?php if ($cas['id'] === $payment['cashid']) {echo 'selected';} ?> class="uk-radio" type="radio" name="radio1"><?= $cas['name']; ?></input></label>
+                                        <?php
+                                            }
+                                        ?>
                                     </div>
                                 </div>
                             </div>
@@ -898,6 +928,7 @@
             document.getElementById('splitbill').addEventListener("click",bill);
             function bill(){
                 document.getElementById('split').removeAttribute('hidden');
+                document.getElementById('split2').removeAttribute('hidden');
                 document.getElementById('amount').setAttribute('hidden','hidden');
                 document.getElementById('splitbill').setAttribute('hidden','hidden');
             }
