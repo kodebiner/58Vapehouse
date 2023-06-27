@@ -155,6 +155,11 @@
                     </div>
                     <form class="uk-form-stacked" name="order" role="form" action="/transaction/create" method="post">
                         <?= csrf_field() ?>
+                        <?php foreach ($outlets as $outlet){ 
+                            if ($outlet['id'] === $this->data['outletPick']) { ?>
+                                <input type="hidden" value="<?php $outlet['id'] ?>">
+                            <?php } ?>
+                        <?php } ?>
                         
                         <div class="uk-modal-body">
                             <div class="uk-margin-bottom">
@@ -230,9 +235,15 @@
                                 <div class="uk-form-controls uk-margin-small">
                                     <select class="uk-select" name="payment" required>
                                         <option><?=lang('Global.paymethod')?></option>
-                                            <?php foreach ($cash as $cas) { ?>
+                                            <?php foreach ($cash as $cas) { 
+                                                foreach ($outlets as $outlet){
+                                                    if ($outlet['id']=== $this->data['outletPick']) {
+                                                if($cas['outletid'] === $outlet['id']){ ?>
                                                 <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
-                                            <?php } ?>
+                                                <?php } 
+                                                    }
+                                                }
+                                            } ?>
                                     </select>
                                 </div>
                             </div>
@@ -248,51 +259,38 @@
                             <div class="uk-margin" id="split" hidden>
                                 <h4 class="uk-margin-remove uk-text-bold uk-text-small"><?=lang('Global.splitbill')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.firstpay')?>" required />
+                                    <input type="text" class="uk-input" name="firstpay" placeholder="<?=lang('Global.firstpay')?>" required />
                                     <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                    <?php
-                                            foreach ($cash as $cas) {
-                                                foreach ($outlets as $outlet) {
-                                                    if ($outlet['id'] === $cas['outletid']) {
-                                                        $checked = 'selected';
-                                                    } else {
-                                                        $checked = '';
-                                                    }
-                                                }
-                                        ?>
-                                            <label for="">
-                                                <input value="<?= $cas['id']; ?>" 
-                                                <?php foreach ($payments as $payment) { ?>
-                                                <?php if ($cas['id'] === $payment['cashid']) {echo 'selected';} ?> 
-                                                <?php }?>
-                                                class="uk-radio" type="radio" name="radio2"><?= $cas['name']; ?>
-                                            </input>
-                                            </label>                                        
-                                        <?php
+                                    <?php foreach ($cash as $cas) {?>
+                                        <?php foreach($outlets as $outlet){ ?>
+                                            <?php if ($this->data['outletPick'] === $outlet['id']){ ?>
+                                                <?php if ($outlet['id']===$cas['outletid']) { ?>
+                                                    <label for="">
+                                                        <input value="<?= $cas['id']; ?>" <?php if ($cas['outletid'] === $outlet['id']) {echo 'selected';} ?> class="uk-radio" type="radio" name="radio2"><?= $cas['name']; ?></input>
+                                                    </label>  
+                                                <?php } 
                                             }
-                                        ?>
+                                        }                                     
+                                    } ?>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="uk-margin" id="split2" hidden>
                             <div class="uk-form-controls uk-margin-small">
-                                    <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.secpay')?>" required />
+                                    <input type="text" class="uk-input" name="secondpay" placeholder="<?=lang('Global.secpay')?>" required />
                                     <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                    <?php
-                                            foreach ($cash as $cas) {
-                                                foreach ($outlets as $outlet) {
-                                                    if ($outlet['id'] === $cas['outletid']) {
-                                                        $checked = 'selected';
-                                                    } else {
-                                                        $checked = '';
-                                                    }
-                                                }
-                                        ?>
-                                            <label for=""><input value="<?= $cas['id']; ?>" <?php if ($cas['id'] === $payment['cashid']) {echo 'selected';} ?> class="uk-radio" type="radio" name="radio1"><?= $cas['name']; ?></input></label>
-                                        <?php
+                                    <?php foreach ($cash as $cas) {?>
+                                        <?php foreach($outlets as $outlet){ ?>
+                                            <?php if ($this->data['outletPick'] === $outlet['id']){ ?>
+                                                <?php if ($outlet['id']===$cas['outletid']) { ?>
+                                                    <label for="">
+                                                        <input value="<?= $cas['id']; ?>" <?php if ($cas['outletid'] === $outlet['id']) {echo 'selected';} ?> class="uk-radio" type="radio" name="radio2"><?= $cas['name']; ?></input>
+                                                    </label>  
+                                                <?php } 
                                             }
-                                        ?>
+                                        }                                     
+                                    } ?>
                                     </div>
                                 </div>
                             </div>
