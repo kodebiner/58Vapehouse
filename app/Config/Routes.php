@@ -200,6 +200,9 @@ $routes->group('cashmove', ['filter'=>'login'], function($routes){
 $routes->group('payment', ['filter'=>'login'], function($routes){
     $routes->get('', 'Payment::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Payment::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'Payment::update/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->get('delete/(:num)', 'Payment::delete/$1', ['filter' => 'role:owner,supervisor']);
+
 });
 
 //Bundle

@@ -66,8 +66,19 @@ class Transaction extends BaseController
     public function create() 
     {
         // Calling Models
-        $TransactionModel = new TransactionModel;
-        
+        $TransactionModel       = new TransactionModel;
+        $BundleModel            = new BundleModel();
+        $BundledetModel         = new BundledetailModel();
+        $OutletModel            = new OutletModel();
+        $UserModel              = new UserModel();
+        $MemberModel            = new MemberModel();
+        $PaymentModel           = new PaymentModel();
+        $ProductModel           = new ProductModel();
+        $VariantModel           = new VariantModel();
+        $StockModel             = new StockModel();
+        $TransactionModel       = new TransactionModel();
+        $TrxdetailModel         = new TransactionModel();
+        $TrxpaymentModel        = new TransactionModel();
 
         // Populating Data
 

@@ -41,7 +41,7 @@
                         <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select" name="outlet" id="sel_out">
-                                <option><?=lang('Global.outlet')?></option>
+                                <option value="0"><?=lang('Global.outlet')?></option>
                                 <?php
 
                                         use App\Controllers\Outlet;
@@ -62,9 +62,9 @@
                     </div>
 
                     <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="cashid"><?=lang('Global.name')?></label>
+                        <label class="uk-form-label" for="cashid"><?=lang('Global.cash')?></label>
                         <div class="uk-form-controls">
-                            <select class="uk-select" name="cashid" id="sel_out">
+                            <select class="uk-select"  name="cashid" id="sel_out">
                                 <option><?=lang('Global.cash')?></option>
                                 <?php
                                     foreach ($cash as $cas) {
@@ -145,9 +145,9 @@
                         <!-- End Of Button Trigger Modal Edit -->
 
                         <!-- Button Delete -->
-                        <!-- <div>
+                        <div>
                             <a uk-icon="trash" class="uk-icon-button-delete" href="payment/delete/<?= $payment['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
-                        </div> -->
+                        </div>
                         <!-- End Of Button Delete -->
                     </td>
                 </tr>
@@ -182,6 +182,29 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="cashid"><?=lang('Global.cash')?></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select"  name="cashid" id="sel_out">
+                                <option><?=lang('Global.cash')?></option>
+                                <?php
+                                    foreach ($cash as $cas) {
+                                        foreach ($outlets as $outlet) {
+                                            if ($outlet['id'] === $cas['outletid']) {
+                                                $checked = 'selected';
+                                            } else {
+                                                $checked = '';
+                                            }
+                                        }
+                                ?>
+                                    <option value="<?= $cas['id']; ?>" <?php if ($cas['id'] === $payment['cashid']) {echo 'selected';} ?>><?= $cas['name']; ?></option>
+                                <?php
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
 
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>

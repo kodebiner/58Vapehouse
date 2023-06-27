@@ -26,6 +26,8 @@ class Payment extends BaseController
             $payment      = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
         }
 
+
+
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.cashManagement');
@@ -56,25 +58,27 @@ class Payment extends BaseController
             'cashid'            => $input['cashid'],
 
         ];
+
         // validation
-
-        if (! $this->validate([
-            'outletid' => "required",
-            'name'  => 'required',       
-            ]))
+        if ($input['outlet'] === '0')
         {
-            foreach ($outlets as $outlets){
+                foreach ($outlets as $outlet){
                     $data = [
-                        'outletid' => $outlets['id'],
-                        'name'     => $input['name'],
-                        'cashid'   => $input['cashid'],
-                    ];
+                            'outletid' => $outlet['id'],
+                            'name'     => $input['name'],
+                            'cashid'   => $input['cashid'],    
+                        ];
+                    $PaymentModel->insert($data);
                 }
-            
-        }
-
-        $PaymentModel->insert($data);
- 
+             
+        }else{
+                $data = [
+                    'outletid' => $input['outlet'],
+                    'name'     => $input['name'],
+                    'cashid'   => $input['cashid'],    
+                ];
+                $PaymentModel->insert($data);
+            }
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
@@ -82,31 +86,48 @@ class Payment extends BaseController
     {
         // calling Model
         $PaymentModel      = new PaymentModel();
+        $OutletModel       = new OutletModel();
 
         // initialize
         $input = $this->request->getpost();
-
-        // saved data
-        $data = [
-            'id'                => $id,
-            'name'              => $input['name'],
-            'cashid'            => $input['cashid'],
-        ];
+        $outlets = $OutletModel->findAll();
 
         // validation
-        if (! $this->validate([
-            'name'              =>  "required|max_length[255]",
-                ])
-            )
-        {      
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        if ($input['outlet'] === "0"){
+            foreach ($outlets as $outlet){
+                $data = [
+                    'id'                    => $id,
+                    'outletid'              => $input['outletid'],
+                    'name'                  => $input['name'],
+                    'cashid'                => $input['cashid'],
+                ];
+                $PaymentModel->save($data);
+            }
+        }else{
+            $data = [
+                'id'                    => $id,
+                'outletid'              => $input['outlet'],
+                'name'                  => $input['name'],
+                'cashid'                => $input['cashid'],
+            ];
+
+            $PaymentModel->save($data);
         }
 
-        // save data
-        $PaymentModel->save($data);
 
         return redirect()->back()->with('massage', lang('global.saved'));
 
+    }
+
+    public function delete($id)
+    {
+
+         // calling Model
+         $PaymentModel  = new PaymentModel();
+         $OutletModel   = new OutletModel();
+         $PaymentModel->delete($id);
+
+         return redirect()->back()->with('error', lang('Global.deleted'));
     }
 
 }
