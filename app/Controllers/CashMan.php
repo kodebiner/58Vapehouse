@@ -56,14 +56,14 @@ class CashMan extends BaseController
         $input          = $this->request->getPost();
 
         if ($input['outlet'] ==="0"){
-            foreach ($outlets as $outlet){
+          
                 $data = [
-                    'outletid'          => $outlet['id'],
+                    'outletid'          => 0,
                     'name'              => $input['name'],
                     'qty'               => $input['qty'],
                 ];
                 $CashModel->insert($data);
-            }
+            
         }else{
             $data = [
                 'outletid'          => $input['outlet'],

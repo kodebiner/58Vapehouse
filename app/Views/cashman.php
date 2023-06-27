@@ -106,8 +106,11 @@
                         <?php foreach ($outlets as $outlet) {
                             if ($outlet['id'] === $cash['outletid']) {
                                 echo $outlet['name'];
-                            }
-                        } ?>
+                            } 
+                        } if ($cash['outletid']==="0"){
+                            echo "All Outlets";
+                        }
+                        ?>
                     </td>
                     <td class="uk-text-center"><?= $cash['qty']; ?></td>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>

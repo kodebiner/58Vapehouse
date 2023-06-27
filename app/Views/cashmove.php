@@ -36,30 +36,6 @@
                 <form class="uk-form-stacked" role="form" action="cashmove/create" method="post">
                     <?= csrf_field() ?>
 
-                    
-                    <!-- select oulet -->
-                    <div class="uk-margin-bottom">
-                    <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
-                        <div class="uk-form-controls">
-                            <select class="uk-select" name="outlet" id="sel_out">
-                                <option><?=lang('Global.outlet')?></option>
-                                <?php
-                                    foreach ($outlets as $outlet) {
-                                        if ($outlet['id'] === $outletPick) {
-                                            $checked = 'selected';
-                                        } else {
-                                            $checked = '';
-                                        }
-                                        ?>
-                                        <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
-                                        <?php
-                                    }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- end select out -->
-
                     <div class="uk-margin">
                         <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
                         <div class="uk-form-controls">
