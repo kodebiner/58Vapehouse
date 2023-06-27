@@ -266,7 +266,7 @@
                                             <?php if ($this->data['outletPick'] === $outlet['id']){ ?>
                                                 <?php if ($outlet['id']===$cas['outletid']) { ?>
                                                     <label for="">
-                                                        <input value="<?= $cas['id']; ?>" <?php if ($cas['outletid'] === $outlet['id']) {echo 'selected';} ?> class="uk-radio" type="radio" name="radio2"><?= $cas['name']; ?></input>
+                                                        <input value="<?= $cas['id']; ?>" <?php if ($cas['outletid'] === $outlet['id']) {echo 'selected';} ?> class="uk-radio" type="radio" name="radio"><?= $cas['name']; ?></input>
                                                     </label>  
                                                 <?php } 
                                             }
