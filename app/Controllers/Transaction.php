@@ -18,6 +18,8 @@ class Transaction extends BaseController
 {
     public function index()
     {
+        $db      = \Config\Database::connect();
+
         // Calling Models
         $BundleModel            = new BundleModel();
         $BundledetModel         = new BundledetailModel();
@@ -48,6 +50,14 @@ class Transaction extends BaseController
         $trxdetails         = $TrxdetailModel->findAll();
         $trxpayments        = $TrxpaymentModel->findAll();
 
+        $bundleBuilder      = $db->table('bundledetail');
+        $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
+        $bundleVariants     = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
+        $bundleVariants     = $bundleBuilder->get();
+
+
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.transaction');
@@ -64,6 +74,7 @@ class Transaction extends BaseController
         $data['stocks']         = $stocks;
         $data['trxdetails']     = $trxdetails;
         $data['trxpayments']    = $trxpayments;
+        $data['bundleVariants'] = $bundleVariants->getResult();
 
         return view('Views/transaction', $data);
     }

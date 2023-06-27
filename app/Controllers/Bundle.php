@@ -19,11 +19,7 @@ class Bundle extends BaseController
         $bundleDetailModel  = new BundledetailModel;
 
         // get data 
-        if ($this->data['outletPick'] === null) {
-            $bundles      = $bundleModel->orderBy('id', 'DESC')->findAll();
-        } else {
-            $bundles      = $bundleModel->where('outletid', $this->data['outletPick'])->find();
-        }
+        $bundles      = $bundleModel->orderBy('id', 'DESC')->findAll();
 
         $bundleDetails    = $bundleDetailModel->findAll();
         $variants         = $variantModel->findAll();

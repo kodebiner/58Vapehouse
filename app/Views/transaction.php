@@ -468,37 +468,42 @@
                                                         </div>
                                                         <div class="uk-modal-body">
                                                             <div class="uk-child-width-1-1" uk-grid>
-                                                                <div id="CreateOrder">
+                                                                <div id="">
                                                                     <?php foreach ($variants as $variant) {
                                                                         if ($variant['productid'] === $product['id']) {
                                                                             $VarName    = $variant['name'];
                                                                             $Price   = $variant['hargamodal'] + $variant['hargajual'];
                                                                             $ProdName   = $productName.' - '. $variant['name']; ?>
 
-                                                                            <div class="uk-card uk-card-hover uk-card-default uk-card-body uk-margin cardvar" onclick="createNewOrder<?= $variant['id'] ?>()">
-                                                                                <div class="uk-child-width-1-3 uk-light" uk-grid>
-                                                                                    <div>
-                                                                                        <div class="uk-h4 uk-text-center"><?= $VarName; ?></div>
+                                                                            <div class="uk-margin">
+                                                                                <div class="uk-flex uk-flex-middle" uk-grid>
+                                                                                    <div class="uk-width-1-3">
+                                                                                        <div class="uk-h4"><?= $VarName; ?></div>
                                                                                     </div>
-                                                                                    <div>
-                                                                                        <div class="uk-h4 uk-text-center">Rp <?= $Price; ?>,-</div>
+                                                                                    <div class="uk-width-1-3">
+                                                                                        <div class="uk-h4">Rp <?= $Price; ?>,-</div>
                                                                                     </div>
-                                                                                    <div>
+                                                                                    <div class="uk-width-1-6">
                                                                                         <?php foreach ($stocks as $stock) {
                                                                                             if (($stock['variantid'] === $variant['id']) && ($stock['outletid'] === $outletPick)) {
                                                                                                 $stok = $stock['qty']; ?>
 
-                                                                                                <div class="uk-h4 uk-text-center"><?= $stok; ?> pcs</div>
+                                                                                                <div class="uk-h4"><?= $stok; ?> pcs</div>
                                                                                             <?php } ?>
                                                                                         <?php } ?>
+                                                                                    </div>
+                                                                                    <div class="uk-width-1-6 uk-text-center">
+                                                                                        <a class="uk-icon-button" uk-icon="cart" onclick="createNewOrder<?= $variant['id'] ?>()"></a>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                         
                                                                             <script type="text/javascript">
                                                                                 var elemexist = document.getElementById('product<?=$variant['id']?>');
-                                                                                var count = 1;
                                                                                 function createNewOrder<?=$variant['id']?>() {
+                                                                                    var count = 1;
+                                                                                    var modal = document.getElementById('modalVar<?= $product['id'] ?>');
+                                                                                    UIkit.modal(modal).hide();
                                                                                     if ( $( "#product<?=$variant['id']?>" ).length ) {
                                                                                         alert('Already added!');
                                                                                     } else {
@@ -518,11 +523,11 @@
                                                                                         
                                                                                         const productgrid = document.createElement('div');
                                                                                         productgrid.setAttribute('id', 'product<?=$variant['id']?>');
-                                                                                        productgrid.setAttribute('class', 'uk-margin-small  uk-child-width-auto');
+                                                                                        productgrid.setAttribute('class', 'uk-margin-small');
                                                                                         productgrid.setAttribute('uk-grid', '');
 
                                                                                         const addcontainer = document.createElement('div');
-                                                                                        addcontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                                                        addcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
                                                                                         
                                                                                         const productqtyinputadd = document.createElement('div');
                                                                                         productqtyinputadd.setAttribute('id','addqty<?=$variant['id']?>');
@@ -530,7 +535,7 @@
                                                                                         productqtyinputadd.innerHTML = '+';
 
                                                                                         const delcontainer = document.createElement('div');
-                                                                                        delcontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                                                        delcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
                                                                                         
                                                                                         const productqtyinputdel = document.createElement('div');
                                                                                         productqtyinputdel.setAttribute('id','delqty<?=$variant['id']?>');
@@ -538,7 +543,7 @@
                                                                                         productqtyinputdel.innerHTML = '-';
 
                                                                                         const quantitycontainer = document.createElement('div');
-                                                                                        quantitycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle');
+                                                                                        quantitycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle uk-width-1-6');
 
                                                                                         const productqty = document.createElement('div');                                               
 
@@ -583,7 +588,7 @@
                                                                                         productqtyinputdel.addEventListener("click", handleDecrement);
 
                                                                                         const namecontainer = document.createElement('div');
-                                                                                        namecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                                                        namecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
 
                                                                                         const productname = document.createElement('div');
                                                                                         productname.setAttribute('id', 'name<?=$variant['id']?>');
@@ -591,7 +596,7 @@
                                                                                         productname.innerHTML = '<?=$ProdName?>';
 
                                                                                         const pricecontainer = document.createElement('div');
-                                                                                        pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                                                        pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
                                                                                         
                                                                                         const productprice = document.createElement('div');
                                                                                         productprice.setAttribute('id', 'price<?=$variant['id']?>');
@@ -613,9 +618,9 @@
                                                                                         productqty.appendChild(inputqty);
                                                                                         quantitycontainer.appendChild(productqty);
                                                                                         delcontainer.appendChild(productqtyinputdel);
-                                                                                        productgrid.appendChild(addcontainer);
-                                                                                        productgrid.appendChild(quantitycontainer);
                                                                                         productgrid.appendChild(delcontainer);
+                                                                                        productgrid.appendChild(quantitycontainer);
+                                                                                        productgrid.appendChild(addcontainer);
                                                                                         namecontainer.appendChild(productname);
                                                                                         productgrid.appendChild(namecontainer);
                                                                                         pricecontainer.appendChild(productprice);
@@ -721,11 +726,10 @@
                                 <!-- Bundle List -->
                                 <li>
                                     <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
-                                        <?php foreach ($bundles as $bundle) : ?>
-                                            <?php 
+                                        <?php foreach ($bundles as $bundle) {
                                                 $BunName = $bundle['name']; 
                                                 $BunPrice = $bundle['price'];
-                                            ?>
+                                        ?>
                                             <div id="CreateOrder">
                                                 <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrderBundle<?= $bundle['id'] ?>()">
                                                     <div class="uk-card-header">
@@ -734,20 +738,23 @@
                                                     <div class="uk-card-body">
                                                         <div class="uk-height-medium uk-flex uk-flex-middle uk-flex-center">
                                                             <div>
-                                                                <?php foreach ($bundets as $bundet) {
-                                                                    if ($bundle['id'] === $bundet['bundleid']) {
-                                                                        foreach ($variants as $variant) {
-                                                                            if ($variant['id'] === $bundet['variantid']) {
-                                                                                foreach ($products as $product) {
-                                                                                    if ($product['id'] === $variant['productid']) {
-                                                                                        $CombName = $product['name'].' - '.$variant['name'];
-                                                                                        echo '<div class="tm-h1 uk-text-center" id="combname">'.$CombName.'</div>';
-                                                                                    }
+                                                                <?php
+                                                                    $i = 0;
+                                                                    foreach ($bundleVariants as $variant) {
+                                                                        if (($variant->bundleid === $bundle['id']) && ($variant->outletid === $outletPick)) {
+                                                                            $i++;
+                                                                            foreach ($products as $product) {
+                                                                                if ($product['id'] === $variant->productid) {
+                                                                                    $CombName = $product['name'].' - '.$variant->name;
+                                                                                    echo '<div class="tm-h1 uk-text-center uk-margin-small" id="combname">'.$CombName.'</div>';
                                                                                 }
+                                                                            }
+                                                                            if ($i === 1) {
+                                                                                $bundlestock = $variant->qty;
                                                                             }
                                                                         }
                                                                     }
-                                                                } ?>
+                                                                ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -759,35 +766,48 @@
                                                 </div>
                                             </div>
 
-                                            <?php foreach ($stocks as $stock) :?>
-                                                <script type="text/javascript">
+                                            <script type="text/javascript">
+                                                var elemexist = document.getElementById('bundle<?= $bundle['id'] ?>');
+                                                function createNewOrderBundle<?= $bundle['id'] ?>() {
                                                     var count = 1;
-                                                    function createNewOrderBundle<?= $bundle['id'] ?>() {
-                                                        let stock = <?=$stock['qty']?>;
+                                                    if ( $( "#bundle<?= $bundle['id'] ?>" ).length ) {
+                                                        alert('Already added!');
+                                                    } else {
+                                                        <?php
+                                                        if ($bundlestock === '0') {
+                                                            echo 'alert("'.lang('Global.alertstock').'");';
+                                                        } else {
+                                                            echo 'let bstock = '.$bundlestock.';';
+                                                        }
+                                                        ?>
+                                                        let minbstock = 1;
+                                                        let minbval = count;
 
                                                         const products = document.getElementById('products');
                                                         
                                                         const bundlegrid = document.createElement('div');
                                                         bundlegrid.setAttribute('id', 'bundle<?= $bundle['id'] ?>');
-                                                        bundlegrid.setAttribute('class', 'uk-margin-small  uk-child-width-auto');
+                                                        bundlegrid.setAttribute('class', 'uk-margin-small');
                                                         bundlegrid.setAttribute('uk-grid', '');
 
                                                         const addbundlecontainer = document.createElement('div');
-                                                        addbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                        addbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
                                                         
                                                         const bunldeqtyinputadd = document.createElement('div');
+                                                        bunldeqtyinputadd.setAttribute('id','addbqty<?= $bundle['id'] ?>');
                                                         bunldeqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
                                                         bunldeqtyinputadd.innerHTML = '+';
 
                                                         const delbundlecontainer = document.createElement('div');
-                                                        delbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                        delbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
                                                         
                                                         const bundleqtyinputdel = document.createElement('div');
+                                                        bundleqtyinputdel.setAttribute('id','delbqty<?= $bundle['id'] ?>');
                                                         bundleqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
                                                         bundleqtyinputdel.innerHTML = '-';
 
                                                         const bundleqtycontainer = document.createElement('div');
-                                                        bundleqtycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle');
+                                                        bundleqtycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle uk-width-1-6');
 
                                                         const bundleqty = document.createElement('div');                                               
 
@@ -796,26 +816,30 @@
                                                         bundleinputqty.setAttribute('id', "bqty[<?= $bundle['id'] ?>]");
                                                         bundleinputqty.setAttribute('name', "bqty[<?= $bundle['id'] ?>]");
                                                         bundleinputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
-                                                        bundleinputqty.setAttribute('min', '1');
-                                                        bundleinputqty.setAttribute('max', stock);
-                                                        bundleinputqty.setAttribute('value', count);
+                                                        bundleinputqty.setAttribute('min', minbstock);
+                                                        bundleinputqty.setAttribute('max', bstock);
+                                                        bundleinputqty.setAttribute('value', '1');
                                                         bundleinputqty.setAttribute('onchange', 'showbprice()');
-                                                        let total = '<?= $BunPrice ?>';
+                                                        
                                                         const handleIncrements = () => {
                                                             count++;
-                                                            if (bundleinputqty.value == stock) {
-                                                                bundleinputqty.value = stock;
+                                                            if (bundleinputqty.value == bstock) {
+                                                                bundleinputqty.value = bstock;
+                                                                count = bstock;
                                                                 alert('<?=lang('Global.alertstock')?>');
                                                             } else {
                                                                 bundleinputqty.value = count;
                                                                 var bprice = count * <?= $BunPrice ?>;
                                                                 bundleprice.innerHTML = bprice;
+                                                                bundleprice.value = bprice;
                                                             }
                                                         };
                                                         
                                                         const handleDecrements = () => {
                                                             count--;
                                                             if (bundleinputqty.value == '1') {
+                                                                bundleinputqty.value = '0';
+                                                                bundleinputqty.remove();
                                                                 bundlegrid.remove();
                                                             } else {
                                                                 bundleinputqty.value = count;
@@ -828,23 +852,27 @@
                                                         bundleqtyinputdel.addEventListener("click", handleDecrements);
 
                                                         const bundlenamecontainer = document.createElement('div');
-                                                        bundlenamecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                        bundlenamecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
 
                                                         const bundlename = document.createElement('div');
+                                                        bundlename.setAttribute('id', 'name<?= $bundle['id'] ?>');
                                                         bundlename.setAttribute('class', 'tm-h2');
                                                         bundlename.innerHTML = '<?= $BunName ?>';
 
                                                         const bpricecontainer = document.createElement('div');
-                                                        bpricecontainer.setAttribute('class', 'uk-flex uk-flex-middle');
+                                                        bpricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
                                                         
                                                         const bundleprice = document.createElement('div');
+                                                        bundleprice.setAttribute('id', 'bprice<?= $bundle['id'] ?>');
                                                         bundleprice.setAttribute('class', 'tm-h2');
-                                                        bundleprice.setAttribute('name', 'bprice');
-                                                        bundleprice.innerHTML = <?= $BunPrice ?>;
+                                                        bundleprice.setAttribute('name', 'price[]');
+                                                        bundleprice.setAttribute('value', showbprice());
+                                                        bundleprice.innerHTML = showbprice();
 
                                                         function showbprice() {
                                                             var bqty = bundleinputqty.value;
-                                                            var bprice = bundleqty * <?= $BunPrice ?>;
+                                                            var bprice = bqty * <?= $BunPrice ?>;
+                                                            return bprice;
                                                             bundleprice.innerHTML = bprice;
                                                         }
 
@@ -854,18 +882,18 @@
                                                         bundleqty.appendChild(bundleinputqty);
                                                         bundleqtycontainer.appendChild(bundleqty);
                                                         delbundlecontainer.appendChild(bundleqtyinputdel);
-                                                        bundlegrid.appendChild(addbundlecontainer);
-                                                        bundlegrid.appendChild(bundleqtycontainer);
                                                         bundlegrid.appendChild(delbundlecontainer);
+                                                        bundlegrid.appendChild(bundleqtycontainer);
+                                                        bundlegrid.appendChild(addbundlecontainer);
                                                         bundlenamecontainer.appendChild(bundlename);
                                                         bundlegrid.appendChild(bundlenamecontainer);
                                                         bpricecontainer.appendChild(bundleprice);
                                                         bundlegrid.appendChild(bpricecontainer);
                                                         products.appendChild(bundlegrid);
                                                     }
-                                                </script>
-                                            <?php endforeach; ?>
-                                        <?php endforeach; ?> 
+                                                }
+                                            </script>
+                                        <?php } ?> 
                                     </div>            
                                 </li>
                                 <!-- End Bundle List -->
