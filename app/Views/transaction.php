@@ -331,13 +331,13 @@
                     <div class="uk-panel uk-panel-scrollable" style="background-color: #363636;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
                         <?php if ($outletPick === null) { ?>
                             <div class="uk-margin uk-flex uk-flex-center">
-                                <div class="uk-width-1-6 uk-card uk-card-default uk-card-small uk-card-body">
+                                <div class="uk-width-1-6@m uk-card uk-card-default uk-card-small uk-card-body">
                                     <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.chooseoutlet')?></div>
                                 </div>
                             </div>
                         <?php } else { ?>
                             <div class="uk-margin uk-flex uk-flex-center">
-                                <div class="uk-width-1-5 uk-card uk-card-default uk-card-small uk-card-body">
+                                <div class="uk-width-1-5@m uk-card uk-card-default uk-card-small uk-card-body">
                                     <div class="tm-h1 uk-text-center tm-text-large">
                                         <?php
                                             foreach ($baseoutlets as $baseoutlet) {
@@ -353,7 +353,7 @@
 
                                 <!-- Catalog List -->
                                 <li>
-                                    <div class="uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                    <div class="uk-child-width-1-5" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                         <?php
                                             foreach ($products as $product) {
                                                 $productName    = $product['name'];
@@ -361,8 +361,8 @@
                                         ?>
                                             <div id="CreateOrder">
                                                 <div class="uk-card uk-card-hover uk-card-default" uk-toggle="target: #modalVar<?= $product['id'] ?>">
-                                                    <div class="uk-card-header">
-                                                        <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName ?></div>
+                                                    <div class="uk-card-header uk-flex uk-flex-center uk-flex-middle">
+                                                        <div class="tm-h1 uk-text-bolder"><?= $productName ?></div>
                                                     </div>
                                                     <div class="uk-card-body">
                                                         <?php if (!empty($productPhoto)) { ?>
