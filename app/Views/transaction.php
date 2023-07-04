@@ -311,7 +311,7 @@
                                     <div class="uk-flex-top tm-h3"><?=lang('Global.total')?></div>
                                 </div>
                                 <div class="uk-width-1-1 uk-text-center">
-                                    <div class="tm-h2 uk-text-bold" id="finalprice">Rp</div>
+                                    <div class="tm-h2 uk-text-bold" id="finalprice" value="0">Rp</div>
                                 </div>
                             </div>
                             <div class="uk-margin uk-flex uk-flex-center">
@@ -935,7 +935,9 @@
                 } else {
                     var subtotal = subarr.reduce(function(a, b){ return a + b; });
                     document.getElementById('subtotal').innerHTML = subtotal;
+                    document.getElementById('finalprice').value = subtotal;
                     document.getElementById('finalprice').innerHTML = subtotal;
+                    document.getElementById("splittotal").innerHTML = 'Total Rp.'+subtotal+',-';
                 }
 
             });
@@ -953,6 +955,7 @@
                 var poin = document.getElementById('poin').value;
                 var priceori = document.getElementById('finalprice').value;
                 var lastpoin = priceori - poin;
+                document.getElementById('finalprice').value = lastpoin;
                 document.getElementById('finalprice').innerHTML = lastpoin;
 
             }
@@ -980,6 +983,7 @@
                     var	reverse = endprice.toString().split('').reverse().join(''),
                     result 	= reverse.match(/\d{1,3}/g);
                     result	= result.join('.').split('').reverse().join('');
+                document.getElementById("finalprice").value = endprice;
                     document.getElementById("finalprice").innerHTML = 'Rp.'+result+',-';
                 } else {
                     rpFunction();
