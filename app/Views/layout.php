@@ -287,13 +287,24 @@
                                     <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
                                     </li>
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                             </li>
-                            <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('cashman') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashManagement');?></a>
+                            <li class="tm-main-navbar uk-parent">
+                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/cash.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
+                                <ul class="uk-nav-sub">
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('walletman') ?>"><?=lang('Global.walletManagement');?></a>
+                                    </li>
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('walletmove') ?>"><?=lang('Global.walletMovement');?></a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>

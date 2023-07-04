@@ -131,8 +131,16 @@
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                         </li>
-                        <li class="tm-main-navbar">
-                            <a class="uk-h4 tm-h4" href="<?= base_url('cashman') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashManagement');?></a>
+                        <li class="tm-main-navbar uk-parent">
+                            <a class="uk-h4 tm-h4" href=""><img src="img/layout/cash.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
+                            <ul class="uk-nav-sub">
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('walletman') ?>"><?=lang('Global.walletManagement');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('walletmove') ?>"><?=lang('Global.walletMovement');?></a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
@@ -250,7 +258,7 @@
                             
                             <div id="custpoin" class="uk-margin" hidden>
                                 <h4 class="uk-margin-remove"><?=lang('Global.point')?></h4>
-                                    <h5 id="curpoin" class="uk-margin-remove"></h5>
+                                <h5 id="curpoin" class="uk-margin-remove"></h5>
                                 <div class="uk-form-controls uk-margin-small">
                                     <input type="number" class="uk-input" id="poin" name="poin" min="0" max="" placeholder="<?=lang('Global.point')?>"/>
                                 </div>
@@ -458,7 +466,7 @@
                                                                                         UIkit.modal(modalFav).hide();
 
                                                                                     if ( $( "#product<?=$variant['id']?>" ).length ) {
-                                                                                        alert('Already added!');
+                                                                                        alert('<?=lang('Global.readyAdd');?>');
                                                                                     } else {
                                                                                         <?php
                                                                                         foreach ($stocks as $stock) {
@@ -761,7 +769,7 @@
                                                 function createNewOrderBundle<?= $bundle['id'] ?>() {
                                                     var count = 1;
                                                     if ( $( "#bundle<?= $bundle['id'] ?>" ).length ) {
-                                                        alert('Already added!');
+                                                        alert('<?=lang('Global.readyAdd');?>');
                                                     } else {
                                                         <?php
                                                         if ($bundlestock === '0') {
@@ -983,9 +991,10 @@
                     var	reverse = endprice.toString().split('').reverse().join(''),
                     result 	= reverse.match(/\d{1,3}/g);
                     result	= result.join('.').split('').reverse().join('');
-                document.getElementById("finalprice").value = endprice;
+                    document.getElementById("finalprice").value = endprice;
                     document.getElementById("finalprice").innerHTML = 'Rp.'+result+',-';
                 } else {
+                    alert('Harus kurang dari samadengan 100! Otomatis melakukan diskon Nominal.');
                     rpFunction();
                 }
             }

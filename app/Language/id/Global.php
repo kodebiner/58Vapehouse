@@ -105,6 +105,7 @@ return [
     'pay'               => 'Bayar',
     'percent'           => '%',
     'rp'                => 'Rp',
+    'readyAdd'          => 'Sudah Ditambahkan!',
 
     // Menu
     'dashboard'         => 'Dasbor',

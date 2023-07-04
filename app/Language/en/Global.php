@@ -105,6 +105,7 @@ return [
     'pay'               => 'Pay',
     'percent'           => '%',
     'rp'                => 'Rp',
+    'readyAdd'          => 'Already added!',
 
     // Menu
     'dashboard'         => 'Dashboard',
