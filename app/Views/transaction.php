@@ -243,19 +243,21 @@
                                 <div class="uk-form-controls uk-margin-small">
                                     <select class="uk-select" name="payment" required>
                                         <option><?=lang('Global.paymethod')?></option>
-                                            <?php foreach ($cash as $cas) { 
-                                                foreach ($outlets as $outlet){
-                                                    if ($outlet['id']=== $this->data['outletPick']) {
-                                                        if($cas['outletid'] === $outlet['id']){ ?>
-                                                            <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
-                                                <?php   } 
-                                                    }
+                                        <?php  $outid = $this->data['outletPick'];
+                                            foreach ($payments as $pay) {
+                                                if ($pay['outletid'] === $outid){ ?>
+                                                        <option value="<?= $pay['id']; ?>"><?= $pay['name']; ?></option>
+                                                        <?php  
+                                                        $checked = 'selected';
+                                                } else {
+                                                    $checked = '';
                                                 }
-                                            } ?>
+                                            } 
+                                        ?>
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div id="custpoin" class="uk-margin" hidden>
                                 <h4 class="uk-margin-remove"><?=lang('Global.point')?></h4>
                                 <h5 id="curpoin" class="uk-margin-remove"></h5>
@@ -267,40 +269,47 @@
                             <div class="uk-margin" id="split" hidden>
                                 <h4 class="uk-margin-remove uk-text-bold uk-text-small"><?=lang('Global.splitbill')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <input type="text" class="uk-input" name="firstpay" placeholder="<?=lang('Global.firstpay')?>" required />
-                                    <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                    <?php foreach ($cash as $cas) {?>
-                                        <?php foreach($outlets as $outlet){ ?>
-                                            <?php if ($this->data['outletPick'] === $outlet['id']){ ?>
-                                                <?php if ($outlet['id']===$cas['outletid']) { ?>
-                                                    <label for="">
-                                                        <input value="<?= $cas['id']; ?>" <?php if ($cas['outletid'] === $outlet['id']) {echo 'selected';} ?> class="uk-radio" type="radio" name="radio"><?= $cas['name']; ?></input>
-                                                    </label>  
-                                                <?php } 
-                                            }
-                                        }                                     
-                                    } ?>
-                                    </div>
+                                    <input type="text" class="uk-input" name="firstpay" placeholder="<?=lang('Global.firstpay')?>" />
+                                    <div class="uk-form-controls uk-margin-small">
+                                    <select class="uk-select" name="firstpayment" required>
+                                        <option disabled><?=lang('Global.firstpaymet')?></option>
+                                        <?php  $outid = $this->data['outletPick'];
+                                            foreach ($payments as $pay) {
+                                                if ($pay['outletid'] === $outid){ ?>
+                                                        <option value="<?= $pay['id']; ?>"><?= $pay['name']; ?></option>
+                                                        <?php  
+                                                        $checked = 'selected';
+                                                } else {
+                                                    $checked = '';
+                                                }
+                                            } 
+                                        ?>
+                                    </select>
+                                </div>
                                 </div>
                             </div>
 
                             <div class="uk-margin" id="split2" hidden>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <input type="text" class="uk-input" name="secondpay" placeholder="<?=lang('Global.secpay')?>" required />
-                                    <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                        <?php foreach ($cash as $cas) {?>
-                                            <?php foreach($outlets as $outlet){ ?>
-                                                <?php if ($this->data['outletPick'] === $outlet['id']){ ?>
-                                                    <?php if ($outlet['id']===$cas['outletid']) { ?>
-                                                        <label for="">
-                                                            <input value="<?= $cas['id']; ?>" <?php if ($cas['outletid'] === $outlet['id']) {echo 'selected';} ?> class="uk-radio" type="radio" name="radio2"><?= $cas['name']; ?></input>
-                                                        </label>  
-                                                    <?php } 
+                                    <input type="text" class="uk-input" name="secondpay" placeholder="<?=lang('Global.secpay')?>" />
+                                    <div class="uk-form-controls uk-margin-small">
+                                    <select class="uk-select" name="secpayment" required>
+                                        <option disabled ><?=lang('Global.secpaymet')?></option>
+                                        <?php  $outid = $this->data['outletPick'];
+                                            foreach ($payments as $pay) {
+                                                if ($pay['outletid'] === $outid){ ?>
+                                                        <option value="<?= $pay['id']; ?>"><?= $pay['name']; ?></option>
+                                                        <?php  
+                                                        $checked = 'selected';
+                                                } else {
+                                                    $checked = '';
                                                 }
-                                            }                                     
-                                        } ?>
-                                    </div>
+                                            } 
+                                        ?>
+                                    </select>
                                 </div>
+                                </div>
+                                
                             </div>
 
                             <div class="uk-margin" id="amount">
@@ -943,10 +952,43 @@
                 } else {
                     var subtotal = subarr.reduce(function(a, b){ return a + b; });
                     document.getElementById('subtotal').innerHTML = subtotal;
-                    document.getElementById('finalprice').value = subtotal;
-                    document.getElementById('finalprice').innerHTML = subtotal;
-                    document.getElementById("splittotal").innerHTML = 'Total Rp.'+subtotal+',-';
+                    var po = document.getElementById('poin').value;
+                    document.getElementById('finalprice').innerHTML = subtotal-po;
+                    document.getElementById('finalprice').value = subtotal-po;
                 }
+
+                var member      = document.getElementById('customerid').value;
+                var percent     = document.getElementById('discvalue').value;
+                var rupiah      = document.getElementById('discvalue').value;
+                var point       = document.getElementById('discvalue').value;
+
+                // not member and haven't disko and point
+                if (member === 0 && percent === 0 && rupiah === 0 && point === 0 ){
+
+                }
+
+                
+                // member haven't point
+                if (member != 0 && percent === 0 && rupiah === 0 && point === 0 ){
+                    
+                }
+
+                // member have discount rupiah
+                if (member === 0 && percent ===0 && rupiah != 0 && point === 0 ){
+                    
+                } 
+                
+                // member have discout percent
+                if (member === 0 && percent !=0 && rupiah === 0 && point === 0 ){
+                    
+                } 
+                // have point + member disc
+
+                // discount manual not member
+
+                // discount input memmber haven't point
+
+                // discount , member active and have point
 
             });
 
@@ -961,7 +1003,7 @@
             document.getElementById('poin').addEventListener("change", point);
             function point () {
                 var poin = document.getElementById('poin').value;
-                var priceori = document.getElementById('finalprice').value;
+                var priceori = document.getElementById('finalprice').innerText;
                 var lastpoin = priceori - poin;
                 document.getElementById('finalprice').value = lastpoin;
                 document.getElementById('finalprice').innerHTML = lastpoin;
@@ -973,12 +1015,8 @@
                 var total = document.getElementById('subtotal').innerHTML;
                 var disc = document.getElementById('discvalue').value;
                 var endprice = total - disc;
-                var	reverse = endprice.toString().split('').reverse().join(''),
-                result 	= reverse.match(/\d{1,3}/g);
-                result	= result.join('.').split('').reverse().join('');
-                document.getElementById("finalprice").innerHTML = 'Rp.'+result+',-';
+                document.getElementById("finalprice").innerHTML = endprice;
                 document.getElementById("finalprice").value = endprice;
-                console.log(document.getElementById("finalprice").value);
             }
 
             document.getElementById('radio-two').addEventListener("click", myFunction);
@@ -988,11 +1026,8 @@
                 if (disc <= 100) {
                     var discprice = (total * disc )/ 100;
                     var endprice = total - discprice;
-                    var	reverse = endprice.toString().split('').reverse().join(''),
-                    result 	= reverse.match(/\d{1,3}/g);
-                    result	= result.join('.').split('').reverse().join('');
                     document.getElementById("finalprice").value = endprice;
-                    document.getElementById("finalprice").innerHTML = 'Rp.'+result+',-';
+                    document.getElementById("finalprice").innerHTML = endprice;
                 } else {
                     alert('Harus kurang dari samadengan 100! Otomatis melakukan diskon Nominal.');
                     rpFunction();

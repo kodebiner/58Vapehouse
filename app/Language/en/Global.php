@@ -81,6 +81,8 @@ return [
     'secpay'            => 'Second payment',
     'payment'           => 'Payment Management',
     'cash'              => 'Cash',
+    'firstpaymet'       => "First Payment Method",
+    'secpaymet'         => "Second Payment Method",
 
     // Button
     'edit'              => 'Edit',
