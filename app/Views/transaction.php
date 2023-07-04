@@ -1001,3 +1001,17 @@
         </script>
     </body>
 </html>
+
+<!-- 
+    if tidak ada member, diskon dan point = (total = subtotal)
+
+    if menginputkan member tidak menggunakan point = (total = subtotal - member discount)
+
+    if point active = (total = subtotal - (member discount + point))
+
+    if discount active tidak menginputkan member = (total = subtotal - discount)
+
+    if discount active, menginputkan member dan tidak menggunakan point = (total = subtotal - (member discount + discount)
+
+    if discount active, menginputkan member dan menggunakan point = (total = subtotal - (member discount + discount + point)
+-->
