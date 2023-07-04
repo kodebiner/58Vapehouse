@@ -36,33 +36,11 @@
                 <form class="uk-form-stacked" role="form" action="payment/create" method="post">
                     <?= csrf_field() ?>
 
-                    <!-- select oulet -->
-                    <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
-                        <div class="uk-form-controls">
-                            <select class="uk-select" name="outlet" id="sel_out">
-                                <option value="0"><?=lang('Global.outlet')?></option>
-                                <?php
-                                    foreach ($outlets as $outlet) {
-                                        if ($outlet['id'] === $outletPick) {
-                                            $checked = 'selected';
-                                        } else {
-                                            $checked = '';
-                                        }
-                                        ?>
-                                        <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
-                                        <?php
-                                    }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="cashid"><?=lang('Global.cash')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select"  name="cashid" id="sel_out">
-                                <option><?=lang('Global.cash')?></option>
+                                <option  disabled><?=lang('Global.cash')?></option>
                                 <?php foreach ($cash as $cas) { ?>
                                     <?php foreach ($outlets as $outlet) { 
                                         if ($cas['outletid'] === $outlet['id']) {
@@ -76,26 +54,6 @@
                                 <?php } ?>
                             </select>
                         </div>
-                        <!-- <label class="uk-form-label" for="cashid"><?=lang('Global.cash')?></label>
-                        <div class="uk-form-controls">
-                            <select class="uk-select"  name="cashid" id="sel_out">
-                                <option><?=lang('Global.cash')?></option>
-                                <?php
-                                    foreach ($cash as $cas) {
-                                        foreach ($outlets as $outlet) {
-                                            if ($outlet['id'] === $cas['outletid']) {
-                                                $checked = 'selected';
-                                            } else {
-                                                $checked = '';
-                                            }
-                                        }
-                                ?>
-                                <option value="<?= $cas['id']; ?>" <?=$checked?>><?= $cas['name']; ?></option>
-                                <?php
-                                    }
-                                ?>
-                            </select>
-                        </div> -->
                     </div>
 
                     <div class="uk-margin-bottom">
@@ -184,38 +142,23 @@
                     <form class="uk-form-stacked" role="form" action="payment/update/<?= $payment['id'] ?>" method="post">
                         <?= csrf_field() ?>
                         <input type="hidden" name="id" value="<?= $payment['id']; ?>">
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="outlet">
-                                    <option disabled><?=lang('Global.outlet')?></option>
-                                    <?php foreach ($outlets as $outlet) { ?>
-                                        <option value="<?= $outlet['id']; ?>" <?php if ($outlet['id'] === $payment['outletid']) {echo 'selected';} ?>><?= $outlet['name']; ?></option>
-                                    <?php }?>
-                                </select>
-                            </div>
-                        </div>
 
-                        <div class="uk-margin-bottom">
+                    <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="cashid"><?=lang('Global.cash')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select"  name="cashid" id="sel_out">
-                                <option><?=lang('Global.cash')?></option>
-                                <?php
-                                    foreach ($cash as $cas) {
-                                        foreach ($outlets as $outlet) {
-                                            if ($outlet['id'] === $cas['outletid']) {
-                                                $checked = 'selected';
-                                            } else {
-                                                $checked = '';
-                                            }
+                                <option  disabled><?=lang('Global.cash')?></option>
+                                <?php foreach ($cash as $cas) { ?>
+                                    <?php foreach ($outlets as $outlet) { 
+                                        if ($cas['outletid'] === $outlet['id']) {
+                                            $WalletName = $cas['name'].'-'.$outlet['name'];
+                                            $checked = 'selected';
+                                        } else {
+                                            $checked = '';
                                         }
-                                ?>
-                                    <option value="<?= $cas['id']; ?>" <?php if ($cas['id'] === $payment['cashid']) {echo 'selected';} ?>><?= $cas['name']; ?></option>
-                                <?php
-                                    }
-                                ?>
+                                    } ?>
+                                    <option value="<?= $cas['id']; ?>" <?=$checked?>><?= $WalletName; ?></option>
+                                <?php } ?>
                             </select>
                         </div>
                     </div>

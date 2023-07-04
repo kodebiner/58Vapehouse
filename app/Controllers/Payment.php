@@ -22,11 +22,9 @@ class Payment extends BaseController
         // get outlet
         if ($this->data['outletPick'] === null) {
             $payment      = $PaymentModel->orderBy('id', 'DESC')->findAll();
-        } else {
+        }else {
             $payment      = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
         }
-
-
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -45,40 +43,27 @@ class Payment extends BaseController
         // Calling Models
         $PaymentModel   = new PaymentModel;
         $OutletModel    = new OutletModel;
+        $CashModel      = new CashModel;
 
         // Populating data
         $outlets        = $OutletModel->findAll();
         // initialize
         $input          = $this->request->getPost();
 
+        // Getting outlet id
+        $cash = $CashModel->find($input['cashid']);
+
         // save data
         $data = [
-            'outletid'          => $input['outlet'],
             'name'              => $input['name'],
             'cashid'            => $input['cashid'],
+            'outletid'          => $cash['outletid'],
 
         ];
 
-        // validation
-        if ($input['outlet'] === '0')
-        {
-                foreach ($outlets as $outlet){
-                    $data = [
-                            'outletid' => $outlet['id'],
-                            'name'     => $input['name'],
-                            'cashid'   => $input['cashid'],    
-                        ];
-                    $PaymentModel->insert($data);
-                }
-             
-        }else{
-                $data = [
-                    'outletid' => $input['outlet'],
-                    'name'     => $input['name'],
-                    'cashid'   => $input['cashid'],    
-                ];
-                $PaymentModel->insert($data);
-            }
+        $PaymentModel->save($data);
+
+        
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
@@ -87,32 +72,23 @@ class Payment extends BaseController
         // calling Model
         $PaymentModel      = new PaymentModel();
         $OutletModel       = new OutletModel();
+        $CashModel         = new CashModel();
 
         // initialize
         $input = $this->request->getpost();
         $outlets = $OutletModel->findAll();
 
+        // Getting Outlet Id
+        $cash = $CashModel->find($input['cashid']);
+
         // validation
-        if ($input['outlet'] === "0"){
-            foreach ($outlets as $outlet){
-                $data = [
-                    'id'                    => $id,
-                    'outletid'              => $input['outletid'],
-                    'name'                  => $input['name'],
-                    'cashid'                => $input['cashid'],
-                ];
-                $PaymentModel->save($data);
-            }
-        }else{
-            $data = [
+        $data = [
                 'id'                    => $id,
-                'outletid'              => $input['outlet'],
+                'outletid'              => $cash['outletid'],
                 'name'                  => $input['name'],
                 'cashid'                => $input['cashid'],
             ];
-
-            $PaymentModel->save($data);
-        }
+        $PaymentModel->save($data);
 
 
         return redirect()->back()->with('massage', lang('global.saved'));

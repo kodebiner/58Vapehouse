@@ -22,7 +22,9 @@ class CashMan extends BaseController
         if ($this->data['outletPick'] === null) {
             $cashman      = $CashModel->orderBy('id', 'DESC')->findAll();
         } else {
-            $cashman      = $CashModel->where('outletid', $this->data['outletPick'])->find();
+            $out =  $this->data['outletPick'];
+            
+            $cashman      = $CashModel->where("outletid = {$out} OR outletid='0'")->orderBy('outletid', 'ASC')->find();
         }
 
         // Parsing Data to View

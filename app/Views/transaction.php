@@ -238,9 +238,9 @@
                                             <?php foreach ($cash as $cas) { 
                                                 foreach ($outlets as $outlet){
                                                     if ($outlet['id']=== $this->data['outletPick']) {
-                                                if($cas['outletid'] === $outlet['id']){ ?>
-                                                <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
-                                                <?php } 
+                                                        if($cas['outletid'] === $outlet['id']){ ?>
+                                                            <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
+                                                <?php   } 
                                                     }
                                                 }
                                             } ?>
@@ -895,7 +895,6 @@
                     var subtotal = subarr.reduce(function(a, b){ return a + b; });
                     document.getElementById('subtotal').innerHTML = subtotal;
                     document.getElementById('finalprice').innerHTML = subtotal;
-                    document.getElementById("splittotal").innerHTML = 'Total Rp.'+subtotal+',-';
                 }
 
             });
@@ -926,7 +925,6 @@
                 result 	= reverse.match(/\d{1,3}/g);
                 result	= result.join('.').split('').reverse().join('');
                 document.getElementById("finalprice").innerHTML = 'Rp.'+result+',-';
-                document.getElementById("splittotal").innerHTML = 'Total Rp.'+result+',-';
                 document.getElementById("finalprice").value = endprice;
                 console.log(document.getElementById("finalprice").value);
             }
@@ -942,7 +940,6 @@
                     result 	= reverse.match(/\d{1,3}/g);
                     result	= result.join('.').split('').reverse().join('');
                     document.getElementById("finalprice").innerHTML = 'Rp.'+result+',-';
-                    document.getElementById("splittotal").innerHTML = 'Total Rp.'+result+',-';
                 } else {
                     rpFunction();
                 }
