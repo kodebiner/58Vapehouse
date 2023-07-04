@@ -13,7 +13,7 @@
 
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
-            <h3 class="tm-h3"><?=lang('Global.payment')?></h3>
+            <h3 class="tm-h3"><?=lang('Global.paymentList')?></h3>
         </div>
 
         <!-- Button Trigger Modal Add -->

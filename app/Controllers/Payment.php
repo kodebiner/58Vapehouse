@@ -28,8 +28,8 @@ class Payment extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.Payment');
-        $data['description']    = lang('Global.cashmanListDesc');
+        $data['title']          = lang('Global.paymentList');
+        $data['description']    = lang('Global.paymentListDesc');
         $data['payments']       = $payment;
         $data['outlets']        = $outlets;
         $data['cash']           = $cash;

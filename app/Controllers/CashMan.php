@@ -29,8 +29,8 @@ class CashMan extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.cashManagement');
-        $data['description']    = lang('Global.cashmanListDesc');
+        $data['title']          = lang('Global.walletManList');
+        $data['description']    = lang('Global.walletManListDesc');
         $data['cashmans']       = $cashman;
         $data['outlets']        = $outlets;
 

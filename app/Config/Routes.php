@@ -183,15 +183,15 @@ $routes->group('stockadjustment', ['filter'=>'login'], function($routes){
     $routes->post('create', 'StockAdjustment::create', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Cash Management
-$routes->group('cashman', ['filter'=>'login'], function($routes){
+//Wallet Management
+$routes->group('walletman', ['filter'=>'login'], function($routes){
     $routes->get('', 'CashMan::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'CashMan::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'CashMan::update/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Cash Movement
-$routes->group('cashmove', ['filter'=>'login'], function($routes){
+//Wallet Movement
+$routes->group('walletmove', ['filter'=>'login'], function($routes){
     $routes->get('', 'CashMove::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'CashMove::create', ['filter' => 'role:owner,supervisor,operator']);
 });

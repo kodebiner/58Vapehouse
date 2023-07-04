@@ -277,20 +277,20 @@
                             </div>
 
                             <div class="uk-margin" id="split2" hidden>
-                            <div class="uk-form-controls uk-margin-small">
+                                <div class="uk-form-controls uk-margin-small">
                                     <input type="text" class="uk-input" name="secondpay" placeholder="<?=lang('Global.secpay')?>" required />
                                     <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                    <?php foreach ($cash as $cas) {?>
-                                        <?php foreach($outlets as $outlet){ ?>
-                                            <?php if ($this->data['outletPick'] === $outlet['id']){ ?>
-                                                <?php if ($outlet['id']===$cas['outletid']) { ?>
-                                                    <label for="">
-                                                        <input value="<?= $cas['id']; ?>" <?php if ($cas['outletid'] === $outlet['id']) {echo 'selected';} ?> class="uk-radio" type="radio" name="radio2"><?= $cas['name']; ?></input>
-                                                    </label>  
-                                                <?php } 
-                                            }
-                                        }                                     
-                                    } ?>
+                                        <?php foreach ($cash as $cas) {?>
+                                            <?php foreach($outlets as $outlet){ ?>
+                                                <?php if ($this->data['outletPick'] === $outlet['id']){ ?>
+                                                    <?php if ($outlet['id']===$cas['outletid']) { ?>
+                                                        <label for="">
+                                                            <input value="<?= $cas['id']; ?>" <?php if ($cas['outletid'] === $outlet['id']) {echo 'selected';} ?> class="uk-radio" type="radio" name="radio2"><?= $cas['name']; ?></input>
+                                                        </label>  
+                                                    <?php } 
+                                                }
+                                            }                                     
+                                        } ?>
                                     </div>
                                 </div>
                             </div>
@@ -452,7 +452,11 @@
                                                                                 function createNewOrder<?=$variant['id']?>() {
                                                                                     var count = 1;
                                                                                     var modal = document.getElementById('modalVar<?= $product['id'] ?>');
-                                                                                    UIkit.modal(modal).hide();
+                                                                                        UIkit.modal(modal).hide();
+
+                                                                                    var modalFav = document.getElementById('modalFav<?= $product['id'] ?>');
+                                                                                        UIkit.modal(modalFav).hide();
+
                                                                                     if ( $( "#product<?=$variant['id']?>" ).length ) {
                                                                                         alert('Already added!');
                                                                                     } else {
@@ -599,20 +603,17 @@
                                 
                                 <!-- Favorite List -->
                                 <li>
-                                    <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
-                                        <?php foreach ($variants as $variant) : ?>
-                                            <?php
-                                                foreach ($products as $product) {
-                                                    
-                                                    if (($product['id'] === $variant['productid']) && ($product['favorite'] === '1')) {
-                                                        $productName = $product['name'];
-                                                        $productName = $product['name'];
-                                                        $productPhoto = $product['thumbnail'];
-                                            ?>
-                                            <div  id="CreateOrder">
-                                                <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrder<?=$variant['id']?>()">
-                                                    <div class="uk-card-header">
-                                                        <div class="tm-h1 uk-text-bolder uk-text-center"><?= $productName.' - '. $variant['name'] ?></div>
+                                <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                        <?php
+                                            foreach ($products as $product) {
+                                                if ($product['favorite'] === '1') {
+                                                    $productName    = $product['name'];
+                                                    $productPhoto   = $product['thumbnail'];
+                                        ?>
+                                            <div id="CreateOrder">
+                                                <div class="uk-card uk-card-hover uk-card-default" uk-toggle="target: #modalFav<?= $product['id'] ?>">
+                                                    <div class="uk-card-header uk-flex uk-flex-center uk-flex-middle">
+                                                        <div class="tm-h1 uk-text-bolder"><?= $productName ?></div>
                                                     </div>
                                                     <div class="uk-card-body">
                                                         <?php if (!empty($productPhoto)) { ?>
@@ -656,17 +657,57 @@
                                                             </svg>
                                                         <?php } ?>
                                                     </div>
-                                                    <div class="uk-card-footer">
-                                                        <div class="tm-h3 uk-text-center">
-                                                            <div>Rp <?= $variant['hargamodal'] + $variant['hargajual'] ?>,-</div>
+                                                </div>
+                                            </div>
+
+                                            <div id="modalFav<?= $product['id'] ?>" class="uk-flex-top" uk-modal>
+                                                <div class="uk-modal-dialog uk-margin-auto-vertical">
+                                                    <div class="uk-modal-container">
+                                                        <div class="uk-modal-header">
+                                                            <div class="uk-modal-title tm-h2 uk-text-center"><?= $productName ?></div>
+                                                        </div>
+                                                        <div class="uk-modal-body">
+                                                            <div class="uk-child-width-1-1" uk-grid>
+                                                                <div id="">
+                                                                    <?php foreach ($variants as $variant) {
+                                                                        if ($variant['productid'] === $product['id']) {
+                                                                            $VarName    = $variant['name'];
+                                                                            $Price   = $variant['hargamodal'] + $variant['hargajual'];
+                                                                            $ProdName   = $productName.' - '. $variant['name']; ?>
+
+                                                                            <div class="uk-margin">
+                                                                                <div class="uk-flex uk-flex-middle" uk-grid>
+                                                                                    <div class="uk-width-1-3">
+                                                                                        <div class="uk-h4"><?= $VarName; ?></div>
+                                                                                    </div>
+                                                                                    <div class="uk-width-1-3">
+                                                                                        <div class="uk-h4">Rp <?= $Price; ?>,-</div>
+                                                                                    </div>
+                                                                                    <div class="uk-width-1-6">
+                                                                                        <?php foreach ($stocks as $stock) {
+                                                                                            if (($stock['variantid'] === $variant['id']) && ($stock['outletid'] === $outletPick)) {
+                                                                                                $stok = $stock['qty']; ?>
+
+                                                                                                <div class="uk-h4"><?= $stok; ?> pcs</div>
+                                                                                            <?php } ?>
+                                                                                        <?php } ?>
+                                                                                    </div>
+                                                                                    <div class="uk-width-1-6 uk-text-center">
+                                                                                        <a class="uk-icon-button" uk-icon="cart" onclick="createNewOrder<?= $variant['id'] ?>()"></a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php } ?>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        <?php
-                                                    }
-                                                }
-                                        endforeach;
+                                        <?php 
+                                                } 
+                                            } 
                                         ?>
                                     </div>
                                 </li>
@@ -674,7 +715,7 @@
 
                                 <!-- Bundle List -->
                                 <li>
-                                    <div class="uk-child-width-1-2 uk-child-width-1-5@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                    <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                         <?php foreach ($bundles as $bundle) {
                                                 $BunName = $bundle['name']; 
                                                 $BunPrice = $bundle['price'];
@@ -685,7 +726,7 @@
                                                         <div class="tm-h1 uk-text-bolder uk-text-center"><?= $BunName; ?></div>
                                                     </div>
                                                     <div class="uk-card-body">
-                                                        <div class="uk-height-medium uk-flex uk-flex-middle uk-flex-center">
+                                                        <div class="uk-height-small uk-flex uk-flex-middle uk-flex-center">
                                                             <div>
                                                                 <?php
                                                                     $i = 0;
@@ -695,7 +736,7 @@
                                                                             foreach ($products as $product) {
                                                                                 if ($product['id'] === $variant->productid) {
                                                                                     $CombName = $product['name'].' - '.$variant->name;
-                                                                                    echo '<div class="tm-h1 uk-text-center uk-margin-small" id="combname">'.$CombName.'</div>';
+                                                                                    echo '<div class="tm-h5 uk-text-center uk-margin-small" id="combname">'.$CombName.'</div>';
                                                                                 }
                                                                             }
                                                                             if ($i === 1) {

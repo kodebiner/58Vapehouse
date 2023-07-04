@@ -16,7 +16,7 @@ class Customer extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.customer');
+        $data['title']          = lang('Global.customerList');
         $data['description']    = lang('Global.customerListDesc');
         $data['customers']      = $customers;
 

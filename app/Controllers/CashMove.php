@@ -31,8 +31,8 @@ class CashMove extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.cashManagement');
-        $data['description']    = lang('Global.cashmanListDesc');
+        $data['title']          = lang('Global.walletMoveList');
+        $data['description']    = lang('Global.walletMoveListDesc');
         $data['cashmoves']      = $cashmoves;
         $data['cashmans']       = $cashman;
         $data['outlets']        = $outlets;

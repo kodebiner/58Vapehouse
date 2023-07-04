@@ -13,12 +13,12 @@
 
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
-            <h3 class="tm-h3"><?=lang('Global.cashmanList')?></h3>
+            <h3 class="tm-h3"><?=lang('Global.walletManList')?></h3>
         </div>
 
         <!-- Button Trigger Modal Add -->
         <div class="uk-width-1-2@m uk-text-right@m">
-            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addCashMan')?></button>
+            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addWallMan')?></button>
         </div>
         <!-- End Of Button Trigger Modal Add -->
     </div>
@@ -30,7 +30,7 @@
     <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
             <div class="uk-modal-header">
-                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addCashMan')?></h5>
+                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addWallMan')?></h5>
             </div>
             <div class="uk-modal-body">
                 <form class="uk-form-stacked" role="form" action="cashman/create" method="post">

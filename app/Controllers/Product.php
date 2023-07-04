@@ -67,8 +67,8 @@ class Product extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.product');
-        $data['description']    = lang('Global.productDesc');
+        $data['title']          = lang('Global.productList');
+        $data['description']    = lang('Global.productListDesc');
         $data['roles']          = $GroupModel->findAll();
         $data['products']       = $products;
         $data['category']       = $category;
@@ -183,8 +183,8 @@ class Product extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.product');
-        $data['description']    = lang('Global.productDesc');
+        $data['title']          = lang('Global.variantList');
+        $data['description']    = lang('Global.variantListDesc');
         $data['roles']          = $GroupModel->findAll();
         $data['stock']          = $stock;
         $data['products']       = $data;
@@ -501,9 +501,7 @@ class Product extends BaseController
             'id'        => $id,
             'favorite'  => $input,
         ];
-
-
-
+        
         $ProductModel->save($data);
         die(json_encode(array($input)));
     }
