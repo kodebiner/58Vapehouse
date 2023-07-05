@@ -1,8 +1,8 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>

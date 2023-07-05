@@ -1,9 +1,9 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript'); ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
+<script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+<script src="js/cdnjs.cloudflare.com_ajax_libs_jquery_3.3.1_jquery.min.js"></script>
+<script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
 <!-- <style type="text/css">
     #results { padding:20px; border:1px solid; background:#ccc; }
 </style> -->
