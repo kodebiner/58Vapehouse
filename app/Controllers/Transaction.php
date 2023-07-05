@@ -96,10 +96,54 @@ class Transaction extends BaseController
         $TrxdetailModel         = new TransactionModel();
         $TrxpaymentModel        = new TransactionModel();
 
+
+      
+
         // Populating Data
 
+        // initialize
+        $input = $this->request->getPost();
+        $auth = service('authentication');
+        $userId = $this->userId = $auth->id();
 
+        // date time stamp
+        $date=date_create();
+        $tanggal = date_format($date,'Y-m-d H:i:s');
+
+     
+        
         // Insert Data
+        $data = [
+            
+            'outletid'  => $input['outlet'],
+            'userid'    => $userId,
+            'memberid'  => $input['customerid'],
+            'paymentid' => $input['payment'],
+            'value'     => $input['value'],
+            'disctype'  => $input['disctype'],
+            'discvalue' => $input['discvalue'],
+            'date'      => $tanggal,
+            
+        ];
+        dd($data);
+
+
+        $TransactionModel->save($data);
+
+        // tranasaction id
+        $trxId = $TransactionModel->getInsertID();
+        // variant id
+        $varId = $input['qty[]'];
+        // Get Data
+        $variants = $VariantModel->where('id',$input['qty[<?=variantid?>]'])->find();
+            $data = [
+                'transactionid' => $trxId,
+                'variantid'     => $varId,
+                'bundleid'      => $input,
+                'qty'           => $input,
+                'description'   => $Input,
+                'value'         => $input,
+            ];
 
     }
 }

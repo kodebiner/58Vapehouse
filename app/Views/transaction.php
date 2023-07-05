@@ -165,7 +165,7 @@
                         <?= csrf_field() ?>
                         <?php foreach ($outlets as $outlet){ 
                             if ($outlet['id'] === $this->data['outletPick']) { ?>
-                                <input type="hidden" value="<?php $outlet['id'] ?>">
+                                <input type="hidden" name="outlet" value="<?php $outlet['id'] ?>">
                             <?php } ?>
                         <?php } ?>
                         

@@ -161,6 +161,7 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
 //Transaction Routes
 $routes->group('transaction', ['filter'=>'login'], function($routes){
     $routes->get('', 'Transaction::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Transaction::create',['filter'=> 'role:owner,supervisor,operator']);
 });
 
 //Restock Routes
