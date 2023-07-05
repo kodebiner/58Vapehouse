@@ -226,7 +226,7 @@
                                 <h4 class="uk-margin-remove"><?=lang('Global.discount')?></h4>
                                 <div class="uk-margin-small uk-flex-middle" uk-grid>
                                     <div class="uk-width-expand">
-                                        <input class="uk-input" id="discvalue" name="discvalue" placeholder="<?=lang('Global.discount')?>" />
+                                        <input class="uk-input" id="discvalue" name="discvalue" placeholder="<?=lang('Global.discount')?>" onchange="totalcount()" />
                                     </div>
                                     <div class="switch-field uk-flex uk-flex-middle uk-width-auto">
                                         <input type="radio" id="radio-one" name="disctype" value="0" checked/>
@@ -938,6 +938,12 @@
         <!-- Footer Section end -->
         
         <script>
+            var subtotalelem = document.getElementById('subtotal');
+            var disctypeval = 0;
+            var discount = 0;
+            var poin = 0;
+            var memberdisc = 0;
+
             $('#products').on('DOMSubtreeModified', function() {
                 var prices = document.querySelectorAll("div[name='price[]']");
                 var subarr = [];
@@ -952,45 +958,69 @@
                 } else {
                     var subtotal = subarr.reduce(function(a, b){ return a + b; });
                     document.getElementById('subtotal').innerHTML = subtotal;
-                    var po = document.getElementById('poin').value;
-                    document.getElementById('finalprice').innerHTML = subtotal-po;
-                    document.getElementById('finalprice').value = subtotal-po;
                 }
-
-                var member      = document.getElementById('customerid').value;
-                var percent     = document.getElementById('discvalue').value;
-                var rupiah      = document.getElementById('discvalue').value;
-                var point       = document.getElementById('discvalue').value;
-
-                // not member and haven't disko and point
-                if (member === 0 && percent === 0 && rupiah === 0 && point === 0 ){
-
-                }
-
-                
-                // member haven't point
-                if (member != 0 && percent === 0 && rupiah === 0 && point === 0 ){
-                    
-                }
-
-                // member have discount rupiah
-                if (member === 0 && percent ===0 && rupiah != 0 && point === 0 ){
-                    
-                } 
-                
-                // member have discout percent
-                if (member === 0 && percent !=0 && rupiah === 0 && point === 0 ){
-                    
-                } 
-                // have point + member disc
-
-                // discount manual not member
-
-                // discount input memmber haven't point
-
-                // discount , member active and have point
-
             });
+
+            subtotalelem.addEventListener('DOMSubtreeModified', totalcount);
+
+            document.getElementById('discvalue').addEventListener('change', totalcount);
+
+            var disctype = document.getElementsByName('disctype');
+            for (var i = 0; i < disctype.length; i++) {
+                disctype[i].addEventListener('change', totalcount);
+            }
+
+            document.getElementById('poin').addEventListener('change', totalcount);
+
+            document.getElementById('customerid').addEventListener('change', totalcount);
+
+            function totalcount(e) {
+                // Subtotal
+                var subtotal = Number(document.getElementById('subtotal').innerText);
+
+                // Discount
+                var discvalue = document.getElementById('discvalue').value;
+
+                for (i = 0; i < disctype.length; i++) {
+                    if (disctype[i].checked) {
+                        var disctypeval = disctype[i].value;
+                    }
+                }
+
+                if (disctypeval == 0) {
+                    var discount = discvalue;
+                } else if (disctypeval == 1) {
+                    if (discvalue > 100) {
+                        alert('Harus kurang dari samadengan 100! Otomatis melakukan diskon Nominal.');
+                        var discount = discvalue;
+                    } else {
+                        var discount = (discvalue/100)*subtotal;
+                    }
+                }
+
+                // Poin
+                var poin = document.getElementById('poin').value;
+
+                // Member Discount
+                var member = document.getElementById('customerid');
+
+                if (member && member.value) {
+                    <?php
+                    if ($gconfig['memberdisctype'] === '0') {
+                        echo 'var memberdisc = '.$gconfig['memberdisc'].';';
+                    } elseif ($gconfig['memberdisctype'] === '1') {
+                        echo 'var memberdisc = ('.$gconfig['memberdisc'].'/100)*subtotal;';
+                    }
+                    ?>
+                } else {
+                    var memberdisc = 0;
+                }
+
+                // Count Total Price
+                var totalprice = subtotal - discount - memberdisc - poin;
+                var finalprice = document.getElementById('finalprice');
+                finalprice.innerHTML = 'Rp. ' + totalprice + ',-';
+            }
 
             document.getElementById('splitbill').addEventListener("click",bill);
             function bill(){
@@ -999,54 +1029,6 @@
                 document.getElementById('amount').setAttribute('hidden','hidden');
                 document.getElementById('splitbill').setAttribute('hidden','hidden');
             }
-            
-            document.getElementById('poin').addEventListener("change", point);
-            function point () {
-                var poin = document.getElementById('poin').value;
-                var priceori = document.getElementById('finalprice').innerText;
-                var lastpoin = priceori - poin;
-                document.getElementById('finalprice').value = lastpoin;
-                document.getElementById('finalprice').innerHTML = lastpoin;
-
-            }
-
-            document.getElementById('radio-one').addEventListener("click", rpFunction);
-            function rpFunction() {
-                var total = document.getElementById('subtotal').innerHTML;
-                var disc = document.getElementById('discvalue').value;
-                var endprice = total - disc;
-                document.getElementById("finalprice").innerHTML = endprice;
-                document.getElementById("finalprice").value = endprice;
-            }
-
-            document.getElementById('radio-two').addEventListener("click", myFunction);
-            function myFunction() {
-                var total = document.getElementById('subtotal').innerHTML;
-                var disc = document.getElementById('discvalue').value;
-                if (disc <= 100) {
-                    var discprice = (total * disc )/ 100;
-                    var endprice = total - discprice;
-                    document.getElementById("finalprice").value = endprice;
-                    document.getElementById("finalprice").innerHTML = endprice;
-                } else {
-                    alert('Harus kurang dari samadengan 100! Otomatis melakukan diskon Nominal.');
-                    rpFunction();
-                }
-            }
         </script>
     </body>
 </html>
-
-<!-- 
-    if tidak ada member, diskon dan point = (total = subtotal)
-
-    if menginputkan member tidak menggunakan point = (total = subtotal - member discount)
-
-    if point active = (total = subtotal - (member discount + point))
-
-    if discount active tidak menginputkan member = (total = subtotal - discount)
-
-    if discount active, menginputkan member dan tidak menggunakan point = (total = subtotal - (member discount + discount)
-
-    if discount active, menginputkan member dan menggunakan point = (total = subtotal - (member discount + discount + point)
--->
