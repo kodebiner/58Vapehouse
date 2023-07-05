@@ -978,6 +978,8 @@
                 // Subtotal
                 var subtotal = Number(document.getElementById('subtotal').innerText);
 
+                
+
                 // Discount
                 var discvalue = document.getElementById('discvalue').value;
 
@@ -1014,12 +1016,16 @@
                     ?>
                 } else {
                     var memberdisc = 0;
-                }
+                }               
 
-                // Count Total Price
-                var totalprice = subtotal - discount - memberdisc - poin;
+                // Tax
+                var tax = (<?=$gconfig['ppn']?>/100)*subtotal;
+                
+                 // Count Total Price
+                var totalprice = subtotal - discount - memberdisc - poin + tax;
                 var finalprice = document.getElementById('finalprice');
                 finalprice.innerHTML = 'Rp. ' + totalprice + ',-';
+
             }
 
             document.getElementById('splitbill').addEventListener("click",bill);
