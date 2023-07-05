@@ -28,9 +28,9 @@
         <link rel="stylesheet" href="css/theme.css">
         <script src="js/uikit.min.js"></script>
         <script src="js/uikit-icons.min.js"></script>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
+        <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
+        <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
         <style type="text/css">
             .dummyproduct{fill:#666666;}
         </style>
