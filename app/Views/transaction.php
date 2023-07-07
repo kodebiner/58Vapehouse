@@ -174,13 +174,14 @@
                                 <h4 class="uk-margin-remove"><?=lang('Global.customer')?></h4>
                                 <div class="uk-margin-small">
                                     <div class="uk-width-1-1">
-                                        <input class="uk-input" id="customerid" name="customerid" />
+                                        <input class="uk-input" id="customerid" name="customerid" required/>
                                     </div>
                                 </div>
 
                                 <script type="text/javascript">
                                     $(function() {
                                         var customerList = [
+                                            {label: "Non Member", idx: "0"},
                                             <?php
                                                 foreach ($customers as $customer) {
                                                     echo '{label:"'.$customer['name'].'",idx:'.$customer['id'].'},';
@@ -197,6 +198,12 @@
                                                         document.getElementById('custpoin').removeAttribute('hidden');
                                                         document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> ' + customers[x]['poin'];
                                                         document.getElementById('poin').setAttribute('max', customers[x]['poin']);
+                                                        totalcount();
+                                                    } else {
+                                                        document.getElementById('custpoin').setAttribute('hidden', '');
+                                                        document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> 0';
+                                                        document.getElementById('poin').setAttribute('max', '0');
+                                                        totalcount();
                                                     }
                                                 }
                                             },
@@ -318,8 +325,14 @@
                                     <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.amountpaid')?>" required />
                                 </div>
                             </div>
+                            
+                            <div class="uk-margin">
+                                <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="splitbill"> Want To Split Bill ?</a>
+                            </div>
 
-                            <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="splitbill"> Want To Split Bill ?</a>
+                            <div class="uk-margin">
+                                <?=lang('Global.vat')?> <?=$gconfig['ppn']?>%
+                            </div>
 
                         </div>
                         <div class="uk-modal-footer" style="border-top: 0;">
@@ -972,7 +985,7 @@
 
             document.getElementById('poin').addEventListener('change', totalcount);
 
-            document.getElementById('customerid').addEventListener('change', totalcount);
+            //document.getElementById('customerid').addEventListener('change', totalcount);
 
             function totalcount(e) {
                 // Subtotal
@@ -1007,13 +1020,17 @@
                 var member = document.getElementById('customerid');
 
                 if (member && member.value) {
-                    <?php
-                    if ($gconfig['memberdisctype'] === '0') {
-                        echo 'var memberdisc = '.$gconfig['memberdisc'].';';
-                    } elseif ($gconfig['memberdisctype'] === '1') {
-                        echo 'var memberdisc = ('.$gconfig['memberdisc'].'/100)*subtotal;';
+                    if (member.value != '0') {
+                        <?php
+                        if ($gconfig['memberdisctype'] === '0') {
+                            echo 'var memberdisc = '.$gconfig['memberdisc'].';';
+                        } elseif ($gconfig['memberdisctype'] === '1') {
+                            echo 'var memberdisc = ('.$gconfig['memberdisc'].'/100)*subtotal;';
+                        }
+                        ?>
+                    } else {
+                        var memberdisc = 0;
                     }
-                    ?>
                 } else {
                     var memberdisc = 0;
                 }               
