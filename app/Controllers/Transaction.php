@@ -110,12 +110,12 @@ class Transaction extends BaseController
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
 
-     
+        $outlet  = $OutletModel->where('id', $this->data['outletPick'])->first();
         
         // Insert Data
         $data = [
             
-            'outletid'  => $input['outlet'],
+            'outletid'  => $outlet['id'],
             'userid'    => $userId,
             'memberid'  => $input['customerid'],
             'paymentid' => $input['payment'],
@@ -125,25 +125,55 @@ class Transaction extends BaseController
             'date'      => $tanggal,
             
         ];
-        dd($data);
-
-
-        $TransactionModel->save($data);
-
+        
+        // save data transaction
+        // $TransactionModel->save($data);
+        
         // tranasaction id
         $trxId = $TransactionModel->getInsertID();
-        // variant id
-        $varId = $input['qty[]'];
+
+        // variants item
+        $variant = $input["qty"];
+        if ($variant < 1) {
+            foreach ($variant as $x => $val){
+                $varId = $x;
+                $qty  = $val;
+            }
+        }else{
+        // if variant more than one
+            foreach ($variant as $varian){
+                $variant = $input["qty"];
+                foreach ($variant as $x => $val){
+                    $varId = $x;
+                    $qty  = $val;
+                }
+            }
+        }
+
+        dd($varId);
+
+        // bundle item
+        $bundles = $input['bqty'];
+        if ($bundles !=0){
+            foreach ($bundles as $y => $value){
+                $bundId = $y;
+                $qty    = $value;
+            }
+        }
+
+
         // Get Data
-        $variants = $VariantModel->where('id',$input['qty[<?=variantid?>]'])->find();
-            $data = [
-                'transactionid' => $trxId,
-                'variantid'     => $varId,
-                'bundleid'      => $input,
-                'qty'           => $input,
-                'description'   => $Input,
-                'value'         => $input,
-            ];
+        $data = [
+            'transactionid' => $trxId,
+            'variantid'     => $varId,
+            'bundleid'      => $input['qty'],
+            'qty'           => $qty,
+            // 'description'   => $input['description'],
+            'value'         => $input['value'],
+        ];
+        dd($data);
+        
+
 
     }
 }
