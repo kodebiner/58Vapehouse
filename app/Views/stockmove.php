@@ -30,7 +30,7 @@
             <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addStockMove')?></h5>
           </div>
           <div class="uk-modal-body">
-            <form class="uk-form-stacked" role="form" action="/StockMove/create" method="post">
+            <form class="uk-form-stacked" role="form" action="stockmove/create" method="post">
               <?= csrf_field() ?>
               
               <!-- ajax -->

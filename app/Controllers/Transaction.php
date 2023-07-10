@@ -104,8 +104,6 @@ class Transaction extends BaseController
         // initialize
         $input = $this->request->getPost();
 
-        dd($input);
-
         // date time stamp
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
@@ -125,53 +123,76 @@ class Transaction extends BaseController
         ];
         
         // save data transaction
-        // $TransactionModel->save($data);
+        $TransactionModel->save($data);
         
         // tranasaction id
         $trxId = $TransactionModel->getInsertID();
 
-        // variants item
-        $variant = $input["qty"];
-        if ($variant < 1) {
-            foreach ($variant as $x => $val){
-                $varId = $x;
+        // save variants item
+        if (!empty($input["qty"])) {
+            $variant = $input["qty"];
+            foreach ($variant as $vId => $val){
+                $varId = $vId;
                 $qty  = $val;
             }
-        }else{
-        // if variant more than one
-            foreach ($variant as $varian){
-                $variant = $input["qty"];
-                foreach ($variant as $x => $val){
-                    $varId = $x;
-                    $qty  = $val;
+            $data = [
+                'transactionid' => $trxId,
+                'variantid'     => $varId,
+                'bundleid'      => "0",
+                'qty'           => $qty,
+                // 'description'   => $input['description'],
+                'value'         => $input['value'],
+            ];
+            $trxdetails->save($data);
+
+            // Minus Stock
+            $stockId = $StockModel->where('variantid', $varId)->where('outletid',$this->data['outletPick'])->find();
+            foreach ($stocks as $stock){
+                if(($stock['variantid']===$varId)&&($stock['outletid']===$this->data['outletPick'])){
+                    $newStock = $stock['qty']-$qty;
+
+                    $stok = [
+                        'id' => $stockId,
+                        'qty' => $newStock,
+                    ];
+                    $StockModel->save($stok);
                 }
             }
         }
 
-        dd($varId);
-
-        // bundle item
-        $bundles = $input['bqty'];
-        if ($bundles !=0){
+        // save bundle item
+        if (!empty($input['bqty'])){
+            $bundles = $input['bqty'];
             foreach ($bundles as $y => $value){
                 $bundId = $y;
                 $qty    = $value;
             }
+            $data = [
+                'transactionid' => $trxId,
+                'variantid'     => "0",
+                'bundleid'      => $y,
+                'qty'           => $qty,
+                // 'description'   => $input['description'],
+                'value'         => $input['value'],
+            ];
+            $trxdetails->save($data);
+
+            // minus stock
+            $bundet = $BundledetModel->where('bundleid',$y)->find();
+            $stockId = $StockModel->where('variantid', $varId)->where('outletid',$this->data['outletPick'])->find();
+            foreach ($stocks as $stock){
+                if (($stock['variantid']===$bundet['variantid'])&&($stock['outletid']===$this->$data['outletPick'])){
+                    $newStock = $stock['qty']-$qty;
+                    $stok = [
+                        'id' => $stockId,
+                        'qty' => $newStock,
+                    ];
+                    $StockModel->save($stok);
+                }
+            }
         }
 
-
-        // Get Data
-        $data = [
-            'transactionid' => $trxId,
-            'variantid'     => $varId,
-            'bundleid'      => $input['qty'],
-            'qty'           => $qty,
-            // 'description'   => $input['description'],
-            'value'         => $input['value'],
-        ];
-        dd($data);
         
-
 
     }
 }
