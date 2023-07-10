@@ -33,7 +33,7 @@
                 <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addWallMan')?></h5>
             </div>
             <div class="uk-modal-body">
-                <form class="uk-form-stacked" role="form" action="cashman/create" method="post">
+                <form class="uk-form-stacked" role="form" action="walletman/create" method="post">
                     <?= csrf_field() ?>
 
                     <!-- select oulet -->
@@ -41,7 +41,8 @@
                     <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select" name="outlet" id="sel_out">
-                                <option value="0"><?=lang('Global.outlet')?></option>
+                                <option selected disbled hidden>-- <?=lang('Global.chooseoutlet')?> --</option>
+                                <option value="0"><?=lang('Global.allOutlets')?></option>
                                 <?php
                                     foreach ($outlets as $outlet) {
                                         if ($outlet['id'] === $outletPick) {
@@ -143,7 +144,7 @@
                 </div>
 
                 <div class="uk-modal-body">
-                    <form class="uk-form-stacked" role="form" action="cashman/update/<?= $cash['id'] ?>" method="post">
+                    <form class="uk-form-stacked" role="form" action="walletman/update/<?= $cash['id'] ?>" method="post">
                         <?= csrf_field() ?>
                         <input type="hidden" name="id" value="<?= $cash['id']; ?>">
                         
@@ -151,7 +152,7 @@
                             <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
                             <div class="uk-form-controls">
                                 <select class="uk-select" name="outlet">
-                                    <option disabled><?=lang('Global.outlet')?></option>
+                                    <option disabled><?=lang('Global.allOutlets')?></option>
                                     <?php foreach ($outlets as $outlet) { ?>
                                         <option value="<?= $outlet['id']; ?>" <?php if ($outlet['id'] === $cash['outletid']) {echo 'selected';} ?>><?= $outlet['name']; ?></option>
                                     <?php }?>
