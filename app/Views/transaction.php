@@ -181,7 +181,7 @@
                                 <script type="text/javascript">
                                     $(function() {
                                         var customerList = [
-                                            {label: "Non Member", idx: "0"},
+                                            {label: "Non Member", idx:0},
                                             <?php
                                                 foreach ($customers as $customer) {
                                                     echo '{label:"'.$customer['name'].'",idx:'.$customer['id'].'},';
@@ -191,23 +191,27 @@
                                         $("#customerid").autocomplete({
                                             source: customerList,
                                             select: function(e, i) {
-                                                $("#customerid").val(i.item.idx);
-                                                var customers = <?php echo json_encode($customers); ?>;
-                                                for (var x = 0; x < customers.length; x++) {
-                                                    if (customers[x]['id'] == i.item.idx) {
-                                                        document.getElementById('custpoin').removeAttribute('hidden');
-                                                        document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> ' + customers[x]['poin'];
-                                                        document.getElementById('poin').setAttribute('max', customers[x]['poin']);
-                                                        totalcount();
-                                                    } else {
-                                                        document.getElementById('custpoin').setAttribute('hidden', '');
-                                                        document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> 0';
-                                                        document.getElementById('poin').setAttribute('max', '0');
-                                                        totalcount();
+                                                document.getElementById('customerid').value = i.item.idx;
+                                                //$("#customerid").val(i.item.idx);
+                                                if (i.item.idx != 0) {
+                                                    var customers = <?php echo json_encode($customers); ?>;
+                                                    for (var x = 0; x < customers.length; x++) {
+                                                        if (customers[x]['id'] == i.item.idx) {
+                                                            document.getElementById('custpoin').removeAttribute('hidden');
+                                                            document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> ' + customers[x]['poin'];
+                                                            document.getElementById('poin').setAttribute('max', customers[x]['poin']);
+                                                            totalcount();
+                                                        }
                                                     }
+                                                } else {
+                                                    document.getElementById('custpoin').setAttribute('hidden', '');
+                                                    document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> 0' ;
+                                                    document.getElementById('poin').setAttribute('max', '0');
+                                                    document.getElementById('poin').value = '0';
+                                                    totalcount();
                                                 }
                                             },
-                                            minLength: 2
+                                            //minLength: 2
                                         });
                                     });
                                 </script>
@@ -218,15 +222,6 @@
                             <div class="uk-margin">
                                 <h4 class="uk-h4 uk-margin-remove-bottom"><?=lang('Global.subtotal')?></h4>
                                 <div class="uk-h4 uk-margin-remove-top" id="subtotal">0</div>
-                                <div class="uk-h4">
-                                    <?php foreach ($transactions as $transaction) : ?>
-                                        <?php foreach ($trxdetails as $trxdet) {
-                                            if ($transaction['id'] === $trxdet['transactionid']) {
-                                                echo $trxdet['value'];
-                                            }
-                                        } ?>
-                                    <?php endforeach; ?>
-                                </div>
                             </div>
 
                             <div class="uk-margin">
@@ -245,78 +240,58 @@
                                 </div>
                             </div>
 
-                            <div class="uk-margin">
+                            <div id="paymentmethod" class="uk-margin">
                                 <h4 class="uk-margin-remove"><?=lang('Global.paymethod')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <select class="uk-select" name="payment" required>
-                                        <option><?=lang('Global.paymethod')?></option>
-                                        <?php  $outid = $this->data['outletPick'];
-                                            foreach ($payments as $pay) {
-                                                if ($pay['outletid'] === $outid){ ?>
-                                                        <option value="<?= $pay['id']; ?>"><?= $pay['name']; ?></option>
-                                                        <?php  
-                                                        $checked = 'selected';
-                                                } else {
-                                                    $checked = '';
-                                                }
-                                            } 
+                                    <select class="uk-select" name="payment">
+                                        <option selected disabled hidden>-- <?=lang('Global.paymethod')?> --</option>
+                                        <?php
+                                        foreach ($payments as $pay) {
+                                            if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
+                                                echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
+                                            }
+                                        }
                                         ?>
                                     </select>
                                 </div>
                             </div>
 
-                            <div id="custpoin" class="uk-margin" hidden>
-                                <h4 class="uk-margin-remove"><?=lang('Global.point')?></h4>
-                                <h5 id="curpoin" class="uk-margin-remove"></h5>
-                                <div class="uk-form-controls uk-margin-small">
-                                    <input type="number" class="uk-input" id="poin" name="poin" min="0" max="" placeholder="<?=lang('Global.point')?>"/>
-                                </div>
-                            </div>
-
-                            <div class="uk-margin" id="split" hidden>
-                                <h4 class="uk-margin-remove uk-text-bold uk-text-small"><?=lang('Global.splitbill')?></h4>
-                                <div class="uk-form-controls uk-margin-small">
-                                    <input type="text" class="uk-input" name="firstpay" placeholder="<?=lang('Global.firstpay')?>" />
-                                    <div class="uk-form-controls uk-margin-small">
-                                    <select class="uk-select" name="firstpayment" required>
-                                        <option disabled><?=lang('Global.firstpaymet')?></option>
-                                        <?php  $outid = $this->data['outletPick'];
+                            <div id="bills" class="uk-margin" hidden>
+                                <h4><?=lang('Global.splitbill')?></h4>
+                                <div class="uk-margin">
+                                    <div class="uk-margin-small uk-form-controls">
+                                        <select class="uk-select" name="firstpayment">
+                                            <option selected disabled hidden>-- <?=lang('Global.firstpaymet')?> --</option>
+                                            <?php
                                             foreach ($payments as $pay) {
-                                                if ($pay['outletid'] === $outid){ ?>
-                                                        <option value="<?= $pay['id']; ?>"><?= $pay['name']; ?></option>
-                                                        <?php  
-                                                        $checked = 'selected';
-                                                } else {
-                                                    $checked = '';
+                                                if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
+                                                    echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
                                                 }
-                                            } 
-                                        ?>
-                                    </select>
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="uk-margin-small uk-form-controls">
+                                        <input type="text" class="uk-input" name="firstpay" placeholder="<?=lang('Global.firstpay')?>" />
+                                    </div>
                                 </div>
-                                </div>
-                            </div>
-
-                            <div class="uk-margin" id="split2" hidden>
-                                <div class="uk-form-controls uk-margin-small">
-                                    <input type="text" class="uk-input" name="secondpay" placeholder="<?=lang('Global.secpay')?>" />
-                                    <div class="uk-form-controls uk-margin-small">
-                                    <select class="uk-select" name="secpayment" required>
-                                        <option disabled ><?=lang('Global.secpaymet')?></option>
-                                        <?php  $outid = $this->data['outletPick'];
+                                <div class="uk-margin">
+                                    <div class="uk-margin-small uk-form-controls">
+                                        <select class="uk-select" name="secpayment">
+                                            <option selected disabled hidden>-- <?=lang('Global.secpaymet')?> --</option>
+                                            <?php
                                             foreach ($payments as $pay) {
-                                                if ($pay['outletid'] === $outid){ ?>
-                                                        <option value="<?= $pay['id']; ?>"><?= $pay['name']; ?></option>
-                                                        <?php  
-                                                        $checked = 'selected';
-                                                } else {
-                                                    $checked = '';
+                                                if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
+                                                    echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
                                                 }
-                                            } 
-                                        ?>
-                                    </select>
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="uk-margin-small uk-form-controls">
+                                        <input type="text" class="uk-input" name="secondpay" placeholder="<?=lang('Global.secpay')?>" />
+                                    </div>
                                 </div>
-                                </div>
-                                
                             </div>
 
                             <div class="uk-margin" id="amount">
@@ -327,7 +302,16 @@
                             </div>
                             
                             <div class="uk-margin">
-                                <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="splitbill"> Want To Split Bill ?</a>
+                                <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="splitbill"><?=lang('Global.wanttosplit')?></a>
+                                <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="cancelsplit" hidden><?=lang('Global.cancelsplit')?></a>
+                            </div>
+
+                            <div id="custpoin" class="uk-margin" hidden>
+                                <h4 class="uk-margin-remove"><?=lang('Global.point')?></h4>
+                                <h5 id="curpoin" class="uk-margin-remove"></h5>
+                                <div class="uk-form-controls uk-margin-small">
+                                    <input type="number" class="uk-input" id="poin" name="poin" min="0" max="" placeholder="<?=lang('Global.point')?>"/>
+                                </div>
                             </div>
 
                             <div class="uk-margin">
@@ -1020,7 +1004,8 @@
                 var member = document.getElementById('customerid');
 
                 if (member && member.value) {
-                    if (member.value != '0') {
+                    console.log(member.value);
+                    if (member.value != 0) {
                         <?php
                         if ($gconfig['memberdisctype'] === '0') {
                             echo 'var memberdisc = '.$gconfig['memberdisc'].';';
@@ -1033,24 +1018,42 @@
                     }
                 } else {
                     var memberdisc = 0;
-                }               
+                }
 
                 // Tax
                 var tax = (<?=$gconfig['ppn']?>/100)*subtotal;
                 
                  // Count Total Price
-                var totalprice = subtotal - discount - memberdisc - poin + tax;
+                var totalprice = subtotal - discount - memberdisc - poin;             
+
+                // Tax
+                var tax = (<?=$gconfig['ppn']?>/100)*totalprice;
+
+                // Count Paid Price
+                var paidprice = totalprice + tax;
+
                 var finalprice = document.getElementById('finalprice');
-                finalprice.innerHTML = 'Rp. ' + totalprice + ',-';
+                finalprice.innerHTML = 'Rp. ' + paidprice + ',-';
 
             }
 
-            document.getElementById('splitbill').addEventListener("click",bill);
-            function bill(){
-                document.getElementById('split').removeAttribute('hidden');
-                document.getElementById('split2').removeAttribute('hidden');
-                document.getElementById('amount').setAttribute('hidden','hidden');
-                document.getElementById('splitbill').setAttribute('hidden','hidden');
+            document.getElementById('splitbill').addEventListener("click", splitbill);
+            document.getElementById('cancelsplit').addEventListener("click", cancelsplit);
+
+            function splitbill() {
+                document.getElementById('amount').setAttribute('hidden', '');
+                document.getElementById('paymentmethod').setAttribute('hidden', '');
+                document.getElementById('splitbill').setAttribute('hidden', '');
+                document.getElementById('bills').removeAttribute('hidden');
+                document.getElementById('cancelsplit').removeAttribute('hidden');
+            }
+
+            function cancelsplit() {
+                document.getElementById('amount').removeAttribute('hidden');
+                document.getElementById('paymentmethod').removeAttribute('hidden');
+                document.getElementById('splitbill').removeAttribute('hidden');
+                document.getElementById('bills').setAttribute('hidden', '');
+                document.getElementById('cancelsplit').setAttribute('hidden', '');
             }
         </script>
     </body>

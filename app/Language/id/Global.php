@@ -78,10 +78,14 @@ return [
     'chooseoutlet'      => 'Pilih Outlet Dahulu',
     'alertstock'        => 'Stock tidak mencukupi',
     'splitbill'         => 'Pisah Pembayaran',
-    'firstpay'          => 'Pembayaran Pertama',
-    'secpay'            => 'Pembayaran Kedua',
+    'wanttosplit'       => 'Ingin pisah pembayaran?',
+    'cancelsplit'       => 'batal pisah pembayaran',
+    'firstpay'          => 'Jumlah pembayaran pertama',
+    'secpay'            => 'Jumlah pembayaran kedua',
     'payment'           => 'Pengelolaan Pembayaran',
     'cash'              => 'Kas',
+    'firstpaymet'       => "Metode Pembayaran 1",
+    'secpaymet'         => "Metode Pembayaran 2",
 
     // Button
     'edit'              => 'Ubah',

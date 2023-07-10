@@ -103,20 +103,18 @@ class Transaction extends BaseController
 
         // initialize
         $input = $this->request->getPost();
-        $auth = service('authentication');
-        $userId = $this->userId = $auth->id();
+
+        dd($input);
 
         // date time stamp
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
-
-        $outlet  = $OutletModel->where('id', $this->data['outletPick'])->first();
         
         // Insert Data
         $data = [
             
-            'outletid'  => $outlet['id'],
-            'userid'    => $userId,
+            'outletid'  => $this->data['outletPick'],
+            'userid'    => $this->data['uid'],
             'memberid'  => $input['customerid'],
             'paymentid' => $input['payment'],
             'value'     => $input['value'],

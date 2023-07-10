@@ -96,11 +96,17 @@
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td><?= $payment['name']; ?></td>
                     <td class="uk-text-left">
-                        <?php foreach ($outlets as $outlet) {
-                            if ($outlet['id'] === $payment['outletid']) {
-                                echo $outlet['name'];
+                        <?php                        
+                        if ($payment['outletid'] === '0') {
+                            echo lang('Global.allOutlets');
+                        } else {
+                            foreach ($outlets as $outlet) {
+                                if ($outlet['id'] === $payment['outletid']) {
+                                    echo $outlet['name'];
+                                }
                             }
-                        } ?>
+                        }
+                        ?>
                     </td>
                     <td class="uk-text-center">
                         <?php 
