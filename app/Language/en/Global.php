@@ -74,6 +74,7 @@ return [
     'amountpaid'        => 'Amount Paid',
     'yourpoint'         => 'Available point is',
     'total'             => 'Total',
+    'choosewallet'      => 'Choose a Wallet',
     'chooseoutlet'      => 'Choose an Outlet first',
     'alertstock'        => 'Insufficient stock',
     'splitbill'         => 'Split Bill',

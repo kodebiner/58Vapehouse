@@ -74,6 +74,7 @@ return [
     'amountpaid'        => 'Jumlah Yang Dibayarkan',
     'yourpoint'         => 'Poin yang tersedia sebesar',
     'total'             => 'Total',
+    'choosewallet'      => 'Pilih Dompet',
     'chooseoutlet'      => 'Pilih Outlet Dahulu',
     'alertstock'        => 'Stock tidak mencukupi',
     'splitbill'         => 'Pisah Pembayaran',

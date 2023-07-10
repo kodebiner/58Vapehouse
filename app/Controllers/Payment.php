@@ -20,11 +20,12 @@ class Payment extends BaseController
         $cash                   = $CashModel->findAll();
 
         // get outlet
-        if ($this->data['outletPick'] === null) {
-            $payment      = $PaymentModel->orderBy('id', 'DESC')->findAll();
-        }else {
-            $payment      = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
-        }
+        $payment = $PaymentModel->where('outletid', '0')->orWhere('outletid', $this->data['outletPick'])->find();
+        // if ($this->data['outletPick'] === null) {
+        //     $payment      = $PaymentModel->orderBy('id', 'DESC')->findAll();
+        // }else {
+        //     $payment      = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
+        // }
 
         // Parsing Data to View
         $data                   = $this->data;

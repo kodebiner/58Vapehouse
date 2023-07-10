@@ -7,6 +7,12 @@
 
 <?= $this->section('main') ?>
 
+<?php if ($outletPick === null) { ?>
+    <div class="uk-alert-danger" uk-alert>
+        <p><?=lang('Global.chooseoutlet')?></p>
+    </div>
+<?php } else { ?>
+
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
     <?= view('Views/Auth/_message_block') ?>
@@ -39,19 +45,15 @@
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="cashid"><?=lang('Global.cash')?></label>
                         <div class="uk-form-controls">
-                            <select class="uk-select"  name="cashid" id="sel_out">
-                                <option  disabled><?=lang('Global.cash')?></option>
-                                <?php foreach ($cash as $cas) { ?>
-                                    <?php foreach ($outlets as $outlet) { 
-                                        if ($cas['outletid'] === $outlet['id']) {
-                                            $WalletName = $cas['name'].'-'.$outlet['name'];
-                                            $checked = 'selected';
-                                        } else {
-                                            $checked = '';
-                                        }
-                                    } ?>
-                                    <option value="<?= $cas['id']; ?>" <?=$checked?>><?= $WalletName; ?></option>
-                                <?php } ?>
+                            <select class="uk-select"  name="cashid" id="cashid" reqired>
+                                <option  selected hidden disabled>-- <?=lang('Global.choosewallet')?> --</option>
+                                <?php
+                                foreach ($cash as $cas) {                                    
+                                    if (($cas['outletid'] === '0') || ($cas['outletid'] === $outletPick)) {
+                                        echo '<option value="'.$cas['id'].'">'.$cas['name'].'</option>';
+                                    }
+                                }
+                                ?>
                             </select>
                         </div>
                     </div>
@@ -143,30 +145,30 @@
                         <?= csrf_field() ?>
                         <input type="hidden" name="id" value="<?= $payment['id']; ?>">
 
-                    <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="cashid"><?=lang('Global.cash')?></label>
-                        <div class="uk-form-controls">
-                            <select class="uk-select"  name="cashid" id="sel_out">
-                                <option  disabled><?=lang('Global.cash')?></option>
-                                <?php foreach ($cash as $cas) { ?>
-                                    <?php foreach ($outlets as $outlet) { 
-                                        if ($cas['outletid'] === $outlet['id']) {
-                                            $WalletName = $cas['name'].'-'.$outlet['name'];
-                                            $checked = 'selected';
-                                        } else {
-                                            $checked = '';
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="cashid"><?=lang('Global.cash')?></label>
+                            <div class="uk-form-controls">
+                                <select class="uk-select"  name="cashid" id="cashid" required>
+                                    <?php
+                                    foreach ($cash as $cas) {
+                                        if (($cas['outletid'] === '0') || ($cas['outletid'] === $outletPick)) {
+                                            if ($payment['cashid'] === $cas['id']) {
+                                                $selected = 'selected';
+                                            } else {
+                                                $selected = '';
+                                            }
+                                            echo '<option value="'.$cas['id'].'" '.$selected.'>'.$cas['name'].'</option>';
                                         }
-                                    } ?>
-                                    <option value="<?= $cas['id']; ?>" <?=$checked?>><?= $WalletName; ?></option>
-                                <?php } ?>
-                            </select>
+                                    }
+                                    ?>
+                                </select>
+                            </div>
                         </div>
-                    </div>
 
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="name" name="name" value="<?= $payment['name']; ?>"autofocus />
+                                <input type="text" class="uk-input" id="name" name="name" value="<?= $payment['name']; ?>" autofocus required />
                             </div>
                         </div>
 
@@ -191,5 +193,7 @@
   });
 </script>
 <!-- Search Engine Script End -->
+
+<?php } ?>
 
 <?= $this->endSection() ?>
