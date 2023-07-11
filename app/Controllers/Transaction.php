@@ -13,6 +13,8 @@ use App\Models\ProductModel;
 use App\Models\StockModel;
 use App\Models\VariantModel;
 use App\Models\TransactionModel;
+use App\Models\TrxdetailModel;
+use App\models\TrxpaymentModel;
 
 class Transaction extends BaseController
 {
@@ -32,8 +34,8 @@ class Transaction extends BaseController
         $VariantModel           = new VariantModel();
         $StockModel             = new StockModel();
         $TransactionModel       = new TransactionModel();
-        $TrxdetailModel         = new TransactionModel();
-        $TrxpaymentModel        = new TransactionModel();
+        $TrxdetailModel         = new TrxdetailModel();
+        $TrxpaymentModel        = new TrxpaymentModel();
 
         // Populating Data
         $bundles            = $BundleModel->findAll();
@@ -82,7 +84,6 @@ class Transaction extends BaseController
     public function create() 
     {
         // Calling Models
-        $TransactionModel       = new TransactionModel;
         $BundleModel            = new BundleModel();
         $BundledetModel         = new BundledetailModel();
         $OutletModel            = new OutletModel();
@@ -93,13 +94,11 @@ class Transaction extends BaseController
         $VariantModel           = new VariantModel();
         $StockModel             = new StockModel();
         $TransactionModel       = new TransactionModel();
-        $TrxdetailModel         = new TransactionModel();
-        $TrxpaymentModel        = new TransactionModel();
-
-
-      
+        $TrxdetailModel         = new TrxdetailModel();
+        $TrxpaymentModel        = new TrxpaymentModel();
 
         // Populating Data
+        $stocks = $StockModel->findall();
 
         // initialize
         $input = $this->request->getPost();
@@ -107,7 +106,7 @@ class Transaction extends BaseController
         // date time stamp
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
-        
+
         // Insert Data
         $data = [
             
@@ -121,13 +120,12 @@ class Transaction extends BaseController
             'date'      => $tanggal,
             
         ];
-        
         // save data transaction
         $TransactionModel->save($data);
         
         // tranasaction id
         $trxId = $TransactionModel->getInsertID();
-
+        
         // save variants item
         if (!empty($input["qty"])) {
             $variant = $input["qty"];
@@ -135,31 +133,29 @@ class Transaction extends BaseController
                 $varId = $vId;
                 $qty  = $val;
             }
+            $value = $VariantModel->where('id',$vId)->first();
+            $price = $value['hargamodal']+$value['hargajual'];
+            $fprice = $price * $qty;
             $data = [
                 'transactionid' => $trxId,
                 'variantid'     => $varId,
                 'bundleid'      => "0",
                 'qty'           => $qty,
                 // 'description'   => $input['description'],
-                'value'         => $input['value'],
+                'value'         => $fprice,
             ];
-            $trxdetails->save($data);
-
+            $TrxdetailModel->save($data);
+            
             // Minus Stock
-            $stockId = $StockModel->where('variantid', $varId)->where('outletid',$this->data['outletPick'])->find();
-            foreach ($stocks as $stock){
-                if(($stock['variantid']===$varId)&&($stock['outletid']===$this->data['outletPick'])){
-                    $newStock = $stock['qty']-$qty;
-
-                    $stok = [
-                        'id' => $stockId,
-                        'qty' => $newStock,
-                    ];
-                    $StockModel->save($stok);
-                }
-            }
+            $stok= $StockModel->where('variantid', $varId)->where('outletid',$this->data['outletPick'])->first();
+            $newStock = $stok['qty'] - $qty;
+            $data = [
+                'id' => $stok['id'],
+                'qty' => $newStock,
+            ];
+            $StockModel->save($data);
         }
-
+        
         // save bundle item
         if (!empty($input['bqty'])){
             $bundles = $input['bqty'];
@@ -167,32 +163,36 @@ class Transaction extends BaseController
                 $bundId = $y;
                 $qty    = $value;
             }
+            $value = $BundleModel->where('id',$bundId)->first();
+            $price = $value['price'];
+            $fprice = $price * $qty;
             $data = [
                 'transactionid' => $trxId,
                 'variantid'     => "0",
                 'bundleid'      => $y,
                 'qty'           => $qty,
                 // 'description'   => $input['description'],
-                'value'         => $input['value'],
+                'value'         => $fprice,
             ];
-            $trxdetails->save($data);
-
+            $TrxdetailModel->save($data);
+            
             // minus stock
             $bundet = $BundledetModel->where('bundleid',$y)->find();
-            $stockId = $StockModel->where('variantid', $varId)->where('outletid',$this->data['outletPick'])->find();
-            foreach ($stocks as $stock){
-                if (($stock['variantid']===$bundet['variantid'])&&($stock['outletid']===$this->$data['outletPick'])){
-                    $newStock = $stock['qty']-$qty;
-                    $stok = [
-                        'id' => $stockId,
-                        'qty' => $newStock,
-                    ];
-                    $StockModel->save($stok);
+            foreach ($bundet as $bun => $val){
+                $bunid = $val['bundleid'];
+                $varid = $val['variantid'];
+                foreach ($stocks as $stock){
+                    $stock = $StockModel->where('variantid', $varid)->where('outletid',$this->data['outletPick'])->first();
+                        $newStock = $stock['qty']-$qty;
+                        $stok = [
+                            'id' => $stock['id'],
+                            'qty' => $newStock,
+                        ];
+                        $StockModel->save($stok);
+                    }
                 }
             }
-        }
-
-        
+            return redirect()->back()->with('message', lang('Global.saved'));
+        }  
 
     }
-}
