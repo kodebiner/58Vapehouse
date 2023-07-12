@@ -108,6 +108,7 @@ class Transaction extends BaseController
         $tanggal = date_format($date,'Y-m-d H:i:s');
 
         if (!empty($input['payment'])){
+            // This Single Payment Control
             
             // validation form
             
@@ -214,8 +215,11 @@ class Transaction extends BaseController
             $CashModel->save($data); 
 
             //Insert Poin Member
+
+            //Insert Cashout For Change Money
           
         } else{
+            // This Split Bill Control
 
             // Variants Value
             if (!empty($input["qty"])) {
@@ -224,10 +228,12 @@ class Transaction extends BaseController
                     $varId = $vId;
                     $qty  = $val;
                 }
+                $value = $VariantModel->where('id',$vId)->first();
+                $price = $value['hargamodal']+$value['hargajual'];
+                $varPrice = $price * $qty;
+            }else{
+                $varPrice = "0";
             }
-            $value = $VariantModel->where('id',$vId)->first();
-            $price = $value['hargamodal']+$value['hargajual'];
-            $varPrice = $price * $qty;
 
             // Bundle Value
             if (!empty($input['bqty'])){
@@ -239,11 +245,13 @@ class Transaction extends BaseController
                 $value = $BundleModel->where('id',$bundId)->first();
                 $price = $value['price'];
                 $bunPrice = $price * $qty;
+            }else{
+                $bunPrice = "0";
             }
-            dd($varPrice);
-
+            
             $totalValue = $varPrice + $bunPrice;
-
+            dd($totalValue);
+            
             // Insert Data
             $data = [
                 'outletid'  => $this->data['outletPick'],

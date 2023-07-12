@@ -53,18 +53,15 @@ class Payment extends BaseController
 
         // Getting outlet id
         $cash = $CashModel->find($input['cashid']);
-
         // save data
         $data = [
             'name'              => $input['name'],
             'cashid'            => $input['cashid'],
             'outletid'          => $cash['outletid'],
-
+            
         ];
-
         $PaymentModel->save($data);
 
-        
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
@@ -91,9 +88,7 @@ class Payment extends BaseController
             ];
         $PaymentModel->save($data);
 
-
         return redirect()->back()->with('massage', lang('global.saved'));
-
     }
 
     public function delete($id)
