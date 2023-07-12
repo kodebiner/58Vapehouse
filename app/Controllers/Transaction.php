@@ -215,9 +215,34 @@ class Transaction extends BaseController
 
             //Insert Poin Member
           
-            
-
         } else{
+
+            // Variants Value
+            if (!empty($input["qty"])) {
+                $variant = $input["qty"];
+                foreach ($variant as $vId => $val){
+                    $varId = $vId;
+                    $qty  = $val;
+                }
+            }
+            $value = $VariantModel->where('id',$vId)->first();
+            $price = $value['hargamodal']+$value['hargajual'];
+            $varPrice = $price * $qty;
+
+            // Bundle Value
+            if (!empty($input['bqty'])){
+                $bundles = $input['bqty'];
+                foreach ($bundles as $y => $value){
+                    $bundId = $y;
+                    $qty    = $value;
+                }
+                $value = $BundleModel->where('id',$bundId)->first();
+                $price = $value['price'];
+                $bunPrice = $price * $qty;
+            }
+            dd($varPrice);
+
+            $totalValue = $varPrice + $bunPrice;
 
             // Insert Data
             $data = [
@@ -225,15 +250,15 @@ class Transaction extends BaseController
                 'userid'    => $this->data['uid'],
                 'memberid'  => $input['customerid'],
                 'paymentid' => "0",
-                'value'     => $input['value'],
+                'value'     => $totalValue,
                 'disctype'  => $input['disctype'],
                 'discvalue' => $input['discvalue'],
                 'date'      => $tanggal,  
             ];
             // save data transaction
-            $TransactionModel->save($data);
+            // $TransactionModel->save($data);
             
-            // tranasaction id
+            // transaction id
             $trxId = $TransactionModel->getInsertID();
             
             // save variants item
@@ -303,18 +328,40 @@ class Transaction extends BaseController
                 }
             }
 
-            //Insert Trx Payment 
-            $total = $varPrice + $bunPrice;
-            dd($bunPrice);
+            //Insert First Trx Payment 
             $data = [
-                'paymentid'     => '0',
+                'paymentid'     => $input['firstpayment'],
                 'transactionid' => $trxId,
-                'value'         => $total
+                'value'         => $input['firstpay']
             ];
             $TrxpaymentModel->save($data);
 
-            // Insert Cash 
+            //Insert Second Trx Payment 
+            $data = [
+                'paymentid'     => $input['secondpayment'],
+                'transactionid' => $trxId,
+                'value'         => $input['secpay']
+            ];
+            $TrxpaymentModel->save($data);
 
+            // Insert First Cash 
+            $cashPlus   = $CashModel->where('id',$input['firstpayment'])->first();
+            $cashUpdate = $input['firstpay'] + $cashPlus['qty'];
+            $data = [
+                'id'    => $cashPlus['id'],
+                'qty'   => $cashUpdate,
+            ];
+            $CashModel->save($data);
+
+            // Insert Second Cash 
+            $cashPlus   = $CashModel->where('id',$input['secondpayment'])->first();
+            $cashUpdate = $input['secpay'] + $cashPlus['qty'];
+            $data = [
+                'id'    => $cashPlus['id'],
+                'qty'   => $cashUpdate,
+            ];
+            $CashModel->save($data);
+                       
             // insert poin Member
 
         }
