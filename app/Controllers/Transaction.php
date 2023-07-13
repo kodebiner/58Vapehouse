@@ -109,8 +109,7 @@ class Transaction extends BaseController
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
 
-        dd($input);
-
+        
         if (!empty($input['payment'])){
             // This Single Payment Control
             // validation form
@@ -129,6 +128,7 @@ class Transaction extends BaseController
             // save data transaction
             $TransactionModel->save($data);
             
+            dd($data);
             // tranasaction id
             $trxId = $TransactionModel->getInsertID();
             
@@ -268,13 +268,13 @@ class Transaction extends BaseController
                 $result = floor($value);
                 $poin   = $result * $poinval;
             }else{
-                $poin = "0"
+                $poin = "0";
             }
 
             $poinPlus = $memberPoint + $poin;
-            $data[
+            $data = [
                 'id'    => $member['id'],
-                'poin'  => $poinPlus.
+                'poin'  => $poinPlus,
             ];
             $MemberModel->save($data);
 
@@ -396,7 +396,7 @@ class Transaction extends BaseController
                     }
                 }
             }
-            
+
             //Discount Price
             if (!empty($input['discvalue'])){
                 if ($input['disctype'] === "0"){
