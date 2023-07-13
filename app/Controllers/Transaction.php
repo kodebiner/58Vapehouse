@@ -115,9 +115,6 @@ class Transaction extends BaseController
         if (!empty($input['payment'])){
             // This Single Payment Control
             // validation form
-
-
-            
             // Insert Data
             $data = [
                 'outletid'  => $this->data['outletPick'],
@@ -141,6 +138,7 @@ class Transaction extends BaseController
                 foreach ($variant as $vId => $val){
                     $varId = $vId;
                     $qty  = $val;
+                  
                 }
                 $value = $VariantModel->where('id',$vId)->first();
                 $price = $value['hargamodal']+$value['hargajual'];
@@ -153,7 +151,6 @@ class Transaction extends BaseController
                     // 'description'   => $input['description'],
                     'value'         => $varPrice,
                 ];
-                
                 $TrxdetailModel->save($data);
                 
                 // Minus Stock
@@ -207,36 +204,27 @@ class Transaction extends BaseController
                 $bunPrice = "0";
             }
 
-            
-
-            // Variant Price
+            // initialize
             $variant = $input["qty"];
             foreach ($variant as $vId => $val){
                 $varId = $vId;
-                $vqty  = $val;
+                $qty  = $val;
             }
-            $var = $VariantModel->where('id',$vId)->first();
-            $varprice   = $var['hargamodal']+$var['hargajual'];
-            $resultvar  = $varprice * $vqty;
-
-            // Bundle Price
-            $bundles = $input['bqty'];
-            foreach ($bundles as $y => $value){
-                $bundId = $y;
-                $bqty    = $value;
-            }
-            $buu = $BundleModel->where('id',$bundId)->first();
-            $bunprice = $value['price'];
-            $resultbun = $bunprice * $bqty;
+            $value = $VariantModel->where('id',$vId)->first();
+            $price = $value['hargamodal']+$value['hargajual'];
+            $varPrice = $price * $qty;
 
             //Discount Price
             if (!empty($input['discvalue'])){
                 if ($input['disctype'] === "0"){
+                    // $sumPrice = $varPrice + $bunPrice;
                     $discPrice = $input['discvalue'];
+                    // $discPrice = $sumPrice - $discount;
                 } else{
                     //Discount Percent 
-                    $sumPrice   = $resultvar + $resultbun;
+                    $sumPrice   = $varPrice + $bunPrice;
                     $discPrice   = ($sumPrice * $input['discvalue'])/100;
+                    // $discPrice  = $sumPrice - $discount;
                 }
             } else{
                 $discPrice = "0";
@@ -262,14 +250,17 @@ class Transaction extends BaseController
                 'poin' => $point,
             ];
             $MemberModel->save($data);
-            
-            // ppn
+
+            // $member Disc
+            $memberdisc = $Gconfig['memberdisc'];
+            // subtotal
             $subtotal = $varPrice + $bunPrice; 
+            // ppn
             $ppn = ($subtotal*$Gconfig['ppn'])/100;
+
             
             //Insert Trx Payment 
-            $total = $subtotal - $discPrice - $discPoint + $ppn;
-            dd($total);
+            $total = $subtotal - $discPrice - $discPoint + $ppn - $memberdisc;
             $data = [
                 'paymentid'     => $input['payment'],
                 'transactionid' => $trxId,
