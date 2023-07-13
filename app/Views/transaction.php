@@ -175,7 +175,7 @@
                                 <h4 class="uk-margin-remove"><?=lang('Global.customer')?></h4>
                                 <div class="uk-margin-small">
                                     <div class="uk-width-1-1">
-                                        <input class="uk-input" id="customername" name="customername" />
+                                        <input class="uk-input" id="customername" name="customername" required />
                                         <input id="customerid" name="customerid" hidden />
                                     </div>
                                 </div>
@@ -282,7 +282,7 @@
                                         </select>
                                     </div>
                                     <div class="uk-margin-small uk-form-controls">
-                                        <input type="text" class="uk-input" name="firstpay" placeholder="<?=lang('Global.firstpay')?>" />
+                                        <input type="text" class="uk-input" id="firstpay" name="firstpay" placeholder="<?=lang('Global.firstpay')?>" />
                                     </div>
                                 </div>
                                 <div class="uk-margin">
@@ -299,7 +299,7 @@
                                         </select>
                                     </div>
                                     <div class="uk-margin-small uk-form-controls">
-                                        <input type="text" class="uk-input" name="secondpay" placeholder="<?=lang('Global.secpay')?>" />
+                                        <input type="text" class="uk-input" id="secondpay" name="secondpay" placeholder="<?=lang('Global.secpay')?>" />
                                     </div>
                                 </div>
                             </div>
@@ -314,6 +314,32 @@
                             <div class="uk-margin">
                                 <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="splitbill"><?=lang('Global.wanttosplit')?></a>
                                 <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="cancelsplit" hidden><?=lang('Global.cancelsplit')?></a>
+                            </div>
+
+                            <div class="uk-margin" id="debtcontainer">
+                                <div class="uk-child-width-auto" uk-grid>
+                                    <div>
+                                        <label class="uk-form-label" for="debt"><?=lang('Global.debt')?></label>
+                                        <div class="uk-form-controls">
+                                            <input class="uk-input uk-form-width-medium" id="debt" name="debt" disabled />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="uk-form-label" for="duedate"><?=lang('Global.duedate')?></label>
+                                        <div class="uk-form-controls uk-inline">
+                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: calendar"></span>
+                                            <input class="uk-input uk-form-width-medium" id="duedate" name="duedate" />
+                                            <script type="text/javascript">
+                                                $( function() {
+                                                    $( "#duedate" ).datepicker({
+                                                        minDate: 0,
+                                                        maxDate: "+1m +1w"
+                                                    });
+                                                } );
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div id="custpoin" class="uk-margin" hidden>
@@ -978,6 +1004,9 @@
             }
 
             document.getElementById('poin').addEventListener('change', totalcount);
+            document.getElementById('value').addEventListener('change', totalcount);
+            document.getElementById('firstpay').addEventListener('change', totalcount);
+            document.getElementById('secondpay').addEventListener('change', totalcount);
 
             //document.getElementById('customerid').addEventListener('change', totalcount);
 
@@ -1050,6 +1079,29 @@
                 } else {
                     buttonpay.setAttribute('disabled', '');
                     var printprice = 0;
+                }
+
+                var pay = document.getElementById('value').value;
+                var firstpay = document.getElementById('firstpay').value;
+                var secondpay = document.getElementById('secondpay').value;
+
+                // Count Debt
+                if (document.getElementById('value') && pay) {
+                    var paid = pay;
+                } else if (document.getElementById('firstpay') && firstpay) {
+                    var paid = firstpay + secondpay;
+                } else {
+                    var paid = 0;
+                }
+
+                if (((pay < printprice)) || ((firstpay + secondpay) < printprice)) {
+                    document.getElementById('debt').value = printprice - paid;
+                }
+
+                if (document.getElementById('debt').value > 0) {
+                    document.getElementById('duedate').setAttribute('required', '');
+                } else {
+                    document.getElementById('duedate').removeAttribute('required');
                 }
 
                 var finalprice = document.getElementById('finalprice');
