@@ -107,9 +107,10 @@ class Transaction extends BaseController
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
 
+        dd($input);
+
         if (!empty($input['payment'])){
             // This Single Payment Control
-            
             // validation form
             
             // Insert Data
@@ -125,7 +126,7 @@ class Transaction extends BaseController
             ];
             // save data transaction
             $TransactionModel->save($data);
-
+            
             // tranasaction id
             $trxId = $TransactionModel->getInsertID();
             
@@ -157,6 +158,8 @@ class Transaction extends BaseController
                     'qty' => $newStock,
                 ];
                 $StockModel->save($data);
+            }else {
+                $varPrice = "0";
             }
             
             // save bundle item
@@ -186,25 +189,57 @@ class Transaction extends BaseController
                     $varid = $val['variantid'];
                     foreach ($stocks as $stock){
                         $stock = $StockModel->where('variantid', $varid)->where('outletid',$this->data['outletPick'])->first();
-                            $newStock = $stock['qty']-$qty;
-                            $stok = [
-                                'id' => $stock['id'],
-                                'qty' => $newStock,
-                            ];
+                        $newStock = $stock['qty']-$qty;
+                        $stok = [
+                            'id' => $stock['id'],
+                            'qty' => $newStock,
+                        ];
                         $StockModel->save($stok);
                     }
                 }
+            }else{
+                $bunPrice = "0";
             }
 
+            //Discount Price
+            if (!empty($input['discvalue'])){
+                if ($input['disctype'] === "0"){
+                    // $sumPrice = $varPrice + $bunPrice;
+                    $discPrice = $input['discvalue'];
+                    // $discPrice = $sumPrice - $discount;
+                } else{
+                //Discount Percent 
+                    $sumPrice   = $varPrice + $bunPrice;
+                    $discPrice   = ($sumPrice * $input['discvalue'])/100;
+                    // $discPrice  = $sumPrice - $discount;
+                }
+            } else{
+                $discPrice = "0";
+            }
+            //Discount Point Member
+            if (!empty($input['customerid'])){
+                $discPoint   = $input['poin'];
+                $member      = $MemberModel->where('id',$input['customerid'])->first();
+                $memberPoint = $member['point'];
+                $point       = $memberPoint - $input['point'];
+                
+                //Min Member Point
+                $data = [
+                    'id' => $member['id'],
+                    'poin' => $point,
+                ];
+                $MemberModel->save($data);
+            } 
+
             //Insert Trx Payment 
-            $total = $varPrice + $bunPrice;
+            $total = ($varPrice + $bunPrice) - $discPrice - $discPoint;
             $data = [
                 'paymentid'     => $input['payment'],
                 'transactionid' => $trxId,
                 'value'         => $total
             ];
             $TrxpaymentModel->save($data);
-
+            
             // Insert Cash
             $cashPlus   = $CashModel->where('id',$input['payment'])->first();
             $cashUpdate = $varPrice + $bunPrice + $cashPlus['qty'];
@@ -213,10 +248,6 @@ class Transaction extends BaseController
                 'qty'   => $cashUpdate,
             ];
             $CashModel->save($data); 
-
-            //Insert Poin Member
-
-            //Insert Cashout For Change Money
           
         } else{
             // This Split Bill Control

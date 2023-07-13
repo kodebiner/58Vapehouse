@@ -163,9 +163,10 @@
                     </div>
                     <form class="uk-form-stacked" name="order" role="form" action="/transaction/create" method="post">
                         <?= csrf_field() ?>
+                        
                         <?php foreach ($outlets as $outlet){ 
                             if ($outlet['id'] === $this->data['outletPick']) { ?>
-                                <input type="hidden" name="outlet" value="<?php $outlet['id'] ?>">
+                                <input type="hidden" name="outlet" value="<?= $outlet['id'] ?>">
                             <?php } ?>
                         <?php } ?>
                         
@@ -174,7 +175,7 @@
                                 <h4 class="uk-margin-remove"><?=lang('Global.customer')?></h4>
                                 <div class="uk-margin-small">
                                     <div class="uk-width-1-1">
-                                        <input class="uk-input" id="customername" name="customername" required/>
+                                        <input class="uk-input" id="customername" name="customername" />
                                         <input id="customerid" name="customerid" hidden />
                                     </div>
                                 </div>
