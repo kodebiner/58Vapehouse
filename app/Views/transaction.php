@@ -229,7 +229,7 @@
                                 <h4 class="uk-margin-remove"><?=lang('Global.discount')?></h4>
                                 <div class="uk-margin-small uk-flex-middle" uk-grid>
                                     <div class="uk-width-expand">
-                                        <input class="uk-input" id="discvalue" name="discvalue" placeholder="<?=lang('Global.discount')?>" onchange="totalcount()" />
+                                        <input type="number" class="uk-input" id="discvalue" name="discvalue" min="0" max="0" placeholder="<?=lang('Global.discount')?>" onchange="totalcount()" />
                                     </div>
                                     <div class="switch-field uk-flex uk-flex-middle uk-width-auto">
                                         <input type="radio" id="radio-one" name="disctype" value="0" checked/>
@@ -244,7 +244,7 @@
                             <div id="paymentmethod" class="uk-margin">
                                 <h4 class="uk-margin-remove"><?=lang('Global.paymethod')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <select class="uk-select" name="payment">
+                                    <select class="uk-select" id="payment" name="payment" required>
                                         <option selected disabled hidden>-- <?=lang('Global.paymethod')?> --</option>
                                         <?php
                                         foreach ($payments as $pay) {
@@ -270,7 +270,7 @@
                                 <h4><?=lang('Global.splitbill')?></h4>
                                 <div class="uk-margin">
                                     <div class="uk-margin-small uk-form-controls">
-                                        <select class="uk-select" name="firstpayment">
+                                        <select class="uk-select" id="firstpayment" name="firstpayment">
                                             <option selected disabled hidden>-- <?=lang('Global.firstpaymet')?> --</option>
                                             <?php
                                             foreach ($payments as $pay) {
@@ -282,12 +282,12 @@
                                         </select>
                                     </div>
                                     <div class="uk-margin-small uk-form-controls">
-                                        <input type="text" class="uk-input" id="firstpay" name="firstpay" placeholder="<?=lang('Global.firstpay')?>" />
+                                        <input type="number" class="uk-input" id="firstpay" name="firstpay" placeholder="<?=lang('Global.firstpay')?>" />
                                     </div>
                                 </div>
                                 <div class="uk-margin">
                                     <div class="uk-margin-small uk-form-controls">
-                                        <select class="uk-select" name="secpayment">
+                                        <select class="uk-select" id="secpayment" name="secpayment">
                                             <option selected disabled hidden>-- <?=lang('Global.secpaymet')?> --</option>
                                             <?php
                                             foreach ($payments as $pay) {
@@ -299,7 +299,7 @@
                                         </select>
                                     </div>
                                     <div class="uk-margin-small uk-form-controls">
-                                        <input type="text" class="uk-input" id="secondpay" name="secondpay" placeholder="<?=lang('Global.secpay')?>" />
+                                        <input type="number" class="uk-input" id="secondpay" name="secondpay" placeholder="<?=lang('Global.secpay')?>" />
                                     </div>
                                 </div>
                             </div>
@@ -307,7 +307,7 @@
                             <div class="uk-margin" id="amount">
                                 <h4 class="uk-margin-remove"><?=lang('Global.amountpaid')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <input type="text" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.amountpaid')?>"/>
+                                    <input type="number" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.amountpaid')?>" required/>
                                 </div>
                             </div>
                             
@@ -316,19 +316,19 @@
                                 <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="cancelsplit" hidden><?=lang('Global.cancelsplit')?></a>
                             </div>
 
-                            <div class="uk-margin" id="debtcontainer">
+                            <div class="uk-margin" id="debtcontainer" hidden>
                                 <div class="uk-child-width-auto" uk-grid>
                                     <div>
                                         <label class="uk-form-label" for="debt"><?=lang('Global.debt')?></label>
                                         <div class="uk-form-controls">
-                                            <input class="uk-input uk-form-width-medium" id="debt" name="debt" disabled />
+                                            <input type="number" class="uk-input uk-form-width-medium" id="debt" name="debt" value="0" disabled />
                                         </div>
                                     </div>
                                     <div>
                                         <label class="uk-form-label" for="duedate"><?=lang('Global.duedate')?></label>
                                         <div class="uk-form-controls uk-inline">
                                             <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: calendar"></span>
-                                            <input class="uk-input uk-form-width-medium" id="duedate" name="duedate" />
+                                            <input class="uk-input uk-form-width-medium" id="duedate" name="duedate" disabled />
                                             <script type="text/javascript">
                                                 $( function() {
                                                     $( "#duedate" ).datepicker({
@@ -1043,7 +1043,6 @@
                 var member = document.getElementById('customerid');
 
                 if (member && member.value) {
-                    console.log(member.value);
                     if (member.value != 0) {
                         <?php
                         if ($gconfig['memberdisctype'] === '0') {
@@ -1085,27 +1084,81 @@
                 var firstpay = document.getElementById('firstpay').value;
                 var secondpay = document.getElementById('secondpay').value;
 
-                // Count Debt
+                // Debt
                 if (document.getElementById('value') && pay) {
                     var paid = pay;
                 } else if (document.getElementById('firstpay') && firstpay) {
-                    var paid = firstpay + secondpay;
+                    var paid = Number(firstpay) + Number(secondpay);
                 } else {
                     var paid = 0;
                 }
 
-                if (((pay < printprice)) || ((firstpay + secondpay) < printprice)) {
+                if (paid < printprice) {
                     document.getElementById('debt').value = printprice - paid;
+                    document.getElementById('debtcontainer').removeAttribute('hidden');
+                } else if (paid >= printprice) {
+                    document.getElementById('debt').value = 0;
+                    document.getElementById('debtcontainer').setAttribute('hidden', '');
                 }
 
                 if (document.getElementById('debt').value > 0) {
                     document.getElementById('duedate').setAttribute('required', '');
+                    document.getElementById('duedate').removeAttribute('disabled');
                 } else {
                     document.getElementById('duedate').removeAttribute('required');
+                    document.getElementById('duedate').setAttribute('disabled', '');
                 }
 
+                // Printing Total Price
                 var finalprice = document.getElementById('finalprice');
                 finalprice.innerHTML = 'Rp. ' + printprice + ',-';
+
+                // Setting Minimum & Maximum Paid Value
+                if (member.value === '0' && document.getElementById('bills').hasAttribute('hidden')) {
+                    document.getElementById('value').setAttribute('min', printprice);
+                    document.getElementById('secondpay').removeAttribute('min');
+                    document.getElementById('debtcontainer').setAttribute('hidden', '');
+                    document.getElementById('debt').value = 0;
+                    document.getElementById('duedate').removeAttribute('required');
+                } else if (member.value === '0' && document.getElementById('amount').hasAttribute('hidden')) {
+                    document.getElementById('secondpay').setAttribute('min', printprice - firstpay);
+                    document.getElementById('value').removeAttribute('min');
+                    document.getElementById('debtcontainer').setAttribute('hidden', '');
+                    document.getElementById('debt').value = 0;
+                    document.getElementById('duedate').removeAttribute('required');
+                } else if (member.value !== '0' && document.getElementById('amount').hasAttribute('hidden')) {
+                    document.getElementById('secondpay').removeAttribute('min');
+                } else if (member.value !== '0' && document.getElementById('bills').hasAttribute('hidden')) {
+                    document.getElementById('value').removeAttribute('min');
+                }
+
+                document.getElementById('value').setAttribute('max', printprice);
+                document.getElementById('firstpay').setAttribute('max', printprice);
+                document.getElementById('secondpay').setAttribute('max', printprice - firstpay);
+
+                // Max Discount
+                if (disctypeval === '1') {
+                    document.getElementById('discvalue').setAttribute('max', '100');
+                } else if (disctypeval === '0') {
+                    document.getElementById('discvalue').setAttribute('max', printprice);
+                }
+
+                // Payment Requirement
+                if (document.getElementById('bills').hasAttribute('hidden')) {
+                    document.getElementById('payment').setAttribute('required', '');
+                    document.getElementById('value').setAttribute('required', '');
+                    document.getElementById('firstpayment').removeAttribute('required');
+                    document.getElementById('firstpay').removeAttribute('required');
+                    document.getElementById('secpayment').removeAttribute('required');
+                    document.getElementById('secondpay').removeAttribute('required');
+                } else {
+                    document.getElementById('payment').removeAttribute('required');
+                    document.getElementById('value').removeAttribute('required');
+                    document.getElementById('firstpayment').setAttribute('required', '');
+                    document.getElementById('firstpay').setAttribute('required', '');
+                    document.getElementById('secpayment').setAttribute('required', '');
+                    document.getElementById('secondpay').setAttribute('required', '');
+                }
             }
 
             document.getElementById('splitbill').addEventListener("click", splitbill);
@@ -1117,6 +1170,8 @@
                 document.getElementById('splitbill').setAttribute('hidden', '');
                 document.getElementById('bills').removeAttribute('hidden');
                 document.getElementById('cancelsplit').removeAttribute('hidden');
+                document.getElementById('value').value = null;
+                totalcount();
             }
 
             function cancelsplit() {
@@ -1125,6 +1180,9 @@
                 document.getElementById('splitbill').removeAttribute('hidden');
                 document.getElementById('bills').setAttribute('hidden', '');
                 document.getElementById('cancelsplit').setAttribute('hidden', '');
+                document.getElementById('firstpay').value = null;
+                document.getElementById('secondpay').value = null;
+                totalcount();
             }
         </script>
     </body>
