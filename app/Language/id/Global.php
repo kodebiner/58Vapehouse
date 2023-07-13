@@ -86,6 +86,8 @@ return [
     'cash'              => 'Kas',
     'firstpaymet'       => "Metode Pembayaran 1",
     'secpaymet'         => "Metode Pembayaran 2",
+    'debt'              => 'Hutang',
+    'duedate'           => 'Jatuh Tempo',
 
     // Button
     'edit'              => 'Ubah',

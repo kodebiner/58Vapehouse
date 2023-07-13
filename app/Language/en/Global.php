@@ -86,6 +86,8 @@ return [
     'cash'              => 'Cash',
     'firstpaymet'       => "First Payment Method",
     'secpaymet'         => "Second Payment Method",
+    'debt'              => 'Debt',
+    'duedate'           => 'Due Date',
 
     // Button
     'edit'              => 'Edit',
