@@ -174,7 +174,8 @@
                                 <h4 class="uk-margin-remove"><?=lang('Global.customer')?></h4>
                                 <div class="uk-margin-small">
                                     <div class="uk-width-1-1">
-                                        <input class="uk-input" id="customerid" name="customerid" required/>
+                                        <input class="uk-input" id="customername" name="customername" required/>
+                                        <input id="customerid" name="customerid" hidden />
                                     </div>
                                 </div>
 
@@ -188,11 +189,10 @@
                                                 }
                                             ?>
                                         ];
-                                        $("#customerid").autocomplete({
+                                        $("#customername").autocomplete({
                                             source: customerList,
                                             select: function(e, i) {
-                                                document.getElementById('customerid').value = i.item.idx;
-                                                //$("#customerid").val(i.item.idx);
+                                                $("#customerid").val(i.item.idx);
                                                 if (i.item.idx != 0) {
                                                     var customers = <?php echo json_encode($customers); ?>;
                                                     for (var x = 0; x < customers.length; x++) {
@@ -211,7 +211,7 @@
                                                     totalcount();
                                                 }
                                             },
-                                            //minLength: 2
+                                            minLength: 2
                                         });
                                     });
                                 </script>
@@ -338,7 +338,7 @@
                                 </div>
                             </div>
                             <div class="uk-margin uk-flex uk-flex-center">
-                                <button type="submit" class="uk-button uk-button-primary uk-button-large uk-text-center tm-h2" style="color: #fff; border-radius: 8px; width: 540px;"><?=lang('Global.pay')?></button>
+                                <button type="submit" id="pay" class="uk-button uk-button-primary uk-button-large uk-text-center" style="border-radius: 8px; width: 540px;" disabled><?=lang('Global.pay')?></button>
                             </div>
                         </div>
                     </form>
@@ -1041,9 +1041,18 @@
                 // Count Paid Price
                 var paidprice = totalprice + tax;
 
-                var finalprice = document.getElementById('finalprice');
-                finalprice.innerHTML = 'Rp. ' + paidprice + ',-';
+                // Pay button
+                var buttonpay = document.getElementById('pay');
+                if (paidprice > 0) {
+                    buttonpay.removeAttribute('disabled');
+                    var printprice = paidprice;
+                } else {
+                    buttonpay.setAttribute('disabled', '');
+                    var printprice = 0;
+                }
 
+                var finalprice = document.getElementById('finalprice');
+                finalprice.innerHTML = 'Rp. ' + printprice + ',-';
             }
 
             document.getElementById('splitbill').addEventListener("click", splitbill);
