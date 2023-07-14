@@ -161,7 +161,7 @@
                     <div class="uk-modal-header">
                         <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.detailOrder');?></h5>
                     </div>
-                    <form class="uk-form-stacked" name="order" role="form" action="/transaction/create" method="post">
+                    <form class="uk-form-stacked" name="order" role="form" action="/transaction/pay" method="post">
                         <?= csrf_field() ?>
                         
                         <?php foreach ($outlets as $outlet){ 

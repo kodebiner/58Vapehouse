@@ -494,5 +494,84 @@ class Transaction extends BaseController
         
     }
 
+    public function pay() {
+        // Calling Models
+        $TransactionModel   = new TransactionModel();
+        $TrxdetailModel     = new TrxdetailModel();
+        $PaymentModel       = new PaymentModel();
+        $TrxpaymentModel    = new TrxpaymentModel();
+        $VariantModel       = new VariantModel();
+        $BundleModel        = new BundleModel();
+
+        // Getting Inputs
+        $input = $this->request->getPost();
+
+        // Populating Data
+
+        // Conditions
+
+        // Inserting Transaction
+
+        $varvalues = array();
+        $bundvalues = array();
+
+        foreach ($input['qty'] as $varid => $varqty) {
+            $variant = $VariantModel->find($varid);
+            $varvalues[] = $varqty * ($variant['hargamodal'] + $variant['hargajual']);
+        }
+
+        foreach ($input['bqty'] as $bunid => $bundqty) {
+            $bundle = $BundleModel->find($bunid);
+            $bundvalues[] = $bundqty * $bundle['price'];
+        }
+
+        $varvalue = array_sum($varvalues);
+        $bundvalue = array_sum($bundvalues);
+
+        $subtotal = $varvalue + $bundvalue;
+
+        if ($input['customerid'] != '0') {
+            $memberid = $input['customerid'];
+            if ($this->data['gconfig']['memberdisctype'] === '0') {
+                $memberdisc = $this->data['gconfig']['memberdisc'];
+            } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+                $memberdisc = ($this->data['gconfig']['memberdisc']/100) * $subtotal;
+            }
+        } else {
+            $memberid = '';
+            $memberdisc = '0';
+        }
+
+        if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
+            $discount = $input['discvalue'];
+        } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
+            $discount = ($input['discvalue']/100) * $subtotal;
+        } else {
+            $discount = '0';
+        }
+
+        $value = $subtotal - $memberdisc - $discount;
+        // Lanjutkan disini
+
+        if (!empty($input['value'])) {
+            $paymentid = $input['payment'];
+        } else {
+            $paymentid = '0';
+        }
+
+        $trx = [
+            'outletid'      => $this->data['outletpick'],
+            'userid'        => $this->data['uid'],
+            'memberid'      => $memberid,
+            'paymentid'     => $paymentid,
+            'value'         => $value,
+            'disctype'      => $input['disctype'],
+            'discvalue'     => $input['discvalue'],
+            'date'          => date('Y-m-d H:i:s')
+        ];
+        $TransactionModel->insert($trx);
+        $trxId = $TransactionModel->getInsertID();
+    }
+
     
 }
