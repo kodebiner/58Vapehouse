@@ -161,7 +161,7 @@
                     <div class="uk-modal-header">
                         <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.detailOrder');?></h5>
                     </div>
-                    <form class="uk-form-stacked" name="order" role="form" action="/transaction/pay" method="post">
+                    <form class="uk-form-stacked" name="order" role="form" action="/transaction/create" method="post">
                         <?= csrf_field() ?>
                         
                         <?php foreach ($outlets as $outlet){ 
@@ -1140,7 +1140,7 @@
                 if (disctypeval === '1') {
                     document.getElementById('discvalue').setAttribute('max', '100');
                 } else if (disctypeval === '0') {
-                    document.getElementById('discvalue').setAttribute('max', printprice);
+                    document.getElementById('discvalue').setAttribute('max', subtotal);
                 }
 
                 // Payment Requirement

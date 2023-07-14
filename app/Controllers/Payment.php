@@ -11,9 +11,9 @@ class Payment extends BaseController
     public function index()
     {
         // Calling Models
-        $PaymentModel           = new PaymentModel;
-        $OutletModel            = new OutletModel;
-        $CashModel              = new CashModel;
+        $PaymentModel           = new PaymentModel();
+        $OutletModel            = new OutletModel();
+        $CashModel              = new CashModel();
 
         // Populating Data
         $outlets                = $OutletModel->findAll();
