@@ -127,6 +127,7 @@ class Transaction extends BaseController
                 'date'      => $tanggal,  
             ];
             // save data transaction
+            
             $TransactionModel->save($data);
             
             // tranasaction id
@@ -137,8 +138,7 @@ class Transaction extends BaseController
                 $variant = $input["qty"];
                 foreach ($variant as $vId => $val){
                     $varId = $vId;
-                    $qty  = $val;
-                  
+                    $qty  = $val;  
                 }
                 $value = $VariantModel->where('id',$vId)->first();
                 $price = $value['hargamodal']+$value['hargajual'];
@@ -148,7 +148,6 @@ class Transaction extends BaseController
                     'variantid'     => $varId,
                     'bundleid'      => "0",
                     'qty'           => $qty,
-                    // 'description'   => $input['description'],
                     'value'         => $varPrice,
                 ];
                 $TrxdetailModel->save($data);
@@ -161,6 +160,7 @@ class Transaction extends BaseController
                     'qty' => $newStock,
                 ];
                 $StockModel->save($data);
+                
             }else {
                 $varPrice = "0";
             }
@@ -207,14 +207,10 @@ class Transaction extends BaseController
             //Discount Price
             if (!empty($input['discvalue'])){
                 if ($input['disctype'] === "0"){
-                    // $sumPrice = $varPrice + $bunPrice;
                     $discPrice = $input['discvalue'];
-                    // $discPrice = $sumPrice - $discount;
-                } else{
-                    //Discount Percent 
+                } else{ 
                     $sumPrice   = $varPrice + $bunPrice;
                     $discPrice   = ($sumPrice * $input['discvalue'])/100;
-                    // $discPrice  = $sumPrice - $discount;
                 }
             } else{
                 $discPrice = "0";
@@ -248,7 +244,6 @@ class Transaction extends BaseController
             // ppn
             $ppn = ($subtotal*$Gconfig['ppn'])/100;
             
-            
             //Insert Trx Payment 
             $total = $subtotal - $discPrice - $discPoint + $ppn - $memberdisc;
             $data = [
@@ -271,7 +266,7 @@ class Transaction extends BaseController
             $minimTrx    = $Gconfig['poinorder'];
             $poinval     = $Gconfig['memberdisc'];
             
-            if ( $total >= $minimTrx ){
+            if ($total >= $minimTrx){
                 $value  = $total / $minimTrx;
                 $result = floor($value);
                 $poin   = $result * $poinval;
@@ -279,8 +274,8 @@ class Transaction extends BaseController
                 $poin = "0";
             }
             
+            //Update Point Member
             if (!empty($input['memberid'])){
-                //Update Point Member
                 $trx = $member['trx'] + 1 ;
                 $poinPlus = $memberPoint + $poin;
                 $data = [
@@ -291,6 +286,7 @@ class Transaction extends BaseController
                 $MemberModel->save($data);
             }
 
+            //Update debt
             if(!empty($input['duedate'])) {
                 $data = [
                     'memberid'      => $input['customerid'],
@@ -298,9 +294,8 @@ class Transaction extends BaseController
                     'deadline'      => $input['duedate'],
                 ];
             }
-    
-
-        } else {  // This Split Bill Control
+            
+        }else{  
 
             // Variants Value
             if (!empty($input["qty"])) {
@@ -396,7 +391,6 @@ class Transaction extends BaseController
                     'variantid'     => "0",
                     'bundleid'      => $y,
                     'qty'           => $qty,
-                    // 'description'   => $input['description'],
                     'value'         => $fprice,
                 ];
                 $TrxdetailModel->save($data);
@@ -421,14 +415,11 @@ class Transaction extends BaseController
             //Discount Price
             if (!empty($input['discvalue'])){
                 if ($input['disctype'] === "0"){
-                    // $sumPrice = $varPrice + $bunPrice;
                     $discPrice = $input['discvalue'];
-                    // $discPrice = $sumPrice - $discount;
                 } else{
                     //Discount Percent 
                     $sumPrice   = $varPrice + $bunPrice;
                     $discPrice   = ($sumPrice * $input['discvalue'])/100;
-                    // $discPrice  = $sumPrice - $discount;
                 }
             } else{
                 $discPrice = "0";
@@ -631,7 +622,74 @@ class Transaction extends BaseController
                 }
             }
         }
-    }
 
+        //Minus Member Point
+        if (!empty($input['customerid'])){
+            $data = [
+                'id' => $member['id'],
+                'poin' => $point,
+            ];
+            $MemberModel->save($data);
+        }
+
+        // $member Disc
+        $memberdisc = $Gconfig['memberdisc'];
+        // subtotal
+        $subtotal = $varPrice + $bunPrice; 
+        // ppn
+        $ppn = ($subtotal*$Gconfig['ppn'])/100;
+        
+        //Insert Trx Payment 
+        $total = $subtotal - $discPrice - $discPoint - $memberdisc + $ppn ;
+        $data = [
+            'paymentid'     => $input['payment'],
+            'transactionid' => $trxId,
+            'value'         => $total,
+        ];
+        $TrxpaymentModel->save($data);
+        
+        // Insert Cash
+        $cashPlus   = $CashModel->where('id',$input['payment'])->first();
+        $cashUpdate = $varPrice + $bunPrice + $cashPlus['qty'];
+        $data = [
+            'id'    => $cashPlus['id'],
+            'qty'   => $cashUpdate,
+        ];
+        $CashModel->save($data);
+        
+        // Gconfig setup
+        $minimTrx    = $Gconfig['poinorder'];
+        $poinval     = $Gconfig['memberdisc'];
+        
+        if ($total >= $minimTrx){
+            $value  = $total / $minimTrx;
+            $result = floor($value);
+            $poin   = $result * $poinval;
+        }else{
+            $poin = "0";
+        }
+        
+        //Update Point Member
+        if (!empty($input['memberid'])){
+            $trx = $member['trx'] + 1 ;
+            $poinPlus = $memberPoint + $poin;
+            $data = [
+                'id'    => $member['id'],
+                'poin'  => $poinPlus,
+                'trx'   => $trx,
+            ];
+            $MemberModel->save($data);
+        }
+
+        //Update debt
+        if(!empty($input['duedate'])) {
+            $data = [
+                'memberid'      => $input['customerid'],
+                'transationid'  => $trxId,
+                'deadline'      => $input['duedate'],
+            ];
+        }
+
+    }
     
 }
