@@ -281,7 +281,7 @@ class Pay extends BaseController
             if ($total  >= $minimTrx){
                 $value  = $total / $minimTrx;
                 $result = floor($value);
-                $poin   = $result * $poinval;
+                $poin   = (int)$result * $poinval;
                 
             }else{
                 $poin = "0";
@@ -289,7 +289,7 @@ class Pay extends BaseController
             //Update Point Member
             if (!empty($input['customerid'])){
                 $trx = $member['trx'] + 1 ;
-                $poinPlus = $memberPoint + $poin;
+                $poinPlus = $memberPoint + $poin;               
                 $poin = [
                     'id'    => $member['id'],
                     'poin'  => $poinPlus,
