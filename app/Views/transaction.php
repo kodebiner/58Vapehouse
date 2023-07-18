@@ -321,7 +321,7 @@
                                     <div>
                                         <label class="uk-form-label" for="debt"><?=lang('Global.debt')?></label>
                                         <div class="uk-form-controls">
-                                            <input type="number" class="uk-input uk-form-width-medium" id="debt" name="debt" value="0" disabled />
+                                            <input type="number" class="uk-input uk-form-width-medium" id="debt" name="debt" value="0" readonly="readonly" />
                                         </div>
                                     </div>
                                     <div>
@@ -332,6 +332,7 @@
                                             <script type="text/javascript">
                                                 $( function() {
                                                     $( "#duedate" ).datepicker({
+                                                        dateFormat: "yy-mm-dd",
                                                         minDate: 0,
                                                         maxDate: "+1m +1w"
                                                     });

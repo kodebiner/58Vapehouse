@@ -431,9 +431,9 @@ class Transaction extends BaseController
                 $member      = $MemberModel->where('id',$input['customerid'])->first();
                 $memberPoint = $member['poin'];
                 // Used Poin 
-                if (!empty($input['poin'])){
+                if (!empty($input['poin'])) {
                     $point       = $memberPoint - $discPoint;
-                } else{
+                } else {
                 // Not Apply Point
                     $point  = $memberPoint;
                 }
@@ -624,9 +624,9 @@ class Transaction extends BaseController
         }
 
         //Minus Member Point
-        if (!empty($input['customerid'])){
+        if ($input['poin'] != '0') {
             $data = [
-                'id' => $member['id'],
+                'id' => $input['customer'],
                 'poin' => $point,
             ];
             $MemberModel->save($data);

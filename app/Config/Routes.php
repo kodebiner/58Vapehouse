@@ -158,6 +158,14 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->get('stockcycle', 'Stock::stockcycle', ['filter' => 'role:owner,supervisor,operator']);
 });
 
+//Transaction Other / cashin cashout
+$routes->group('cashinout', ['filter'=>'login'], function($routes){
+    $routes->get('', 'Trxother::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Trxother::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'Trxother::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Trxother::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+});
+
 //Transaction Routes
 $routes->group('transaction', ['filter'=>'login'], function($routes){
     $routes->get('', 'Transaction::index', ['filter' => 'role:owner,supervisor,operator']);

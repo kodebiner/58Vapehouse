@@ -2,16 +2,17 @@
 
 use CodeIgniter\Model;
 
-class DebtModel extends Model
+class TrxotherModel extends Model
 {
     protected $allowedFields = [
-        'memberid','transactionid', 'value', 'deadline',
+        'id','userid','outletid','cashid','description','type','date','qty',
 
     ];
 
-    protected $table      = 'debt';
+    protected $table      = 'trxother';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType     = 'array';
+    
 
 }

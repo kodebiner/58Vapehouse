@@ -45,6 +45,7 @@ return [
     'margin'            => 'Margin',
     'cashin'            => 'Cash In',
     'cashout'           => 'Cash Out',
+    'cashinout'         => 'Cash In Cash Out',
     'deleted'           => 'Data has been deleted',
     'saved'             => 'Data has been saved',
     'deleteConfirm'     => 'Are you sure want to delete this data? ',
@@ -106,6 +107,7 @@ return [
     'addWallMan'        => 'Add Wallet Management',
     'addWallMove'       => 'Add Wallet Movement',
     'addBundle'         => 'Add Bundle',
+    'addCash'           => 'Add Cash',
     'checkin'           => 'Check In',
     'checkout'          => 'Check Out',
     'addPay'            => 'Add Payment',
@@ -113,6 +115,7 @@ return [
     'percent'           => '%',
     'rp'                => 'Rp',
     'readyAdd'          => 'Already added!',
+    
 
     // Menu
     'dashboard'         => 'Dashboard',

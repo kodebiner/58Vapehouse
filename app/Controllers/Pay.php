@@ -147,7 +147,7 @@ class Pay extends BaseController
             }
         } else {
             $memberid = '';
-            $memberdisc = '0';
+            $memberdisc = 0;
         }
 
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
@@ -155,13 +155,13 @@ class Pay extends BaseController
         } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
             $discount = ($input['discvalue']/100) * $subtotal;
         } else {
-            $discount = '0';
+            $discount = 0;
         }
 
         if (!empty($input['poin'])) {
             $poin = $input['poin'];
         } else {
-            $poin = '0';
+            $poin = 0;
         }
 
         $value = $subtotal - $memberdisc - $discount - $poin;
@@ -172,100 +172,99 @@ class Pay extends BaseController
             $paymentid = '0';
         }
         
-        // Input Normal Transaction 
-        if((!empty($input['value'])) && (empty($input['firstpay']))){
+        $trx = [
+            'outletid'      => $this->data['outletPick'],
+            'userid'        => $this->data['uid'],
+            'memberid'      => $memberid,
+            'paymentid'     => $paymentid,
+            'value'         => $value,
+            'disctype'      => $input['disctype'],
+            'discvalue'     => $input['discvalue'],
+            'date'          => $date
+        ];
+        $TransactionModel->insert($trx);
+        $trxId = $TransactionModel->getInsertID();
 
-            $trx = [
-                'outletid'      => $this->data['outletPick'],
-                'userid'        => $this->data['uid'],
-                'memberid'      => $memberid,
-                'paymentid'     => $paymentid,
-                'value'         => $value,
-                'disctype'      => $input['disctype'],
-                'discvalue'     => $input['discvalue'],
-                'date'          => $date
-            ];
-            $TransactionModel->insert($trx);
-            $trxId = $TransactionModel->getInsertID();
-    
-            // Transaction Detail & Stock
-            if (!empty($input['qty'])) {
-                foreach ($input['qty'] as $varid => $varqty) {
-                    $variant = $VariantModel->find($varid);
-                    $trxvar = [
-                        'transactionid' => $trxId,
-                        'variantid'     => $varid,
-                        'qty'           => $varqty,
-                        'value'         => ($variant['hargamodal'] + $variant['hargajual']) * $varqty
-                    ];
-                    $TrxdetailModel->save($trxvar);
-    
-                    $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
-                    $saleVarStock = [
-                        'id'        => $stock['id'],
-                        'sale'      => $date,
-                        'qty'       => $stock['qty'] - $varqty
-                    ];
-                    $StockModel->save($saleVarStock);
-    
-                }
-            }
-    
-            if (!empty($input['bqty'])) {
-                foreach ($input['bqty'] as $bunid => $bunqty) {
-                    $bundle = $BundleModel->find($bunid);
-                    $trxbun = [
-                        'transactionid' => $trxId,
-                        'bundleid'      => $bunid,
-                        'qty'           => $bunqty,
-                        'value'         => $bundle['price'] * $bunqty
-                    ];
-                    $TrxdetailModel->save($trxbun);
-    
-                    $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
-                    foreach ($bundledetail as $BundleDetail) {
-                        $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
-                        $saleBunStock = [
-                            'id'        => $bunstock['id'],
-                            'sale'      => $date,
-                            'qty'       => $bunstock['qty'] - $bunqty
-                        ];
-                        $StockModel->save($saleBunStock);
-    
-                    }
-                }
-            }
-    
-            // Member Point
-            if (!empty($input['customerid'])){
-                $discPoint   = $input['poin'];
-                $member      = $MemberModel->where('id',$input['customerid'])->first();
-                $memberPoint = $member['poin'];
-                // Used Poin 
-                if (!empty($input['poin'])){
-                    $point       = $memberPoint - $discPoint;
-                } else{
-                    // Not Apply Point
-                    $point  = $memberPoint;
-                }
-                $poin = [
-                    'id' => $member['id'],
-                    'poin' => $point,
+        // Transaction Detail & Stock
+        if (!empty($input['qty'])) {
+            foreach ($input['qty'] as $varid => $varqty) {
+                $variant = $VariantModel->find($varid);
+                $trxvar = [
+                    'transactionid' => $trxId,
+                    'variantid'     => $varid,
+                    'qty'           => $varqty,
+                    'value'         => ($variant['hargamodal'] + $variant['hargajual']) * $varqty
                 ];
-                $MemberModel->save($poin);
+                $TrxdetailModel->save($trxvar);
+
+                $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
+                $saleVarStock = [
+                    'id'        => $stock['id'],
+                    'sale'      => $date,
+                    'qty'       => $stock['qty'] - $varqty
+                ];
+                $StockModel->save($saleVarStock);
+
             }
-            
-            $ppn = ($value * $Gconfig['ppn'])/100;
-            //Insert Trx Payment 
-            $total = $subtotal - (int)$discount - $poin['poin'] - $memberdisc + $ppn;
-            $paymet = [
-                'paymentid'     => $input['payment'],
-                'transactionid' => $trxId,
-                'value'         => $total,
+        }
+
+        if (!empty($input['bqty'])) {
+            foreach ($input['bqty'] as $bunid => $bunqty) {
+                $bundle = $BundleModel->find($bunid);
+                $trxbun = [
+                    'transactionid' => $trxId,
+                    'bundleid'      => $bunid,
+                    'qty'           => $bunqty,
+                    'value'         => $bundle['price'] * $bunqty
+                ];
+                $TrxdetailModel->save($trxbun);
+
+                $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
+                foreach ($bundledetail as $BundleDetail) {
+                    $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
+                    $saleBunStock = [
+                        'id'        => $bunstock['id'],
+                        'sale'      => $date,
+                        'qty'       => $bunstock['qty'] - $bunqty
+                    ];
+                    $StockModel->save($saleBunStock);
+
+                }
+            }
+        }
+
+        // Member Point
+        if ($input['customerid'] != '0') {
+            $discPoint   = $input['poin'];
+            $member      = $MemberModel->where('id',$input['customerid'])->first();
+            $memberPoint = $member['poin'];
+            // Used Poin 
+            if (!empty($input['poin'])){
+                $point       = $memberPoint - $discPoint;
+            } else{
+                // Not Apply Point
+                $point  = $memberPoint;
+            }
+            $poin = [
+                'id' => $member['id'],
+                'poin' => $point,
             ];
-            $TrxpaymentModel->save($paymet);
-           
-            // Insert Cash
+            $MemberModel->save($poin);
+        }
+        
+        $ppn = $value * ($Gconfig['ppn']/100);
+        //Insert Trx Payment 
+        // dd($input['poin']);
+        $total = $subtotal - $discount - (int)$input['poin'] - $memberdisc + $ppn;
+        $paymet = [
+            'paymentid'     => $input['payment'],
+            'transactionid' => $trxId,
+            'value'         => $total,
+        ];
+        $TrxpaymentModel->save($paymet);
+        
+        // Insert Cash
+        if (empty($input['duedate'])){
             $cashPlus   = $CashModel->where('id',$input['payment'])->first();
             $cashUp = $varvalue + $bundvalue + $cashPlus['qty'];
             $cash = [
@@ -273,188 +272,42 @@ class Pay extends BaseController
                 'qty'   => $cashUp,
             ];
             $CashModel->save($cash);
-            
-            // Gconfig setup
-            $minimTrx    = $Gconfig['poinorder'];
-            $poinval     = $Gconfig['memberdisc'];
-            
-            if ($total  >= $minimTrx){
-                $value  = $total / $minimTrx;
-                $result = floor($value);
-                $poin   = (int)$result * $poinval;
-                
-            }else{
-                $poin = "0";
-            }
-            //Update Point Member
-            if (!empty($input['customerid'])){
-                $trx = $member['trx'] + 1 ;
-                $poinPlus = $memberPoint + $poin;               
-                $poin = [
-                    'id'    => $member['id'],
-                    'poin'  => $poinPlus,
-                    'trx'   => $trx,
-                ];
-                $MemberModel->save($poin);
-            }
-            
-            if(!empty($input['duedate'])) {
-                $debt = [
-                    'memberid'      => $input['customerid'],
-                    'transationid'  => $trxId,
-                    'deadline'      => $input['duedate'],
-                ];
-                $DebtModel->save($debt);
-            }
+        }
 
-        // Input Split Bill Tansaction
-        }elseif(!empty($input['firstpay']) && (empty($input['value']))){
-          
-                $trx = [
-                    'outletid'      => $this->data['outletPick'],
-                    'userid'        => $this->data['uid'],
-                    'memberid'      => $memberid,
-                    'paymentid'     => "0",
-                    'value'         => $value,
-                    'disctype'      => $input['disctype'],
-                    'discvalue'     => $input['discvalue'],
-                    'date'          => $date
-                ];
-                $TransactionModel->insert($trx);
-                $trxId = $TransactionModel->getInsertID();
+        // Gconfig setup
+        $minimTrx    = $Gconfig['poinorder'];
+        $poinval     = $Gconfig['memberdisc'];
         
-                // Transaction Detail & Stock
-                if (!empty($input['qty'])) {
-                    foreach ($input['qty'] as $varid => $varqty) {
-                        $variant = $VariantModel->find($varid);
-                        $trxvar = [
-                            'transactionid' => $trxId,
-                            'variantid'     => $varid,
-                            'qty'           => $varqty,
-                            'value'         => ($variant['hargamodal'] + $variant['hargajual']) * $varqty
-                        ];
-                        $TrxdetailModel->save($trxvar);
-        
-                        $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
-                        $saleVarStock = [
-                            'id'        => $stock['id'],
-                            'sale'      => $date,
-                            'qty'       => $stock['qty'] - $varqty
-                        ];
-                        $StockModel->save($saleVarStock);
-        
-                    }
-                }
-        
-                if (!empty($input['bqty'])) {
-                    foreach ($input['bqty'] as $bunid => $bunqty) {
-                        $bundle = $BundleModel->find($bunid);
-                        $trxbun = [
-                            'transactionid' => $trxId,
-                            'bundleid'      => $bunid,
-                            'qty'           => $bunqty,
-                            'value'         => $bundle['price'] * $bunqty
-                        ];
-                        $TrxdetailModel->save($trxbun);
-        
-                        $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
-                        foreach ($bundledetail as $BundleDetail) {
-                            $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
-                            $saleBunStock = [
-                                'id'        => $bunstock['id'],
-                                'sale'      => $date,
-                                'qty'       => $bunstock['qty'] - $bunqty
-                            ];
-                            $StockModel->save($saleBunStock);
-        
-                        }
-                    }
-                }
-        
-                // Member Point
-                if (!empty($input['customerid'])){
-                    $discPoint   = $input['poin'];
-                    $member      = $MemberModel->where('id',$input['customerid'])->first();
-                    $memberPoint = $member['poin'];
-                    // Used Poin 
-                    if (!empty($input['poin'])){
-                        $point       = $memberPoint - $discPoint;
-                    } else{
-                        // Not Apply Point
-                        $point  = $memberPoint;
-                    }
-                    $poin = [
-                        'id' => $member['id'],
-                        'poin' => $point,
-                    ];
-                    $MemberModel->save($poin);
-                }
-                
-                // PPN Value
-                $ppn = ($value * $Gconfig['ppn'])/100;
+        if ($total  >= $minimTrx){
+            $value  = $total / $minimTrx;
+            $result = floor($value);
+            $poin   = (int)$result * $poinval;
+            
+        }else{
+            $poin = "0";
+        }
 
-                //Insert Trx Payment 
-                $total = $subtotal - (int)$discount - $poin['poin'] - $memberdisc + $ppn;
-                // firstpayment
-                $paymet = [
-                    'paymentid'     => $input['firstpayment'],
-                    'transactionid' => $trxId,
-                    'value'         => $total,
-                ];
-                $TrxpaymentModel->save($paymet);
-                // second payment
-                $paymet = [
-                    'paymentid'     => $input['secpayment'],
-                    'transactionid' => $trxId,
-                    'value'         => $total,
-                ];
-                $TrxpaymentModel->save($paymet);
-               
-                // Insert Cash
-                if (empty($input['duedate'])){
-                $cashPlus   = $CashModel->where('id',$input['payment'])->first();
-                $cashUp = $varvalue + $bundvalue + $cashPlus['qty'];
-                $cash = [
-                    'id'    => $cashPlus['id'],
-                    'qty'   => $cashUp,
-                ];
-                $CashModel->save($cash);
-                }
-
-                // Gconfig setup
-                $minimTrx    = $Gconfig['poinorder'];
-                $poinval     = $Gconfig['memberdisc'];
-                
-                if ($total  >= $minimTrx){
-                    $value  = $total / $minimTrx;
-                    $result = floor($value);
-                    $poin   = $result * $poinval;
-                    
-                }else{
-                    $poin = "0";
-                }
-                //Update Point Member
-                if (!empty($input['customerid'])){
-                    $trx = $member['trx'] + 1 ;
-                    $poinPlus = $memberPoint + $poin;
-                    $poin = [
-                        'id'    => $member['id'],
-                        'poin'  => $poinPlus,
-                        'trx'   => $trx,
-                    ];
-                    $MemberModel->save($poin);
-                }
-                
-                // Insert Debt
-                if(!empty($input['duedate'])) {
-                    $debt = [
-                        'memberid'      => $input['customerid'],
-                        'transationid'  => $trxId,
-                        'deadline'      => $input['duedate'],
-                    ];
-                    $DebtModel->save($debt);
-                }
-        }  
+        //Update Point Member
+        if (!empty($input['customerid'])){
+            $trx = $member['trx'] + 1 ;
+            $poinPlus = $memberPoint + $poin;               
+            $poin = [
+                'id'    => $member['id'],
+                'poin'  => $poinPlus,
+                'trx'   => $trx,
+            ];
+            $MemberModel->save($poin);
+        }
+        
+        if(!empty($input['duedate'])) {
+            $debt = [
+                'memberid'      => $input['customerid'],
+                'transactionid' => $trxId,
+                'value'         => $input['debt'],
+                'deadline'      => $input['duedate'],
+            ];
+            $DebtModel->save($debt);
+        } 
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 }

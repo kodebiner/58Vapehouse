@@ -295,6 +295,9 @@
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                             </li>
+                            <li class="tm-main-navbar">
+                                <a class="uk-h4 tm-h4" href="<?= base_url('cashinout') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.cash');?></a>
+                            </li>
                             <li class="tm-main-navbar uk-parent">
                                 <a class="uk-h4 tm-h4" href=""><img src="img/layout/cash.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
@@ -370,6 +373,9 @@
                     </li>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
+                    </li>
+                    <li class="tm-main-navbar">
+                        <a class="uk-h4 tm-h4" href="<?= base_url('cashinout') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.cash');?></a>
                     </li>
                     <li class="tm-main-navbar uk-parent">
                         <a class="uk-h4 tm-h4" href=""><img src="img/layout/cash.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
