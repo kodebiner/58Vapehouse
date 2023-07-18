@@ -34,7 +34,7 @@ class Trxother extends BaseController
             
 
             // Find Data
-            $data           = $this->data;
+           
             $trxothers      = $TrxotherModel->findAll();
             $users          = $UserModel->findAll();
 
@@ -45,6 +45,7 @@ class Trxother extends BaseController
             }
 
             // Parsing data to view
+            $data                   = $this->data;
             $data['title']          = lang('Global.cashin');
             $data['description']    = lang('Global.cashin');
             $data['trxothers']      = $cashinout;
@@ -61,12 +62,15 @@ class Trxother extends BaseController
         // Calling Model
         $TrxotherModel  = new TrxotherModel;
         $UserModel      = new UserModel;
+        $CashModel      = new CashModel;
         
         // initialize
         $input = $this->request->getPost();
+        $cash = $CashModel->where('id',$input['cashid'])->where('outletid',$this->data['outletPick'])->first();
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
-
+    
+        
         $data  = [
             'userid'        =>$this->data['uid'],
             'outletid'      =>$this->data['outletPick'],
@@ -78,6 +82,20 @@ class Trxother extends BaseController
         ];
         // Save Data Stok
         $TrxotherModel->save($data);
+
+        // Plus & Minus Cash Wallet
+        if ( $input['cash'] === "0" ){
+            $cas = $input['quantity'] + $cash['qty'];
+        } else {
+            $cas =  $cash['qty'] - $input['quantity'] ;
+        }
+
+        $wallet = [
+            'id'    => $cash['id'],
+            'qty'   => $cas,
+        ];
+        // dd($wallet);
+        $CashModel->save($wallet);
 
         // return
         return redirect()->back()->with('message', lang('Global.saved'));

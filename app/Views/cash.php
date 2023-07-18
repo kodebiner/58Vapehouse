@@ -150,7 +150,7 @@
                         ?>
                     </td>
                     <td class="uk-text-center">
-                        <?php if($trx['type']===0){
+                        <?php if ( $trx['type'] === "0" ){
                             echo "Cash In";
                         }else{
                             echo "Cash Out";
