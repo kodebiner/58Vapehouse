@@ -110,11 +110,11 @@ class Pay extends BaseController
         $Gconfig     = $GconfigModel->first();
 
         // Conditions
-
+        
         // Inserting Transaction
         $varvalues = array();
         $bundvalues = array();
-
+        
         if (!empty($input['qty'])) {
             foreach ($input['qty'] as $varid => $varqty) {
                 $variant = $VariantModel->find($varid);
@@ -123,7 +123,7 @@ class Pay extends BaseController
         } else {
             $varvalues[] = '0';
         }
-
+        
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bundqty) {
                 $bundle = $BundleModel->find($bunid);
@@ -137,7 +137,7 @@ class Pay extends BaseController
         $bundvalue = array_sum($bundvalues);
 
         $subtotal = $varvalue + $bundvalue;
-
+        
         if ($input['customerid'] != '0') {
             $memberid = $input['customerid'];
             if ($this->data['gconfig']['memberdisctype'] === '0') {
@@ -149,7 +149,7 @@ class Pay extends BaseController
             $memberid = '';
             $memberdisc = 0;
         }
-
+        
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
             $discount = $input['discvalue'];
         } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
@@ -163,7 +163,7 @@ class Pay extends BaseController
         } else {
             $poin = 0;
         }
-
+        
         $value = $subtotal - $memberdisc - $discount - $poin;
 
         if (!empty($input['value'])) {
@@ -184,7 +184,7 @@ class Pay extends BaseController
         ];
         $TransactionModel->insert($trx);
         $trxId = $TransactionModel->getInsertID();
-
+        
         // Transaction Detail & Stock
         if (!empty($input['qty'])) {
             foreach ($input['qty'] as $varid => $varqty) {
@@ -204,10 +204,10 @@ class Pay extends BaseController
                     'qty'       => $stock['qty'] - $varqty
                 ];
                 $StockModel->save($saleVarStock);
-
+                
             }
         }
-
+        
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bunqty) {
                 $bundle = $BundleModel->find($bunid);
@@ -228,11 +228,12 @@ class Pay extends BaseController
                         'qty'       => $bunstock['qty'] - $bunqty
                     ];
                     $StockModel->save($saleBunStock);
-
+                    
                 }
             }
         }
-
+        
+       
         // Member Point
         if ($input['customerid'] != '0') {
             $discPoint   = $input['poin'];
@@ -266,6 +267,7 @@ class Pay extends BaseController
         // Insert Cash
         if (empty($input['duedate'])){
             $cashPlus   = $CashModel->where('id',$input['payment'])->first();
+            // dd($cashPlus);
             $cashUp = $varvalue + $bundvalue + $cashPlus['qty'];
             $cash = [
                 'id'    => $cashPlus['id'],
@@ -303,7 +305,7 @@ class Pay extends BaseController
             $debt = [
                 'memberid'      => $input['customerid'],
                 'transactionid' => $trxId,
-                'value'         => $input['debt'],
+                'value'         => $input[' '],
                 'deadline'      => $input['duedate'],
             ];
             $DebtModel->save($debt);

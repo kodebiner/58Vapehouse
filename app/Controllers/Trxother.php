@@ -94,7 +94,6 @@ class Trxother extends BaseController
             'id'    => $cash['id'],
             'qty'   => $cas,
         ];
-        // dd($wallet);
         $CashModel->save($wallet);
 
         // return
