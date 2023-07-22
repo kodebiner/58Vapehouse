@@ -305,7 +305,7 @@ class Pay extends BaseController
             $debt = [
                 'memberid'      => $input['customerid'],
                 'transactionid' => $trxId,
-                'value'         => $input[' '],
+                'value'         => $input['value'],
                 'deadline'      => $input['duedate'],
             ];
             $DebtModel->save($debt);

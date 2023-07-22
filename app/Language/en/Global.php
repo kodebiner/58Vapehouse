@@ -90,7 +90,8 @@ return [
     'secpaymet'         => "Second Payment Method",
     'debt'              => 'Debt',
     'duedate'           => 'Due Date',
-
+    'restock'           => 'Restock',
+    'sale'              => 'sale',
     // Button
     'edit'              => 'Edit',
     'delete'            => 'Delete',

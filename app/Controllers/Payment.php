@@ -21,12 +21,7 @@ class Payment extends BaseController
 
         // get outlet
         $payment = $PaymentModel->where('outletid', '0')->orWhere('outletid', $this->data['outletPick'])->find();
-        // if ($this->data['outletPick'] === null) {
-        //     $payment      = $PaymentModel->orderBy('id', 'DESC')->findAll();
-        // }else {
-        //     $payment      = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
-        // }
-
+        
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.paymentList');
