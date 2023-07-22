@@ -223,16 +223,18 @@
           <div id="createVariant" class="uk-margin-bottom">
             <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
             <div class="uk-text-right"><a onclick="createNewVariant()">+ Add More Variant</a></div>
-            <div class="uk-margin uk-margin-remove-top uk-child-width-1-5" uk-grid>
+            <div class="uk-margin uk-margin-remove-top uk-child-width-1-6" uk-grid>
               <div class="uk-text-bold"><?=lang('Global.name')?></div>
               <div class="uk-text-bold"><?=lang('Global.basePrice')?></div>
               <div class="uk-text-bold"><?=lang('Global.capitalPrice')?></div>
+              <div class="uk-text-bold"><?=lang('Global.suggestPrice')?></div>
               <div class="uk-text-bold"><?=lang('Global.margin')?></div>
             </div>
-            <div id="create0" class="uk-margin uk-child-width-1-5" uk-grid>
+            <div id="create0" class="uk-margin uk-child-width-1-6" uk-grid>
               <div id="createVarName0"><input type="text" class="uk-input" id="varName[0]" name="varName[0]" /></div>
               <div id="createVarBase0"><input type="number" class="uk-input" id="varBase[0]" name="varBase[0]" required/></div>
               <div id="createVarCap0"><input type="number" class="uk-input" id="varCap[0]" name="varCap[0]" required/></div>
+              <div id="createSugCap0"><input type="number" class="uk-input" id="varSug[0]" name="varSug[0]" required/></div>
               <div id="createVarMargin0"><input type="number" class="uk-input" id="varMargin[0]" name="varMargin[0]" required/></div>
             </div>
           </div>
@@ -245,7 +247,7 @@
 
               const newCreateVariant = document.createElement('div');
               newCreateVariant.setAttribute('id','create'+createCount);
-              newCreateVariant.setAttribute('class','uk-margin uk-child-width-1-5');
+              newCreateVariant.setAttribute('class','uk-margin uk-child-width-1-6');
               newCreateVariant.setAttribute('uk-grid','');
 
               const createVarName = document.createElement('div');
@@ -275,6 +277,15 @@
               createVarCapInput.setAttribute('id','varCap['+createCount+']');
               createVarCapInput.setAttribute('name','varCap['+createCount+']');
 
+              const createSugCap = document.createElement('div');
+              createSugCap.setAttribute('id','createSugCap'+createCount);
+
+              const createSugCapInput = document.createElement('input');
+              createSugCapInput.setAttribute('type','number');
+              createSugCapInput.setAttribute('class','uk-input');
+              createSugCapInput.setAttribute('id','varSug['+createCount+']');
+              createSugCapInput.setAttribute('name','varSug['+createCount+']');
+
               const createVarMargin = document.createElement('div');
               createVarMargin.setAttribute('id','createVarMargin'+createCount);
 
@@ -299,6 +310,8 @@
               newCreateVariant.appendChild(createVarBase);
               createVarCap.appendChild(createVarCapInput);
               newCreateVariant.appendChild(createVarCap);
+              createSugCap.appendChild(createSugCapInput);
+              newCreateVariant.appendChild(createSugCap);
               createRemove.appendChild(createRemoveButton);
               createVarMargin.appendChild(createVarMarginInput);
               newCreateVariant.appendChild(createVarMargin);

@@ -41,6 +41,7 @@ return [
     'editVar'           => 'Ingin mengelola rincian Varian? ',
     'basePrice'         => 'Harga Dasar',
     'capitalPrice'      => 'Harga Modal',
+    'suggestPrice'      => 'MSRP',
     'price'             => 'Harga Jual',
     'margin'            => 'Margin',
     'cashin'            => 'Uang Masuk',

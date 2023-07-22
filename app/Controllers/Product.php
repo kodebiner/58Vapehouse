@@ -133,6 +133,10 @@ class Product extends BaseController
                     if($capKey === $baseKey) { $variant['hargamodal'] = $capValue; }
                 }
 
+                foreach ($input['varSug'] as $SugKey => $SugValue) {
+                    if($SugKey === $baseKey) { $variant['hargarekomendasi'] = $SugValue; }
+                }
+
                 foreach ($input['varMargin'] as $marginKey => $marginValue) {
                     if($marginKey === $baseKey) { $variant['hargajual'] = $marginValue; }
                 }
@@ -216,10 +220,11 @@ class Product extends BaseController
         
         // rules
         $rule = [
-            'name'         => 'required|max_length[255]',
-            'hargadasar'   => 'required|max_length[255]',
-            'hargamodal'   => 'required',
-            'margin'       => 'required',
+            'name'                  => 'required|max_length[255]',
+            'hargadasar'            => 'required|max_length[255]',
+            'hargamodal'            => 'required',
+            'hargarekomendasi'      => 'required',
+            'margin'                => 'required',
         ];
         
         // Validation
@@ -229,11 +234,12 @@ class Product extends BaseController
         
         // get data
         $data = [
-            'productid'    => $id, 
-            'name'         => $input['name'],
-            'hargadasar'   => $input['hargadasar'],
-            'hargamodal'   => $input['hargamodal'],
-            'hargajual'    => $input['margin'],
+            'productid'             => $id, 
+            'name'                  => $input['name'],
+            'hargadasar'            => $input['hargadasar'],
+            'hargamodal'            => $input['hargamodal'],
+            'hargarekomendasi'      => $input['hargarekomendasi'],
+            'hargajual'             => $input['margin'],
         ];
 
         // insert data product
@@ -252,9 +258,10 @@ class Product extends BaseController
         }
 
         $oldstock = [
-            'variantid'     => $variantid,
-            'hargamodal'    => '0',
-            'hargadasar'    => '0'
+            'variantid'             => $variantid,
+            'hargamodal'            => '0',
+            'hargarekomendasi'      => '0',
+            'hargadasar'            => '0'
         ];
         $OldStockModel->insert($oldstock);
         
@@ -320,11 +327,12 @@ class Product extends BaseController
         //update variant
         foreach ( $products as $product) {
         $variants =  [
-                'id'            => $id,
-                'name'          => $input['name'],
-                'hargadasar'    => $input['hargadasar'],
-                'hargamodal'    => $input['hargamodal'],
-                'hargajual'     => $input['margin'],
+                'id'                    => $id,
+                'name'                  => $input['name'],
+                'hargadasar'            => $input['hargadasar'],
+                'hargamodal'            => $input['hargamodal'],
+                'hargarekomendasi'      => $input['hargarekomendasi'],
+                'hargajual'             => $input['margin'],
                 ];
             }
 

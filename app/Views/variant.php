@@ -39,7 +39,7 @@
           <div class="uk-margin-bottom">
             <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
             <div class="uk-form-controls">
-              <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+              <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" required />
             </div>
           </div>
 
@@ -53,14 +53,21 @@
           <div class="uk-margin-bottom">
             <label class="uk-form-label" for="hargamodal"><?=lang('Global.capitalPrice')?></label>
             <div class="uk-form-controls">
-              <input type="text" class="uk-input <?php if (session('errors.capitalPrice')) : ?>tm-form-invalid<?php endif ?>" id="hargamodal" name="hargamodal" placeholder="<?=lang('Global.capitalPrice')?>" autofocus required />
+              <input type="text" class="uk-input <?php if (session('errors.capitalPrice')) : ?>tm-form-invalid<?php endif ?>" id="hargamodal" name="hargamodal" placeholder="<?=lang('Global.capitalPrice')?>" required />
+            </div>
+          </div>
+
+          <div class="uk-margin-bottom">
+            <label class="uk-form-label" for="hargarekomendasi"><?=lang('Global.suggestPrice')?></label>
+            <div class="uk-form-controls">
+              <input type="text" class="uk-input <?php if (session('errors.suggestPrice')) : ?>tm-form-invalid<?php endif ?>" id="hargarekomendasi" name="hargarekomendasi" placeholder="<?=lang('Global.suggestPrice')?>" required />
             </div>
           </div>
 
           <div class="uk-margin-bottom">
             <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
             <div class="uk-form-controls">
-              <input type="text" class="uk-input <?php if (session('errors.margin')) : ?>tm-form-invalid<?php endif ?>" id="margin" name="margin" placeholder="<?=lang('Global.margin')?>" autofocus required />
+              <input type="text" class="uk-input <?php if (session('errors.margin')) : ?>tm-form-invalid<?php endif ?>" id="margin" name="margin" placeholder="<?=lang('Global.margin')?>" required />
             </div>
           </div>
           <hr>
@@ -83,6 +90,7 @@
         <th class="uk-text-center uk-width-large"><?=lang('Global.name')?></th>
         <th class="uk-text-center uk-width-medium"><?=lang('Global.basePrice')?></th>
         <th class="uk-text-center uk-width-medium"><?=lang('Global.capitalPrice')?></th>
+        <th class="uk-text-center uk-width-medium"><?=lang('Global.suggestPrice')?></th>
         <th class="uk-text-center uk-width-medium"><?=lang('Global.margin')?></th>
         <th class="uk-text-center uk-width-small"><?=lang('Global.stock')?></th>
         <th class="uk-text-center uk-width-large"><?=lang('Global.action')?></th>
@@ -95,7 +103,8 @@
             <td class="uk-text-center"><?= $i++; ?></td>
             <td class="uk-text-center"><?=$variant['name']?></td>
             <td class="uk-text-center"><?=$variant['hargadasar']?></td>
-            <td class="uk-text-center"><?=$variant['hargamodal']?></td>            
+            <td class="uk-text-center"><?=$variant['hargamodal']?></td>
+            <td class="uk-text-center"><?=$variant['hargarekomendasi']?></td>
             <td class="uk-text-center"><?=$variant['hargajual']?></td>
             <td class="uk-text-center">
               <?php
@@ -145,28 +154,35 @@
             <div class="uk-margin-bottom">
               <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
               <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="name" name="name" value="<?= $variant['name']; ?>"autofocus />
+                <input type="text" class="uk-input" id="name" name="name" value="<?= $variant['name']; ?>" />
               </div>
             </div>
 
             <div class="uk-margin-bottom">
               <label class="uk-form-label" for="hargadasar"><?=lang('Global.basePrice')?></label>
               <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="hargadasar" name="hargadasar"  value="<?= $variant['hargadasar']; ?>" autofocus />
+                <input type="text" class="uk-input" id="hargadasar" name="hargadasar"  value="<?= $variant['hargadasar']; ?>" />
               </div>
             </div>
 
             <div class="uk-margin-bottom">
               <label class="uk-form-label" for="hargammodal"><?=lang('Global.capitalPrice')?></label>
               <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="hargamodal" name="hargamodal"  value="<?= $variant['hargamodal']; ?>" autofocus />
+                <input type="text" class="uk-input" id="hargamodal" name="hargamodal"  value="<?= $variant['hargamodal']; ?>" />
+              </div>
+            </div>
+
+            <div class="uk-margin-bottom">
+              <label class="uk-form-label" for="hargammodal"><?=lang('Global.suggestPrice')?></label>
+              <div class="uk-form-controls">
+                <input type="text" class="uk-input" id="hargarekomendasi" name="hargarekomendasi"  value="<?= $variant['hargarekomendasi']; ?>" />
               </div>
             </div>
             
             <div class="uk-margin-bottom">
               <label class="uk-form-label" for="margin"><?=lang('Global.margin')?></label>
               <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="margin" name="margin"  value="<?= $variant['hargajual']; ?>" autofocus />
+                <input type="text" class="uk-input" id="margin" name="margin"  value="<?= $variant['hargajual']; ?>" />
               </div>
             </div>
 
