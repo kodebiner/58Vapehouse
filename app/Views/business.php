@@ -61,8 +61,8 @@
                         <input class="uk-input uk-form-width-small" id="memberdisc" name="memberdisc" type="number" value="<?=$gconfig['memberdisc']?>" required>
                     </div>
                 </div>
-                <h4 class="tm-h4"><?=lang('Global.tax')?></h4>
-                <div class="uk-margin">
+                <h4 class="tm-h4" hidden><?=lang('Global.tax')?></h4>
+                <div class="uk-margin" hidden>
                     <label class="uk-form-label" for="ppn"><?=lang('Global.vat')?></label>
                     <div class="uk-form-controls">
                         <input class="uk-input uk-form-width-xsmall" id="ppn" name="ppn" type="number" value="<?=$gconfig['ppn']?>" required> %

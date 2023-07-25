@@ -48,6 +48,8 @@ class Product extends BaseController
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
         $variant    = $VariantModel->findAll();
+
+        
         if ($this->data['outletPick'] === null) {
             $stock      = $StockModel->findAll();
         } else {
@@ -56,14 +58,6 @@ class Product extends BaseController
 
         // Checking filter
         $input = $this->request->getPost();
-        // if (!empty($input)) {
-        //     if (!empty($input['brand'])) {
-        //         $products = $ProductModel->where('catid', $input['category'])->find();
-        //     }
-            
-        // } else {
-        //     $products   = $ProductModel->findAll();
-        // }
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -92,7 +86,7 @@ class Product extends BaseController
             $input = $this->request->getPost();
             $outlets = $OutletModel->findAll();
     
-            
+            dd($input);
             // rules
             $rule = [
                 'name'          => 'required|max_length[255]|is_unique[product.name]',

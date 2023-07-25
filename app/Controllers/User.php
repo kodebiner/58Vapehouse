@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use App\Models\GroupUserModel;
 use Myth\Auth\Models\GroupModel;
+use App\Models\OutletModel;
+use App\Models\OutletaccessModel;
 
 class User extends BaseController
 {
@@ -20,12 +22,17 @@ class User extends BaseController
         $this->builder =   $this->db->table('users');
         $this->config = config('Auth');
         $this->auth   = service('authentication');
+
+        
     }
 
     public function index()
     {
         // Calling Model
-        $GroupModel = new GroupModel();
+        $GroupModel     = new GroupModel();
+        $OutletModel    = new OutletModel();
+        $OutletAccessModel   = new OutletaccessModel();
+
 
         // Populating data
 
@@ -41,12 +48,15 @@ class User extends BaseController
 
         
         
+        
         // Parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.employeeList');
         $data['description']    = lang('Global.employeeListDesc');
         $data['roles']          = $GroupModel->findAll();
         $data['users']          = $query->getResult();
+        $data['outlets']        = $OutletModel->findAll();
+        $data['outletAccess']   = $OutletAccessModel->findAll();
 
         return view('Views/user', $data);
     }
@@ -57,13 +67,14 @@ class User extends BaseController
         $authorize = service('authorization');
 
         // Calling Entities
-        $newUser = new \App\Entities\User();
-        
+        $newUser            = new \App\Entities\User();
+        $OutletAccessModel   = new OutletaccessModel();
         // Calling Model
         $UserModel = new UserModel();
         
         // Defining input
         $input = $this->request->getPost();
+    
 
         // Validation basic form
         $rules = [
@@ -105,6 +116,16 @@ class User extends BaseController
         // Adding new user to group
         $authorize->addUserToGroup($userId, $input['role']);
 
+        // OutAccess
+        foreach ($input['outlet'] as $out){
+            $outAccess = [
+                'userid' => $userId,
+                'outletid' => $out,
+            ];
+            $OutletAccessModel->save($outAccess);
+           
+        }
+
         // Return back to index
         return redirect()->to('user');   
     }
@@ -116,7 +137,7 @@ class User extends BaseController
 
         // Calling Entities
         $updateUser = new \App\Entities\User();
-        
+        $OutletAccessModel   = new OutletaccessModel();
         // Calling Model
         $UserModel      = new UserModel();
         $GroupUserModel = new GroupUserModel();
@@ -124,6 +145,7 @@ class User extends BaseController
         
         // Defining input
         $input = $this->request->getPost();
+       
 
         // Finding user
         $user = $UserModel->find($id);
@@ -201,6 +223,29 @@ class User extends BaseController
         // Adding to group
         $authorize->addUserToGroup($id, $input['role']);
 
+        // OutAccess
+//         $befOut = $OutletAccessModel->where('userid',$id)->find();
+
+//         $OutletAccessModel->deleteBatch($befOut);
+
+//         $this->db      = \Config\Database::connect();
+//         $this->access = $this->db->table('outletaccess');
+//         $this->access->select('*');
+//         $this->access->where('userid',$id);
+//         $this->access->where('outletid',$input['outlet']);
+//         $result = $this->access->get()->getResult();
+
+// dd($result);
+        // insert new Outlet Access
+        foreach ($input['outlet'] as $out){
+            $outAccess = [
+                'userid' => $id,
+                'outletid' => $out,
+            ];
+            $OutletAccessModel->save($outAccess);
+           
+        }
+
         // Redirect to user management
         return redirect()->to('user');
 
@@ -215,6 +260,8 @@ class User extends BaseController
             // session()->setFlashdata('message', 'Data Berhasil Diupdate');
 
             // return redirect()->to('user');
+
+        
 
     }
 
@@ -232,6 +279,10 @@ class User extends BaseController
         ]);
         $usersModel->delete($id);
         return redirect()->to('user')->with('message', lang('Global.deleted'));
+
+        // delete Outlet Access
+        $outAccess =  $OutletAccessModel->where('id',$id);
+        $OutletAccessModel->delete($outAccess);
 
     }
 

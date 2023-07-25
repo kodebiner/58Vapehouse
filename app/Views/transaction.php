@@ -225,7 +225,7 @@
                                 <div class="uk-h4 uk-margin-remove-top" id="subtotal">0</div>
                             </div>
 
-                            <div class="uk-margin">
+                            <div class="uk-margin" hidden>
                                 <h4 class="uk-margin-remove"><?=lang('Global.discount')?></h4>
                                 <div class="uk-margin-small uk-flex-middle" uk-grid>
                                     <div class="uk-width-expand">
@@ -351,7 +351,7 @@
                                 </div>
                             </div>
 
-                            <div class="uk-margin">
+                            <div class="uk-margin" id="tax" hidden>
                                 <?=lang('Global.vat')?> <?=$gconfig['ppn']?>%
                             </div>
 
@@ -1015,8 +1015,6 @@
                 // Subtotal
                 var subtotal = Number(document.getElementById('subtotal').innerText);
 
-                
-
                 // Discount
                 var discvalue = document.getElementById('discvalue').value;
 
@@ -1073,12 +1071,12 @@
 
                 // Pay button
                 var buttonpay = document.getElementById('pay');
-                if (paidprice > 0) {
+                if (paidprice >= 0) {
                     buttonpay.removeAttribute('disabled');
                     var printprice = paidprice;
                 } else {
                     buttonpay.setAttribute('disabled', '');
-                    var printprice = 0;
+                    var printprice = "Price To Low";
                 }
 
                 var pay = document.getElementById('value').value;

@@ -34,16 +34,34 @@ class Trxother extends BaseController
             
 
             // Find Data
-           
+            $auth = service('authentication');
             $trxothers      = $TrxotherModel->findAll();
             $users          = $UserModel->findAll();
-
-            if ($this->data['outletPick'] === null) {
-                $cashinout  = $TrxotherModel->orderBy('id', 'DESC')->findAll();
-            } else {
-                $cashinout  = $TrxotherModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
+            $userId         = $auth->id();
+            $GroupUser      = $this->GroupUserModel->where('user_id', $this->userId)->first();
+            $roleid         = $GroupUser['group_id'];
+            $user           = $UserModel->where('id',$userId)->first();
+            $userOutlet     = $user->outletid;
+            
+            // Operator 
+            if ($roleid === 4){
+                    $cashinout  = $TrxotherModel->orderBy('id', 'DESC')->where('outletid',$userOutlet)->find();
+            }else{
+                if ($this->data['outletPick'] === null) {
+                    $cashinout  = $TrxotherModel->orderBy('id', 'DESC')->findAll();
+                } else {
+                    $cashinout  = $TrxotherModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
+                }
             }
-
+            // dd($cashinout);
+            
+            // if ($this->data['outletPick'] === null) {
+            //     $cashinout  = $TrxotherModel->orderBy('id', 'DESC')->findAll();
+            // } else {
+            //     $cashinout  = $TrxotherModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
+            // }
+            
+        
             // Parsing data to view
             $data                   = $this->data;
             $data['title']          = lang('Global.cashin');

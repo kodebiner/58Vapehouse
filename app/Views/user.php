@@ -109,6 +109,19 @@
             </div>
           </div>
 
+          <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+            <?php foreach ($outlets as $outlet) :?>
+            <label><input class="uk-checkbox" type="checkbox" name="outlet[]" value="<?=$outlet['id']?>" checked><?=$outlet['name']?></label>
+            <?php
+              if ($outlet['id'] === '0') {
+                $checked = '';
+              } else {
+                $checked = 'checked';
+              }
+            ?>
+            <?php endforeach;?>
+          </div>
+
           <hr>
 
           <div class="uk-margin">
@@ -253,6 +266,20 @@
                   ?>
                 </select>
               </div>
+            </div>
+
+            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+              <?php
+              foreach ($outlets as $outlet) {
+                $checked = '';
+                foreach ($outletAccess as $access) {
+                  if (($access['outletid'] === $outlet['id']) && ($access['userid'] === $user->id)) {
+                    $checked = 'checked';
+                  }
+                }
+                echo '<label class="uk-form-label" for="form-horizontal-text"> <input type="checkbox" class="uk-checkbox" name="outlet['.$outlet['id'].']" value="'.$outlet['id'].'" '.$checked.'> '.$outlet['name'].'</label>';
+              } 
+              ?> 
             </div>
             <hr>
 

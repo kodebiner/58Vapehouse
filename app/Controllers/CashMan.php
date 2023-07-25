@@ -18,22 +18,23 @@ class CashMan extends BaseController
         // Populating Data
         $outlets                = $OutletModel->findAll();
 
+ 
         // get outlet
         if ($this->data['outletPick'] === null) {
             $cashman      = $CashModel->orderBy('id', 'DESC')->findAll();
         } else {
             $out =  $this->data['outletPick'];
-            
             $cashman      = $CashModel->where("outletid = {$out} OR outletid='0'")->orderBy('outletid', 'ASC')->find();
         }
 
+    
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.walletManList');
         $data['description']    = lang('Global.walletManListDesc');
         $data['cashmans']       = $cashman;
         $data['outlets']        = $outlets;
-
+        
         return view('Views/cashman', $data);
     }
 
@@ -43,9 +44,11 @@ class CashMan extends BaseController
         // Calling Models
         $CashModel      = new CashModel;
         $OutletModel    = new OutletModel;
+        $UserModel      = new UserModel;
 
         // Populating data
         $outlets        = $OutletModel->findAll();
+        $userOutlet = $UserModel->where('id',$this->data['outletPick'])->first();
         
         // get outlet
         if ($this->data['outletPick'] === null) {
