@@ -285,6 +285,9 @@
                                         <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
+                                    </li>
+                                    <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
@@ -365,6 +368,9 @@
                             </li>
                             <li class="uk-h5 tm-h5">
                                 <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
+                            </li>
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
                                 <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>

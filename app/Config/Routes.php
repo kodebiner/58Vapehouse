@@ -165,6 +165,12 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->post('createsup', 'Stock::createsup', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('updatesup/(:num)', 'Stock::updatesup/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('deletesup/(:num)', 'Stock::deletesup/$1', ['filter' => 'role:owner,supervisor,operator']);
+
+    // Purchase
+    $routes->get('purchase', 'Stock::indexpurchase', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('createpur', 'Stock::createpur', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('updatepur/(:num)', 'Stock::updatepur/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('deletepur/(:num)', 'Stock::deletepur/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Transaction Other / cashin cashout

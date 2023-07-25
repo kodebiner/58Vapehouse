@@ -216,4 +216,34 @@ class Stock extends BaseController
 
         return redirect()->back()->with('error', lang('Global.deleted'));
     }
+
+    // Purchase Stock
+    public function indexpurchase()
+    {
+        // Calling Model
+        $SupplierModel  = new SupplierModel;
+        $StockModel     = new StockModel;
+        $ProductModel   = new ProductModel;
+        $VariantModel   = new VariantModel;
+        $OutletModel    = new OutletModel;
+
+        // Find Data
+        $data           = $this->data;
+        $products       = $ProductModel->findAll();
+        $outlets        = $OutletModel->findAll();
+        $variants       = $VariantModel->findAll();
+        $suppliers      = $SupplierModel->findAll();
+        $purchases      = $StockModel->orderBy('id', 'DESC')->findAll();
+
+        // Parsing data to view
+        $data['title']          = lang('Global.purchase');
+        $data['description']    = lang('Global.purchaseListDesc');
+        $data['variants']       = $variants;
+        $data['products']       = $products;
+        $data['outlets']        = $outlets;
+        $data['suppliers']      = $suppliers;
+        $data['purchases']      = $purchases;
+
+        return view ('Views/purchase', $data);
+    }
 }

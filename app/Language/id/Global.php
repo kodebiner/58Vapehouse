@@ -93,6 +93,9 @@ return [
     'restock'           => 'Restock',
     'sale'              => 'Terjual',
     'city'              => 'Kota',
+    'status'            => 'Status',
+    'detail'            => 'Rincian',
+    'pcsPrice'          => 'Harga Beli Satuan',
 
     // Button
     'edit'              => 'Ubah',
@@ -113,6 +116,7 @@ return [
     'addBundle'         => 'Tambah Bundel',
     'addCash'           => 'Tambah Kas',
     'addSupplier'       => 'Tambah Pemasok',
+    'addPurchase'       => 'Tambah Pembelian',
     'checkin'           => 'Masuk',
     'checkout'          => 'Keluar',
     'addPay'            => 'Tambah Pembayaran',
@@ -145,6 +149,7 @@ return [
     'presence'          => 'Presensi',
     'wallet'            => 'Dompet',
     'supplier'          => 'Pemasok',
+    'purchase'          => 'Pembelian',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',
@@ -166,6 +171,7 @@ return [
     'bundledetailList'          => 'Daftar Rincian Bundel',
     'paymentList'               => 'Daftar Pembayaran',
     'supplierList'              => 'Daftar Pemasok',
+    'purchaseList'              => 'Daftar Pembelian',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
     
@@ -185,6 +191,7 @@ return [
     'bundledetailListDesc'      => 'Daftar rincian bundel yang anda miliki',
     'paymentListDesc'           => 'Daftar pembayaran yang anda miliki',
     'supplierListDesc'          => 'Daftar pemasok yang anda miliki',
+    'purchaseListDesc'          => 'Daftar pembelian yang anda miliki',
     'userProfileDesc'           => 'Informasi mengenai profil anda',
     'businessInfoDesc'          => 'Informasi mengenai bisnis anda',
 ];

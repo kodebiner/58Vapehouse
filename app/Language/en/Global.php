@@ -93,6 +93,9 @@ return [
     'restock'           => 'Restock',
     'sale'              => 'Sale',
     'city'              => 'City',
+    'status'            => 'Status',
+    'detail'            => 'Detail',
+    'pcsPrice'          => 'Price Per Pieces',
 
     // Button
     'edit'              => 'Edit',
@@ -113,6 +116,7 @@ return [
     'addBundle'         => 'Add Bundle',
     'addCash'           => 'Add Cash',
     'addSupplier'       => 'Add Supplier',
+    'addPurchase'       => 'Add Purchase',
     'checkin'           => 'Check In',
     'checkout'          => 'Check Out',
     'addPay'            => 'Add Payment',
@@ -146,6 +150,7 @@ return [
     'presence'          => 'Presence',
     'wallet'            => 'Wallet',
     'supplier'          => 'Supplier',
+    'purchase'          => 'Purchase',
 
     // Title
     'employeeList'              => 'Employee List',
@@ -167,6 +172,7 @@ return [
     'bundledetailList'          => 'Bundle Detail List',
     'paymentList'               => 'Payment List',
     'supplierList'              => 'Supplier List',
+    'purchaseList'              => 'Purchase List',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
     
@@ -186,6 +192,7 @@ return [
     'bundledetailListDesc'      => 'List of all your bundle deatils',
     'paymentListDesc'           => 'List of all your payments',
     'supplierListDesc'          => 'List of all your supplier',
+    'purchaseListDesc'          => 'List of all your purchase',
     'userProfileDesc'           => 'Information about your profile',
     'businessInfoDesc'          => 'Information about your business',
 ];
