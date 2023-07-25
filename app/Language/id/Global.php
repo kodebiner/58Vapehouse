@@ -46,6 +46,7 @@ return [
     'margin'            => 'Margin',
     'cashin'            => 'Uang Masuk',
     'cashout'           => 'Uang Keluar',
+    'cashinout'         => 'Pengelolaan Kas', //Jangan lupa diganti manage cash
     'deleted'           => 'Data sudah terhapus',
     'saved'             => 'Data sudah tersimpan',
     'deleteConfirm'     => 'Anda yakin akan menghapus data tersebut? ',
@@ -89,6 +90,9 @@ return [
     'secpaymet'         => "Metode Pembayaran 2",
     'debt'              => 'Hutang',
     'duedate'           => 'Jatuh Tempo',
+    'restock'           => 'Restock',
+    'sale'              => 'Terjual',
+    'city'              => 'Kota',
 
     // Button
     'edit'              => 'Ubah',
@@ -107,6 +111,8 @@ return [
     'addWallMan'        => 'Tambah Pengelolaann Dompet',
     'addWallMove'       => 'Tambah Perpindahan Dompet',
     'addBundle'         => 'Tambah Bundel',
+    'addCash'           => 'Tambah Kas',
+    'addSupplier'       => 'Tambah Pemasok',
     'checkin'           => 'Masuk',
     'checkout'          => 'Keluar',
     'addPay'            => 'Tambah Pembayaran',
@@ -138,6 +144,7 @@ return [
     'bundledetail'      => 'Rincian Bundel',
     'presence'          => 'Presensi',
     'wallet'            => 'Dompet',
+    'supplier'          => 'Pemasok',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',
@@ -157,9 +164,10 @@ return [
     'walletMoveList'            => 'Daftar Perpindahan Dompet',
     'bundleList'                => 'Daftar Bundel',
     'bundledetailList'          => 'Daftar Rincian Bundel',
+    'paymentList'               => 'Daftar Pembayaran',
+    'supplierList'              => 'Daftar Pemasok',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
-    'paymentList'               => 'Daftar Pembayaran',
     
     // Page Description
     'dashdesc'                  => 'Informasi global mengenai bisnis anda',
@@ -176,6 +184,7 @@ return [
     'bundleListDesc'            => 'Daftar bundel yang anda miliki',
     'bundledetailListDesc'      => 'Daftar rincian bundel yang anda miliki',
     'paymentListDesc'           => 'Daftar pembayaran yang anda miliki',
+    'supplierListDesc'          => 'Daftar pemasok yang anda miliki',
     'userProfileDesc'           => 'Informasi mengenai profil anda',
     'businessInfoDesc'          => 'Informasi mengenai bisnis anda',
 ];

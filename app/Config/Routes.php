@@ -100,7 +100,7 @@ $routes->group('user', ['filter'=>'login'], function($routes){
     $routes->get('delete/(:num)', 'User::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Outlet Routes
+// Outlet Routes
 $routes->group('outlet', ['filter'=>'login'], function($routes){
 
     $routes->get('', 'Outlet::index', ['filter' => 'role:owner,supervisor,operator']);
@@ -110,10 +110,10 @@ $routes->group('outlet', ['filter'=>'login'], function($routes){
     $routes->get('pick/(:num)', 'Home::outletses/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Product Routes
+// Product Routes
 $routes->group('product', ['filter'=>'login'], function($routes){
 
-    //product
+    // product
     $routes->get('', 'Product::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('favorite/(:num)', 'Product::favorite/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('favorite/(:num)', 'Product::favorite/$1', ['filter' => 'role:owner,supervisor,operator']);
@@ -122,7 +122,7 @@ $routes->group('product', ['filter'=>'login'], function($routes){
     $routes->post('update/(:num)', 'Product::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Product::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 
-    //category
+    // category
     $routes->post('createcat', 'Product::createcat', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('editcat(:num)', 'Product::editcat/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('deletecat/(:num)', 'Product::deletecat/$1', ['filter' => 'role:owner,supervisor,operator']);
@@ -141,7 +141,7 @@ $routes->group('product', ['filter'=>'login'], function($routes){
   
 });
 
-//Customer Routes
+// Customer Routes
 $routes->group('customer', ['filter'=>'login'], function($routes){
     $routes->get('', 'Customer::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Customer::create', ['filter' => 'role:owner,supervisor,operator']);
@@ -149,16 +149,25 @@ $routes->group('customer', ['filter'=>'login'], function($routes){
     $routes->get('delete/(:num)', 'Customer::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Customer Stock
+// Stock
 $routes->group('stock', ['filter'=>'login'], function($routes){
+    // Stock
     $routes->get('', 'Stock::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Stock::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Stock::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Stock::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+
+    // Stock Cycle
     $routes->get('stockcycle', 'Stock::stockcycle', ['filter' => 'role:owner,supervisor,operator']);
+
+    // Supplier
+    $routes->get('supplier', 'Stock::indexsupplier', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('createsup', 'Stock::createsup', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('updatesup/(:num)', 'Stock::updatesup/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('deletesup/(:num)', 'Stock::deletesup/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Transaction Other / cashin cashout
+// Transaction Other / cashin cashout
 $routes->group('cashinout', ['filter'=>'login'], function($routes){
     $routes->get('', 'Trxother::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Trxother::create', ['filter' => 'role:owner,supervisor,operator']);
@@ -166,7 +175,7 @@ $routes->group('cashinout', ['filter'=>'login'], function($routes){
     $routes->get('delete/(:num)', 'Trxother::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Transaction Routes
+// Transaction Routes
 $routes->group('transaction', ['filter'=>'login'], function($routes){
     $routes->get('', 'Transaction::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('create', 'Transaction::index',['filter'=> 'role:owner,supervisor,operator']);
@@ -174,7 +183,7 @@ $routes->group('transaction', ['filter'=>'login'], function($routes){
     $routes->post('pay', 'Transaction::pay',['filter'=> 'role:owner,supervisor,operator']);
 });
 
-//Pay Routes
+// Pay Routes
 $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->get('', 'Pay::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('create', 'Pay::index',['filter'=> 'role:owner,supervisor,operator']);
@@ -182,38 +191,38 @@ $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->post('pay', 'Pay::pay',['filter'=> 'role:owner,supervisor,operator']);
 });
 
-//Restock Routes
+// Restock Routes
 $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->get('', 'Stock::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('restock', 'Stock::restock', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Stock Stock Movement
+// Stock Movement
 $routes->group('stockmove', ['filter'=>'login'], function($routes){
     $routes->get('', 'StockMove::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'StockMove::create', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Stock Adjustment
+// Stock Adjustment
 $routes->group('stockadjustment', ['filter'=>'login'], function($routes){
     $routes->get('', 'StockAdjustment::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'StockAdjustment::create', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Wallet Management
+// Wallet Management
 $routes->group('walletman', ['filter'=>'login'], function($routes){
     $routes->get('', 'CashMan::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'CashMan::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'CashMan::update/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Wallet Movement
+// Wallet Movement
 $routes->group('walletmove', ['filter'=>'login'], function($routes){
     $routes->get('', 'CashMove::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'CashMove::create', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-//Payment
+// Payment
 $routes->group('payment', ['filter'=>'login'], function($routes){
     $routes->get('', 'Payment::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Payment::create', ['filter' => 'role:owner,supervisor,operator']);
@@ -222,7 +231,7 @@ $routes->group('payment', ['filter'=>'login'], function($routes){
 
 });
 
-//Bundle
+// Bundle
 $routes->group('bundle', ['filter'=>'login'], function($routes){
     // bundle
     $routes->get('', 'Bundle::index', ['filter' => 'role:owner,supervisor,operator']);

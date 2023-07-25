@@ -43,6 +43,7 @@ class Payment extends BaseController
 
         // Populating data
         $outlets        = $OutletModel->findAll();
+        
         // initialize
         $input          = $this->request->getPost();
 
@@ -76,11 +77,11 @@ class Payment extends BaseController
 
         // validation
         $data = [
-                'id'                    => $id,
-                'outletid'              => $cash['outletid'],
-                'name'                  => $input['name'],
-                'cashid'                => $input['cashid'],
-            ];
+            'id'                    => $id,
+            'outletid'              => $cash['outletid'],
+            'name'                  => $input['name'],
+            'cashid'                => $input['cashid'],
+        ];
         $PaymentModel->save($data);
 
         return redirect()->back()->with('massage', lang('global.saved'));
@@ -89,12 +90,12 @@ class Payment extends BaseController
     public function delete($id)
     {
 
-         // calling Model
-         $PaymentModel  = new PaymentModel();
-         $OutletModel   = new OutletModel();
-         $PaymentModel->delete($id);
+        // calling Model
+        $PaymentModel  = new PaymentModel();
+        $OutletModel   = new OutletModel();
+        $PaymentModel->delete($id);
 
-         return redirect()->back()->with('error', lang('Global.deleted'));
+        return redirect()->back()->with('error', lang('Global.deleted'));
     }
 
 }

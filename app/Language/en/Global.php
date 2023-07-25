@@ -46,7 +46,7 @@ return [
     'margin'            => 'Margin',
     'cashin'            => 'Cash In',
     'cashout'           => 'Cash Out',
-    'cashinout'         => 'Cash In Cash Out',
+    'cashinout'         => 'Manage Cash', //Jangan lupa diganti manage cash
     'deleted'           => 'Data has been deleted',
     'saved'             => 'Data has been saved',
     'deleteConfirm'     => 'Are you sure want to delete this data? ',
@@ -91,7 +91,9 @@ return [
     'debt'              => 'Debt',
     'duedate'           => 'Due Date',
     'restock'           => 'Restock',
-    'sale'              => 'sale',
+    'sale'              => 'Sale',
+    'city'              => 'City',
+
     // Button
     'edit'              => 'Edit',
     'delete'            => 'Delete',
@@ -110,6 +112,7 @@ return [
     'addWallMove'       => 'Add Wallet Movement',
     'addBundle'         => 'Add Bundle',
     'addCash'           => 'Add Cash',
+    'addSupplier'       => 'Add Supplier',
     'checkin'           => 'Check In',
     'checkout'          => 'Check Out',
     'addPay'            => 'Add Payment',
@@ -142,6 +145,7 @@ return [
     'bundledetail'      => 'Bundle Detail',
     'presence'          => 'Presence',
     'wallet'            => 'Wallet',
+    'supplier'          => 'Supplier',
 
     // Title
     'employeeList'              => 'Employee List',
@@ -161,9 +165,10 @@ return [
     'walletMoveList'            => 'Wallet Movement List',
     'bundleList'                => 'Bundle List',
     'bundledetailList'          => 'Bundle Detail List',
+    'paymentList'               => 'Payment List',
+    'supplierList'              => 'Supplier List',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
-    'paymentList'               => 'Payment List',
     
     // Page Description
     'dashdesc'                  => 'Global information about your business',
@@ -180,6 +185,7 @@ return [
     'bundleListDesc'            => 'List of all your bundles',
     'bundledetailListDesc'      => 'List of all your bundle deatils',
     'paymentListDesc'           => 'List of all your payments',
+    'supplierListDesc'          => 'List of all your supplier',
     'userProfileDesc'           => 'Information about your profile',
     'businessInfoDesc'          => 'Information about your business',
 ];

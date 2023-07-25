@@ -57,12 +57,7 @@
           <div class="uk-margin">
             <label class="uk-form-label" for="category"><?=lang('Global.category')?></label>
             <div class="uk-form-controls">
-              <select class="uk-select" name="category">
-                <option><?=lang('Global.category')?></option>
-                <?php foreach ($category as $cate) { ?>
-                  <option value="<?= $cate['id']; ?>"><?= $cate['name']; ?></option>
-                <?php } ?>
-              </select>
+              <input type="text" class="uk-input" id="catename" name="catename" placeholder="<?=lang('Global.category')?>">
             </div>
             <div class="uk-h6 uk-margin-remove">
               <?=lang('Global.morecate')?><a uk-toggle="target: #tambahcat"><?=lang('Global.addCategory')?></a>
@@ -72,12 +67,7 @@
           <div class="uk-margin-bottom">
             <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
             <div class="uk-form-controls">
-              <select class="uk-select" name="brand">
-                <option><?=lang('Global.brand')?></option>
-                <?php foreach ($brand as $bran) { ?>
-                  <option value="<?= $bran['id']; ?>"><?= $bran['name']; ?></option>
-                <?php } ?>
-              </select>
+              <input type="text" class="uk-input" id="brandname" name="brandname" placeholder="<?=lang('Global.brand')?>">
             </div>
             <div class="uk-h6 uk-margin-remove">
               <?=lang('Global.morebrand')?><a uk-toggle="target: #tambahbrand"><?=lang('Global.addBrand')?></a>
@@ -101,123 +91,145 @@
               </div>
           </div>
           <script type="text/javascript">
-              var bar = document.getElementById('js-progressbar-create');
+            var bar = document.getElementById('js-progressbar-create');
 
               UIkit.upload('.js-upload-create', {
-                  url: 'upload/productcreate',
-                  multiple: false,
-                  name: 'uploads',
-                  method: 'POST',
-                  type: 'json',
+                url: 'upload/productcreate',
+                multiple: false,
+                name: 'uploads',
+                method: 'POST',
+                type: 'json',
 
-                  beforeSend: function () {
-                      console.log('beforeSend', arguments);
-                  },
-                  beforeAll: function () {
-                      console.log('beforeAll', arguments);
-                  },
-                  load: function () {
-                      console.log('load', arguments);
-                  },
-                  error: function () {
-                      console.log('error', arguments);
-                      var error = arguments[0].xhr.response.message.uploads;
-                      alert(error);
-                  },
-                  complete: function () {
-                      console.log('complete', arguments);
-                      
-                      var filename = arguments[0].response;
+                beforeSend: function () {
+                    console.log('beforeSend', arguments);
+                },
+                beforeAll: function () {
+                    console.log('beforeAll', arguments);
+                },
+                load: function () {
+                    console.log('load', arguments);
+                },
+                error: function () {
+                    console.log('error', arguments);
+                    var error = arguments[0].xhr.response.message.uploads;
+                    alert(error);
+                },
+                complete: function () {
+                    console.log('complete', arguments);
+                    
+                    var filename = arguments[0].response;
 
-                      if (document.getElementById('display-container-create')) {
-                          document.getElementById('display-container-create').remove();
-                      };
+                    if (document.getElementById('display-container-create')) {
+                        document.getElementById('display-container-create').remove();
+                    };
 
-                      document.getElementById('photocreate').value = filename;
-                      document.getElementById('photocreatethumb').value = 'thumb-'+filename;
+                    document.getElementById('photocreate').value = filename;
+                    document.getElementById('photocreatethumb').value = 'thumb-'+filename;
 
-                      var imgContainer = document.getElementById('image-container-create');
+                    var imgContainer = document.getElementById('image-container-create');
 
-                      var displayContainer = document.createElement('div');
-                      displayContainer.setAttribute('id', 'display-container-create');
-                      displayContainer.setAttribute('class', 'uk-inline');
+                    var displayContainer = document.createElement('div');
+                    displayContainer.setAttribute('id', 'display-container-create');
+                    displayContainer.setAttribute('class', 'uk-inline');
 
-                      var displayImg = document.createElement('img');
-                      displayImg.setAttribute('src', 'img/product/thumb-'+filename);
-                      displayImg.setAttribute('width', '150');
-                      displayImg.setAttribute('height', '150');
+                    var displayImg = document.createElement('img');
+                    displayImg.setAttribute('src', 'img/product/thumb-'+filename);
+                    displayImg.setAttribute('width', '150');
+                    displayImg.setAttribute('height', '150');
 
-                      var closeContainer = document.createElement('div');
-                      closeContainer.setAttribute('class', 'uk-position-small uk-position-top-right');
+                    var closeContainer = document.createElement('div');
+                    closeContainer.setAttribute('class', 'uk-position-small uk-position-top-right');
 
-                      var closeButton = document.createElement('a');
-                      closeButton.setAttribute('class', 'tm-img-remove uk-border-circle');
-                      closeButton.setAttribute('onClick', 'removeImgCreate()');
-                      closeButton.setAttribute('uk-icon', 'close');
+                    var closeButton = document.createElement('a');
+                    closeButton.setAttribute('class', 'tm-img-remove uk-border-circle');
+                    closeButton.setAttribute('onClick', 'removeImgCreate()');
+                    closeButton.setAttribute('uk-icon', 'close');
 
-                      closeContainer.appendChild(closeButton);
-                      displayContainer.appendChild(displayImg);
-                      displayContainer.appendChild(closeContainer);
-                      imgContainer.appendChild(displayContainer);
-                  },
+                    closeContainer.appendChild(closeButton);
+                    displayContainer.appendChild(displayImg);
+                    displayContainer.appendChild(closeContainer);
+                    imgContainer.appendChild(displayContainer);
+                },
 
-                  loadStart: function (e) {
-                      console.log('loadStart', arguments);
+                loadStart: function (e) {
+                    console.log('loadStart', arguments);
 
-                      bar.removeAttribute('hidden');
-                      bar.max = e.total;
-                      bar.value = e.loaded;
-                  },
+                    bar.removeAttribute('hidden');
+                    bar.max = e.total;
+                    bar.value = e.loaded;
+                },
 
-                  progress: function (e) {
-                      console.log('progress', arguments);
+                progress: function (e) {
+                    console.log('progress', arguments);
 
-                      bar.max = e.total;
-                      bar.value = e.loaded;
-                  },
+                    bar.max = e.total;
+                    bar.value = e.loaded;
+                },
 
-                  loadEnd: function (e) {
-                      console.log('loadEnd', arguments);
+                loadEnd: function (e) {
+                    console.log('loadEnd', arguments);
 
-                      bar.max = e.total;
-                      bar.value = e.loaded;
-                  },
+                    bar.max = e.total;
+                    bar.value = e.loaded;
+                },
 
-                  completeAll: function () {
-                      console.log('completeAll', arguments);                                   
+                completeAll: function () {
+                    console.log('completeAll', arguments);                                   
 
-                      setTimeout(function () {
-                          bar.setAttribute('hidden', 'hidden');
-                      }, 1000);
+                    setTimeout(function () {
+                        bar.setAttribute('hidden', 'hidden');
+                    }, 1000);
 
-                      alert('<?=lang('Global.uploadComplete')?>');
-                  }
+                    alert('<?=lang('Global.uploadComplete')?>');
+                }
+            });
+
+            function removeImgCreate() {                                
+              $.ajax ({
+                type: 'post',
+                url: 'upload/removeproductcreate',
+                data: {'photo': document.getElementById('photocreate').value},
+                dataType: 'json',
+
+                error: function() {
+                    console.log('error', arguments);
+                },
+
+                success:function() {
+                  console.log('success', arguments);
+
+                  var pesan = arguments[0].message;
+
+                  document.getElementById('display-container-create').remove();
+                  document.getElementById('photocreate').value = '';
+                  document.getElementById('photocreatethumb').value = '';
+
+                  alert(pesan);
+                }
               });
-
-              function removeImgCreate() {                                
-                  $.ajax ({
-                      type: 'post',
-                      url: 'upload/removeproductcreate',
-                      data: {'photo': document.getElementById('photocreate').value},
-                      dataType: 'json',
-
-                      error: function() {
-                          console.log('error', arguments);
-                      },
-
-                      success:function() {
-                          console.log('success', arguments);
-
-                          var pesan = arguments[0].message;
-
-                          document.getElementById('display-container-create').remove();
-                          document.getElementById('photocreate').value = '';
-                          document.getElementById('photocreatethumb').value = '';
-
-                          alert(pesan);
-                      }
-                  });
-              };
+            };
+            
+            $(function() {
+              var brandList = [
+                <?php foreach ($brand as $bran) {
+                  echo '"'.$bran['name'].'",';
+                }?>
+              ];
+              $("#brandname").autocomplete({
+                source: brandList,
+              });
+            });
+            
+            $(function() {
+              var cateList = [
+                <?php foreach ($category as $cate) {
+                  echo '"'.$cate['name'].'",';
+                }?>
+              ];
+              $("#catename").autocomplete({
+                source: cateList,
+              });
+            });
           </script>
 
           <div id="createVariant" class="uk-margin-bottom">
@@ -669,70 +681,61 @@
             </div>
 
             <div class="uk-margin-bottom">
-              <h4 class="uk-margin-remove"><?=lang('Global.category')?></h4>
-                <div class="uk-margin-small">
-                    <div class="uk-width-1-1">
-                       <input class="uk-input" name="category<?=$product['id']?>" id="category<?=$product['id']?>" required/>
-                       <input id="catid<?=$product['id']?>" name="catid<?=$product['id']?>" hidden/> 
-                     </div>
+              <label class="uk-form-label"><?=lang('Global.category')?></label>
+              <div class="uk-margin-small">
+                <div class="uk-width-1-1">
+                  <input class="uk-input" name="category<?=$product['id']?>" id="category<?=$product['id']?>" required/>
+                  <input id="catid<?=$product['id']?>" name="catid<?=$product['id']?>" hidden/>
                 </div>
-
-                <script type="text/javascript">
-                  $(function() {
-                    var category = [
-                      <?php
-                      foreach ($category as $cat) {
-                        echo '{label:"'.$cat['name'].'",idx:'.(int)$cat['id'].'},';
-                      }
-                      ?>
-                    ];
-                    $("#category<?=$product['id']?>").autocomplete({
-                      source: category,
-                      select: function (e, i) {
-                        $("#catid<?=$product['id']?>").val(i.item.idx); // save selected id to hidden input
-                      },
-                      minLength: 2
-                    });
-                  });
-                </script>
-            </div>
-
-            <div class="uk-margin-bottom">
-              <h4 class="uk-margin-remove"><?=lang('Global.brand')?></h4>
-                <div class="uk-margin-small">
-                    <div class="uk-width-1-1">
-                       <input class="uk-input" name="brand<?=$product['id']?>" id="brand<?=$product['id']?>" required/>
-                       <input id="brandid<?=$product['id']?>" name="brandid<?=$product['id']?>" hidden/> 
-                     </div>
-                </div>
-
-                <script type="text/javascript">
-                  $(function() {
-                    var brand = [
-                      <?php
-                      foreach ($brand as $bran) {
-                        echo '{label:"'.$bran['name'].'",idx:'.(int)$bran['id'].'},';
-                      }
-                      ?>
-                    ];
-                    $("#brand<?=$product['id']?>").autocomplete({
-                      source: brand,
-                      select: function (e, i) {
-                        $("#brandid<?=$product['id']?>").val(i.item.idx); // save selected id to hidden input
-                      },
-                      minLength: 2
-                    });
-                  });
-                </script>
-            </div>
-
-              
-
-            <div class="uk-margin-bottom">
-              <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
-              <div class="uk-form-controls">
-                <!-- <input type="text" class="uk-input" id="brand" name="brand"  value="<?= $bran['id']; ?>" autofocus /> -->
               </div>
+
+              <script type="text/javascript">
+                $(function() {
+                  var category = [
+                    <?php
+                    foreach ($category as $cat) {
+                      echo '{label:"'.$cat['name'].'",idx:'.(int)$cat['id'].'},';
+                    }
+                    ?>
+                  ];
+                  $("#category<?=$product['id']?>").autocomplete({
+                    source: category,
+                    select: function (e, i) {
+                      $("#catid<?=$product['id']?>").val(i.item.idx); // save selected id to hidden input
+                    },
+                    minLength: 2
+                  });
+                });
+              </script>
+            </div>
+
+            <div class="uk-margin-bottom">
+              <label class="uk-form-label"><?=lang('Global.brand')?></label>
+              <div class="uk-margin-small">
+                <div class="uk-width-1-1">
+                  <input class="uk-input" name="brand<?=$product['id']?>" id="brand<?=$product['id']?>" required/>
+                  <input id="brandid<?=$product['id']?>" name="brandid<?=$product['id']?>" hidden/>
+                </div>
+              </div>
+
+              <script type="text/javascript">
+                $(function() {
+                  var brand = [
+                    <?php
+                    foreach ($brand as $bran) {
+                      echo '{label:"'.$bran['name'].'",idx:'.(int)$bran['id'].'},';
+                    }
+                    ?>
+                  ];
+                  $("#brand<?=$product['id']?>").autocomplete({
+                    source: brand,
+                    select: function (e, i) {
+                      $("#brandid<?=$product['id']?>").val(i.item.idx); // save selected id to hidden input
+                    },
+                    minLength: 2
+                  });
+                });
+              </script>
             </div>
 
             <div id="image-container-edit-<?=$product['id']?>" class="uk-margin">
