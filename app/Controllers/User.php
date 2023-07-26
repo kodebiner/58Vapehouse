@@ -223,29 +223,31 @@ class User extends BaseController
         // Adding to group
         $authorize->addUserToGroup($id, $input['role']);
 
-        // OutAccess
-//         $befOut = $OutletAccessModel->where('userid',$id)->find();
 
-//         $OutletAccessModel->deleteBatch($befOut);
-
-//         $this->db      = \Config\Database::connect();
-//         $this->access = $this->db->table('outletaccess');
-//         $this->access->select('*');
-//         $this->access->where('userid',$id);
-//         $this->access->where('outletid',$input['outlet']);
-//         $result = $this->access->get()->getResult();
-
-// dd($result);
-        // insert new Outlet Access
+        // Deleting Old Outlet Access
+        $oldAcc = $OutletAccessModel->where('userid',$id)->find();
+        foreach ($oldAcc as $acc ){
+            foreach ($input['outlet'] as $newAcc){
+                if ($acc['outletid'] != $newAcc){
+                    $oldOut = $acc['outletid'];
+                    $data = [
+                        'id'        => $acc['id'],
+                        'outletid'  => $oldOut,
+                        'userid'    => $id,
+                    ];
+                    $OutletAccessModel->delete($data);
+                }
+            }
+        }
         foreach ($input['outlet'] as $out){
             $outAccess = [
                 'userid' => $id,
                 'outletid' => $out,
             ];
             $OutletAccessModel->save($outAccess);
-           
         }
-
+       
+        
         // Redirect to user management
         return redirect()->to('user');
 
