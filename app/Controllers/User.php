@@ -145,7 +145,6 @@ class User extends BaseController
         
         // Defining input
         $input = $this->request->getPost();
-       
 
         // Finding user
         $user = $UserModel->find($id);
@@ -223,7 +222,6 @@ class User extends BaseController
         // Adding to group
         $authorize->addUserToGroup($id, $input['role']);
 
-
         // Deleting Old Outlet Access
         $oldAcc = $OutletAccessModel->where('userid',$id)->find();
         foreach ($oldAcc as $acc ){
@@ -249,7 +247,7 @@ class User extends BaseController
        
         
         // Redirect to user management
-        return redirect()->to('user');
+        return redirect()->to('user')->with('message', lang('Global.saved'));
 
             // $user = $usersModel->where('username', $input['username'])->first();
             // //$authorize->inGroup($user->role, $user->Id);

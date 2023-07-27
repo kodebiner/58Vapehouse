@@ -609,6 +609,14 @@
                                                                                         productprice.setAttribute('value', showprice())
                                                                                         productprice.innerHTML = showprice();
 
+                                                                                        const butcontainer = document.createElement('div');
+                                                                                        butcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-12');
+
+                                                                                        const but = document.createElement('a');
+                                                                                        but.setAttribute('href', '#');
+                                                                                        const sp = document.createElement('span');
+                                                                                        sp.setAttribute('class','uk-nav-parent-icon')
+
                                                                                         function showprice() {
                                                                                             var qty = inputqty.value;
                                                                                             var price = qty * <?=$Price?>;
@@ -622,13 +630,17 @@
                                                                                         productqty.appendChild(inputqty);
                                                                                         quantitycontainer.appendChild(productqty);
                                                                                         delcontainer.appendChild(productqtyinputdel);
+                                                                                        pricecontainer.appendChild(productprice);
+                                                                                        namecontainer.appendChild(productname);
+                                                                                        butcontainer.appendChild(but);
+                                                                                        but.appendChild(sp);
                                                                                         productgrid.appendChild(delcontainer);
                                                                                         productgrid.appendChild(quantitycontainer);
                                                                                         productgrid.appendChild(addcontainer);
-                                                                                        namecontainer.appendChild(productname);
                                                                                         productgrid.appendChild(namecontainer);
-                                                                                        pricecontainer.appendChild(productprice);
                                                                                         productgrid.appendChild(pricecontainer);
+                                                                                        productgrid.appendChild(pricecontainer);
+                                                                                        productgrid.appendChild(butcontainer);
                                                                                         products.appendChild(productgrid);
 
                                                                                         <?php

@@ -122,12 +122,16 @@
                         <?php if ($ismobile === false) { ?>
                         <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">
                             <?php
-                            if ($outletPick === null) {
+                            if ($outletPick === null)  {
                                 $viewOutlet = lang('Global.allOutlets');
                             } else {
                                 foreach ($baseoutlets as $baseoutlet) {
                                     if ($baseoutlet['id'] === $outletPick) {
-                                        $viewOutlet = $baseoutlet['name'];
+                                        foreach ($outlets as $outlet) {
+                                            if (($baseoutlet['outletid'] === $outlet['id'])&&($baseoutlet['userid'] === $this->data['uid'])){
+                                                $viewOutlet = $outlet['name'];
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -142,10 +146,15 @@
                                     <?php } ?>
                                     <?php
                                     foreach ($baseoutlets as $baseoutlet) {
+                                        foreach ($outlets as $outlet) {
+                                            if (($baseoutlet['outletid'] === $outlet['id'])&&($baseoutlet['userid'] === $this->data['uid'])){
+                                                $viewOutlet = $outlet['name'];
+                                            }
+                                        }
                                         if ($outletPick === $baseoutlet['id']) {
-                                            echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$baseoutlet['name'].'</li>';
+                                            echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$outlet['name'].'</li>';
                                         } else {
-                                            echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$baseoutlet['id'].'" class="uk-link-reset">'.$baseoutlet['name'].'</a></li>';
+                                            echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$baseoutlet['id'].'" class="uk-link-reset">'.$outlet['name'].'</a></li>';
                                         }
                                     }
                                     ?>

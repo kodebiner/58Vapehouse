@@ -14,6 +14,7 @@ use Myth\Auth\Models\GroupModel;
 use App\Models\GroupUserModel;
 use App\Models\GconfigModel;
 use App\Models\OutletModel;
+use App\Models\OutletaccessModel;
 
 /**
  * Class BaseController
@@ -72,6 +73,7 @@ abstract class BaseController extends Controller
         $this->GroupUserModel = new GroupUserModel();
         $this->ConfigModel = new GconfigModel();
         $this->OutletModel = new OutletModel();
+        $this->OutletAccessModel = new OutletaccessModel();
 
         // Login Check
         $auth = service('authentication');
@@ -88,8 +90,12 @@ abstract class BaseController extends Controller
             // Getting User Role
             $GroupUser = $this->GroupUserModel->where('user_id', $this->userId)->first();
             $role = $this->GroupModel->find($GroupUser['group_id']);
+
+            // Get User Outlet Access
+            $outletUser = $this->OutletAccessModel->where('userid',$this->userId)->findAll();
         }
 
+        // $outletUser = $this->OutletAccessModel->where('userid',$this->userId)->findAll();
         // Language check
 		if ($this->locale === 'id') {
 			$lang = 'id';
@@ -123,7 +129,8 @@ abstract class BaseController extends Controller
         } else {
             $outletPick = null;
         }
-
+        
+        // dd($outletUser);
 
         // Parsing View Data
         $this->data = [
@@ -134,7 +141,10 @@ abstract class BaseController extends Controller
             'authorize'     => service('authorization'),
             'account'       => $this->user,
             'fullname'      => $fullname,
-            'baseoutlets'   => $this->OutletModel->findAll(),
+            // 'baseoutlets'   => $this->OutletModel->findAll(),
+            'outlets'       => $this->OutletModel->findAll(),
+            'baseoutlets'   => $outletUser,
+            // 'role'          => $this->GroupModel->find($GroupUser['group_id']),
             'gconfig'       => $gconfig,
             'outletPick'    => $outletPick,
 		];
