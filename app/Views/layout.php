@@ -126,10 +126,14 @@
                                 $viewOutlet = lang('Global.allOutlets');
                             } else {
                                 foreach ($baseoutlets as $baseoutlet) {
-                                    if ($baseoutlet['id'] === $outletPick) {
-                                        foreach ($outlets as $outlet) {
-                                            if (($baseoutlet['outletid'] === $outlet['id'])&&($baseoutlet['userid'] === $this->data['uid'])){
-                                                $viewOutlet = $outlet['name'];
+                                    if ($baseoutlet['outletid'] === $outletPick) {
+                                        // dd($outletPick);
+                                        if($baseoutlet['userid'] === $this->data['uid']){
+                                            foreach ($outlets as $outlet) {
+                                                if ($baseoutlet['outletid'] === $outlet['id']){
+                                                    // dd($outlet['name']);
+                                                    $viewOutlet = $outlet['name'];
+                                                }
                                             }
                                         }
                                     }
@@ -146,15 +150,15 @@
                                     <?php } ?>
                                     <?php
                                     foreach ($baseoutlets as $baseoutlet) {
-                                        foreach ($outlets as $outlet) {
-                                            if (($baseoutlet['outletid'] === $outlet['id'])&&($baseoutlet['userid'] === $this->data['uid'])){
-                                                $viewOutlet = $outlet['name'];
+                                        if ($outletPick === $baseoutlet['outletid']) {
+                                            foreach ($outlets as $outlet) {
+                                                if ($baseoutlet['outletid'] === $outlet['id']){
+                                                    $viewOutlet = $outlet['name'];
+                                                    echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$viewOutlet.'</li>';
+                                                } else {
+                                                    echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$outlet['id'].'" class="uk-link-reset">'.$outlet['name'].'</a></li>';
+                                                }
                                             }
-                                        }
-                                        if ($outletPick === $baseoutlet['id']) {
-                                            echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$outlet['name'].'</li>';
-                                        } else {
-                                            echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$baseoutlet['id'].'" class="uk-link-reset">'.$outlet['name'].'</a></li>';
                                         }
                                     }
                                     ?>

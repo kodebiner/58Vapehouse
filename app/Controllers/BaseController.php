@@ -95,7 +95,15 @@ abstract class BaseController extends Controller
             $outletUser = $this->OutletAccessModel->where('userid',$this->userId)->findAll();
         }
 
-        // $outletUser = $this->OutletAccessModel->where('userid',$this->userId)->findAll();
+        $outletUser = $this->OutletAccessModel->where('userid',$this->userId)->findAll();
+
+        foreach ($outletUser as $outlet ){
+            $outletId   = $outlet['id'];
+            $userOutlet  = $outlet['userid'];
+        }
+        
+       
+
         // Language check
 		if ($this->locale === 'id') {
 			$lang = 'id';
@@ -144,7 +152,6 @@ abstract class BaseController extends Controller
             // 'baseoutlets'   => $this->OutletModel->findAll(),
             'outlets'       => $this->OutletModel->findAll(),
             'baseoutlets'   => $outletUser,
-            // 'role'          => $this->GroupModel->find($GroupUser['group_id']),
             'gconfig'       => $gconfig,
             'outletPick'    => $outletPick,
 		];
