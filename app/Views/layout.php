@@ -123,15 +123,19 @@
                         <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">
                             <?php
                             if ($outletPick === null)  {
-                                $viewOutlet = lang('Global.allOutlets');
+                                    $viewOutlet = lang('Global.allOutlets');          
                             } else {
                                 foreach ($baseoutlets as $baseoutlet) {
-                                    if ($baseoutlet['outletid'] === $outletPick) {
-                                        // dd($outletPick);
-                                        if($baseoutlet['userid'] === $this->data['uid']){
-                                            foreach ($outlets as $outlet) {
+                                    foreach ($outlets as $outlet) {
+                                        if ($outlet['id'] === $outletPick) {
+                                            if($baseoutlet['userid'] === $this->data['uid']){
                                                 if ($baseoutlet['outletid'] === $outlet['id']){
-                                                    // dd($outlet['name']);
+                                                    $viewOutlet = $outlet['name'];
+                                                }
+                                            }
+                                        } else {
+                                            if($baseoutlet['userid'] === $this->data['uid']){
+                                                if ($baseoutlet['outletid'] === $outlet['id']){
                                                     $viewOutlet = $outlet['name'];
                                                 }
                                             }
@@ -149,16 +153,14 @@
                                         <li class="uk-h4 tm-h4"><a href="outlet/pick/0" class="uk-link-reset"><?=lang('Global.allOutlets')?></a></li>
                                     <?php } ?>
                                     <?php
-                                    foreach ($baseoutlets as $baseoutlet) {
-                                        if ($outletPick === $baseoutlet['outletid']) {
-                                            foreach ($outlets as $outlet) {
-                                                if ($baseoutlet['outletid'] === $outlet['id']){
-                                                    $viewOutlet = $outlet['name'];
-                                                    echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$viewOutlet.'</li>';
-                                                } else {
-                                                    echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$outlet['id'].'" class="uk-link-reset">'.$outlet['name'].'</a></li>';
-                                                }
-                                            }
+                                    foreach ($outlets as $outlet) {
+                                        foreach ($baseoutlets as $baseoutlet) {
+                                            $viewOutlet = $outlet['name'];
+                                        }
+                                        if ($baseoutlet['outletid'] === $outlet['id']){
+                                            echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$viewOutlet.'</li>';
+                                        } else {
+                                            echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$outlet['id'].'" class="uk-link-reset">'.$outlet['name'].'</a></li>';
                                         }
                                     }
                                     ?>

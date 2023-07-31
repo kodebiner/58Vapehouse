@@ -97,12 +97,14 @@ abstract class BaseController extends Controller
 
         $outletUser = $this->OutletAccessModel->where('userid',$this->userId)->findAll();
 
+        
+
         foreach ($outletUser as $outlet ){
-            $outletId   = $outlet['id'];
+            $outletId   = $outlet['outletid'];
             $userOutlet  = $outlet['userid'];
         }
         
-       
+    //    dd(min($outletUser['outletid']));
 
         // Language check
 		if ($this->locale === 'id') {
