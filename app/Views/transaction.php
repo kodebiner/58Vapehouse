@@ -391,7 +391,7 @@
                                 <div class="uk-width-1-5@m uk-card uk-card-default uk-card-small uk-card-body">
                                     <div class="tm-h1 uk-text-center tm-text-large">
                                         <?php
-                                            foreach ($baseoutlets as $baseoutlet) {
+                                            foreach ($outlets as $baseoutlet) {
                                                 if ($baseoutlet['id'] === $outletPick) {
                                                     echo $baseoutlet['name'];
                                                 }

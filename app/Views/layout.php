@@ -123,23 +123,11 @@
                         <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">
                             <?php
                             if ($outletPick === null)  {
-                                    $viewOutlet = lang('Global.allOutlets');          
+                                $viewOutlet = lang('Global.allOutlets');
                             } else {
-                                foreach ($baseoutlets as $baseoutlet) {
-                                    foreach ($outlets as $outlet) {
-                                        if ($outlet['id'] === $outletPick) {
-                                            if($baseoutlet['userid'] === $this->data['uid']){
-                                                if ($baseoutlet['outletid'] === $outlet['id']){
-                                                    $viewOutlet = $outlet['name'];
-                                                }
-                                            }
-                                        } else {
-                                            if($baseoutlet['userid'] === $this->data['uid']){
-                                                if ($baseoutlet['outletid'] === $outlet['id']){
-                                                    $viewOutlet = $outlet['name'];
-                                                }
-                                            }
-                                        }
+                                foreach ($outlets as $outlet) {
+                                    if ($outletPick === $outlet['id']) {
+                                        $viewOutlet = $outlet['name'];
                                     }
                                 }
                             }
@@ -147,20 +135,25 @@
                             <a class="tm-h4 tm-outlet" type="button"><img src="img/layout/union.svg" style="position: relative; top: -2px; margin-right: 5px;" /> <span class="tm-outlet-picker-selector"><?=$viewOutlet?></span> <span uk-icon="triangle-down"></span></a>
                             <div class="uk-width-large tm-outlet-dropdown" uk-dropdown="mode: click;">
                                 <ul class="uk-list">
-                                    <?php if ($outletPick === null) { ?>
-                                        <li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> <?=lang('Global.allOutlets')?></li>
-                                    <?php } else { ?>
-                                        <li class="uk-h4 tm-h4"><a href="outlet/pick/0" class="uk-link-reset"><?=lang('Global.allOutlets')?></a></li>
-                                    <?php } ?>
                                     <?php
-                                    foreach ($outlets as $outlet) {
-                                        foreach ($baseoutlets as $baseoutlet) {
-                                            $viewOutlet = $outlet['name'];
-                                        }
-                                        if ($baseoutlet['outletid'] === $outlet['id']){
-                                            echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$viewOutlet.'</li>';
+                                    $accesscount = count($baseoutlets);
+                                    $outletcount = count($outlets);
+                                    if ($accesscount === $outletcount) {
+                                        if ($outletPick === null) {
+                                            echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.lang('Global.allOutlets').'</li>';
                                         } else {
-                                            echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$outlet['id'].'" class="uk-link-reset">'.$outlet['name'].'</a></li>';
+                                            echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/0" class="uk-link-reset">'.lang('Global.allOutlets').'</a></li>';
+                                        }
+                                    }
+                                    foreach ($outlets as $outlet) {
+                                        foreach ($baseoutlets as $access) {
+                                            if ($access['outletid'] === $outlet['id']) {
+                                                if ($outletPick === $outlet['id']) {
+                                                    echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$outlet['name'].'</li>';
+                                                } else {
+                                                    echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$outlet['id'].'" class="uk-link-reset">'.$outlet['name'].'</a></li>';
+                                                }
+                                            }
                                         }
                                     }
                                     ?>
@@ -217,33 +210,41 @@
             <div class="uk-container uk-container-expand">
                 <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">
                     <?php
-                    if ($outletPick === null) {
-                        $viewOutlet = lang('Global.allOutlets');
-                    } else {
-                        foreach ($baseoutlets as $baseoutlet) {
-                            if ($baseoutlet['id'] === $outletPick) {
-                                $viewOutlet = $baseoutlet['name'];
+                        if ($outletPick === null)  {
+                            $viewOutlet = lang('Global.allOutlets');
+                        } else {
+                            foreach ($outlets as $outlet) {
+                                if ($outletPick === $outlet['id']) {
+                                    $viewOutlet = $outlet['name'];
+                                }
                             }
                         }
-                    }
                     ?>
                     <a class="tm-h4 tm-outlet" type="button"><img src="img/layout/union.svg" style="position: relative; top: -2px; margin-right: 5px;" /> <span class="tm-outlet-picker-selector"><?=$viewOutlet?></span> <span uk-icon="triangle-down"></span></a>
                     <div class="uk-width-large tm-outlet-dropdown" uk-dropdown="mode: click;">
                         <ul class="uk-list">
-                            <?php if ($outletPick === null) { ?>
-                                <li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> <?=lang('Global.allOutlets')?></li>
-                            <?php } else { ?>
-                                <li class="uk-h4 tm-h4"><a href="outlet/pick/0" class="uk-link-reset"><?=lang('Global.allOutlets')?></a></li>
-                            <?php } ?>
-                            <?php
-                            foreach ($baseoutlets as $baseoutlet) {
-                                if ($outletPick === $baseoutlet['id']) {
-                                    echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$baseoutlet['name'].'</li>';
+                        <?php
+                            $accesscount = count($baseoutlets);
+                            $outletcount = count($outlets);
+                            if ($accesscount === $outletcount) {
+                                if ($outletPick === null) {
+                                    echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.lang('Global.allOutlets').'</li>';
                                 } else {
-                                    echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$baseoutlet['id'].'" class="uk-link-reset">'.$baseoutlet['name'].'</a></li>';
+                                    echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/0" class="uk-link-reset">'.lang('Global.allOutlets').'</a></li>';
                                 }
                             }
-                            ?>
+                            foreach ($outlets as $outlet) {
+                                foreach ($baseoutlets as $access) {
+                                    if ($access['outletid'] === $outlet['id']) {
+                                        if ($outletPick === $outlet['id']) {
+                                            echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$outlet['name'].'</li>';
+                                        } else {
+                                            echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$outlet['id'].'" class="uk-link-reset">'.$outlet['name'].'</a></li>';
+                                        }
+                                    }
+                                }
+                            }
+                        ?>
                         </ul>
                     </div>
                 </div>

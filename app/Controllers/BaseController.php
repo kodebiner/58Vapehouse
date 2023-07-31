@@ -81,6 +81,7 @@ abstract class BaseController extends Controller
             $this->userId = null;
             $fullname = '';
             $this->user = null;
+            $outletUser = '';
         }
         else {
             $this->userId = $auth->id();
@@ -92,19 +93,8 @@ abstract class BaseController extends Controller
             $role = $this->GroupModel->find($GroupUser['group_id']);
 
             // Get User Outlet Access
-            $outletUser = $this->OutletAccessModel->where('userid',$this->userId)->findAll();
+            $outletUser = $this->OutletAccessModel->where('userid',$this->userId)->find();
         }
-
-        $outletUser = $this->OutletAccessModel->where('userid',$this->userId)->findAll();
-
-        
-
-        foreach ($outletUser as $outlet ){
-            $outletId   = $outlet['outletid'];
-            $userOutlet  = $outlet['userid'];
-        }
-        
-    //    dd(min($outletUser['outletid']));
 
         // Language check
 		if ($this->locale === 'id') {
@@ -112,7 +102,6 @@ abstract class BaseController extends Controller
 		} else {
 			$lang = 'en';
 		}
-
 
         // Load Config
         $this->gconfig = $this->ConfigModel->first();
@@ -140,7 +129,6 @@ abstract class BaseController extends Controller
             $outletPick = null;
         }
         
-        // dd($outletUser);
 
         // Parsing View Data
         $this->data = [
@@ -151,7 +139,6 @@ abstract class BaseController extends Controller
             'authorize'     => service('authorization'),
             'account'       => $this->user,
             'fullname'      => $fullname,
-            // 'baseoutlets'   => $this->OutletModel->findAll(),
             'outlets'       => $this->OutletModel->findAll(),
             'baseoutlets'   => $outletUser,
             'gconfig'       => $gconfig,
