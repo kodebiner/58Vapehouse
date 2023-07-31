@@ -40,6 +40,24 @@
                     <?= csrf_field() ?>
 
                     <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select" name="outlet" id="sel_out">
+                                <option><?=lang('Global.outlet')?></option>
+                                <?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $outletPick) {
+                                        $checked = 'selected';
+                                    } else {
+                                        $checked = '';
+                                    }
+                                    ?>
+                                    <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="supplier"><?=lang('Global.supplier')?></label>
                         <div class="uk-form-controls">
                             <input type="text" class="uk-input" id="suppliername" name="suppliername" placeholder="<?=lang('Global.supplier')?>">
@@ -53,41 +71,41 @@
                         </div>
                     </div>
 
-                    <div id="tablevariant">
-                        <div class="uk-overflow-auto uk-margin-bottom">
-                            <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
-                                <thead>
-                                    <tr>
-                                        <th class="uk-width-medium" style="color: #000;"><?=lang('Global.variant')?></th>
-                                        <th class="uk-width-small" style="color: #000;"><?=lang('Global.total')?></th>
-                                        <th class="uk-width-small" style="color: #000;"></th>
-                                        <th class="uk-text-center uk-width-medium" style="color: #000;"><?=lang('Global.pcsPrice')?></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($purchases as $purchase) { ?>
+                    <?php foreach ($products as $product) {?>
+                        <div id="tablevariant<?= $product['id']; ?>" hidden>
+                            <div class="uk-overflow-auto uk-margin-bottom">
+                                <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
+                                    <thead>
+                                        <tr>
+                                            <th class="uk-width-medium" style="color: #000;"><?=lang('Global.variant')?></th>
+                                            <th class="uk-width-small" style="color: #000;"><?=lang('Global.total')?></th>
+                                            <th class="uk-width-small" style="color: #000;"></th>
+                                            <th class="uk-text-center uk-width-medium" style="color: #000;"><?=lang('Global.pcsPrice')?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         <?php foreach ($variants as $variant) {?>
-                                            <?php if ($variant['id'] === $purchase['variantid']) {
+                                            <?php if ($variant['productid'] === $product['id']) {
                                                 $VarName    = $variant['name'];
                                                 $basePrice  = $variant['hargadasar']; ?>
                                             
                                                 <tr>
                                                     <td class="uk-width-medium"><?= $VarName; ?></td>
                                                     <td class="uk-text-center uk-width-small">
-                                                        <input type="number" class="uk-input" id="totalpcs" name="totalpcs" placeholder="0">
+                                                        <input type="number" class="uk-input" id="totalpcs[<?=$variant['id']?>]" name="totalpcs[<?=$variant['id']?>]" placeholder="0">
                                                     </td>
                                                     <td class="uk-width-small">Pcs</td>
                                                     <td class="uk-text-center uk-width-small">
-                                                        <input type="number" class="uk-input" id="bprice" name="bprice" placeholder="<?php $basePrice; ?>">
+                                                        <input type="number" class="uk-input" id="bprice[<?=$variant['id']?>]" name="bprice[<?=$variant['id']?>]" placeholder="<?= $basePrice; ?>">
                                                     </td>
                                                 </tr>
                                             <?php } ?>
                                         <?php } ?>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
+                    <?php } ?>
 
                     <hr>
 
@@ -126,10 +144,10 @@
                     </td>
                     <td class="uk-text-center uk-width-small"><?= $purchase['price']; ?></td>
                     <td class="uk-text-center uk-width-small"><?= $purchase['status']; ?></td>
-                    <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
+                    <td class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small" uk-grid>
                         <!-- Button Trigger Modal Detail -->
                         <div class="uk-text-center">
-                            <button class="uk-button uk-button-success" style="border-radius: 15px;" uk-toggle="target: #detail<?= $purchase['id'] ?>"><?=lang('Global.detail')?></button>
+                            <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
                         </div>
                         <!-- End Of Button Trigger Modal Detail -->
 
@@ -186,11 +204,15 @@
                 if (i.item.idx != 0) {
                     var products = <?php echo json_encode($products); ?>;
                     for (var x = 0; x < products.length; x++) {
+                        document.getElementById('tablevariant'+products[x]['id']).setAttribute('hidden', '');
+                        <?php
+                        foreach ($variants as $variant) {
+                            echo 'document.getElementById("totalpcs['.$variant['id'].']").value = "0";';
+                            echo 'document.getElementById("bprice['.$variant['id'].']").value = "'.$variant['hargadasar'].'";';
+                        }
+                        ?>
                         if (products[x]['id'] == i.item.idx) {
-                            document.getElementById('tablevariant').removeAttribute('hidden');
-                            document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> ' + customers[x]['poin'];
-                            document.getElementById('poin').setAttribute('max', customers[x]['poin']);
-                            totalcount();
+                            document.getElementById('tablevariant'+products[x]['id']).removeAttribute('hidden');
                         }
                     }
                 }

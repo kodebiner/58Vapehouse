@@ -1202,6 +1202,32 @@ button.uk-icon:not(:disabled) {
     color: #666
 }
 
+.uk-icon-button-success {
+    box-sizing: border-box;
+    width: 36px;
+    height: 36px;
+    border-radius: 500px;
+    background: #198754 !important;
+    color: #fff !important;
+    vertical-align: middle;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: .1s ease-in-out;
+    transition-property: color, background-color
+}
+
+.uk-icon-button-success:hover {
+    background-color: #f2f2f2 !important;
+    color: #666 !important;
+}
+
+.uk-active>.uk-icon-button-success,
+.uk-icon-button-success:active {
+    background-color: #dfdfdf;
+    color: #666
+}
+
 
 .uk-range {
     -webkit-appearance: none;
