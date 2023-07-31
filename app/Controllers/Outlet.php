@@ -6,6 +6,8 @@ use App\Models\OutletModel;
 use App\Models\ProductModel;
 use App\Models\StockModel;
 use App\Models\VariantModel;
+use App\Models\UserModel;
+use App\Models\GroupUserModel;
 
 class Outlet extends BaseController
 {
@@ -31,9 +33,11 @@ class Outlet extends BaseController
         $validation = \Config\Services::validation();
 
         // Calling Models
-        $OutletModel    = new OutletModel;
-        $StockModel     = new StockModel;
-        $VariantModel   = new VariantModel;
+        $OutletModel            = new OutletModel;
+        $StockModel             = new StockModel;
+        $VariantModel           = new VariantModel;
+        $OutletAccessModel      = new OutletaccessModel;
+        $GroupUserModel         = new GroupUserModel;
 
         // Populating data
         $input      = $this->request->getPost();
@@ -71,6 +75,23 @@ class Outlet extends BaseController
             ];
             $StockModel->save($stock);
         }
+
+        $group = $GroupUserModel->where('group_id', '2')->find();
+        $userarr = array();
+        foreach ($group as $gr) {
+            $userarr[] = $gr['user_id'];
+        }
+        // Owner Outlet 
+        $accessId = $AccessModel->whereIn('id', $userarr)->find();
+
+        foreach ($accessId as $access){
+            $outletAcc = [
+                'userid'   => $access['id'],
+                'outletid' => $outletID,
+            ];
+            $OutletAccessModel->save($outletAcc);
+        }
+
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
