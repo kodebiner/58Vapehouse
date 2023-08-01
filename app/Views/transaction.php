@@ -307,7 +307,7 @@
                             <div class="uk-margin" id="amount">
                                 <h4 class="uk-margin-remove"><?=lang('Global.amountpaid')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <input type="number" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.amountpaid')?>" required/>
+                                    <input type="number" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.amountpaid')?>" />
                                 </div>
                             </div>
                             
@@ -1062,6 +1062,7 @@
 
                 // Poin
                 var poin = document.getElementById('poin').value;
+
 
                 // Member Discount
                 var member = document.getElementById('customerid');

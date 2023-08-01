@@ -87,15 +87,14 @@ class Outlet extends BaseController
         
         // Owner Outlet 
         $accessId = $OutletAccessModel->whereIn('userid', $userarr)->find();
-        // dd($accessId);
         foreach ($accessId as $access){
             $outletAcc = [
                 'userid'   => $access['userid'],
                 'outletid' => $outletID,
             ];
-           
-            $OutletAccessModel->save($outletAcc);
         }
+        
+            $OutletAccessModel->save($outletAcc);
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }

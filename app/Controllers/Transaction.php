@@ -71,6 +71,7 @@ class Transaction extends BaseController
         $data['transactions']   = $transactions;
         $data['outlets']        = $outlets;
         $data['payments']       = $payments;
+        $data['members']        = $MemberModel->findAll();
         $data['customers']      = $customers;
         $data['products']       = $products;
         $data['variants']       = $variants;
