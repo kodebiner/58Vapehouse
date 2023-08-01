@@ -533,7 +533,9 @@
         <th><?=lang('Global.price')?></th>
         <th><?=lang('Global.stock')?></th>
         <th><?=lang('Global.brand')?></th>
+        <?php if (in_groups('owner')) : ?>
         <th class="uk-text-center"><?=lang('Global.action')?></th>
+        <?php endif ?>
       </tr>
     </thead>
     <tbody>
@@ -602,6 +604,7 @@
               }
             ?>
           </td>
+          <?php if (in_groups('owner')) : ?>
           <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
             <!-- Button Trigger Modal Edit -->
             <div>
@@ -615,6 +618,7 @@
             </div>
             <!-- End Of Button Delete -->
           </td>
+          <?php endif ?>
         </tr>
       <?php endforeach; ?>
     </tbody>

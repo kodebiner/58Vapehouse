@@ -259,12 +259,14 @@
                 <div class="uk-offcanvas-bar" role="dialog" aria-modal="true">
                     <nav>
                         <ul class="uk-nav uk-nav-default tm-nav uk-light" uk-nav>
+                            <?php if (in_groups('owner')) : ?>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                             </li>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?></a>
                             </li>
+                            <?php endif ?>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                             </li>
@@ -344,12 +346,14 @@
         <?php } else { ?>
             <nav class="tm-sidebar-left">
                 <ul class="uk-nav uk-nav-default tm-nav uk-light" uk-nav>
+                <?php if (in_groups('owner')) : ?>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                     </li>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?></a>
                     </li>
+                    <?php endif ?>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                     </li>
