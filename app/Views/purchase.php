@@ -77,10 +77,10 @@
                                 <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
                                     <thead>
                                         <tr>
-                                            <th class="uk-width-medium" style="color: #000;"><?=lang('Global.variant')?></th>
-                                            <th class="uk-width-small" style="color: #000;"><?=lang('Global.total')?></th>
-                                            <th class="uk-width-small" style="color: #000;"></th>
-                                            <th class="uk-text-center uk-width-medium" style="color: #000;"><?=lang('Global.pcsPrice')?></th>
+                                            <th class="uk-text-emphasis uk-width-medium"><?=lang('Global.variant')?></th>
+                                            <th class="uk-text-emphasis uk-width-small"><?=lang('Global.total')?></th>
+                                            <th class="uk-text-emphasis uk-width-small"></th>
+                                            <th class="uk-text-emphasis uk-text-center uk-width-medium"><?=lang('Global.pcsPrice')?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -120,55 +120,127 @@
 <!-- End Of Modal Add -->
 
 <!-- Table Of Content -->
-<div class="uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
-        <thead>
-            <tr>
-                <th class="uk-width-medium"><?=lang('Global.date')?></th>
-                <th class="uk-width-small"><?=lang('Global.supplier')?></th>
-                <th class="uk-text-center uk-width-small"><?=lang('Global.total')?></th>
-                <th class="uk-text-center uk-width-small"><?=lang('Global.status')?></th>
-                <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($purchases as $purchase) : ?>
+<?php
+$success    = "Completed";
+$cancel     = "Canceled";
+$pending    = "Order Processed";
+
+foreach ($purchases as $purchase) { ?>
+    <div class="uk-margin">
+        <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
+            <thead>
                 <tr>
-                    <td class="uk-width-medium"><?= $purchase['restock']; ?></td>
-                    <td class="uk-width-small">
-                        <?php foreach ($suppliers as $supplier) {
-                            if ($supplier['id'] === $purchase['supplierid']) {
-                                echo $supplier['name'];
-                            }
-                        } ?>
-                    </td>
-                    <td class="uk-text-center uk-width-small"><?= $purchase['price']; ?></td>
-                    <td class="uk-text-center uk-width-small"><?= $purchase['status']; ?></td>
-                    <td class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small" uk-grid>
-                        <!-- Button Trigger Modal Detail -->
-                        <div class="uk-text-center">
-                            <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
-                        </div>
-                        <!-- End Of Button Trigger Modal Detail -->
-
-                        <!-- Button Trigger Modal Edit -->
-                        <div>
-                            <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $purchase['id'] ?>"></a>
-                        </div>
-                        <!-- End Of Button Trigger Modal Edit -->
-
-                        <!-- Button Delete -->
-                        <div>
-                            <a uk-icon="trash" class="uk-icon-button-delete" href="purchase/deletesup/<?= $purchase['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
-                        </div>
-                        <!-- End Of Button Delete -->
-                    </td>
+                    <th class="uk-width-medium"><?=lang('Global.date')?></th>
+                    <th class="uk-width-small"><?=lang('Global.supplier')?></th>
+                    <th class="uk-text-center uk-width-small"><?=lang('Global.total')?></th>
+                    <th class="uk-text-center uk-width-small"><?=lang('Global.status')?></th>
+                    <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td class="uk-width-medium"><?= $purchase['restock']; ?></td>
+                        <td class="uk-width-small">
+                            <?php foreach ($suppliers as $supplier) {
+                                if ($supplier['id'] === $purchase['supplierid']) {
+                                    echo $supplier['name'];
+                                }
+                            } ?>
+                        </td>
+                        <td class="uk-text-center uk-width-small"><?= $purchase['price']; ?></td>
+                        <td class="uk-text-center uk-width-small">
+                            <?php if ($purchase['status'] === "0") {
+                                echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.$success.'</div>';
+                            } elseif ($purchase['status'] === "1") {
+                                echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$cancel.'</div>';
+                            } else {
+                                echo '<div class="uk-text-primary" style="border-style: solid; border-color: #1e87f0;">'.$pending.'</div>';
+                            } ?>
+                        </td>
+
+                        <?php if ($purchase['status'] === null) { ?>
+                            <td class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small" uk-grid>
+                                <!-- Button Trigger Modal Detail -->
+                                <div class="uk-text-center">
+                                    <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
+                                </div>
+                                <!-- End Of Button Trigger Modal Detail -->
+
+                                <!-- Button Trigger Modal Edit -->
+                                <div>
+                                    <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $purchase['id'] ?>"></a>
+                                </div>
+                                <!-- End Of Button Trigger Modal Edit -->
+
+                                <!-- Button Delete -->
+                                <div>
+                                    <a uk-icon="close" class="uk-icon-button-delete" href="purchase/deletesup/<?= $purchase['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
+                                </div>
+                                <!-- End Of Button Delete -->
+                            </td>
+                        <?php } else {?>
+                            <td class="uk-text-center uk-width-small">
+                                <!-- Button Trigger Modal Detail -->
+                                <div class="uk-text-center">
+                                    <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
+                                </div>
+                                <!-- End Of Button Trigger Modal Detail -->
+                            </td>
+                        <?php } ?>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+<?php } ?>
 <!-- End Of Table Content -->
+
+<!-- Modal Detail -->
+<?php 
+$success    = "Completed";
+$cancel     = "Canceled";
+$pending    = "Order Processed";
+
+foreach ($purchases as $purchase) { ?>
+    <div uk-modal class="uk-flex-top" id="detail<?= $purchase['id'] ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-content">
+                <div class="uk-modal-header">
+                    <h5 class="uk-modal-title" id="detail" ><?=lang('Global.detail')?></h5>
+                </div>
+                <div class="uk-modal-body">
+                    <div class="uk-form-horizontal">
+                        <div class="uk-margin">
+                            <label class="uk-form-label"><?=lang('Global.status')?></label>
+                            <div class="uk-form-controls">
+                                <?php if ($purchase['status'] === "0") {
+                                    echo '<span class="uk-text-success uk-width-auto" style="padding: 5px; border-style: solid; border-color: #32d296;">'.$success.'</span>';
+                                } elseif ($purchase['status'] === "1") {
+                                    echo '<span class="uk-text-danger uk-width-auto" style="padding: 5px; border-style: solid; border-color: #f0506e;">'.$cancel.'</span>';
+                                } else {
+                                    echo '<span class="uk-text-primary" style="padding: 5px; border-style: solid; border-color: #1e87f0;">'.$pending.'</span>';
+                                } ?>
+                            </div>
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label"><?=lang('Global.date')?></label>
+                            <div class="uk-form-controls"><?= $purchase['restock'] ?></div>
+                        </div>
+
+                        <?php foreach ($outlets as $outlet) { ?>
+                            <?php if ($outlet['id'] === $purchase['outletid']) { ?>
+                                <div class="uk-margin">
+                                    <label class="uk-form-label"><?=lang('Global.outlet')?></label>
+                                    <div class="uk-form-controls"><?= $outlet['name'] ?></div>
+                                </div>
+                            <?php } ?>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<!-- Modal Detail End -->
 
 <!-- Search Engine Script -->
 <script type="text/javascript">

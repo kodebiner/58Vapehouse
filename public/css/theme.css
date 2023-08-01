@@ -10963,6 +10963,34 @@ video) {
     color: #fff !important
 }
 
+.tm-navbar-container:not(.uk-navbar-transparent) .uk-text-primary,
+.uk-card-primary.uk-card-body .uk-text-primary,
+.uk-card-primary>:not([class*=uk-card-media]) .uk-text-primary,
+.uk-card-secondary.uk-card-body .uk-text-primary,
+.uk-card-secondary>:not([class*=uk-card-media]) .uk-text-primary,
+.uk-light .uk-text-success,
+.uk-overlay-primary .uk-text-primary,
+.uk-section-primary:not(.uk-preserve-color) .uk-text-primary,
+.uk-section-secondary:not(.uk-preserve-color) .uk-text-primary,
+.uk-tile-primary:not(.uk-preserve-color) .uk-text-primary,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-text-primary {
+    color: #fff !important
+}
+
+.tm-navbar-container:not(.uk-navbar-transparent) .uk-text-primary,
+.uk-card-primary.uk-card-body .uk-text-primary,
+.uk-card-primary>:not([class*=uk-card-media]) .uk-text-primary,
+.uk-card-secondary.uk-card-body .uk-text-primary,
+.uk-card-secondary>:not([class*=uk-card-media]) .uk-text-primary,
+.uk-light .uk-text-danger,
+.uk-overlay-primary .uk-text-primary,
+.uk-section-primary:not(.uk-preserve-color) .uk-text-primary,
+.uk-section-secondary:not(.uk-preserve-color) .uk-text-primary,
+.uk-tile-primary:not(.uk-preserve-color) .uk-text-primary,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-text-primary {
+    color: #fff !important
+}
+
 .tm-navbar-container:not(.uk-navbar-transparent) .uk-text-secondary,
 .uk-card-primary.uk-card-body .uk-text-secondary,
 .uk-card-primary>:not([class*=uk-card-media]) .uk-text-secondary,

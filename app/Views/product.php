@@ -57,21 +57,61 @@
           <div class="uk-margin">
             <label class="uk-form-label" for="category"><?=lang('Global.category')?></label>
             <div class="uk-form-controls">
-              <input type="text" class="uk-input" id="catename" name="catename" placeholder="<?=lang('Global.category')?>">
+              <input class="uk-input" id="category" name="category" placeholder="<?=lang('Global.category')?>" required>
+              <input id="catid" name="catid" hidden/>
             </div>
             <div class="uk-h6 uk-margin-remove">
               <?=lang('Global.morecate')?><a uk-toggle="target: #tambahcat"><?=lang('Global.addCategory')?></a>
             </div>
+
+            <script type="text/javascript">
+              $(function() {
+                var category = [
+                  <?php
+                  foreach ($category as $cat) {
+                    echo '{label:"'.$cat['name'].'",idx:'.(int)$cat['id'].'},';
+                  }
+                  ?>
+                ];
+                $("#category").autocomplete({
+                  source: category,
+                  select: function (e, i) {
+                    $("#catid").val(i.item.idx); // save selected id to hidden input
+                  },
+                  minLength: 2
+                });
+              });
+            </script>
           </div>
 
           <div class="uk-margin-bottom">
             <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
             <div class="uk-form-controls">
-              <input type="text" class="uk-input" id="brandname" name="brandname" placeholder="<?=lang('Global.brand')?>">
+              <input class="uk-input" id="brand" name="brand" placeholder="<?=lang('Global.brand')?>" required>
+              <input id="brandid" name="brandid" hidden/>
             </div>
             <div class="uk-h6 uk-margin-remove">
               <?=lang('Global.morebrand')?><a uk-toggle="target: #tambahbrand"><?=lang('Global.addBrand')?></a>
             </div>
+
+            <script type="text/javascript">
+              $(function() {
+                var brand = [
+                  <?php
+                  foreach ($brand as $bran) {
+                    echo '{label:"'.$bran['name'].'",idx:'.(int)$bran['id'].'},';
+                  }
+                  ?>
+                ];
+                $("#brand").autocomplete({
+                  source: brand,
+                  select: function (e, i) {
+                    $("#brandid").val(i.item.idx); // save selected id to hidden input
+                  },
+                  minLength: 2
+                });
+              });
+            </script>
           </div>
 
           <div id="image-container-create" class="uk-margin">
@@ -208,28 +248,6 @@
                 }
               });
             };
-            
-            $(function() {
-              var brandList = [
-                <?php foreach ($brand as $bran) {
-                  echo '"'.$bran['name'].'",';
-                }?>
-              ];
-              $("#brandname").autocomplete({
-                source: brandList,
-              });
-            });
-            
-            $(function() {
-              var cateList = [
-                <?php foreach ($category as $cate) {
-                  echo '"'.$cate['name'].'",';
-                }?>
-              ];
-              $("#catename").autocomplete({
-                source: cateList,
-              });
-            });
           </script>
 
           <div id="createVariant" class="uk-margin-bottom">

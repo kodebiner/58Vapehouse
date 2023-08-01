@@ -85,8 +85,7 @@ class Product extends BaseController
             // search all data
             $input = $this->request->getPost();
             $outlets = $OutletModel->findAll();
-    
-            dd($input);
+            
             // rules
             $rule = [
                 'name'          => 'required|max_length[255]|is_unique[product.name]',
@@ -104,8 +103,8 @@ class Product extends BaseController
             $data = [
                 'name'          => $input['name'],
                 'description'   => $input['description'],
-                'catid'         => $input['category'],
-                'brandid'       => $input['brand'],
+                'catid'         => $input['catid'],
+                'brandid'       => $input['brandid'],
             ];
 
             // insert data product

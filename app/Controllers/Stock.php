@@ -8,6 +8,7 @@ use App\Models\StockModel;
 use App\Models\OldStockModel;
 use App\Models\VariantModel;
 use App\Models\SupplierModel;
+use App\Models\UserModel;
 
 class Stock extends BaseController
 
@@ -226,23 +227,26 @@ class Stock extends BaseController
         $ProductModel   = new ProductModel;
         $VariantModel   = new VariantModel;
         $OutletModel    = new OutletModel;
+        $UserModel      = new UserModel;
 
         // Find Data
         $data           = $this->data;
-        $products       = $ProductModel->findAll();
-        $outlets        = $OutletModel->findAll();
-        $variants       = $VariantModel->findAll();
         $suppliers      = $SupplierModel->findAll();
+        $products       = $ProductModel->findAll();
+        $variants       = $VariantModel->findAll();
+        $outlets        = $OutletModel->findAll();
+        $users          = $UserModel->findAll();
         $purchases      = $StockModel->orderBy('id', 'DESC')->findAll();
 
         // Parsing data to view
         $data['title']          = lang('Global.purchase');
         $data['description']    = lang('Global.purchaseListDesc');
-        $data['variants']       = $variants;
-        $data['products']       = $products;
-        $data['outlets']        = $outlets;
-        $data['suppliers']      = $suppliers;
         $data['purchases']      = $purchases;
+        $data['suppliers']      = $suppliers;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['outlets']        = $outlets;
+        $data['users']          = $users;
 
         return view ('Views/purchase', $data);
     }
