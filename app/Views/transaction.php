@@ -225,7 +225,7 @@
                                 <div class="uk-h4 uk-margin-remove-top" id="subtotal">0</div>
                             </div>
 
-                            <div class="uk-margin" hidden>
+                            <div class="uk-margin">
                                 <h4 class="uk-margin-remove"><?=lang('Global.discount')?></h4>
                                 <div class="uk-margin-small uk-flex-middle" uk-grid>
                                     <div class="uk-width-expand">
@@ -366,7 +366,8 @@
                                 </div>
                             </div>
                             <div class="uk-margin uk-flex uk-flex-center">
-                                <button type="submit" id="pay" class="uk-button uk-button-primary uk-button-large uk-text-center" style="border-radius: 8px; width: 540px;" disabled><?=lang('Global.pay')?></button>
+                                <button type="submit" id="pay" class="uk-button uk-button-primary uk-button-large uk-text-center" style="border-radius: 8px; width: 260px;" disabled><?=lang('Global.pay')?></button>
+                                <button type="submit" id="save" class="uk-button uk-button-danger uk-button-large uk-text-center uk-margin-small-left" style="border-radius: 8px; width: 260px;" disabled><span uk-icon="icon:  pull"></span><?=lang('Global.save')?></button>
                             </div>
                         </div>
                     </form>
@@ -609,13 +610,23 @@
                                                                                         productprice.setAttribute('value', showprice())
                                                                                         productprice.innerHTML = showprice();
 
-                                                                                        const butcontainer = document.createElement('div');
-                                                                                        butcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-12');
+                                                                                        const varpricecontainer = document.createElement('div');
+                                                                                        varpricecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
 
-                                                                                        const but = document.createElement('a');
-                                                                                        but.setAttribute('href', '#');
-                                                                                        const sp = document.createElement('span');
-                                                                                        sp.setAttribute('class','uk-nav-parent-icon')
+                                                                                        const varbargain = document.createElement('input');
+                                                                                        varbargain.setAttribute('class', 'uk-width-1-2 uk-input uk-form-width-small');
+                                                                                        varbargain.setAttribute('id', 'varbargain<?=$variant['id']?>');
+                                                                                        varbargain.setAttribute('placeholder', 'variant bargain');
+                                                                                        varbargain.setAttribute('name', 'varbargain[]');
+
+                                                                                        const varvaluecontainer = document.createElement('div');
+                                                                                        varvaluecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
+
+                                                                                        const varprice = document.createElement('input');
+                                                                                        varprice.setAttribute('class', 'uk-width-1-2 uk-input uk-form-width-small');
+                                                                                        varprice.setAttribute('id', 'varprice<?=$variant['id']?>');
+                                                                                        varprice.setAttribute('placeholder', 'variant price');
+                                                                                        varbargain.setAttribute('name', 'varprice[]');
 
                                                                                         function showprice() {
                                                                                             var qty = inputqty.value;
@@ -632,15 +643,17 @@
                                                                                         delcontainer.appendChild(productqtyinputdel);
                                                                                         pricecontainer.appendChild(productprice);
                                                                                         namecontainer.appendChild(productname);
-                                                                                        butcontainer.appendChild(but);
-                                                                                        but.appendChild(sp);
+                                                                                        varpricecontainer.appendChild(varbargain);
+                                                                                        varvaluecontainer.appendChild(varprice);
                                                                                         productgrid.appendChild(delcontainer);
                                                                                         productgrid.appendChild(quantitycontainer);
                                                                                         productgrid.appendChild(addcontainer);
                                                                                         productgrid.appendChild(namecontainer);
                                                                                         productgrid.appendChild(pricecontainer);
                                                                                         productgrid.appendChild(pricecontainer);
-                                                                                        productgrid.appendChild(butcontainer);
+                                                                                        productgrid.appendChild(varpricecontainer);
+                                                                                        productgrid.appendChild(varvaluecontainer);
+                                                                                       
                                                                                         products.appendChild(productgrid);
 
                                                                                         <?php
@@ -1083,6 +1096,20 @@
 
                 // Pay button
                 var buttonpay = document.getElementById('pay');
+                if (paidprice >= 0) {
+                    buttonpay.removeAttribute('disabled');
+                    var printprice = paidprice;
+                } else {
+                    buttonpay.setAttribute('disabled', '');
+                    var printprice = "Price To Low";
+                }
+
+                var pay = document.getElementById('value').value;
+                var firstpay = document.getElementById('firstpay').value;
+                var secondpay = document.getElementById('secondpay').value;
+
+                // Save button
+                var buttonpay = document.getElementById('save');
                 if (paidprice >= 0) {
                     buttonpay.removeAttribute('disabled');
                     var printprice = paidprice;
