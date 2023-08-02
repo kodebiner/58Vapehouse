@@ -708,8 +708,8 @@
                 <div class="uk-width-1-1">
                   <?php foreach ($category as $cat) { ?>
                     <?php if ($cat['id'] === $product['catid']) { ?>
-                      <input class="uk-input" name="category<?=$product['id']?>" id="category<?=$product['id']?>" value="<?= $cat['name']; ?>" />
-                      <input id="catid<?=$product['id']?>" name="catid<?=$product['id']?>" value="<?= $cat['name']; ?>" hidden/>
+                      <input class="uk-input" name="category<?=$product['id']?>" id="category<?=$product['id']?>" value="<?= $cat['name']; ?>" required />
+                      <input id="catid<?=$product['id']?>" name="catid<?=$product['id']?>" value="<?= $cat['id']; ?>" hidden/>
                     <?php } ?>
                   <?php } ?>
                 </div>
@@ -741,8 +741,8 @@
                 <div class="uk-width-1-1">
                   <?php foreach ($brand as $bran) { ?>
                     <?php if ($bran['id'] === $product['brandid']) { ?>
-                      <input class="uk-input" name="brand<?=$product['id']?>" id="brand<?=$product['id']?>" value="<?= $bran['name']; ?>"/>
-                      <input id="brandid<?=$product['id']?>" name="brandid<?=$product['id']?>" value="<?= $bran['name']; ?>" hidden/>
+                      <input class="uk-input" name="brand<?=$product['id']?>" id="brand<?=$product['id']?>" value="<?= $bran['name']; ?>" required/>
+                      <input id="brandid<?=$product['id']?>" name="brandid<?=$product['id']?>" value="<?= $bran['id']; ?>" hidden/>
                     <?php } ?>
                   <?php } ?>
                 </div>
