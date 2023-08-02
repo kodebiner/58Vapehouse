@@ -296,7 +296,7 @@ foreach ($purchases as $purchase) { ?>
                             <label class="uk-form-label"><?=lang('Global.totalPurchase')?></label>
                             <?php foreach ($variants as $variant) { ?>
                                 <?php if ($purchase['variantid'] === $variant['id']) { ?>
-                                    <div class="uk-form-controls">Rp. <?= $variant['hargadasar'] * $purchase['qty']; ?>,-</div>
+                                    <div class="uk-form-controls">Rp. <?= $purchase['price']; ?>,-</div>
                                 <?php } ?>
                             <?php } ?>
                         </div>
