@@ -236,7 +236,14 @@ class Stock extends BaseController
         $variants       = $VariantModel->findAll();
         $outlets        = $OutletModel->findAll();
         $users          = $UserModel->findAll();
-        $purchases      = $StockModel->orderBy('id', 'DESC')->findAll();
+
+        // get outlet
+        if ($this->data['outletPick'] === null) {
+            $purchases      = $StockModel->orderBy('id', 'DESC')->findAll();
+        } else {
+            $out =  $this->data['outletPick'];
+            $purchases      = $StockModel->where("outletid = {$out} OR outletid='0'")->orderBy('outletid', 'ASC')->find();
+        }
 
         // Parsing data to view
         $data['title']          = lang('Global.purchase');

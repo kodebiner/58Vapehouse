@@ -96,6 +96,12 @@ return [
     'status'            => 'Status',
     'detail'            => 'Detail',
     'pcsPrice'          => 'Price Per Pieces',
+    'purchaseInfo'      => 'Purchase Information',
+    'totalPurchase'     => 'Total Purchase',
+    'accepted'          => 'Accepted',
+    'success'           => 'Completed',
+    'cancel'            => 'Canceled',
+    'pending'           => 'Order Processed',
 
     // Button
     'edit'              => 'Edit',

@@ -691,14 +691,14 @@
             <div class="uk-margin-bottom">
               <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
               <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="name" name="name" value="<?= $product['name']; ?>"autofocus />
+                <input type="text" class="uk-input" id="name" name="name" value="<?= $product['name']; ?>" />
               </div>
             </div>
             
             <div class="uk-margin-bottom">
               <label class="uk-form-label" for="name"><?=lang('Global.description')?></label>
               <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="description" name="description" value="<?= $product['description']; ?>"autofocus />
+                <input type="text" class="uk-input" id="description" name="description" value="<?= $product['description']; ?>" />
               </div>
             </div>
 
@@ -706,8 +706,12 @@
               <label class="uk-form-label"><?=lang('Global.category')?></label>
               <div class="uk-margin-small">
                 <div class="uk-width-1-1">
-                  <input class="uk-input" name="category<?=$product['id']?>" id="category<?=$product['id']?>" required/>
-                  <input id="catid<?=$product['id']?>" name="catid<?=$product['id']?>" hidden/>
+                  <?php foreach ($category as $cat) { ?>
+                    <?php if ($cat['id'] === $product['catid']) { ?>
+                      <input class="uk-input" name="category<?=$product['id']?>" id="category<?=$product['id']?>" value="<?= $cat['name']; ?>" />
+                      <input id="catid<?=$product['id']?>" name="catid<?=$product['id']?>" value="<?= $cat['name']; ?>" hidden/>
+                    <?php } ?>
+                  <?php } ?>
                 </div>
               </div>
 
@@ -735,8 +739,12 @@
               <label class="uk-form-label"><?=lang('Global.brand')?></label>
               <div class="uk-margin-small">
                 <div class="uk-width-1-1">
-                  <input class="uk-input" name="brand<?=$product['id']?>" id="brand<?=$product['id']?>" required/>
-                  <input id="brandid<?=$product['id']?>" name="brandid<?=$product['id']?>" hidden/>
+                  <?php foreach ($brand as $bran) { ?>
+                    <?php if ($bran['id'] === $product['brandid']) { ?>
+                      <input class="uk-input" name="brand<?=$product['id']?>" id="brand<?=$product['id']?>" value="<?= $bran['name']; ?>"/>
+                      <input id="brandid<?=$product['id']?>" name="brandid<?=$product['id']?>" value="<?= $bran['name']; ?>" hidden/>
+                    <?php } ?>
+                  <?php } ?>
                 </div>
               </div>
 

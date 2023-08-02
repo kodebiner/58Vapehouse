@@ -120,24 +120,25 @@
 <!-- End Of Modal Add -->
 
 <!-- Table Of Content -->
-<?php
-$success    = "Completed";
-$cancel     = "Canceled";
-$pending    = "Order Processed";
+<div class="uk-margin">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
+        <thead>
+            <tr>
+                <th class="uk-width-medium"><?=lang('Global.date')?></th>
+                <th class="uk-width-small"><?=lang('Global.supplier')?></th>
+                <th class="uk-text-center uk-width-small"><?=lang('Global.total')?></th>
+                <th class="uk-text-center uk-width-small"><?=lang('Global.status')?></th>
+                <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $success    = lang('Global.success');
+            $cancel     = lang('Global.cancel');
+            $pending    = lang('Global.pending');
 
-foreach ($purchases as $purchase) { ?>
-    <div class="uk-margin">
-        <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
-            <thead>
-                <tr>
-                    <th class="uk-width-medium"><?=lang('Global.date')?></th>
-                    <th class="uk-width-small"><?=lang('Global.supplier')?></th>
-                    <th class="uk-text-center uk-width-small"><?=lang('Global.total')?></th>
-                    <th class="uk-text-center uk-width-small"><?=lang('Global.status')?></th>
-                    <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
-                </tr>
-            </thead>
-            <tbody>
+            foreach ($purchases as $purchase) { ?>
+                <?php if ($purchase['qty'] !== "0") { ?>
                     <tr>
                         <td class="uk-width-medium"><?= $purchase['restock']; ?></td>
                         <td class="uk-width-small">
@@ -166,17 +167,17 @@ foreach ($purchases as $purchase) { ?>
                                 </div>
                                 <!-- End Of Button Trigger Modal Detail -->
 
-                                <!-- Button Trigger Modal Edit -->
+                                <!-- Button Confirmation -->
                                 <div>
                                     <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $purchase['id'] ?>"></a>
                                 </div>
-                                <!-- End Of Button Trigger Modal Edit -->
+                                <!-- End Of Button Confirmation -->
 
-                                <!-- Button Delete -->
+                                <!-- Button Cancel -->
                                 <div>
                                     <a uk-icon="close" class="uk-icon-button-delete" href="purchase/deletesup/<?= $purchase['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
                                 </div>
-                                <!-- End Of Button Delete -->
+                                <!-- End Of Button Cancel -->
                             </td>
                         <?php } else {?>
                             <td class="uk-text-center uk-width-small">
@@ -188,17 +189,19 @@ foreach ($purchases as $purchase) { ?>
                             </td>
                         <?php } ?>
                     </tr>
-            </tbody>
-        </table>
-    </div>
-<?php } ?>
+                <?php } else { ?>
+                <?php } ?>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
 <!-- End Of Table Content -->
 
 <!-- Modal Detail -->
-<?php 
-$success    = "Completed";
-$cancel     = "Canceled";
-$pending    = "Order Processed";
+<?php
+$success    = lang('Global.success');
+$cancel     = lang('Global.cancel');
+$pending    = lang('Global.pending');
 
 foreach ($purchases as $purchase) { ?>
     <div uk-modal class="uk-flex-top" id="detail<?= $purchase['id'] ?>">
@@ -209,6 +212,10 @@ foreach ($purchases as $purchase) { ?>
                 </div>
                 <div class="uk-modal-body">
                     <div class="uk-form-horizontal">
+                        <div class="uk-margin">
+                            <div class="tm-h2 uk-h4"><?=lang('Global.purchaseInfo')?></div>
+                        </div>
+
                         <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.status')?></label>
                             <div class="uk-form-controls">
@@ -221,6 +228,7 @@ foreach ($purchases as $purchase) { ?>
                                 } ?>
                             </div>
                         </div>
+                        
                         <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.date')?></label>
                             <div class="uk-form-controls"><?= $purchase['restock'] ?></div>
@@ -235,6 +243,70 @@ foreach ($purchases as $purchase) { ?>
                             <?php } ?>
                         <?php } ?>
                     </div>
+
+                    <div class="uk-divider-icon"></div>
+                    
+                    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" style="background-color: #fff;">
+                        <thead>
+                            <tr>
+                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.product')?></th>
+                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.variant')?></th>
+                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
+                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.accepted')?></th>
+                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.pcsPrice')?></th>
+                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.total')?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <?php foreach ($variants as $variant) { ?>
+                                    <?php foreach ($products as $product) { ?>
+                                        <?php if ($variant['id'] === $purchase['variantid'] && $product['id'] === $variant['productid']) {
+                                            $pName  = $product['name'];
+                                            $vName  = $variant['name']; ?>
+
+                                            <td class="uk-width-small"><?= $pName; ?></td>
+                                            <td class="uk-width-small"><?= $vName; ?></td>
+                                        <?php } ?>
+                                    <?php } ?>
+                                <?php } ?>
+                                
+                                <td class="uk-width-small"><?= $purchase['qty']; ?> Pcs</td>
+
+                                <?php if ($purchase['status'] === "0") { ?>
+                                    <td class="uk-width-small"><?= $purchase['qty'] ?> Pcs</td>
+                                <?php } else { ?>
+                                    <td class="uk-width-small">0 Pcs</td>
+                                <?php } ?>
+
+                                <?php foreach ($variants as $variant) { ?>
+                                    <?php if ($purchase['variantid'] === $variant['id']) { ?>
+                                        <td class="uk-width-small"><?= $variant['hargadasar']; ?></td>
+                                        <td class="uk-width-small" id="ptotal" name="ptotal[]"><?= $variant['hargadasar'] * $purchase['qty']; ?></td>
+                                    <?php } ?>
+                                <?php } ?>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <hr>
+
+                    <div class="uk-form-horizontal">
+                        <div class="uk-margin">
+                            <label class="uk-form-label"><?=lang('Global.totalPurchase')?></label>
+                            <?php foreach ($variants as $variant) { ?>
+                                <?php if ($purchase['variantid'] === $variant['id']) { ?>
+                                    <div class="uk-form-controls">Rp. <?= $variant['hargadasar'] * $purchase['qty']; ?>,-</div>
+                                <?php } ?>
+                            <?php } ?>
+                        </div>
+                    </div>
+
+                    <?php if ($purchase['status'] === null) { ?>
+                        <div class="uk-flex uk-flex-right">
+                            <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $purchase['id'] ?>"></a>
+                        </div>
+                    <?php } else {} ?>
                 </div>
             </div>
         </div>
@@ -244,6 +316,26 @@ foreach ($purchases as $purchase) { ?>
 
 <!-- Search Engine Script -->
 <script type="text/javascript">
+
+    // Total Purchase 
+    // var ptotalelem = document.getElementById('ptotal');
+
+    // $('#totalpurchase').on('DOMSubtreeModified', function() {
+    //     var prices = document.querySelectorAll("td[name='ptotal[]']");
+    //     var totarr = [];
+
+    //     for (i = 0; i < prices.length; i++) {
+    //         price = Number(prices[i].innerText);
+    //         totarr.push(price);
+    //     }
+
+    //     if (totarr.length === 0) {
+    //         document.getElementById('ptotal').innerHTML = 0;
+    //     } else {
+    //         var ptotal = totarr.reduce(function(a, b){ return a + b; });
+    //         document.getElementById('ptotal').innerHTML = ptotal;
+    //     }
+    // });
 
     // Data Table
     $(document).ready(function () {

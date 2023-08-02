@@ -96,6 +96,12 @@ return [
     'status'            => 'Status',
     'detail'            => 'Rincian',
     'pcsPrice'          => 'Harga Beli Satuan',
+    'purchaseInfo'      => 'Informasi Pembelian',
+    'totalPurchase'     => 'Jumlah Pembelian',
+    'accepted'          => 'Diterima',
+    'success'           => 'Dikonfirmasi',
+    'cancel'            => 'Dibatalkan',
+    'pending'           => 'Sedang Diproses',
 
     // Button
     'edit'              => 'Ubah',
