@@ -9,6 +9,8 @@ use App\Models\OldStockModel;
 use App\Models\VariantModel;
 use App\Models\SupplierModel;
 use App\Models\UserModel;
+use App\Models\PurchaseModel;
+use App\Models\PurchasedetailModel;
 
 class Stock extends BaseController
 
@@ -222,38 +224,41 @@ class Stock extends BaseController
     public function indexpurchase()
     {
         // Calling Model
-        $SupplierModel  = new SupplierModel;
-        $StockModel     = new StockModel;
-        $ProductModel   = new ProductModel;
-        $VariantModel   = new VariantModel;
-        $OutletModel    = new OutletModel;
-        $UserModel      = new UserModel;
+        $SupplierModel              = new SupplierModel;
+        $ProductModel               = new ProductModel;
+        $VariantModel               = new VariantModel;
+        $OutletModel                = new OutletModel;
+        $UserModel                  = new UserModel;
+        $PurchaseModel              = new PurchaseModel;
+        $PurchasedetailModel        = new PurchasedetailModel;
 
         // Find Data
-        $data           = $this->data;
-        $suppliers      = $SupplierModel->findAll();
-        $products       = $ProductModel->findAll();
-        $variants       = $VariantModel->findAll();
-        $outlets        = $OutletModel->findAll();
-        $users          = $UserModel->findAll();
+        $data                       = $this->data;
+        $suppliers                  = $SupplierModel->findAll();
+        $products                   = $ProductModel->findAll();
+        $variants                   = $VariantModel->findAll();
+        $outlets                    = $OutletModel->findAll();
+        $users                      = $UserModel->findAll();
+        $purchasedetails            = $PurchasedetailModel->findAll();
 
         // get outlet
         if ($this->data['outletPick'] === null) {
-            $purchases      = $StockModel->orderBy('id', 'DESC')->findAll();
+            $purchases              = $PurchaseModel->orderBy('id', 'DESC')->findAll();
         } else {
-            $out =  $this->data['outletPick'];
-            $purchases      = $StockModel->where("outletid = {$out} OR outletid='0'")->orderBy('outletid', 'ASC')->find();
+            $out                    = $this->data['outletPick'];
+            $purchases              = $PurchaseModel->where("outletid = {$out} OR outletid='0'")->orderBy('outletid', 'ASC')->find();
         }
 
         // Parsing data to view
-        $data['title']          = lang('Global.purchase');
-        $data['description']    = lang('Global.purchaseListDesc');
-        $data['purchases']      = $purchases;
-        $data['suppliers']      = $suppliers;
-        $data['products']       = $products;
-        $data['variants']       = $variants;
-        $data['outlets']        = $outlets;
-        $data['users']          = $users;
+        $data['title']              = lang('Global.purchase');
+        $data['description']        = lang('Global.purchaseListDesc');
+        $data['purchases']          = $purchases;
+        $data['purchasedetails']    = $purchasedetails;
+        $data['suppliers']          = $suppliers;
+        $data['products']           = $products;
+        $data['variants']           = $variants;
+        $data['outlets']            = $outlets;
+        $data['users']              = $users;
 
         return view ('Views/purchase', $data);
     }
