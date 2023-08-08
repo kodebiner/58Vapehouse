@@ -617,7 +617,7 @@
                                                                                         varbargain.setAttribute('class', 'uk-width-1-2 uk-input uk-form-width-small');
                                                                                         varbargain.setAttribute('id', 'varbargain<?=$variant['id']?>');
                                                                                         varbargain.setAttribute('placeholder', 'variant bargain');
-                                                                                        varbargain.setAttribute('name', 'varbargain[]');
+                                                                                        varbargain.setAttribute('name', 'varbargain[<?=$variant['id']?>]');
 
                                                                                         const varvaluecontainer = document.createElement('div');
                                                                                         varvaluecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
@@ -626,7 +626,10 @@
                                                                                         varprice.setAttribute('class', 'uk-width-1-2 uk-input uk-form-width-small');
                                                                                         varprice.setAttribute('id', 'varprice<?=$variant['id']?>');
                                                                                         varprice.setAttribute('placeholder', 'variant price');
-                                                                                        varbargain.setAttribute('name', 'varprice[]');
+                                                                                        varprice.setAttribute('name', 'varprice[<?=$variant['id']?>]');
+                                                                                        varprice.setAttribute('value', '0');
+                                                                                        // varprice.setAttribute('onkeyup','discvar()');
+
 
                                                                                         function showprice() {
                                                                                             var qty = inputqty.value;
@@ -636,6 +639,17 @@
                                                                                         }
 
                                                                                         inputqty.onchange = function() {showprice()};
+
+                                                                                        varbargain.onchange = function() {
+                                                                                            var bargainprice = varbargain.value;
+                                                                                            if (bargainprice) {
+                                                                                                document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
+                                                                                            } else {
+                                                                                                document.getElementById('price<?=$variant['id']?>').innerHTML = showprice();
+                                                                                            }
+                                                                                        }
+
+
 
                                                                                         addcontainer.appendChild(productqtyinputadd);
                                                                                         productqty.appendChild(inputqty);
@@ -1002,7 +1016,9 @@
             var discount = 0;
             var poin = 0;
             var memberdisc = 0;
+            var discvar = 0;
 
+           
             $('#products').on('DOMSubtreeModified', function() {
                 var prices = document.querySelectorAll("div[name='price[]']");
                 var subarr = [];
@@ -1018,6 +1034,7 @@
                     var subtotal = subarr.reduce(function(a, b){ return a + b; });
                     document.getElementById('subtotal').innerHTML = subtotal;
                 }
+            
             });
 
             subtotalelem.addEventListener('DOMSubtreeModified', totalcount);
@@ -1199,6 +1216,7 @@
                     document.getElementById('secondpay').setAttribute('required', '');
                 }
             }
+
 
             document.getElementById('splitbill').addEventListener("click", splitbill);
             document.getElementById('cancelsplit').addEventListener("click", cancelsplit);

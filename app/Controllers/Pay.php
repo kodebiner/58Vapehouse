@@ -108,8 +108,6 @@ class Pay extends BaseController
         // Populating Data
         $date        = date('Y-m-d H:i:s');
         $Gconfig     = $GconfigModel->first();
-
-        // Conditions
         
         // Inserting Transaction
         $varvalues = array();
@@ -254,8 +252,8 @@ class Pay extends BaseController
         }
         
         $ppn = $value * ($Gconfig['ppn']/100);
+
         //Insert Trx Payment 
-        // dd($input['poin']);
         $total = $subtotal - $discount - (int)$input['poin'] - $memberdisc + $ppn;
         $paymet = [
             'paymentid'     => $input['payment'],
