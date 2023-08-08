@@ -12,6 +12,7 @@ class CreatePurchase extends Migration
             'id'                => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'null' => false, 'auto_increment' => true],
             'outletid'          => ['type' => 'INT', 'constraint' => 11],
             'supplierid'        => ['type' => 'INT', 'constraint' => 11],
+            'purchasedetailid'  => ['type' => 'INT', 'constraint' => 11],
             'date'              => ['type' => 'DATETIME'],
             'status'            => ['type' => 'INT', 'constraint' => 11],
         ];
