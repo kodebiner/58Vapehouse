@@ -12,7 +12,7 @@ class CreatePurchaseDetail extends Migration
             'id'                => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'null' => false, 'auto_increment' => true],
             'variantid'         => ['type' => 'INT', 'constraint' => 11],
             'qty'               => ['type' => 'INT', 'constraint' => 11],
-            'hargadasar'        => ['type' => 'VARCHAR', 'constraint' => 255],
+            'price'             => ['type' => 'VARCHAR', 'constraint' => 255],
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
