@@ -573,6 +573,11 @@
                                                                                                 var price = count * <?=$Price?>;
                                                                                                 productprice.innerHTML = price;
                                                                                                 productprice.value = price;
+                                                                                                var bargainprice = varbargain.value * inputqty.value;
+                                                                                                if (bargainprice !== null){
+                                                                                                    bargainprice = varbargain.value * inputqty.value;
+                                                                                                    document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
+                                                                                                }
                                                                                             }
                                                                                         };
                                                                                         
@@ -586,6 +591,11 @@
                                                                                                 inputqty.value = count;
                                                                                                 var price = count * <?=$Price?>;
                                                                                                 productprice.innerHTML = price;
+                                                                                                var bargainprice = varbargain.value * inputqty.value;
+                                                                                                if (bargainprice !== null){
+                                                                                                    bargainprice = varbargain.value * inputqty.value;
+                                                                                                    document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
+                                                                                                }
                                                                                             }
                                                                                         };
 
@@ -623,12 +633,12 @@
                                                                                         varvaluecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
 
                                                                                         const varprice = document.createElement('input');
-                                                                                        varprice.setAttribute('class', 'uk-width-1-2 uk-input uk-form-width-small');
+                                                                                        varprice.setAttribute('class', 'uk-width-1-2 uk-input uk-form-width-small varprice');
+                                                                                        varprice.setAttribute('data-index', '<?=$variant['id']?>');
                                                                                         varprice.setAttribute('id', 'varprice<?=$variant['id']?>');
                                                                                         varprice.setAttribute('placeholder', 'variant price');
                                                                                         varprice.setAttribute('name', 'varprice[<?=$variant['id']?>]');
                                                                                         varprice.setAttribute('value', '0');
-                                                                                        // varprice.setAttribute('onkeyup','discvar()');
 
 
                                                                                         function showprice() {
@@ -641,15 +651,13 @@
                                                                                         inputqty.onchange = function() {showprice()};
 
                                                                                         varbargain.onchange = function() {
-                                                                                            var bargainprice = varbargain.value;
+                                                                                            var bargainprice = varbargain.value * inputqty.value;
                                                                                             if (bargainprice) {
                                                                                                 document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
                                                                                             } else {
                                                                                                 document.getElementById('price<?=$variant['id']?>').innerHTML = showprice();
                                                                                             }
                                                                                         }
-
-
 
                                                                                         addcontainer.appendChild(productqtyinputadd);
                                                                                         productqty.appendChild(inputqty);
@@ -667,7 +675,6 @@
                                                                                         productgrid.appendChild(pricecontainer);
                                                                                         productgrid.appendChild(varpricecontainer);
                                                                                         productgrid.appendChild(varvaluecontainer);
-                                                                                       
                                                                                         products.appendChild(productgrid);
 
                                                                                         <?php
@@ -1020,21 +1027,34 @@
 
            
             $('#products').on('DOMSubtreeModified', function() {
-                var prices = document.querySelectorAll("div[name='price[]']");
-                var subarr = [];
+                $(".varprice").keyup(function(){
+                    var prices = document.querySelectorAll("div[name='price[]']");
+                    var discvars = document.querySelectorAll(".varprice");
+                    
+                    var subarr = [];
+                    var discarr = [];
+                    
+                    for (i = 0; i < prices.length; i++) {
+                        price = Number(prices[i].innerText);
+                        subarr.push(price);
+                    }
 
-                for (i = 0; i < prices.length; i++) {
-                    price = Number(prices[i].innerText);
-                    subarr.push(price);
-                }
+                    for (i = 0; i < discvars.length; i++) {
+                        var index = discvars[i].getAttribute('data-index');
+                        var varqty = document.getElementById('qty['+index+']').value;
+                        var vardisc = document.getElementById('varprice'+index).value;
+                        var discountvar = Number(varqty) * Number(vardisc);
+                        discarr.push(discountvar);
+                    }
 
-                if (subarr.length === 0) {
-                    document.getElementById('subtotal').innerHTML = 0;
-                } else {
-                    var subtotal = subarr.reduce(function(a, b){ return a + b; });
-                    document.getElementById('subtotal').innerHTML = subtotal;
-                }
-            
+                    if (subarr.length === 0) {
+                        document.getElementById('subtotal').innerHTML = 0;
+                    } else {
+                        var subtotal = subarr.reduce(function(a, b){ return a + b; });
+                        var discountvar = discarr.reduce(function(a, b){ return a + b; });
+                        document.getElementById('subtotal').innerHTML = subtotal - discountvar;
+                    }
+                });
             });
 
             subtotalelem.addEventListener('DOMSubtreeModified', totalcount);
