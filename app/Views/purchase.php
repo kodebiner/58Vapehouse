@@ -23,10 +23,10 @@
         <div class="uk-width-1-2@m uk-text-right@m">
             <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addPurchase')?></button>
         </div>
-        <!-- End Of Button Trigger Modal Add -->
+        <!-- Button Trigger Modal Add End -->
     </div>
 </div>
-<!-- End Of Page Heading -->
+<!-- Page Heading End -->
 
 <!-- Modal Add -->
 <div uk-modal class="uk-flex-top" id="tambahdata">
@@ -78,27 +78,95 @@
                                     <thead>
                                         <tr>
                                             <th class="uk-text-emphasis uk-width-medium"><?=lang('Global.variant')?></th>
-                                            <th class="uk-text-emphasis uk-width-small"><?=lang('Global.total')?></th>
                                             <th class="uk-text-emphasis uk-width-small"></th>
-                                            <th class="uk-text-emphasis uk-text-center uk-width-medium"><?=lang('Global.pcsPrice')?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach ($variants as $variant) {?>
                                             <?php if ($variant['productid'] === $product['id']) {
                                                 $VarName    = $variant['name'];
+                                                $CombName   = $product['name'].' - '.$VarName;
                                                 $basePrice  = $variant['hargadasar']; ?>
                                             
                                                 <tr>
                                                     <td class="uk-width-medium"><?= $VarName; ?></td>
-                                                    <td class="uk-text-center uk-width-small">
-                                                        <input type="number" class="uk-input" id="totalpcs[<?=$variant['id']?>]" name="totalpcs[<?=$variant['id']?>]" placeholder="0">
-                                                    </td>
-                                                    <td class="uk-width-small">Pcs</td>
-                                                    <td class="uk-text-center uk-width-small">
-                                                        <input type="number" class="uk-input" id="bprice[<?=$variant['id']?>]" name="bprice[<?=$variant['id']?>]" placeholder="<?= $basePrice; ?>">
+                                                    <td class="uk-width-small">
+                                                        <div>
+                                                            <a class="uk-icon-button" uk-icon="cart" onclick="createVar<?= $variant['id'] ?>()"></a>
+                                                        </div>
                                                     </td>
                                                 </tr>
+
+                                                <script type="text/javascript">
+                                                    var elemexist = document.getElementById('product<?=$variant['id']?>');
+                                                    function createVar<?=$variant['id']?>() {
+                                                        var count = 1;
+                                                        var modal = document.getElementById('tablevariant<?= $product['id'] ?>');
+                                                            UIkit.modal(modal).hide();
+
+                                                        if ( $( "#product<?=$variant['id']?>" ).length ) {
+                                                            alert('<?=lang('Global.readyAdd');?>');
+                                                        } else {
+                                                            let minval = count;
+
+                                                            const products = document.getElementById('tableproduct');
+                                                            
+                                                            const productgrid = document.createElement('div');
+                                                            productgrid.setAttribute('id', 'product<?=$variant['id']?>');
+                                                            productgrid.setAttribute('class', 'uk-margin-small');
+                                                            productgrid.setAttribute('uk-grid', '');
+
+                                                            const varcontainer = document.createElement('div');
+                                                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                                                            
+                                                            const varname = document.createElement('div');
+                                                            varname.setAttribute('id','var<?=$variant['id']?>');
+                                                            varname.setAttribute('class','tm-h2');
+                                                            varname.innerHTML = '<?= $CombName ?>';
+
+                                                            const totalcontainer = document.createElement('div');
+                                                            totalcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+
+                                                            const total = document.createElement('input');
+                                                            total.setAttribute('type', 'number');
+                                                            total.setAttribute('id', "totalpcs[<?=$variant['id']?>]");
+                                                            total.setAttribute('name', "totalpcs[<?=$variant['id']?>]");
+                                                            total.setAttribute('class', 'uk-input');
+                                                            total.setAttribute('value', '0');
+
+                                                            const pcs = document.createElement('div');
+                                                            pcs.setAttribute('class', 'uk-margin-small-left');
+                                                            pcs.innerHTML = 'Pcs';
+
+                                                            const pricecontainer = document.createElement('div');
+                                                            pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+
+                                                            const price = document.createElement('input');
+                                                            price.setAttribute('type', 'number');
+                                                            price.setAttribute('id', "bprice[<?=$variant['id']?>]");
+                                                            price.setAttribute('name', "bprice[<?=$variant['id']?>]");
+                                                            price.setAttribute('class', 'uk-input');
+                                                            price.setAttribute('value', '<?= $basePrice; ?>');
+
+                                                            const subtotcontainer = document.createElement('div');
+                                                            subtotcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+
+                                                            const subtotal = document.createElement('div');
+                                                            subtotal.setAttribute('id', "subtotal");
+
+                                                            varcontainer.appendChild(varname);
+                                                            totalcontainer.appendChild(total);
+                                                            totalcontainer.appendChild(pcs);
+                                                            pricecontainer.appendChild(price);
+                                                            subtotcontainer.appendChild(subtotal);
+                                                            productgrid.appendChild(varcontainer);
+                                                            productgrid.appendChild(totalcontainer);
+                                                            productgrid.appendChild(pricecontainer);
+                                                            productgrid.appendChild(subtotcontainer);
+                                                            products.appendChild(productgrid);
+                                                        }
+                                                    }
+                                                </script>
                                             <?php } ?>
                                         <?php } ?>
                                     </tbody>
@@ -107,17 +175,42 @@
                         </div>
                     <?php } ?>
 
-                    <hr>
+                    <div class="uk-margin-small" uk-grid>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.variant') ?></div>
+                        </div>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.quantity') ?></div>
+                        </div>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.pcsPrice') ?></div>
+                        </div>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.total') ?></div>
+                        </div>
+                    </div>
 
-                    <div class="uk-margin">
-                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                    <div id="tableproduct"></div>
+
+                    <div class="uk-modal-footer">
+                        <div class="uk-margin">
+                            <div class="uk-width-1-1 uk-text-center">
+                                <div class="uk-flex-top tm-h3"><?=lang('Global.total')?></div>
+                            </div>
+                            <div class="uk-width-1-1 uk-text-center">
+                                <div class="tm-h2 uk-text-bold" id="finalprice" value="0">Rp 0,-</div>
+                            </div>
+                        </div>
+                        <div class="uk-margin uk-flex uk-flex-center">
+                            <button type="submit" class="uk-button uk-button-primary uk-button-large uk-text-center" style="border-radius: 8px; width: 540px;"><?=lang('Global.save')?></button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<!-- End Of Modal Add -->
+<!-- Modal Add End -->
 
 <!-- Table Of Content -->
 <div class="uk-margin">
@@ -138,64 +231,68 @@
             $pending    = lang('Global.pending');
 
             foreach ($purchases as $purchase) { ?>
-                <?php if ($purchase['qty'] !== "0") { ?>
-                    <tr>
-                        <td class="uk-width-medium"><?= $purchase['restock']; ?></td>
-                        <td class="uk-width-small">
-                            <?php foreach ($suppliers as $supplier) {
-                                if ($supplier['id'] === $purchase['supplierid']) {
-                                    echo $supplier['name'];
-                                }
-                            } ?>
-                        </td>
-                        <td class="uk-text-center uk-width-small"><?= $purchase['price']; ?></td>
-                        <td class="uk-text-center uk-width-small">
-                            <?php if ($purchase['status'] === "0") {
-                                echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.$success.'</div>';
-                            } elseif ($purchase['status'] === "1") {
-                                echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$cancel.'</div>';
-                            } else {
-                                echo '<div class="uk-text-primary" style="border-style: solid; border-color: #1e87f0;">'.$pending.'</div>';
-                            } ?>
-                        </td>
+                <?php foreach ($purchasedetails as $purdet) { ?>
+                    <?php if ($purdet['id'] === $purchase['purchasedetailid']) { ?>
+                        <?php if ($purdet['qty'] !== "0") { ?>
+                            <tr>
+                                <td class="uk-width-medium"><?= $purchase['date']; ?></td>
+                                <td class="uk-width-small">
+                                    <?php foreach ($suppliers as $supplier) {
+                                        if ($supplier['id'] === $purchase['supplierid']) {
+                                            echo $supplier['name'];
+                                        }
+                                    } ?>
+                                </td>
+                                <td class="uk-text-center uk-width-small"><?= $purdet['price']; ?></td>
+                                <td class="uk-text-center uk-width-small">
+                                    <?php if ($purchase['status'] === "0") {
+                                        echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.$success.'</div>';
+                                    } elseif ($purchase['status'] === "1") {
+                                        echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$cancel.'</div>';
+                                    } else {
+                                        echo '<div class="uk-text-primary" style="border-style: solid; border-color: #1e87f0;">'.$pending.'</div>';
+                                    } ?>
+                                </td>
 
-                        <?php if ($purchase['status'] === null) { ?>
-                            <td class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small" uk-grid>
-                                <!-- Button Trigger Modal Detail -->
-                                <div class="uk-text-center">
-                                    <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
-                                </div>
-                                <!-- End Of Button Trigger Modal Detail -->
+                                <?php if ($purchase['status'] === null) { ?>
+                                    <td class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small" uk-grid>
+                                        <!-- Button Trigger Modal Detail -->
+                                        <div class="uk-text-center">
+                                            <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
+                                        </div>
+                                        <!-- End Of Button Trigger Modal Detail -->
 
-                                <!-- Button Confirmation -->
-                                <div>
-                                    <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $purchase['id'] ?>"></a>
-                                </div>
-                                <!-- End Of Button Confirmation -->
+                                        <!-- Button Confirmation -->
+                                        <div>
+                                            <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $purchase['id'] ?>"></a>
+                                        </div>
+                                        <!-- End Of Button Confirmation -->
 
-                                <!-- Button Cancel -->
-                                <div>
-                                    <a uk-icon="close" class="uk-icon-button-delete" href="purchase/deletesup/<?= $purchase['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
-                                </div>
-                                <!-- End Of Button Cancel -->
-                            </td>
-                        <?php } else {?>
-                            <td class="uk-text-center uk-width-small">
-                                <!-- Button Trigger Modal Detail -->
-                                <div class="uk-text-center">
-                                    <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
-                                </div>
-                                <!-- End Of Button Trigger Modal Detail -->
-                            </td>
+                                        <!-- Button Cancel -->
+                                        <div>
+                                            <a uk-icon="close" class="uk-icon-button-delete" href="purchase/deletesup/<?= $purchase['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
+                                        </div>
+                                        <!-- End Of Button Cancel -->
+                                    </td>
+                                <?php } else { ?>
+                                    <td class="uk-text-center uk-width-small">
+                                        <!-- Button Trigger Modal Detail -->
+                                        <div class="uk-text-center">
+                                            <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
+                                        </div>
+                                        <!-- End Of Button Trigger Modal Detail -->
+                                    </td>
+                                <?php } ?>
+                            </tr>
+                        <?php } else { ?>
                         <?php } ?>
-                    </tr>
-                <?php } else { ?>
+                    <?php } ?>
                 <?php } ?>
             <?php } ?>
         </tbody>
     </table>
 </div>
-<!-- End Of Table Content -->
+<!-- Table Content End -->
 
 <!-- Modal Detail -->
 <?php
@@ -371,8 +468,8 @@ foreach ($purchases as $purchase) { ?>
                         document.getElementById('tablevariant'+products[x]['id']).setAttribute('hidden', '');
                         <?php
                         foreach ($variants as $variant) {
-                            echo 'document.getElementById("totalpcs['.$variant['id'].']").value = "0";';
-                            echo 'document.getElementById("bprice['.$variant['id'].']").value = "'.$variant['hargadasar'].'";';
+                            // echo 'document.getElementById("totalpcs['.$variant['id'].']").value = "0";';
+                            // echo 'document.getElementById("bprice['.$variant['id'].']").value = "'.$variant['hargadasar'].'";';
                         }
                         ?>
                         if (products[x]['id'] == i.item.idx) {
