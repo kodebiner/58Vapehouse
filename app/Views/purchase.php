@@ -100,9 +100,9 @@
                                                 <script type="text/javascript">
                                                     var elemexist = document.getElementById('product<?=$variant['id']?>');
                                                     function createVar<?=$variant['id']?>() {
+                                                        document.getElementById('tablevariant<?= $product['id']; ?>').setAttribute('hidden', '');
+
                                                         var count = 1;
-                                                        var modal = document.getElementById('tablevariant<?= $product['id'] ?>');
-                                                            UIkit.modal(modal).hide();
 
                                                         if ( $( "#product<?=$variant['id']?>" ).length ) {
                                                             alert('<?=lang('Global.readyAdd');?>');
@@ -121,25 +121,25 @@
                                                                                             
                                                             const varname = document.createElement('div');
                                                             varname.setAttribute('id','var<?=$variant['id']?>');
-                                                            varname.setAttribute('class','tm-h2');
+                                                            varname.setAttribute('class','');
                                                             varname.innerHTML = '<?= $CombName ?>';
 
                                                             const totalcontainer = document.createElement('div');
-                                                            totalcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                            totalcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
 
                                                             const total = document.createElement('input');
                                                             total.setAttribute('type', 'number');
                                                             total.setAttribute('id', "totalpcs[<?=$variant['id']?>]");
                                                             total.setAttribute('name', "totalpcs[<?=$variant['id']?>]");
                                                             total.setAttribute('class', 'uk-input');
-                                                            total.setAttribute('value', '0');
+                                                            total.setAttribute('value', '1');
 
                                                             const pcs = document.createElement('div');
                                                             pcs.setAttribute('class', 'uk-margin-small-left');
                                                             pcs.innerHTML = 'Pcs';
 
                                                             const pricecontainer = document.createElement('div');
-                                                            pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                            pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
 
                                                             const price = document.createElement('input');
                                                             price.setAttribute('type', 'number');
@@ -149,10 +149,23 @@
                                                             price.setAttribute('value', '<?= $basePrice; ?>');
 
                                                             const subtotcontainer = document.createElement('div');
-                                                            subtotcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                            subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
 
                                                             const subtotal = document.createElement('div');
-                                                            subtotal.setAttribute('id', "subtotal");
+                                                            subtotal.setAttribute('id', "subtotal<?=$variant['id']?>");
+                                                            subtotal.setAttribute('class', 'subvariant');
+
+                                                            totalprice();
+                                                            total.addEventListener('change', totalprice);
+                                                            price.addEventListener('change', totalprice);
+
+                                                            function totalprice() {
+                                                                var varprice = price.value;
+                                                                var varqty = total.value;
+                                                                var subprice = varprice * varqty;
+                                                                subtotal.setAttribute('value', subprice);
+                                                                subtotal.innerHTML = subprice;
+                                                            }
 
                                                             varcontainer.appendChild(varname);
                                                             totalcontainer.appendChild(total);
@@ -480,6 +493,23 @@ foreach ($purchases as $purchase) { ?>
             },
             minLength: 2
         });
+    });
+
+    $('#tableproduct').on('DOMSubtreeModified', function() {
+        var prices = document.querySelectorAll(".subvariant");
+        var subarr = [];
+
+        for (i = 0; i < prices.length; i++) {
+            price = Number(prices[i].innerText);
+            subarr.push(price);
+        }
+
+        if (subarr.length === 0) {
+            document.getElementById('finalprice').innerHTML = 0;
+        } else {
+            var subtotalvar = subarr.reduce(function(a, b){ return a + b; });
+            document.getElementById('finalprice').innerHTML = 'Rp. ' + subtotalvar + ',-';
+        }
     });
 </script>
 <!-- Search Engine Script End -->
