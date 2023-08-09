@@ -571,11 +571,13 @@
                                                                                             } else {
                                                                                                 inputqty.value = count;
                                                                                                 var price = count * <?=$Price?>;
-                                                                                                productprice.innerHTML = price;
-                                                                                                productprice.value = price;
                                                                                                 var bargainprice = varbargain.value * inputqty.value;
-                                                                                                if (bargainprice !== null){
+                                                                                                if(varbargain.value){
                                                                                                     document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
+                                                                                                }
+                                                                                                else {
+                                                                                                    productprice.innerHTML = price;
+                                                                                                    productprice.value = price;
                                                                                                 }
                                                                                             }
                                                                                         };
@@ -584,15 +586,18 @@
                                                                                             count--;
                                                                                             if (inputqty.value == '1') {
                                                                                                 inputqty.value = '0';
-                                                                                                inputqty.remove();
+                                                                                                inputqty.remove();                                                                                                
                                                                                                 productgrid.remove();
                                                                                             } else {
                                                                                                 inputqty.value = count;
                                                                                                 var price = count * <?=$Price?>;
-                                                                                                productprice.innerHTML = price;
                                                                                                 var bargainprice = varbargain.value * inputqty.value;
-                                                                                                if (bargainprice !== null){
+                                                                                                if(varbargain.value){
                                                                                                     document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
+                                                                                                }
+                                                                                                else {
+                                                                                                    productprice.innerHTML = price;
+                                                                                                    productprice.value = price;
                                                                                                 }
                                                                                             }
                                                                                         };
@@ -629,7 +634,7 @@
 
                                                                                         const varvaluecontainer = document.createElement('div');
                                                                                         varvaluecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
-
+                                                                                        
                                                                                         const varprice = document.createElement('input');
                                                                                         varprice.setAttribute('class', 'uk-width-1-2 uk-input uk-form-width-small varprice');
                                                                                         varprice.setAttribute('data-index', '<?=$variant['id']?>');
