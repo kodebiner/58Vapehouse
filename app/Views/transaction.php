@@ -575,7 +575,6 @@
                                                                                                 productprice.value = price;
                                                                                                 var bargainprice = varbargain.value * inputqty.value;
                                                                                                 if (bargainprice !== null){
-                                                                                                    bargainprice = varbargain.value * inputqty.value;
                                                                                                     document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
                                                                                                 }
                                                                                             }
@@ -593,7 +592,6 @@
                                                                                                 productprice.innerHTML = price;
                                                                                                 var bargainprice = varbargain.value * inputqty.value;
                                                                                                 if (bargainprice !== null){
-                                                                                                    bargainprice = varbargain.value * inputqty.value;
                                                                                                     document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
                                                                                                 }
                                                                                             }
@@ -1023,30 +1021,27 @@
             var discount = 0;
             var poin = 0;
             var memberdisc = 0;
-            var discvar = 0;
-
            
             $('#products').on('DOMSubtreeModified', function() {
-                $(".varprice").keyup(function(){
-                    var prices = document.querySelectorAll("div[name='price[]']");
-                    var discvars = document.querySelectorAll(".varprice");
-                    
-                    var subarr = [];
-                    var discarr = [];
-                    
-                    for (i = 0; i < prices.length; i++) {
-                        price = Number(prices[i].innerText);
-                        subarr.push(price);
-                    }
-
-                    for (i = 0; i < discvars.length; i++) {
-                        var index = discvars[i].getAttribute('data-index');
-                        var varqty = document.getElementById('qty['+index+']').value;
-                        var vardisc = document.getElementById('varprice'+index).value;
-                        var discountvar = Number(varqty) * Number(vardisc);
-                        discarr.push(discountvar);
-                    }
-
+                var prices = document.querySelectorAll("div[name='price[]']");
+                var discvars = document.querySelectorAll(".varprice");
+                
+                var subarr = [];
+                var discarr = [];
+                
+                for (i = 0; i < prices.length; i++) {
+                    price = Number(prices[i].innerText);
+                    subarr.push(price);
+                }
+                
+                for (i = 0; i < discvars.length; i++) {
+                    var index = discvars[i].getAttribute('data-index');
+                    var varqty = document.getElementById('qty['+index+']').value;
+                    var vardisc = document.getElementById('varprice'+index).value;
+                    var discountvar = Number(varqty) * Number(vardisc);
+                    discarr.push(discountvar);
+                }
+                console.log(subarr);
                     if (subarr.length === 0) {
                         document.getElementById('subtotal').innerHTML = 0;
                     } else {
@@ -1054,9 +1049,38 @@
                         var discountvar = discarr.reduce(function(a, b){ return a + b; });
                         document.getElementById('subtotal').innerHTML = subtotal - discountvar;
                     }
+                $(document).ready(function() {
+                    $(".varprice").keyup(function(){
+                        var prices = document.querySelectorAll("div[name='price[]']");
+                        var discvars = document.querySelectorAll(".varprice");
+                        
+                        var subarr = [];
+                        var discarr = [];
+                        
+                        for (i = 0; i < prices.length; i++) {
+                            price = Number(prices[i].innerText);
+                            subarr.push(price);
+                        }
+                        
+                        for (i = 0; i < discvars.length; i++) {
+                            var index = discvars[i].getAttribute('data-index');
+                            var varqty = document.getElementById('qty['+index+']').value;
+                            var vardisc = document.getElementById('varprice'+index).value;
+                            var discountvar = Number(varqty) * Number(vardisc);
+                            discarr.push(discountvar);
+                        }
+                        if (subarr.length === 0) {
+                            document.getElementById('subtotal').innerHTML = 0;
+                        } else {
+                            var subtotal = subarr.reduce(function(a, b){ return a + b; });
+                            var discountvar = discarr.reduce(function(a, b){ return a + b; });
+                            document.getElementById('subtotal').innerHTML = subtotal - discountvar;
+                        }
+                    });
+                    console.log( "ready!" );
                 });
             });
-
+            
             subtotalelem.addEventListener('DOMSubtreeModified', totalcount);
 
             document.getElementById('discvalue').addEventListener('change', totalcount);
