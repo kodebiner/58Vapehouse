@@ -101,22 +101,73 @@ class Pay extends BaseController
         $TransactionModel       = new TransactionModel();
         $TrxdetailModel         = new TrxdetailModel();
         $TrxpaymentModel        = new TrxpaymentModel();
+        $MemberModel            = new MemberModel();
 
         // Getting Inputs
         $input = $this->request->getPost();
 
         // Populating Data
-        $date        = date('Y-m-d H:i:s');
-        $Gconfig     = $GconfigModel->first();
+        $date           = date('Y-m-d H:i:s');
+        $Gconfig        = $GconfigModel->first();
+        $customers      = $MemberModel->findAll();
         
         // Inserting Transaction
         $varvalues = array();
         $bundvalues = array();
         
+        // dd($input);
         if (!empty($input['qty'])) {
             foreach ($input['qty'] as $varid => $varqty) {
                 $variant = $VariantModel->find($varid);
-                $varvalues[] = $varqty * ($variant['hargamodal'] + $variant['hargajual']);
+
+                foreach ($input['varprice'] as $varprice){
+                    $discvar = $varprice * $varqty;
+                    foreach($input['varbargain'] as $bargain){
+                        $discbargain = (int)$bargain* $varqty;
+                        // Bargain And Varprice Added
+                        if (!empty($input['varprice']) && !empty($input['varbargain'])){
+                            $varvalues[]  = $discbargain - $discvar;
+                            // Vaprice Added And Null Bargain
+                        }elseif(!empty($input['varprice']) && empty($input['varbargain'])){
+                            $varvalues[]  = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar;
+                            // Bargain Added And Null Varprice
+                        }elseif(empty($input['varprice']) && !empty($input['varbargain'])){
+                            $varvalues[]  = $discbargain;
+                            // Null Bargain & Varprice
+                        }elseif(empty($input['varprice']) && empty($input['varbargain'])){
+                            $varvalues[] = $varqty * ($variant['hargamodal'] + $variant['hargajual']);
+                        }
+                    }
+                }
+
+                
+                // dd(array_sum($varvalues));
+
+                // // Discount Variant
+                // if(!empty($input['varprice'])){
+                //     foreach ($input['varprice'] as $discvar){              
+                //         $discountvar = $discvar * $varqty;
+                //     }   
+                // }
+                
+                // // Variant Bargain
+                // if(!empty($input['varbargain'] )){
+                //     foreach ( $input["varbargain"] as $bargain) {
+                //         $bargainvar = (int)$bargain * (int)$varqty;
+                //     }
+                // }
+
+                // // Value Condition
+                // if (!empty($input['varbargain']) && (empty($input['varprice']))){
+                //     $varvalues[]  = $bargainvar * $varqty;
+                // } elseif (empty($input['varbargain']) && (!empty($input['varprice']))) {
+                //     $varvalues[]  = $discountvar * $varqty;
+                // } elseif (!empty($input['varbargain']) && (!empty($input['varprice']))) {
+                //     $varvalues[]  = $bargainvar - $discountvar;
+                // } elseif( ($bargainvar === "") && ($discountvar === "0")) {
+                //     $varvalues[] = $varqty * ($variant['hargamodal'] + $variant['hargajual']);
+                // }
+                // $varvalues[] = $varqty * ($variant['hargamodal'] + $variant['hargajual']);
             }
         } else {
             $varvalues[] = '0';
@@ -133,7 +184,7 @@ class Pay extends BaseController
 
         $varvalue = array_sum($varvalues);
         $bundvalue = array_sum($bundvalues);
-
+        
         $subtotal = $varvalue + $bundvalue;
         
         if ($input['customerid'] != '0') {
@@ -187,11 +238,29 @@ class Pay extends BaseController
         if (!empty($input['qty'])) {
             foreach ($input['qty'] as $varid => $varqty) {
                 $variant = $VariantModel->find($varid);
+                // Discount Variant
+                foreach ($input['varprice'] as $discvar){                    
+                    $discountvar = $discvar * $varqty;
+                }
+                // Variant Bargain
+                foreach ( $input["varbargain"] as $bargain) {
+                    $bargainvar = (int)$bargain * $varqty;
+                }
+                // Value Condition
+                if (!empty($input['varbargain']) && (empty($input['varprice']))){
+                    $varPrice = $bargainvar * $varqty;
+                } elseif (empty($input['varbargain']) && (!empty($input['varprice']))) {
+                    $varPrice = $discountvar * $varqty;
+                } elseif (!empty($input['varbargain']) && (!empty($input['varprice']))) {
+                    $varPrice = $bargainvar - $discountvar;
+                } else {
+                    $varPrice = ($variant['hargamodal'] + $variant['hargajual']) * $varqty;
+                }
                 $trxvar = [
                     'transactionid' => $trxId,
                     'variantid'     => $varid,
                     'qty'           => $varqty,
-                    'value'         => ($variant['hargamodal'] + $variant['hargajual']) * $varqty
+                    'value'         => $varPrice,
                 ];
                 $TrxdetailModel->save($trxvar);
 
@@ -201,8 +270,7 @@ class Pay extends BaseController
                     'sale'      => $date,
                     'qty'       => $stock['qty'] - $varqty
                 ];
-                $StockModel->save($saleVarStock);
-                
+                $StockModel->save($saleVarStock);                
             }
         }
         
@@ -230,26 +298,45 @@ class Pay extends BaseController
                 }
             }
         }
+
+        if (!empty($input['poin'])){
+            foreach ($customers as $customer){
+                $cust       = $MemberModel->where('id',$input['customerid'])->first();
+                $custPoin   = $cust['poin'];
+                $poinUsed   = $input['poin'];
+
+                if (!empty($poinUsed)){
+                    $poin   = $custPoin - $poinUsed;
+                } else {
+                    $poin   = $custPoin;
+                }
+                $point = [
+                    'id' => $cust['id'],
+                    'poin' => $poin,
+                ];
+                $MemberModel->save($point);
+            }
+        }
         
        
         // Member Point
-        if ($input['customerid'] != '0') {
-            $discPoint   = $input['poin'];
-            $member      = $MemberModel->where('id',$input['customerid'])->first();
-            $memberPoint = $member['poin'];
-            // Used Poin 
-            if (!empty($input['poin'])){
-                $point       = $memberPoint - $discPoint;
-            } else{
-                // Not Apply Point
-                $point  = $memberPoint;
-            }
-            $poin = [
-                'id' => $member['id'],
-                'poin' => $point,
-            ];
-            $MemberModel->save($poin);
-        }
+        // if ($input['customerid'] != '0') {
+        //     $discPoint   = $input['poin'];
+        //     $member      = $MemberModel->where('id',$input['customerid'])->first();
+        //     $memberPoint = $member['poin'];
+        //     // Used Poin 
+        //     if (!empty($input['poin'])){
+        //         $point       = $memberPoint - $discPoint;
+        //     } else{
+        //         // Not Apply Point
+        //         $point  = $memberPoint;
+        //     }
+        //     $poin = [
+        //         'id' => $member['id'],
+        //         'poin' => $point,
+        //     ];
+        //     $MemberModel->save($poin);
+        // }
         
         $ppn = $value * ($Gconfig['ppn']/100);
 
@@ -289,7 +376,9 @@ class Pay extends BaseController
 
         //Update Point Member
         if (!empty($input['customerid'])){
+            $member      = $MemberModel->where('id',$input['customerid'])->first();
             $trx = $member['trx'] + 1 ;
+            $memberPoint = $member['poin'];
             $poinPlus = $memberPoint + $poin;               
             $poin = [
                 'id'    => $member['id'],
