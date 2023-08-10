@@ -631,6 +631,7 @@
                                                                                         varbargain.setAttribute('id', 'varbargain<?=$variant['id']?>');
                                                                                         varbargain.setAttribute('placeholder', 'variant bargain');
                                                                                         varbargain.setAttribute('name', 'varbargain[<?=$variant['id']?>]');
+                                                                                        
 
                                                                                         const varvaluecontainer = document.createElement('div');
                                                                                         varvaluecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
