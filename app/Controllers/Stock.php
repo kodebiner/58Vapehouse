@@ -224,6 +224,7 @@ class Stock extends BaseController
     public function indexpurchase()
     {
         // Calling Model
+        $StockModel                 = new StockModel;
         $SupplierModel              = new SupplierModel;
         $ProductModel               = new ProductModel;
         $VariantModel               = new VariantModel;
@@ -234,6 +235,7 @@ class Stock extends BaseController
 
         // Find Data
         $data                       = $this->data;
+        $stocks                     = $StockModel->findAll();
         $suppliers                  = $SupplierModel->findAll();
         $products                   = $ProductModel->findAll();
         $variants                   = $VariantModel->findAll();
@@ -252,6 +254,7 @@ class Stock extends BaseController
         // Parsing data to view
         $data['title']              = lang('Global.purchase');
         $data['description']        = lang('Global.purchaseListDesc');
+        $data['stocks']             = $stocks;
         $data['purchases']          = $purchases;
         $data['purchasedetails']    = $purchasedetails;
         $data['suppliers']          = $suppliers;
@@ -261,5 +264,34 @@ class Stock extends BaseController
         $data['users']              = $users;
 
         return view ('Views/purchase', $data);
+    }
+
+    public function createpur()
+    {
+        // Calling Model
+        $PurchaseModel              = new PurchaseModel;
+        $PurchasedetailModel        = new PurchasedetailModel;
+
+        // Find Data
+        $purchasedetails            = $PurchasedetailModel->findAll();
+
+        // get outlet
+        if ($this->data['outletPick'] === null) {
+            $purchases              = $PurchaseModel->orderBy('id', 'DESC')->findAll();
+        } else {
+            $out                    = $this->data['outletPick'];
+            $purchases              = $PurchaseModel->where("outletid = {$out} OR outletid='0'")->orderBy('outletid', 'ASC')->find();
+        }
+
+        // initialize
+        $input = $this->request->getPost();
+
+        // date time stamp
+        $date=date_create();
+        $tanggal = date_format($date,'Y-m-d H:i:s');
+
+        
+        // return
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 }
