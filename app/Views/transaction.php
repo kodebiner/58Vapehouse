@@ -1028,7 +1028,7 @@
             var discount = 0;
             var poin = 0;
             var memberdisc = 0;
-           
+            
             $('#products').on('DOMSubtreeModified', function() {
                 var prices = document.querySelectorAll("div[name='price[]']");
                 var discvars = document.querySelectorAll(".varprice");
@@ -1082,9 +1082,14 @@
                             var subtotal = subarr.reduce(function(a, b){ return a + b; });
                             var discountvar = discarr.reduce(function(a, b){ return a + b; });
                             document.getElementById('subtotal').innerHTML = subtotal - discountvar;
-                        }
+                        }  
+                        
+                        if (document.getElementById('subtotal').innerHTML < min ){
+                        document.getElementById('subtotal').innerHTML = "Sorry Price To Low"; 
+                    }
                     });
                     console.log( "ready!" );
+                   
                 });
             });
             
