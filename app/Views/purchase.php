@@ -19,11 +19,13 @@
             <h3 class="tm-h3"><?=lang('Global.purchaseList')?></h3>
         </div>
 
-        <!-- Button Trigger Modal Add -->
-        <div class="uk-width-1-2@m uk-text-right@m">
-            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addPurchase')?></button>
-        </div>
-        <!-- Button Trigger Modal Add End -->
+        <?php if ($outletPick != null) { ?>
+            <!-- Button Trigger Modal Add -->
+            <div class="uk-width-1-2@m uk-text-right@m">
+                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addPurchase')?></button>
+            </div>
+            <!-- Button Trigger Modal Add End -->
+        <?php } ?>
     </div>
 </div>
 <!-- Page Heading End -->
@@ -40,27 +42,10 @@
                     <?= csrf_field() ?>
 
                     <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
-                        <div class="uk-form-controls">
-                            <select class="uk-select" name="outlet" id="sel_out">
-                                <option><?=lang('Global.outlet')?></option>
-                                <?php foreach ($outlets as $outlet) {
-                                    if ($outlet['id'] === $outletPick) {
-                                        $checked = 'selected';
-                                    } else {
-                                        $checked = '';
-                                    }
-                                    ?>
-                                    <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="supplier"><?=lang('Global.supplier')?></label>
                         <div class="uk-form-controls">
                             <input type="text" class="uk-input" id="suppliername" name="suppliername" placeholder="<?=lang('Global.supplier')?>">
+                            <input id="supplierid" name="supplierid" hidden required>
                         </div>
                     </div>
 
@@ -133,6 +118,7 @@
                                                             total.setAttribute('name', "totalpcs[<?=$variant['id']?>]");
                                                             total.setAttribute('class', 'uk-input');
                                                             total.setAttribute('value', '1');
+                                                            total.setAttribute('required', '');
 
                                                             const pcs = document.createElement('div');
                                                             pcs.setAttribute('class', 'uk-margin-small-left');
@@ -147,6 +133,7 @@
                                                             price.setAttribute('name', "bprice[<?=$variant['id']?>]");
                                                             price.setAttribute('class', 'uk-input');
                                                             price.setAttribute('value', '<?= $basePrice; ?>');
+                                                            price.setAttribute('required', '');
 
                                                             const subtotcontainer = document.createElement('div');
                                                             subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
@@ -232,7 +219,7 @@
             <tr>
                 <th class="uk-width-medium"><?=lang('Global.date')?></th>
                 <th class="uk-width-small"><?=lang('Global.supplier')?></th>
-                <th class="uk-text-center uk-width-small"><?=lang('Global.total')?></th>
+                <th class="uk-width-small"><?=lang('Global.total')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.status')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
             </tr>
@@ -244,63 +231,70 @@
             $pending    = lang('Global.pending');
 
             foreach ($purchases as $purchase) { ?>
-                <?php foreach ($purchasedetails as $purdet) { ?>
-                    <?php if ($purdet['id'] === $purchase['purchasedetailid']) { ?>
-                        <?php if ($purdet['qty'] !== "0") { ?>
-                            <tr>
-                                <td class="uk-width-medium"><?= $purchase['date']; ?></td>
-                                <td class="uk-width-small">
-                                    <?php foreach ($suppliers as $supplier) {
-                                        if ($supplier['id'] === $purchase['supplierid']) {
-                                            echo $supplier['name'];
-                                        }
-                                    } ?>
-                                </td>
-                                <td class="uk-text-center uk-width-small"><?= $purdet['price']; ?></td>
-                                <td class="uk-text-center uk-width-small">
-                                    <?php if ($purchase['status'] === "0") {
-                                        echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.$success.'</div>';
-                                    } elseif ($purchase['status'] === "1") {
-                                        echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$cancel.'</div>';
-                                    } else {
-                                        echo '<div class="uk-text-primary" style="border-style: solid; border-color: #1e87f0;">'.$pending.'</div>';
-                                    } ?>
-                                </td>
+                <tr>
+                    <td class="uk-width-medium"><?= $purchase['date']; ?></td>
+                    <td class="uk-width-small">
+                        <?php foreach ($suppliers as $supplier) {
+                            if ($supplier['id'] === $purchase['supplierid']) {
+                                echo $supplier['name'];
+                            }
+                        } ?>
+                    </td>
 
-                                <?php if ($purchase['status'] === null) { ?>
-                                    <td class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small" uk-grid>
-                                        <!-- Button Trigger Modal Detail -->
-                                        <div class="uk-text-center">
-                                            <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
-                                        </div>
-                                        <!-- End Of Button Trigger Modal Detail -->
+                    <td class="uk-width-small">
+                        <?php
+                        $prices = array();
+                        foreach ($purchasedetails as $purdet) {
+                            if ($purchase['id'] === $purdet['purchaseid']) {
+                                $total = $purdet['qty'] * $purdet['price'];
+                                $prices [] = $total;
+                            }
+                        }
+                        $sum = array_sum($prices);
+                        echo "Rp " . number_format($sum,2,',','.');
+                        ?>
+                    </td>
 
-                                        <!-- Button Confirmation -->
-                                        <div>
-                                            <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $purchase['id'] ?>"></a>
-                                        </div>
-                                        <!-- End Of Button Confirmation -->
+                    <td class="uk-text-center uk-width-small">
+                        <?php if ($purchase['status'] === "0") {
+                            echo '<div class="uk-text-primary" style="border-style: solid; border-color: #1e87f0;">'.$pending.'</div>';
+                        } elseif ($purchase['status'] === "1") {
+                            echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.$success.'</div>';
+                        } else {
+                            echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$cancel.'</div>';
+                        } ?>
+                    </td>
 
-                                        <!-- Button Cancel -->
-                                        <div>
-                                            <a uk-icon="close" class="uk-icon-button-delete" href="purchase/deletesup/<?= $purchase['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
-                                        </div>
-                                        <!-- End Of Button Cancel -->
-                                    </td>
-                                <?php } else { ?>
-                                    <td class="uk-text-center uk-width-small">
-                                        <!-- Button Trigger Modal Detail -->
-                                        <div class="uk-text-center">
-                                            <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
-                                        </div>
-                                        <!-- End Of Button Trigger Modal Detail -->
-                                    </td>
-                                <?php } ?>
-                            </tr>
-                        <?php } else { ?>
-                        <?php } ?>
+                    <?php if ($purchase['status'] === "0") { ?>
+                        <td class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small uk-text-center" uk-grid>
+                            <!-- Button Trigger Modal Detail -->
+                            <div class="">
+                                <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
+                            </div>
+                            <!-- End Of Button Trigger Modal Detail -->
+
+                            <!-- Button Confirmation -->
+                            <div>
+                                <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $purchase['id'] ?>"></a>
+                            </div>
+                            <!-- End Of Button Confirmation -->
+
+                            <!-- Button Cancel -->
+                            <div>
+                                <a uk-icon="close" class="uk-icon-button-delete" href="purchase/deletesup/<?= $purchase['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
+                            </div>
+                            <!-- End Of Button Cancel -->
+                        </td>
+                    <?php } else { ?>
+                        <td class="uk-text-center uk-width-small">
+                            <!-- Button Trigger Modal Detail -->
+                            <div class="uk-text-center">
+                                <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
+                            </div>
+                            <!-- End Of Button Trigger Modal Detail -->
+                        </td>
                     <?php } ?>
-                <?php } ?>
+                </tr>
             <?php } ?>
         </tbody>
     </table>
@@ -330,18 +324,18 @@ foreach ($purchases as $purchase) { ?>
                             <label class="uk-form-label"><?=lang('Global.status')?></label>
                             <div class="uk-form-controls">
                                 <?php if ($purchase['status'] === "0") {
-                                    echo '<span class="uk-text-success uk-width-auto" style="padding: 5px; border-style: solid; border-color: #32d296;">'.$success.'</span>';
-                                } elseif ($purchase['status'] === "1") {
-                                    echo '<span class="uk-text-danger uk-width-auto" style="padding: 5px; border-style: solid; border-color: #f0506e;">'.$cancel.'</span>';
-                                } else {
                                     echo '<span class="uk-text-primary" style="padding: 5px; border-style: solid; border-color: #1e87f0;">'.$pending.'</span>';
+                                } elseif ($purchase['status'] === "1") {
+                                    echo '<span class="uk-text-success uk-width-auto" style="padding: 5px; border-style: solid; border-color: #32d296;">'.$success.'</span>';
+                                } else {
+                                    echo '<span class="uk-text-danger uk-width-auto" style="padding: 5px; border-style: solid; border-color: #f0506e;">'.$cancel.'</span>';
                                 } ?>
                             </div>
                         </div>
                         
                         <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.date')?></label>
-                            <div class="uk-form-controls"><?= $purchase['restock'] ?></div>
+                            <div class="uk-form-controls"><?= $purchase['date'] ?></div>
                         </div>
 
                         <?php foreach ($outlets as $outlet) { ?>
@@ -368,34 +362,34 @@ foreach ($purchases as $purchase) { ?>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <?php foreach ($variants as $variant) { ?>
-                                    <?php foreach ($products as $product) { ?>
-                                        <?php if ($variant['id'] === $purchase['variantid'] && $product['id'] === $variant['productid']) {
-                                            $pName  = $product['name'];
-                                            $vName  = $variant['name']; ?>
+                            <?php foreach ($purchasedetails as $purdet) { ?>
+                                <?php if ($purchase['id'] === $purdet['purchaseid']) { ?>
+                                    <tr>
+                                        <?php foreach ($variants as $variant) { ?>
+                                            <?php foreach ($products as $product) { ?>
+                                                <?php if ($variant['id'] === $purdet['variantid'] && $product['id'] === $variant['productid']) {
+                                                    $pName  = $product['name'];
+                                                    $vName  = $variant['name']; ?>
 
-                                            <td class="uk-width-small"><?= $pName; ?></td>
-                                            <td class="uk-width-small"><?= $vName; ?></td>
+                                                    <td class="uk-width-small"><?= $pName; ?></td>
+                                                    <td class="uk-width-small"><?= $vName; ?></td>
+                                                <?php } ?>
+                                            <?php } ?>
                                         <?php } ?>
-                                    <?php } ?>
-                                <?php } ?>
-                                
-                                <td class="uk-width-small"><?= $purchase['qty']; ?> Pcs</td>
+                                            
+                                        <td class="uk-width-small"><?= $purdet['qty']; ?> Pcs</td>
 
-                                <?php if ($purchase['status'] === "0") { ?>
-                                    <td class="uk-width-small"><?= $purchase['qty'] ?> Pcs</td>
-                                <?php } else { ?>
-                                    <td class="uk-width-small">0 Pcs</td>
-                                <?php } ?>
+                                        <?php if ($purchase['status'] === "1") { ?>
+                                            <td class="uk-width-small"><?= $purdet['qty']?> Pcs</td>
+                                        <?php } else { ?>
+                                            <td class="uk-width-small">0 Pcs</td>
+                                        <?php } ?>
 
-                                <?php foreach ($variants as $variant) { ?>
-                                    <?php if ($purchase['variantid'] === $variant['id']) { ?>
-                                        <td class="uk-width-small"><?= $variant['hargadasar']; ?></td>
-                                        <td class="uk-width-small" id="ptotal" name="ptotal[]"><?= $variant['hargadasar'] * $purchase['qty']; ?></td>
-                                    <?php } ?>
+                                        <td class="uk-width-small"><?= $purdet['price']; ?></td>
+                                        <td class="uk-width-small"><?= $purdet['price'] * $purdet['qty']; ?></td>
+                                    </tr>
                                 <?php } ?>
-                            </tr>
+                            <?php } ?>
                         </tbody>
                     </table>
 
@@ -404,17 +398,25 @@ foreach ($purchases as $purchase) { ?>
                     <div class="uk-form-horizontal">
                         <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.totalPurchase')?></label>
-                            <?php foreach ($variants as $variant) { ?>
-                                <?php if ($purchase['variantid'] === $variant['id']) { ?>
-                                    <div class="uk-form-controls">Rp. <?= $purchase['price']; ?>,-</div>
-                                <?php } ?>
-                            <?php } ?>
+                            <div class="uk-form-controls">
+                            <?php
+                            $prices = array();
+                            foreach ($purchasedetails as $purdet) {
+                                if ($purchase['id'] === $purdet['purchaseid']) {
+                                    $total = $purdet['qty'] * $purdet['price'];
+                                    $prices [] = $total;
+                                }
+                            }
+                            $sum = array_sum($prices);
+                            echo "Rp " . number_format($sum,2,',','.');
+                            ?>
+                            </div>
                         </div>
                     </div>
 
                     <?php if ($purchase['status'] === null) { ?>
                         <div class="uk-flex uk-flex-right">
-                            <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $purchase['id'] ?>"></a>
+                            <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $purdet['id'] ?>"></a>
                         </div>
                     <?php } else {} ?>
                 </div>
@@ -456,11 +458,14 @@ foreach ($purchases as $purchase) { ?>
     $(function() {
         var supplierList = [
             <?php foreach ($suppliers as $supplier) {
-                echo '"'.$supplier['name'].'",';
+                echo '{label:"'.$supplier['name'].'",idx:'.$supplier['id'].'},';
             }?>
         ];
         $("#suppliername").autocomplete({
             source: supplierList,
+            select: function(e, i) {
+                $("#supplierid").val(i.item.idx);
+            }
         });
     });
 
@@ -479,12 +484,6 @@ foreach ($purchases as $purchase) { ?>
                     var products = <?php echo json_encode($products); ?>;
                     for (var x = 0; x < products.length; x++) {
                         document.getElementById('tablevariant'+products[x]['id']).setAttribute('hidden', '');
-                        <?php
-                        foreach ($variants as $variant) {
-                            // echo 'document.getElementById("totalpcs['.$variant['id'].']").value = "0";';
-                            // echo 'document.getElementById("bprice['.$variant['id'].']").value = "'.$variant['hargadasar'].'";';
-                        }
-                        ?>
                         if (products[x]['id'] == i.item.idx) {
                             document.getElementById('tablevariant'+products[x]['id']).removeAttribute('hidden');
                         }

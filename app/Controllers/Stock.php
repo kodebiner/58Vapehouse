@@ -224,7 +224,6 @@ class Stock extends BaseController
     public function indexpurchase()
     {
         // Calling Model
-        $StockModel                 = new StockModel;
         $SupplierModel              = new SupplierModel;
         $ProductModel               = new ProductModel;
         $VariantModel               = new VariantModel;
@@ -235,7 +234,6 @@ class Stock extends BaseController
 
         // Find Data
         $data                       = $this->data;
-        $stocks                     = $StockModel->findAll();
         $suppliers                  = $SupplierModel->findAll();
         $products                   = $ProductModel->findAll();
         $variants                   = $VariantModel->findAll();
@@ -254,7 +252,6 @@ class Stock extends BaseController
         // Parsing data to view
         $data['title']              = lang('Global.purchase');
         $data['description']        = lang('Global.purchaseListDesc');
-        $data['stocks']             = $stocks;
         $data['purchases']          = $purchases;
         $data['purchasedetails']    = $purchasedetails;
         $data['suppliers']          = $suppliers;
@@ -268,20 +265,15 @@ class Stock extends BaseController
 
     public function createpur()
     {
+        // Validate Data
+        $validation = \Config\Services::validation();
+
         // Calling Model
-        $PurchaseModel              = new PurchaseModel;
-        $PurchasedetailModel        = new PurchasedetailModel;
+        $PurchaseModel              = new PurchaseModel();
+        $PurchasedetailModel        = new PurchasedetailModel();
 
         // Find Data
         $purchasedetails            = $PurchasedetailModel->findAll();
-
-        // get outlet
-        if ($this->data['outletPick'] === null) {
-            $purchases              = $PurchaseModel->orderBy('id', 'DESC')->findAll();
-        } else {
-            $out                    = $this->data['outletPick'];
-            $purchases              = $PurchaseModel->where("outletid = {$out} OR outletid='0'")->orderBy('outletid', 'ASC')->find();
-        }
 
         // initialize
         $input = $this->request->getPost();
@@ -290,7 +282,33 @@ class Stock extends BaseController
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
 
-        
+        $data = [
+            'outletid'              => $this->data['outletPick'],
+            'userid'                => $this->data['uid'],
+            'supplierid'            => $input['supplierid'],
+            'date'                  => $tanggal,
+            'status'                => "0",
+        ];
+
+        // Save Data Purchase
+        $PurchaseModel->insert($data);
+
+        // Get Purchase ID
+        $purchaseid = $PurchaseModel->getInsertID();
+
+        // Purchase Detail
+        foreach ($input['totalpcs'] as $varid => $value) {
+            $datadetail   = [
+                'purchaseid'    => $purchaseid,
+                'variantid'     => $varid,
+                'qty'           => $value,
+                'price'         => $input['bprice'][$varid],
+            ];
+
+            // Save Data Purchase Detail
+            $PurchasedetailModel->save($datadetail);
+        }
+
         // return
         return redirect()->back()->with('message', lang('Global.saved'));
     }
