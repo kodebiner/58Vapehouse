@@ -10,6 +10,7 @@ class CreatePurchaseDetail extends Migration
     {
         $fields = [
             'id'                => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'null' => false, 'auto_increment' => true],
+            'purchaseid'        => ['type' => 'INT', 'constraint' => 11],
             'variantid'         => ['type' => 'INT', 'constraint' => 11],
             'qty'               => ['type' => 'INT', 'constraint' => 11],
             'price'             => ['type' => 'VARCHAR', 'constraint' => 255],

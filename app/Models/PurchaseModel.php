@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class PurchaseModel extends Model
 {
     protected $allowedFields = [
-        'outletid','supplierid','purchasedetailid','date','status',
+        'outletid','supplierid','userid','date','status',
 
     ];
 

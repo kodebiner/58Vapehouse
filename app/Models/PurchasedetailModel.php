@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class PurchasedetailModel extends Model
 {
     protected $allowedFields = [
-        'variantid','qty','price',
+        'variantid','purchaseid','qty','price',
 
     ];
 
