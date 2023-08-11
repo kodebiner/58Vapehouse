@@ -222,7 +222,7 @@
 
                             <div class="uk-margin">
                                 <h4 class="uk-h4 uk-margin-remove-bottom"><?=lang('Global.subtotal')?></h4>
-                                <div class="uk-h4 uk-margin-remove-top" id="subtotal">0</div>
+                                <div class="uk-h4 uk-margin-remove-top" min="0" id="subtotal">0</div>
                             </div>
 
                             <div class="uk-margin">
@@ -245,7 +245,7 @@
                                 <h4 class="uk-margin-remove"><?=lang('Global.paymethod')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
                                     <select class="uk-select" id="payment" name="payment" required>
-                                        <option selected disabled hidden>-- <?=lang('Global.paymethod')?> --</option>
+                                        <option value="" selected disabled hidden>-- <?=lang('Global.paymethod')?> --</option>
                                         <?php
                                         foreach ($payments as $pay) {
                                             if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
@@ -271,7 +271,7 @@
                                 <div class="uk-margin">
                                     <div class="uk-margin-small uk-form-controls">
                                         <select class="uk-select" id="firstpayment" name="firstpayment">
-                                            <option selected disabled hidden>-- <?=lang('Global.firstpaymet')?> --</option>
+                                            <option value="" selected disabled hidden>-- <?=lang('Global.firstpaymet')?> --</option>
                                             <?php
                                             foreach ($payments as $pay) {
                                                 if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
@@ -288,7 +288,7 @@
                                 <div class="uk-margin">
                                     <div class="uk-margin-small uk-form-controls">
                                         <select class="uk-select" id="secpayment" name="secpayment">
-                                            <option selected disabled hidden>-- <?=lang('Global.secpaymet')?> --</option>
+                                            <option value="" selected disabled hidden>-- <?=lang('Global.secpaymet')?> --</option>
                                             <?php
                                             foreach ($payments as $pay) {
                                                 if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
@@ -631,7 +631,7 @@
                                                                                         varbargain.setAttribute('id', 'varbargain<?=$variant['id']?>');
                                                                                         varbargain.setAttribute('placeholder', 'variant bargain');
                                                                                         varbargain.setAttribute('name', 'varbargain[<?=$variant['id']?>]');
-                                                                                        
+                                                                                        varbargain.setAttribute('type', 'number');
 
                                                                                         const varvaluecontainer = document.createElement('div');
                                                                                         varvaluecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
@@ -643,6 +643,7 @@
                                                                                         varprice.setAttribute('placeholder', 'variant price');
                                                                                         varprice.setAttribute('name', 'varprice[<?=$variant['id']?>]');
                                                                                         varprice.setAttribute('value', '0');
+                                                                                        varprice.setAttribute('type', 'number');
 
 
                                                                                         function showprice() {

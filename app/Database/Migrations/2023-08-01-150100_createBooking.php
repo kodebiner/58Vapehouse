@@ -11,12 +11,12 @@ class CreatebookingOrder extends Migration
         $fields = [
             'id'                => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'null' => false, 'auto_increment' => true],
             'outletid'          => ['type' => 'INT', 'constraint' => 11],
-            'memberid'          => ['type' => 'VARCHAR', 'constraint' => 255],
+            'memberid'          => ['type' => 'INT', 'constraint' => 255],
             'value'             => ['type' => 'VARCHAR', 'constraint' => 255],
             'disctype'          => ['type' => 'tinyint', 'constraint' => 1],
             'discvalue'         => ['type' => 'VARCHAR', 'constraint' => 255],
-            'discvar'           => ['type' => 'VARCHAR', 'constraint' => 255],
-            'bargainprice'      => ['type' => 'VARCHAR', 'constraint' => 255],
+            'discvar'           => ['type' => 'INT', 'constraint' => 255],
+            'bargainprice'      => ['type' => 'INT', 'constraint' => 255],
             'date'              => ['type' => 'DATETIME'],
         ];
         $this->forge->addField($fields);
