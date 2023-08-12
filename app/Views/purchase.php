@@ -260,7 +260,7 @@
                             echo '<div class="uk-text-primary" style="border-style: solid; border-color: #1e87f0;">'.$pending.'</div>';
                         } elseif ($purchase['status'] === "1") {
                             echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.$success.'</div>';
-                        } else {
+                        } elseif ($purchase['status'] === "2") {
                             echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$cancel.'</div>';
                         } ?>
                     </td>
@@ -327,7 +327,7 @@ foreach ($purchases as $purchase) { ?>
                                     echo '<span class="uk-text-primary" style="padding: 5px; border-style: solid; border-color: #1e87f0;">'.$pending.'</span>';
                                 } elseif ($purchase['status'] === "1") {
                                     echo '<span class="uk-text-success uk-width-auto" style="padding: 5px; border-style: solid; border-color: #32d296;">'.$success.'</span>';
-                                } else {
+                                } elseif ($purchase['status'] === "2") {
                                     echo '<span class="uk-text-danger uk-width-auto" style="padding: 5px; border-style: solid; border-color: #f0506e;">'.$cancel.'</span>';
                                 } ?>
                             </div>
@@ -338,14 +338,23 @@ foreach ($purchases as $purchase) { ?>
                             <div class="uk-form-controls"><?= $purchase['date'] ?></div>
                         </div>
 
-                        <?php foreach ($outlets as $outlet) { ?>
-                            <?php if ($outlet['id'] === $purchase['outletid']) { ?>
-                                <div class="uk-margin">
-                                    <label class="uk-form-label"><?=lang('Global.outlet')?></label>
+                        <div class="uk-margin">
+                            <label class="uk-form-label"><?=lang('Global.outlet')?></label>
+                            <?php foreach ($outlets as $outlet) { ?>
+                                <?php if ($outlet['id'] === $purchase['outletid']) { ?>
                                     <div class="uk-form-controls"><?= $outlet['name'] ?></div>
-                                </div>
+                                <?php } ?>
                             <?php } ?>
-                        <?php } ?>
+                        </div>
+
+                        <div class="uk-margin">
+                            <label class="uk-form-label"><?=lang('Global.employee')?></label>
+                            <?php foreach ($users as $user) { ?>
+                                <?php if ($user->id === $purchase['userid']) { ?>
+                                    <div class="uk-form-controls"><?= $user->name ?></div>
+                                <?php } ?>
+                            <?php } ?>
+                        </div>
                     </div>
 
                     <div class="uk-divider-icon"></div>
@@ -399,32 +408,64 @@ foreach ($purchases as $purchase) { ?>
                         <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.totalPurchase')?></label>
                             <div class="uk-form-controls">
-                            <?php
-                            $prices = array();
-                            foreach ($purchasedetails as $purdet) {
-                                if ($purchase['id'] === $purdet['purchaseid']) {
-                                    $total = $purdet['qty'] * $purdet['price'];
-                                    $prices [] = $total;
+                                <?php
+                                $prices = array();
+                                foreach ($purchasedetails as $purdet) {
+                                    if ($purchase['id'] === $purdet['purchaseid']) {
+                                        $total = $purdet['qty'] * $purdet['price'];
+                                        $prices [] = $total;
+                                    }
                                 }
-                            }
-                            $sum = array_sum($prices);
-                            echo "Rp " . number_format($sum,2,',','.');
-                            ?>
+                                $sum = array_sum($prices);
+                                echo "Rp " . number_format($sum,2,',','.');
+                                ?>
+                            </div>
+                            <div class="uk-flex uk-flex-right">
+                                <?php if ($purchase['status'] === "0") { ?>
+                                    <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $purchase['id'] ?>"></a>
+                                <?php } else {} ?>
                             </div>
                         </div>
                     </div>
-
-                    <?php if ($purchase['status'] === null) { ?>
-                        <div class="uk-flex uk-flex-right">
-                            <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $purdet['id'] ?>"></a>
-                        </div>
-                    <?php } else {} ?>
                 </div>
             </div>
         </div>
     </div>
 <?php } ?>
 <!-- Modal Detail End -->
+
+<!-- Modal Edit -->
+<?php foreach ($purchases as $purchase) { ?>
+    <div uk-modal class="uk-flex-top" id="editdata<?= $purchase['id'] ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-content">
+                <div class="uk-modal-header">
+                    <h5 class="uk-modal-title" id="editdata<?= $purchase['id'] ?>"><?=lang('Global.updateData')?></h5>
+                </div>
+
+                <div class="uk-modal-body">
+                    <form class="uk-form-stacked" role="form" action="stock/updatepur/<?= $purchase['id'] ?>" method="post">
+                        <?= csrf_field() ?>
+
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="supplier"><?=lang('Global.supplier')?></label>
+                            <div class="uk-form-controls">
+                                <?php foreach ($suppliers as $supplier) { ?>
+                                    <?php if ($supplier['id'] === $purchase['supplierid']) { ?>
+                                        <input class="uk-input" id="suppliername<?=$purchase['id']?>" name="suppliername<?=$purchase['id']?>" value="<?= $supplier['name'] ?>" required>
+                                        <input id="supplierid<?=$purchase['id']?>" name="supplierid<?=$purchase['id']?>" hidden required>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<!-- MOodal Edit End -->
 
 <!-- Search Engine Script -->
 <script type="text/javascript">
