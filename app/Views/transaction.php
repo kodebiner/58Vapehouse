@@ -614,15 +614,15 @@
                                                                                         productprice.setAttribute('value', showprice())
                                                                                         productprice.innerHTML = showprice();
 
-                                                                                        const but = document.createElement('span');
-                                                                                        but.setAttribute('class',"uk-icon-link uk-margin-small-right");
-                                                                                        but.setAttribute("uk-icon","file-edit");
+                                                                                        // const but = document.createElement('span');
+                                                                                        // but.setAttribute('class',"uk-icon-link uk-margin-small-right");
+                                                                                        // but.setAttribute("uk-icon","file-edit");
 
                                                                                         const varpricecontainer = document.createElement('div');
-                                                                                        varpricecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
+                                                                                        varpricecontainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
 
                                                                                         const varbardiv = document.createElement('div');
-                                                                                        varbardiv.setAttribute('class','uk-margin uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
+                                                                                        varbardiv.setAttribute('class','uk-margin uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
 
                                                                                         const varbarlab = document.createElement('label');
                                                                                         varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
@@ -635,17 +635,16 @@
                                                                                         const varbargain = document.createElement('input');
                                                                                         varbargain.setAttribute('class', 'uk-input uk-form-width-small');
                                                                                         varbargain.setAttribute('id', 'varbargain<?=$variant['id']?>');
-                                                                                        varbargain.setAttribute('placeholder', 'variant bargain');
+                                                                                        varbargain.setAttribute('placeholder', '0');
                                                                                         varbargain.setAttribute('name', 'varbargain[<?=$variant['id']?>]');
-                                                                                        varbargain.setAttribute('value', '0');
-                                                                                        varbargain.setAttribute('min', "0")
+                                                                                        varbargain.setAttribute('min', "0");
                                                                                         varbargain.setAttribute('type', 'number');
 
                                                                                         const varvaluecontainer = document.createElement('div');
-                                                                                        varvaluecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
+                                                                                        varvaluecontainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
 
                                                                                         const varpricediv = document.createElement('div');
-                                                                                        varpricediv.setAttribute('class','uk-margin uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
+                                                                                        varpricediv.setAttribute('class','uk-margin uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
 
                                                                                         const varpricelab = document.createElement('label');
                                                                                         varpricelab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4' );
@@ -659,7 +658,7 @@
                                                                                         varprice.setAttribute('class', 'uk-input uk-form-width-small varprice');
                                                                                         varprice.setAttribute('data-index', '<?=$variant['id']?>');
                                                                                         varprice.setAttribute('id', 'varprice<?=$variant['id']?>');
-                                                                                        varprice.setAttribute('placeholder', 'variant price');
+                                                                                        varprice.setAttribute('placeholder', '0');
                                                                                         varprice.setAttribute('name', 'varprice[<?=$variant['id']?>]');
                                                                                         varprice.setAttribute('value', '0');
                                                                                         varprice.setAttribute('type', 'number');
@@ -690,26 +689,23 @@
                                                                                         delcontainer.appendChild(productqtyinputdel);
                                                                                         pricecontainer.appendChild(productprice);
                                                                                         namecontainer.appendChild(productname);
-                                                                                        // varpricecontainer.appendChild(varbargain);
                                                                                         varpricecontainer.appendChild(varbardiv);
                                                                                         varbardiv.appendChild(varbarlab);
                                                                                         varbarlab.appendChild(varbartext);
                                                                                         varbarlab.appendChild(varbarform);
                                                                                         varbarform.appendChild(varbargain);
-
                                                                                         varvaluecontainer.appendChild(varpricediv);
                                                                                         varpricediv.appendChild(varpricelab);
                                                                                         varpricelab.appendChild(varpricetext);
                                                                                         varpricelab.appendChild(varpriceform);
-                                                                                        varpriceform.appendChild(varprice);
-                                                                                        
+                                                                                        varpriceform.appendChild(varprice);                                                                                        
                                                                                         productgrid.appendChild(delcontainer);
                                                                                         productgrid.appendChild(quantitycontainer);
                                                                                         productgrid.appendChild(addcontainer);
                                                                                         productgrid.appendChild(namecontainer);
                                                                                         productgrid.appendChild(pricecontainer);
                                                                                         productgrid.appendChild(pricecontainer);
-                                                                                        productgrid.appendChild(but);
+                                                                                        // productgrid.appendChild(but);
                                                                                         productgrid.appendChild(varpricecontainer);
                                                                                         productgrid.appendChild(varvaluecontainer);
                                                                                         products.appendChild(productgrid);
@@ -1060,7 +1056,7 @@
             var discount = 0;
             var poin = 0;
             var memberdisc = 0;
-            
+            var min = 0;
             $('#products').on('DOMSubtreeModified', function() {
                 var prices = document.querySelectorAll("div[name='price[]']");
                 var discvars = document.querySelectorAll(".varprice");
@@ -1115,7 +1111,7 @@
                                 document.getElementById('subtotal').innerHTML = subtotal - discountvar;
                             }  
                             
-                            if (document.getElementById('subtotal').innerHTML < 0 ){
+                            if (document.getElementById('subtotal').innerHTML < min ){
                             document.getElementById('subtotal').innerHTML = "Sorry Price To Low!"; 
                         }
                     }); 

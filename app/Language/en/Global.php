@@ -102,6 +102,7 @@ return [
     'success'           => 'Completed',
     'cancel'            => 'Canceled',
     'pending'           => 'Order Processed',
+    
 
     // Button
     'edit'              => 'Edit',
@@ -157,6 +158,7 @@ return [
     'wallet'            => 'Wallet',
     'supplier'          => 'Supplier',
     'purchase'          => 'Purchase',
+    'sop'               => 'Oprational Standar',
 
     // Title
     'employeeList'              => 'Employee List',

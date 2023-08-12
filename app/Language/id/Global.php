@@ -156,6 +156,7 @@ return [
     'wallet'            => 'Dompet',
     'supplier'          => 'Pemasok',
     'purchase'          => 'Pembelian',
+    'sop'               => 'Standar Operasional',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',
