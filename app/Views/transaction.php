@@ -161,7 +161,7 @@
                     <div class="uk-modal-header">
                         <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.detailOrder');?></h5>
                     </div>
-                    <form class="uk-form-stacked" name="order" role="form" action="/pay/create" method="post">
+                    <form class="uk-form-stacked" name="order" id="order" role="form" method="post">
                         <?= csrf_field() ?>
                         
                         <?php foreach ($outlets as $outlet){ 
@@ -255,15 +255,6 @@
                                         ?>
                                     </select>
                                 </div>
-                                <!-- Error Validation -->
-                                <?php if (! empty($errors)): ?>
-                                    <div class="alert alert-danger">
-                                    <?php foreach ($errors as $field => $error): ?>
-                                        <p><?= esc($error) ?></p>
-                                    <?php endforeach ?>
-                                    </div>
-                                <?php endif ?>
-                                <!-- The End Error -->
                             </div>
 
                             <div id="bills" class="uk-margin" hidden>
@@ -299,7 +290,7 @@
                                         </select>
                                     </div>
                                     <div class="uk-margin-small uk-form-controls">
-                                        <input type="number" class="uk-input" id="secondpay" name="secondpay" placeholder="<?=lang('Global.secpay')?>" />
+                                        <input type="number" class="uk-input" id="secondpay"  name="secondpay" placeholder="<?=lang('Global.secpay')?>" />
                                     </div>
                                 </div>
                             </div>
@@ -307,7 +298,7 @@
                             <div class="uk-margin" id="amount">
                                 <h4 class="uk-margin-remove"><?=lang('Global.amountpaid')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <input type="number" class="uk-input" id="value" name="value" placeholder="<?=lang('Global.amountpaid')?>" />
+                                    <input type="number" class="uk-input" id="value" name="value" min="0" value="0" placeholder="<?=lang('Global.amountpaid')?>" />
                                 </div>
                             </div>
                             
@@ -623,27 +614,56 @@
                                                                                         productprice.setAttribute('value', showprice())
                                                                                         productprice.innerHTML = showprice();
 
+                                                                                        const but = document.createElement('span');
+                                                                                        but.setAttribute('class',"uk-icon-link uk-margin-small-right");
+                                                                                        but.setAttribute("uk-icon","file-edit");
+
                                                                                         const varpricecontainer = document.createElement('div');
                                                                                         varpricecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
 
+                                                                                        const varbardiv = document.createElement('div');
+                                                                                        varbardiv.setAttribute('class','uk-margin uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
+
+                                                                                        const varbarlab = document.createElement('label');
+                                                                                        varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
+
+                                                                                        const varbartext = document.createTextNode("Variant Bargain");
+
+                                                                                        const varbarform = document.createElement('div');
+                                                                                        varbarform.setAttribute('class','uk-form-controls');
+
                                                                                         const varbargain = document.createElement('input');
-                                                                                        varbargain.setAttribute('class', 'uk-width-1-2 uk-input uk-form-width-small');
+                                                                                        varbargain.setAttribute('class', 'uk-input uk-form-width-small');
                                                                                         varbargain.setAttribute('id', 'varbargain<?=$variant['id']?>');
                                                                                         varbargain.setAttribute('placeholder', 'variant bargain');
                                                                                         varbargain.setAttribute('name', 'varbargain[<?=$variant['id']?>]');
+                                                                                        varbargain.setAttribute('value', '0');
+                                                                                        varbargain.setAttribute('min', "0")
                                                                                         varbargain.setAttribute('type', 'number');
 
                                                                                         const varvaluecontainer = document.createElement('div');
                                                                                         varvaluecontainer.setAttribute('class', 'uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
+
+                                                                                        const varpricediv = document.createElement('div');
+                                                                                        varpricediv.setAttribute('class','uk-margin uk-margin-small-top uk-flex uk-flex-middle uk-width-1-2');
+
+                                                                                        const varpricelab = document.createElement('label');
+                                                                                        varpricelab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4' );
+
+                                                                                        const varpricetext = document.createTextNode("Discount Variant");
+
+                                                                                        const varpriceform = document.createElement('div');
+                                                                                        varpriceform.setAttribute('class','uk-form-controls');
                                                                                         
                                                                                         const varprice = document.createElement('input');
-                                                                                        varprice.setAttribute('class', 'uk-width-1-2 uk-input uk-form-width-small varprice');
+                                                                                        varprice.setAttribute('class', 'uk-input uk-form-width-small varprice');
                                                                                         varprice.setAttribute('data-index', '<?=$variant['id']?>');
                                                                                         varprice.setAttribute('id', 'varprice<?=$variant['id']?>');
                                                                                         varprice.setAttribute('placeholder', 'variant price');
                                                                                         varprice.setAttribute('name', 'varprice[<?=$variant['id']?>]');
                                                                                         varprice.setAttribute('value', '0');
                                                                                         varprice.setAttribute('type', 'number');
+                                                                                        varprice.setAttribute('min', '0');
 
 
                                                                                         function showprice() {
@@ -670,14 +690,26 @@
                                                                                         delcontainer.appendChild(productqtyinputdel);
                                                                                         pricecontainer.appendChild(productprice);
                                                                                         namecontainer.appendChild(productname);
-                                                                                        varpricecontainer.appendChild(varbargain);
-                                                                                        varvaluecontainer.appendChild(varprice);
+                                                                                        // varpricecontainer.appendChild(varbargain);
+                                                                                        varpricecontainer.appendChild(varbardiv);
+                                                                                        varbardiv.appendChild(varbarlab);
+                                                                                        varbarlab.appendChild(varbartext);
+                                                                                        varbarlab.appendChild(varbarform);
+                                                                                        varbarform.appendChild(varbargain);
+
+                                                                                        varvaluecontainer.appendChild(varpricediv);
+                                                                                        varpricediv.appendChild(varpricelab);
+                                                                                        varpricelab.appendChild(varpricetext);
+                                                                                        varpricelab.appendChild(varpriceform);
+                                                                                        varpriceform.appendChild(varprice);
+                                                                                        
                                                                                         productgrid.appendChild(delcontainer);
                                                                                         productgrid.appendChild(quantitycontainer);
                                                                                         productgrid.appendChild(addcontainer);
                                                                                         productgrid.appendChild(namecontainer);
                                                                                         productgrid.appendChild(pricecontainer);
                                                                                         productgrid.appendChild(pricecontainer);
+                                                                                        productgrid.appendChild(but);
                                                                                         productgrid.appendChild(varpricecontainer);
                                                                                         productgrid.appendChild(varvaluecontainer);
                                                                                         products.appendChild(productgrid);
@@ -1048,45 +1080,53 @@
                     var discountvar = Number(varqty) * Number(vardisc);
                     discarr.push(discountvar);
                 }
-                console.log(subarr);
-                    if (subarr.length === 0) {
-                        document.getElementById('subtotal').innerHTML = 0;
-                    } else {
-                        var subtotal = subarr.reduce(function(a, b){ return a + b; });
-                        var discountvar = discarr.reduce(function(a, b){ return a + b; });
-                        document.getElementById('subtotal').innerHTML = subtotal - discountvar;
-                    }
+                if (subarr.length === 0) {
+                    document.getElementById('subtotal').innerHTML = 0;
+                } else {
+                    var subtotal = subarr.reduce(function(a, b){ return a + b; });
+                    var discountvar = discarr.reduce(function(a, b){ return a + b; });
+                    document.getElementById('subtotal').innerHTML = subtotal - discountvar;
+                }
                 $(document).ready(function() {
                     $(".varprice").keyup(function(){
-                        var prices = document.querySelectorAll("div[name='price[]']");
-                        var discvars = document.querySelectorAll(".varprice");
-                        
-                        var subarr = [];
-                        var discarr = [];
-                        
-                        for (i = 0; i < prices.length; i++) {
-                            price = Number(prices[i].innerText);
-                            subarr.push(price);
+                            var prices = document.querySelectorAll("div[name='price[]']");
+                            var discvars = document.querySelectorAll(".varprice");
+                            
+                            var subarr = [];
+                            var discarr = [];
+                            
+                            for (i = 0; i < prices.length; i++) {
+                                price = Number(prices[i].innerText);
+                                subarr.push(price);
+                            }
+                            
+                            for (i = 0; i < discvars.length; i++) {
+                                var index = discvars[i].getAttribute('data-index');
+                                var varqty = document.getElementById('qty['+index+']').value;
+                                var vardisc = document.getElementById('varprice'+index).value;
+                                var discountvar = Number(varqty) * Number(vardisc);
+                                discarr.push(discountvar);
+                            }
+                            if (subarr.length === 0) {
+                                document.getElementById('subtotal').innerHTML = 0;
+                            } else {
+                                var subtotal = subarr.reduce(function(a, b){ return a + b; });
+                                var discountvar = discarr.reduce(function(a, b){ return a + b; });
+                                document.getElementById('subtotal').innerHTML = subtotal - discountvar;
+                            }  
+                            
+                            if (document.getElementById('subtotal').innerHTML < 0 ){
+                            document.getElementById('subtotal').innerHTML = "Sorry Price To Low!"; 
                         }
-                        
-                        for (i = 0; i < discvars.length; i++) {
-                            var index = discvars[i].getAttribute('data-index');
-                            var varqty = document.getElementById('qty['+index+']').value;
-                            var vardisc = document.getElementById('varprice'+index).value;
-                            var discountvar = Number(varqty) * Number(vardisc);
-                            discarr.push(discountvar);
-                        }
-                        if (subarr.length === 0) {
-                            document.getElementById('subtotal').innerHTML = 0;
-                        } else {
-                            var subtotal = subarr.reduce(function(a, b){ return a + b; });
-                            var discountvar = discarr.reduce(function(a, b){ return a + b; });
-                            document.getElementById('subtotal').innerHTML = subtotal - discountvar;
-                        }  
-                        
-                        if (document.getElementById('subtotal').innerHTML < min ){
-                        document.getElementById('subtotal').innerHTML = "Sorry Price To Low"; 
-                    }
+                    }); 
+                    $('#pay').click(function(){
+                        $('#order').attr('action', "/pay/create");
+                        $('#order').submit();
+                    });
+
+                    $('#save').click(function(){
+                        $('#order').attr('action', "/pay/save");
+                        $('#order').submit();
                     });
                     console.log( "ready!" );
                    
@@ -1175,7 +1215,8 @@
                     var printprice = paidprice;
                 } else {
                     buttonpay.setAttribute('disabled', '');
-                    var printprice = "Price To Low";
+                    var printprice = "Sorry Price To Low!";
+                    // document.getElementById('finalprice').innerHTML = "Sorry Price To Low!";
                 }
 
                 var pay = document.getElementById('value').value;
@@ -1189,7 +1230,8 @@
                     var printprice = paidprice;
                 } else {
                     buttonpay.setAttribute('disabled', '');
-                    var printprice = "Price To Low";
+                    var printprice = "Sorry Price To Low !";
+                    // document.getElementById('finalprice').innerHTML = "Sorry Price To Low!";
                 }
 
                 var pay = document.getElementById('value').value;

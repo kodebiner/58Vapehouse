@@ -120,7 +120,7 @@ class Pay extends BaseController
             foreach ($input['qty'] as $varid => $varqty) {
                 $variant = $VariantModel->find($varid);
 
-                $discvar = $input['varprice'][$varid]  * $varqty;
+                $discvar = (int)$input['varprice'][$varid]  * $varqty;
                 $discbargain = (int)$input['varbargain'][$varid]* $varqty;
                 // Bargain And Varprice Added
                 if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
@@ -149,8 +149,6 @@ class Pay extends BaseController
         } else {
             $bundvalues[] = '0';
         }
-
-        // dd($varvalues);
 
         $varvalue = array_sum($varvalues);
         $bundvalue = array_sum($bundvalues);
@@ -210,7 +208,7 @@ class Pay extends BaseController
             foreach ($input['qty'] as $varid => $varqty) {
                 $variant = $VariantModel->find($varid);
 
-                    $discvar = $input['varprice'][$varid] * $varqty;
+                    $discvar = (int)$input['varprice'][$varid] * $varqty;
                     $discbargain = (int)$input['varbargain'][$varid]* $varqty;
                     // Bargain And Varprice Added
                     if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
