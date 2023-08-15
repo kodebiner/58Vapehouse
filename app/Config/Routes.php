@@ -169,6 +169,7 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
     // Purchase
     $routes->get('purchase', 'Stock::indexpurchase', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('createpur', 'Stock::createpur', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('confirm', 'Stock::confirm', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('updatepur/(:num)', 'Stock::updatepur/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('deletepur/(:num)', 'Stock::deletepur/$1', ['filter' => 'role:owner,supervisor,operator']);
 });

@@ -102,6 +102,7 @@ return [
     'success'           => 'Dikonfirmasi',
     'cancel'            => 'Dibatalkan',
     'pending'           => 'Sedang Diproses',
+    'confirmation'      => 'Konfirmasi',
 
     // Button
     'edit'              => 'Ubah',

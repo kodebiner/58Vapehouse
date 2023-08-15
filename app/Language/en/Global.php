@@ -102,6 +102,7 @@ return [
     'success'           => 'Completed',
     'cancel'            => 'Canceled',
     'pending'           => 'Order Processed',
+    'confirmation'      => 'Confirmation',
     
 
     // Button
