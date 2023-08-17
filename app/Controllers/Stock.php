@@ -312,4 +312,32 @@ class Stock extends BaseController
         // return
         return redirect()->back()->with('message', lang('Global.saved'));
     }
+
+    public function cancelpur($id)
+    {
+        // calling Model
+        $PurchaseModel      = new PurchaseModel();
+        
+        // search id
+        $data['purchases'] = $PurchaseModel->where('id', $id)->first();
+
+        // initialize
+        $input              = $this->request->getpost();
+
+        // date time stamp
+        $date=date_create();
+        $tanggal = date_format($date,'Y-m-d H:i:s');
+
+        // validation
+        $data = [
+            'id'                    => $id,
+            'outletid'              => $this->data['outletPick'],
+            'userid'                => $this->data['uid'],
+            'date'                  => $tanggal,
+            'status'                => "2",
+        ];
+        $PurchaseModel->save($data);
+
+        return redirect()->back()->with('massage', lang('global.saved'));
+    }
 }

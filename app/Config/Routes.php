@@ -171,7 +171,7 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->post('createpur', 'Stock::createpur', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('confirm', 'Stock::confirm', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('updatepur/(:num)', 'Stock::updatepur/$1', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('deletepur/(:num)', 'Stock::deletepur/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('cancelpur/(:num)', 'Stock::cancelpur/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Transaction Other / cashin cashout

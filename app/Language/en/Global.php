@@ -50,6 +50,7 @@ return [
     'deleted'           => 'Data has been deleted',
     'saved'             => 'Data has been saved',
     'deleteConfirm'     => 'Are you sure want to delete this data? ',
+    'cancelConfirm'     => 'Are you sure want to cancel this purchase? ',
     'description'       => 'Description',
     'bizName'           => 'Business Name',
     'poinValue'         => 'Poin Value',

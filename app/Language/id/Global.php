@@ -50,6 +50,7 @@ return [
     'deleted'           => 'Data sudah terhapus',
     'saved'             => 'Data sudah tersimpan',
     'deleteConfirm'     => 'Anda yakin akan menghapus data tersebut? ',
+    'cancelConfirm'     => 'Anda yakin akan membatalkan pesanan tersebut? ',
     'description'       => 'Deskripsi',
     'bizName'           => 'Nama Bisnis',
     'poinValue'         => 'Nilai Poin',
