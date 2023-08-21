@@ -626,8 +626,8 @@ foreach ($purchases as $purchase) { ?>
                             <div class="uk-form-controls">
                                 <?php foreach ($suppliers as $supplier) { ?>
                                     <?php if ($supplier['id'] === $purchase['supplierid']) { ?>
-                                        <input class="uk-input" id="suppliername<?= $purchase['id'] ?>" name="suppliername" value="<?= $supplier['name'] ?>" required>
-                                        <input id="supplierid<?= $purchase['id'] ?>" name="supplierid" hidden required>
+                                        <input class="uk-input" id="suppliername<?= $purchase['id'] ?>" name="suppliername<?= $purchase['id'] ?>" value="<?= $supplier['name'] ?>" required>
+                                        <input id="supplierid<?= $purchase['id'] ?>" name="supplierid<?= $purchase['id'] ?>" value="<?= $supplier['id'] ?>" hidden>
                                     <?php } ?>
                                 <?php } ?>
                             </div>
@@ -644,7 +644,7 @@ foreach ($purchases as $purchase) { ?>
                                 $("#suppliername<?= $purchase['id'] ?>").autocomplete({
                                     source: suppList,
                                     select: function(e, i) {
-                                        $("#esupplierid<?= $purchase['id'] ?>").val(i.item.idx);
+                                        $("#supplierid<?= $purchase['id'] ?>").val(i.item.idx);
                                     }
                                 });
                             });

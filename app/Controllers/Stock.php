@@ -313,6 +313,58 @@ class Stock extends BaseController
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
+    public function updatepur($id)
+    {
+        // Validate Data
+        $validation = \Config\Services::validation();
+
+        // Calling Model
+        $PurchaseModel              = new PurchaseModel();
+        $PurchasedetailModel        = new PurchasedetailModel();
+
+        // Find Data
+        $purchasedetails            = $PurchasedetailModel->findAll();
+
+        // initialize
+        $input = $this->request->getPost();
+
+        // date time stamp
+        $date=date_create();
+        $tanggal = date_format($date,'Y-m-d H:i:s');
+
+        $data = [
+            'id'                    => $id,
+            'outletid'              => $this->data['outletPick'],
+            'userid'                => $this->data['uid'],
+            'supplierid'            => $input['supplierid'.$id],
+            'date'                  => $tanggal,
+            'status'                => "0",
+        ];
+
+        // Save Data Purchase
+        $PurchaseModel->save($data);
+
+        // Get Purchase ID
+        $purchaseid = $PurchaseModel->getInsertID();
+
+        // Purchase Detail
+        foreach ($input['totalpcs'] as $varid => $value) {
+            $datadetail   = [
+                'id'            => $id,
+                'purchaseid'    => $purchaseid,
+                'variantid'     => $varid.$id,
+                'qty'           => $value.$id,
+                'price'         => $input['bprice'][$varid],
+            ];
+
+            // Save Data Purchase Detail
+            $PurchasedetailModel->save($datadetail);
+        }
+
+        // return
+        return redirect()->back()->withInput()->with('message', lang('Global.saved'));
+    }
+
     public function cancelpur($id)
     {
         // calling Model
