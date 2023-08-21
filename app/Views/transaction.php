@@ -31,6 +31,8 @@
         <link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
         <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
         <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
+        <script src="js/jquery.validate.min.js"></script>  
+        
         <style type="text/css">
             .dummyproduct{fill:#666666;}
         </style>
@@ -161,7 +163,7 @@
                     <div class="uk-modal-header">
                         <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.detailOrder');?></h5>
                     </div>
-                    <form class="uk-form-stacked" name="order" id="order" role="form" method="post">
+                    <form class="uk-form-stacked" name="order" action="pay/create" id="order" role="form" method="post">
                         <?= csrf_field() ?>
                         
                         <?php foreach ($outlets as $outlet){ 
@@ -244,7 +246,7 @@
                             <div id="paymentmethod" class="uk-margin">
                                 <h4 class="uk-margin-remove"><?=lang('Global.paymethod')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <select class="uk-select" id="payment" name="payment" required>
+                                    <select class="uk-select" id="payment" name="payment" required/>
                                         <option value="" selected disabled hidden>-- <?=lang('Global.paymethod')?> --</option>
                                         <?php
                                         foreach ($payments as $pay) {
@@ -358,7 +360,7 @@
                             </div>
                             <div class="uk-margin uk-flex uk-flex-center">
                                 <button type="submit" id="pay" class="uk-button uk-button-primary uk-button-large uk-text-center" style="border-radius: 8px; width: 260px;" disabled><?=lang('Global.pay')?></button>
-                                <button type="submit" id="save" class="uk-button uk-button-danger uk-button-large uk-text-center uk-margin-small-left" style="border-radius: 8px; width: 260px;" disabled><span uk-icon="icon:  pull"></span><?=lang('Global.save')?></button>
+                                <button type="submit" id="save" class="uk-button uk-button-danger uk-button-large uk-text-center uk-margin-small-left" style="border-radius: 8px; width: 260px;" disabled><span uk-icon="icon:  pull"></span><?=lang('Global.book')?></button>
                             </div>
                         </div>
                     </form>
@@ -1025,6 +1027,29 @@
         </main>
         <!-- Main Section end -->
 
+        <!-- Modal
+        <div id="success_tic" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+            Modal content-->
+                <!-- <div class="modal-content">
+                    <a class="close" href="#" data-dismiss="modal">&times;</a>
+                    <div class="page-body">
+                        <div class="head">  
+                            <h3 style="margin-top:5px;">Lorem ipsum dolor sit amet</h3>
+                            <h4>Lorem ipsum dolor sit amet</h4>
+                        </div>
+                        <h1 style="text-align:center;">
+                            <div class="checkmark-circle">
+                                <div class="background"></div>
+                                <div class="checkmark draw"></div>
+                            </div>
+                        <h1>
+                    </div>
+                </div>
+            </div>
+        </div> --> 
+
+
         <!-- Footer Section -->
         <footer class="tm-footer" style="background-color:#000;">
             <ul class="uk-flex-around tm-trx-tab" uk-tab uk-switcher="connect: .switcher-class; active: 1;">
@@ -1050,6 +1075,80 @@
         </footer>
         <!-- Footer Section end -->
         
+
+
+        <div id="modalsucces" uk-modal >
+            <div class="uk-modal-dialog">
+                <button class="uk-modal-close-default" type="button" uk-close></button>
+                <div class="uk-modal-body">
+                <div class="page-body">
+                    <div id="success_tic" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="page-body">
+                                    <div class="head">  
+                                        <h3 style="margin-top:5px;">Transaction Success</h3>
+                                        <?php foreach ($stocks as $t){ ?>
+                                        <h4> <?=$t['qty']?></h4>
+                                        <?php }?>
+                                    </div>
+                                    <h1 style="text-align:center;">
+                                        <div class="checkmark-circle">
+                                            <div class="background"></div>
+                                            <div class="checkmark draw"></div>
+                                        </div>
+                                    <h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-modal-footer">
+                    <div class="uk-margin uk-flex uk-flex-center">
+                        <button class="uk-button uk-button-primary uk-button-large uk-text-center uk-margin-small-left" type="button" style="border-radius: 8px; width: 260px;">send</button>
+                        <a href="#modalinvoice" class="uk-button uk-button-danger uk-button-large uk-text-center uk-margin-small-left" style="border-radius: 8px; width: 260px;" uk-toggle>Print</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="modalinvoice" uk-modal>
+            <div class="uk-modal-dialog">
+                <button class="uk-modal-close-default" type="button" uk-close></button>
+                <div class="uk-modal-header">
+                    <h2 class="uk-modal-title">invoice</h2>
+                </div>
+                <div class="uk-modal-body">
+                <table class="uk-table uk-table-divider">
+                    <thead>
+                        <tr>
+                            <th class="uk-table" style="color:black">Product</th>
+                            <th class="uk-table-expand" style="color:black">Qty</th>
+                            <th class="uk-width-small"  style="color:black">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Oat Drips Banana</td>
+                            <td>3</td>
+                            <td>Rp.90.000,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                    <a href="pay/invoice/$1" class="uk-button uk-button-primary">Print</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- <script type="text/javascript">
+            var transactionid;
+            transactionid = < echo $transactionid ?>;
+        </script> -->
+        
+
         <script>
             var subtotalelem = document.getElementById('subtotal');
             var disctypeval = 0;
@@ -1057,6 +1156,18 @@
             var poin = 0;
             var memberdisc = 0;
             var min = 0;
+
+            function loadContent(){
+                var xhr = new XMLHttpRequest();
+                var url = "pay.php";
+            xhr.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status == 200){
+                   console.log(this.responseText);
+                }
+            };
+                xhr.open("GET", url, true);
+                xhr.send();
+            }
             $('#products').on('DOMSubtreeModified', function() {
                 var prices = document.querySelectorAll("div[name='price[]']");
                 var discvars = document.querySelectorAll(".varprice");
@@ -1084,13 +1195,25 @@
                     document.getElementById('subtotal').innerHTML = subtotal - discountvar;
                 }
                 $(document).ready(function() {
+                    var xhr = new XMLHttpRequest();
+                    var url = "pay/create";    
+
+                    xhr.onreadystatechange = function(){
+                        if(this.readyState == 4 && this.status == 200){  
+                            console.log(this.responseText);
+                        }
+                    };
+
+                    xhr.open("GET", url, false);
+                    xhr.send();
+
                     $(".varprice").keyup(function(){
-                            var prices = document.querySelectorAll("div[name='price[]']");
-                            var discvars = document.querySelectorAll(".varprice");
-                            
-                            var subarr = [];
-                            var discarr = [];
-                            
+                        var prices = document.querySelectorAll("div[name='price[]']");
+                        var discvars = document.querySelectorAll(".varprice");
+                        
+                        var subarr = [];
+                        var discarr = [];
+                        
                             for (i = 0; i < prices.length; i++) {
                                 price = Number(prices[i].innerText);
                                 subarr.push(price);
@@ -1113,16 +1236,25 @@
                             
                             if (document.getElementById('subtotal').innerHTML < min ){
                             document.getElementById('subtotal').innerHTML = "Sorry Price To Low!"; 
-                        }
+                            }
                     }); 
+
                     $('#pay').click(function(){
                         $('#order').attr('action', "/pay/create");
+                        $("#order").validate({
+                            required: true,
+                        });
                         $('#order').submit();
+                        UIkit.modal('#modalsucces').toggle(); 
                     });
-
+                    
                     $('#save').click(function(){
                         $('#order').attr('action', "/pay/save");
+                        $("#order").validate({
+                            required: true,
+                        });
                         $('#order').submit();
+                        $('#modalsucces').show();
                     });
                     console.log( "ready!" );
                    
@@ -1206,29 +1338,21 @@
 
                 // Pay button
                 var buttonpay = document.getElementById('pay');
+                var buttonsave = document.getElementById('save');
                 if (paidprice >= 0) {
                     buttonpay.removeAttribute('disabled');
+                    buttonsave.removeAttribute('disabled', '');
                     var printprice = paidprice;
                 } else {
                     buttonpay.setAttribute('disabled', '');
+                    buttonsave.setAttribute('disabled', '');
                     var printprice = "Sorry Price To Low!";
-                    // document.getElementById('finalprice').innerHTML = "Sorry Price To Low!";
                 }
 
                 var pay = document.getElementById('value').value;
                 var firstpay = document.getElementById('firstpay').value;
                 var secondpay = document.getElementById('secondpay').value;
 
-                // Save button
-                var buttonpay = document.getElementById('save');
-                if (paidprice >= 0) {
-                    buttonpay.removeAttribute('disabled');
-                    var printprice = paidprice;
-                } else {
-                    buttonpay.setAttribute('disabled', '');
-                    var printprice = "Sorry Price To Low !";
-                    // document.getElementById('finalprice').innerHTML = "Sorry Price To Low!";
-                }
 
                 var pay = document.getElementById('value').value;
                 var firstpay = document.getElementById('firstpay').value;

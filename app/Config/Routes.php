@@ -195,7 +195,18 @@ $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->get('', 'Pay::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('create', 'Pay::index',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('create', 'Pay::create',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->post('save', 'Pay::save',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('pay', 'Pay::pay',['filter'=> 'role:owner,supervisor,operator']);
+});
+
+// Sop Routes
+$routes->group('sop', ['filter'=>'login'], function($routes){
+    $routes->get('', 'Sop::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('create', 'Sop::index',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Sop::create',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->post('createtodo', 'Sop::createtodo',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->post('save', 'Sop::save',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->post('delete', 'Sop::delete',['filter' => 'role:owner']);
 });
 
 // Restock Routes

@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\PresenceModel;
 use App\Models\UserModel;
-
+use App\Models\SopModel;
 
 class Presence extends BaseController
 {
@@ -12,7 +12,8 @@ class Presence extends BaseController
     {
         // Calling Models
         $PresenceModel      = new PresenceModel();
-        $UserModel          = new PresenceModel();
+        $UserModel          = new UserModel();
+        $SopModel           = new SopModel();
 
         // Populating Data
         $presence    = $PresenceModel->findAll();
@@ -24,6 +25,7 @@ class Presence extends BaseController
         $data['description']    = lang('Global.presenceListDesc');
         $data['presences']      = $presence;
         $data['users']          = $users;
+        $data['sops']           = $SopModel->findAll();
 
         return view('Views/presence', $data);
     }
@@ -83,6 +85,7 @@ class Presence extends BaseController
         $PresenceModel->insert($data);
 
         return redirect()->back()->with('message', lang('Global.saved'));
+        // return view ('sop', $data);
     }
 
 }

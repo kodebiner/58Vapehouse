@@ -14,12 +14,14 @@ use App\Models\PaymentModel;
 use App\Models\ProductModel;
 use App\Models\StockModel;
 use App\Models\VariantModel;
+use App\Models\BookingModel;
+use App\Models\BookingdetailModel;
 use App\Models\TransactionModel;
 use App\Models\TrxdetailModel;
 use App\models\TrxpaymentModel;
-
 class Pay extends BaseController
 {
+    
     public function index()
     {
         $db      = \Config\Database::connect();
@@ -27,6 +29,8 @@ class Pay extends BaseController
         // Calling Models
         $BundleModel            = new BundleModel();
         $BundledetModel         = new BundledetailModel();
+        $BookingModel           = new BookingModel();
+        $BookingdetailModel     = new BookingdetailModel();
         $CashModel              = new CashModel();
         $OutletModel            = new OutletModel();
         $UserModel              = new UserModel();
@@ -61,7 +65,7 @@ class Pay extends BaseController
         $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
         $bundleVariants     = $bundleBuilder->get();
 
-
+       
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.transaction');
@@ -78,6 +82,7 @@ class Pay extends BaseController
         $data['stocks']         = $stocks;
         $data['trxdetails']     = $trxdetails;
         $data['trxpayments']    = $trxpayments;
+        $data['bookings']       = $BookingModel->findAll();
         $data['bundleVariants'] = $bundleVariants->getResult();
 
         return view('Views/transaction', $data);
@@ -88,6 +93,8 @@ class Pay extends BaseController
         // Calling Models
         $BundleModel            = new BundleModel();
         $BundledetModel         = new BundledetailModel();
+        $BookingModel           = new BookingModel();
+        $BookingdetailModel     = new BookingdetailModel();
         $CashModel              = new CashModel();
         $DebtModel              = new DebtModel();
         $GconfigModel           = new GconfigModel();
@@ -102,6 +109,7 @@ class Pay extends BaseController
         $TrxdetailModel         = new TrxdetailModel();
         $TrxpaymentModel        = new TrxpaymentModel();
         $MemberModel            = new MemberModel();
+        $TransactionModel       = new TransactionModel();
 
         // Getting Inputs
         $input = $this->request->getPost();
@@ -291,7 +299,7 @@ class Pay extends BaseController
 
         //Insert Trx Payment 
         $total = $subtotal - $discount - (int)$input['poin'] - $memberdisc + $ppn;
-        if(!isset($input['firstpayment'])&& !isset($input['secpayment'])){
+        if(!isset($input['firstpayment'])&& !isset($input['secpayment']) && isset($input['payment'])){
             $paymet = [
                 'paymentid'     => $input['payment'],
                 'transactionid' => $trxId,
@@ -299,7 +307,7 @@ class Pay extends BaseController
             ];
             $TrxpaymentModel->save($paymet);
 
-        }else{
+        }elseif(isset($input['firstpayment'])&& isset($input['secpayment']) && !isset($input['payment'])){
             // Split Payment Method
             // First payment
             $paymet = [
@@ -316,7 +324,6 @@ class Pay extends BaseController
                 'value'         =>$input['secondpay'],
             ];
             $TrxpaymentModel->save($pay);
-
         }
         
         // Insert Cash
@@ -382,9 +389,272 @@ class Pay extends BaseController
                 'deadline'      => $input['duedate'],
             ];
             $DebtModel->save($debt);
-        } 
+        }
+
+        $db      = \Config\Database::connect();
+        // Populating Data
+        $bundles            = $BundleModel->findAll();
+        $bundets            = $BundledetModel->findAll();
+        $Cash               = $CashModel->findAll();
+        $outlets            = $OutletModel->findAll();
+        $users              = $UserModel->findAll();
+        $customers          = $MemberModel->findAll();
+        $payments           = $PaymentModel->findAll();
+        $products           = $ProductModel->findAll();
+        $variants           = $VariantModel->findAll();
+        $stocks             = $StockModel->findAll();
+        $transactions       = $TransactionModel->findAll();
+        $trxdetails         = $TrxdetailModel->findAll();
+        $trxpayments        = $TrxpaymentModel->findAll();
+
+        $bundleBuilder      = $db->table('bundledetail');
+        $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
+        $bundleVariants     = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
+        $bundleVariants     = $bundleBuilder->get();
+
+        $data                   = $this->data;
+        $data['title']          = lang('Global.transaction');
+        $data['description']    = lang('Global.transactionListDesc');
+        $data['bundles']        = $bundles;
+        $data['bundets']        = $bundets;
+        $data['cash']           = $Cash;
+        $data['transactions']   = $transactions;
+        $data['outlets']        = $outlets;
+        $data['payments']       = $payments;
+        $data['customers']      = $customers;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['stocks']         = $stocks;
+        $data['trxdetails']     = $trxdetails;
+        $data['trxpayments']    = $trxpayments;
+        $data['bookings']       = $BookingModel->findAll();
+        $data['bundleVariants'] = $bundleVariants->getResult();
+        $data['transactionid']  = $trxId;
+
+        $transactionx += $trxId;
+         
+        // return view('Views/transaction', $data);
         return redirect()->back()->with('message', lang('Global.saved'));
+        // return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+
+    }
+
+    public function save()
+    {
+         // Calling Models
+         $BundleModel            = new BundleModel();
+         $BundledetModel         = new BundledetailModel();
+         $CashModel              = new CashModel();
+         $DebtModel              = new DebtModel();
+         $GconfigModel           = new GconfigModel();
+         $OutletModel            = new OutletModel();
+         $UserModel              = new UserModel();
+         $MemberModel            = new MemberModel();
+         $PaymentModel           = new PaymentModel();
+         $ProductModel           = new ProductModel();
+         $VariantModel           = new VariantModel();
+         $StockModel             = new StockModel();
+         $BookingModel           = new BookingModel();
+         $BookingdetailModel     = new BookingdetailModel();
+         $TransactionModel       = new TransactionModel();
+         $TrxdetailModel         = new TrxdetailModel();
+         $TrxpaymentModel        = new TrxpaymentModel();
+         $MemberModel            = new MemberModel();
+ 
+         // Getting Inputs
+         $input = $this->request->getPost();
+ 
+         // Populating Data
+         $date           = date('Y-m-d H:i:s');
+         $Gconfig        = $GconfigModel->first();
+         $customers      = $MemberModel->findAll();
+         
+         // Inserting Transaction
+         $varvalues = array();
+         $bundvalues = array();
+         
+         // dd($input);
+         if (!empty($input['qty'])) {
+             foreach ($input['qty'] as $varid => $varqty) {
+                 $variant = $VariantModel->find($varid);
+ 
+                 $discvar = (int)$input['varprice'][$varid]  * $varqty;
+                 $discbargain = (int)$input['varbargain'][$varid]* $varqty;
+                 // Bargain And Varprice Added
+                 if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
+                     $varvalues[]  = $discbargain - $discvar;
+                     // Vaprice Added And Null Bargain
+                 }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
+                     $varvalues[]  = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar;
+                     // Bargain Added And Null Varprice
+                 }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
+                     $varvalues[]  = $discbargain;
+                     // Null Bargain & Varprice
+                 }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
+                     $varvalues[] = $varqty * ($variant['hargamodal'] + $variant['hargajual']);
+                 }
+             }
+         } else {
+             $varvalues[] = '0';
+         }
+         
+        
+         if (!empty($input['bqty'])) {
+             foreach ($input['bqty'] as $bunid => $bundqty) {
+                 $bundle = $BundleModel->find($bunid);
+                 $bundvalues[] = $bundqty * $bundle['price'];
+             }
+         } else {
+             $bundvalues[] = '0';
+         }
+ 
+         $varvalue = array_sum($varvalues);
+         $bundvalue = array_sum($bundvalues);
+         
+         $subtotal = $varvalue + $bundvalue;
+         
+         if ($input['customerid'] != '0') {
+             $memberid = $input['customerid'];
+             if ($this->data['gconfig']['memberdisctype'] === '0') {
+                 $memberdisc = $this->data['gconfig']['memberdisc'];
+             } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+                 $memberdisc = ($this->data['gconfig']['memberdisc']/100) * $subtotal;
+             }
+         } else {
+             $memberid = '';
+             $memberdisc = 0;
+         }
+         
+         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
+             $discount = $input['discvalue'];
+         } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
+             $discount = ($input['discvalue']/100) * $subtotal;
+         } else {
+             $discount = 0;
+         }
+ 
+         if (!empty($input['poin'])) {
+             $poin = $input['poin'];
+         } else {
+             $poin = 0;
+         }
+         
+         $value = $subtotal - $memberdisc - $discount - $poin;
+         
+         $book = [
+             'outletid'      => $this->data['outletPick'],
+             'userid'        => $this->data['uid'],
+             'memberid'      => $memberid,
+             'value'         => $value,
+             'disctype'      => $input['disctype'],
+             'discvalue'     => $input['discvalue'],
+         ];
+         $BookingModel->insert($book);
+         $bookId = $BookingModel->getInsertID();
+         
+         // Booking Detail & Stock
+         if (!empty($input['qty'])) {
+             foreach ($input['qty'] as $varid => $varqty) {
+                 $variant = $VariantModel->find($varid);
+ 
+                     $discvar = (int)$input['varprice'][$varid] * $varqty;
+                     $discbargain = (int)$input['varbargain'][$varid]* $varqty;
+                     // Bargain And Varprice Added
+                     if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
+                         $varPrice  = ($discbargain - $discvar)/$varqty;
+                         // Vaprice Added And Null Bargain
+                     }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
+                         $varPrice  = (($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar) / $varqty;
+                         // Bargain Added And Null Varprice
+                     }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
+                         $varPrice  = $discbargain / $varqty;
+                         // Null Bargain & Varprice
+                     }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
+                         $varPrice = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) / $varqty;
+                     }
+ 
+                 $trxvar = [
+                     'bookingid'     => $bookId,
+                     'variantid'     => $varid,
+                     'qty'           => $varqty,
+                     'value'         => $varPrice,
+                 ];
+                 $BookingdetailModel->save($trxvar);
+ 
+                 $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
+                 $saleVarStock = [
+                     'id'        => $stock['id'],
+                     'sale'      => $date,
+                     'qty'       => $stock['qty'] - $varqty
+                 ];
+                 $StockModel->save($saleVarStock);                
+             }
+         }
+         
+         if (!empty($input['bqty'])) {
+             foreach ($input['bqty'] as $bunid => $bunqty) {
+                 $bundle = $BundleModel->find($bunid);
+                 $trxbun = [
+                     'bookingid'     => $bookId,
+                     'bundleid'      => $bunid,
+                     'qty'           => $bunqty,
+                     'value'         => $bundle['price'] * $bunqty
+                 ];
+                 $BookingdetailModel->save($trxbun);
+ 
+                 $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
+                 foreach ($bundledetail as $BundleDetail) {
+                     $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
+                     $saleBunStock = [
+                         'id'        => $bunstock['id'],
+                         'sale'      => $date,
+                         'qty'       => $bunstock['qty'] - $bunqty
+                     ];
+                     $StockModel->save($saleBunStock);
+                     
+                 }
+             }
+         }
+         return redirect()->back()->with('message', lang('Global.saved'));
+    }
+
+    function invoice($id)
+    {
+		$transaksiModel = new \App\Models\TransaksiModel();
+		$transaksi = $transaksiModel->find($id);
+
+		$memberModel = new \App\Models\MemberModel();
+		$pembeli = $memberModel->find($transaksi->memberid);
+
+		$variantModel = new \App\Models\VariantModel();
+		$variant = $variantModel->find($transaksi->variantid);
+
+		$html = view('transaksi/invoice',[
+			'transaksi'=> $transaksi,
+			'pembeli' => $pembeli,
+			'barang' => $barang,
+		]);
+
+		$pdf = new TCPDF('L', PDF_UNIT, 'A5', true, 'UTF-8', false);
+
+		$pdf->SetCreator(PDF_CREATOR);
+		$pdf->SetAuthor('58 Vape House');
+		$pdf->SetTitle('Invoice');
+		$pdf->SetSubject('Invoice');
+
+		$pdf->setPrintHeader(false);
+		$pdf->setPrintFooter(false);
+
+		$pdf->addPage();
+
+		// output the HTML content
+		$pdf->writeHTML($html, true, false, true, false, '');
+		//line ini penting
+		$this->response->setContentType('application/pdf');
+		//Close and output PDF document
+		$pdf->Output('invoice.pdf', 'I');
     }
 }
-
 ?>

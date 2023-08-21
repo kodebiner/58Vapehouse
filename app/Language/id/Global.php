@@ -104,6 +104,7 @@ return [
     'cancel'            => 'Dibatalkan',
     'pending'           => 'Sedang Diproses',
     'confirmation'      => 'Konfirmasi',
+    'shift'             => 'peralihan',
 
     // Button
     'edit'              => 'Ubah',
@@ -132,6 +133,8 @@ return [
     'percent'           => '%',
     'rp'                => 'Rp',
     'readyAdd'          => 'Sudah Ditambahkan!',
+    'book'              => 'Pesan',
+    'addsop'            => 'Tambah Sop',
 
     // Menu
     'dashboard'         => 'Dasbor',

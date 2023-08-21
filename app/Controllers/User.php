@@ -17,11 +17,11 @@ class User extends BaseController
 
     public function __construct()
     {
-        $this->db      = \Config\Database::connect();
-        $validation = \Config\Services::validation();
-        $this->builder =   $this->db->table('users');
-        $this->config = config('Auth');
-        $this->auth   = service('authentication');
+        $this->db       = \Config\Database::connect();
+        $validation     = \Config\Services::validation();
+        $this->builder  = $this->db->table('users');
+        $this->config   = config('Auth');
+        $this->auth     = service('authentication');
 
         
     }
@@ -29,9 +29,9 @@ class User extends BaseController
     public function index()
     {
         // Calling Model
-        $GroupModel     = new GroupModel();
-        $OutletModel    = new OutletModel();
-        $OutletAccessModel   = new OutletaccessModel();
+        $GroupModel             = new GroupModel();
+        $OutletModel            = new OutletModel();
+        $OutletAccessModel      = new OutletaccessModel();
 
 
         // Populating data

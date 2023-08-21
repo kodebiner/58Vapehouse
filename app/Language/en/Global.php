@@ -104,6 +104,7 @@ return [
     'cancel'            => 'Canceled',
     'pending'           => 'Order Processed',
     'confirmation'      => 'Confirmation',
+    'shift'              =>'Shift',
     
 
     // Button
@@ -133,6 +134,8 @@ return [
     'percent'           => '%',
     'rp'                => 'Rp',
     'readyAdd'          => 'Already added!',
+    'book'              => 'Booking',
+    'addsop'            => 'Add Sop',
     
 
     // Menu
