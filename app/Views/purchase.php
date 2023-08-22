@@ -758,8 +758,8 @@ foreach ($purchases as $purchase) { ?>
 
                                                                 const total = document.createElement('input');
                                                                 total.setAttribute('type', 'number');
-                                                                total.setAttribute('id', "totalpcs[<?=$variant['id']?>]");
-                                                                total.setAttribute('name', "totalpcs[<?=$variant['id']?>]");
+                                                                total.setAttribute('id', "addtotalpcs[<?=$variant['id']?>]");
+                                                                total.setAttribute('name', "addtotalpcs[<?=$variant['id']?>]");
                                                                 total.setAttribute('class', 'uk-input');
                                                                 total.setAttribute('value', '1');
                                                                 total.setAttribute('required', '');
@@ -773,8 +773,8 @@ foreach ($purchases as $purchase) { ?>
 
                                                                 const price = document.createElement('input');
                                                                 price.setAttribute('type', 'number');
-                                                                price.setAttribute('id', "bprice[<?=$variant['id']?>]");
-                                                                price.setAttribute('name', "bprice[<?=$variant['id']?>]");
+                                                                price.setAttribute('id', "addbprice[<?=$variant['id']?>]");
+                                                                price.setAttribute('name', "addbprice[<?=$variant['id']?>]");
                                                                 price.setAttribute('class', 'uk-input');
                                                                 price.setAttribute('value', '<?= $basePrice; ?>');
                                                                 price.setAttribute('required', '');
@@ -831,11 +831,11 @@ foreach ($purchases as $purchase) { ?>
                                                     <div class=""><?= $product['name'].' - '.$variant['name'] ?></div>
                                                 </div>
                                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                                                    <input class="uk-input" type="number" id="totalpcs[<?=$variant['id']?>]" name="totalpcs[<?=$variant['id']?>]" value="<?= $purdet['qty'] ?>" required />
+                                                    <input class="uk-input" type="number" id="totalpcs[<?=$purdet['id']?>]" name="totalpcs[<?=$purdet['id']?>]" value="<?= $purdet['qty'] ?>" required />
                                                     <div class="uk-margin-small-left">Pcs</div>
                                                 </div>
                                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                                                    <input class="uk-input" type="number" id="bprice[<?=$variant['id']?>]" name="bprice[<?=$variant['id']?>]" value="<?= $purdet['price'] ?>" required />
+                                                    <input class="uk-input" type="number" id="bprice[<?=$purdet['id']?>]" name="bprice[<?=$purdet['id']?>]" value="<?= $purdet['price'] ?>" required />
                                                 </div>
                                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center subvariant<?= $purchase['id'] ?>" id="subtotal<?= $purdet['id'] ?>">
                                                     <?= $purdet['price'] * $purdet['qty'] ?>
@@ -844,8 +844,8 @@ foreach ($purchases as $purchase) { ?>
 
                                             <script type="text/javascript">
 
-                                                var total<?= $purdet['id'] ?> = document.getElementById('totalpcs[<?=$variant['id']?>]');
-                                                var price<?= $purdet['id'] ?> = document.getElementById('bprice[<?=$variant['id']?>]');
+                                                var total<?= $purdet['id'] ?> = document.getElementById('totalpcs[<?=$purdet['id']?>]');
+                                                var price<?= $purdet['id'] ?> = document.getElementById('bprice[<?=$purdet['id']?>]');
 
                                                 total<?= $purdet['id'] ?>.addEventListener('change', totalprice<?= $purdet['id'] ?>);
                                                 price<?= $purdet['id'] ?>.addEventListener('change', totalprice<?= $purdet['id'] ?>);

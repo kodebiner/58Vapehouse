@@ -338,27 +338,33 @@ class Stock extends BaseController
             'userid'                => $this->data['uid'],
             'supplierid'            => $input['supplierid'.$id],
             'date'                  => $tanggal,
-            'status'                => "0",
         ];
 
         // Save Data Purchase
         $PurchaseModel->save($data);
 
-        // Get Purchase ID
-        $purchaseid = $PurchaseModel->getInsertID();
-
         // Purchase Detail
         foreach ($input['totalpcs'] as $varid => $value) {
             $datadetail   = [
-                'id'            => $id,
-                'purchaseid'    => $purchaseid,
-                'variantid'     => $varid.$id,
-                'qty'           => $value.$id,
+                'id'            => $varid,
+                'qty'           => $value,
                 'price'         => $input['bprice'][$varid],
             ];
 
             // Save Data Purchase Detail
             $PurchasedetailModel->save($datadetail);
+        }
+
+        foreach ($input['addtotalpcs'] as $var => $val) {
+            $adddata = [
+                'purchaseid'    => $id,
+                'variantid'     => $var,
+                'qty'           => $val,
+                'price'         => $input['addbprice'][$var],
+            ];
+
+            // Save Data Purchase Detail
+            $PurchasedetailModel->save($adddata);
         }
 
         // return
