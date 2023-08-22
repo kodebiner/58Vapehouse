@@ -114,11 +114,15 @@ class Sop extends BaseController
 
         // initialize
         $input      = $this->request->getPost();
-
+        
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
-        foreach ($input['sopid'] as $sopid ){
-            foreach ($input['status'] as $status){
+
+        $x = $input['sopid'];
+        $y = $input['status'];
+        
+        foreach ($x as $sopid){
+            foreach ($y as $status){
                 $data = [
                     'sopid'      => $sopid,
                     'userid'     => $this->data['uid'],

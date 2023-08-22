@@ -47,8 +47,6 @@ class User extends BaseController
         $query =   $this->builder->get();
 
         
-        
-        
         // Parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.employeeList');

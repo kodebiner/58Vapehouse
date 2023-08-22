@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class SopDetailModel extends Model
 {
     protected $allowedFields = [
-        'sopid','userid','status','dates',
+        'sopid','userid','status','date',
     ];
 
     protected $table      = 'sopdetail';

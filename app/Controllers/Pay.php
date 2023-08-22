@@ -656,5 +656,9 @@ class Pay extends BaseController
 		//Close and output PDF document
 		$pdf->Output('invoice.pdf', 'I');
     }
+
+    public function topup(){
+        
+    }
 }
 ?>

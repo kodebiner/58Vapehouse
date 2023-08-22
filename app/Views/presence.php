@@ -89,9 +89,9 @@
                     <?php if ($sop['shift'] === "0") { ?>
                         <div class="uk-margin">
                             <label class="uk-form-label" for="form-horizontal-text"><?= $sop['name'] ?></label>
-                            <input type="text" name="sopid" value="<?=$sop['id']?>" hidden>
+                            <input type="text" name="sopid[<?= $sop['id']; ?>]" value="<?=$sop['id']?>" hidden>
                             <div class="uk-form-controls">
-                                <input class="uk-checkbox" type="checkbox" name="status" value="1">
+                                <input class="uk-checkbox" type="checkbox"  name="status[<?= $sop['id']; ?>]" value="1">
                             </div>
                         </div>
                     <?php } ?>
@@ -113,23 +113,24 @@
             <h2 class="uk-modal-title">Shift 2</h2>
         </div>
         <div class="uk-modal-body">
-            <form class="uk-form-horizontal uk-margin-large" action="sop/createtodo">
+        <form class="uk-form-horizontal uk-margin-large" action="sop/createtodo" method="post">
                 <?php foreach ($sops as $sop){?>
                     <?php if ($sop['shift'] === "1") { ?>
                         <div class="uk-margin">
                             <label class="uk-form-label" for="form-horizontal-text"><?= $sop['name'] ?></label>
+                            <input type="text" name="sopid[<?= $sop['id']; ?>]" value="<?=$sop['id']?>" hidden>
                             <div class="uk-form-controls">
-                                <input class="uk-checkbox" name="<?=$sop['id']?>" value="1" type="checkbox" required>
+                                <input class="uk-checkbox" type="checkbox"  name="status[<?= $sop['id']; ?>]" value="1">
                             </div>
                         </div>
                     <?php } ?>
                 <?php } ?>
-            </form>
-        </div>
-        <div class="uk-modal-footer uk-text-right">
-            <button class="uk-button uk-button-primary uk-button-default uk-modal-close" type="submit" value="submit">submit</button>
-            <a href="#modal-group-1" class="uk-button uk-button-primary" uk-toggle>Previous</a>
-        </div>
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button class="uk-button uk-button-primary" type="submit" value="submit">submit</button>
+                <a href="#modal-group-1" class="uk-button uk-button-primary" uk-toggle>Previous</a>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -164,7 +165,7 @@
             var pos = position.coords.latitude +','+position.coords.longitude;
             $(".loc").val(pos);
         }
-
+        
         function showError(error) {
             switch(error.code) {
                 case error.PERMISSION_DENIED:

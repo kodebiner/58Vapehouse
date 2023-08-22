@@ -67,10 +67,73 @@
                     
                     <!-- Navbar Right -->
                     <div class="uk-navbar-right">
-                        <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="35" height="35" style="color: #fff;"></a>
+                        <a class="uk-button uk-button-text" href="#modal-sections" uk-toggle>Top Up Point</a>
+                        <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="35" height="35" style="color: #fff;"></button>
                     </div>
                     <!-- Navbar Right End -->
-
+                    <!-- modal -->
+                    <div id="modal-sections" uk-modal>
+                        <div class="uk-modal-dialog">
+                            <button class="uk-modal-close-default" type="button" uk-close></button>
+                            <div class="uk-modal-header">
+                                <h2 class="uk-modal-title">Top Up Point</h2>
+                            </div>
+                            <div class="uk-modal-body">
+                                <form class="uk-form-horizontal uk-margin-large" action="sop/createtodo" method="post">
+                                    <div class="uk-margin">
+                                        <label class="uk-form-label" for="form-horizontal-text">Name</label>
+                                        <div class="uk-form-controls">
+                                            <div class="uk-inline uk-width-1-1">
+                                                <span class="uk-form-icon" uk-icon="icon: user"></span>
+                                                <input class="uk-input ui-autocomplete-input1" type="text" id="customer" name="customer" aria-label="Not clickable icon">
+                                                <input id="customerid" name="customerid" hidden />
+                                            </div>
+                                        </div>                                    
+                                    </div>
+                                    <script type="text/javascript">
+                                        $(function() {
+                                            var customerList = [
+                                                {label: "Non Member", idx:0},
+                                                <?php
+                                                    foreach ($customers as $customer) {
+                                                        echo '{label:"'.$customer['name'].'",idx:'.$customer['id'].'},';
+                                                    }
+                                                ?>
+                                            ];
+                                            $("#customer").autocomplete({
+                                                source: customerList,
+                                                select: function(e, i) {
+                                                    $("#customerid").val(i.item.idx);
+                                                },
+                                                minLength: 1
+                                            });
+                                        });
+                                    </script>
+                                    <div class="uk-margin">
+                                    <label class="uk-form-label" for="form-horizontal-text">Value</label>
+                                        <div class="uk-form-controls">
+                                            <div class="uk-inline uk-width-1-1">
+                                                <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
+                                                <input class="uk-input ui-autocomplete-input" min="0" name="value" type="number" aria-label="Not clickable icon">
+                                            </div>
+                                        </div>
+                                    <div class="uk-margin">
+                                    <label class="uk-form-label" for="form-horizontal-text">Description</label>
+                                        <div class="uk-form-controls">
+                                            <div class="uk-inline uk-width-1-1">
+                                                <textarea class="uk-textarea" rows="5" placeholder="Description" name="description" aria-label="Textarea"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="uk-modal-footer uk-text-right">
+                                <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                                <button class="uk-button uk-button-primary" type="button">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end modal -->
                 </div>
             </div>
         </header>
