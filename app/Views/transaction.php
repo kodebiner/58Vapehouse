@@ -79,13 +79,13 @@
                                 <h2 class="uk-modal-title">Top Up Point</h2>
                             </div>
                             <div class="uk-modal-body">
-                                <form class="uk-form-horizontal uk-margin-large" action="sop/createtodo" method="post">
+                                <form class="uk-form-horizontal uk-margin-large" action="pay/topup" method="post">
                                     <div class="uk-margin">
                                         <label class="uk-form-label" for="form-horizontal-text">Name</label>
                                         <div class="uk-form-controls">
                                             <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon" uk-icon="icon: user"></span>
-                                                <input class="uk-input ui-autocomplete-input1" type="text" id="customer" name="customer" aria-label="Not clickable icon">
+                                                <input class="uk-input ui-autocomplete-input1" type="text" placeholder="Name" id="customer" name="customer" aria-label="Not clickable icon">
                                                 <input id="customerid" name="customerid" hidden />
                                             </div>
                                         </div>                                    
@@ -110,15 +110,34 @@
                                         });
                                     </script>
                                     <div class="uk-margin">
-                                    <label class="uk-form-label" for="form-horizontal-text">Value</label>
+                                        <label class="uk-form-label" for="form-horizontal-text">Value</label>
+                                        <div class="uk-form-controls">
+                                            <div class="uk-inline uk-width-1-1">
+                                                <span class="uk-form-icon" uk-icon="icon: database"></span>
+                                                <input class="uk-input" min="0" name="value" type="number" placeholder="Point" aria-label="Not clickable icon">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="uk-margin">
+                                        <label class="uk-form-label" for="form-horizontal-text">Payment</label>
                                         <div class="uk-form-controls">
                                             <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
-                                                <input class="uk-input ui-autocomplete-input" min="0" name="value" type="number" aria-label="Not clickable icon">
+                                                <select class="uk-select uk-input" id="payment" name="payment" required/>
+                                                    <option value="" selected disabled hidden><?=lang('global.payment')?></option>
+                                                    <?php
+                                                    foreach ($payments as $pay) {
+                                                        if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
+                                                            echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
                                             </div>
                                         </div>
+                                    </div>
                                     <div class="uk-margin">
-                                    <label class="uk-form-label" for="form-horizontal-text">Description</label>
+                                        <label class="uk-form-label" for="form-horizontal-text">Description</label>
                                         <div class="uk-form-controls">
                                             <div class="uk-inline uk-width-1-1">
                                                 <textarea class="uk-textarea" rows="5" placeholder="Description" name="description" aria-label="Textarea"></textarea>
@@ -128,8 +147,7 @@
                                 </form>
                             </div>
                             <div class="uk-modal-footer uk-text-right">
-                                <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-                                <button class="uk-button uk-button-primary" type="button">Save</button>
+                                <button class="uk-button uk-button-primary" type="submit" value="submit">Save</button>
                             </div>
                         </div>
                     </div>

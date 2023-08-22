@@ -659,6 +659,48 @@ class Pay extends BaseController
 
     public function topup(){
         
+        // Declaration Model
+        $MemberModel    = new MemberModel;
+        $TrxotherModel  = new TrxotherModel;
+        $CashModel      = new CashModel;
+
+        // Get Data
+        $cashin = $TrxotherModel->findAll();
+        $cash   = $CashModel->findAll();
+        $input = $this->request->getPost();
+        $date=date_create();
+        $tanggal = date_format($date,'Y-m-d H:i:s');
+        $member = $MemberModel->where('id',$input['customerid'])->find();
+        
+        $poin = $member['poin'] + $input['value'];
+        
+        $data=[
+            'poin' => $poin,
+        ];
+        $MemberModel->save($data);
+        
+        // Save Cash 
+        $cash = $CashModel->where('id',$input['cashid'])->where('outletid',$this->data['outletPick'])->first();
+        $data  = [
+            'userid'        =>$this->data['uid'],
+            'outletid'      =>$this->data['outletPick'],
+            'cashid'        =>$input['payment'],
+            'description'   =>$input['description'],
+            'type'          =>$input['cash'],
+            'date'          =>$tanggal,
+            'qty'           =>$input['value'],
+        ];
+        $TrxotherModel->save($data);
+
+        $cas = $input['value'] + $cash['qty'];
+        $wallet = [
+            'id'    => $cash['id'],
+            'qty'   => $cas,
+        ];
+        $CashModel->save($wallet);
+
+        // return
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 }
 ?>

@@ -98,7 +98,7 @@ class Trxother extends BaseController
             'date'          =>$tanggal,
             'qty'           =>$input['quantity'],
         ];
-        // Save Data Stok
+        // Save Data Cash
         $TrxotherModel->save($data);
 
         // Plus & Minus Cash Wallet
