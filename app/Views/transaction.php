@@ -1335,7 +1335,7 @@
                             required: true,
                         });
                         $('#order').submit();
-                        UIkit.modal('#modalsucces').toggle(); 
+                        UIkit.modal('#modalsucces').toggle();
                     });
                     
                     $('#save').click(function(){
