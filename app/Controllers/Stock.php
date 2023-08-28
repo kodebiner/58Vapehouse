@@ -329,8 +329,8 @@ class Stock extends BaseController
         $input = $this->request->getPost();
 
         // date time stamp
-        $date=date_create();
-        $tanggal = date_format($date,'Y-m-d H:i:s');
+        $date       = date_create();
+        $tanggal    = date_format($date,'Y-m-d H:i:s');
 
         $data = [
             'id'                    => $id,
@@ -369,6 +369,77 @@ class Stock extends BaseController
 
         // return
         return redirect()->back()->withInput()->with('message', lang('Global.saved'));
+    }
+
+    public function confirmpur($id)
+    {
+        // Calling Model
+        $PurchaseModel              = new PurchaseModel();
+        $PurchasedetailModel        = new PurchasedetailModel();
+        $StockModel                 = new StockModel;
+        $VariantModel               = new VariantModel;
+        $OldStockModel              = new OldStockModel;
+
+        // initialize
+        $input = $this->request->getPost();
+
+        // date time stamp
+        $date       = date_create();
+        $tanggal    = date_format($date,'Y-m-d H:i:s');
+
+        $data = [
+            'id'                    => $id,
+            'date'                  => $tanggal,
+            'status'                => "1",
+        ];
+
+        $PurchaseModel->save($data);
+
+        foreach ($input['ctotalpcs'][$id] as $key => $value) {
+            // Update Purchase Detail
+            $purdet = $PurchasedetailModel->where('purchaseid', $id)->where('variantid', $key)->first();
+            $purdetdata = [
+                'id'                => $purdet['id'],
+                'qty'               => $value,
+                'price'             => $input['cbprice'][$id][$key]
+            ];
+            $PurchasedetailModel->save($purdetdata);
+
+            // Update Old Stock
+            $variant = $VariantModel->find($key);
+            $oldstock = $OldStockModel->where('variantid', $key)->first();
+            $oldstockdata = [
+                'id'                => $oldstock['id'],
+                'hargadasar'        => $variant['hargadasar']
+            ];
+            $OldStockModel->save($oldstockdata);
+
+            // Finding Total Stock
+            $Stocks = $StockModel->where('variantid', $key)->find();
+            $totalstock = 0;
+            foreach ($Stocks as $stock) {
+                $totalstock += $stock['qty'];
+            }
+
+            // Update Stock
+            $stock = $StockModel->where('variantid', $key)->where('outletid', $this->data['outletPick'])->first();
+            $stockdata = [
+                'id'                => $stock['id'],
+                'qty'               => $stock['qty']+$value,
+                'restock'           => $tanggal
+            ];
+            $StockModel->save($stockdata);
+
+            // Update Variant
+            $variantdata = [
+                'id'                => $key,
+                'hargadasar'        => (($variant['hargadasar'] * $totalstock) + ($input['cbprice'][$id][$key] * $value)) / ($totalstock + $value)
+            ];
+            $VariantModel->save($variantdata);
+        }
+
+        // return
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function cancelpur($id)

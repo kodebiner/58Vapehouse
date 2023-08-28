@@ -67,8 +67,14 @@
                     
                     <!-- Navbar Right -->
                     <div class="uk-navbar-right">
-                        <a class="uk-button uk-button-text" href="#modal-sections" uk-toggle>Top Up Point</a>
-                        <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="35" height="35" style="color: #fff;"></button>
+                        <div class="uk-child-width-1-2 uk-flex uk-flex-middle" uk-grid>
+                            <div>
+                                <a class="uk-button uk-button-text" href="#modal-sections" uk-toggle>Top Up Point</a>
+                            </div>
+                            <div>
+                                <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="35" height="35" style="color: #fff;"></button>
+                            </div>
+                        </div>
                     </div>
                     <!-- Navbar Right End -->
                     <!-- modal -->
@@ -167,6 +173,9 @@
                         </li>
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?></a>
+                        </li>
+                        <li class="tm-main-navbar">
+                            <a class="uk-h4 tm-h4" href="<?= base_url('transaction') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.transaction');?></a>
                         </li>
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>

@@ -915,26 +915,4 @@ foreach ($purchases as $purchase) { ?>
 <?php } ?>
 <!-- Modal Edit End -->
 
-<!-- Search Engine Script -->
-<!-- <script type="text/javascript">
-
-    // $('#tabprod').on('DOMSubtreeModified', function() {
-    //     var eprices = document.querySelectorAll(".esubvariant");
-    //     var esubarr = [];
-
-    //     for (i = 0; i < eprices.length; i++) {
-    //         eprice = Number(eprices[i].innerText);
-    //         esubarr.push(eprice);
-    //     }
-
-    //     if (esubarr.length === 0) {
-    //         document.getElementById('finalprice').innerHTML = 0;
-    //     } else {
-    //         var esubtotalvar = subarr.reduce(function(a, b){ return a + b; });
-    //         document.getElementById('finalprice').innerHTML = 'Rp. ' + esubtotalvar + ',-';
-    //     }
-    // });
-</script> -->
-<!-- Search Engine Script End -->
-
 <?= $this->endSection() ?>
