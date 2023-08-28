@@ -92,7 +92,7 @@
                                             <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon" uk-icon="icon: user"></span>
                                                 <input class="uk-input ui-autocomplete-input1" type="text" placeholder="Name" id="customer" name="customer" aria-label="Not clickable icon">
-                                                <input id="customerid" name="customerid" hidden />
+                                                <input id="customerx" name="customerid" hidden />
                                             </div>
                                         </div>                                    
                                     </div>
@@ -109,7 +109,7 @@
                                             $("#customer").autocomplete({
                                                 source: customerList,
                                                 select: function(e, i) {
-                                                    $("#customerid").val(i.item.idx);
+                                                    $("#customerx").val(i.item.idx);
                                                 },
                                                 minLength: 1
                                             });
@@ -150,10 +150,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="uk-modal-footer uk-text-right">
+                                        <button class="uk-button uk-button-primary" type="submit" value="submit">Save</button>
+                                    </div>
                                 </form>
-                            </div>
-                            <div class="uk-modal-footer uk-text-right">
-                                <button class="uk-button uk-button-primary" type="submit" value="submit">Save</button>
                             </div>
                         </div>
                     </div>
@@ -1166,8 +1166,7 @@
         <!-- Footer Section end -->
         
 
-
-        <div id="modalsucces" uk-modal >
+        <div id="modalsucces"  uk-modal >
             <div class="uk-modal-dialog">
                 <button class="uk-modal-close-default" type="button" uk-close></button>
                 <div class="uk-modal-body">
@@ -1178,9 +1177,6 @@
                                 <div class="page-body">
                                     <div class="head">  
                                         <h3 style="margin-top:5px;">Transaction Success</h3>
-                                        <?php foreach ($stocks as $t){ ?>
-                                        <h4> <?=$t['qty']?></h4>
-                                        <?php }?>
                                     </div>
                                     <h1 style="text-align:center;">
                                         <div class="checkmark-circle">
@@ -1344,7 +1340,6 @@
                             required: true,
                         });
                         $('#order').submit();
-                        $('#modalsucces').show();
                     });
                     console.log( "ready!" );
                    

@@ -135,6 +135,7 @@ return [
     'readyAdd'          => 'Sudah Ditambahkan!',
     'book'              => 'Pesan',
     'addsop'            => 'Tambah Sop',
+    'invoice'           => 'Nota',
 
     // Menu
     'dashboard'         => 'Dasbor',

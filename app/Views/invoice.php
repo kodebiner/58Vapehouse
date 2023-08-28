@@ -13,7 +13,7 @@
 
   <div uk-grid class="uk-flex-middle">
     <div class="uk-width-1-2@m">
-      <h3 class="tm-h3"><?=lang('Global.outletList')?></h3>
+      <h3 class="tm-h3"><?=lang('Global.invoice')?></h3>
     </div>
 
     <!-- Button Trigger Modal Add -->
@@ -25,143 +25,157 @@
 </div>
 <!-- End Of Page Heading -->
 
-<!-- Modal Add -->
-<div uk-modal class="uk-flex-top" id="tambahdata">
-  <div class="uk-modal-dialog uk-margin-auto-vertical">
-    <div class="uk-modal-content">
-      <div class="uk-modal-header">
-        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addOutlet')?></h5>
-      </div>
-      <div class="uk-modal-body">
-        <form class="uk-form-stacked" role="form" action="/outlet/create" method="post">
-          <?= csrf_field() ?>
 
-          <div class="uk-margin-bottom">
-            <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
-            <div class="uk-form-controls">
-              <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
-            </div>
-          </div>
-
-          <div class="uk-margin">
-            <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
-            <div class="uk-form-controls">
-              <input type="text" class="uk-input <?php if (session('errors.address')) : ?>tm-form-invalid<?php endif ?>" name="address" id="address" placeholder="<?=lang('Global.address')?>" required/>
-            </div>
-          </div>
-
-          <div class="uk-margin-bottom">
-            <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
-            <div class="uk-form-controls">
-              <input type="text" class="uk-input <?php if (session('errors.maps')) : ?>tm-form-invalid<?php endif ?>" id="maps" name="maps" placeholder="<?=lang('Global.maps')?>" autofocus required />
-            </div>
-          </div>
-
-          <hr>
-
-          <div class="uk-margin">
-            <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+<div class="uk-card uk-card-default uk-card-body uk-width-1-2@m uk-position-relative  uk-position-center">
+<style>
+ 
+ #tabel
+ {
+ font-size:15px;
+ border-collapse:collapse;
+ }
+ #tabel  td
+ {
+ padding-left:5px;
+ border: 1px solid black;
+ }
+ </style>
+ </head>
+ <body style='font-family:tahoma; font-size:8pt; color:white;'>
+ <center><table style='width:350px; font-size:16pt; font-family:calibri; border-collapse: collapse;' border = '0'>
+ <td width='70%' align='CENTER' vertical-align:top'><span style='color:black;'>
+ <b>58 VapeHouse</b></br>JL XXXXXXXXXXX XXXXXXX</span></br>
+  
+  
+ <span style='font-size:12pt'>No. : xxxxx, 11 Juni 2020 (user:xxxxx), 11:57:50</span></br>
+ </td>
+ </table>
+ <style>
+ hr { 
+     display: block;
+     margin-top: 0.5em;
+     margin-bottom: 0.5em;
+     margin-left: auto;
+     margin-right: auto;
+     border-style: inset;
+     border-width: 1px;
+ } 
+ </style>
+ <table cellspacing='0' cellpadding='0' style='width:350px; font-size:12pt; font-family:calibri;  border-collapse: collapse;' border='0'>
+  
+ <tr align='center'>
+ <td width='10%'>Item</td>
+ <td width='13%'>Price</td>
+ <td width='4%'>Qty</td>
+ <td width='7%'>Diskon %</td>
+ <td width='13%'>Total</td><tr>
+ <td colspan='5'><hr></td></tr>
+ </tr>
+ <tr><td style='vertical-align:top'>3 WAY STOPCOCK</td>
+ <td style='vertical-align:top; text-align:right; padding-right:10px'>7.440</td>
+ <td style='vertical-align:top; text-align:right; padding-right:10px'>100</td>
+ <td style='vertical-align:top; text-align:right; padding-right:10px'>0,00%</td>
+ <td style='text-align:right; vertical-align:top'>744.000</td></tr>
+ <tr>
+ <td colspan='5'><hr></td>
+ </tr>
+ <tr>
+ <td colspan = '4'><div style='text-align:right'>Biaya Adm : </div></td><td style='text-align:right; font-size:16pt;'>Rp3.500,00</td>
+ </tr>
+ <tr>
+ <td colspan = '4'><div style='text-align:right; color:black'>Total : </div></td><td style='text-align:right; font-size:16pt; color:black'>747.500</td>
+ </tr>
+ <tr>
+ <td colspan = '4'><div style='text-align:right; color:black'>Cash : </div></td><td style='text-align:right; font-size:16pt; color:black'>1.000.000</td>
+ </tr>
+ <tr>
+ <td colspan = '4'><div style='text-align:right; color:black'>Change : </div></td><td style='text-align:right; font-size:16pt; color:black'>252.500</td>
+ </tr>
+ <tr>
+ <td colspan = '4'><div style='text-align:right; color:black'>DP : </div></td><td style='text-align:right; font-size:16pt; color:black'>0</td>
+ </tr>
+ <tr>
+ <td colspan = '4'><div style='text-align:right; color:black'>Sisa : </div></td><td style='text-align:right; font-size:16pt; color:black'>0</td>
+ </tr>
+ </table>
+ <table style='width:350; font-size:12pt;' cellspacing='2'><tr></br><td align='center'>****** TERIMAKASIH ******</br></td></tr></table></center></body>
+ </html>    
 </div>
-<!-- End Of Modal Add -->
 
-<!-- Table Of Content -->
-<div class="uk-overflow-auto uk-margin">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
+
+
+<table class="uk-table uk-table-divider">
     <thead>
-      <tr>
-        <th class="uk-text-center uk-width-small">No</th>
-        <th class="uk-width-large"><?=lang('Global.name')?></th>
-        <th class="uk-width-medium"><?=lang('Global.address')?></th>
-        <th class="uk-width-medium"><?=lang('Global.maps')?></th>
-        <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
-      </tr>
+        <tr>
+            <th class="uk-table-shrink">Shrink</th>
+            <th class="uk-table-expand">Expand</th>
+            <th class="uk-width-small">Width Small</th>
+        </tr>
     </thead>
     <tbody>
-      <?php $i = 1 ; ?>
-      <?php foreach ($outlets as $outlet) : ?>
         <tr>
-          <td class="uk-text-center"><?= $i++; ?></td>
-          <td><?= $outlet['name']; ?></td>
-          <td><?= $outlet['address']; ?></td>
-          <td><?= $outlet['maps']; ?></td>
-          <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
-            <!-- Button Trigger Modal Edit -->
-            <div>
-              <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $outlet['id'] ?>"></a>
-            </div>
-            <!-- End Of Button Trigger Modal Edit -->
-
-            <!-- Button Delete -->
-            <div>
-              <a uk-icon="trash" class="uk-icon-button-delete" href="outlet/delete/<?= $outlet['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
-            </div>
-            <!-- End Of Button Delete -->
-          </td>
+            <td>Table Data</td>
+            <td>Table Data</td>
+            <td>Table Data</td>
         </tr>
-      <?php endforeach; ?>
+        <tr>
+            <td>Table Data</td>
+            <td>Table Data</td>
+            <td>Table Data</td>
+        </tr>
     </tbody>
-  </table>
-</div>
-<!-- End Of Table Content -->
+</table>
 
-<!-- Modal Edit -->
-<?php foreach ($outlets as $outlet) : ?>
-  <div uk-modal class="uk-flex-top" id="editdata<?= $outlet['id'] ?>">
-    <div class="uk-modal-dialog uk-margin-auto-vertical">
-      <div class="uk-modal-content">
-        <div class="uk-modal-header">
-          <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
-        </div>
+<hr>
 
-        <div class="uk-modal-body">
-          <form class="uk-form-stacked" role="form" action="outlet/update/<?= $outlet['id'] ?>" method="post">
-            <?= csrf_field() ?>
-            <input type="hidden" name="id" value="<?= $outlet['id']; ?>">
+<table class="uk-table uk-table-divider">
+    <thead>
+        <tr>
+            <th class="uk-table-shrink">Shrink</th>
+            <th class="uk-table-expand">Expand</th>
+            <th class="uk-width-small">Width Small</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Table Data</td>
+            <td>Table Data</td>
+            <td>Table Data</td>
+        </tr>
+        <tr>
+            <td>Table Data</td>
+            <td>Table Data</td>
+            <td>Table Data</td>
+        </tr>
+    </tbody>
+</table>
 
-            <div class="uk-margin-bottom">
-              <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
-              <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet['name']; ?>"autofocus />
-              </div>
-            </div>
+<hr>
 
-            <div class="uk-margin-bottom">
-              <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
-              <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet['address']; ?>" autofocus />
-              </div>
-            </div>
+<table class="uk-table uk-table-divider">
+    <thead>
+        <tr>
+            <th class="uk-table-shrink">Shrink</th>
+            <th class="uk-table-expand">Expand</th>
+            <th class="uk-width-small">Width Small</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Table Data</td>
+            <td>Table Data</td>
+            <td>Table Data</td>
+        </tr>
+        <tr>
+            <td>Table Data</td>
+            <td>Table Data</td>
+            <td>Table Data</td>
+        </tr>
+    </tbody>
+</table>
 
-            <div class="uk-margin-bottom">
-              <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
-              <div class="uk-form-controls">
-                <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" autofocus />
-              </div>
-            </div>
+<hr>
+      
 
-            <hr>
 
-            <div class="uk-margin">
-              <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-<?php endforeach; ?>
-<!-- End Of Modal Edit -->
-
-<!-- Search Engine Script -->
-<script>
-  $(document).ready(function () {
-    $('#example').DataTable();
-  });
-</script>
-<!-- Search Engine Script End -->
 <?= $this->endSection() ?>

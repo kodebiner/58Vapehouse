@@ -104,7 +104,8 @@ return [
     'cancel'            => 'Canceled',
     'pending'           => 'Order Processed',
     'confirmation'      => 'Confirmation',
-    'shift'              =>'Shift',
+    'shift'             => 'Shift',
+    'invoice'           => 'Invoice',
     
 
     // Button

@@ -17,6 +17,7 @@ use App\Models\VariantModel;
 use App\Models\BookingModel;
 use App\Models\BookingdetailModel;
 use App\Models\TransactionModel;
+use App\Models\TrxotherModel;
 use App\Models\TrxdetailModel;
 use App\models\TrxpaymentModel;
 class Pay extends BaseController
@@ -433,10 +434,10 @@ class Pay extends BaseController
         $data['bundleVariants'] = $bundleVariants->getResult();
         $data['transactionid']  = $trxId;
 
-        $transactionx += $trxId;
+        // $transactionx += $trxId;
          
-        // return view('Views/transaction', $data);
-        return redirect()->back()->with('message', lang('Global.saved'));
+        return view('Views/invoice', $data);
+        // return redirect()->back()->with('message', lang('Global.saved'))->with('trxid', $trxId);
         // return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 
     }
@@ -670,10 +671,10 @@ class Pay extends BaseController
         $input = $this->request->getPost();
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
-        $member = $MemberModel->where('id',$input['customerid'])->find();
+        $member = $MemberModel->where('id',$input['customerid'])->first();
         
+        // member poin
         $poin = $member['poin'] + $input['value'];
-        
         $data=[
             'poin' => $poin,
         ];
@@ -691,7 +692,7 @@ class Pay extends BaseController
             'qty'           =>$input['value'],
         ];
         $TrxotherModel->save($data);
-
+        
         $cas = $input['value'] + $cash['qty'];
         $wallet = [
             'id'    => $cash['id'],

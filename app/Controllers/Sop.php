@@ -38,8 +38,8 @@ class Sop extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.productList');
-        $data['description']    = lang('Global.productListDesc');
+        $data['title']          = lang('Global.sop');
+        $data['description']    = lang('Global.sop');
         $data['sops']           = $sopModel->findAll();
         $data['sopdetails']     = $SopDetailModel->findAll();
         $data['users']          = $userModel->findAll();

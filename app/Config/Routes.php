@@ -197,6 +197,7 @@ $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->post('create', 'Pay::create',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('save', 'Pay::save',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('pay', 'Pay::pay',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->post('topup', 'Pay::topup',['filter' =>'role:owner,supervisor']);
 });
 
 // Sop Routes
@@ -272,6 +273,12 @@ $routes->group('presence', ['filter'=>'login'], function($routes){
     $routes->post('create', 'presence::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'presence::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'presence::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+});
+
+// reminder
+$routes->group('reminder', ['filter'=>'login'], function($routes){
+    // presence
+    $routes->get('', 'reminder::index', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 
