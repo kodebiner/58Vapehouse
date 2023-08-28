@@ -13,7 +13,7 @@
 
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
-            <h3 class="tm-h3"><?=lang('Global.purchaseList')?></h3>
+            <h3 class="tm-h3"><?=lang('Global.reminder')?></h3>
         </div>
 
         <?php if ($outletPick != null) { ?>
@@ -26,75 +26,62 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
-  <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example">
-    <thead>
-      <tr>
-        <th class="uk-text-center">No</th>
-        <th class=""><?=lang('Global.product')?></th>
-        <th class="uk-text-center"><?=lang('Global.variant')?></th>
-        <th class="uk-text-center"><?=lang('Global.reminder')?></th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php $i = 1 ; ?>
-      <?php foreach ($stocks as $stock) {
-        $today= $stock['restock'];
-        $date = date_create($today);
-        date_add($date, date_interval_create_from_date_string('30 days'));
-        $newdate = date_format($date, 'Y/m/d H:i:s');
-        if ($stock['sale'] > $newdate){
-          $remindate = "The product has not been sold for 1 month";
-        }
-        if ($stock['qty'] < "1"){
-          $remindqty = "Stock Is Running Out";
-        } 
-        ?>
-        <tr>
-          <td class="uk-text-center"><?= $i++; ?></td>
-          <td class="uk-text-left">
-            <?php 
-            foreach ($products as $product){
-              foreach($variants as $variant){
-              if ($variant['id'] === $stock['variantid'] && $variant['productid'] === $product['id']){
-                echo $product['name'];
-              }
-              }
-            }
-            ?>
-          </td>
-          <td class="uk-text-center">
-          <?php 
-            foreach($variants as $variant){
-              if ($variant['id'] === $stock['variantid']){
-                echo $variant['name'];
-              }
-            }    
-          ?>
-          </td>
-          <td class="uk-text-center">
-            <?php
-            if ($stock['sale'] > $newdate){
-              echo "The product has not been sold for 1 month" ; 
-            }elseif($stock['qty'] < "1"){
-              echo  "Stock Is Running Out" ; 
-            }
-            ?>
-          </td>
-        </tr>
-      <?php }?>
-    </tbody>
-  </table>
-  <!-- End Table Content -->
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example">
+        <thead>
+            <tr>
+                <th class="uk-text-center uk-width-small">No</th>
+                <th class="uk-width-medium"><?=lang('Global.product')?></th>
+                <th class="uk-width-medium"><?=lang('Global.variant')?></th>
+                <th class="uk-text-center uk-width-large"><?=lang('Global.reminder')?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $i = 1 ; ?>
+            <?php foreach ($stocks as $stock) {
+                $today  = $stock['restock'];
+                $date   = date_create($today);
+                date_add($date, date_interval_create_from_date_string('30 days'));
+                $newdate = date_format($date, 'Y/m/d H:i:s');
+                if (($stock['sale'] > $newdate) || ($stock['qty'] < "1")) {
+                ?>
+                <tr>
+                    <?php foreach ($products as $product) { ?>
+                        <?php foreach($variants as $variant) { ?>
+                            <?php if (($variant['id'] === $stock['variantid']) && ($variant['productid'] === $product['id'])) {
+                            $productname    = $product['name'];
+                            $varname        = $variant['name'];
+                            $stockremind    = "Stock Is Running Out";
+                            $saleremind     = "The product has not been sold for 1 month"
+                            ?>
+                                <td class="uk-text-center uk-width-small"><?= $i++; ?></td>
+                                <td class="uk-width-medium"><?= $productname ?></td>
+                                <td class="uk-width-medium"><?= $varname ?></td>
+                                <td class="uk-text-center uk-width-large">
+                                    <?php
+                                        if (($stock['sale'] > $newdate) && ($stock['qty'] < "1")) {
+                                            echo '<div class="uk-child-width-1-1" uk-grid><div><div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$saleremind.'</div></div><div class="uk-margin-small-top"><div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$stockremind.'</div></div></div>';
+                                        } elseif ($stock['sale'] > $newdate) {
+                                            echo '<div class="uk-text-danger uk-width-1-1" style="border-style: solid; border-color: #f0506e;">'.$saleremind.'</div>';
+                                        } elseif ($stock['qty'] < "1") {
+                                            echo '<div class="uk-text-danger uk-width-1-1" style="border-style: solid; border-color: #f0506e;">'.$stockremind.'</div>';
+                                        }
+                                    ?>
+                                </td>
+                            <?php } ?>
+                        <?php } ?>
+                    <?php } ?>
+                </tr>
+            <?php } }?>
+        </tbody>
+    </table>
 </div>
-
-<script>
-</script>
+<!-- End Table Content -->
 
 <!-- Search Engine Script -->
 <script>
-  $(document).ready(function () {
-    $('#example').DataTable();
-  });
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
 </script>
 <!-- Search Engine Script End -->
 
