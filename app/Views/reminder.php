@@ -42,7 +42,7 @@
                 $date   = date_create($today);
                 date_add($date, date_interval_create_from_date_string('30 days'));
                 $newdate = date_format($date, 'Y/m/d H:i:s');
-                if (($stock['sale'] > $newdate) || ($stock['qty'] < "1")) {
+                if ($stock['sale'] > $newdate || $stock['qty'] < "1") {
                 ?>
                 <tr>
                     <?php foreach ($products as $product) { ?>
