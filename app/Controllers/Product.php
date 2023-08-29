@@ -75,90 +75,90 @@ class Product extends BaseController
 
     public function create()
     {  
-            // calling Model
-            $ProductModel = new ProductModel();
-            $StockModel = new StockModel();
-            $OldStockModel = new OldStockModel();
-            $VariantModel = new VariantModel();
-            $OutletModel = new OutletModel();
+        // calling Model
+        $ProductModel = new ProductModel();
+        $StockModel = new StockModel();
+        $OldStockModel = new OldStockModel();
+        $VariantModel = new VariantModel();
+        $OutletModel = new OutletModel();
 
-            // search all data
-            $input = $this->request->getPost();
-            $outlets = $OutletModel->findAll();
-            
-            // rules
-            $rule = [
-                'name'          => 'required|max_length[255]|is_unique[product.name]',
-                'description'   => 'required|max_length[255]',
-                'category'      => 'required',
-                'brand'         => 'required',
-            ];
-            
-            // Validation
-            if (! $this->validate($rule)) {
-                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        // search all data
+        $input = $this->request->getPost();
+        $outlets = $OutletModel->findAll();
+        
+        // rules
+        $rule = [
+            'name'          => 'required|max_length[255]|is_unique[product.name]',
+            'description'   => 'required|max_length[255]',
+            'category'      => 'required',
+            'brand'         => 'required',
+        ];
+        
+        // Validation
+        if (! $this->validate($rule)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+        
+        // get data
+        $data = [
+            'name'          => $input['name'],
+            'description'   => $input['description'],
+            'catid'         => $input['catid'],
+            'brandid'       => $input['brandid'],
+        ];
+
+        // insert data product
+        $ProductModel->insert($data);
+
+        // Get inserted Product ID
+        $productId = $ProductModel->getInsertID();
+        
+        // insert variant
+        foreach ($input['varBase'] as $baseKey => $baseValue) {
+            $variant['productid'] = $productId;
+            $variant['hargadasar'] = $baseValue;
+
+            foreach ($input['varName'] as $nameKey => $nameValue) {
+                if($nameKey === $baseKey) { $variant['name'] = $nameValue; }
             }
-            
-            // get data
-            $data = [
-                'name'          => $input['name'],
-                'description'   => $input['description'],
-                'catid'         => $input['catid'],
-                'brandid'       => $input['brandid'],
-            ];
 
-            // insert data product
-            $ProductModel->insert($data);
+            foreach ($input['varCap'] as $capKey => $capValue) {
+                if($capKey === $baseKey) { $variant['hargamodal'] = $capValue; }
+            }
 
-            // Get inserted Product ID
-            $productId = $ProductModel->getInsertID();
-            
-            // insert variant
-            foreach ($input['varBase'] as $baseKey => $baseValue) {
-                $variant['productid'] = $productId;
-                $variant['hargadasar'] = $baseValue;
+            foreach ($input['varSug'] as $SugKey => $SugValue) {
+                if($SugKey === $baseKey) { $variant['hargarekomendasi'] = $SugValue; }
+            }
 
-                foreach ($input['varName'] as $nameKey => $nameValue) {
-                    if($nameKey === $baseKey) { $variant['name'] = $nameValue; }
-                }
+            foreach ($input['varMargin'] as $marginKey => $marginValue) {
+                if($marginKey === $baseKey) { $variant['hargajual'] = $marginValue; }
+            }
 
-                foreach ($input['varCap'] as $capKey => $capValue) {
-                    if($capKey === $baseKey) { $variant['hargamodal'] = $capValue; }
-                }
+            $VariantModel->insert($variant);
 
-                foreach ($input['varSug'] as $SugKey => $SugValue) {
-                    if($SugKey === $baseKey) { $variant['hargarekomendasi'] = $SugValue; }
-                }
+            // Getting variant ID
+            $variantid = $VariantModel->getInsertID();
 
-                foreach ($input['varMargin'] as $marginKey => $marginValue) {
-                    if($marginKey === $baseKey) { $variant['hargajual'] = $marginValue; }
-                }
-
-                $VariantModel->insert($variant);
-
-                // Getting variant ID
-                $variantid = $VariantModel->getInsertID();
-
-                // Update stock
-                foreach ($outlets as $outlet) {
-                    $stock = [
-                        'outletid'  => $outlet['id'],
-                        'variantid' => $variantid,
-                        'qty'       => '0'
-                    ];
-                    $StockModel->insert($stock);
-                }
-
-                // Create Total Stock
-                $totalStock = [
-                    'variantid'     => $variantid,
-                    'hargadasar'    => $baseValue,
-                    'hargamodal'    => $capValue,
+            // Update stock
+            foreach ($outlets as $outlet) {
+                $stock = [
+                    'outletid'  => $outlet['id'],
+                    'variantid' => $variantid,
+                    'qty'       => '0'
                 ];
-                $OldStockModel->insert($totalStock);
+                $StockModel->insert($stock);
             }
 
-            return redirect()->back()->with('message', lang('Global.saved'));
+            // Create Total Stock
+            $totalStock = [
+                'variantid'     => $variantid,
+                'hargadasar'    => $baseValue,
+                'hargamodal'    => $capValue,
+            ];
+            $OldStockModel->insert($totalStock);
+        }
+
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function indexvar($id)

@@ -106,33 +106,78 @@ class Sop extends BaseController
         return redirect()->back()->with('message', lang('Global.deleted'));
     }
 
-    public function createtodo (){
+    public function todolist()
+    {
+        // Calling Model   
+        $SopModel                   = new SopModel;
+        $SopDetailModel             = new SopDetailModel;
+
+        // initialize
+        $sops                       = $SopModel->findAll();
+        $today                      = date('Y-m-d') .' 00:00:01';
+        $sopdetails                 = $SopDetailModel->where('created_at >', $today)->find();
+        
+        if (empty($sopdetails)) {
+            foreach ($sops as $sop) {
+                $datasop = [
+                    'sopid'         => $sop['id'],
+                    'status'        => "0"
+                ];
+                $SopDetailModel->save($datasop);
+            }
+        }
+
+        $sopdet = $SopDetailModel->where('created_at >', $today)->find();
+        
+        // Parsing Data to View
+        $data                       = $this->data; 
+        $data['title']              = lang('Global.dosop');
+        $data['description']        = lang('Global.dosopListDesc');
+        $data['sops']               = $sops;
+        $data['sopdetails']         = $sopdet;
+
+        // Return
+        return view ('Views/dosop', $data);
+    }
+
+    public function updatetodo()
+    {
         // Calling Model   
         $sopModel       = new SopModel;
         $SopDetailModel = new SopDetailModel;
         $userModel      = new UserModel;
 
         // initialize
-        $input      = $this->request->getPost();
+        $input          = $this->request->getPost();
+        // $sopdetails     = $SopDetailModel->where('created_at >', $today)->find();
         
-        $date=date_create();
-        $tanggal = date_format($date,'Y-m-d H:i:s');
+        // $date=date_create();
+        // $tanggal = date_format($date,'Y-m-d H:i:s');
 
-        $x = $input['sopid'];
-        $y = $input['status'];
-        
-        foreach ($x as $sopid){
-            foreach ($y as $status){
-                $data = [
-                    'sopid'      => $sopid,
-                    'userid'     => $this->data['uid'],
-                    'status'     => $status,
-                    'date'       => $tanggal,
-                ];
-            }
+        foreach ($input['status'] as $key => $value) {
+            $sopdata = [
+                'id'        => $key,
+                'userid'    => $this->data['uid'],
+                'status'    => '1'
+            ];
+            $SopDetailModel->save($sopdata);
         }
+
+        // $x = $input['sopid'];
+        // $y = $input['status'];
         
-        $SopDetailModel->save($data);
+        // foreach ($x as $sopid) {
+        //     foreach ($y as $status) {
+        //         $data = [
+        //             'sopid'      => $sopid,
+        //             'userid'     => $this->data['uid'],
+        //             'status'     => $status,
+        //             'date'       => $tanggal,
+        //         ];
+        //         $SopDetailModel->save($data);
+        //     }
+        // }
+        
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 }

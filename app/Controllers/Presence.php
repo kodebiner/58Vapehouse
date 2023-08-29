@@ -11,13 +11,14 @@ class Presence extends BaseController
     public function index()
     {
         // Calling Models
-        $PresenceModel      = new PresenceModel();
-        $UserModel          = new UserModel();
-        $SopModel           = new SopModel();
+        $PresenceModel          = new PresenceModel();
+        $UserModel              = new UserModel();
+        $SopModel               = new SopModel();
 
         // Populating Data
-        $presence    = $PresenceModel->findAll();
-        $users       = $UserModel->findAll();
+        $presence               = $PresenceModel->findAll();
+        $users                  = $UserModel->findAll();
+        $sops                   = $SopModel->findAll();
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -25,7 +26,7 @@ class Presence extends BaseController
         $data['description']    = lang('Global.presenceListDesc');
         $data['presences']      = $presence;
         $data['users']          = $users;
-        $data['sops']           = $SopModel->findAll();
+        $data['sops']           = $sops;
 
         return view('Views/presence', $data);
     }

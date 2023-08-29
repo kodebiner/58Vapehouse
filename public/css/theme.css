@@ -11664,6 +11664,11 @@ li.tm-main-navbar>a>svg {
     border-bottom: 1px solid #e5e5e5;
 }
 
+.tm-header {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .tm-footer {
     padding-top: 10px;
     padding-bottom: 10px;

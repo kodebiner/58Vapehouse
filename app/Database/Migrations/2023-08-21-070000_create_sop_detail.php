@@ -11,9 +11,11 @@ class createSopDetail extends Migration
         $fields = [
             'id'                => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'null' => false, 'auto_increment' => true],
             'sopid'             => ['type' => 'INT', 'constraint' => 11],
-            'userid'            => ['type' => 'INT', 'constraint' => 11],          
-            'status'            => ['type' => 'INT', 'constraint' => 11],          
-            'date'              => ['type' => 'datetime', 'null' => true],          
+            'userid'            => ['type' => 'INT', 'constraint' => 11],
+            'status'            => ['type' => 'INT', 'constraint' => 11],
+            'created_at'        => ['type' => 'datetime', 'null' => true],
+            'updated_at'        => ['type' => 'datetime', 'null' => true],
+            'deleted_at'        => ['type' => 'datetime', 'null' => true],
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);

@@ -4,12 +4,12 @@ use CodeIgniter\Model;
 
 class SopDetailModel extends Model
 {
-    protected $allowedFields = [
-        'sopid','userid','status','date',
-    ];
-
-    protected $table      = 'sopdetail';
-    protected $primaryKey = 'id';
+    protected $table            = 'sopdetail';
+    protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType     = 'array';
+    protected $returnType       = 'array';
+    protected $allowedFields    = [
+        'sopid','userid','status','created_at','updated_at','deleted_at',
+    ];
+    protected $useTimestamps   = true;
 }

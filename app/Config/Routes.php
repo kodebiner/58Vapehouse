@@ -208,6 +208,8 @@ $routes->group('sop', ['filter'=>'login'], function($routes){
     $routes->post('createtodo', 'Sop::createtodo',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('save', 'Sop::save',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('delete', 'Sop::delete',['filter' => 'role:owner']);
+    $routes->get('todolist', 'Sop::todolist',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->post('updatetodo', 'Sop::updatetodo',['filter'=> 'role:owner,supervisor,operator']);
 });
 
 // Restock Routes

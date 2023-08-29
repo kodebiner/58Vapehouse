@@ -1,12 +1,12 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript'); ?>
-<script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-<script src="js/cdnjs.cloudflare.com_ajax_libs_jquery_3.3.1_jquery.min.js"></script>
-<script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
-<!-- <style type="text/css">
-    #results { padding:20px; border:1px solid; background:#ccc; }
-</style> -->
+    <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+    <script src="js/cdnjs.cloudflare.com_ajax_libs_jquery_3.3.1_jquery.min.js"></script>
+    <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
+    <!-- <style type="text/css">
+        #results { padding:20px; border:1px solid; background:#ccc; }
+    </style> -->
 <?= $this->endSection(); ?>
 
 <?= $this->section('main') ?>
@@ -16,16 +16,14 @@
     <?= view('Views/Auth/_message_block') ?>
 
     <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-2@m">
+        <div class="uk-width-1-2@s">
             <h3 class="tm-h3"><?=lang('Global.presence')?></h3>
         </div>
-        <div class ="uk-width-1-2@m uk-text-right@m">
-            <button class="uk-button uk-button-primary uk-button-default" href="#modal-shift-1" uk-toggle>Open Shift</button>
-            <a class="uk-button uk-button-primary uk-button-default" href="#modal-shift-2" uk-toggle>Close Shift</a>
+        <div class ="uk-width-1-2@s uk-text-right@s">
+            <form class="uk-form-stacked" role="form" action="sop/todolist" method="post">
+                <button type="submit" class="uk-button uk-button-primary uk-button-default uk-preserve-color">To Do List</button>
+            </form>
         </div>
-        <!-- shift button -->
-        
-        <!-- shift button -->
     </div>
 </div>
 <!-- End Of Page Heading -->
@@ -133,7 +131,6 @@
         </form>
     </div>
 </div>
-
 <!-- End Modal Shift -->
  
 <!-- Camera Script -->

@@ -825,7 +825,7 @@
                                 
                                 <!-- Favorite List -->
                                 <li>
-                                <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                    <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                         <?php
                                             foreach ($products as $product) {
                                                 if ($product['favorite'] === '1') {
