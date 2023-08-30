@@ -438,6 +438,19 @@
                                 <?=lang('Global.vat')?> <?=$gconfig['ppn']?>%
                             </div>
 
+                            <div class="uk-margin" id="outlet" hidden>
+                                <div class="uk-form-controls uk-margin-small">
+                                    <?php
+                                        foreach ($outlets as $baseoutlet) {
+                                            if ($baseoutlet['id'] === $outletPick) {
+                                                $outid = $baseoutlet['id'];
+                                            }
+                                        }
+                                        ?>
+                                        <input type="number" class="uk-input" id="outlet" name="outlet" value="<?=$baseoutlet['id']?>" />
+                                </div>
+                            </div>
+
                         </div>
                         <div class="uk-modal-footer" style="border-top: 0;">
                             <div class="uk-margin">
@@ -1166,7 +1179,7 @@
         <!-- Footer Section end -->
         
 
-        <div id="modalsucces"  uk-modal >
+        <!-- <div id="modalsucces"  uk-modal >
             <div class="uk-modal-dialog">
                 <button class="uk-modal-close-default" type="button" uk-close></button>
                 <div class="uk-modal-body">
@@ -1227,12 +1240,7 @@
                     <a href="pay/invoice/$1" class="uk-button uk-button-primary">Print</a>
                 </div>
             </div>
-        </div>
-
-        <!-- <script type="text/javascript">
-            var transactionid;
-            transactionid = < echo $transactionid ?>;
-        </script> -->
+        </div> -->
         
 
         <script>
@@ -1243,17 +1251,6 @@
             var memberdisc = 0;
             var min = 0;
 
-            function loadContent(){
-                var xhr = new XMLHttpRequest();
-                var url = "pay.php";
-            xhr.onreadystatechange = function(){
-                if(this.readyState == 4 && this.status == 200){
-                   console.log(this.responseText);
-                }
-            };
-                xhr.open("GET", url, true);
-                xhr.send();
-            }
             $('#products').on('DOMSubtreeModified', function() {
                 var prices = document.querySelectorAll("div[name='price[]']");
                 var discvars = document.querySelectorAll(".varprice");
@@ -1281,17 +1278,6 @@
                     document.getElementById('subtotal').innerHTML = subtotal - discountvar;
                 }
                 $(document).ready(function() {
-                    var xhr = new XMLHttpRequest();
-                    var url = "pay/create";    
-
-                    xhr.onreadystatechange = function(){
-                        if(this.readyState == 4 && this.status == 200){  
-                            console.log(this.responseText);
-                        }
-                    };
-
-                    xhr.open("GET", url, false);
-                    xhr.send();
 
                     $(".varprice").keyup(function(){
                         var prices = document.querySelectorAll("div[name='price[]']");
@@ -1331,7 +1317,7 @@
                             required: true,
                         });
                         $('#order').submit();
-                        UIkit.modal('#modalsucces').toggle();
+                        // UIkit.modal('#modalsucces').toggle();
                     });
                     
                     $('#save').click(function(){

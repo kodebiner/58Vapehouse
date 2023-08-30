@@ -308,7 +308,7 @@ class Pay extends BaseController
             ];
             $TrxpaymentModel->save($paymet);
 
-        }elseif(isset($input['firstpayment'])&& isset($input['secpayment']) && !isset($input['payment'])){
+        }elseif(isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment'])){
             // Split Payment Method
             // First payment
             $paymet = [
@@ -394,6 +394,26 @@ class Pay extends BaseController
 
         $db      = \Config\Database::connect();
         // Populating Data
+        // $bundles            = $BundleModel->findAll();
+        // $bundets            = $BundledetModel->findAll();
+        // $Cash               = $CashModel->findAll();
+        // $outlets            = $OutletModel->where('id',$input['outlet'])->first();
+        // $customers          = $MemberModel->findAll();
+        // $products           = $ProductModel->findAll();
+        // $stocks             = $StockModel->findAll();
+        // $transactions       = $TransactionModel->where('id',$trxId)->first();
+        // $user               = $UserModel->where('id',$transactions['userid'])->first();
+        // $trxdetails         = $TrxdetailModel->where('transactionid',$trxId)->find();
+        // $trxpayments        = $TrxpaymentModel->where('transactionid',$trxId)->first();
+        // $payments           = $PaymentModel->where('id',$trxpayments['paymentid'])->first();
+        // foreach ($trxdetails as $trxdetail){
+        //     if ($trxdetail['transactionid'] === $trxId){
+        //         $trxdet[] = $trxdetail['id'];
+        //         $variants[]           = $VariantModel->where('id',$trxdet)->find();
+               
+        //     }
+        // }
+        
         $bundles            = $BundleModel->findAll();
         $bundets            = $BundledetModel->findAll();
         $Cash               = $CashModel->findAll();
@@ -404,17 +424,44 @@ class Pay extends BaseController
         $products           = $ProductModel->findAll();
         $variants           = $VariantModel->findAll();
         $stocks             = $StockModel->findAll();
-        $transactions       = $TransactionModel->findAll();
-        $trxdetails         = $TrxdetailModel->findAll();
+        $transactions       = $TransactionModel->find($trxId);
+        $trxdetails         = $TrxdetailModel->where('transactionid', $trxId)->find();
         $trxpayments        = $TrxpaymentModel->findAll();
+        $member             = $MemberModel->where('id',$transactions['memberid'])->first();
 
+        $user               = $UserModel->where('id',$transactions['userid'])->first();
+        $trxdata            = $TransactionModel->where('id',$trxId)->first();
+        
         $bundleBuilder      = $db->table('bundledetail');
         $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
         $bundleVariants     = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
         $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
         $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
         $bundleVariants     = $bundleBuilder->get();
-
+        
+        // $data                   = $this->data;
+        // $data['title']          = lang('Global.transaction');
+        // $data['description']    = lang('Global.transactionListDesc');
+        // $data['bundles']        = $bundles;
+        // $data['bundets']        = $bundets;
+        // $data['cash']           = $Cash;
+        // $data['transactions']   = $TransactionModel->where('id',$trxId)->first();
+        // $data['outlet']         = $outlets['name'];
+        // $data['address']        = $outlets['address'];
+        // $data['payments']       = $payments;
+        // $data['customers']      = $customers;
+        // $data['products']       = $products;
+        // $data['variants']       = $variants;
+        // $data['stocks']         = $stocks;
+        // $data['payment']        = $payments['name'];
+        // $data['trxdetails']     = $trxdetails;
+        // $data['trxpayments']    = $trxpayments;
+        // $data['user']           = $user->username;
+        // $data['date']           = $transactions['date'];
+        // $data['bookings']       = $BookingModel->findAll();
+        // $data['bundleVariants'] = $bundleVariants->getResult();
+        // $data['transactionid']  = $trxId;
+        // $transactionx += $trxId;
         $data                   = $this->data;
         $data['title']          = lang('Global.transaction');
         $data['description']    = lang('Global.transactionListDesc');
@@ -428,18 +475,32 @@ class Pay extends BaseController
         $data['products']       = $products;
         $data['variants']       = $variants;
         $data['stocks']         = $stocks;
-        $data['trxdetails']     = $trxdetails;
+        $data['trxdetails']     = $TrxdetailModel->findAll();
         $data['trxpayments']    = $trxpayments;
+        $data['outid']          = $OutletModel->where('id',$input['outlet'])->first();
         $data['bookings']       = $BookingModel->findAll();
         $data['bundleVariants'] = $bundleVariants->getResult();
-        $data['transactionid']  = $trxId;
-
-        // $transactionx += $trxId;
+        
+        
+        if (!empty($input['customerid'])){
+            $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
+            $data['mempoin']        = $member['poin'];
+            $data['poinused']       = $input['poin'];
+        }else{
+            $data['cust']           = "0";
+            $data['mempoin']        = "0";
+            $data['poinused']       = "0";
+        }
          
-        return view('Views/invoice', $data);
-        // return redirect()->back()->with('message', lang('Global.saved'))->with('trxid', $trxId);
-        // return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-
+        $data['user']           = $user->username;
+        $data['date']           = $transactions['date'];
+        $data['transactionid']  = $trxId;
+        $data['vardiscval']     = $input['varprice'];
+        $data['subtotal']       = $subtotal;
+        $data['pay']            = $input['value'];
+        $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
+        $data['total']          = $total;
+        return view('Views/print', $data);
     }
 
     public function save()

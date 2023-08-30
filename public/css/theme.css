@@ -5950,6 +5950,11 @@ ul.uk-nav-sub {
     text-decoration: none
 }
 
+.uk-text-xsmall {
+    font-size: 10px;
+    line-height: 1.5
+}
+
 .uk-text-small {
     font-size: 14px;
     line-height: 1.5
