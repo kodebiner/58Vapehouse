@@ -16,6 +16,8 @@ use App\Models\VariantModel;
 use App\Models\TransactionModel;
 use App\Models\TrxdetailModel;
 use App\models\TrxpaymentModel;
+use App\Models\BookingModel;
+use App\Models\BookingdetailModel;
 
 class Transaction extends BaseController
 {
@@ -37,28 +39,32 @@ class Transaction extends BaseController
         $TransactionModel       = new TransactionModel();
         $TrxdetailModel         = new TrxdetailModel();
         $TrxpaymentModel        = new TrxpaymentModel();
+        $BookingModel           = new BookingModel();
+        $BookingdetailModel     = new BookingdetailModel();
 
         // Populating Data
-        $bundles            = $BundleModel->findAll();
-        $bundets            = $BundledetModel->findAll();
-        $Cash               = $CashModel->findAll();
-        $outlets            = $OutletModel->findAll();
-        $users              = $UserModel->findAll();
-        $customers          = $MemberModel->findAll();
-        $payments           = $PaymentModel->findAll();
-        $products           = $ProductModel->findAll();
-        $variants           = $VariantModel->findAll();
-        $stocks             = $StockModel->findAll();
-        $transactions       = $TransactionModel->findAll();
-        $trxdetails         = $TrxdetailModel->findAll();
-        $trxpayments        = $TrxpaymentModel->findAll();
+        $bundles                = $BundleModel->findAll();
+        $bundets                = $BundledetModel->findAll();
+        $Cash                   = $CashModel->findAll();
+        $outlets                = $OutletModel->findAll();
+        $users                  = $UserModel->findAll();
+        $customers              = $MemberModel->findAll();
+        $payments               = $PaymentModel->findAll();
+        $products               = $ProductModel->findAll();
+        $variants               = $VariantModel->findAll();
+        $stocks                 = $StockModel->findAll();
+        $transactions           = $TransactionModel->findAll();
+        $trxdetails             = $TrxdetailModel->findAll();
+        $trxpayments            = $TrxpaymentModel->findAll();
+        $bookings               = $BookingModel->orderBy('created_at', 'DESC')->findAll();
+        $bookingdetails         = $BookingdetailModel->findAll();
 
-        $bundleBuilder      = $db->table('bundledetail');
-        $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
-        $bundleVariants     = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
-        $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
-        $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
-        $bundleVariants     = $bundleBuilder->get();
+        $bundleBuilder          = $db->table('bundledetail');
+        $bundleVariants         = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
+        $bundleVariants         = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
+        $bundleVariants         = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
+        $bundleVariants         = $bundleBuilder->orderBy('stock.qty', 'ASC');
+        $bundleVariants         = $bundleBuilder->get();
 
 
         // Parsing Data to View
@@ -79,6 +85,8 @@ class Transaction extends BaseController
         $data['trxdetails']     = $trxdetails;
         $data['trxpayments']    = $trxpayments;
         $data['bundleVariants'] = $bundleVariants->getResult();
+        $data['bookings']       = $bookings;
+        $data['bookingdetails'] = $bookingdetails;
 
         return view('Views/transaction', $data);
     }

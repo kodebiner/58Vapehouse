@@ -505,181 +505,181 @@ class Pay extends BaseController
 
     public function save()
     {
-         // Calling Models
-         $BundleModel            = new BundleModel();
-         $BundledetModel         = new BundledetailModel();
-         $CashModel              = new CashModel();
-         $DebtModel              = new DebtModel();
-         $GconfigModel           = new GconfigModel();
-         $OutletModel            = new OutletModel();
-         $UserModel              = new UserModel();
-         $MemberModel            = new MemberModel();
-         $PaymentModel           = new PaymentModel();
-         $ProductModel           = new ProductModel();
-         $VariantModel           = new VariantModel();
-         $StockModel             = new StockModel();
-         $BookingModel           = new BookingModel();
-         $BookingdetailModel     = new BookingdetailModel();
-         $TransactionModel       = new TransactionModel();
-         $TrxdetailModel         = new TrxdetailModel();
-         $TrxpaymentModel        = new TrxpaymentModel();
-         $MemberModel            = new MemberModel();
- 
-         // Getting Inputs
-         $input = $this->request->getPost();
- 
-         // Populating Data
-         $date           = date('Y-m-d H:i:s');
-         $Gconfig        = $GconfigModel->first();
-         $customers      = $MemberModel->findAll();
-         
-         // Inserting Transaction
-         $varvalues = array();
-         $bundvalues = array();
-         
-         // dd($input);
-         if (!empty($input['qty'])) {
-             foreach ($input['qty'] as $varid => $varqty) {
-                 $variant = $VariantModel->find($varid);
- 
-                 $discvar = (int)$input['varprice'][$varid]  * $varqty;
-                 $discbargain = (int)$input['varbargain'][$varid]* $varqty;
-                 // Bargain And Varprice Added
-                 if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
-                     $varvalues[]  = $discbargain - $discvar;
-                     // Vaprice Added And Null Bargain
-                 }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
-                     $varvalues[]  = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar;
-                     // Bargain Added And Null Varprice
-                 }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
-                     $varvalues[]  = $discbargain;
-                     // Null Bargain & Varprice
-                 }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
-                     $varvalues[] = $varqty * ($variant['hargamodal'] + $variant['hargajual']);
-                 }
-             }
-         } else {
-             $varvalues[] = '0';
-         }
-         
+        // Calling Models
+        $BundleModel            = new BundleModel();
+        $BundledetModel         = new BundledetailModel();
+        $CashModel              = new CashModel();
+        $DebtModel              = new DebtModel();
+        $GconfigModel           = new GconfigModel();
+        $OutletModel            = new OutletModel();
+        $UserModel              = new UserModel();
+        $MemberModel            = new MemberModel();
+        $PaymentModel           = new PaymentModel();
+        $ProductModel           = new ProductModel();
+        $VariantModel           = new VariantModel();
+        $StockModel             = new StockModel();
+        $BookingModel           = new BookingModel();
+        $BookingdetailModel     = new BookingdetailModel();
+        $TransactionModel       = new TransactionModel();
+        $TrxdetailModel         = new TrxdetailModel();
+        $TrxpaymentModel        = new TrxpaymentModel();
+        $MemberModel            = new MemberModel();
+
+        // Getting Inputs
+        $input = $this->request->getPost();
+
+        // Populating Data
+        $date           = date('Y-m-d H:i:s');
+        $Gconfig        = $GconfigModel->first();
+        $customers      = $MemberModel->findAll();
         
-         if (!empty($input['bqty'])) {
-             foreach ($input['bqty'] as $bunid => $bundqty) {
-                 $bundle = $BundleModel->find($bunid);
-                 $bundvalues[] = $bundqty * $bundle['price'];
-             }
-         } else {
-             $bundvalues[] = '0';
-         }
- 
-         $varvalue = array_sum($varvalues);
-         $bundvalue = array_sum($bundvalues);
-         
-         $subtotal = $varvalue + $bundvalue;
-         
-         if ($input['customerid'] != '0') {
-             $memberid = $input['customerid'];
-             if ($this->data['gconfig']['memberdisctype'] === '0') {
-                 $memberdisc = $this->data['gconfig']['memberdisc'];
-             } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                 $memberdisc = ($this->data['gconfig']['memberdisc']/100) * $subtotal;
-             }
-         } else {
-             $memberid = '';
-             $memberdisc = 0;
-         }
-         
-         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
-             $discount = $input['discvalue'];
-         } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
-             $discount = ($input['discvalue']/100) * $subtotal;
-         } else {
-             $discount = 0;
-         }
- 
-         if (!empty($input['poin'])) {
-             $poin = $input['poin'];
-         } else {
-             $poin = 0;
-         }
-         
-         $value = $subtotal - $memberdisc - $discount - $poin;
-         
-         $book = [
-             'outletid'      => $this->data['outletPick'],
-             'userid'        => $this->data['uid'],
-             'memberid'      => $memberid,
-             'value'         => $value,
-             'disctype'      => $input['disctype'],
-             'discvalue'     => $input['discvalue'],
-         ];
-         $BookingModel->insert($book);
-         $bookId = $BookingModel->getInsertID();
-         
-         // Booking Detail & Stock
-         if (!empty($input['qty'])) {
-             foreach ($input['qty'] as $varid => $varqty) {
-                 $variant = $VariantModel->find($varid);
- 
-                     $discvar = (int)$input['varprice'][$varid] * $varqty;
-                     $discbargain = (int)$input['varbargain'][$varid]* $varqty;
-                     // Bargain And Varprice Added
-                     if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
-                         $varPrice  = ($discbargain - $discvar)/$varqty;
-                         // Vaprice Added And Null Bargain
-                     }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
-                         $varPrice  = (($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar) / $varqty;
-                         // Bargain Added And Null Varprice
-                     }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
-                         $varPrice  = $discbargain / $varqty;
-                         // Null Bargain & Varprice
-                     }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
-                         $varPrice = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) / $varqty;
-                     }
- 
-                 $trxvar = [
-                     'bookingid'     => $bookId,
-                     'variantid'     => $varid,
-                     'qty'           => $varqty,
-                     'value'         => $varPrice,
-                 ];
-                 $BookingdetailModel->save($trxvar);
- 
-                 $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
-                 $saleVarStock = [
-                     'id'        => $stock['id'],
-                     'sale'      => $date,
-                     'qty'       => $stock['qty'] - $varqty
-                 ];
-                 $StockModel->save($saleVarStock);                
-             }
-         }
-         
-         if (!empty($input['bqty'])) {
-             foreach ($input['bqty'] as $bunid => $bunqty) {
-                 $bundle = $BundleModel->find($bunid);
-                 $trxbun = [
-                     'bookingid'     => $bookId,
-                     'bundleid'      => $bunid,
-                     'qty'           => $bunqty,
-                     'value'         => $bundle['price'] * $bunqty
-                 ];
-                 $BookingdetailModel->save($trxbun);
- 
-                 $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
-                 foreach ($bundledetail as $BundleDetail) {
-                     $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
-                     $saleBunStock = [
-                         'id'        => $bunstock['id'],
-                         'sale'      => $date,
-                         'qty'       => $bunstock['qty'] - $bunqty
-                     ];
-                     $StockModel->save($saleBunStock);
-                     
-                 }
-             }
-         }
-         return redirect()->back()->with('message', lang('Global.saved'));
+        // Inserting Transaction
+        $varvalues = array();
+        $bundvalues = array();
+        
+        // dd($input);
+        if (!empty($input['qty'])) {
+            foreach ($input['qty'] as $varid => $varqty) {
+                $variant = $VariantModel->find($varid);
+
+                $discvar = (int)$input['varprice'][$varid]  * $varqty;
+                $discbargain = (int)$input['varbargain'][$varid]* $varqty;
+                // Bargain And Varprice Added
+                if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
+                    $varvalues[]  = $discbargain - $discvar;
+                    // Vaprice Added And Null Bargain
+                }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
+                    $varvalues[]  = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar;
+                    // Bargain Added And Null Varprice
+                }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
+                    $varvalues[]  = $discbargain;
+                    // Null Bargain & Varprice
+                }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
+                    $varvalues[] = $varqty * ($variant['hargamodal'] + $variant['hargajual']);
+                }
+            }
+        } else {
+            $varvalues[] = '0';
+        }
+        
+    
+        if (!empty($input['bqty'])) {
+            foreach ($input['bqty'] as $bunid => $bundqty) {
+                $bundle = $BundleModel->find($bunid);
+                $bundvalues[] = $bundqty * $bundle['price'];
+            }
+        } else {
+            $bundvalues[] = '0';
+        }
+
+        $varvalue = array_sum($varvalues);
+        $bundvalue = array_sum($bundvalues);
+        
+        $subtotal = $varvalue + $bundvalue;
+        
+        if ($input['customerid'] != '0') {
+            $memberid = $input['customerid'];
+            if ($this->data['gconfig']['memberdisctype'] === '0') {
+                $memberdisc = $this->data['gconfig']['memberdisc'];
+            } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+                $memberdisc = ($this->data['gconfig']['memberdisc']/100) * $subtotal;
+            }
+        } else {
+            $memberid = '';
+            $memberdisc = 0;
+        }
+        
+        if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
+            $discount = $input['discvalue'];
+        } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
+            $discount = ($input['discvalue']/100) * $subtotal;
+        } else {
+            $discount = 0;
+        }
+
+        if (!empty($input['poin'])) {
+            $poin = $input['poin'];
+        } else {
+            $poin = 0;
+        }
+        
+        $value = $subtotal - $memberdisc - $discount - $poin;
+        
+        $book = [
+            'outletid'      => $this->data['outletPick'],
+            'userid'        => $this->data['uid'],
+            'memberid'      => $memberid,
+            'value'         => $value,
+            'disctype'      => $input['disctype'],
+            'discvalue'     => $input['discvalue'],
+        ];
+        $BookingModel->insert($book);
+        $bookId = $BookingModel->getInsertID();
+        
+        // Booking Detail & Stock
+        if (!empty($input['qty'])) {
+            foreach ($input['qty'] as $varid => $varqty) {
+                $variant = $VariantModel->find($varid);
+
+                    $discvar = (int)$input['varprice'][$varid] * $varqty;
+                    $discbargain = (int)$input['varbargain'][$varid]* $varqty;
+                    // Bargain And Varprice Added
+                    if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
+                        $varPrice  = ($discbargain - $discvar)/$varqty;
+                        // Vaprice Added And Null Bargain
+                    }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
+                        $varPrice  = (($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar) / $varqty;
+                        // Bargain Added And Null Varprice
+                    }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
+                        $varPrice  = $discbargain / $varqty;
+                        // Null Bargain & Varprice
+                    }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
+                        $varPrice = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) / $varqty;
+                    }
+
+                $trxvar = [
+                    'bookingid'     => $bookId,
+                    'variantid'     => $varid,
+                    'qty'           => $varqty,
+                    'value'         => $varPrice,
+                ];
+                $BookingdetailModel->save($trxvar);
+
+                $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
+                $saleVarStock = [
+                    'id'        => $stock['id'],
+                    'sale'      => $date,
+                    'qty'       => $stock['qty'] - $varqty
+                ];
+                $StockModel->save($saleVarStock);                
+            }
+        }
+        
+        if (!empty($input['bqty'])) {
+            foreach ($input['bqty'] as $bunid => $bunqty) {
+                $bundle = $BundleModel->find($bunid);
+                $trxbun = [
+                    'bookingid'     => $bookId,
+                    'bundleid'      => $bunid,
+                    'qty'           => $bunqty,
+                    'value'         => $bundle['price'] * $bunqty
+                ];
+                $BookingdetailModel->save($trxbun);
+
+                $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
+                foreach ($bundledetail as $BundleDetail) {
+                    $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
+                    $saleBunStock = [
+                        'id'        => $bunstock['id'],
+                        'sale'      => $date,
+                        'qty'       => $bunstock['qty'] - $bunqty
+                    ];
+                    $StockModel->save($saleBunStock);
+                    
+                }
+            }
+        }
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     function invoice($id)

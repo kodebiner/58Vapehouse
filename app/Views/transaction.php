@@ -42,8 +42,6 @@
 
         <!-- Header Section -->
         <header class="uk-navbar-container tm-navbar-container" style="background-color:#000;">
-            <?= view('Views/Auth/_message_block') ?>
-            
             <div class="uk-container uk-container-expand uk-margin">
                 <div class="uk-flex-middle" uk-navbar>
 
@@ -66,20 +64,40 @@
                     <!-- Navbar Center End -->
                     
                     <!-- Navbar Right -->
-                    <div class="uk-navbar-right">
-                        <div class="uk-child-width-1-2 uk-flex uk-flex-middle" uk-grid>
-                            <div>
-                                <a class="uk-button uk-button-text" href="#modal-sections" uk-toggle>Top Up Point</a>
-                            </div>
-                            <div>
-                                <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="35" height="35" style="color: #fff;"></button>
+                    <?php if ($ismobile === false) { ?>
+                        <div class="uk-navbar-right">
+                            <div class="uk-child-width-1-3 uk-flex uk-flex-middle" uk-grid>
+                                <div>
+                                    <a class="uk-button uk-button-text" href="#modal-sections" uk-toggle>Top Up Point</a>
+                                </div>
+                                <div>
+                                    <button type="button" class="uk-button" uk-toggle="target: #bookinglist" uk-icon="folder" width="35" height="35" style="color: #fff;"></button>
+                                </div>
+                                <div>
+                                    <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="35" height="35" style="color: #fff;"></button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php } else { ?>
+                        <div class="uk-navbar-right">
+                            <div class="uk-child-width-1-3 uk-flex uk-flex-middle" uk-grid>
+                                <div class="uk-padding-remove uk-flex uk-flex-center">
+                                    <a class="uk-button uk-button-text" href="#modal-sections" uk-toggle>Top Up Point</a>
+                                </div>
+                                <div class="uk-padding-remove uk-flex uk-flex-center">
+                                    <button type="button" class="uk-button" uk-toggle="target: #bookinglist" uk-icon="folder" width="30" height="30" style="color: #fff;"></button>
+                                </div>
+                                <div class="uk-padding-remove uk-flex uk-flex-center">
+                                    <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="30" height="30" style="color: #fff;"></button>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
                     <!-- Navbar Right End -->
-                    <!-- modal -->
-                    <div id="modal-sections" uk-modal>
-                        <div class="uk-modal-dialog">
+
+                    <!-- Modal Top Up Point -->
+                    <div class="uk-flex-top" id="modal-sections" uk-modal>
+                        <div class="uk-modal-dialog uk-margin-auto-vertical">
                             <button class="uk-modal-close-default" type="button" uk-close></button>
                             <div class="uk-modal-header">
                                 <h2 class="uk-modal-title">Top Up Point</h2>
@@ -129,7 +147,7 @@
                                         <div class="uk-form-controls">
                                             <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
-                                                <select class="uk-select uk-input" id="payment" name="payment" required/>
+                                                <select class="uk-select uk-input" id="payment" name="payment" required>
                                                     <option value="" selected disabled hidden><?=lang('global.payment')?></option>
                                                     <?php
                                                     foreach ($payments as $pay) {
@@ -157,7 +175,55 @@
                             </div>
                         </div>
                     </div>
-                    <!-- end modal -->
+                    <!-- Modal Top Up Point End -->
+
+                    <!-- Modal Booking -->
+                    <div uk-modal class="uk-flex-top" id="bookinglist">
+                        <div class="uk-modal-dialog uk-margin-auto-vertical">
+                            <div class="uk-modal-content">
+                                <div class="uk-modal-header">
+                                    <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.book')?></h5>
+                                </div>
+                                <div class="uk-modal-body">
+                                    <?php foreach ($bookings as $book) { ?>
+                                        <div class="uk-overflow-auto uk-margin-bottom">
+                                            <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="uk-text-emphasis uk-text-bold"><?= $book['created_at'] ?></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <?php foreach ($bookingdetails as $bookdet) { ?>
+                                                            <?php if ($book['id'] === $bookdet['bookingid']) { ?>
+                                                                <?php foreach ($variants as $variant) { ?>
+                                                                    <?php foreach ($products as $product) { ?>
+                                                                        <?php if (($variant['id'] === $bookdet['variantid']) && ($product['id'] === $variant['productid'])) { ?>
+                                                                            <?php foreach ($customers as $cust) { ?>
+                                                                                <?php if ($book['memberid'] === $cust['id']) { ?>
+                                                                                    <?php if ($cust['id'] === "0") { ?>
+                                                                                        <td><?= $product['name'].' - '.$variant['name'] ?></td>
+                                                                                    <?php } else { ?>
+                                                                                        <td><?= $cust['name'] ?></td>
+                                                                                    <?php } ?>
+                                                                                <?php } ?>
+                                                                            <?php } ?>
+                                                                        <?php } ?>
+                                                                    <?php } ?>
+                                                                <?php } ?>
+                                                            <?php } ?>
+                                                        <?php } ?>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Booking End -->
                 </div>
             </div>
         </header>
@@ -336,7 +402,7 @@
                             <div id="paymentmethod" class="uk-margin">
                                 <h4 class="uk-margin-remove"><?=lang('Global.paymethod')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <select class="uk-select" id="payment" name="payment" required/>
+                                    <select class="uk-select" id="payment" name="payment">
                                         <option value="" selected disabled hidden>-- <?=lang('Global.paymethod')?> --</option>
                                         <?php
                                         foreach ($payments as $pay) {
@@ -477,6 +543,7 @@
             <div class="tm-main">
                 <div class="uk-container uk-container-expand uk-padding-remove-horizontal">
                     <div class="uk-panel uk-panel-scrollable" style="background-color: #363636;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
+                        <?= view('Views/Auth/_message_block') ?>
                         <?php if ($outletPick === null) { ?>
                             <div class="uk-margin uk-flex uk-flex-center">
                                 <div class="uk-width-1-6@m uk-card uk-card-default uk-card-small uk-card-body">
@@ -1129,29 +1196,6 @@
             </div>
         </main>
         <!-- Main Section end -->
-
-        <!-- Modal
-        <div id="success_tic" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-            Modal content-->
-                <!-- <div class="modal-content">
-                    <a class="close" href="#" data-dismiss="modal">&times;</a>
-                    <div class="page-body">
-                        <div class="head">  
-                            <h3 style="margin-top:5px;">Lorem ipsum dolor sit amet</h3>
-                            <h4>Lorem ipsum dolor sit amet</h4>
-                        </div>
-                        <h1 style="text-align:center;">
-                            <div class="checkmark-circle">
-                                <div class="background"></div>
-                                <div class="checkmark draw"></div>
-                            </div>
-                        <h1>
-                    </div>
-                </div>
-            </div>
-        </div> --> 
-
 
         <!-- Footer Section -->
         <footer class="tm-footer" style="background-color:#000;">
