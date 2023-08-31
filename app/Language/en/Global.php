@@ -106,6 +106,7 @@ return [
     'confirmation'      => 'Confirmation',
     'shift'             => 'Shift',
     'invoice'           => 'Invoice',
+    'cashamount'        => 'Cash Payment Amount',
     
 
     // Button

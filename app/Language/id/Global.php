@@ -136,6 +136,7 @@ return [
     'book'              => 'Pesan',
     'addsop'            => 'Tambah Sop',
     'invoice'           => 'Nota',
+    'cashamount'        => 'jumlah Pembayaran Tunai',
 
     // Menu
     'dashboard'         => 'Dasbor',

@@ -67,7 +67,8 @@
                         <?php }?>
                     </div>
                 </div>
-                <hr>
+                <hr style ="border-top: 1px  dotted black;">
+                <!-- variant -->
                     <?php foreach ($trxdetails as $trxdet) {?>
                         <?php foreach ($variants as $variant) {?>
                             <?php foreach ($products as $product) { ?>
@@ -85,56 +86,63 @@
                                             <div class="uk-width-1-3"><?=$variantval?></div>
                                         </div>
                                         <div class="uk-grid-collapse" uk-grid>
-                                            <?php foreach ($vardiscval as $variantdisc){
-                                                $variantdis = $variantdisc;
-                                            }?>
-                                            <?php if ($variantdis > "0" ){
-                                               echo "<div class='uk-width-2-3'>Discount</br> $variantdis</div>";
-                                               echo "<div class='uk-width-1-3'></br>-$variantdis</div>";
-                                            }?>
+                                            <?php
+                                            echo "<div class='uk-width-2-3'>Discount</br> @" .$vardiscval[$variant['id']]. "</div>";
+                                            echo "<div class='uk-width-1-3'></br>-" .$vardiscval[$variant['id']]. "</div>";
+                                            ?>
                                         </div>
                                     </div>
                                 <?php } ?>
                             <?php } ?>
                         <?php } ?>
                     <?php } ?>
-                <hr class="uk-margin-small">
+                <!-- end variant -->
+
+                <!-- bundle -->
+                <!-- end bundle -->
+                    
+                <hr style ="border-top: 1px solid black;">
                 <div class="uk-margin-small uk-text-xsmall">
                     <div class="uk-grid-collapse" uk-grid>
-                        <div class="uk-width-2-3">Subtotal</div>
-                        <div class="uk-width-1-3"><?=$subtotal?></div>
+                        <div class="uk-width-2-3 uk-text-bold">Subtotal</div>
+                        <div class="uk-width-1-3  uk-text-bold"><?=$subtotal?></div>
                     </div>
                     <div class="uk-grid-collapse" uk-grid>
                         <?php if ($transactions['memberid'] !== "0") {
                             $memberdisc = $gconfig['memberdisc'];
-                            echo " <div class='uk-width-2-3'>Total Poin</div>";
-                            echo "<div class='uk-width-1-3'>$memberdisc/div>";
+                            echo "<div class='uk-width-2-3'>Discount Poin</div>";
+                            echo "<div class='uk-width-1-3'>$memberdisc</div>";
                         }?> 
                     </div>
                     <div class="uk-grid-collapse" uk-grid>
-                        <div class="uk-width-2-3">Total</div>
-                        <div class="uk-width-1-3"><?=$total?></div>
+                        <div class="uk-width-2-3 uk-text-bold">Total</div>
+                        <div class="uk-width-1-3  uk-text-bold"><?=$total?></div>
                     </div>
                     <div class="uk-grid-collapse" uk-grid>
-                        <div class="uk-width-2-3">Pay</div>
-                        <div class="uk-width-1-3">5000</div>
+                        <?php if ($pay !== "0"){
+                            echo "<div class='uk-width-2-3'>Pay</div>";
+                            echo "<div class='uk-width-1-3'>$pay</div>";
+                        }?>
                     </div>
                     <div class="uk-grid-collapse" uk-grid>
-                        <div class="uk-width-2-3">Change</div>
-                        <div class="uk-width-1-3">5000</div>
+                        <?php if ($change !== "0"){
+                            echo "<div class='uk-width-2-3'> change </div>";
+                            echo "<div class='uk-width-1-3'>$change</div>";
+                        }?>
                     </div>
                     <div class="uk-grid-collapse" uk-grid>
-                        <div class="uk-width-2-3">Customer</div>
                         <?php if ($transactions['memberid'] !== "0") {
                             $cust = $cust['name'];
-                        }else{
-                            $cust = 'Non Member';
+                            echo "<div class='uk-width-2-3'>Customer</div>";
+                            echo "<div class='uk-width-1-3'>$cust</div>";
                         }?> 
-                        <div class="uk-width-1-3"><?=$cust?></div>
                     </div>
                     <div class="uk-grid-collapse" uk-grid>
-                        <div class="uk-width-2-3">Point Earned</div>
-                        <div class="uk-width-1-3"><?=$gconfig['poinorder']?></div>
+                        <?php if ($transactions['memberid'] !== "0") {
+                            $poinearn = $gconfig['poinorder'];
+                            echo "<div class='uk-width-2-3'>Point Earned</div>";
+                            echo "<div class='uk-width-1-3'>$poinearn</div>";
+                        }?> 
                     </div>
                     <div class="uk-grid-collapse" uk-grid>
                         <?php if ($transactions['memberid'] !== "0") {
@@ -151,6 +159,7 @@
         <div class="uk-width-1-1@m uk-text-center@m uk-margin-medium-top" id="btn" style=" align-text:center;">
             <button type="button" class="uk-button uk-button-primary uk-preserve-color" onclick="printOut()">Print Invoice</button>
             <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata">Send Invoice</button>
+            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata">Back To Transaction</button>
         </div>
     </body>
 </html>

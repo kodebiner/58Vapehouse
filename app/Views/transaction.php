@@ -414,6 +414,15 @@
                                     </select>
                                 </div>
                             </div>
+                            
+                            <div id="cash" class="uk-margin">
+                                <h4 class="uk-margin-remove"><?=lang('Global.cashamount')?></h4>
+                                <div class="uk-form-controls uk-margin-small">
+                                    <div class="uk-margin">
+                                        <input class="uk-input" type="number" name="cashamount" placeholder="0" min="0" aria-label="<?=lang('Global.cashamount')?>">
+                                    </div>
+                                </div>
+                            </div>
 
                             <div id="bills" class="uk-margin" hidden>
                                 <h4><?=lang('Global.splitbill')?></h4>

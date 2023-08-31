@@ -393,27 +393,7 @@ class Pay extends BaseController
         }
 
         $db      = \Config\Database::connect();
-        // Populating Data
-        // $bundles            = $BundleModel->findAll();
-        // $bundets            = $BundledetModel->findAll();
-        // $Cash               = $CashModel->findAll();
-        // $outlets            = $OutletModel->where('id',$input['outlet'])->first();
-        // $customers          = $MemberModel->findAll();
-        // $products           = $ProductModel->findAll();
-        // $stocks             = $StockModel->findAll();
-        // $transactions       = $TransactionModel->where('id',$trxId)->first();
-        // $user               = $UserModel->where('id',$transactions['userid'])->first();
-        // $trxdetails         = $TrxdetailModel->where('transactionid',$trxId)->find();
-        // $trxpayments        = $TrxpaymentModel->where('transactionid',$trxId)->first();
-        // $payments           = $PaymentModel->where('id',$trxpayments['paymentid'])->first();
-        // foreach ($trxdetails as $trxdetail){
-        //     if ($trxdetail['transactionid'] === $trxId){
-        //         $trxdet[] = $trxdetail['id'];
-        //         $variants[]           = $VariantModel->where('id',$trxdet)->find();
-               
-        //     }
-        // }
-        
+
         $bundles            = $BundleModel->findAll();
         $bundets            = $BundledetModel->findAll();
         $Cash               = $CashModel->findAll();
@@ -438,30 +418,7 @@ class Pay extends BaseController
         $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
         $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
         $bundleVariants     = $bundleBuilder->get();
-        
-        // $data                   = $this->data;
-        // $data['title']          = lang('Global.transaction');
-        // $data['description']    = lang('Global.transactionListDesc');
-        // $data['bundles']        = $bundles;
-        // $data['bundets']        = $bundets;
-        // $data['cash']           = $Cash;
-        // $data['transactions']   = $TransactionModel->where('id',$trxId)->first();
-        // $data['outlet']         = $outlets['name'];
-        // $data['address']        = $outlets['address'];
-        // $data['payments']       = $payments;
-        // $data['customers']      = $customers;
-        // $data['products']       = $products;
-        // $data['variants']       = $variants;
-        // $data['stocks']         = $stocks;
-        // $data['payment']        = $payments['name'];
-        // $data['trxdetails']     = $trxdetails;
-        // $data['trxpayments']    = $trxpayments;
-        // $data['user']           = $user->username;
-        // $data['date']           = $transactions['date'];
-        // $data['bookings']       = $BookingModel->findAll();
-        // $data['bundleVariants'] = $bundleVariants->getResult();
-        // $data['transactionid']  = $trxId;
-        // $transactionx += $trxId;
+
         $data                   = $this->data;
         $data['title']          = lang('Global.transaction');
         $data['description']    = lang('Global.transactionListDesc');
@@ -491,13 +448,20 @@ class Pay extends BaseController
             $data['mempoin']        = "0";
             $data['poinused']       = "0";
         }
+
+        if (!empty ($input['cashamount'])){
+            $data['change']     = $input['cashamount'] - $input['value'];
+        }else{
+            $data['change']     = "0";
+        }
+
          
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $trxId;
         $data['vardiscval']     = $input['varprice'];
         $data['subtotal']       = $subtotal;
-        $data['pay']            = $input['value'];
+        $data['pay']            = $input['cashamount'];
         $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
         $data['total']          = $total;
         return view('Views/print', $data);
