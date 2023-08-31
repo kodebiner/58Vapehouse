@@ -193,9 +193,9 @@ $routes->group('transaction', ['filter'=>'login'], function($routes){
 // Pay Routes
 $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->get('', 'Pay::index', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('create', 'Pay::index',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('create', 'Pay::create',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('save', 'Pay::save',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Pay::bookingdelete/$1',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('pay', 'Pay::pay',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('topup', 'Pay::topup',['filter' =>'role:owner,supervisor']);
 });

@@ -186,38 +186,74 @@
                                 </div>
                                 <div class="uk-modal-body">
                                     <?php foreach ($bookings as $book) { ?>
-                                        <div class="uk-overflow-auto uk-margin-bottom">
-                                            <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="uk-text-emphasis uk-text-bold"><?= $book['created_at'] ?></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <?php foreach ($bookingdetails as $bookdet) { ?>
-                                                            <?php if ($book['id'] === $bookdet['bookingid']) { ?>
-                                                                <?php foreach ($variants as $variant) { ?>
-                                                                    <?php foreach ($products as $product) { ?>
-                                                                        <?php if (($variant['id'] === $bookdet['variantid']) && ($product['id'] === $variant['productid'])) { ?>
-                                                                            <?php foreach ($customers as $cust) { ?>
-                                                                                <?php if ($book['memberid'] === $cust['id']) { ?>
-                                                                                    <?php if ($cust['id'] === "0") { ?>
-                                                                                        <td><?= $product['name'].' - '.$variant['name'] ?></td>
-                                                                                    <?php } else { ?>
-                                                                                        <td><?= $cust['name'] ?></td>
-                                                                                    <?php } ?>
-                                                                                <?php } ?>
-                                                                            <?php } ?>
-                                                                        <?php } ?>
-                                                                    <?php } ?>
-                                                                <?php } ?>
-                                                            <?php } ?>
-                                                        <?php } ?>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                        <div class="uk-h3 tm-h4"><?= $book['created_at'] ?></div>
+                                        <div class="uk-margin-small-top" uk-grid>
+                                            <a class="uk-width-5-6 uk-link-reset" uk-toggle="target: #detail<?= $book['id'] ?>">
+                                                <?php
+                                                if ($book['memberid'] === '0') {
+                                                    $member = 'Non Member';
+                                                } else {
+                                                    foreach ($customers as $cust) {
+                                                        if ($book['memberid'] === $cust['id']) {
+                                                            $member = $cust['name'];
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                                <div><?= $member ?></div>
+                                                <div><?= $book['value'] ?></div>
+                                            </a>
+                                            <div class="uk-width-1-6 uk-light">
+                                                <a uk-icon="trash" class="uk-icon-button-delete" href="pay/delete/<?= $book['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
+                                            </div>
                                         </div>
+                                        <hr>
+
+                                        <!-- Modal Booking Detail -->
+                                        <div uk-modal class="uk-flex-top" id="detail<?= $book['id'] ?>">
+                                            <div class="uk-modal-dialog uk-margin-auto-vertical">
+                                                <div class="uk-modal-content">
+                                                    <div class="uk-modal-header">
+                                                        <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.bookdetail')?></h5>
+                                                    </div>
+                                                    <div class="uk-modal-body">
+                                                        <?php
+                                                        if ($book['memberid'] === '0') {
+                                                            $member = 'Non Member';
+                                                        } else {
+                                                            foreach ($customers as $cust) {
+                                                                if ($book['memberid'] === $cust['id']) {
+                                                                    $member = $cust['name'];
+                                                                }
+                                                            }
+                                                        }
+                                                        ?>
+                                                        <div class="uk-h3 tm-h4"><?= $member ?></div>
+                                                        <?php foreach ($bookingdetails as $bookdet) { 
+                                                            if ($bookdet['bookingid'] === $book['id']) {
+                                                                foreach ($variants as $variant) {
+                                                                    foreach ($products as $product) {
+                                                                        if (($product['id'] === $variant['productid']) && ($variant['id'] === $bookdet['variantid'])) {
+                                                                            $vname = $product['name'].' - '.$variant['name']; ?>
+                                                                            <div class="uk-margin-remove" uk-grid>
+                                                                                <div class="uk-width-5-6">
+                                                                                    <div><?= $vname ?></div>
+                                                                                </div>
+                                                                                <div class="uk-width-1-6">
+                                                                                    <div><?= $bookdet['value'] ?></div>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php }
+                                                                    }
+                                                                }
+                                                                
+                                                            }
+                                                        } ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal Booking Detail End -->
                                     <?php } ?>
                                 </div>
                             </div>

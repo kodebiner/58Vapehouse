@@ -22,73 +22,6 @@ use App\Models\TrxdetailModel;
 use App\models\TrxpaymentModel;
 class Pay extends BaseController
 {
-    
-    public function index()
-    {
-        $db      = \Config\Database::connect();
-
-        // Calling Models
-        $BundleModel            = new BundleModel();
-        $BundledetModel         = new BundledetailModel();
-        $BookingModel           = new BookingModel();
-        $BookingdetailModel     = new BookingdetailModel();
-        $CashModel              = new CashModel();
-        $OutletModel            = new OutletModel();
-        $UserModel              = new UserModel();
-        $MemberModel            = new MemberModel();
-        $PaymentModel           = new PaymentModel();
-        $ProductModel           = new ProductModel();
-        $VariantModel           = new VariantModel();
-        $StockModel             = new StockModel();
-        $TransactionModel       = new TransactionModel();
-        $TrxdetailModel         = new TrxdetailModel();
-        $TrxpaymentModel        = new TrxpaymentModel();
-
-        // Populating Data
-        $bundles            = $BundleModel->findAll();
-        $bundets            = $BundledetModel->findAll();
-        $Cash               = $CashModel->findAll();
-        $outlets            = $OutletModel->findAll();
-        $users              = $UserModel->findAll();
-        $customers          = $MemberModel->findAll();
-        $payments           = $PaymentModel->findAll();
-        $products           = $ProductModel->findAll();
-        $variants           = $VariantModel->findAll();
-        $stocks             = $StockModel->findAll();
-        $transactions       = $TransactionModel->findAll();
-        $trxdetails         = $TrxdetailModel->findAll();
-        $trxpayments        = $TrxpaymentModel->findAll();
-
-        $bundleBuilder      = $db->table('bundledetail');
-        $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
-        $bundleVariants     = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
-        $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
-        $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
-        $bundleVariants     = $bundleBuilder->get();
-
-       
-        // Parsing Data to View
-        $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc');
-        $data['bundles']        = $bundles;
-        $data['bundets']        = $bundets;
-        $data['cash']           = $Cash;
-        $data['transactions']   = $transactions;
-        $data['outlets']        = $outlets;
-        $data['payments']       = $payments;
-        $data['customers']      = $customers;
-        $data['products']       = $products;
-        $data['variants']       = $variants;
-        $data['stocks']         = $stocks;
-        $data['trxdetails']     = $trxdetails;
-        $data['trxpayments']    = $trxpayments;
-        $data['bookings']       = $BookingModel->findAll();
-        $data['bundleVariants'] = $bundleVariants->getResult();
-
-        return view('Views/transaction', $data);
-    }
-
     public function create()
     {
         // Calling Models
@@ -644,6 +577,25 @@ class Pay extends BaseController
             }
         }
         return redirect()->back()->with('message', lang('Global.saved'));
+    }
+
+    public function bookingdelete($id)
+    {
+        // Calling Model
+        $BookingModel       = new BookingModel();
+        $BookingdetailModel = new BookingdetailModel();
+
+        // Populating & Removing Booking Detail Data
+        $bookingdetails = $BookingdetailModel->where('bookingid', $id)->find();
+        foreach ($bookingdetails as $bookdet) {
+            // Removing Variant
+            $BookingdetailModel->delete($bookdet['id']);
+        }
+
+        // Removing Product Data
+        $BookingModel->delete($id);
+
+        return redirect()->back()->with('error', lang('Global.deleted'));
     }
 
     function invoice($id)
