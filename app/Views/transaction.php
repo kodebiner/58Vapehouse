@@ -182,7 +182,7 @@
                         <div class="uk-modal-dialog uk-margin-auto-vertical">
                             <div class="uk-modal-content">
                                 <div class="uk-modal-header">
-                                    <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.book')?></h5>
+                                    <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.bookingList')?></h5>
                                 </div>
                                 <div class="uk-modal-body">
                                     <?php foreach ($bookings as $book) { ?>
@@ -214,7 +214,7 @@
                                             <div class="uk-modal-dialog uk-margin-auto-vertical">
                                                 <div class="uk-modal-content">
                                                     <div class="uk-modal-header">
-                                                        <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.bookdetail')?></h5>
+                                                        <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.bookdetList')?></h5>
                                                     </div>
                                                     <div class="uk-modal-body">
                                                         <?php
@@ -236,7 +236,10 @@
                                                                         if (($product['id'] === $variant['productid']) && ($variant['id'] === $bookdet['variantid'])) {
                                                                             $vname = $product['name'].' - '.$variant['name']; ?>
                                                                             <div class="uk-margin-remove" uk-grid>
-                                                                                <div class="uk-width-5-6">
+                                                                                <div class="uk-width-1-6">
+                                                                                    <div><?= $bookdet['qty'] ?></div>
+                                                                                </div>
+                                                                                <div class="uk-width-2-3">
                                                                                     <div><?= $vname ?></div>
                                                                                 </div>
                                                                                 <div class="uk-width-1-6">
@@ -249,11 +252,259 @@
                                                                 
                                                             }
                                                         } ?>
+                                                        <hr>
+                                                        <div class="uk-margin">
+                                                            <button type="submit" class="uk-button uk-button-default" style="border-radius: 8px; width: 540px;"><?= lang('Global.print') ?></button>
+                                                        </div>
+                                                        <div>
+                                                            <a class="uk-button uk-button-primary" style="border-radius: 8px; width: 540px;" uk-toggle="#tambahdata" onclick="insertBooking<?= $book['id'] ?>()"><?= lang('Global.tocart') ?></a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <!-- Modal Booking Detail End -->
+
+                                        <!-- Script Booking -->
+                                        <script type="text/javascript">
+                                            var elemexist = document.getElementById('product<?=$variant['id']?><?= $book['id'] ?>');
+                                            function insertBooking<?= $book['id'] ?>() {
+                                                var oldproducts = document.querySelector('#products');
+                                                var oldproductschild = oldproducts.lastElementChild;
+                                                while (oldproductschild) {
+                                                    oldproducts.removeChild(oldproductschild);
+                                                    oldproductschild = oldproducts.lastElementChild;
+                                                }
+                                                <?php
+                                                $bookqty = array();
+                                                foreach ($bookingdetails as $bookdet) {
+                                                    foreach ($products as $product) {
+                                                        foreach ($variants as $variant) {
+                                                            if (($bookdet['bookingid'] === $book['id']) && ($variant['id'] === $bookdet['variantid']) && ($variant['productid'] === $product['id'])) {
+                                                                $VarName    = $variant['name'];
+                                                                $Price   = $variant['hargamodal'] + $variant['hargajual'];
+                                                                $ProdName   = $product['name'].' - '. $variant['name']; ?>
+                                                                var count = 1;
+
+                                                                if ( $( "#product<?=$variant['id']?><?= $book['id'] ?>" ).length ) {
+                                                                    alert('<?=lang('Global.readyAdd');?>');
+                                                                } else {
+                                                                    <?php
+                                                                    foreach ($stocks as $stock) {
+                                                                        if (($stock['variantid'] === $variant['id']) && ($stock['outletid'] === $outletPick)) {
+                                                                            echo 'let stock = '.$stock['qty'].';';
+                                                                            if ($stock['qty'] === '0') {
+                                                                                echo 'alert("'.lang('Global.alertstock').'")';
+                                                                            } else {
+                                                                    ?>
+
+                                                                    let minstock = 1;
+                                                                    let minval = count;
+
+                                                                    const products = document.getElementById('products');
+                                                                    
+                                                                    const productgrid = document.createElement('div');
+                                                                    productgrid.setAttribute('id', 'product<?=$variant['id']?><?= $book['id'] ?>');
+                                                                    productgrid.setAttribute('class', 'uk-margin-small');
+                                                                    productgrid.setAttribute('uk-grid', '');
+
+                                                                    const addcontainer = document.createElement('div');
+                                                                    addcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
+                                                                    
+                                                                    const productqtyinputadd = document.createElement('div');
+                                                                    productqtyinputadd.setAttribute('id','addqty<?=$variant['id']?>');
+                                                                    productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
+                                                                    productqtyinputadd.innerHTML = '+';
+
+                                                                    const delcontainer = document.createElement('div');
+                                                                    delcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
+                                                                    
+                                                                    const productqtyinputdel = document.createElement('div');
+                                                                    productqtyinputdel.setAttribute('id','delqty<?=$variant['id']?>');
+                                                                    productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
+                                                                    productqtyinputdel.innerHTML = '-';
+
+                                                                    const quantitycontainer = document.createElement('div');
+                                                                    quantitycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle uk-width-1-6');
+
+                                                                    const productqty = document.createElement('div');                                               
+
+                                                                    const inputqty = document.createElement('input');
+                                                                    inputqty.setAttribute('type', 'number');
+                                                                    inputqty.setAttribute('id', "qty[<?=$variant['id']?>]");
+                                                                    inputqty.setAttribute('name', "qty[<?=$variant['id']?>]");
+                                                                    inputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
+                                                                    inputqty.setAttribute('min', minstock);
+                                                                    inputqty.setAttribute('max', stock);
+                                                                    inputqty.setAttribute('value', '<?= $bookdet['qty'] ?>');
+                                                                    inputqty.setAttribute('onchange', 'showprice()');
+                                                                    
+                                                                    const handleIncrement = () => {
+                                                                        count++;
+                                                                        if (inputqty.value == stock) {
+                                                                            inputqty.value = stock;
+                                                                            count = stock;
+                                                                            alert('<?=lang('Global.alertstock')?>');
+                                                                        } else {
+                                                                            inputqty.value = count;
+                                                                            var price = count * <?=$Price?>;
+                                                                            var bargainprice = varbargain.value * inputqty.value;
+                                                                            if(varbargain.value){
+                                                                                document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
+                                                                            }
+                                                                            else {
+                                                                                productprice.innerHTML = price;
+                                                                                productprice.value = price;
+                                                                            }
+                                                                        }
+                                                                    };
+                                                                    
+                                                                    const handleDecrement = () => {
+                                                                        count--;
+                                                                        if (inputqty.value == '1') {
+                                                                            inputqty.value = '0';
+                                                                            inputqty.remove();                                                                                                
+                                                                            productgrid.remove();
+                                                                        } else {
+                                                                            inputqty.value = count;
+                                                                            var price = count * <?=$Price?>;
+                                                                            var bargainprice = varbargain.value * inputqty.value;
+                                                                            if(varbargain.value){
+                                                                                document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
+                                                                            }
+                                                                            else {
+                                                                                productprice.innerHTML = price;
+                                                                                productprice.value = price;
+                                                                            }
+                                                                        }
+                                                                    };
+
+                                                                    productqtyinputadd.addEventListener("click", handleIncrement);
+                                                                    productqtyinputdel.addEventListener("click", handleDecrement);
+
+                                                                    const namecontainer = document.createElement('div');
+                                                                    namecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
+
+                                                                    const productname = document.createElement('div');
+                                                                    productname.setAttribute('id', 'name<?=$variant['id']?>');
+                                                                    productname.setAttribute('class', 'tm-h2');
+                                                                    productname.innerHTML = '<?=$ProdName?>';
+
+                                                                    const pricecontainer = document.createElement('div');
+                                                                    pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
+                                                                    
+                                                                    const productprice = document.createElement('div');
+                                                                    productprice.setAttribute('id', 'price<?=$variant['id']?>');
+                                                                    productprice.setAttribute('class', 'tm-h2');
+                                                                    productprice.setAttribute('name', 'price[]');
+                                                                    productprice.setAttribute('value', showprice())
+                                                                    productprice.innerHTML = showprice();
+
+                                                                    const varpricecontainer = document.createElement('div');
+                                                                    varpricecontainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
+
+                                                                    const varbardiv = document.createElement('div');
+                                                                    varbardiv.setAttribute('class','uk-margin uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
+
+                                                                    const varbarlab = document.createElement('label');
+                                                                    varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
+
+                                                                    const varbartext = document.createTextNode("Variant Bargain");
+
+                                                                    const varbarform = document.createElement('div');
+                                                                    varbarform.setAttribute('class','uk-form-controls');
+
+                                                                    const varbargain = document.createElement('input');
+                                                                    varbargain.setAttribute('class', 'uk-input uk-form-width-small');
+                                                                    varbargain.setAttribute('id', 'varbargain<?=$variant['id']?>');
+                                                                    varbargain.setAttribute('placeholder', '0');
+                                                                    varbargain.setAttribute('name', 'varbargain[<?=$variant['id']?>]');
+                                                                    varbargain.setAttribute('min', "0");
+                                                                    varbargain.setAttribute('type', 'number');
+
+                                                                    const varvaluecontainer = document.createElement('div');
+                                                                    varvaluecontainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
+
+                                                                    const varpricediv = document.createElement('div');
+                                                                    varpricediv.setAttribute('class','uk-margin uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
+
+                                                                    const varpricelab = document.createElement('label');
+                                                                    varpricelab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4' );
+
+                                                                    const varpricetext = document.createTextNode("Discount Variant");
+
+                                                                    const varpriceform = document.createElement('div');
+                                                                    varpriceform.setAttribute('class','uk-form-controls');
+                                                                    
+                                                                    const varprice = document.createElement('input');
+                                                                    varprice.setAttribute('class', 'uk-input uk-form-width-small varprice');
+                                                                    varprice.setAttribute('data-index', '<?=$variant['id']?>');
+                                                                    varprice.setAttribute('id', 'varprice<?=$variant['id']?>');
+                                                                    varprice.setAttribute('placeholder', '0');
+                                                                    varprice.setAttribute('name', 'varprice[<?=$variant['id']?>]');
+                                                                    varprice.setAttribute('value', '0');
+                                                                    varprice.setAttribute('type', 'number');
+                                                                    varprice.setAttribute('min', '0');
+
+
+                                                                    function showprice() {
+                                                                        var qty = inputqty.value;
+                                                                        var price = qty * <?=$Price?>;
+                                                                        return price;
+                                                                        productprice.innerHTML = price;
+                                                                    }
+
+                                                                    inputqty.onchange = function() {showprice()};
+
+                                                                    varbargain.onchange = function() {
+                                                                        var bargainprice = varbargain.value * inputqty.value;
+                                                                        if (bargainprice) {
+                                                                            document.getElementById('price<?=$variant['id']?>').innerHTML = bargainprice;
+                                                                        } else {
+                                                                            document.getElementById('price<?=$variant['id']?>').innerHTML = showprice();
+                                                                        }
+                                                                    }
+
+                                                                    addcontainer.appendChild(productqtyinputadd);
+                                                                    productqty.appendChild(inputqty);
+                                                                    quantitycontainer.appendChild(productqty);
+                                                                    delcontainer.appendChild(productqtyinputdel);
+                                                                    pricecontainer.appendChild(productprice);
+                                                                    namecontainer.appendChild(productname);
+                                                                    varpricecontainer.appendChild(varbardiv);
+                                                                    varbardiv.appendChild(varbarlab);
+                                                                    varbarlab.appendChild(varbartext);
+                                                                    varbarlab.appendChild(varbarform);
+                                                                    varbarform.appendChild(varbargain);
+                                                                    varvaluecontainer.appendChild(varpricediv);
+                                                                    varpricediv.appendChild(varpricelab);
+                                                                    varpricelab.appendChild(varpricetext);
+                                                                    varpricelab.appendChild(varpriceform);
+                                                                    varpriceform.appendChild(varprice);                                                                                        
+                                                                    productgrid.appendChild(delcontainer);
+                                                                    productgrid.appendChild(quantitycontainer);
+                                                                    productgrid.appendChild(addcontainer);
+                                                                    productgrid.appendChild(namecontainer);
+                                                                    productgrid.appendChild(pricecontainer);
+                                                                    productgrid.appendChild(pricecontainer);
+                                                                    // productgrid.appendChild(but);
+                                                                    productgrid.appendChild(varpricecontainer);
+                                                                    productgrid.appendChild(varvaluecontainer);
+                                                                    products.appendChild(productgrid);
+
+                                                                    <?php
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                }
+                                                            <?php }
+                                                        }
+                                                    }
+                                                } ?>
+                                            }
+                                        </script>
+                                        <!-- Script Booking End -->
                                     <?php } ?>
                                 </div>
                             </div>

@@ -133,6 +133,8 @@ return [
     'percent'           => '%',
     'rp'                => 'Rp',
     'readyAdd'          => 'Sudah Ditambahkan!',
+    'print'             => 'Cetak',
+    'tocart'            => 'Masukkan ke Keranjang',
     'book'              => 'Pesan',
     'addsop'            => 'Tambah Sop',
     'invoice'           => 'Nota',
@@ -186,6 +188,8 @@ return [
     'paymentList'               => 'Daftar Pembayaran',
     'supplierList'              => 'Daftar Pemasok',
     'purchaseList'              => 'Daftar Pembelian',
+    'bookingList'               => 'Daftar Booking',
+    'bookdetList'               => 'Rincian Booking',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
     

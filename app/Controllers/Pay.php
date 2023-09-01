@@ -589,10 +589,19 @@ class Pay extends BaseController
         // Calling Model
         $BookingModel       = new BookingModel();
         $BookingdetailModel = new BookingdetailModel();
+        $StockModel         = new StockModel();
 
         // Populating & Removing Booking Detail Data
         $bookingdetails = $BookingdetailModel->where('bookingid', $id)->find();
         foreach ($bookingdetails as $bookdet) {
+            // Restore Stock
+            $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $bookdet['variantid'])->first();
+            $stockdata = [
+                'id'    => $stock['id'],
+                'qty'   => $stock['qty'] + $bookdet['qty'],
+            ];
+            $StockModel->save($stockdata);
+
             // Removing Variant
             $BookingdetailModel->delete($bookdet['id']);
         }

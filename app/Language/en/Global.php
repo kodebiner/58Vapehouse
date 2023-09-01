@@ -136,6 +136,8 @@ return [
     'percent'           => '%',
     'rp'                => 'Rp',
     'readyAdd'          => 'Already added!',
+    'print'             => 'Print',
+    'tocart'            => 'Continue To Cart',
     'book'              => 'Booking',
     'addsop'            => 'Add Sop',
     
@@ -188,6 +190,8 @@ return [
     'paymentList'               => 'Payment List',
     'supplierList'              => 'Supplier List',
     'purchaseList'              => 'Purchase List',
+    'bookingList'               => 'Booking List',
+    'bookdetList'               => 'Booking Details',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
     
