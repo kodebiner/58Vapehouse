@@ -1597,25 +1597,31 @@
                 
                 var subarr = [];
                 var discarr = [];
-                
+
                 for (i = 0; i < prices.length; i++) {
                     price = Number(prices[i].innerText);
                     subarr.push(price);
                 }
                 
-                for (i = 0; i < discvars.length; i++) {
-                    var index = discvars[i].getAttribute('data-index');
-                    var varqty = document.getElementById('qty['+index+']').value;
-                    var vardisc = document.getElementById('varprice'+index).value;
-                    var discountvar = Number(varqty) * Number(vardisc);
-                    discarr.push(discountvar);
+                if (discvars.length !== 0){
+                    for (i = 0; i < discvars.length; i++) {
+                        var index = discvars[i].getAttribute('data-index');
+                        var varqty = document.getElementById('qty['+index+']').value;
+                        var vardisc = document.getElementById('varprice'+index).value;
+                        var discountvar = Number(varqty) * Number(vardisc);
+                        discarr.push(discountvar);
+                    }
                 }
                 if (subarr.length === 0) {
                     document.getElementById('subtotal').innerHTML = 0;
                 } else {
                     var subtotal = subarr.reduce(function(a, b){ return a + b; });
+                    if (discvars.length !== 0){
                     var discountvar = discarr.reduce(function(a, b){ return a + b; });
                     document.getElementById('subtotal').innerHTML = subtotal - discountvar;
+                    }else{
+                        document.getElementById('subtotal').innerHTML = subtotal;
+                    }
                 }
                 $(document).ready(function() {
 
@@ -1625,7 +1631,8 @@
                         
                         var subarr = [];
                         var discarr = [];
-                        
+
+                        if (discvars.length !== 0){
                             for (i = 0; i < prices.length; i++) {
                                 price = Number(prices[i].innerText);
                                 subarr.push(price);
@@ -1649,6 +1656,7 @@
                             if (document.getElementById('subtotal').innerHTML < min ){
                             document.getElementById('subtotal').innerHTML = "Sorry Price To Low!"; 
                             }
+                        }
                     }); 
 
                     $('#pay').click(function(){

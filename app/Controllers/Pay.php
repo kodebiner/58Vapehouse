@@ -393,11 +393,16 @@ class Pay extends BaseController
             $data['change']     = "0";
         }
 
+        if (!empty($input['varprice'])){
+            $data['vardiscval']     = $input['varprice'];
+        }else{
+            $data['vardiscval']     = "0";
+        }
+
          
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $trxId;
-        $data['vardiscval']     = $input['varprice'];
         $data['subtotal']       = $subtotal;
         $data['pay']            = $input['cashamount'];
         $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
