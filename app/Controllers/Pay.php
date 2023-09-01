@@ -44,10 +44,10 @@ class Pay extends BaseController
         $TrxpaymentModel        = new TrxpaymentModel();
         $MemberModel            = new MemberModel();
         $TransactionModel       = new TransactionModel();
-
+        
         // Getting Inputs
         $input = $this->request->getPost();
-
+        
         // Populating Data
         $date           = date('Y-m-d H:i:s');
         $Gconfig        = $GconfigModel->first();
@@ -58,6 +58,7 @@ class Pay extends BaseController
         $bundvalues = array();
         
         // dd($input);
+        
         if (!empty($input['qty'])) {
             foreach ($input['qty'] as $varid => $varqty) {
                 $variant = $VariantModel->find($varid);
@@ -71,7 +72,7 @@ class Pay extends BaseController
                 }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
                     $varvalues[]  = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar;
                     // Bargain Added And Null Varprice
-                }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
+                }elseif((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)){
                     $varvalues[]  = $discbargain;
                     // Null Bargain & Varprice
                 }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
@@ -82,7 +83,6 @@ class Pay extends BaseController
             $varvalues[] = '0';
         }
         
-       
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bundqty) {
                 $bundle = $BundleModel->find($bunid);
@@ -94,6 +94,7 @@ class Pay extends BaseController
 
         $varvalue = array_sum($varvalues);
         $bundvalue = array_sum($bundvalues);
+
         
         $subtotal = $varvalue + $bundvalue;
         
@@ -152,6 +153,7 @@ class Pay extends BaseController
 
                     $discvar = (int)$input['varprice'][$varid] * $varqty;
                     $discbargain = (int)$input['varbargain'][$varid]* $varqty;
+                    
                     // Bargain And Varprice Added
                     if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
                         $varPrice  = ($discbargain - $discvar)/$varqty;
@@ -159,13 +161,15 @@ class Pay extends BaseController
                     }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
                         $varPrice  = (($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar) / $varqty;
                         // Bargain Added And Null Varprice
-                    }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
+                    }elseif((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)){
                         $varPrice  = $discbargain / $varqty;
                         // Null Bargain & Varprice
                     }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
                         $varPrice = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) / $varqty;
+                    }else{
+                        $varPrice = 0;
                     }
-
+                    
                 $trxvar = [
                     'transactionid' => $trxId,
                     'variantid'     => $varid,
@@ -231,6 +235,7 @@ class Pay extends BaseController
         // PPN Value
         $ppn = $value * ($Gconfig['ppn']/100);
 
+        
         //Insert Trx Payment 
         $total = $subtotal - $discount - (int)$input['poin'] - $memberdisc + $ppn;
         if(!isset($input['firstpayment'])&& !isset($input['secpayment']) && isset($input['payment'])){

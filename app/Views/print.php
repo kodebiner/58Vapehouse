@@ -69,36 +69,76 @@
                 </div>
                 <hr style ="border-top: 1px  dotted black;">
                 <!-- variant -->
-                    <?php foreach ($trxdetails as $trxdet) {?>
-                        <?php foreach ($variants as $variant) {?>
-                            <?php foreach ($products as $product) { ?>
-                                <?php if (($trxdet['variantid'] === $variant['id']) && ($product['id'] === $variant['productid']) && ($trxdet['transactionid'] === $transactions['id']) ) {
-                                    $variantName     = $variant['name'];
-                                    $productName     = $product['name']; 
-                                    $variantval      = $trxdet['value'] / $trxdet['qty'];
-                                    ?>
-                                    <div class="uk-margin-small uk-text-xsmall">
-                                        <div>
-                                            <?=$productName.' - '.$variantName?>
+                    <?php foreach ($trxdetails as $trxdet) {
+                        if ($trxdet['variantid'] !== "0"){
+                            foreach ($variants as $variant) {
+                                foreach ($products as $product) { 
+                                    if (($trxdet['variantid'] === $variant['id']) && ($product['id'] === $variant['productid']) && ($trxdet['transactionid'] === $transactions['id']) ) {
+                                        $variantName     = $variant['name'];
+                                        $productName     = $product['name']; 
+                                        $variantval      = $trxdet['value'];
+                                        ?>
+                                        <div class="uk-margin-small uk-text-xsmall">
+                                            <div>
+                                                <?=$productName.' - '.$variantName?>
+                                            </div>
+                                            <div class="uk-grid-collapse" uk-grid>
+                                                <div class="uk-width-2-3">x<?=$trxdet['qty']?> @<?=$variantval?></div>
+                                                <div class="uk-width-1-3"><?=$variantval * $trxdet['qty']?></div>
+                                            </div>
+                                            <div class="uk-grid-collapse" uk-grid>
+                                                <?php
+                                                if (!empty($vardiscval[$variant['id']])){
+                                                    echo "<div class='uk-width-2-3'>Discount</br> @" .$vardiscval[$variant['id']]. "</div>";
+                                                    echo "<div class='uk-width-1-3'></br>-" .$vardiscval[$variant['id']]. "</div>";
+                                                }
+                                                ?>
+                                            </div>
                                         </div>
-                                        <div class="uk-grid-collapse" uk-grid>
-                                            <div class="uk-width-2-3">x<?=$trxdet['qty']?> @<?=$variantval?></div>
-                                            <div class="uk-width-1-3"><?=$variantval?></div>
-                                        </div>
-                                        <div class="uk-grid-collapse" uk-grid>
-                                            <?php
-                                            echo "<div class='uk-width-2-3'>Discount</br> @" .$vardiscval[$variant['id']]. "</div>";
-                                            echo "<div class='uk-width-1-3'></br>-" .$vardiscval[$variant['id']]. "</div>";
-                                            ?>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-                            <?php } ?>
-                        <?php } ?>
-                    <?php } ?>
+                                    <?php }
+                                } 
+                            } 
+                        }
+                    } ?>
                 <!-- end variant -->
 
                 <!-- bundle -->
+                <?php 
+                if (!empty($trxdet['bundleid']) ){
+                    foreach ($trxdetails as $trxdet) { 
+                        foreach ($bundles as $bundle){
+                            if (($trxdet['transactionid'] === $transactions['id']) && ($trxdet['bundleid'] === $bundle['id']) ) {
+                                $bundleName      = $bundle  ['name'];
+                                $variantval      = $trxdet  ['value'];
+                                ?>
+                                <div class="uk-margin-small uk-text-xsmall">
+                                    <div>
+                                        x<?=$trxdet['qty']?> Bundle <br> <?= $bundleName?> <br>
+                                        <div class="uk-grid-collapse" uk-grid>
+                                            <div class="uk-width-2-3"> @<?=$variantval?></div>
+                                            <div class="uk-width-1-3"><?=$variantval * $trxdet['qty']?></div>
+                                        </div>
+                                        <?php 
+                                        foreach ($bundets as $bundet){
+                                            foreach ($products as $product) { 
+                                                foreach ($variants as $variant){    
+                                                    $productName     = $product ['name']; 
+                                                    $variantName     = $variant ['name'];
+                                                    if(($variant['id'] === $bundet['variantid'])  && ($product['id'] === $variant['productid'])&& 
+                                                    ($trxdet['bundleid'] === $bundet['bundleid']) && ($bundle['id'] === $bundet['bundleid'])){
+                                                        echo "# ".$productName."-".$variantName."</br>";
+                                                    }
+                                                }
+                                            }
+                                        }?>
+                                    </div>
+                                </div>
+                                <?php 
+                            } 
+                        } 
+                    } 
+                } 
+                ?>
                 <!-- end bundle -->
                     
                 <hr style ="border-top: 1px solid black;">
