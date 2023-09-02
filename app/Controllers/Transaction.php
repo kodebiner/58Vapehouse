@@ -700,5 +700,11 @@ class Transaction extends BaseController
         }
 
     }
+
+    public function restorestock() {
+        $input = $this->request->getPost();
+
+        die($input);
+    }
     
 }

@@ -188,6 +188,7 @@ $routes->group('transaction', ['filter'=>'login'], function($routes){
     $routes->get('create', 'Transaction::index',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('create', 'Transaction::create',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('pay', 'Transaction::pay',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->post('restorestock', 'Transaction::restorestock',['filter'=> 'role:owner,supervisor,operator']);
 });
 
 // Pay Routes
