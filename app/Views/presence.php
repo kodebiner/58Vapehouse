@@ -20,9 +20,7 @@
             <h3 class="tm-h3"><?=lang('Global.presence')?></h3>
         </div>
         <div class ="uk-width-1-2@s uk-text-right@s">
-            <form class="uk-form-stacked" role="form" action="sop/todolist" method="post">
-                <button type="submit" class="uk-button uk-button-primary uk-button-default uk-preserve-color">To Do List</button>
-            </form>
+            <a href="sop/todolist" class="uk-button uk-button-primary uk-button-default uk-preserve-color">To Do List</a>
         </div>
     </div>
 </div>

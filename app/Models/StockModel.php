@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class StockModel extends Model
 {
     protected $allowedFields = [
-        'outletid','variantid','restock','sale','qty', 'productid', 'supplierid', 'price', 'status',
+        'outletid','variantid','restock','sale','qty'
     ];
 
     protected $table      = 'stock';

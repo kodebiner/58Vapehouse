@@ -56,7 +56,7 @@ class Transaction extends BaseController
         $transactions           = $TransactionModel->findAll();
         $trxdetails             = $TrxdetailModel->findAll();
         $trxpayments            = $TrxpaymentModel->findAll();
-        $bookings               = $BookingModel->orderBy('created_at', 'DESC')->findAll();
+        $bookings               = $BookingModel->where('status', '0')->orderBy('created_at', 'DESC')->findAll();
         $bookingdetails         = $BookingdetailModel->findAll();
 
         $bundleBuilder          = $db->table('bundledetail');
@@ -702,9 +702,51 @@ class Transaction extends BaseController
     }
 
     public function restorestock() {
-        $input = $this->request->getPost();
+        // Calling Model
+        $StockModel = new StockModel();
+        $BookingModel = new BookingModel();
 
-        die($input);
+        // Populating Data
+        $input = $this->request->getPost();
+        $outletId = $this->data['outletPick'];
+
+        // Restore Stock
+        $stocks = $StockModel->where('outletid', $outletId)->find();
+        foreach ($stocks as $stock) {
+            if (isset($input['datavar'])) {
+                foreach ($input['datavar'] as $varkey => $varvalue) {
+                    if ($varkey == $stock['variantid']) {
+                        $varstock = [
+                            'id'        => $stock['id'],
+                            'qty'       => $stock['qty'] + $varvalue
+                        ];
+                        $StockModel->save($varstock);
+                    }
+                    
+                }
+            }
+            if (isset($input['databund'])) {
+                foreach ($input['databund'] as $bunkey => $bunvalue) {
+                    if ($bunkey == $stock['variantid']) {
+                        $bunstock = [
+                            'id'        => $stock['id'],
+                            'qty'       => $stock['qty'] + $bunvalue
+                        ];
+                        $StockModel->save($bunstock);
+                    }
+                }
+            }
+        }
+
+        // Set Booking Status
+        $bookingdata = [
+            'id'        => $input['bookingid'],
+            'status'    => true
+        ];
+        $BookingModel->save($bookingdata);
+
+        // Return message
+        die(json_encode('success'));
     }
     
 }

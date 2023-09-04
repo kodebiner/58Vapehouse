@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class BookingModel extends Model
 {
     protected $allowedFields = [
-        'outletid','userid','memberid','paymentid','value','disctype','discvalue',
+        'outletid','userid','memberid','value','disctype','discvalue','discvar','bargainprice','status','created_at','updated_at','deleted_at',
 
     ];
 

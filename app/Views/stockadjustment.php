@@ -136,12 +136,13 @@
                                     foreach ($products as $product) {
                                         if ($variant['productid'] === $product['id']) {
                                             $ProdName = $product['name'];
+
+                                            echo $ProdName.' - '.$varName;
                                         }
                                     }
                                 }
                             }
                         ?>
-                        <?= $ProdName.' - '.$varName ?>
                     </td>
                     <td class="">
                         <?php foreach ($outlets as $outlet) {

@@ -124,8 +124,10 @@ class Bundle extends BaseController
         $bundleDetailModel  = new bundledetailModel;
 
         // deleted
-        $detail =  $bundleDetailModel->where('bundleid',$id)->first();
-        $bundleDetailModel->delete($detail);
+        $detail =  $bundleDetailModel->where('bundleid',$id)->find();
+        foreach ($detail as $bundet) {
+            $bundleDetailModel->delete($bundet['id']);
+        }
         $bundleModel->delete($id);
         return redirect()->back()->with('error', lang('Global.deleted'));
 
@@ -184,7 +186,7 @@ class Bundle extends BaseController
         $bundleDetailModel  = new bundledetailModel;
 
         $bundle = $bundleDetailModel->where('variantid',$id)->first();
-        // // deleted
+        // deleted
         $bundleDetailModel->delete($bundle);
 
         return redirect()->back()->with('message', lang('Global.delete'));
