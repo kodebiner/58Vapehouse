@@ -169,6 +169,8 @@ return [
     'supplier'          => 'Supplier',
     'purchase'          => 'Purchase',
     'sop'               => 'Oprational Standar',
+    'shift1'            => 'Shift 1',
+    'shift2'            => 'Shift 2',
 
     // Title
     'employeeList'              => 'Employee List',
@@ -193,6 +195,7 @@ return [
     'purchaseList'              => 'Purchase List',
     'bookingList'               => 'Booking List',
     'bookdetList'               => 'Booking Details',
+    'trxHistoryList'            => 'Transaction History List',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
     
@@ -213,6 +216,7 @@ return [
     'paymentListDesc'           => 'List of all your payments',
     'supplierListDesc'          => 'List of all your supplier',
     'purchaseListDesc'          => 'List of all your purchase',
+    'trxHistoryList'            => 'List of all your transaction',
     'userProfileDesc'           => 'Information about your profile',
     'businessInfoDesc'          => 'Information about your business',
 ];

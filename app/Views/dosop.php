@@ -6,13 +6,13 @@
         <li>
             <a style="border-radius: 10px;" uk-switcher-item="0">
                 <div width="45" height="30" uk-icon="sign-in"></div>
-                <div class="uk-h4 uk-margin-small">Shift 1</div>
+                <div class="uk-h4 uk-margin-small"><?= lang('Global.shift1') ?></div>
             </a>
         </li>
         <li>
             <a style="border-radius: 10px;" uk-switcher-item="0">
                 <div width="45" height="30" uk-icon="sign-out"></div>
-                <div class="uk-h4 uk-margin-small">Shift 2</div>
+                <div class="uk-h4 uk-margin-small"><?= lang('Global.shift2') ?></div>
             </a>
         </li>
     </ul>

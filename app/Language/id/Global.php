@@ -166,6 +166,8 @@ return [
     'supplier'          => 'Pemasok',
     'purchase'          => 'Pembelian',
     'sop'               => 'Standar Operasional',
+    'shift1'            => 'Shift 1',
+    'shift2'            => 'Shift 2',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',
@@ -190,6 +192,7 @@ return [
     'purchaseList'              => 'Daftar Pembelian',
     'bookingList'               => 'Daftar Booking',
     'bookdetList'               => 'Rincian Booking',
+    'trxHistoryList'            => 'Daftar Riwayat Transaksi',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
     
@@ -210,6 +213,7 @@ return [
     'paymentListDesc'           => 'Daftar pembayaran yang anda miliki',
     'supplierListDesc'          => 'Daftar pemasok yang anda miliki',
     'purchaseListDesc'          => 'Daftar pembelian yang anda miliki',
+    'trxHistoryList'            => 'Daftar transaksi yang anda miliki',
     'userProfileDesc'           => 'Informasi mengenai profil anda',
     'businessInfoDesc'          => 'Informasi mengenai bisnis anda',
 ];

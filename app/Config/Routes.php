@@ -191,6 +191,11 @@ $routes->group('transaction', ['filter'=>'login'], function($routes){
     $routes->post('restorestock', 'Transaction::restorestock',['filter'=> 'role:owner,supervisor,operator']);
 });
 
+// Debt & Transaction History
+$routes->group('trxhistory', ['filter'=>'login'], function($routes){
+    $routes->get('', 'Debt::indextrx', ['filter' => 'role:owner,supervisor,operator']);
+});
+
 // Pay Routes
 $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->get('', 'Pay::index', ['filter' => 'role:owner,supervisor,operator']);
