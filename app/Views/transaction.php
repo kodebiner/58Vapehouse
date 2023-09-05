@@ -240,6 +240,7 @@
                                                                                 $vname = $product['name'].' - '.$variant['name']; ?>
                                                                                 <div class="uk-margin-remove" uk-grid>
                                                                                     <div class="uk-width-1-6">
+                                                                                    <input type="number" value="<?=$book['id']?>" hidden>
                                                                                         <div><?= $bookdet['qty'] ?></div>
                                                                                     </div>
                                                                                     <div class="uk-width-2-3">
@@ -256,7 +257,7 @@
                                                                     foreach ($bundles as $bundle) {
                                                                         if ($bundle['id'] === $bookdet['bundleid']) {
                                                                             $bname = $bundle['name']; ?>
-
+                                                                            <input type="number" value="<?=$book['id']?>" hidden>
                                                                             <div class="uk-margin-remove" uk-grid>
                                                                                 <div class="uk-width-1-6">
                                                                                     <div><?= $bookdet['qty'] ?></div>
@@ -885,15 +886,6 @@
                                         }
                                         ?>
                                     </select>
-                                </div>
-                            </div>
-                            
-                            <div id="cash" class="uk-margin">
-                                <h4 class="uk-margin-remove"><?=lang('Global.cashamount')?></h4>
-                                <div class="uk-form-controls uk-margin-small">
-                                    <div class="uk-margin">
-                                        <input class="uk-input" type="number" name="cashamount" placeholder="0" min="0" aria-label="<?=lang('Global.cashamount')?>">
-                                    </div>
                                 </div>
                             </div>
 
@@ -1705,70 +1697,6 @@
         <!-- Footer Section end -->
         
 
-        <!-- <div id="modalsucces"  uk-modal >
-            <div class="uk-modal-dialog">
-                <button class="uk-modal-close-default" type="button" uk-close></button>
-                <div class="uk-modal-body">
-                <div class="page-body">
-                    <div id="success_tic" class="modal fade" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="page-body">
-                                    <div class="head">  
-                                        <h3 style="margin-top:5px;">Transaction Success</h3>
-                                    </div>
-                                    <h1 style="text-align:center;">
-                                        <div class="checkmark-circle">
-                                            <div class="background"></div>
-                                            <div class="checkmark draw"></div>
-                                        </div>
-                                    <h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="uk-modal-footer">
-                    <div class="uk-margin uk-flex uk-flex-center">
-                        <button class="uk-button uk-button-primary uk-button-large uk-text-center uk-margin-small-left" type="button" style="border-radius: 8px; width: 260px;">send</button>
-                        <a href="#modalinvoice" class="uk-button uk-button-danger uk-button-large uk-text-center uk-margin-small-left" style="border-radius: 8px; width: 260px;" uk-toggle>Print</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="modalinvoice" uk-modal>
-            <div class="uk-modal-dialog">
-                <button class="uk-modal-close-default" type="button" uk-close></button>
-                <div class="uk-modal-header">
-                    <h2 class="uk-modal-title">invoice</h2>
-                </div>
-                <div class="uk-modal-body">
-                <table class="uk-table uk-table-divider">
-                    <thead>
-                        <tr>
-                            <th class="uk-table" style="color:black">Product</th>
-                            <th class="uk-table-expand" style="color:black">Qty</th>
-                            <th class="uk-width-small"  style="color:black">Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Oat Drips Banana</td>
-                            <td>3</td>
-                            <td>Rp.90.000,00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="uk-modal-footer uk-text-right">
-                    <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-                    <a href="pay/invoice/$1" class="uk-button uk-button-primary">Print</a>
-                </div>
-            </div>
-        </div> -->
-        
-
         <script>
             var subtotalelem = document.getElementById('subtotal');
             var disctypeval = 0;
@@ -2011,7 +1939,7 @@
                     document.getElementById('value').removeAttribute('min');
                 }
 
-                document.getElementById('value').setAttribute('max', printprice);
+                // document.getElementById('value').setAttribute('max', printprice);
                 document.getElementById('firstpay').setAttribute('max', printprice);
                 document.getElementById('secondpay').setAttribute('max', printprice - firstpay);
 

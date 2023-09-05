@@ -127,7 +127,7 @@ class Pay extends BaseController
         $value = $subtotal - $memberdisc - $discount - $poin;
 
         
-        if (!empty($input['value'])) {
+        if (!empty($input['payment'])) {
             $paymentid = $input['payment'];
         } else {
             $paymentid = '0';
@@ -266,7 +266,7 @@ class Pay extends BaseController
         }
         
         // Insert Cash
-        if (!isset($input['duedate']) && $input['payment'] !== 0){
+        if (!empty($input['duedate']) && !empty($input['payment'])){
             $cashPlus   = $CashModel->where('id',$input['payment'])->first();
             $cashUp = $varvalue + $bundvalue + $cashPlus['qty'];
             $cash = [
@@ -274,7 +274,8 @@ class Pay extends BaseController
                 'qty'   => $cashUp,
             ];
             $CashModel->save($cash);
-        }elseif(!isset($input['payment'])){
+
+        }elseif(!isset($input['payment']) && isset($input['firstpaymnet'])){
             // Insert First Payment
             $cashPlus   = $CashModel->where('id', $input['firstpayment'])->first();
             $cashUp     = $cashPlus['qty'] + $input['firstpay'];
@@ -311,7 +312,7 @@ class Pay extends BaseController
             $member      = $MemberModel->where('id',$input['customerid'])->first();
             $trx = $member['trx'] + 1 ;
             $memberPoint = $member['poin'];
-            $poinPlus = $memberPoint + $poin;               
+            $poinPlus = (int)$memberPoint + $poin;           
             $poin = [
                 'id'    => $member['id'],
                 'poin'  => $poinPlus,
@@ -330,8 +331,7 @@ class Pay extends BaseController
             $DebtModel->save($debt);
         }
 
-        $db      = \Config\Database::connect();
-
+        $db                 = \Config\Database::connect();
         $bundles            = $BundleModel->findAll();
         $bundets            = $BundledetModel->findAll();
         $Cash               = $CashModel->findAll();
@@ -346,7 +346,7 @@ class Pay extends BaseController
         $trxdetails         = $TrxdetailModel->where('transactionid', $trxId)->find();
         $trxpayments        = $TrxpaymentModel->findAll();
         $member             = $MemberModel->where('id',$transactions['memberid'])->first();
-
+        $debt               = $DebtModel->where('memberid',$transactions['memberid'])->first();
         $user               = $UserModel->where('id',$transactions['userid'])->first();
         $trxdata            = $TransactionModel->where('id',$trxId)->first();
         
@@ -372,7 +372,7 @@ class Pay extends BaseController
         $data['stocks']         = $stocks;
         $data['trxdetails']     = $TrxdetailModel->findAll();
         $data['trxpayments']    = $trxpayments;
-        $data['outid']          = $OutletModel->where('id',$input['outlet'])->first();
+        $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
         $data['bookings']       = $BookingModel->findAll();
         $data['bundleVariants'] = $bundleVariants->getResult();
         
@@ -387,8 +387,8 @@ class Pay extends BaseController
             $data['poinused']       = "0";
         }
 
-        if (!empty ($input['cashamount'])){
-            $data['change']     = $input['cashamount'] - $input['value'];
+        if (!empty ($input['value'])){
+            $data['change']     = $input['value'] - $total;
         }else{
             $data['change']     = "0";
         }
@@ -399,14 +399,38 @@ class Pay extends BaseController
             $data['vardiscval']     = "0";
         }
 
+        if (!empty($input['value'])){
+            $data['pay']            = $input['value'];
+        } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
+            $data['pay']            = $input['firstpay'] + $input['secondpay'];
+        }
+
+        $data['discount'] = "0";
+
+        if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
+            $data['discount'] += $input['discvalue'];
+        } elseif ((isset($input['discvalue'])) && ($input['disctype'] === '1')) {
+            $data['discount'] += ($input['discvalue'] / 100) * $subtotal;
+        } else {
+            $data['discount'] += 0;
+        }
+    
+
+        if(!empty($input['debt'])){
+            $data['debt']       = $input['debt'];
+            $data['totaldebt']  = $member['kasbon'];
+        }else{
+            $data['debt']       = "0";
+            $data['totaldebt']  = "0";
+        }
          
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $trxId;
         $data['subtotal']       = $subtotal;
-        $data['pay']            = $input['cashamount'];
         $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
         $data['total']          = $total;
+
         return view('Views/print', $data);
     }
 
@@ -586,7 +610,221 @@ class Pay extends BaseController
                 }
             }
         }
-        return redirect()->back()->with('message', lang('Global.saved'));
+        $db                 = \Config\Database::connect();
+        $bundles            = $BundleModel->findAll();
+        $bundets            = $BundledetModel->findAll();
+        $booking            = $BookingModel->where('id', $bookId)->first();
+        $bookingdetails     = $BookingdetailModel->where('bookingid',$bookId)->first();
+        $Cash               = $CashModel->findAll();
+        $outlets            = $OutletModel->findAll();
+        $users              = $UserModel->findAll();
+        $customers          = $MemberModel->findAll();
+        $payments           = $PaymentModel->findAll();
+        $products           = $ProductModel->findAll();
+        $variants           = $VariantModel->findAll();
+        $stocks             = $StockModel->findAll();
+        $member             = $MemberModel->where('id',$booking['memberid'])->first();
+        $debt               = $DebtModel->where('memberid',$booking['memberid'])->first();
+        $user               = $UserModel->where('id',$booking['userid'])->first();
+        $trxdata            = $TransactionModel->where('id',$bookId)->first();
+        
+        $bundleBuilder      = $db->table('bundledetail');
+        $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
+        $bundleVariants     = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
+        $bundleVariants     = $bundleBuilder->get();
+        
+        $data                   = $this->data;
+        $data['title']          = lang('Global.transaction');
+        $data['description']    = lang('Global.transactionListDesc');
+        $data['bundles']        = $bundles;
+        $data['bundets']        = $bundets;
+        $data['cash']           = $Cash;
+        $data['outlets']        = $outlets;
+        $data['payments']       = $payments;
+        $data['customers']      = $customers;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['stocks']         = $stocks;
+        $data['trxdetails']     = $TrxdetailModel->findAll();
+        $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
+        $data['bookings']       = $booking;
+        $data['bookingdetails'] = $bookingdetails;
+        $data['bundleVariants'] = $bundleVariants->getResult();
+        
+        
+        if (!empty($input['customerid'])){
+            $data['cust']           = $MemberModel->where('id',$booking['memberid'])->first();
+            $data['mempoin']        = $member['poin'];
+            $data['poinused']       = $input['poin'];
+        }else{
+            $data['cust']           = "0";
+            $data['mempoin']        = "0";
+            $data['poinused']       = "0";
+        }
+
+        if (!empty ($input['value']) && $input['value'] <= "0"){
+            $data['change']     = $input['value'] - $total;
+        }else{
+            $data['change']     = "0";
+        }
+
+        if (!empty($input['varprice'])){
+            $data['vardiscval']     = $input['varprice'];
+        }else{
+            $data['vardiscval']     = "0";
+        }
+
+        if (!empty($input['value'])){
+            $data['pay']            = $input['value'];
+        } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
+            $data['pay']            = $input['firstpay'] + $input['secondpay'];
+        }
+
+        $data['discount'] = "0";
+
+        if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
+            $data['discount'] += $input['discvalue'];
+        } elseif ((isset($input['discvalue'])) && ($input['disctype'] === '1')) {
+            $data['discount'] += ($input['discvalue'] / 100) * $subtotal;
+        } else {
+            $data['discount'] += 0;
+        }
+    
+
+        if(!empty($input['debt'])){
+            $data['debt']       = $input['debt'];
+            $data['totaldebt']  = $member['kasbon'];
+        }else{
+            $data['debt']       = "0";
+            $data['totaldebt']  = "0";
+        }
+
+        if(!empty($total)){
+            $data['total']          = $total;
+        }else{
+            $data['total']          = "0";
+        }
+         
+        $data['user']           = $user->username;
+        $data['date']           = $booking['created_at'];
+        $data['bookingid']      = $booking['id'];
+        $data['subtotal']       = $subtotal;
+        $data['member']         = $MemberModel->where('id',$booking['memberid'])->first();
+        
+
+        return view('Views/print', $data);
+    }
+
+    public function bookprint(){
+        
+        $db                 = \Config\Database::connect();
+        $bundles            = $BundleModel->findAll();
+        $bundets            = $BundledetModel->findAll();
+        $booking            = $BookingModel->where('id', $bookId)->first();
+        $bookingdetails     = $BookingdetailModel->where('bookingid',$bookId)->first();
+        $Cash               = $CashModel->findAll();
+        $outlets            = $OutletModel->findAll();
+        $users              = $UserModel->findAll();
+        $customers          = $MemberModel->findAll();
+        $payments           = $PaymentModel->findAll();
+        $products           = $ProductModel->findAll();
+        $variants           = $VariantModel->findAll();
+        $stocks             = $StockModel->findAll();
+        $transactions       = $TransactionModel->find($trxId);
+        $trxdetails         = $TrxdetailModel->where('transactionid', $trxId)->find();
+        $trxpayments        = $TrxpaymentModel->findAll();
+        $member             = $MemberModel->where('id',$transactions['memberid'])->first();
+        $debt               = $DebtModel->where('memberid',$transactions['memberid'])->first();
+        $user               = $UserModel->where('id',$transactions['userid'])->first();
+        $trxdata            = $TransactionModel->where('id',$trxId)->first();
+        
+        $bundleBuilder      = $db->table('bundledetail');
+        $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
+        $bundleVariants     = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
+        $bundleVariants     = $bundleBuilder->get();
+
+        $data                   = $this->data;
+        $data['title']          = lang('Global.transaction');
+        $data['description']    = lang('Global.transactionListDesc');
+        $data['bundles']        = $bundles;
+        $data['bundets']        = $bundets;
+        $data['cash']           = $Cash;
+        $data['transactions']   = $transactions;
+        $data['outlets']        = $outlets;
+        $data['payments']       = $payments;
+        $data['customers']      = $customers;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['stocks']         = $stocks;
+        $data['trxdetails']     = $TrxdetailModel->findAll();
+        $data['trxpayments']    = $trxpayments;
+        $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
+        $data['bookings']       = $BookingModel->findAll();
+        $data['bundleVariants'] = $bundleVariants->getResult();
+        
+        
+        if (!empty($input['customerid'])){
+            $data['cust']           = $MemberModel->where('id',$booking['memberid'])->first();
+            $data['mempoin']        = $member['poin'];
+            $data['poinused']       = $input['poin'];
+        }else{
+            $data['cust']           = "0";
+            $data['mempoin']        = "0";
+            $data['poinused']       = "0";
+        }
+
+        // value
+
+        if (!empty ($input['value'])){
+            $data['change']     = $input['value'] - $total;
+        }else{
+            $data['change']     = "0";
+        }
+
+        // discount variant
+        if (!empty($input['varprice'])){
+            $data['vardiscval']     = $input['varprice'];
+        }else{
+            $data['vardiscval']     = "0";
+        }
+
+        if (!empty($input['value'])){
+            $data['pay']            = $input['value'];
+        } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
+            $data['pay']            = $input['firstpay'] + $input['secondpay'];
+        }
+
+        $data['discount'] = "0";
+
+        if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
+            $data['discount'] += $input['discvalue'];
+        } elseif ((isset($input['discvalue'])) && ($input['disctype'] === '1')) {
+            $data['discount'] += ($input['discvalue'] / 100) * $subtotal;
+        } else {
+            $data['discount'] += 0;
+        }
+    
+
+        if(!empty($input['debt'])){
+            $data['debt']       = $input['debt'];
+            $data['totaldebt']  = $member['kasbon'];
+        }else{
+            $data['debt']       = "0";
+            $data['totaldebt']  = "0";
+        }
+         
+        $data['user']           = $user->username;
+        $data['date']           = $transactions['date'];
+        $data['transactionid']  = $trxId;
+        $data['subtotal']       = $subtotal;
+        $data['member']         = $MemberModel->where('id',$booking['memberid'])->first();
+        $data['total']          = $total;
+
+        return view('Views/print', $data);
     }
 
     public function bookingdelete($id)
@@ -615,43 +853,6 @@ class Pay extends BaseController
         $BookingModel->delete($id);
 
         return redirect()->back()->with('error', lang('Global.deleted'));
-    }
-
-    function invoice($id)
-    {
-		$transaksiModel = new \App\Models\TransaksiModel();
-		$transaksi = $transaksiModel->find($id);
-
-		$memberModel = new \App\Models\MemberModel();
-		$pembeli = $memberModel->find($transaksi->memberid);
-
-		$variantModel = new \App\Models\VariantModel();
-		$variant = $variantModel->find($transaksi->variantid);
-
-		$html = view('transaksi/invoice',[
-			'transaksi'=> $transaksi,
-			'pembeli' => $pembeli,
-			'barang' => $barang,
-		]);
-
-		$pdf = new TCPDF('L', PDF_UNIT, 'A5', true, 'UTF-8', false);
-
-		$pdf->SetCreator(PDF_CREATOR);
-		$pdf->SetAuthor('58 Vape House');
-		$pdf->SetTitle('Invoice');
-		$pdf->SetSubject('Invoice');
-
-		$pdf->setPrintHeader(false);
-		$pdf->setPrintFooter(false);
-
-		$pdf->addPage();
-
-		// output the HTML content
-		$pdf->writeHTML($html, true, false, true, false, '');
-		//line ini penting
-		$this->response->setContentType('application/pdf');
-		//Close and output PDF document
-		$pdf->Output('invoice.pdf', 'I');
     }
 
     public function topup(){
