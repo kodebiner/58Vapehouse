@@ -32,6 +32,7 @@
         <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
         <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
         <script src="js/jquery.validate.min.js"></script>  
+        <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
         
         <style type="text/css">
             .dummyproduct{fill:#666666;}
@@ -708,7 +709,7 @@
             <div class="uk-offcanvas-bar" role="dialog" aria-modal="true">
                 <nav>
                     <ul class="uk-nav uk-nav-default tm-nav uk-light" uk-nav>
-                        <li class="tm-main-navbar">
+                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
                             <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                         </li>
                         <li class="tm-main-navbar">
@@ -721,7 +722,10 @@
                             <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                         </li>
                         <li class="tm-main-navbar">
-                            <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
+                            <a class="uk-h4 tm-h4" href="<?= base_url('payment') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
+                        </li>
+                        <li class="tm-main-navbar">
+                            <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.sop');?></a>
                         </li>
                         <li class="tm-main-navbar uk-parent">
                             <a class="uk-h4 tm-h4" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
@@ -750,6 +754,12 @@
                                     <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
                                 </li>
                                 <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
                                     <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
                                 </li>
                                 <li class="uk-h5 tm-h5">
@@ -762,6 +772,9 @@
                         </li>
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
+                        </li>
+                        <li class="tm-main-navbar">
+                            <a class="uk-h4 tm-h4" href="<?= base_url('cashinout') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.cash');?></a>
                         </li>
                         <li class="tm-main-navbar uk-parent">
                             <a class="uk-h4 tm-h4" href=""><img src="img/layout/cash.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
@@ -876,7 +889,7 @@
                             <div id="paymentmethod" class="uk-margin">
                                 <h4 class="uk-margin-remove"><?=lang('Global.paymethod')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <select class="uk-select" id="payment" name="payment">
+                                    <select class="uk-select" id="payment" name="payment" required>
                                         <option value="" selected disabled hidden>-- <?=lang('Global.paymethod')?> --</option>
                                         <?php
                                         foreach ($payments as $pay) {
@@ -991,6 +1004,16 @@
                                 </div>
                             </div>
 
+                            <div class="uk-margin">
+                                <div class="uk-width-1-1">
+                                    <a class="uk-button uk-button-primary" uk-toggle="#trxproof"><?= lang('Global.trxproof') ?></a>
+                                </div>
+                            </div>
+
+                            <div class="uk-margin" id="outlet" hidden>
+                                <input class="image-tag" type="hidden" name="image">
+                            </div>
+
                         </div>
                         <div class="uk-modal-footer" style="border-top: 0;">
                             <div class="uk-margin">
@@ -1011,6 +1034,58 @@
             </div>
         </div>
         <!-- Modal Detail Transaction End -->
+
+        <!-- Modal Transaction Proof -->
+        <div uk-modal class="uk-flex-top" id="trxproof">
+            <div class="uk-modal-dialog uk-margin-auto-vertical">
+                <div class="uk-modal-content">
+                    <div class="uk-modal-header">
+                        <div class="uk-flex uk-flex-middle uk-child-width-auto" uk-grid>
+                            <div class="uk-padding-remove uk-margin-medium-left">
+                                <a class="" uk-icon="arrow-left" uk-toggle="#tambahdata" width="35" height="35"></a>
+                            </div>
+                            <div>
+                                <h5 class="uk-modal-title" ><?=lang('Global.trxproof')?></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-modal-body">
+                        <div class="uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
+                            <div class="uk-margin-left">
+                                <div id="my_camera"></div>
+                            </div>
+                            <div class="uk-text-center">
+                                <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="take_snapshot()">
+                            </div>
+                            <div class="uk-text-center">
+                                <div id="results"></div>
+                            </div>
+                        </div>
+
+                        <!-- Script Webcam Trx Proof -->
+                        <script type="text/javascript">
+                            Webcam.set({
+                                width: 490,
+                                height: 390,
+                                image_format: 'jpeg',
+                                jpeg_quality: 90
+                            });
+                        
+                            Webcam.attach( '#my_camera' );
+
+                            function take_snapshot() {
+                                Webcam.snap( function(data_uri) {
+                                    $(".image-tag").val(data_uri);
+                                    document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
+                                } );
+                            }
+                        </script>
+                        <!-- Script Webcam Trx Proof End -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Transaction Proof End -->
 
         <!-- Main Section -->
         <main role="main">

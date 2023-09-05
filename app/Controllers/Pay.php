@@ -48,6 +48,17 @@ class Pay extends BaseController
         // Getting Inputs
         $input = $this->request->getPost();
         
+        // Image Capture
+        $img            = $input['image'];
+        $folderPath     = "img";
+        $image_parts    = explode(";base64,", $img);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type     = $image_type_aux[1];
+        $image_base64   = base64_decode($image_parts[1]);
+        $fileName       = uniqid() . '.png';
+        $file           = $folderPath . $fileName;
+        file_put_contents($file, $image_base64);
+        
         // Populating Data
         $date           = date('Y-m-d H:i:s');
         $Gconfig        = $GconfigModel->first();
@@ -141,7 +152,8 @@ class Pay extends BaseController
             'value'         => $value,
             'disctype'      => $input['disctype'],
             'discvalue'     => $input['discvalue'],
-            'date'          => $date
+            'date'          => $date,
+            'photo'         => $fileName,
         ];
         $TransactionModel->insert($trx);
         $trxId = $TransactionModel->getInsertID();
@@ -833,17 +845,31 @@ class Pay extends BaseController
         $BookingModel       = new BookingModel();
         $BookingdetailModel = new BookingdetailModel();
         $StockModel         = new StockModel();
+        $BundleModel        = new BundleModel();
+        $BundledetailModel  = new BundledetailModel();
 
         // Populating & Removing Booking Detail Data
         $bookingdetails = $BookingdetailModel->where('bookingid', $id)->find();
         foreach ($bookingdetails as $bookdet) {
             // Restore Stock
-            $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $bookdet['variantid'])->first();
-            $stockdata = [
-                'id'    => $stock['id'],
-                'qty'   => $stock['qty'] + $bookdet['qty'],
-            ];
-            $StockModel->save($stockdata);
+            if ($bookdet['variantid'] != '0') {
+                $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $bookdet['variantid'])->first();
+                $stockdata = [
+                    'id'    => $stock['id'],
+                    'qty'   => $stock['qty'] + $bookdet['qty'],
+                ];
+                $StockModel->save($stockdata);
+            } else {
+                $bundles = $BundledetailModel->where('bundleid', $bookdet['bundleid'])->find();
+                foreach ($bundles as $bundle) {
+                    $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $bundle['variantid'])->first();
+                    $stockdata = [
+                        'id'    => $stock['id'],
+                        'qty'   => $stock['qty'] + $bookdet['qty'],
+                    ];
+                    $StockModel->save($stockdata);
+                }
+            }
 
             // Removing Variant
             $BookingdetailModel->delete($bookdet['id']);

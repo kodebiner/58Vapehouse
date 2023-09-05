@@ -1,8 +1,9 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
-<script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
+    <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
+    <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -85,6 +86,41 @@
                             <input type="text" class="uk-input <?php if (session('errors.quantity')) : ?>tm-form-invalid<?php endif ?>" id="quantity" name="quantity" placeholder="<?=lang('Global.quantity')?>" autofocus required />
                         </div>
                     </div>
+
+                    <div class="uk-margin-bottom">
+                        <div class="uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
+                            <div class="uk-margin-left">
+                                <div id="my_camera"></div>
+                            </div>
+                            <div class="uk-text-center">
+                                <input class="image-tag" type="hidden" name="image">
+                                <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="take_snapshot()" required>
+                            </div>
+                            <div class="uk-text-center">
+                                <div id="results"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Webcam Cash -->
+                    <script type="text/javascript">
+                        Webcam.set({
+                            width: 490,
+                            height: 390,
+                            image_format: 'jpeg',
+                            jpeg_quality: 90
+                        });
+                    
+                        Webcam.attach( '#my_camera' );
+
+                        function take_snapshot() {
+                            Webcam.snap( function(data_uri) {
+                                $(".image-tag").val(data_uri);
+                                document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
+                            } );
+                        }
+                    </script>
+                    <!-- Webcam Cash End -->
 
                     <hr>
 

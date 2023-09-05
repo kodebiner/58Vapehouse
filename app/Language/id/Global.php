@@ -137,8 +137,8 @@ return [
     'tocart'            => 'Masukkan ke Keranjang',
     'book'              => 'Pesan',
     'addsop'            => 'Tambah Sop',
+    'trxproof'          => 'Bukti Transaksi',
     'invoice'           => 'Nota',
-    'cashamount'        => 'jumlah Pembayaran Tunai',
 
     // Menu
     'dashboard'         => 'Dasbor',

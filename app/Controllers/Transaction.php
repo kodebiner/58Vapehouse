@@ -119,6 +119,17 @@ class Transaction extends BaseController
         // date time stamp
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
+        
+        // Image Capture
+        $img            = $input['image'];
+        $folderPath     = "img";
+        $image_parts    = explode(";base64,", $img);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type     = $image_type_aux[1];
+        $image_base64   = base64_decode($image_parts[1]);
+        $fileName       = uniqid() . '.png';
+        $file           = $folderPath . $fileName;
+        file_put_contents($file, $image_base64);
 
         
         if (!empty($input['payment'])){
@@ -133,7 +144,8 @@ class Transaction extends BaseController
                 'value'     => $input['value'],
                 'disctype'  => $input['disctype'],
                 'discvalue' => $input['discvalue'],
-                'date'      => $tanggal,  
+                'date'      => $tanggal,
+                'photo'     => $fileName,
             ];
             // save data transaction
             

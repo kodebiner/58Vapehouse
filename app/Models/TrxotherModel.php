@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class TrxotherModel extends Model
 {
     protected $allowedFields = [
-        'id','userid','outletid','cashid','description','type','date','qty',
+        'id','userid','outletid','cashid','description','type','date','qty','photo',
 
     ];
 

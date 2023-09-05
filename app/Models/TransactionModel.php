@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class TransactionModel extends Model
 {
     protected $allowedFields = [
-        'outletid','userid','memberid','paymentid','value','disctype','discvalue','date',
+        'outletid','userid','memberid','paymentid','value','disctype','discvalue','date','photo',
 
     ];
 

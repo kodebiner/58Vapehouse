@@ -140,8 +140,9 @@ return [
     'tocart'            => 'Continue To Cart',
     'book'              => 'Booking',
     'addsop'            => 'Add Sop',
+    'trxproof'          => 'Transaction Proof',
+    'invoice'           => 'Invoice',
     
-
     // Menu
     'dashboard'         => 'Dashboard',
     'report'            => 'Report',
