@@ -216,6 +216,7 @@
                                         <div uk-modal class="uk-flex-top" id="detail<?= $book['id'] ?>">
                                             <div class="uk-modal-dialog uk-margin-auto-vertical">
                                                 <div class="uk-modal-content">
+                                                <form action="pay/bookprint/<?= $book['id'] ?>" method="post">
                                                     <div class="uk-modal-header">
                                                         <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.bookdetList')?></h5>
                                                     </div>
@@ -241,8 +242,8 @@
                                                                                 $vname = $product['name'].' - '.$variant['name']; ?>
                                                                                 <div class="uk-margin-remove" uk-grid>
                                                                                     <div class="uk-width-1-6">
-                                                                                    <input type="number" value="<?=$book['id']?>" hidden>
                                                                                         <div><?= $bookdet['qty'] ?></div>
+                                                                                        <input type="number" value="<?=$book['id']?>" name="id" hidden>
                                                                                     </div>
                                                                                     <div class="uk-width-2-3">
                                                                                         <div><?= $vname ?></div>
@@ -283,6 +284,7 @@
                                                             <a class="uk-button uk-button-primary" style="border-radius: 8px; width: 540px;" uk-toggle="#tambahdata" onclick="insertBooking<?= $book['id'] ?>()"><?= lang('Global.tocart') ?></a>
                                                         </div>
                                                     </div>
+                                                </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -1770,7 +1772,6 @@
             </ul>
         </footer>
         <!-- Footer Section end -->
-        
 
         <script>
             var subtotalelem = document.getElementById('subtotal');

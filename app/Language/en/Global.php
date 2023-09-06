@@ -107,6 +107,7 @@ return [
     'shift'             => 'Shift',
     'invoice'           => 'Invoice',
     'cashamount'        => 'Cash Payment Amount',
+    'bookorder'         => 'Booking Order',
     
 
     // Button

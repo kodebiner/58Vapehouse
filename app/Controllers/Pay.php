@@ -246,7 +246,6 @@ class Pay extends BaseController
         
         // PPN Value
         $ppn = $value * ($Gconfig['ppn']/100);
-
         
         //Insert Trx Payment 
         $total = $subtotal - $discount - (int)$input['poin'] - $memberdisc + $ppn;
@@ -547,7 +546,13 @@ class Pay extends BaseController
         }
         
         $value = $subtotal - $memberdisc - $discount - $poin;
-        
+        foreach ($input['varprice'] as $variantprice){
+            $varprice = $variantprice;
+        }
+
+        foreach($input['varbargain'] as $bargain){
+            $varbargain = $bargain;
+        }
         $book = [
             'outletid'      => $this->data['outletPick'],
             'userid'        => $this->data['uid'],
@@ -555,6 +560,8 @@ class Pay extends BaseController
             'value'         => $value,
             'disctype'      => $input['disctype'],
             'discvalue'     => $input['discvalue'],
+            'discvar'       => $varprice,
+            'bargainprice'  => $varbargain,
         ];
         $BookingModel->insert($book);
         $bookId = $BookingModel->getInsertID();
@@ -567,7 +574,7 @@ class Pay extends BaseController
                     $discvar = (int)$input['varprice'][$varid] * $varqty;
                     $discbargain = (int)$input['varbargain'][$varid]* $varqty;
                     // Bargain And Varprice Added
-                    if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
+                    if (isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid]) && $discbargain !== 0){
                         $varPrice  = ($discbargain - $discvar)/$varqty;
                         // Vaprice Added And Null Bargain
                     }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
@@ -689,7 +696,7 @@ class Pay extends BaseController
         }
 
         if (!empty($input['value'])){
-            $data['pay']            = $input['value'];
+            $data['pay']            = "UNPAID";
         } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
             $data['pay']            = $input['firstpay'] + $input['secondpay'];
         }
@@ -713,8 +720,8 @@ class Pay extends BaseController
             $data['totaldebt']  = "0";
         }
 
-        if(!empty($total)){
-            $data['total']          = $total;
+        if(!empty($value)){
+            $data['total']          = $value;
         }else{
             $data['total']          = "0";
         }
@@ -725,17 +732,36 @@ class Pay extends BaseController
         $data['subtotal']       = $subtotal;
         $data['member']         = $MemberModel->where('id',$booking['memberid'])->first();
         
-
         return view('Views/print', $data);
     }
 
-    public function bookprint(){
+    public function bookprint($id){
+
+        // Calling Models
+        $BundleModel            = new BundleModel();
+        $BundledetModel         = new BundledetailModel();
+        $CashModel              = new CashModel();
+        $DebtModel              = new DebtModel();
+        $GconfigModel           = new GconfigModel();
+        $OutletModel            = new OutletModel();
+        $UserModel              = new UserModel();
+        $MemberModel            = new MemberModel();
+        $PaymentModel           = new PaymentModel();
+        $ProductModel           = new ProductModel();
+        $VariantModel           = new VariantModel();
+        $StockModel             = new StockModel();
+        $BookingModel           = new BookingModel();
+        $BookingdetailModel     = new BookingdetailModel();
+        $TransactionModel       = new TransactionModel();
+        $TrxdetailModel         = new TrxdetailModel();
+        $TrxpaymentModel        = new TrxpaymentModel();
+        $MemberModel            = new MemberModel();
         
         $db                 = \Config\Database::connect();
         $bundles            = $BundleModel->findAll();
         $bundets            = $BundledetModel->findAll();
-        $booking            = $BookingModel->where('id', $bookId)->first();
-        $bookingdetails     = $BookingdetailModel->where('bookingid',$bookId)->first();
+        $booking            = $BookingModel->where('id', $id)->first();
+        $bookingdetails     = $BookingdetailModel->where('bookingid',$id)->first();
         $Cash               = $CashModel->findAll();
         $outlets            = $OutletModel->findAll();
         $users              = $UserModel->findAll();
@@ -744,13 +770,9 @@ class Pay extends BaseController
         $products           = $ProductModel->findAll();
         $variants           = $VariantModel->findAll();
         $stocks             = $StockModel->findAll();
-        $transactions       = $TransactionModel->find($trxId);
-        $trxdetails         = $TrxdetailModel->where('transactionid', $trxId)->find();
-        $trxpayments        = $TrxpaymentModel->findAll();
-        $member             = $MemberModel->where('id',$transactions['memberid'])->first();
-        $debt               = $DebtModel->where('memberid',$transactions['memberid'])->first();
-        $user               = $UserModel->where('id',$transactions['userid'])->first();
-        $trxdata            = $TransactionModel->where('id',$trxId)->first();
+        $member             = $MemberModel->where('id',$booking['memberid'])->first();
+        $debt               = $DebtModel->where('memberid',$booking['memberid'])->first();
+        $user               = $UserModel->where('id',$booking['userid'])->first();
         
         $bundleBuilder      = $db->table('bundledetail');
         $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
@@ -758,14 +780,13 @@ class Pay extends BaseController
         $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
         $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
         $bundleVariants     = $bundleBuilder->get();
-
+        
         $data                   = $this->data;
         $data['title']          = lang('Global.transaction');
         $data['description']    = lang('Global.transactionListDesc');
         $data['bundles']        = $bundles;
         $data['bundets']        = $bundets;
         $data['cash']           = $Cash;
-        $data['transactions']   = $transactions;
         $data['outlets']        = $outlets;
         $data['payments']       = $payments;
         $data['customers']      = $customers;
@@ -773,53 +794,44 @@ class Pay extends BaseController
         $data['variants']       = $variants;
         $data['stocks']         = $stocks;
         $data['trxdetails']     = $TrxdetailModel->findAll();
-        $data['trxpayments']    = $trxpayments;
         $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
-        $data['bookings']       = $BookingModel->findAll();
+        $data['bookings']       = $booking;
+        $data['bookingdetails'] = $bookingdetails;
         $data['bundleVariants'] = $bundleVariants->getResult();
         
         
-        if (!empty($input['customerid'])){
+        if (!empty($member)){
             $data['cust']           = $MemberModel->where('id',$booking['memberid'])->first();
             $data['mempoin']        = $member['poin'];
-            $data['poinused']       = $input['poin'];
         }else{
             $data['cust']           = "0";
             $data['mempoin']        = "0";
             $data['poinused']       = "0";
         }
 
-        // value
-
-        if (!empty ($input['value'])){
+        if (!empty ($input['value']) && $input['value'] <= "0"){
             $data['change']     = $input['value'] - $total;
         }else{
             $data['change']     = "0";
         }
 
-        // discount variant
-        if (!empty($input['varprice'])){
-            $data['vardiscval']     = $input['varprice'];
+        if (!empty($booking['discvar']) && $booking['discvar'] !== "0"){
+            $data['vardiscval']     = $bookingdetails['value']['variantid'];
         }else{
             $data['vardiscval']     = "0";
         }
-
-        if (!empty($input['value'])){
-            $data['pay']            = $input['value'];
-        } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
-            $data['pay']            = $input['firstpay'] + $input['secondpay'];
-        }
-
-        $data['discount'] = "0";
-
-        if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
-            $data['discount'] += $input['discvalue'];
-        } elseif ((isset($input['discvalue'])) && ($input['disctype'] === '1')) {
-            $data['discount'] += ($input['discvalue'] / 100) * $subtotal;
+ 
+        
+        if ((!empty($booking['discvalue'])) && ($booking['disctype'] === '0')) {
+            $data['discount'] = $booking['discvalue'];
+            $data['memberdisc'] = $booking['discvalue'];
+        } elseif ((!empty($booking['discvalue'])) && ($booking['disctype'] === '1')) {
+            $data['discount'] = ($booking['discvalue']/100) * $bookingdetails['value'];
+            $data['memberdisc'] = ($booking['discvalue'] / 100) * $bookingdetails['value'];
         } else {
-            $data['discount'] += 0;
+            $data['discount'] = 0;
+            $data['memberdisc'] = 0;
         }
-    
 
         if(!empty($input['debt'])){
             $data['debt']       = $input['debt'];
@@ -828,14 +840,20 @@ class Pay extends BaseController
             $data['debt']       = "0";
             $data['totaldebt']  = "0";
         }
-         
-        $data['user']           = $user->username;
-        $data['date']           = $transactions['date'];
-        $data['transactionid']  = $trxId;
-        $data['subtotal']       = $subtotal;
-        $data['member']         = $MemberModel->where('id',$booking['memberid'])->first();
-        $data['total']          = $total;
 
+        if(!empty($bookingdetails)){
+            $data['total']          = $booking['value'];
+        }else{
+            $data['total']          = "0";
+        }
+
+        $data['pay']            = "UNPAID";
+        $data['user']           = $user->username;
+        $data['date']           = $booking['created_at'];
+        $data['bookingid']      = $booking['id'];
+        $data['subtotal']       = $bookingdetails['value'];
+        $data['member']         = $MemberModel->where('id',$booking['memberid'])->first();
+        
         return view('Views/print', $data);
     }
 
@@ -889,39 +907,40 @@ class Pay extends BaseController
         $CashModel      = new CashModel;
 
         // Get Data
-        $cashin = $TrxotherModel->findAll();
+        $cashinout = $TrxotherModel->findAll();
         $cash   = $CashModel->findAll();
         $input = $this->request->getPost();
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
-        $member = $MemberModel->where('id',$input['customerid'])->first();
         
-        // member poin
+        // Cash In 
+        $cashin = [
+            'userid'        => $this->data['uid'],
+            'outletid'      => $this->data['outletPick'],
+            'cashid'        => $input['payment'],
+            'description'   => $input['description'],
+            'type'          => "0",
+            'date'          => $tanggal,
+            'qty'           => $input['value'],
+        ];
+        $TrxotherModel->save($cashin);
+        
+        // plus member poin
         $poin = $member['poin'] + $input['value'];
         $data=[
+            'id'   => $input['customerid'],
             'poin' => $poin,
         ];
         $MemberModel->save($data);
         
-        // Save Cash 
-        $cash = $CashModel->where('id',$input['cashid'])->where('outletid',$this->data['outletPick'])->first();
-        $data  = [
-            'userid'        =>$this->data['uid'],
-            'outletid'      =>$this->data['outletPick'],
-            'cashid'        =>$input['payment'],
-            'description'   =>$input['description'],
-            'type'          =>$input['cash'],
-            'date'          =>$tanggal,
-            'qty'           =>$input['value'],
-        ];
-        $TrxotherModel->save($data);
-        
         $cas = $input['value'] + $cash['qty'];
         $wallet = [
-            'id'    => $cash['id'],
+            'id'    => $input['payment'],
             'qty'   => $cas,
         ];
         $CashModel->save($wallet);
+
+        
 
         // return
         return redirect()->back()->with('message', lang('Global.saved'));

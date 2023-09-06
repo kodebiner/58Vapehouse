@@ -105,6 +105,7 @@ return [
     'pending'           => 'Sedang Diproses',
     'confirmation'      => 'Konfirmasi',
     'shift'             => 'peralihan',
+    'bookorder'         => 'Pemesanan Booking',
 
     // Button
     'edit'              => 'Ubah',
