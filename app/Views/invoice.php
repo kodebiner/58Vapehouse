@@ -9,8 +9,6 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light" id="pagehead">
-    <?= view('Views/Auth/_message_block') ?>
-
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.invoice')?></h3>
@@ -18,6 +16,9 @@
     </div>
 </div>
 <!-- End Of Page Heading -->
+
+<?= view('Views/Auth/_message_block') ?>
+
 <!doctype html>
 <html dir="ltr "lang="<?=$lang?>" vocab="http://schema.org/" style="overflow-y: hidden;">
         <style>

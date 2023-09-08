@@ -9,8 +9,6 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <?= view('Views/Auth/_message_block') ?>
-
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.stockCycle')?></h3>
@@ -18,6 +16,8 @@
     </div>
 </div>
 <!-- End Of Page Heading -->
+
+<?= view('Views/Auth/_message_block') ?>
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">

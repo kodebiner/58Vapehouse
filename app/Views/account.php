@@ -7,11 +7,11 @@
 <?= $this->section('main') ?>
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-  <div uk-grid class="uk-width-1-1@m uk-flex-middle">
-    <div class="uk-width-1-2@m">
-      <h3 class="tm-h3"><?=lang('Global.userProfile')?></h3>
+    <div uk-grid class="uk-width-1-1@m uk-flex-middle">
+        <div class="uk-width-1-2@m">
+            <h3 class="tm-h3"><?=lang('Global.userProfile')?></h3>
+        </div>
     </div>
-  </div>
 </div>
 <!-- End Of Page Heading -->
 
@@ -222,7 +222,9 @@
                 </div>
             </div>
         </div>
+
         <hr class="uk-divider-icon"/>
+
         <div class="uk-margin uk-text-right">
             <button class="uk-button uk-button-primary uk-button-large uk-preserve-color" type="submit"><?=lang('Global.save')?></button>
         </div>

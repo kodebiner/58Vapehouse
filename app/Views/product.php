@@ -12,8 +12,6 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <?= view('Views/Auth/_message_block') ?>
-
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.productList')?></h3>
@@ -27,6 +25,8 @@
     </div>
 </div>
 <!-- End Of Page Heading -->
+
+<?= view('Views/Auth/_message_block') ?>
 
 <!-- Modal Add -->
 <div uk-modal class="uk-flex-top" id="tambahdata">
@@ -596,11 +596,17 @@
                         $toqty = 0;
                         foreach ($stocks as $stock) {
                             foreach ($variants as $variant) {
-                                if (($variant['productid'] === $product['id']) && ($stock['variantid'] === $variant['id'])) {
-                                    $toqty += $stock['qty'];
+                                if ($outletPick === null) {
+                                    if (($variant['productid'] === $product['id']) && ($stock['variantid'] === $variant['id'])) {
+                                        $toqty += $stock['qty'];
+                                    }
+                                } else {
+                                    if (($variant['productid'] === $product['id']) && ($stock['variantid'] === $variant['id']) && ($stock['outletid'] === $outletPick)) {
+                                        $toqty += $stock['qty'];
+                                    }
                                 }
                             }
-                        }
+                        }                        
                         echo $toqty;
                         ?>
                     </td>
@@ -972,8 +978,14 @@
                         $toqty = 0;
                         foreach ($stocks as $stock) {
                             foreach ($variants as $variant) {
-                                if (($variant['productid'] === $product['id']) && ($stock['variantid'] === $variant['id'])) {
-                                    $toqty += $stock['qty'];
+                                if ($outletPick === null) {
+                                    if (($variant['productid'] === $product['id']) && ($stock['variantid'] === $variant['id'])) {
+                                        $toqty += $stock['qty'];
+                                    }
+                                } else {
+                                    if (($variant['productid'] === $product['id']) && ($stock['variantid'] === $variant['id']) && ($stock['outletid']) === $outletPick) {
+                                        $toqty += $stock['qty'];
+                                    }
                                 }
                             }
                         }
@@ -983,7 +995,7 @@
                             $stockClass = 'uk-sext-success';
                         }
                         ?>
-                        <div class="uk-h3 tm-h3">Total Stock <span class="<?=$stockClass?>"><?=$toqty?></span></div>
+                        <div class="uk-h3 tm-h3"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> <span class="<?=$stockClass?>"><?=$toqty?></span></div>
                         <h6 class="uk-h4 tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h6>
                         <table class="uk-table uk-table-justify uk-table-middle" style="background-color: #fff;">
                             <thead>

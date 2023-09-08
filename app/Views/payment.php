@@ -15,8 +15,6 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <?= view('Views/Auth/_message_block') ?>
-
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.paymentList')?></h3>
@@ -30,6 +28,8 @@
     </div>
 </div>
 <!-- End Of Page Heading -->
+
+<?= view('Views/Auth/_message_block') ?>
 
 <!-- Modal Add -->
 <div uk-modal class="uk-flex-top" id="tambahdata">
@@ -47,13 +47,11 @@
                         <div class="uk-form-controls">
                             <select class="uk-select"  name="cashid" id="cashid" reqired>
                                 <option  selected hidden disabled>-- <?=lang('Global.choosewallet')?> --</option>
-                                <?php
-                                foreach ($cash as $cas) {                                    
+                                <?php foreach ($cash as $cas) {                                    
                                     if (($cas['outletid'] === '0') || ($cas['outletid'] === $outletPick)) {
                                         echo '<option value="'.$cas['id'].'">'.$cas['name'].'</option>';
                                     }
-                                }
-                                ?>
+                                } ?>
                             </select>
                         </div>
                     </div>
@@ -91,13 +89,12 @@
         </thead>
         <tbody>
             <?php $i = 1 ; ?>
-            <?php foreach ($payments as $payment) : ?>
+            <?php foreach ($payments as $payment) { ?>
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td><?= $payment['name']; ?></td>
                     <td class="uk-text-left">
-                        <?php                        
-                        if ($payment['outletid'] === '0') {
+                        <?php if ($payment['outletid'] === '0') {
                             echo lang('Global.allOutlets');
                         } else {
                             foreach ($outlets as $outlet) {
@@ -105,17 +102,14 @@
                                     echo $outlet['name'];
                                 }
                             }
-                        }
-                        ?>
+                        } ?>
                     </td>
                     <td class="uk-text-center">
-                        <?php 
-                        foreach ($cash as $cas){
+                        <?php  foreach ($cash as $cas){
                                 if ($cas['id'] == $payment['cashid']){
                                     echo $cas['name'];
                                 }
-                         }
-                        ?>    
+                        } ?>    
                     </td>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                         <!-- Button Trigger Modal Edit -->
@@ -131,7 +125,7 @@
                         <!-- End Of Button Delete -->
                     </td>
                 </tr>
-            <?php endforeach; ?>
+            <?php } ?>
         </tbody>
     </table>
 </div>

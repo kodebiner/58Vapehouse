@@ -54,7 +54,7 @@ class Debt extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.trxHistoryList');
+        $data['title']          = lang('Global.trxHistory');
         $data['description']    = lang('Global.trxHistoryListDesc');
         $data['bundles']        = $bundles;
         $data['bundets']        = $bundets;

@@ -9,8 +9,6 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <?= view('Views/Auth/_message_block') ?>
-
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.customerList')?></h3>
@@ -21,53 +19,55 @@
             <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addCustomer')?></button>
         </div>
         <!-- End Of Button Trigger Modal Add -->
-
-        <!-- Modal Add -->
-        <div uk-modal class="uk-flex-top" id="tambahdata">
-            <div class="uk-modal-dialog uk-margin-auto-vertical">
-                <div class="uk-modal-content">
-                    <div class="uk-modal-header">
-                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addCustomer')?></h5>
-                    </div>
-                    <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="/customer/create" method="post">
-                            <?= csrf_field() ?>
-
-                            <div class="uk-margin-bottom">
-                                <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
-                                <div class="uk-form-controls">
-                                <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
-                                </div>
-                            </div>
-
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="phone"><?=lang('Global.phone')?></label>
-                                <div class="uk-form-controls">
-                                <input type="text" class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>" name="phone" id="phone" placeholder="<?=lang('Global.phone')?>" required/>
-                                </div>
-                            </div>
-
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="email"><?=lang('Auth.email')?></label>
-                                <div class="uk-form-controls">
-                                <input type="email" class="uk-input <?php if (session('errors.email')) : ?>tm-form-invalid<?php endif ?>" name="email" id="email" placeholder="<?=lang('Auth.email')?>" required/>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <div class="uk-margin">
-                                <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Of Modal Add -->
     </div>
 </div>
 <!-- End of Page Heading -->
+
+<?= view('Views/Auth/_message_block') ?>
+
+<!-- Modal Add -->
+<div uk-modal class="uk-flex-top" id="tambahdata">
+    <div class="uk-modal-dialog uk-margin-auto-vertical">
+        <div class="uk-modal-content">
+            <div class="uk-modal-header">
+                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addCustomer')?></h5>
+            </div>
+            <div class="uk-modal-body">
+                <form class="uk-form-stacked" role="form" action="/customer/create" method="post">
+                    <?= csrf_field() ?>
+
+                    <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                        <div class="uk-form-controls">
+                        <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" required />
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="phone"><?=lang('Global.phone')?></label>
+                        <div class="uk-form-controls">
+                        <input type="text" class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>" name="phone" id="phone" placeholder="<?=lang('Global.phone')?>" required/>
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="email"><?=lang('Auth.email')?></label>
+                        <div class="uk-form-controls">
+                        <input type="email" class="uk-input <?php if (session('errors.email')) : ?>tm-form-invalid<?php endif ?>" name="email" id="email" placeholder="<?=lang('Auth.email')?>"/>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="uk-margin">
+                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Of Modal Add -->
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
@@ -130,21 +130,21 @@
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                                 <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="name" name="name" value="<?= $customer['name']; ?>"autofocus />
+                                <input type="text" class="uk-input" id="name" name="name" value="<?= $customer['name']; ?>" />
                                 </div>
                             </div>
 
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="phone"><?=lang('Global.phone')?></label>
                                 <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="phone" name="phone"  value="<?= $customer['phone']; ?>" autofocus />
+                                <input type="text" class="uk-input" id="phone" name="phone"  value="<?= $customer['phone']; ?>" />
                                 </div>
                             </div>
 
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="emaila"><?=lang('Auth.email')?></label>
                                 <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="email" name="email"  value="<?= $customer['email']; ?>" autofocus />
+                                <input type="text" class="uk-input" id="email" name="email"  value="<?= $customer['email']; ?>" />
                                 </div>
                             </div>
 

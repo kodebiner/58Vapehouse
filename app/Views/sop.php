@@ -9,8 +9,6 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <?= view('Views/Auth/_message_block') ?>
-
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.sop')?></h3>
@@ -24,6 +22,8 @@
     </div>
 </div>
 <!-- End Of Page Heading -->
+
+<?= view('Views/Auth/_message_block') ?>
 
 <!-- Modal Add -->
 <div uk-modal class="uk-flex-top" id="tambahdata">
@@ -44,8 +44,8 @@
                     <div class="uk-margin">
                         <label class="uk-form-label" for="form-stacked-text" required><?=lang('Global.shift')?> </label>
                         <select class="uk-select" name="shift" aria-label="Select">
-                            <option value="0">Open</option>
-                            <option value="1">Closed</option>
+                            <option value="0"><?= lang('Global.shift1') ?></option>
+                            <option value="1"><?= lang('Global.shift2') ?></option>
                         </select>
                     </div>
 
@@ -73,23 +73,32 @@
         </thead>
         <tbody>
             <?php $i = 1 ; ?>
-            <?php foreach ($sops as $sop) : ?>
+            <?php foreach ($sops as $sop) { ?>
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td class="uk-text-left"><?= $sop['name']; ?></td>
                     <td class="uk-text-center">
-                        <?php if ($sop['shift'] === "0" ){
-                            echo "Open";
-                        } else{
-                            echo "Closed";
+                        <?php if ($sop['shift'] === "0" ) {
+                            echo lang('Global.shift1');
+                        } else {
+                            echo lang('Global.shift2');
                         } ?>
                     </td>
-                    <td class="uk-text-center">
-                        <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editcat<?= $sop['id'] ?>"></a>
-                        <a class="uk-icon-button-delete" uk-icon="trash" href="product/deletecat/<?= $sop['id'] ?>"></a>
+                    <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
+                        <!-- Button Trigger Modal Edit -->
+                        <div>
+                            <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editcat<?= $sop['id'] ?>"></a>
+                        </div>
+                        <!-- Button Trigger Modal Edit End -->
+
+                        <!-- Button Delete -->
+                        <div>
+                            <a class="uk-icon-button-delete" uk-icon="trash" href="product/deletecat/<?= $sop['id'] ?>"></a>
+                        </div>
+                        <!-- Button Delete End -->
                     </td>
                 </tr>
-            <?php endforeach; ?>
+            <?php } ?>
         </tbody>
     </table>
 </div>

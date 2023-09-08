@@ -13,8 +13,6 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <?= view('Views/Auth/_message_block') ?>
-
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@s">
             <h3 class="tm-h3"><?=lang('Global.presence')?></h3>
@@ -25,6 +23,8 @@
     </div>
 </div>
 <!-- End Of Page Heading -->
+
+<?= view('Views/Auth/_message_block') ?>
 
 <!-- Content -->
 <div class="uk-container uk-margin">
@@ -73,7 +73,7 @@
 <!-- End Content -->
 
 <!-- Modal Shift -->
-<div class="uk-flex-top" id="modal-shift-1" uk-modal>
+<!-- <div class="uk-flex-top" id="modal-shift-1" uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close></button>
         <div class="uk-modal-header">
@@ -81,8 +81,8 @@
         </div>
         <div class="uk-modal-body">
             <form class="uk-form-horizontal uk-margin-large" action="sop/createtodo" method="post">
-                <?php foreach ($sops as $sop) {?>
-                    <?php if ($sop['shift'] === "0") { ?>
+                <?php foreach ($sops as $sop) {
+                    if ($sop['shift'] === "0") { ?>
                         <div class="uk-margin">
                             <label class="uk-form-label" for="form-horizontal-text"><?= $sop['name'] ?></label>
                             <input type="text" name="sopid[<?= $sop['id']; ?>]" value="<?=$sop['id']?>" hidden>
@@ -90,8 +90,8 @@
                                 <input class="uk-checkbox" type="checkbox"  name="status[<?= $sop['id']; ?>]" value="1">
                             </div>
                         </div>
-                    <?php } ?>
-                <?php } ?>
+                    <?php }
+                } ?>
                 <hr>
                 <div class="uk-margin">
                     <button class="uk-button uk-button-primary" type="submit" value="submit">submit</button>
@@ -128,12 +128,11 @@
             </div>
         </form>
     </div>
-</div>
+</div> -->
 <!-- End Modal Shift -->
  
 <!-- Camera Script -->
 <script>
-    
     Webcam.set({
         width: 490,
         height: 390,
@@ -187,9 +186,6 @@
     function klik2(){
         $(".status").val("0");
     }
-
-    
 </script>
 <!-- Camera Script End -->
-
 <?= $this->endSection() ?>

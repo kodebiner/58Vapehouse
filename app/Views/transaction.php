@@ -831,7 +831,7 @@
                                             {label: "Non Member", idx:0},
                                             <?php
                                                 foreach ($customers as $customer) {
-                                                    echo '{label:"'.$customer['name'].'",idx:'.$customer['id'].'},';
+                                                    echo '{label:"'.$customer['name'].' / '.$customer['phone'].'",idx:'.$customer['id'].'},';
                                                 }
                                             ?>
                                         ];
@@ -1092,7 +1092,6 @@
             <div class="tm-main">
                 <div class="uk-container uk-container-expand uk-padding-remove-horizontal">
                     <div class="uk-panel uk-panel-scrollable" style="background-color: #363636;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
-                        <?= view('Views/Auth/_message_block') ?>
                         <?php if ($outletPick === null) { ?>
                             <div class="uk-margin uk-flex uk-flex-center">
                                 <div class="uk-width-1-6@m uk-card uk-card-default uk-card-small uk-card-body">
@@ -1113,6 +1112,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <?= view('Views/Auth/_message_block') ?>
                             <ul class="uk-switcher switcher-class">
 
                                 <!-- Catalog List -->

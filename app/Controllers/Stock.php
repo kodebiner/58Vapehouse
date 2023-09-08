@@ -433,7 +433,7 @@ class Stock extends BaseController
             // Update Variant
             $variantdata = [
                 'id'                => $key,
-                'hargadasar'        => (($variant['hargadasar'] * $totalstock) + ($input['cbprice'][$id][$key] * $value)) / ($totalstock + $value)
+                'hargadasar'        => round((($variant['hargadasar'] * $totalstock) + ($input['cbprice'][$id][$key] * $value)) / ($totalstock + $value))
             ];
             $VariantModel->save($variantdata);
         }

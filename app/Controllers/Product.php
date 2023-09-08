@@ -74,7 +74,7 @@ class Product extends BaseController
     }
 
     public function create()
-    {  
+    {
         // calling Model
         $ProductModel = new ProductModel();
         $StockModel = new StockModel();
@@ -106,6 +106,10 @@ class Product extends BaseController
             'catid'         => $input['catid'],
             'brandid'       => $input['brandid'],
         ];
+        if (isset($input['photo'])) {
+            $data['photo'] = $input['photo'];
+            $data['thumbnail'] = $input['thumbnail'];
+        }
 
         // insert data product
         $ProductModel->insert($data);
