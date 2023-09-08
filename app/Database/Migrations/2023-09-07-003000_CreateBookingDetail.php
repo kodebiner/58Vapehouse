@@ -14,8 +14,9 @@ class createBookingDetail extends Migration
             'variantid'             => ['type' => 'INT', 'constraint' => 11],
             'bundleid'              => ['type' => 'INT', 'constraint' => 11],
             'qty'                   => ['type' => 'INT', 'constraint' => 11],
-            'description'           => ['type' => 'VARCHAR', 'constraint' => 255],
-            'value'                 => ['type' => 'INT', 'constraint' => 11],
+            'value'                 => ['type' => 'INT', 'null' => true],
+            'description'           => ['type' => 'varchar','constraint' => 255 ,'null' => true],
+            'discvar'               => ['type' => 'INT', 'constraint' => 11],
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);

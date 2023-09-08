@@ -16,8 +16,6 @@ class createBooking extends Migration
             'value'             => ['type' => 'VARCHAR', 'constraint' => 255],
             'disctype'          => ['type' => 'tinyint', 'constraint' => 1],
             'discvalue'         => ['type' => 'VARCHAR', 'constraint' => 255],
-            'discvar'           => ['type' => 'INT', 'constraint' => 255],
-            'bargainprice'      => ['type' => 'INT', 'constraint' => 255],
             'status'            => ['type' => 'tinyint', 'constraint' => 1 ],
             'created_at'        => ['type' => 'datetime', 'null' => true],
             'updated_at'        => ['type' => 'datetime', 'null' => true],

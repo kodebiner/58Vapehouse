@@ -106,6 +106,7 @@ return [
     'confirmation'      => 'Konfirmasi',
     'shift'             => 'peralihan',
     'bookorder'         => 'Pemesanan Booking',
+    'topup'             => 'Top Up',
 
     // Button
     'edit'              => 'Ubah',

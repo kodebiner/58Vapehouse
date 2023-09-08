@@ -201,7 +201,6 @@ class Transaction extends BaseController
                     'variantid'     => "0",
                     'bundleid'      => $y,
                     'qty'           => $qty,
-                    // 'description'   => $input['description'],
                     'value'         => $bunPrice,
                 ];
                 $TrxdetailModel->save($data);

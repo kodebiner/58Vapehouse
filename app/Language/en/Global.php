@@ -108,6 +108,7 @@ return [
     'invoice'           => 'Invoice',
     'cashamount'        => 'Cash Payment Amount',
     'bookorder'         => 'Booking Order',
+    'topup'             => 'Top Up',
     
 
     // Button

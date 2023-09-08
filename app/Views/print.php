@@ -63,11 +63,11 @@
                                 <?php foreach($payments as $payment){?>
                                         <?php 
                                         if ($transactions['paymentid'] === $payment['id'] && ($transactions['paymentid'] !== "0")) {
-                                            echo "/".$payment['name'];
+                                            echo $payment['name'];
                                         }elseif (($transactions['paymentid'] === "0")){
                                             foreach($trxpayments as $trxpay){
                                                 if ($trxpay["transactionid"] === $payment['id']){
-                                                echo "/".$payment['name'];
+                                                echo $payment['name']; 
                                                 }
                                             }
                                         }
@@ -81,9 +81,10 @@
                         <?php } ?>
                     </div>
                 </div>
-                <hr style ="border-top: 1px  dotted black;">
+                <!-- <hr style ="border-top: 1px  dotted black;"> -->
+                <hr style ="border-top: 3px double #8c8b8b">
                 <?php if (!empty($transactions['id'])){ ?>
-                    <!-- variant -->
+                    <!-- variant transaction -->
                     <?php foreach ($trxdetails as $trxdet) {
                         if ($trxdet['variantid'] !== "0"){
                             foreach ($variants as $variant) {
@@ -157,86 +158,70 @@
                 <!-- end bundle -->
                 <?php } ?>
 
-                <!-- booking -->
-                    <?php if(!empty($bookings) && (empty($transactions['id']))){ ?>
-                      <!-- variant -->
-                      <?php 
-                          if ($bookingdetails['variantid'] !== "0"){
-                              foreach ($variants as $variant) {
-                                  foreach ($products as $product) { 
-                                      if (($bookingdetails['variantid'] === $variant['id']) && ($product['id'] === $variant['productid']) && ($bookingdetails['bookingid'] === $bookings['id']) ) {
-                                          $variantName     = $variant['name'];
-                                          $productName     = $product['name']; 
-                                            $variantval      = $bookingdetails['value'] + $vardiscval[$variant['id']];
-                                          
-                                          ?>
-                                          <div class="uk-margin-small uk-text-xsmall">
-                                              <div>
-                                                  <?=$productName.' - '.$variantName?>
-                                              </div>
-                                              <div class="uk-grid-collapse" uk-grid>
-                                                  <div class="uk-width-2-3">x<?=$bookingdetails['qty']?> @<?=$variantval?></div>
-                                                  <div class="uk-width-1-3"><?=$variantval * $bookingdetails['qty']?></div>
-                                              </div>
-                                              <div class="uk-grid-collapse" uk-grid>
-                                                  <?php
-                                                  if (!empty($vardiscval[$variant['id']])){
-                                                      echo "<div class='uk-width-2-3'>Discount</br> @" .$vardiscval[$variant['id']]. "</div>";
-                                                      echo "<div class='uk-width-1-3'></br>-" .$vardiscval[$variant['id']]. "</div>";
-                                                  }
-                                                  ?>
-                                              </div>
-                                          </div>
-                                      <?php }
-                                  } 
-                              } 
-                          }
-                       ?>
-                      <!-- end variant -->
-  
-                      <!-- bundle -->
-                        <?php 
-                        if (!empty($bookingdetails['bundleid']) && empty($transactions['id']) ){
-                                foreach ($bundles as $bundle){
-                                    if (($bookingdetails['bookingid'] === $bookings['id']) && ($bookingdetails['bundleid'] === $bundle['id']) ) {
-                                        $bundleName      = $bundle  ['name'];
-                                        $variantval      = $bookingdetails  ['value'];
-                                        ?>
-                                      <div class="uk-margin-small uk-text-xsmall">
-                                          <div>
-                                              x<?=$bookingdetails['qty']?> Bundle <br> <?= $bundleName?> <br>
-                                              <div class="uk-grid-collapse" uk-grid>
-                                                  <div class="uk-width-2-3"> @<?=$variantval?></div>
-                                                  <div class="uk-width-1-3"><?=$variantval * $bookingdetails['qty']?></div>
-                                              </div>
-                                              <?php 
-                                              foreach ($bundets as $bundet){
-                                                  foreach ($products as $product) { 
-                                                      foreach ($variants as $variant){    
-                                                          $productName     = $product ['name']; 
-                                                          $variantName     = $variant ['name'];
-                                                          if(($variant['id'] === $bundet['variantid'])  && ($product['id'] === $variant['productid'])&& 
-                                                          ($bookingdetails['bundleid'] === $bundet['bundleid']) && ($bundle['id'] === $bundet['bundleid'])){
-                                                            echo "# ".$productName."-".$variantName."</br>";
-                                                          }
-                                                      }
-                                                  }
-                                              }?>
-                                          </div>
-                                      </div>
-                                    <?php 
-                                } 
-                            } 
-                          
-                        } ?>
-                    <?php } ?>
+                <!-- booking variant -->
+                    <?php
+                    if(!empty($bookings) && (empty($transactions['id']))){
+                        foreach ($bookingdetails as $bookingdetail) {
+                            if ($bookingdetail['variantid'] !== '0') {
+                                foreach ($variants as $variant) {
+                                    foreach ($products as $product) {
+                                        if (($bookingdetail['variantid'] === $variant['id']) && ($variant['productid'] === $product['id'])) {
+                                            $variantName    = $variant['name'];
+                                            $productName    = $product['name'];
+                                            $variantval     = $bookingdetail['value'] + $bookingdetail['discvar'];
+
+                                            echo '<div class="uk-margin-small uk-text-xsmall">';
+                                            echo '<div>';
+                                            echo $productName.' - '.$variantName;
+                                            echo '</div>';
+                                            echo '<div class="uk-grid-collapse" uk-grid>';
+                                            echo '<div class="uk-width-2-3">x'.$bookingdetail['qty'].' @'.$variantval.'</div>';
+                                            echo '<div class="uk-width-1-3">'.$variantval * $bookingdetail['qty'].'</div>';
+                                            echo '</div>';
+                                            if ($bookingdetail['discvar'] !== '0') {
+                                                echo '<div class="uk-grid-collapse" uk-grid>';
+                                                echo "<div class='uk-width-2-3'>Discount</br> @" .(int)$bookingdetail['discvar']. "</div>";
+                                                echo "<div class='uk-width-1-3'></br>-" .$bookingdetail['discvar']. "</div>";
+                                                echo '</div>';
+                                            }
+                                            echo '</div>';
+                                        }
+                                    }
+                                }
+                            } else {
+                                foreach ($bundles as $bundle) {
+                                    if ($bundle['id'] === $bookingdetail['bundleid']) {
+                                        echo '<div class="uk-margin-small uk-text-xsmall">';
+                                        echo '<div>';
+                                        echo 'x'.$bookingdetail['qty'].' Bundle <br>'.$bundle['name'].'<br>';
+                                        echo '<div class="uk-grid-collapse" uk-grid>';
+                                        echo '<div class="uk-width-2-3"> @'.$bookingdetail['value'].'</div>';
+                                        echo '<div class="uk-width-1-3">'.$bookingdetail['value'] * $bookingdetail['qty'].'</div>';
+                                        echo '</div>';
+                                        foreach ($bundets as $bundet) {
+                                            foreach ($products as $product) {
+                                                foreach ($variants as $variant) {
+                                                    if (($bundet['variantid'] === $variant['id']) && ($variant['productid'] === $product['id'])) {
+                                                        echo "# ".$product['name']."-".$variant['name']."</br>";
+                                                    } 
+                                                }
+                                            }
+                                        }
+                                        echo '</div>';
+                                        echo '</div>';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    ?>
 
                 <!-- end booking-->
 
                 <!-- total transaction -->
                 <?php 
                 if (!empty($bookings['id']) && empty ($transactions['id']) ){ ?>
-                    <hr style ="border-top: 1px solid black;">
+                    <hr style ="border-top: 3px double #8c8b8b">
                     <div class="uk-margin-small uk-text-xsmall">
                         <div class="uk-grid-collapse" uk-grid>
                             <div class="uk-width-2-3 uk-text-bold">Subtotal</div>
@@ -249,7 +234,7 @@
                             }?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if (($bookings['memberid'] !== "0") && ($bookings['id']=== $bookingid)) {
+                            <?php if (($bookings['memberid'] !== "0") && ($bookings['id']=== $bookingid) && ($gconfig['memberdisc'] !== "0")) {
                                 $memberdisc = $gconfig['memberdisc'];
                                 echo "<div class='uk-width-2-3'>Discount Member</div>";
                                 echo "<div class='uk-width-1-3'>$memberdisc</div>";
@@ -312,8 +297,9 @@
                         </div>
                     </div>
                     <!-- end total transaction -->
+                    <!-- total booking -->
                     <?php } elseif(!empty($transactions['id'])) { ?>
-                    <hr style ="border-top: 1px solid black;">
+                    <hr style ="border-top: 3px double #8c8b8b">                    
                     <div class="uk-margin-small uk-text-xsmall">
                         <div class="uk-grid-collapse" uk-grid>
                             <div class="uk-width-2-3 uk-text-bold">Subtotal</div>
@@ -326,7 +312,7 @@
                             }?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if (($transactions['memberid'] !== "0")) {
+                            <?php if (($transactions['memberid'] !== "0") && ($gconfig['memberdisc'] !== "0")) {
                                 $memberdisc = $gconfig['memberdisc'];
                                 echo "<div class='uk-width-2-3'>Discount Member</div>";
                                 echo "<div class='uk-width-1-3'>$memberdisc</div>";
@@ -388,7 +374,7 @@
                             }?> 
                         </div>
                     </div>
-                    <!-- end total transaction -->
+                    <!-- end total booking -->
                 <?php } ?>
                 <div class="uk-margin uk-text-center">#VapingSambilNongkrong</div>
                 <hr/>

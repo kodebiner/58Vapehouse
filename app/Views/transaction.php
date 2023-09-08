@@ -83,7 +83,7 @@
                         <div class="uk-navbar-right">
                             <div class="uk-child-width-1-3 uk-flex uk-flex-middle" uk-grid>
                                 <div class="uk-padding-remove uk-flex uk-flex-center">
-                                    <a class="uk-button uk-button-text" href="#modal-sections" uk-toggle>Top Up Point</a>
+                                    <a class="uk-button uk-button-text" href="#modal-sections" uk-toggle><?=lang('Global.topup')?></a>
                                 </div>
                                 <div class="uk-padding-remove uk-flex uk-flex-center">
                                     <button type="button" class="uk-button" uk-toggle="target: #bookinglist" uk-icon="folder" width="30" height="30" style="color: #fff;"></button>
@@ -216,7 +216,6 @@
                                         <div uk-modal class="uk-flex-top" id="detail<?= $book['id'] ?>">
                                             <div class="uk-modal-dialog uk-margin-auto-vertical">
                                                 <div class="uk-modal-content">
-                                                <form action="pay/bookprint/<?= $book['id'] ?>" method="post">
                                                     <div class="uk-modal-header">
                                                         <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.bookdetList')?></h5>
                                                     </div>
@@ -278,13 +277,12 @@
                                                         } ?>
                                                         <hr>
                                                         <div class="uk-margin">
-                                                            <button type="submit" class="uk-button uk-button-default" style="border-radius: 8px; width: 540px;"><?= lang('Global.print') ?></button>
+                                                            <a href="pay/bookprint/<?=$book['id']?>" class="uk-button uk-button-default" style="border-radius: 8px; width: 540px;"><?= lang('Global.print') ?></a>
                                                         </div>
                                                         <div>
                                                             <a class="uk-button uk-button-primary" style="border-radius: 8px; width: 540px;" uk-toggle="#tambahdata" onclick="insertBooking<?= $book['id'] ?>()"><?= lang('Global.tocart') ?></a>
                                                         </div>
                                                     </div>
-                                                </form>
                                                 </div>
                                             </div>
                                         </div>
