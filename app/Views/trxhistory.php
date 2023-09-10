@@ -23,6 +23,7 @@
             <th class="uk-width-small uk-text-center"><?= lang('Global.employee') ?></th>
             <th class="uk-width-small uk-text-center"><?= lang('Global.paymethod') ?></th>
             <th class="uk-width-small uk-text-center"><?= lang('Global.total') ?></th>
+            <th class="uk-width-small uk-text-center"><?= lang('Global.print') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -60,6 +61,7 @@
                     $sum = array_sum($prices);
                     echo "Rp " . number_format($sum,2,',','.'); ?>
                 </td>
+                <td class="uk-width-small uk-text-center"> <a type="button" class="uk-button uk-button-primary uk-preserve-color" href="pay/copyprint/<?=$transaction['id']?>"><?=lang('Global.print')?></a></td>
             </tr>
         <?php } ?>
     </tbody>

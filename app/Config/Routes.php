@@ -203,6 +203,7 @@ $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->post('save', 'Pay::save',['filter'=> 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Pay::bookingdelete/$1',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('pay', 'Pay::pay',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->get('copyprint/(:num)', 'Pay::copyprint/$1',['filter'=> 'role:owner,supervisor,operator']);
     $routes->get('bookprint/(:num)','Pay::bookprint/$1',['filter'=>'role:owner,supervisor,operator']);
     $routes->post('topup', 'Pay::topup',['filter' =>'role:owner,supervisor']);
 });
