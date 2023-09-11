@@ -148,6 +148,7 @@ return [
     'book'              => 'Booking',
     'addsop'            => 'Add Sop',
     'trxproof'          => 'Transaction Proof',
+    'topupproof'        => 'Top Up Proof',
     'invoice'           => 'Invoice',
     
     // Menu

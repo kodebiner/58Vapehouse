@@ -69,7 +69,7 @@
                         <div class="uk-navbar-right">
                             <div class="uk-child-width-1-3 uk-flex uk-flex-middle" uk-grid>
                                 <div>
-                                    <a class="uk-button uk-button-text" href="#modal-sections" uk-toggle>Top Up Point</a>
+                                    <a class="uk-button uk-button-text" uk-toggle="#modal-sections">Top Up Point</a>
                                 </div>
                                 <div>
                                     <button type="button" class="uk-button" uk-toggle="target: #bookinglist" uk-icon="folder" width="35" height="35" style="color: #fff;"></button>
@@ -83,7 +83,7 @@
                         <div class="uk-navbar-right">
                             <div class="uk-child-width-1-3 uk-flex uk-flex-middle" uk-grid>
                                 <div class="uk-padding-remove uk-flex uk-flex-center">
-                                    <a class="uk-button uk-button-text" href="#modal-sections" uk-toggle><?=lang('Global.topup')?></a>
+                                    <a class="uk-button uk-button-text" uk-toggle="#modal-sections"><?=lang('Global.topup')?></a>
                                 </div>
                                 <div class="uk-padding-remove uk-flex uk-flex-center">
                                     <button type="button" class="uk-button" uk-toggle="target: #bookinglist" uk-icon="folder" width="30" height="30" style="color: #fff;"></button>
@@ -161,14 +161,77 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="uk-margin">
+                                        <div class="uk-form-controls">
+                                            <a class="uk-button uk-button-default" uk-toggle="#topupproof"><?= lang('Global.topupproof') ?></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="uk-margin" hidden>
+                                        <input class="image-tag" name="image">
+                                    </div>
+
                                     <div class="uk-modal-footer uk-text-right">
-                                        <button class="uk-button uk-button-primary" type="submit" value="submit">Save</button>
+                                        <button class="uk-button uk-button-primary" type="submit" value="submit"><?= lang('Global.save') ?></button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                     <!-- Modal Top Up Point End -->
+
+                    <!-- Modal Top Up Proof -->
+                    <div uk-modal class="uk-flex-top" id="topupproof">
+                        <div class="uk-modal-dialog uk-margin-auto-vertical">
+                            <div class="uk-modal-content">
+                                <div class="uk-modal-header">
+                                    <div class="uk-flex uk-flex-middle uk-child-width-auto" uk-grid>
+                                        <div class="uk-padding-remove uk-margin-medium-left">
+                                            <a uk-icon="arrow-left" uk-toggle="#modal-sections" width="35" height="35"></a>
+                                        </div>
+                                        <div>
+                                            <h5 class="uk-modal-title" ><?=lang('Global.topupproof')?></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-modal-body">
+                                    <div class="uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
+                                        <div class="uk-margin-left">
+                                            <div id="topup_camera"></div>
+                                        </div>
+                                        <div class="uk-text-center">
+                                            <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="topup_snapshot()">
+                                        </div>
+                                        <div class="uk-text-center">
+                                            <div id="topup_results"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Script Webcam Trx Proof -->
+                                    <script type="text/javascript">
+                                        Webcam.set({
+                                            width: 490,
+                                            height: 390,
+                                            image_format: 'jpeg',
+                                            jpeg_quality: 90
+                                        });
+                                    
+                                        Webcam.attach( '#topup_camera' );
+
+                                        function topup_snapshot() {
+                                            Webcam.snap( function(data_uri) {
+                                                $(".image-tag").val(data_uri);
+                                                document.getElementById('topup_results').innerHTML = '<img src="'+data_uri+'"/>';
+                                            } );
+                                        }
+                                    </script>
+                                    <!-- Script Webcam Trx Proof End -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Top Up Proof End -->
 
                     <!-- Modal Booking -->
                     <div uk-modal class="uk-flex-top" id="bookinglist">
@@ -699,7 +762,7 @@
         <!-- Left Sidebar Section -->
         <div id="offcanvas" uk-offcanvas="overlay: true;">
             <div class="uk-offcanvas-bar" role="dialog" aria-modal="true">
-                <nav>
+                <nav class="tm-sidebar-left uk-padding-remove-left uk-padding-remove-top">
                     <ul class="uk-nav uk-nav-default tm-nav uk-light" uk-nav>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
                             <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>

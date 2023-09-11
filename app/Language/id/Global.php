@@ -145,6 +145,7 @@ return [
     'book'              => 'Pesan',
     'addsop'            => 'Tambah Sop',
     'trxproof'          => 'Bukti Transaksi',
+    'topupproof'        => 'Bukti Top Up',
     'invoice'           => 'Nota',
 
     // Menu

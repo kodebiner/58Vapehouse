@@ -423,12 +423,8 @@ class Pay extends BaseController
             $data['pay']            = $input['value'];
         } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
             $data['pay']            = $input['firstpay'] + $input['secondpay'];
-        }elseif(!empty($input['debt']) && (empty($input['value']))){
-            $data['pay']            = "0";
-        } elseif(!empty($input['value']) && !empty($input['debt'])){
-            $data['pay']            = $input['value'] - $input['debt'];
         }
-        
+
         $data['discount'] = "0";
 
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
@@ -1044,8 +1040,8 @@ class Pay extends BaseController
         return redirect()->back()->with('error', lang('Global.deleted'));
     }
 
-    public function topup(){
-        
+    public function topup()
+    {
         // Declaration Model
         $MemberModel    = new MemberModel;
         $TrxotherModel  = new TrxotherModel;
@@ -1059,6 +1055,17 @@ class Pay extends BaseController
         $tanggal = date_format($date,'Y-m-d H:i:s');
         $member = $MemberModel->where('id',$input['customerid'])->first();
         $poin = $member['poin'] + $input['value'];
+
+        // Image Capture
+        $img            = $input['image'];
+        $folderPath     = "img";
+        $image_parts    = explode(";base64,", $img);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type     = $image_type_aux[1];
+        $image_base64   = base64_decode($image_parts[1]);
+        $fileName       = uniqid() . '.png';
+        $file           = $folderPath . $fileName;
+        file_put_contents($file, $image_base64);
         
         // Cash In 
         $cashin = [
@@ -1069,6 +1076,7 @@ class Pay extends BaseController
             'type'          => "0",
             'date'          => $tanggal,
             'qty'           => $input['value'],
+            'photo'         => $fileName,
         ];
         $TrxotherModel->save($cashin);
         
