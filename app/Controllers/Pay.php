@@ -423,8 +423,12 @@ class Pay extends BaseController
             $data['pay']            = $input['value'];
         } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
             $data['pay']            = $input['firstpay'] + $input['secondpay'];
+        }elseif(!empty($input['debt']) && (empty($input['value']))){
+            $data['pay']            = "0";
+        } elseif(!empty($input['value']) && !empty($input['debt'])){
+            $data['pay']            = $input['value'] - $input['debt'];
         }
-
+        
         $data['discount'] = "0";
 
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {

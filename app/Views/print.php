@@ -65,10 +65,8 @@
                                         if ($transactions['paymentid'] === $payment['id'] && ($transactions['paymentid'] !== "0")) {
                                             echo $payment['name'];
                                         }elseif (($transactions['paymentid'] === "0")){
-                                            foreach($trxpayments as $trxpay){
-                                                if ($trxpay["transactionid"] === $payment['id']){
-                                                echo $payment['name']; 
-                                                }
+                                            if ($trxpayments["paymentid"] === $payment['id']){
+                                            echo $payment['name']; 
                                             }
                                         }
                                     ?>
@@ -95,18 +93,18 @@
                                         $variantval      = $trxdet['value'] + $trxdet['discvar'];
                                         ?>
                                         <div class="uk-margin-small uk-text-xsmall">
-                                            <div>
+                                            <div class="uk-text-bold">
                                                 <?=$productName.' - '.$variantName?>
                                             </div>
                                             <div class="uk-grid-collapse" uk-grid>
-                                                <div class="uk-width-2-3">x<?=$trxdet['qty']?> @<?=$variantval?></div>
-                                                <div class="uk-width-1-4 uk-text-left"><?=$variantval * $trxdet['qty']?></div>
+                                                <div class="uk-width-1-2">x<?=$trxdet['qty']?> @<?=$variantval?></div>
+                                                <div class="uk-width-1-2 uk-text-right"><?=$variantval * $trxdet['qty']?></div>
                                             </div>
                                             <div class="uk-grid-collapse" uk-grid>
                                                 <?php
                                                 if (!empty($trxdet['discvar'])){
-                                                    echo "<div class='uk-width-2-3'>Discount</br> @" .$trxdet['discvar']. "</div>";
-                                                    echo "<div class='uk-width-1-4'></br>-" .$trxdet['discvar']. "</div>";
+                                                    echo "<div class='uk-width-1-2'>Discount</br> @" .$trxdet['discvar']. "</div>";
+                                                    echo "<div class='uk-width-1-2 uk-text-right'></br>-" .$trxdet['discvar']. "</div>";
                                                 }
                                                 ?>
                                             </div>
@@ -129,7 +127,7 @@
                                     ?>
                                     <div class="uk-margin-small uk-text-xsmall">
                                         <div>
-                                            x<?=$trxdet['qty']?> Bundle <br> <?= $bundleName?> <br>
+                                            x<?=$trxdet['qty']?> <?=lang('Global.bundle')?> <br> <?= $bundleName?> <br>
                                             <div class="uk-grid-collapse" uk-grid>
                                                 <div class="uk-width-2-3"> @<?=$variantval?></div>
                                                 <div class="uk-width-1-3"><?=$variantval * $trxdet['qty']?></div>
@@ -302,74 +300,74 @@
                     <hr style ="border-top: 3px double #8c8b8b">                    
                     <div class="uk-margin-small uk-text-xsmall">
                         <div class="uk-grid-collapse" uk-grid>
-                            <div class="uk-width-2-3 uk-text-bold ">Subtotal</div>
-                            <div class="uk-width-1-4  uk-text-bold "><?=$subtotal?></div>
+                            <div class="uk-width-1-2 uk-text-bold ">Subtotal</div>
+                            <div class="uk-width-1-2  uk-text-bold uk-text-right"><?=$subtotal?></div>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if(!empty($discount)){
-                                echo "<div class='uk-width-2-3 uk-text-bold'>Discount</div>";
-                                echo "<div class='uk-width-1-4  uk-text-bold'>".$discount."</div>";
+                                echo "<div class='uk-width-1-2 uk-text-bold'>Discount</div>";
+                                echo "<div class='uk-width-1-2  uk-text-bold uk-text-right'>".$discount."</div>";
                             }?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (($transactions['memberid'] !== "0") && ($gconfig['memberdisc'] !== "0")) {
                                 $memberdisc = $gconfig['memberdisc'];
-                                echo "<div class='uk-width-2-3'>Discount Member</div>";
-                                echo "<div class='uk-width-1-4'>$memberdisc</div>";
+                                echo "<div class='uk-width-1-2'>Discount Member</div>";
+                                echo "<div class='uk-width-1-2 uk-text-right'>$memberdisc</div>";
                             }?> 
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <div class="uk-width-2-3 uk-text-bold">Total</div>
-                            <div class="uk-width-1-4  uk-text-bold"><?=$total?></div>
+                            <div class="uk-width-1-2 uk-text-bold">Total</div>
+                            <div class="uk-width-1-2  uk-text-bold uk-text-right"><?=$total?></div>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if ($pay !== "0"){
-                                echo "<div class='uk-width-2-3'>Pay</div>";
-                                echo "<div class='uk-width-1-4 uk-text-bold'>$pay</div>";
+                                echo "<div class='uk-width-1-2'>Pay</div>";
+                                echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>$pay</div>";
                             }?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if ($change !== "0"){
-                                echo "<div class='uk-width-2-3'>change</div>";
-                                echo "<div class='uk-width-1-4'>$change</div>";
+                                echo "<div class='uk-width-1-2'>change</div>";
+                                echo "<div class='uk-width-1-2 uk-text-right'>$change</div>";
                             }?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (($transactions['memberid'] !== "0") ) {
                                 $cust = $cust['name'];
-                                echo "<div class='uk-width-2-3'>Customer</div>";
-                                echo "<div class='uk-width-1-4'>$cust</div>";
+                                echo "<div class='uk-width-1-2'>Customer</div>";
+                                echo "<div class='uk-width-1-2 uk-text-right'>$cust</div>";
                             }?> 
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (($transactions['memberid'] !== "0")) {
                                 $poinearn = $gconfig['poinvalue'];
-                                echo "<div class='uk-width-2-3'>Point Earned</div>";
-                                echo "<div class='uk-width-1-4 uk-text-left'>$poinearn</div>";
+                                echo "<div class='uk-width-1-2'>Point Earned</div>";
+                                echo "<div class='uk-width-1-2 uk-text-left uk-text-right'>$poinearn</div>";
                             }?> 
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (($transactions['memberid'] !== "0") && ($transactions['pointused']) !== "0") {
-                                echo "<div class='uk-width-2-3'>Point Used</div>";
-                                echo "<div class='uk-width-1-4'>$poinused</div>";
+                                echo "<div class='uk-width-1-2'>Point Used</div>";
+                                echo "<div class='uk-width-1-2 uk-text-right'>$poinused</div>";
                             }?> 
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (($transactions['memberid'] !== "0")) {
-                                echo " <div class='uk-width-2-3'>Total Poin</div>";
-                                echo "<div class='uk-width-1-4'>$mempoin</div>";
+                                echo " <div class='uk-width-1-2'>Total Poin</div>";
+                                echo "<div class='uk-width-1-2 uk-text-right'>$mempoin</div>";
                             }?> 
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (!empty($debt)) {
-                                echo " <div class='uk-width-2-3'>debt</div>";
-                                echo "<div class='uk-width-1-4'>$debt</div>";
+                                echo " <div class='uk-width-1-2'>debt</div>";
+                                echo "<div class='uk-width-1-2 uk-text-right'>$debt</div>";
                             }?> 
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (!empty($totaldebt)) {
-                                echo " <div class='uk-width-2-3'>debt</div>";
-                                echo "<div class='uk-width-1-4'>$totaldebt</div>";
+                                echo " <div class='uk-width-1-2'>debt</div>";
+                                echo "<div class='uk-width-1-2 uk-text-right'>$totaldebt</div>";
                             }?> 
                         </div>
                     </div>
