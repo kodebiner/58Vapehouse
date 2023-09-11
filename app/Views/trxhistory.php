@@ -22,7 +22,6 @@
             <th class=""><?= lang('Global.employee') ?></th>
             <th class=""><?= lang('Global.paymethod') ?></th>
             <th class=""><?= lang('Global.total') ?></th>
-            <!-- <th class="uk-width-small uk-text-center"><?= lang('Global.print') ?></th> -->
         </tr>
     </thead>
     <tbody>
@@ -64,7 +63,6 @@
                     $sum = array_sum($prices);
                     echo "Rp " . number_format($sum,2,',','.'); ?>
                 </td>
-                <!-- <td class="uk-width-small uk-text-center"> <a type="button" class="uk-button uk-button-primary uk-preserve-color" href="pay/copyprint/<?=$transaction['id']?>"><?=lang('Global.print')?></a></td> -->
             </tr>
         <?php } ?>
     </tbody>
@@ -277,19 +275,21 @@
                                 </div>
 
                                 <div class="uk-margin-remove-top" uk-grid>
-                                    <div class="uk-width-1-2">
-                                        <div><?= lang('Global.change') ?></div>
-                                    </div>
-                                    <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
-                                        <div><?= $transaction['amountpaid'] - $transaction['value'] ?></div>
-                                    </div>
+                                    <?php if (($transaction['amountpaid'] - $transaction['value'] !== "0")) { ?>
+                                        <div class="uk-width-1-2">
+                                            <div><?= lang('Global.change') ?></div>
+                                        </div>
+                                        <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
+                                            <div><?= $transaction['amountpaid'] - $transaction['value'] ?></div>
+                                        </div>
+                                    <?php } ?>
                                 </div>
 
                                 <hr style ="border-top: 3px double #8c8b8b">
 
                                 <div class="uk-margin-remove-top" uk-grid>
                                     <?php if (($transaction['memberid'] !== "0")) {
-                                        $pointearn = round($transaction['value'] / $gconfig['poinorder']) * $gconfig['poinvalue']; ?>
+                                        $pointearn = (floor($transaction['value'] / $gconfig['poinorder'])) * $gconfig['poinvalue']; ?>
                                         <div class="uk-width-1-2">
                                             <div><?= lang('Global.pointearn') ?></div>
                                         </div>

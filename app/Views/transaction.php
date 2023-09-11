@@ -161,14 +161,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-horizontal-text">Description</label>
-                                        <div class="uk-form-controls">
-                                            <div class="uk-inline uk-width-1-1">
-                                                <textarea class="uk-textarea" rows="5" placeholder="Description" name="description" aria-label="Textarea"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="uk-modal-footer uk-text-right">
                                         <button class="uk-button uk-button-primary" type="submit" value="submit">Save</button>
                                     </div>
@@ -722,6 +714,12 @@
                             <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                         </li>
                         <li class="tm-main-navbar">
+                            <a class="uk-h4 tm-h4" href="<?= base_url('debt') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.debt');?></a>
+                        </li>
+                        <li class="tm-main-navbar">
+                            <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.topup');?></a>
+                        </li>
+                        <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('payment') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
                         </li>
                         <li class="tm-main-navbar">
@@ -1182,19 +1180,39 @@
                                                         <div class="uk-modal-body">
                                                             <div class="uk-child-width-1-1" uk-grid>
                                                                 <div id="">
+                                                                    <div class="uk-margin">
+                                                                        <div class="uk-flex uk-flex-middle" uk-grid>
+                                                                            <div class="uk-width-1-6">
+                                                                                <h5 style="text-transform: uppercase;"><?= lang('Global.variant'); ?></h5>
+                                                                            </div>
+                                                                            <div class="uk-width-1-4">
+                                                                                <h5 style="text-transform: uppercase;"><?= lang('Global.price'); ?></h5>
+                                                                            </div>
+                                                                            <div class="uk-width-1-4">
+                                                                                <h5 style="text-transform: uppercase;"><?= lang('Global.suggestPrice'); ?></h5>
+                                                                            </div>
+                                                                            <div class="uk-width-1-6">
+                                                                                <h5 style="text-transform: uppercase;"><?= lang('Global.stock'); ?></h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
                                                                     <?php foreach ($variants as $variant) {
                                                                         if ($variant['productid'] === $product['id']) {
                                                                             $VarName    = $variant['name'];
-                                                                            $Price   = $variant['hargamodal'] + $variant['hargajual'];
+                                                                            $Price      = $variant['hargamodal'] + $variant['hargajual'];
                                                                             $ProdName   = $productName.' - '. $variant['name']; ?>
 
                                                                             <div class="uk-margin">
                                                                                 <div class="uk-flex uk-flex-middle" uk-grid>
-                                                                                    <div class="uk-width-1-3">
+                                                                                    <div class="uk-width-1-6">
                                                                                         <div class="uk-h4"><?= $VarName; ?></div>
                                                                                     </div>
-                                                                                    <div class="uk-width-1-3">
+                                                                                    <div class="uk-width-1-4">
                                                                                         <div class="uk-h4">Rp <?= $Price; ?>,-</div>
+                                                                                    </div>
+                                                                                    <div class="uk-width-1-4">
+                                                                                        <div class="uk-h4">Rp <?= $variant['hargarekomendasi']; ?>,-</div>
                                                                                     </div>
                                                                                     <div class="uk-width-1-6">
                                                                                         <?php foreach ($stocks as $stock) {

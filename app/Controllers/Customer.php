@@ -44,7 +44,7 @@ class Customer extends BaseController
         if (! $this->validate([
             'name'      => "required|max_length[255]',",
             'phone'     => 'required',
-            'email'     => 'max_length[255]|valid_email',
+            'email'     => 'max_length[255]',
         ])) {
                 
            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());

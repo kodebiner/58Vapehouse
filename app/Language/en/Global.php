@@ -91,7 +91,6 @@ return [
     'cash'              => 'Cash',
     'firstpaymet'       => "First Payment Method",
     'secpaymet'         => "Second Payment Method",
-    'debt'              => 'Debt',
     'duedate'           => 'Due Date',
     'restock'           => 'Restock',
     'sale'              => 'Sale',
@@ -204,6 +203,8 @@ return [
     'bookingList'               => 'Booking List',
     'bookdetList'               => 'Booking Details',
     'trxHistoryList'            => 'Transaction History List',
+    'debtList'                  => 'Debt List',
+    'topupList'                 => 'Top Up List',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
     
@@ -224,7 +225,9 @@ return [
     'paymentListDesc'           => 'List of all your payments',
     'supplierListDesc'          => 'List of all your supplier',
     'purchaseListDesc'          => 'List of all your purchase',
-    'trxHistoryList'            => 'List of all your transaction',
+    'trxHistoryListDesc'        => 'List of all your transaction',
+    'debtListDesc'              => 'List of all your Debt',
+    'topupListDesc'             => 'List of all your Top Up',
     'userProfileDesc'           => 'Information about your profile',
     'businessInfoDesc'          => 'Information about your business',
 ];

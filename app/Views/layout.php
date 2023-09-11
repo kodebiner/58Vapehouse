@@ -274,6 +274,12 @@
                                 <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                             </li>
                             <li class="tm-main-navbar">
+                                <a class="uk-h4 tm-h4" href="<?= base_url('debt') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.debt');?></a>
+                            </li>
+                            <li class="tm-main-navbar">
+                                <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.topup');?></a>
+                            </li>
+                            <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('payment') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
                             </li>
                             <li class="tm-main-navbar">
@@ -365,6 +371,12 @@
                     </li>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
+                    </li>
+                    <li class="tm-main-navbar">
+                        <a class="uk-h4 tm-h4" href="<?= base_url('debt') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.debt');?></a>
+                    </li>
+                    <li class="tm-main-navbar">
+                        <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.topup');?></a>
                     </li>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('payment') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>

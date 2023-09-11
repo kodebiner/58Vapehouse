@@ -317,7 +317,7 @@ class Pay extends BaseController
 
         // Gconfig setup
         $minimTrx    = $Gconfig['poinorder'];
-        $poinval     = $Gconfig['memberdisc'];
+        $poinval     = $Gconfig['poinvalue'];
         
         if ($total  >= $minimTrx) {
             $value  = $total / $minimTrx;

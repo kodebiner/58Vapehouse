@@ -91,7 +91,6 @@ return [
     'cash'              => 'Kas',
     'firstpaymet'       => "Metode Pembayaran 1",
     'secpaymet'         => "Metode Pembayaran 2",
-    'debt'              => 'Hutang',
     'duedate'           => 'Jatuh Tempo',
     'restock'           => 'Restock',
     'sale'              => 'Terjual',
@@ -201,6 +200,8 @@ return [
     'bookingList'               => 'Daftar Booking',
     'bookdetList'               => 'Rincian Booking',
     'trxHistoryList'            => 'Daftar Riwayat Transaksi',
+    'debtList'                  => 'Daftar Kasbon',
+    'topupList'                 => 'Daftar Top Up',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
     
@@ -221,7 +222,9 @@ return [
     'paymentListDesc'           => 'Daftar pembayaran yang anda miliki',
     'supplierListDesc'          => 'Daftar pemasok yang anda miliki',
     'purchaseListDesc'          => 'Daftar pembelian yang anda miliki',
-    'trxHistoryList'            => 'Daftar transaksi yang anda miliki',
+    'trxHistoryListDesc'        => 'Daftar transaksi yang anda miliki',
+    'debtListDesc'              => 'Daftar kasbon yang anda miliki',
+    'topupListDesc'             => 'Daftar top up yang anda miliki',
     'userProfileDesc'           => 'Informasi mengenai profil anda',
     'businessInfoDesc'          => 'Informasi mengenai bisnis anda',
 ];
