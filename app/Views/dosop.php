@@ -35,27 +35,27 @@
                 <tbody>
                     <?php $i = 1 ; ?>
                     <form class="uk-form-stacked" role="form" action="sop/updatetodo" method="post">
-                        <?php foreach ($sops as $sop) { ?>
-                            <?php if ($sop['shift'] === "0") { ?>
+                        <?php foreach ($sops as $sop) {
+                            if ($sop['shift'] === "0") { ?>
                                 <tr>
                                     <td class="uk-width-small uk-text-center"><?= $i++; ?></td>
                                     <td class="uk-width-large"><?= $sop['name'] ?></td>
                                     <td class="uk-width-small uk-text-center">
                                         <div class="uk-form-controls">
-                                            <?php foreach ($sopdetails as $sopdet) { ?>
-                                                <?php if ($sopdet['sopid'] === $sop['id']) { ?>
-                                                    <?php if ($sopdet['status'] === "0") { ?>
+                                            <?php foreach ($sopdetails as $sopdet) {
+                                                if ($sopdet['sopid'] === $sop['id']) {
+                                                    if ($sopdet['status'] === "0") { ?>
                                                         <input class="uk-checkbox" type="checkbox" name="status[<?= $sopdet['id']; ?>]">
                                                     <?php } else { ?>
                                                         <div uk-icon="check"></div>
-                                                    <?php } ?>
-                                                <?php } ?>
-                                            <?php } ?>
+                                                    <?php }
+                                                 }
+                                            } ?>
                                         </div>
                                     </td>
                                 </tr>
-                            <?php } ?>
-                        <?php } ?>
+                            <?php }
+                        } ?>
                         <tr>
                             <td class="uk-width-small uk-text-center"></td>
                             <td class="uk-width-large"></td>
@@ -84,27 +84,27 @@
                 <tbody>
                     <?php $i = 1 ; ?>
                     <form class="uk-form-stacked" role="form" action="sop/updatetodo" method="post">
-                        <?php foreach ($sops as $sop) { ?>
-                            <?php if ($sop['shift'] === "1") { ?>
+                        <?php foreach ($sops as $sop) {
+                            if ($sop['shift'] === "1") { ?>
                                 <tr>
                                     <td class="uk-width-small uk-text-center"><?= $i++; ?></td>
                                     <td class="uk-width-large"><?= $sop['name'] ?></td>
                                     <td class="uk-width-small uk-text-center">
                                         <div class="uk-form-controls">
-                                            <?php foreach ($sopdetails as $sopdet) { ?>
-                                                <?php if ($sopdet['sopid'] === $sop['id']) { ?>
-                                                    <?php if ($sopdet['status'] === "0") { ?>
+                                            <?php foreach ($sopdetails as $sopdet) {
+                                                if ($sopdet['sopid'] === $sop['id']) {
+                                                    if ($sopdet['status'] === "0") { ?>
                                                         <input class="uk-checkbox" type="checkbox" name="status[<?= $sopdet['id']; ?>]">
                                                     <?php } else { ?>
                                                         <div uk-icon="check"></div>
-                                                    <?php } ?>
-                                                <?php } ?>
-                                            <?php } ?>
+                                                    <?php }
+                                                }
+                                            } ?>
                                         </div>
                                     </td>
                                 </tr>
-                            <?php } ?>
-                        <?php } ?>
+                            <?php }
+                        } ?>
                         <tfoot>
                             <tr>
                                 <td class="uk-width-small uk-text-center"></td>

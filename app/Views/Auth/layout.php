@@ -33,10 +33,10 @@
 </head>
 
 <body id="body" uk-height-viewport>
-    <main role="main">
+    <main role="main" style="background-color: #363636;">
         <?= $this->renderSection('main') ?>
     </main>
-    <footer role="footer" class="uk-position-z-index" style="background-color:#1e87f0; color:#fff;" uk-sticky="position: bottom; start: 0; end: #body">
+    <footer role="footer" class="uk-position-z-index" style="background-color: #000; color:#fff;" uk-sticky="position: bottom; start: 0; end: #body">
         <div class="uk-section-xsmall uk-text-center">
             Developed by<br/><a class="uk-link-reset" href="https://binary111.com">PT. Kodebiner Teknologi Indonesia</a>
         </div>

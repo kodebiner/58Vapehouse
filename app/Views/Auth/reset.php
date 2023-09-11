@@ -3,8 +3,17 @@
 
 <div class="uk-width-1-1 uk-panel uk-panel-scrollable" uk-height-viewport="offset-bottom: footer">
 	<div class="uk-width-1-1 uk-section uk-section-small uk-flex uk-flex-center">
-        <div class="uk-width-1-3@l uk-card uk-card-default">
+        <div class="uk-width-1-3@l uk-card uk-card-default uk-light" style="background-color: #000;">
             <div class="uk-card-body">
+				<div class="uk-width-1-1 uk-margin">
+                    <a class="uk-navbar-item uk-logo" href="<?=base_url();?>" aria-label="<?=lang('Global.backHome')?>">
+                        <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
+                            <img src="/img/<?=$gconfig['logo'];?>" alt="<?=$gconfig['bizname'];?>" style="height: 100px;">
+                        <?php } else { ?>
+                            <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 100px;">
+                        <?php } ?>
+                    </a>
+				</div>
 				<div class="uk-width-1-1">
 					<h1 class="uk-text-center"><?=lang('Auth.resetYourPassword')?></h1>
 				</div>
@@ -56,7 +65,7 @@
                     </div>
 
                     <div class="uk-margin">
-                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Auth.resetPassword')?></button>
+                        <button type="submit" class="uk-button uk-button-primary uk-preserve-color"><?=lang('Auth.resetPassword')?></button>
                     </div>
                 </form>
             </div>

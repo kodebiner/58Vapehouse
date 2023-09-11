@@ -32,6 +32,7 @@ return [
     'favorite'          => 'Favorite',
     'manual'            => 'Manual',
     'detailOrder'       => 'Detail Order',
+    'detailTrx'         => 'Transaction Detail',
     'resetPassDesc'     => 'Fill it if you want to reset your password. Otherwise, leave it empty.',
     'currentPass'       => 'Current Password',
     'morecate'          => 'Need more Category? ',
@@ -46,6 +47,7 @@ return [
     'margin'            => 'Margin',
     'cashin'            => 'Cash In',
     'cashout'           => 'Cash Out',
+    'cashin/out'        => 'Cash In / Cash Out',
     'cashinout'         => 'Manage Cash', //Jangan lupa diganti manage cash
     'deleted'           => 'Data has been deleted',
     'saved'             => 'Data has been saved',
@@ -109,6 +111,10 @@ return [
     'cashamount'        => 'Cash Payment Amount',
     'bookorder'         => 'Booking Order',
     'topup'             => 'Top Up',
+    'redeemPoint'       => 'Redeem Point',
+    'change'            => 'Change',
+    'pointearn'         => 'Point Earned',
+    'totalpoint'        => 'Total Point',
     
 
     // Button

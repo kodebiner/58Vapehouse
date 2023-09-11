@@ -3,7 +3,16 @@
 
 <div class="uk-flex uk-flex-middle uk-panel uk-panel-scrollable" uk-height-viewport="offset-bottom: footer;">
     <div class="uk-width-1-1 uk-flex uk-flex-center">
-        <div class="uk-card uk-card-default uk-card-body uk-width-1-4@l uk-padding-small">
+        <div class="uk-card uk-card-default uk-card-body uk-width-1-4@l uk-padding-small uk-light" style="background-color: #000;">
+            <div class="uk-width-1-1 uk-margin">
+                <a class="uk-navbar-item uk-logo" href="<?=base_url();?>" aria-label="<?=lang('Global.backHome')?>">
+                    <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
+                        <img src="/img/<?=$gconfig['logo'];?>" alt="<?=$gconfig['bizname'];?>" style="height: 100px;">
+                    <?php } else { ?>
+                        <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 100px;">
+                    <?php } ?>
+                </a>
+            </div>
             <p><?=lang('Auth.enterEmailForInstructions')?></p>
             <form class="uk-form-stacked" action="<?= url_to('forgot') ?>" method="post">
                 <?= csrf_field() ?>
@@ -17,7 +26,7 @@
                     </div>
                 </div>
                 <div class="uk-margin">
-                    <button type="submit" class="uk-button uk-button-primary"><?=lang('Auth.sendInstructions')?></button>
+                    <button type="submit" class="uk-button uk-button-primary uk-preserve-color"><?=lang('Auth.sendInstructions')?></button>
                 </div>
             </form>
         </div>
