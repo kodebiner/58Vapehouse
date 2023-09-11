@@ -761,9 +761,9 @@ class Pay extends BaseController
 
         $db                 = \Config\Database::connect();
         $transactions       = $TransactionModel->find($id);
-        $trxdetails         = $TrxdetailModel->where('transactionid', $id)->first();
+        $trxdetails         = $TrxdetailModel->where('transactionid', $id)->find();
         $trxpayments        = $TrxpaymentModel->where('transactionid',$id)->first();
-        $bundles            = $BundleModel->where('id',$trxdetails['bundleid'])->first();
+        $bundles            = $BundleModel->findAll();
         $bundets            = $BundledetModel->where('id',$id)->find();
         $Cash               = $CashModel->findAll();
         $outlets            = $OutletModel->findAll();
@@ -811,19 +811,21 @@ class Pay extends BaseController
             $data['mempoin']        = "0";  
         }
         
-        if(!empty($transactions['poinused'])){
-            $data['poinused']       = $transactions['poinused'];
+        if(!empty($transactions['pointused'])){
+            $data['poinused']       = $transactions['pointused'];
         }else{
             $data['poinused']       = "0";
         }
         
-
+        foreach ($trxdetails as $trxdetail){
+            $trxdetval = $trxdetail['value'];
+        }
         if (!empty ($transactions['amountpaid'])){
-            $data['change']     = $transactions['amountpaid'] - $trxdetails['value'];
+            $data['change']     = $transactions['amountpaid'] - $transactions['value'];
         }else{
             $data['change']     = "0";
         }
-
+        
         if (!empty($trxdetails['discvar'])){
             $data['vardiscval']     = $trxdetails['discvar']['variantid'];
         }else{
@@ -833,6 +835,7 @@ class Pay extends BaseController
         if (!empty($transactions['amountpaid'])){
             $data['pay']            = $transactions['amountpaid'];
         } elseif (empty($transactions['amountpaid'])) {
+            dd($trxdetail);
             $data['pay']            = $trxdetails['value'] + $trxdetails['value'];
         }else{
             $data['pay']            = '0';
@@ -860,7 +863,7 @@ class Pay extends BaseController
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $id;
-        $data['subtotal']       = $trxdetails['value'];
+        $data['subtotal']       = $trxdetail['value'];
         $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
         $data['total']          = $trxpayments['value'];
 
