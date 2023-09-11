@@ -32,6 +32,7 @@ return [
     'favorite'          => 'Favorit',
     'manual'            => 'Manual',
     'detailOrder'       => 'Detail Pesanan',
+    'detailTrx'         => 'Detail Transaksi',
     'resetPassDesc'     => 'Isi jika ingin reset password. Jika tidak, biarkan kosong.',
     'currentPass'       => 'Password Saat Ini',
     'morecate'          => 'Ingin menambah Kategori? ',
@@ -46,6 +47,7 @@ return [
     'margin'            => 'Margin',
     'cashin'            => 'Uang Masuk',
     'cashout'           => 'Uang Keluar',
+    'cashin/out'        => 'Uang Masuk / Keluar',
     'cashinout'         => 'Pengelolaan Kas', //Jangan lupa diganti manage cash
     'deleted'           => 'Data sudah terhapus',
     'saved'             => 'Data sudah tersimpan',
@@ -107,6 +109,10 @@ return [
     'shift'             => 'peralihan',
     'bookorder'         => 'Pemesanan Booking',
     'topup'             => 'Top Up',
+    'redeemPoint'       => 'Tukar Poin',
+    'change'            => 'Kembalian',
+    'pointearn'         => 'Poin yang didapat',
+    'totalpoint'        => 'Jumlah Poin',
 
     // Button
     'edit'              => 'Ubah',

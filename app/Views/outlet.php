@@ -39,7 +39,7 @@
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" required />
                         </div>
                     </div>
 
@@ -53,7 +53,7 @@
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.maps')) : ?>tm-form-invalid<?php endif ?>" id="maps" name="maps" placeholder="<?=lang('Global.maps')?>" autofocus required />
+                            <input type="text" class="uk-input <?php if (session('errors.maps')) : ?>tm-form-invalid<?php endif ?>" id="maps" name="maps" placeholder="<?=lang('Global.maps')?>" required />
                         </div>
                     </div>
 
@@ -75,9 +75,8 @@
         <thead>
             <tr>
                 <th class="uk-text-center uk-width-small">No</th>
-                <th class="uk-width-large"><?=lang('Global.name')?></th>
-                <th class="uk-width-medium"><?=lang('Global.address')?></th>
-                <th class="uk-width-medium"><?=lang('Global.maps')?></th>
+                <th class="uk-width-medium"><?=lang('Global.name')?></th>
+                <th class="uk-width-large"><?=lang('Global.address')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
             </tr>
         </thead>
@@ -88,7 +87,6 @@
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td><?= $outlet['name']; ?></td>
                     <td><?= $outlet['address']; ?></td>
-                    <td><?= $outlet['maps']; ?></td>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                         <!-- Button Trigger Modal Edit -->
                         <div>
@@ -126,21 +124,21 @@
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet['name']; ?>"autofocus />
+                                <input type="text" class="uk-input" id="name" name="name" value="<?= $outlet['name']; ?>" />
                             </div>
                         </div>
 
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="address"><?=lang('Global.address')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet['address']; ?>" autofocus />
+                                <input type="text" class="uk-input" id="address" name="address"  value="<?= $outlet['address']; ?>" />
                             </div>
                         </div>
 
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" autofocus />
+                                <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" />
                             </div>
                         </div>
 

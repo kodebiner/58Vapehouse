@@ -23,7 +23,7 @@
 
         <!-- Button Trigger Modal Add -->
         <div class="uk-width-1-2@m uk-text-right@m">
-            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addCash')?></button>
+            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.cashin/out')?></button>
         </div>
         <!-- End Of Button Trigger Modal Add -->
     </div>
