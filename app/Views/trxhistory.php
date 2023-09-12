@@ -22,6 +22,7 @@
             <th class=""><?= lang('Global.employee') ?></th>
             <th class=""><?= lang('Global.paymethod') ?></th>
             <th class=""><?= lang('Global.total') ?></th>
+            <th class="uk-text-center"></th>
         </tr>
     </thead>
     <tbody>
@@ -66,6 +67,20 @@
                     <?php }
                     $sum = array_sum($prices);
                     echo "Rp " . number_format($sum,2,',','.'); ?>
+                </td>
+
+                <td class="uk-text-center">
+                    <?php if (!empty($transaction['amountpaid'])) {
+                        echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.lang('Global.paid').'</div>';
+                    } else {
+                        foreach ($debts as $debt) {
+                            if ($debt['transactionid'] === $transaction['id']) {
+                                if ($transaction['amountpaid'] - $debt['value'] !== "0") {
+                                    echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.lang('Global.notpaid').'</div>';
+                                }
+                            }
+                        }
+                    } ?>
                 </td>
             </tr>
         <?php } ?>

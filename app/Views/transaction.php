@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
         <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
         <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
-        <script src="js/jquery.validate.min.js"></script>  
+        <script src="js/jquery.validate.min.js"></script>
         <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
         
         <style type="text/css">
@@ -208,7 +208,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Script Webcam Trx Proof -->
+                                    <!-- Script Webcam Top Up Proof -->
                                     <script type="text/javascript">
                                         Webcam.set({
                                             width: 490,
@@ -226,7 +226,7 @@
                                             } );
                                         }
                                     </script>
-                                    <!-- Script Webcam Trx Proof End -->
+                                    <!-- Script Webcam Top Up Proof End -->
                                 </div>
                             </div>
                         </div>

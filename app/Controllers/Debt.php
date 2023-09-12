@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controllers;
 
 use App\Models\BundledetailModel;
@@ -37,6 +36,7 @@ class Debt extends BaseController
         $TransactionModel       = new TransactionModel();
         $TrxdetailModel         = new TrxdetailModel();
         $TrxpaymentModel        = new TrxpaymentModel();
+        $DebtModel              = new DebtModel();
 
         // Populating Data
         $bundles                = $BundleModel->findAll();
@@ -52,6 +52,7 @@ class Debt extends BaseController
         $transactions           = $TransactionModel->orderBy('date', 'DESC')->findAll();
         $trxdetails             = $TrxdetailModel->findAll();
         $trxpayments            = $TrxpaymentModel->findAll();
+        $debts                  = $DebtModel->findAll();
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -70,6 +71,7 @@ class Debt extends BaseController
         $data['stocks']         = $stocks;
         $data['trxdetails']     = $trxdetails;
         $data['trxpayments']    = $trxpayments;
+        $data['debts']          = $debts;
 
         return view('Views/trxhistory', $data);
     }
@@ -77,54 +79,104 @@ class Debt extends BaseController
     public function indexdebt()
     {
         // Calling Models
-        $BundleModel            = new BundleModel();
-        $BundledetModel         = new BundledetailModel();
-        $CashModel              = new CashModel();
         $OutletModel            = new OutletModel();
-        $UserModel              = new UserModel();
         $MemberModel            = new MemberModel();
-        $PaymentModel           = new PaymentModel();
-        $ProductModel           = new ProductModel();
-        $VariantModel           = new VariantModel();
-        $StockModel             = new StockModel();
         $TransactionModel       = new TransactionModel();
-        $TrxdetailModel         = new TrxdetailModel();
-        $TrxpaymentModel        = new TrxpaymentModel();
+        $DebtModel              = new DebtModel();
 
         // Populating Data
-        $bundles                = $BundleModel->findAll();
-        $bundets                = $BundledetModel->findAll();
-        $cash                   = $CashModel->findAll();
         $outlets                = $OutletModel->findAll();
-        $users                  = $UserModel->findAll();
         $customers              = $MemberModel->findAll();
-        $payments               = $PaymentModel->findAll();
-        $products               = $ProductModel->findAll();
-        $variants               = $VariantModel->findAll();
-        $stocks                 = $StockModel->findAll();
-        $transactions           = $TransactionModel->orderBy('date', 'DESC')->findAll();
-        $trxdetails             = $TrxdetailModel->findAll();
-        $trxpayments            = $TrxpaymentModel->findAll();
+        $transactions           = $TransactionModel->findAll();
+        $debts                  = $DebtModel->orderBy('deadline', 'ASC')->findAll();
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.debt');
         $data['description']    = lang('Global.debtListDesc');
-        $data['bundles']        = $bundles;
-        $data['bundets']        = $bundets;
-        $data['cash']           = $cash;
-        $data['users']          = $users;
         $data['transactions']   = $transactions;
         $data['outlets']        = $outlets;
-        $data['payments']       = $payments;
         $data['customers']      = $customers;
-        $data['products']       = $products;
-        $data['variants']       = $variants;
-        $data['stocks']         = $stocks;
-        $data['trxdetails']     = $trxdetails;
-        $data['trxpayments']    = $trxpayments;
+        $data['debts']          = $debts;
 
         return view('Views/debt', $data);
+    }
+
+    public function paydebt($id)
+    {
+        // Validate Data
+        $validation = \Config\Services::validation();
+
+        // Calling Models
+        $DebtModel              = new DebtModel();
+        $CashModel              = new CashModel();
+        $TransactionModel       = new TransactionModel();
+        $TrxotherModel          = new TrxotherModel();
+        $PaymentModel           = new PaymentModel();
+        $MemberModel            = new MemberModel();
+
+        // Populating Data
+        $debts                  = $DebtModel->find($id);
+        $cash                   = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
+        $payments               = $PaymentModel->like('name', 'Cash')->where('cashid', $cash['id'])->where('outletid', $this->data['outletPick'])->first();
+        $customers              = $MemberModel->where('id', $debts['memberid'])->first();
+
+        // Date Time Stamp
+        $date                   = date_create();
+        $tanggal                = date_format($date,'Y-m-d H:i:s');
+
+        // Initialize
+        $input = $this->request->getPost();
+
+        if ($debts['value'] - $input['value'] != "0") {
+            $data = [
+                'id'            => $id,
+                'value'         => $debts['value'] - $input['value'],
+                'deadline'      => $input['duedate'.$id],
+            ];
+        } else {
+            $data = [
+                'id'            => $id,
+                'deadline'      => NULL,
+            ];
+        }
+
+        // Save Data Debt
+        $DebtModel->save($data);
+
+        // Image Capture
+        $img                    = $input['image'];
+        $folderPath             = "img";
+        $image_parts            = explode(";base64,", $img);
+        $image_type_aux         = explode("image/", $image_parts[0]);
+        $image_type             = $image_type_aux[1];
+        $image_base64           = base64_decode($image_parts[1]);
+        $fileName               = uniqid() . '.png';
+        $file                   = $folderPath . $fileName;
+        file_put_contents($file, $image_base64);
+        
+        // Trx Other Cash In
+        $cashin = [
+            'userid'        => $this->data['uid'],
+            'outletid'      => $this->data['outletPick'],
+            'cashid'        => $cash['id'],
+            'description'   => lang('Global.debt')." - ".$customers['name'] ,
+            'type'          => "0",
+            'date'          => $tanggal,
+            'qty'           => $input['value'],
+            'photo'         => $fileName,
+        ];
+        $TrxotherModel->save($cashin);
+        
+        // Input Value to cash
+        $wallet = [
+            'id'    => $cash['id'],
+            'qty'   => $input['value'] + $cash['qty'],
+        ];
+        $CashModel->save($wallet);
+
+        // Return
+        return redirect()->back()->with('massage', lang('global.saved'));
     }
     
     public function indextopup()

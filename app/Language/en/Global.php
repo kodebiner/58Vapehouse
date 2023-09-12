@@ -114,7 +114,9 @@ return [
     'change'            => 'Change',
     'pointearn'         => 'Point Earned',
     'totalpoint'        => 'Total Point',
-    
+    'paid'              => 'Paid',
+    'notpaid'           => 'Not Paid',
+    'paybill'           => 'Bill',
 
     // Button
     'edit'              => 'Edit',
@@ -149,6 +151,7 @@ return [
     'addsop'            => 'Add Sop',
     'trxproof'          => 'Transaction Proof',
     'topupproof'        => 'Top Up Proof',
+    'payproof'          => 'Payment Proof',
     'invoice'           => 'Invoice',
     
     // Menu

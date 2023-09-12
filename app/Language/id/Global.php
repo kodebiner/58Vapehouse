@@ -112,6 +112,9 @@ return [
     'change'            => 'Kembalian',
     'pointearn'         => 'Poin yang didapat',
     'totalpoint'        => 'Jumlah Poin',
+    'paid'              => 'Lunas',
+    'notpaid'           => 'Belum Lunas',
+    'paybill'           => 'Total Tagihan',
 
     // Button
     'edit'              => 'Ubah',
@@ -146,6 +149,7 @@ return [
     'addsop'            => 'Tambah Sop',
     'trxproof'          => 'Bukti Transaksi',
     'topupproof'        => 'Bukti Top Up',
+    'payproof'          => 'Bukti Pembayaran',
     'invoice'           => 'Nota',
 
     // Menu
