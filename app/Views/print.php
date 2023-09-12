@@ -37,8 +37,19 @@
         </style>
     </head>
     <body style="background-color:#000;">
+        <div class="uk-flex-center uk-margin" id="btn" uk-grid>
+            <div class="uk-padding-remove uk-text-center">
+                <a class="uk-icon-button" uk-icon="arrow-left" href="<?= base_url('transaction') ?>"></a>
+            </div>
+            <div class="uk-padding-remove uk-text-center uk-margin-small-left">
+                <button type="button" class="uk-button uk-button-primary uk-preserve-color" onclick="printOut()"><?= lang('GlobaL.print') ?></button>
+            </div>
+            <div class="uk-padding-remove uk-text-center uk-margin-small-left">
+                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata">Send Invoice</button>
+            </div>
+        </div>
         <div class="uk-width-1-1 uk-flex uk-flex-center">
-            <div style="width:45mm; padding:10mm 2mm; background: #fff;">
+            <div class="uk-padding-small" style="width:45mm; background: #fff;">
                 <div class="uk-margin-small uk-width-1-1 uk-text-center">
                     <img class="uk-width-1-3" src="/img/58vape.png" />
                 </div>
@@ -60,17 +71,35 @@
                         <div class="uk-text-right"><?= $date ?></div>
                         <?php if(!empty($transactionid)){ ?>
                             <div class="uk-text-right">
-                                <?php foreach($payments as $payment){?>
-                                        <?php 
+                                <?php if ($transactions['paymentid'] === "0") {
+                                    echo lang('Global.splitbill');
+                                } else {
+                                    foreach($payments as $payment) {
                                         if ($transactions['paymentid'] === $payment['id'] && ($transactions['paymentid'] !== "0")) {
-                                            echo $payment['name'];
-                                        }elseif (($transactions['paymentid'] === "0")){
-                                            if ($trxpayments["paymentid"] === $payment['id']){
-                                            echo $payment['name']; 
+                                            foreach ($cash as $cas){
+                                                if($cas['id'] === $payment['cashid'])
+                                                echo $payment['name'];
                                             }
                                         }
-                                    ?>
-                                <?php }?>
+                                    }
+                                } ?>
+                                    <!-- foreach($payments as $payment) {
+                                        if ($transactions['paymentid'] === $payment['id'] && ($transactions['paymentid'] !== "0")) {
+                                            echo $payment['name'];
+                                        } elseif (($transactions['paymentid'] === "0")){
+                                            foreach ($trxdetails as $trxdet){
+                                                if($transactionid === $trxdet['transactionid']){
+                                                    foreach($trxpayments as $trxpay){
+                                                        if($trxpay['transactionid'] === $transactionid){
+                                                            if($payment['id'] === $trxpay['paymentid']){
+                                                                echo $payment['name'];
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }}
+                                    } ?> -->
                             </div>
                         <?php } elseif (!empty($bookings['id'])){?>
                             <div class="uk-text-right">
@@ -377,18 +406,13 @@
                 <hr/>
             </div>
         </div>
-        <div class="uk-width-1-1@m uk-text-center@m uk-margin-medium-top" id="btn" style=" align-text:center;">
-            <button type="button" class="uk-button uk-button-primary uk-preserve-color" onclick="printOut()">Print Invoice</button>
-            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata">Send Invoice</button>
-            <a type="button" class="uk-button uk-button-primary uk-preserve-color" href="<?= base_url('transaction') ?>">Back To Transaction</a>
-        </div>
+        <script>
+        var lama = 1000;
+        t = null;
+        function printOut(){
+            window.print();
+            t = setTimeout("self.close()",lama);
+        }
+        </script>
     </body>
 </html>
-<script>
-  var lama = 1000;
-  t = null;
-  function printOut(){
-      window.print();
-      t = setTimeout("self.close()",lama);
-  }
-</script>

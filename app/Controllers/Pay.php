@@ -25,6 +25,7 @@ class Pay extends BaseController
     public function create()
     {
         // Calling Models
+        $db                     = \Config\Database::connect();
         $BundleModel            = new BundleModel();
         $BundledetModel         = new BundledetailModel();
         $BookingModel           = new BookingModel();
@@ -47,7 +48,6 @@ class Pay extends BaseController
         
         // Getting Inputs
         $input = $this->request->getPost();
-        
         // Image Capture
         if (!empty($input['image'])){
 
@@ -259,27 +259,34 @@ class Pay extends BaseController
         
         //Insert Trx Payment 
         $total = $subtotal - $discount - (int)$input['poin'] - $memberdisc + $ppn;
-        if(!isset($input['firstpayment'])&& !isset($input['secpayment']) && isset($input['payment'])){
+        
+        if(!isset($input['firstpayment']) && !isset($input['secpayment']) && isset($input['payment'])){
+            $payment = $PaymentModel->where('cashid',$input['payment'])->first();
+            $paymentId = $payment['cashid'];
             $paymet = [
-                'paymentid'     => $input['payment'],
+                'paymentid'     => $paymentId,
                 'transactionid' => $trxId,
                 'value'         => $total,
             ];
             $TrxpaymentModel->save($paymet);
 
-        }elseif(isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment'])){
+        }elseif(isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && empty($input['payment'])){
             // Split Payment Method
             // First payment
+            $firstpayment = $PaymentModel->where('cashid',$input['firstpayment'])->first();
+            $firstId = $firstpayment['cashid'];
             $paymet = [
-                'paymentid'     => $input['firstpayment'],
+                'paymentid'     => $firstId,
                 'transactionid' => $trxId,
                 'value'         => $input['firstpay'],
             ];
             $TrxpaymentModel->save($paymet);
 
+            $secpayment = $PaymentModel->where('cashid',$input['secpayment'])->first();
+            $secId = $secpayment['cashid'];
             // Second Payment
             $pay = [
-                'paymentid' => $input['secpayment'],
+                'paymentid'     =>$secId,
                 'transactionid' =>$trxId,
                 'value'         =>$input['secondpay'],
             ];
@@ -287,7 +294,7 @@ class Pay extends BaseController
         }
         
         // Insert Cash
-        if (!empty($input['duedate']) && !empty($input['payment'])){
+        if (!empty($input['payment'])){
             $cashPlus   = $CashModel->where('id',$input['payment'])->first();
             $cashUp = $varvalue + $bundvalue + $cashPlus['qty'];
             $cash = [
@@ -296,7 +303,7 @@ class Pay extends BaseController
             ];
             $CashModel->save($cash);
 
-        }elseif(!isset($input['payment']) && isset($input['firstpaymnet'])){
+        }elseif(!isset($input['payment']) && isset($input['firstpayment'])){
             // Insert First Payment
             $cashPlus   = $CashModel->where('id', $input['firstpayment'])->first();
             $cashUp     = $cashPlus['qty'] + $input['firstpay'];
@@ -364,7 +371,7 @@ class Pay extends BaseController
         $stocks             = $StockModel->findAll();
         $transactions       = $TransactionModel->find($trxId);
         $trxdetails         = $TrxdetailModel->where('transactionid', $trxId)->find();
-        $trxpayments        = $TrxpaymentModel->findAll();
+        $trxpayments        = $TrxpaymentModel->where('transactionid',$trxId)->find();
         $member             = $MemberModel->where('id',$transactions['memberid'])->first();
         $debt               = $DebtModel->where('memberid',$transactions['memberid'])->first();
         $user               = $UserModel->where('id',$transactions['userid'])->first();
@@ -390,7 +397,7 @@ class Pay extends BaseController
         $data['products']       = $products;
         $data['variants']       = $variants;
         $data['stocks']         = $stocks;
-        $data['trxdetails']     = $TrxdetailModel->findAll();
+        $data['trxdetails']     = $TrxdetailModel->where('transactionid', $trxId)->find();
         $data['trxpayments']    = $trxpayments;
         $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
         $data['bookings']       = $BookingModel->findAll();
@@ -762,7 +769,7 @@ class Pay extends BaseController
         $db                 = \Config\Database::connect();
         $transactions       = $TransactionModel->find($id);
         $trxdetails         = $TrxdetailModel->where('transactionid', $id)->find();
-        $trxpayments        = $TrxpaymentModel->where('transactionid',$id)->first();
+        $trxpayments        = $TrxpaymentModel->where('transactionid',$id)->find();
         $bundles            = $BundleModel->findAll();
         $bundets            = $BundledetModel->where('id',$id)->find();
         $Cash               = $CashModel->findAll();
@@ -835,11 +842,24 @@ class Pay extends BaseController
         if (!empty($transactions['amountpaid'])){
             $data['pay']            = $transactions['amountpaid'];
         } elseif (empty($transactions['amountpaid'])) {
-            dd($trxdetail);
-            $data['pay']            = $trxdetails['value'] + $trxdetails['value'];
+            foreach ($trxdetails as $trxdetail){
+                if($trxdetail['transactionid']== $id){
+                    $data['pay']            = $trxdetail['value'];
+                }
+            }
         }else{
             $data['pay']            = '0';
         }
+
+        // if (!empty($input['value'])){
+        //     $data['pay']            = $input['value'];
+        // } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
+        //     $data['pay']            = $input['firstpay'] + $input['secondpay'];
+        // }elseif(!empty($input['debt']) && (empty($input['value']))){
+        //     $data['pay']            = "0";
+        // } elseif(!empty($input['value']) && !empty($input['debt'])){
+        //     $data['pay']            = $input['value'] - $input['debt'];
+        // }
 
         $data['discount'] = "0";
 
@@ -860,12 +880,21 @@ class Pay extends BaseController
             $data['totaldebt']  = "0";
         }
          
+        $prices = array();
+        foreach ($trxdetails as $trxdet) {
+            if ($trxdet['transactionid'] === $id) {
+                $total = $trxdet['qty'] * $trxdet['value'];
+                $prices [] = $total;
+            } 
+        }
+        $sum = array_sum($prices);
+
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $id;
         $data['subtotal']       = $trxdetail['value'];
         $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
-        $data['total']          = $trxpayments['value'];
+        $data['total']          = $sum - $data['discount'];
 
         return view('Views/print', $data);
        

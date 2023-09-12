@@ -82,7 +82,7 @@ return [
     'choosewallet'      => 'Pilih Dompet',
     'chooseoutlet'      => 'Pilih Outlet Dahulu',
     'alertstock'        => 'Stock tidak mencukupi',
-    'splitbill'         => 'Pisah Pembayaran',
+    'splitbill'         => 'Pecah Pembayaran',
     'wanttosplit'       => 'Ingin pisah pembayaran?',
     'cancelsplit'       => 'batal pisah pembayaran',
     'firstpay'          => 'Jumlah pembayaran pertama',

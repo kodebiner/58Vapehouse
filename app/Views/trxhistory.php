@@ -45,10 +45,14 @@
                     <?php }
                 } ?>
 
-                <?php foreach ($payments as $payment) {
-                    if ($payment['id'] === $transaction['paymentid']) { ?>
-                        <td class=""><?= $payment['name'] ?></td>
-                    <?php }
+                <?php if ($transaction['paymentid'] === "0") { ?>
+                    <td class=""><?= lang('Global.splitbill') ?></td>
+                <?php } else {
+                    foreach ($payments as $payment) {
+                        if ($payment['id'] === $transaction['paymentid']) { ?>
+                            <td class=""><?= $payment['name'] ?></td>
+                        <?php }
+                    }
                 } ?>
 
                 <td class="">
@@ -116,17 +120,15 @@
                             <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
                                 <div>Cashier: <?= $fullname ?></div>
                                 <div class="uk-text-right">
-                                    <?php foreach($payments as $payment){
-                                        if ($transaction['paymentid'] === $payment['id'] && ($transaction['paymentid'] !== "0")) {
-                                            echo $payment['name'];
-                                        } elseif (($transaction['paymentid'] === "0")) {
-                                            foreach ($trxpayments as $trxpay){
-                                                if ($trxpay["transactionid"] === $payment['id']) {
-                                                echo $payment['name']; 
-                                                }
-                                            }
+                                    <?php if ($transaction['paymentid'] === "0") { ?>
+                                        <?= lang('Global.splitbill') ?>
+                                    <?php } else {
+                                        foreach ($payments as $payment) {
+                                            if ($payment['id'] === $transaction['paymentid']) { ?>
+                                                <?= $payment['name'] ?>
+                                            <?php }
                                         }
-                                    }?>
+                                    } ?>
                                 </div>
                             </div>
 

@@ -955,7 +955,7 @@
                                         <?php
                                         foreach ($payments as $pay) {
                                             if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
-                                                echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
+                                                echo '<option value="'.$pay['cashid'].'">'.$pay['name'].'</option>';
                                             }
                                         }
                                         ?>
@@ -972,7 +972,7 @@
                                             <?php
                                             foreach ($payments as $pay) {
                                                 if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
-                                                    echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
+                                                    echo '<option value="'.$pay['cashid'].'">'.$pay['name'].'</option>';
                                                 }
                                             }
                                             ?>
@@ -989,7 +989,7 @@
                                             <?php
                                             foreach ($payments as $pay) {
                                                 if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
-                                                    echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
+                                                    echo '<option value="'.$pay['cashid'].'">'.$pay['name'].'</option>';
                                                 }
                                             }
                                             ?>
