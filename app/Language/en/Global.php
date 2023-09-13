@@ -114,6 +114,7 @@ return [
     'change'            => 'Change',
     'pointearn'         => 'Point Earned',
     'totalpoint'        => 'Total Point',
+    'totaldebt'         => 'Total Debt',
     'paid'              => 'Paid',
     'notpaid'           => 'Not Paid',
     'paybill'           => 'Bill',
@@ -153,6 +154,8 @@ return [
     'topupproof'        => 'Top Up Proof',
     'payproof'          => 'Payment Proof',
     'invoice'           => 'Invoice',
+    'submit'            => 'Submit',
+    'phonenumber'       => 'Phone Number',
     
     // Menu
     'dashboard'         => 'Dashboard',

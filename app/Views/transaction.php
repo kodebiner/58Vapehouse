@@ -101,7 +101,7 @@
                         <div class="uk-modal-dialog uk-margin-auto-vertical">
                             <button class="uk-modal-close-default" type="button" uk-close></button>
                             <div class="uk-modal-header">
-                                <h2 class="uk-modal-title">Top Up Point</h2>
+                                <h2 class="uk-modal-title"><?=lang('Global.topup')?></h2>
                             </div>
                             <div class="uk-modal-body">
                                 <form class="uk-form-horizontal uk-margin-large" action="pay/topup" method="post">
@@ -135,7 +135,7 @@
                                         });
                                     </script>
                                     <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-horizontal-text">Value</label>
+                                        <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.payment')?></label>
                                         <div class="uk-form-controls">
                                             <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon" uk-icon="icon: database"></span>
@@ -144,7 +144,7 @@
                                         </div>
                                     </div>
                                     <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-horizontal-text">Payment</label>
+                                        <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.payment')?></label>
                                         <div class="uk-form-controls">
                                             <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
@@ -955,7 +955,7 @@
                                         <?php
                                         foreach ($payments as $pay) {
                                             if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
-                                                echo '<option value="'.$pay['cashid'].'">'.$pay['name'].'</option>';
+                                                echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
                                             }
                                         }
                                         ?>
@@ -972,7 +972,7 @@
                                             <?php
                                             foreach ($payments as $pay) {
                                                 if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
-                                                    echo '<option value="'.$pay['cashid'].'">'.$pay['name'].'</option>';
+                                                    echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
                                                 }
                                             }
                                             ?>
@@ -989,7 +989,7 @@
                                             <?php
                                             foreach ($payments as $pay) {
                                                 if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
-                                                    echo '<option value="'.$pay['cashid'].'">'.$pay['name'].'</option>';
+                                                    echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
                                                 }
                                             }
                                             ?>

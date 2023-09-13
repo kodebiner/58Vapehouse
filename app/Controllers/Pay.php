@@ -237,17 +237,15 @@ class Pay extends BaseController
         if (!empty($input['poin'])){
             foreach ($customers as $customer){
                 $cust       = $MemberModel->where('id',$input['customerid'])->first();
-                $custPoin   = $cust['poin'];
-                $poinUsed   = $input['poin'];
 
-                if (!empty($poinUsed)){
-                    $poin   = $custPoin - $poinUsed;
+                if (!empty($input['poin'])){
+                    $poin   = $cust['poin'] - $input['poin'];
                 } else {
-                    $poin   = $custPoin;
+                    $poin   = $cust['poin'];
                 }
                 $point = [
-                    'id' => $cust['id'],
-                    'poin' => $poin,
+                    'id'    => $cust['id'],
+                    'poin'  => $poin,
                 ];
                 $MemberModel->save($point);
 
@@ -261,10 +259,9 @@ class Pay extends BaseController
         $total = $subtotal - $discount - (int)$input['poin'] - $memberdisc + $ppn;
         
         if(!isset($input['firstpayment']) && !isset($input['secpayment']) && isset($input['payment'])){
-            $payment = $PaymentModel->where('cashid',$input['payment'])->first();
-            $paymentId = $payment['cashid'];
+            $payment = $PaymentModel->where('id',$input['payment'])->first();
             $paymet = [
-                'paymentid'     => $paymentId,
+                'paymentid'     => $payment['id'],
                 'transactionid' => $trxId,
                 'value'         => $total,
             ];
@@ -273,20 +270,18 @@ class Pay extends BaseController
         }elseif(isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && empty($input['payment'])){
             // Split Payment Method
             // First payment
-            $firstpayment = $PaymentModel->where('cashid',$input['firstpayment'])->first();
-            $firstId = $firstpayment['cashid'];
+            $firstpayment = $PaymentModel->where('id',$input['firstpayment'])->first();
             $paymet = [
-                'paymentid'     => $firstId,
+                'paymentid'     => $firstpayment['id'],
                 'transactionid' => $trxId,
                 'value'         => $input['firstpay'],
             ];
             $TrxpaymentModel->save($paymet);
 
-            $secpayment = $PaymentModel->where('cashid',$input['secpayment'])->first();
-            $secId = $secpayment['cashid'];
+            $secpayment = $PaymentModel->where('id',$input['secpayment'])->first();
             // Second Payment
             $pay = [
-                'paymentid'     =>$secId,
+                'paymentid'     =>$secpayment['cashid'],
                 'transactionid' =>$trxId,
                 'value'         =>$input['secondpay'],
             ];
@@ -295,8 +290,10 @@ class Pay extends BaseController
         
         // Insert Cash
         if (!empty($input['payment'])){
-            $cashPlus   = $CashModel->where('id',$input['payment'])->first();
-            $cashUp = $varvalue + $bundvalue + $cashPlus['qty'];
+            $payment    = $PaymentModel->where('id',$input['payment'])->first();
+            $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
+            $cashUp     = $varvalue + $bundvalue + $cashPlus['qty'];
+
             $cash = [
                 'id'    => $cashPlus['id'],
                 'qty'   => $cashUp,
@@ -305,16 +302,18 @@ class Pay extends BaseController
 
         }elseif(!isset($input['payment']) && isset($input['firstpayment'])){
             // Insert First Payment
-            $cashPlus   = $CashModel->where('id', $input['firstpayment'])->first();
+            $payment    = $PaymentModel->where('id',$input['firstpayment'])->first();
+            $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
             $cashUp     = $cashPlus['qty'] + $input['firstpay'];
             $cash       = [
                 'id'    => $cashPlus['id'],
                 'qty'   => $cashUp
             ];
             $CashModel->save($cash);
+            $payment        = $PaymentModel->where('id',$input['secpayment'])->first();
+            $cashPlus2      = $CashModel->where('id',$payment['cashid'])->first();
             // Insert Second Payment
-            $cashPlus2  = $CashModel->where('id',$input['secpayment'])->first();
-            $cashUp2     = $cashPlus2['qty']+ $cashPlus2['qty'];
+            $cashUp2     = $cashPlus2['qty']+ $input['secondpay'];
             $cash2       = [
                 'id'    => $cashPlus2['id'],
                 'qty'   => $cashUp2,
@@ -322,7 +321,7 @@ class Pay extends BaseController
             $CashModel->save($cash2);
         }
 
-        // Gconfig setup
+        // Gconfig poin setup
         $minimTrx    = $Gconfig['poinorder'];
         $poinval     = $Gconfig['poinvalue'];
         
@@ -403,15 +402,26 @@ class Pay extends BaseController
         $data['bookings']       = $BookingModel->findAll();
         $data['bundleVariants'] = $bundleVariants->getResult();
         
+        // Gconfig poin setup
+        $minimTrx    = $Gconfig['poinorder'];
+        $poinval     = $Gconfig['poinvalue'];
+        
+        if ($total  >= $minimTrx) {
+            $value  = $total / $minimTrx;
+            $result = floor($value);
+            $poin   = (int)$result * $poinval;
+        }
         
         if (!empty($input['customerid'])){
             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
             $data['mempoin']        = $member['poin'];
             $data['poinused']       = $input['poin'];
+            $data['poinearn']       = $poin;
         }else{
             $data['cust']           = "0";
             $data['mempoin']        = "0";
             $data['poinused']       = "0";
+            $data['poinearn']       = "0";
         }
 
         if (!empty ($input['value'])){
@@ -430,6 +440,8 @@ class Pay extends BaseController
             $data['pay']            = $input['value'];
         } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
             $data['pay']            = $input['firstpay'] + $input['secondpay'];
+        } elseif(!empty($input['duedate']) && empty($input['value'])){
+            $data['pay']            = "0";
         }
 
         $data['discount'] = "0";
@@ -765,6 +777,7 @@ class Pay extends BaseController
         $TrxdetailModel         = new TrxdetailModel();
         $TrxpaymentModel        = new TrxpaymentModel();
         $MemberModel            = new MemberModel();
+        $GconfigModel           = new GconfigModel();
 
         $db                 = \Config\Database::connect();
         $transactions       = $TransactionModel->find($id);
@@ -783,6 +796,7 @@ class Pay extends BaseController
         $member             = $MemberModel->where('id',$transactions['memberid'])->first();
         $debt               = $DebtModel->where('transactionid',$id)->find();
         $user               = $UserModel->where('id',$transactions['userid'])->first();
+        $Gconfig            = $GconfigModel->first();
         
         $bundleBuilder      = $db->table('bundledetail');
         $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
@@ -810,14 +824,47 @@ class Pay extends BaseController
         $data['bookings']       = $BookingModel->findAll();
         $data['bundleVariants'] = $bundleVariants->getResult();
 
+        $data['discount'] = "0";
+        if ((!empty($transactions['discvalue'])) && ($transactions['disctype'] === '0')) {
+            $data['discount'] += $transactions['discvalue'];
+        } elseif ((isset($transactions['discvalue'])) && ($transactions['disctype'] === '1')) {
+            $data['discount'] += ($transactions['discvalue'] / 100) * $subtotal;
+        } else {
+            $data['discount'] += 0;
+        }
+
+        $prices = array();
+        foreach ($trxdetails as $trxdet) {
+            if ($trxdet['transactionid'] === $id) {
+                $total = $trxdet['qty'] * $trxdet['value'];
+                $prices [] = $total;
+            } 
+        }
+        $sum = array_sum($prices);
+
+        $total = $sum - $data['discount'] - $transactions['pointused'] - $Gconfig['memberdisc'] + $Gconfig['ppn']; 
+
+        // Gconfig poin setup
+        $minimTrx    = $Gconfig['poinorder'];
+        $poinval     = $Gconfig['poinvalue'];
+        
+        if ($total  >= $minimTrx) {
+            $value  = $total / $minimTrx;
+            $result = floor($value);
+            $poin   = (int)$result * $poinval;
+        }
+
         if (!empty($transactions['memberid'])){
             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
             $data['mempoin']        = $member['poin'];
+            $data['poinearn']       = $poin;
         }else{
             $data['cust']           = "0";
-            $data['mempoin']        = "0";  
+            $data['mempoin']        = "0";
+            $data['poinearn']       = "0";  
         }
         
+     
         if(!empty($transactions['pointused'])){
             $data['poinused']       = $transactions['pointused'];
         }else{
@@ -861,17 +908,6 @@ class Pay extends BaseController
         //     $data['pay']            = $input['value'] - $input['debt'];
         // }
 
-        $data['discount'] = "0";
-
-        if ((!empty($transactions['discvalue'])) && ($transactions['disctype'] === '0')) {
-            $data['discount'] += $transactions['discvalue'];
-        } elseif ((isset($transactions['discvalue'])) && ($transactions['disctype'] === '1')) {
-            $data['discount'] += ($transactions['discvalue'] / 100) * $subtotal;
-        } else {
-            $data['discount'] += 0;
-        }
-    
-
         if(!empty($debt['value'])){
             $data['debt']       = $debt['debt'];
             $data['totaldebt']  = $debt['value'];
@@ -880,21 +916,14 @@ class Pay extends BaseController
             $data['totaldebt']  = "0";
         }
          
-        $prices = array();
-        foreach ($trxdetails as $trxdet) {
-            if ($trxdet['transactionid'] === $id) {
-                $total = $trxdet['qty'] * $trxdet['value'];
-                $prices [] = $total;
-            } 
-        }
-        $sum = array_sum($prices);
+        
 
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $id;
         $data['subtotal']       = $trxdetail['value'];
         $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
-        $data['total']          = $sum - $data['discount'];
+        $data['total']          = $total;
 
         return view('Views/print', $data);
        

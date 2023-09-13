@@ -10,8 +10,8 @@ class CreateDailyReport extends Migration
     {
         $fields = [
             'id'                => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'null' => false, 'auto_increment' => true],
-            'dateopen'          => ['type' => 'DATETIME', 'constraint' => 255],
-            'dateclose'         => ['type' => 'DATETIME', 'constraint' => 255],
+            'dateopen'          => ['type' => 'DATETIME'],
+            'dateclose'         => ['type' => 'DATETIME'],
             'useridopen'        => ['type' => 'INT', 'constraint' => 11],
             'useridclose'       => ['type' => 'INT', 'constraint' => 11],
             'outletid'          => ['type' => 'INT', 'constraint' => 11],
