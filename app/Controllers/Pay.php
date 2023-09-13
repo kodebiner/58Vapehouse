@@ -824,6 +824,11 @@ class Pay extends BaseController
         $data['bookings']       = $BookingModel->findAll();
         $data['bundleVariants'] = $bundleVariants->getResult();
 
+        $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $data['links']          =  urlencode($actual_link);
+
+        dd($data['links']);
+
         $data['discount'] = "0";
         if ((!empty($transactions['discvalue'])) && ($transactions['disctype'] === '0')) {
             $data['discount'] += $transactions['discvalue'];
@@ -1154,6 +1159,169 @@ class Pay extends BaseController
 
         // return
         return redirect()->back()->with('message', lang('Global.saved'));
+    }
+
+    public function invoice($id){
+        // Calling Models
+        $BundleModel            = new BundleModel();
+        $BundledetModel         = new BundledetailModel();
+        $CashModel              = new CashModel();
+        $DebtModel              = new DebtModel();
+        $GconfigModel           = new GconfigModel();
+        $OutletModel            = new OutletModel();
+        $UserModel              = new UserModel();
+        $MemberModel            = new MemberModel();
+        $PaymentModel           = new PaymentModel();
+        $ProductModel           = new ProductModel();
+        $VariantModel           = new VariantModel();
+        $StockModel             = new StockModel();
+        $BookingModel           = new BookingModel();
+        $BookingdetailModel     = new BookingdetailModel();
+        $TransactionModel       = new TransactionModel();
+        $TrxdetailModel         = new TrxdetailModel();
+        $TrxpaymentModel        = new TrxpaymentModel();
+        $MemberModel            = new MemberModel();
+        $GconfigModel           = new GconfigModel();
+
+        $db                 = \Config\Database::connect();
+        $transactions       = $TransactionModel->find($id);
+        $trxdetails         = $TrxdetailModel->where('transactionid', $id)->find();
+        $trxpayments        = $TrxpaymentModel->where('transactionid',$id)->find();
+        $bundles            = $BundleModel->findAll();
+        $bundets            = $BundledetModel->where('id',$id)->find();
+        $Cash               = $CashModel->findAll();
+        $outlets            = $OutletModel->findAll();
+        $users              = $UserModel->findAll();
+        $customers          = $MemberModel->findAll();
+        $payments           = $PaymentModel->findAll();
+        $products           = $ProductModel->findAll();
+        $variants           = $VariantModel->findAll();
+        $stocks             = $StockModel->findAll();
+        $members            = $MemberModel->where('id',$transactions['memberid'])->first();
+        $debt               = $DebtModel->where('transactionid',$id)->find();
+        $user               = $UserModel->where('id',$transactions['userid'])->first();
+        $Gconfig            = $GconfigModel->first();
+        
+        $bundleBuilder      = $db->table('bundledetail');
+        $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
+        $bundleVariants     = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
+        $bundleVariants     = $bundleBuilder->get();
+
+        $data                   = $this->data;
+        $data['title']          = lang('Global.transaction');
+        $data['description']    = lang('Global.transactionListDesc');
+        $data['bundles']        = $bundles;
+        $data['bundets']        = $bundets;
+        $data['cash']           = $Cash;
+        $data['transactions']   = $transactions;
+        $data['outlets']        = $outlets;
+        $data['payments']       = $payments;
+        $data['customers']      = $customers;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['stocks']         = $stocks;
+        $data['trxdetails']     = $TrxdetailModel->where('transactionid',$id)->find();
+        $data['trxpayments']    = $trxpayments;
+        $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
+        $data['bookings']       = $BookingModel->findAll();
+        $data['bundleVariants'] = $bundleVariants->getResult();
+        $data['members']        = $MemberModel->findAll();
+
+        $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $data['links']          = $actual_link;
+
+        $data['discount'] = "0";
+        if ((!empty($transactions['discvalue'])) && ($transactions['disctype'] === '0')) {
+            $data['discount'] += $transactions['discvalue'];
+        } elseif ((isset($transactions['discvalue'])) && ($transactions['disctype'] === '1')) {
+            $data['discount'] += ($transactions['discvalue'] / 100) * $subtotal;
+        } else {
+            $data['discount'] += 0;
+        }
+
+        $prices = array();
+        foreach ($trxdetails as $trxdet) {
+            if ($trxdet['transactionid'] === $id) {
+                $total = $trxdet['qty'] * $trxdet['value'];
+                $prices [] = $total;
+            } 
+        }
+        $sum = array_sum($prices);
+
+        $total = $sum - $data['discount'] - $transactions['pointused'] - $Gconfig['memberdisc'] + $Gconfig['ppn']; 
+
+        // Gconfig poin setup
+        $minimTrx    = $Gconfig['poinorder'];
+        $poinval     = $Gconfig['poinvalue'];
+        
+        if ($total  >= $minimTrx) {
+            $value  = $total / $minimTrx;
+            $result = floor($value);
+            $poin   = (int)$result * $poinval;
+        }
+
+        if (!empty($transactions['memberid'])){
+            $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
+            $data['mempoin']        = $members['poin'];
+            $data['poinearn']       = $poin;
+        }else{
+            $data['cust']           = "0";
+            $data['mempoin']        = "0";
+            $data['poinearn']       = "0";  
+        }
+        
+    
+        if(!empty($transactions['pointused'])){
+            $data['poinused']       = $transactions['pointused'];
+        }else{
+            $data['poinused']       = "0";
+        }
+        
+        foreach ($trxdetails as $trxdetail){
+            $trxdetval = $trxdetail['value'];
+        }
+        if (!empty ($transactions['amountpaid'])){
+            $data['change']     = $transactions['amountpaid'] - $transactions['value'];
+        }else{
+            $data['change']     = "0";
+        }
+        
+        if (!empty($trxdetails['discvar'])){
+            $data['vardiscval']     = $trxdetails['discvar']['variantid'];
+        }else{
+            $data['vardiscval']     = "0";
+        }
+
+        if (!empty($transactions['amountpaid'])){
+            $data['pay']            = $transactions['amountpaid'];
+        } elseif (empty($transactions['amountpaid'])) {
+            foreach ($trxdetails as $trxdetail){
+                if($trxdetail['transactionid']== $id){
+                    $data['pay']            = $trxdetail['value'];
+                }
+            }
+        }else{
+            $data['pay']            = '0';
+        }
+
+        if(!empty($debt['value'])){
+            $data['debt']       = $debt['debt'];
+            $data['totaldebt']  = $debt['value'];
+        }else{
+            $data['debt']       = "0";
+            $data['totaldebt']  = "0";
+        }
+
+        $data['user']           = $user->username;
+        $data['date']           = $transactions['date'];
+        $data['transactionid']  = $id;
+        $data['subtotal']       = $trxdetail['value'];
+        $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
+        $data['total']          = $total;
+
+        return view('Views/invoice', $data);
     }
 }
 ?>

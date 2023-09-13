@@ -219,11 +219,14 @@ $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->post('topup', 'Pay::topup',['filter' =>'role:owner,supervisor']);
 });
 
+//Invoice 
+$routes->get('pay/invoice/(:num)', 'Pay::invoice/$1');
+
 // Report Routes
 $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('', 'Report::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('penjualan', 'Report::penjualan', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('create', 'Report::create',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->get('keuntungan', 'Report::keuntungan', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Sop Routes
