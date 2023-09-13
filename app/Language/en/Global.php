@@ -47,7 +47,6 @@ return [
     'margin'            => 'Margin',
     'cashin'            => 'Cash In',
     'cashout'           => 'Cash Out',
-    'cashin/out'        => 'Cash In / Cash Out',
     'cashinout'         => 'Manage Cash', //Jangan lupa diganti manage cash
     'deleted'           => 'Data has been deleted',
     'saved'             => 'Data has been saved',
@@ -118,6 +117,7 @@ return [
     'paid'              => 'Paid',
     'notpaid'           => 'Not Paid',
     'paybill'           => 'Bill',
+    'value'             => 'Value',
 
     // Button
     'edit'              => 'Edit',
@@ -154,6 +154,8 @@ return [
     'topupproof'        => 'Top Up Proof',
     'payproof'          => 'Payment Proof',
     'invoice'           => 'Invoice',
+    'cashin/out'        => 'Cash In / Cash Out',
+    'withdraw'          => 'Cash Withdraw',
     'submit'            => 'Submit',
     'phonenumber'       => 'Phone Number',
     
@@ -210,6 +212,7 @@ return [
     'bookingList'               => 'Booking List',
     'bookdetList'               => 'Booking Details',
     'trxHistoryList'            => 'Transaction History List',
+    'cashinoutList'             => 'Cash List',
     'debtList'                  => 'Debt List',
     'topupList'                 => 'Top Up List',
     'businessInfo'              => 'Business Information',
@@ -233,6 +236,7 @@ return [
     'supplierListDesc'          => 'List of all your supplier',
     'purchaseListDesc'          => 'List of all your purchase',
     'trxHistoryListDesc'        => 'List of all your transaction',
+    'cashinoutListDesc'         => 'List of all your cash',
     'debtListDesc'              => 'List of all your Debt',
     'topupListDesc'             => 'List of all your Top Up',
     'userProfileDesc'           => 'Information about your profile',

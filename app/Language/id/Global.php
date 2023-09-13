@@ -47,7 +47,6 @@ return [
     'margin'            => 'Margin',
     'cashin'            => 'Uang Masuk',
     'cashout'           => 'Uang Keluar',
-    'cashin/out'        => 'Uang Masuk / Keluar',
     'cashinout'         => 'Pengelolaan Kas', //Jangan lupa diganti manage cash
     'deleted'           => 'Data sudah terhapus',
     'saved'             => 'Data sudah tersimpan',
@@ -112,6 +111,10 @@ return [
     'change'            => 'Kembalian',
     'pointearn'         => 'Poin yang didapat',
     'totalpoint'        => 'Jumlah Poin',
+    'paid'              => 'Lunas',
+    'notpaid'           => 'Belum Lunas',
+    'paybill'           => 'Total Tagihan',
+    'value'             => 'Nilai',
 
     // Button
     'edit'              => 'Ubah',
@@ -148,8 +151,10 @@ return [
     'topupproof'        => 'Bukti Top Up',
     'payproof'          => 'Bukti Pembayaran',
     'invoice'           => 'Nota',
+    'cashin/out'        => 'Uang Masuk / Keluar',
+    'withdraw'          => 'Tarik Tunai',
     'submit'            => 'Kirim',
-    'phonenumber'       => 'No Telphone',
+    'phonenumber'       => 'No Telephone',
 
     // Menu
     'dashboard'         => 'Dasbor',
@@ -204,6 +209,7 @@ return [
     'bookingList'               => 'Daftar Booking',
     'bookdetList'               => 'Rincian Booking',
     'trxHistoryList'            => 'Daftar Riwayat Transaksi',
+    'cashinoutList'             => 'Daftar Kas',
     'debtList'                  => 'Daftar Kasbon',
     'topupList'                 => 'Daftar Top Up',
     'businessInfo'              => 'Informasi Usaha',
@@ -227,6 +233,7 @@ return [
     'supplierListDesc'          => 'Daftar pemasok yang anda miliki',
     'purchaseListDesc'          => 'Daftar pembelian yang anda miliki',
     'trxHistoryListDesc'        => 'Daftar transaksi yang anda miliki',
+    'cashinoutListDesc'         => 'Daftar kas yang anda miliki',
     'debtListDesc'              => 'Daftar kasbon yang anda miliki',
     'topupListDesc'             => 'Daftar top up yang anda miliki',
     'userProfileDesc'           => 'Informasi mengenai profil anda',

@@ -23,7 +23,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($trxothers as $trx) : ?>
+        <?php foreach ($trxothers as $trx) { ?>
             <tr>
                 <td class=""><?= $trx['date'];?></td>
                 <td>
@@ -36,7 +36,7 @@
                 <td class=""><?= $trx['description'];?></td>
                 <td class="uk-text-center"><?= $trx['qty'];?></td>
             </tr>
-        <?php endforeach; ?>
+        <?php } ?>
     </tbody>
 </table>
 <!-- Table Of Content End -->

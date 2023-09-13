@@ -178,6 +178,7 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
 $routes->group('cashinout', ['filter'=>'login'], function($routes){
     $routes->get('', 'Trxother::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Trxother::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('withdraw', 'Trxother::withdraw', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Trxother::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Trxother::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });

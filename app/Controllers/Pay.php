@@ -1106,13 +1106,13 @@ class Pay extends BaseController
         $CashModel      = new CashModel;
 
         // Get Data
-        $cashinout = $TrxotherModel->findAll();
-        $input = $this->request->getPost();
-        $cash   = $CashModel->find($input['payment']);
-        $date=date_create();
-        $tanggal = date_format($date,'Y-m-d H:i:s');
-        $member = $MemberModel->where('id',$input['customerid'])->first();
-        $poin = $member['poin'] + $input['value'];
+        $cashinout      = $TrxotherModel->findAll();
+        $input          = $this->request->getPost();
+        $cash           = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
+        $date           = date_create();
+        $tanggal        = date_format($date,'Y-m-d H:i:s');
+        $member         = $MemberModel->where('id',$input['customerid'])->first();
+        $poin           = $member['poin'] + $input['value'];
 
         // Image Capture
         $img            = $input['image'];
@@ -1129,8 +1129,8 @@ class Pay extends BaseController
         $cashin = [
             'userid'        => $this->data['uid'],
             'outletid'      => $this->data['outletPick'],
-            'cashid'        => $input['payment'],
-            'description'   => "Top Up - ".$member['name'] ,
+            'cashid'        => $cash['id'],
+            'description'   => lang('Global.topup')." - ".$member['name'] ,
             'type'          => "0",
             'date'          => $tanggal,
             'qty'           => $input['value'],
@@ -1147,7 +1147,7 @@ class Pay extends BaseController
         
         $cas = $input['value'] + $cash['qty'];
         $wallet = [
-            'id'    => $input['payment'],
+            'id'    => $cash['id'],
             'qty'   => $cas,
         ];
         $CashModel->save($wallet);

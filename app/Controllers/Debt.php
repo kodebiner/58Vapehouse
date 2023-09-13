@@ -207,8 +207,8 @@ class Debt extends BaseController
         $products               = $ProductModel->findAll();
         $variants               = $VariantModel->findAll();
         $stocks                 = $StockModel->findAll();
-        $transactions           = $TransactionModel->orderBy('date', 'DESC')->findAll();
-        $trxothers              = $TrxotherModel->like('description', 'Top Up')->find();
+        $transactions           = $TransactionModel->findAll();
+        $trxothers              = $TrxotherModel->orderBy('date', 'DESC')->like('description', 'Top Up')->find();
         $trxpayments            = $TrxpaymentModel->findAll();
 
         // Parsing Data to View
