@@ -33,7 +33,7 @@
                 <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addEmployee')?></h5>
             </div>
             <div class="uk-modal-body">
-                <form class="uk-form-stacked" role="form" action="/user/create" method="post">
+                <form class="uk-form-stacked" role="form" action="user/create" method="post">
                     <?= csrf_field() ?>
 
                     <div class="uk-margin-bottom">

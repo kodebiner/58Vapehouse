@@ -33,17 +33,18 @@
                 <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.sop')?></h5>
             </div>
             <div class="uk-modal-body">
-                <form class="uk-form-stacked" role="form" action="/sop/create" method="post">
+                <form class="uk-form-stacked" role="form" action="sop/create" method="post">
                     <?= csrf_field() ?>
 
                     <div class="uk-margin">
-                        <label class="uk-form-label" for="form-stacked-text" required><?=lang('Global.sop')?></label>
+                        <label class="uk-form-label" for="form-stacked-text"><?=lang('Global.sop')?></label>
                         <input class="uk-input" name="name" type="text" placeholder="Name" aria-label="Input" required/>
                     </div>
 
                     <div class="uk-margin">
-                        <label class="uk-form-label" for="form-stacked-text" required><?=lang('Global.shift')?> </label>
-                        <select class="uk-select" name="shift" aria-label="Select">
+                        <label class="uk-form-label" for="form-stacked-text"><?=lang('Global.shift')?> </label>
+                        <select class="uk-select" name="shift" aria-label="Select" required>
+                            <option><?= lang('Global.shift') ?></option>
                             <option value="0"><?= lang('Global.shift1') ?></option>
                             <option value="1"><?= lang('Global.shift2') ?></option>
                         </select>
@@ -51,7 +52,7 @@
 
                     <hr>
                     <div class="uk-margin">
-                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.shift')?></button>
+                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
                     </div>
                 </form>
             </div>
@@ -87,13 +88,13 @@
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                         <!-- Button Trigger Modal Edit -->
                         <div>
-                            <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editcat<?= $sop['id'] ?>"></a>
+                            <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #update-<?= $sop['id'] ?>"></a>
                         </div>
                         <!-- Button Trigger Modal Edit End -->
 
                         <!-- Button Delete -->
                         <div>
-                            <a class="uk-icon-button-delete" uk-icon="trash" href="product/deletecat/<?= $sop['id'] ?>"></a>
+                            <a class="uk-icon-button-delete" uk-icon="trash" href="sop/delete/<?= $sop['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
                         </div>
                         <!-- Button Delete End -->
                     </td>
@@ -104,8 +105,48 @@
 </div>
 <!-- End Table Content -->
 
-<script>
-</script>
+<!-- Modal Edit -->
+<?php foreach ($sops as $sop) { ?>
+    <div uk-modal class="uk-flex-top" id="update-<?= $sop['id'] ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-content">
+                <div class="uk-modal-header">
+                    <h5 class="uk-modal-title"><?=lang('Global.sop')?></h5>
+                </div>
+                <div class="uk-modal-body">
+                    <form class="uk-form-stacked" role="form" action="sop/update/<?= $sop['id'] ?>" method="post">
+                        <?= csrf_field() ?>
+
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="form-stacked-text" required><?=lang('Global.sop')?></label>
+                            <input class="uk-input" name="name" type="text" value="<?= $sop['name'] ?>" placeholder="<?= $sop['name'] ?>" aria-label="Input" required/>
+                        </div>
+
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="form-stacked-text" required><?=lang('Global.shift')?> </label>
+                            <select class="uk-select" name="shift" aria-label="Select" placeholder="<?php if ($sop['shift'] === "0") { ?><?= lang('Global.shift1') ?><?php } elseif ($sop['shift'] === "1") { ?><?= lang('Global.shift2') ?><?php } ?>">
+                                <option disabled><?= lang('Global.shift') ?></option>
+                                <?php if ($sop['shift'] === "0") { ?>
+                                    <option value="0" selected><?= lang('Global.shift1') ?></option>
+                                    <option value="1"><?= lang('Global.shift2') ?></option>
+                                <?php } else { ?>
+                                    <option value="0"><?= lang('Global.shift1') ?></option>
+                                    <option value="1" selected><?= lang('Global.shift2') ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <hr>
+                        <div class="uk-margin">
+                            <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<!-- Modal Edit End -->
 
 <!-- Search Engine Script -->
 <script>

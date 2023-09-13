@@ -155,6 +155,7 @@ return [
     'withdraw'          => 'Tarik Tunai',
     'submit'            => 'Kirim',
     'phonenumber'       => 'No Telephone',
+    'instagram'         => 'Instagram',
 
     // Menu
     'dashboard'         => 'Dasbor',
@@ -212,6 +213,7 @@ return [
     'cashinoutList'             => 'Daftar Kas',
     'debtList'                  => 'Daftar Kasbon',
     'topupList'                 => 'Daftar Top Up',
+    'dosop'                     => 'Lakukan SOP',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
     

@@ -33,7 +33,7 @@
                 <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addOutlet')?></h5>
             </div>
             <div class="uk-modal-body">
-                <form class="uk-form-stacked" role="form" action="/outlet/create" method="post">
+                <form class="uk-form-stacked" role="form" action="outlet/create" method="post">
                     <?= csrf_field() ?>
 
                     <div class="uk-margin-bottom">
@@ -54,6 +54,20 @@
                         <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
                         <div class="uk-form-controls">
                             <input type="text" class="uk-input <?php if (session('errors.maps')) : ?>tm-form-invalid<?php endif ?>" id="maps" name="maps" placeholder="<?=lang('Global.maps')?>" required />
+                        </div>
+                    </div>
+
+                    <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="instagram"><?=lang('Global.instagram')?></label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input <?php if (session('errors.instagram')) : ?>tm-form-invalid<?php endif ?>" id="instagram" name="instagram" placeholder="<?=lang('Global.instagram')?>" required />
+                        </div>
+                    </div>
+
+                    <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="maps"><?=lang('Global.phone')?></label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>" id="phone" name="phone" placeholder="<?=lang('Global.phone')?>" required />
                         </div>
                     </div>
 
@@ -139,6 +153,20 @@
                             <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
                             <div class="uk-form-controls">
                                 <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" />
+                            </div>
+                        </div>
+
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="instagram"><?=lang('Global.instagram')?></label>
+                            <div class="uk-form-controls">
+                                <input type="text" class="uk-input" id="instagram" name="instagram"  value="<?= $outlet['instagram']; ?>" />
+                            </div>
+                        </div>
+
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="phone"><?=lang('Global.phone')?></label>
+                            <div class="uk-form-controls">
+                                <input type="text" class="uk-input" id="phone" name="phone"  value="<?= $outlet['phone']; ?>" />
                             </div>
                         </div>
 

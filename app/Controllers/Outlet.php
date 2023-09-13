@@ -6,6 +6,8 @@ use App\Models\OutletModel;
 use App\Models\ProductModel;
 use App\Models\StockModel;
 use App\Models\VariantModel;
+use App\Models\CashModel;
+use App\Models\PaymentModel;
 use App\Models\UserModel;
 use App\Models\OutletaccessModel;
 use App\Models\GroupUserModel;
@@ -37,34 +39,52 @@ class Outlet extends BaseController
         $OutletModel            = new OutletModel;
         $StockModel             = new StockModel;
         $VariantModel           = new VariantModel;
+        $CashModel              = new CashModel;
+        $PaymentModel           = new PaymentModel;
         $OutletAccessModel      = new OutletaccessModel;
         $GroupUserModel         = new GroupUserModel;
 
         // Populating data
-        $input      = $this->request->getPost();
-        $outlets    = $OutletModel->findAll();
-        $stocks     = $StockModel->findAll();
+        $input                  = $this->request->getPost();
+        $outlets                = $OutletModel->findAll();
+        $stocks                 = $StockModel->findAll();
 
         $data = [
             'name'      => $input['name'],
             'address'   => $input['address'],
             'maps'      => $input['maps'],
+            'instagram' => $input['instagram'],
+            'phone'     => $input['phone'],
         ];
-        
-        // if (! $this->validate([
-        //     'name'      => "required|max_length[255]',",
-        //     'address'   => 'required',
-        //     'maps'      => 'required|max_length[255]',
-        // ])) {
-                
-        //    return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        // }
             
         // Inserting Outlet
         $OutletModel->insert($data);
 
-        //Getting Outlet ID
+        // Getting Outlet ID
         $outletID = $OutletModel->getInsertID();
+
+        // Insert Wallet
+        $cash     = $CashModel->findAll();
+        $wallet = [
+            'outletid'  => $outletID,
+            'name'      => "Petty Cash ".$input['name'],
+            'qty'       => "0",
+        ];
+        // Insert Cash Data
+        $CashModel->insert($wallet);
+
+        // Getting Cash ID
+        $cashid = $CashModel->getInsertID();
+
+        // Insert Payment
+        $payments   = $PaymentModel->findAll();
+        $paymet = [
+            'cashid'    => $cashid,
+            'name'      => "Cash",
+            'outletid'  => $outletID,
+        ];
+        // Insert Payment Data
+        $PaymentModel->insert($paymet);
 
         // insert variants
         $variants   = $VariantModel->findAll();
@@ -94,7 +114,7 @@ class Outlet extends BaseController
             ];
         }
         
-            $OutletAccessModel->save($outletAcc);
+        $OutletAccessModel->save($outletAcc);
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }
@@ -114,6 +134,8 @@ class Outlet extends BaseController
             'name'      => $input['name'],
             'address'   => $input['address'],
             'maps'      => $input['maps'],
+            'instagram' => $input['instagram'],
+            'phone'     => $input['phone'],
         ];
 
         // Validasi
@@ -121,6 +143,8 @@ class Outlet extends BaseController
             'name'      => "max_length[255]",
             'address'   => "max_length[255]",
             'maps'      => "max_length[255]",
+            'instagram' => "max_length[255]",
+            'phone'     => "max_length[255]",
         ])) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
@@ -132,13 +156,27 @@ class Outlet extends BaseController
     public function delete($id)
     {
         // Calling Model
-        $OutletModel   = new OutletModel();
-        $StockModel     = new StockModel;
+        $OutletModel            = new OutletModel();
+        $StockModel             = new StockModel;
+        $CashModel              = new CashModel;
+        $PaymentModel           = new PaymentModel;
 
         // Delete Stock
         $stocks = $StockModel->where('outletid',$id)->find();
         foreach ($stocks as $stock) {
-        $StockModel->delete($stock['id']);
+            $StockModel->delete($stock['id']);
+        }
+
+        // Delete Payment
+        $payments = $PaymentModel->where('outletid', $id)->find();
+        foreach ($payments as $payment) {
+            $PaymentModel->delete($payment['id']);
+        }
+
+        // Delete Cash
+        $cash = $CashModel->where('outletid', $id)->find();
+        foreach ($cash as $cas) {
+            $CashModel->delete($cas['id']);
         }
 
         // Delete Outlet

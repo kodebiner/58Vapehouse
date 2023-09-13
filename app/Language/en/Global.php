@@ -158,6 +158,7 @@ return [
     'withdraw'          => 'Cash Withdraw',
     'submit'            => 'Submit',
     'phonenumber'       => 'Phone Number',
+    'instagram'         => 'Instagram',
     
     // Menu
     'dashboard'         => 'Dashboard',
@@ -215,6 +216,7 @@ return [
     'cashinoutList'             => 'Cash List',
     'debtList'                  => 'Debt List',
     'topupList'                 => 'Top Up List',
+    'dosop'                     => 'Do SOP',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
     

@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class OutletModel extends Model
 {
     protected $allowedFields = [
-        'name','address','maps',
+        'name','address','maps','instagram','phone',
 
     ];
 

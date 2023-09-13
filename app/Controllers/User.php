@@ -104,6 +104,7 @@ class User extends BaseController
         $newUser->lastname  = $input['lastname'];
         $newUser->phone     = $input['phone'];
         $newUser->password  = $input['password'];
+        $newUser->active    = 1;
 
         // Save new user
         $UserModel->insert($newUser);

@@ -9,7 +9,6 @@ use App\Models\SopDetailModel;
 
 class Sop extends BaseController
 {
-
     protected $db, $builder;
     protected $auth;
     protected $config;
@@ -26,15 +25,6 @@ class Sop extends BaseController
         $sopModel       = new SopModel;
         $SopDetailModel = new SopDetailModel;
         $userModel      = new UserModel;
-        
-        // if ($this->data['outletPick'] === null) {
-        //     $sop      = $sopModel->findAll();
-        // } else {
-        //     $sop      = $sopModel->where('outletid', $this->data['outletPick'])->find();
-        // }
-
-        // Checking filter
-        $input = $this->request->getPost();
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -47,11 +37,13 @@ class Sop extends BaseController
         return view('Views/sop', $data);
     }
 
-
     public function create()
     {
+        // Validate Data
+        $validation = \Config\Services::validation();
+
         // Calling Model   
-        $sopModel       = new SopModel;
+        $SopModel       = new SopModel;
         $SopDetailModel = new SopDetailModel;
         $userModel      = new UserModel;
 
@@ -63,16 +55,15 @@ class Sop extends BaseController
             'shift'     => $input['shift'],
         ];
         
-        $sopModel->save($data);
+        $SopModel->save($data);
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
-    public function edit($id){
-
+    public function update($id)
+    {
         // Calling Model   
-        $sopModel       = new SopModel;
+        $SopModel       = new SopModel;
         $SopDetailModel = new SopDetailModel;
-        $userModel      = new UserModel;
 
         // initialize
         $input      = $this->request->getPost();
@@ -83,26 +74,30 @@ class Sop extends BaseController
             'shift'     => $input['shift'],
         ];
         
+        // Insert Sop Data
         $SopModel->save($data);
+
+        // Return
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
-    Public function delete($id){
+    Public function delete($id)
+    {
         // Calling Model   
-        $sopModel       = new SopModel;
+        $SopModel       = new SopModel;
         $SopDetailModel = new SopDetailModel;
-        $userModel      = new UserModel;
 
-        // initialize
-        $input      = $this->request->getPost();
-
-        $data = [
-            'id'        => $id,
-            'name'      => $input['name'],
-            'shift'     => $input['shift'],
-        ];
+        // Populating & Removing Sop Detail Data
+        $sopdetails = $SopDetailModel->where('sopid', $id)->find();
+        foreach ($sopdetails as $sopdet) {
+            // Removing Sop Detail
+            $SopDetailModel->delete($sopdet['id']);
+        }
         
-        $SopModel->save($data);
+        // Delete Sop
+        $SopModel->delete($id);
+
+        // Return
         return redirect()->back()->with('message', lang('Global.deleted'));
     }
 
@@ -138,46 +133,5 @@ class Sop extends BaseController
 
         // Return
         return view ('Views/dosop', $data);
-    }
-
-    public function updatetodo()
-    {
-        // Calling Model   
-        $sopModel       = new SopModel;
-        $SopDetailModel = new SopDetailModel;
-        $userModel      = new UserModel;
-
-        // initialize
-        $input          = $this->request->getPost();
-        // $sopdetails     = $SopDetailModel->where('created_at >', $today)->find();
-        
-        // $date=date_create();
-        // $tanggal = date_format($date,'Y-m-d H:i:s');
-
-        foreach ($input['status'] as $key => $value) {
-            $sopdata = [
-                'id'        => $key,
-                'userid'    => $this->data['uid'],
-                'status'    => '1'
-            ];
-            $SopDetailModel->save($sopdata);
-        }
-
-        // $x = $input['sopid'];
-        // $y = $input['status'];
-        
-        // foreach ($x as $sopid) {
-        //     foreach ($y as $status) {
-        //         $data = [
-        //             'sopid'      => $sopid,
-        //             'userid'     => $this->data['uid'],
-        //             'status'     => $status,
-        //             'date'       => $tanggal,
-        //         ];
-        //         $SopDetailModel->save($data);
-        //     }
-        // }
-        
-        return redirect()->back()->with('message', lang('Global.saved'));
     }
 }

@@ -92,7 +92,6 @@ $routes->group('business', ['filter'=>'login'], function($routes){
 
 // User Routes
 $routes->group('user', ['filter'=>'login'], function($routes){
-
     $routes->get('', 'User::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'User::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('edit(:num)', 'User::edit/$1', ['filter' => 'role:owner,supervisor,operator']);
@@ -102,7 +101,6 @@ $routes->group('user', ['filter'=>'login'], function($routes){
 
 // Outlet Routes
 $routes->group('outlet', ['filter'=>'login'], function($routes){
-
     $routes->get('', 'Outlet::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Outlet::create', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('update/(:num)', 'Outlet::update/$1', ['filter' => 'role:owner,supervisor,operator']);
@@ -233,13 +231,10 @@ $routes->group('report', ['filter'=>'login'], function($routes){
 // Sop Routes
 $routes->group('sop', ['filter'=>'login'], function($routes){
     $routes->get('', 'Sop::index', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('create', 'Sop::index',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('create', 'Sop::create',['filter'=> 'role:owner,supervisor,operator']);
-    $routes->post('createtodo', 'Sop::createtodo',['filter'=> 'role:owner,supervisor,operator']);
-    $routes->post('save', 'Sop::save',['filter'=> 'role:owner,supervisor,operator']);
-    $routes->post('delete', 'Sop::delete',['filter' => 'role:owner']);
+    $routes->post('update/(:num)', 'Sop::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Sop::delete/$1',['filter' => 'role:owner,supervisor,operator']);
     $routes->get('todolist', 'Sop::todolist',['filter'=> 'role:owner,supervisor,operator']);
-    $routes->post('updatetodo', 'Sop::updatetodo',['filter'=> 'role:owner,supervisor,operator']);
 });
 
 // Restock Routes

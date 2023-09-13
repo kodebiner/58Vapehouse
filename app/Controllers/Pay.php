@@ -1093,11 +1093,11 @@ class Pay extends BaseController
                 }
             }
 
-            // Removing Variant
+            // Removing Booking Detail
             $BookingdetailModel->delete($bookdet['id']);
         }
 
-        // Removing Product Data
+        // Removing Booking Data
         $BookingModel->delete($id);
 
         return redirect()->back()->with('error', lang('Global.deleted'));

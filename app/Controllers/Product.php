@@ -8,6 +8,8 @@ use App\Models\BrandModel;
 use App\Models\CashModel;
 use App\Models\CategoryModel;
 use App\Models\VariantModel;
+use App\Models\BundleModel;
+use App\Models\BundledetailModel;
 use App\Models\StockModel;
 use App\Models\OldStockModel;
 use App\Models\OutletModel;
@@ -351,39 +353,69 @@ class Product extends BaseController
         // redirect back
         return redirect()->back()->with('message', lang('Global.saved'));
     }
-  
 
     public function deletevar($id)
     {
+        // Calling Model
+        $StockModel             = new StockModel();
+        $VariantModel           = new VariantModel();
+        $BundleModel            = new BundleModel();
+        $BundledetailModel      = new BundledetailModel();
 
-         // calling Model
-         $StockModel = new StockModel();
-         $VariantModel = new VariantModel();
- 
-         // Populating & Removing Variants Data
-         $stocks = $StockModel->where('variantid', $id)->find();
-         foreach ($stocks as $stock) {
+        // Populating & Removing Stock Data
+        $stocks = $StockModel->where('variantid', $id)->find();
+        foreach ($stocks as $stock) {
             $StockModel->delete($stock['id']);
-         }
-         $VariantModel->delete($id);
+        }
 
-         return redirect()->back()->with('error', lang('Global.deleted'));
+        // Populating & Removing Bundle & Bundle Detail Data
+        $bundledets = $BundledetailModel->where('variantid', $id)->find();
+        foreach ($bundledets as $bundets) {
+            // Populating & Removing Bundle Data
+            $bundles = $BundleModel->where('id', $bundets['bundleid'])->find();
+            foreach ($bundles as $bundle) {
+                $BundleModel->delete($bundle['id']);
+            }
+
+            // Removing Bundle Detail
+            $BundledetailModel->delete($bundets['id']);
+        }
+
+        // Removing Variant Data
+        $VariantModel->delete($id);
+
+        return redirect()->back()->with('error', lang('Global.deleted'));
     }
 
     public function delete($id)
     {
         // calling Model
-        $ProductModel = new ProductModel();
-        $StockModel = new StockModel();
-        $VariantModel = new VariantModel();
+        $ProductModel           = new ProductModel();
+        $StockModel             = new StockModel();
+        $VariantModel           = new VariantModel();
+        $BundleModel            = new BundleModel();
+        $BundledetailModel      = new BundledetailModel();
 
         // Populating & Removing Variants Data
         $variants = $VariantModel->where('productid', $id)->find();
         foreach ($variants as $varian) {
-            // Removing Stocks
+            // Populating & Removing Stocks Data
             $stocks = $StockModel->where('variantid', $varian['id'])->find();
             foreach ($stocks as $stock) {
                 $StockModel->delete($stock['id']);
+            }
+
+            // Populating & Removing Bundle & Bundle Detail Data
+            $bundledets = $BundledetailModel->where('variantid', $varian['id'])->find();
+            foreach ($bundledets as $bundets) {
+                // Populating & Removing Bundle Data
+                $bundles = $BundleModel->where('id', $bundets['bundleid'])->find();
+                foreach ($bundles as $bundle) {
+                    $BundleModel->delete($bundle['id']);
+                }
+                
+                // Removing Bundle Detail
+                $BundledetailModel->delete($bundets['id']);
             }
 
             // Removing Variant
