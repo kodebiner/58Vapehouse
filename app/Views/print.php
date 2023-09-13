@@ -53,7 +53,7 @@
                         foreach ($members as $member){
                             if($transactions['memberid'] === $member['id']){
                                 $memphone = $member['phone'];
-                                echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62.$memphone.?text=I'm%20interested%20in%20your%20car%20for%20sale'></a>";
+                                echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62$memphone?text=$link></a>";
                             }
                         }
                     }elseif(empty($member['id'])){

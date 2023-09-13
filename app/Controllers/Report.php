@@ -18,6 +18,8 @@ use App\Models\TrxdetailModel;
 use App\models\TrxpaymentModel;
 use App\Models\BookingModel;
 use App\Models\BookingdetailModel;
+use App\Models\PurchaseModel;
+use App\Models\Purchasedetail;
 
 class Report extends BaseController
 {
@@ -126,5 +128,64 @@ class Report extends BaseController
         return view('Views/report/penjualan', $data);
     }
 
+    public function keuntungan(){
+
+        // Calling Models
+        $TransactionModel       = new TransactionModel;
+        $PurchaseModel          = new PurchaseModel;
+        $PurchaseDetailModel    = new PurchaseDetailModel;
+
+        // $prices = array();
+        // foreach ($purchasedetails as $purdet) {
+        //     if ($purchase['id'] === $purdet['purchaseid']) {
+        //         $total = $purdet['qty'] * $purdet['price'];
+        //         $prices [] = $total;
+        //     }
+        // }
+        // $sum = array_sum($prices);
+        // echo "Rp " . number_format($sum,2,',','.');
+    
+
+        // Populating Data
+        $Purchases       = $PurchaseModel->findAll();
+        $PurchaseDets    = $PurchaseDetailModel->findAll();
+
+        $input = $this->request->getGet();
+
+        if(!empty($input)){
+            $startdate = strtotime($input['startdate']);
+            $enddata = strtotime($input['enddate']);
+        } else {
+            $stardate = strtotime($date('Y-m-1'));
+            $enddate  = strtotime(date('Y-m-t'));
+        }
+
+        $purchasvalue = array();
+        foreach ($Purchases as $Purchase){
+            foreach ($PurchaseDets as $purchasedet){
+                if($Purchase['id'] === $Pruchasedee['value']){
+                    $amount = $purchasedet['qty']* $purchasedet['value'];
+                    $purchasevalue[] = $amount;
+                }
+            }
+        }
+        $total = array_sum($purchasevalue);
+        dd($total);
+
+        $transactions = array();
+        for($date = $stardate; $date<=$enddate; $date+= (86400)){
+            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00',$date))->where('date <=', date('Y-m-d 23:59:59',$date))->find();
+            $penjualan = array_sum(array_column($transaction, 'value'));
+            
+        }        
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = lang('Global.transaction');
+        $data['description']    = lang('Global.transactionListDesc');
+        $data['transactions']   = $transactions;
+
+        return view('Views/report/keuntungan', $data);
+    }
     
 }
