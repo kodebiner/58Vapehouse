@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class TrxdetailModel extends Model
 {
     protected $allowedFields = [
-        'transactionid','variantid','bundleid','qty','description','value','discvar',
+        'transactionid','variantid','bundleid','qty','description','value','discvar','margindasar','marginmodal',
 
     ];
 

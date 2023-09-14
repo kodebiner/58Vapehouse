@@ -118,6 +118,10 @@ return [
     'phonenumber'       => 'No Telephone',
     'instagram'         => 'Instagram',
     'initialcash'       => 'Uang Tunai Awal',
+    'sales'             => 'penjualan',
+    'profit'            => 'keuntungan',
+    'net'               => 'penjualan bersih',
+    'gross'             => 'penjualan kotor',
 
     // Button
     'edit'              => 'Ubah',

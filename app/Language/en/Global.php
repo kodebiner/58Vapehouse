@@ -162,6 +162,10 @@ return [
     'submit'            => 'Submit',
     'open'              => 'Open Store',
     'close'             => 'Close Store',
+    'sales'             => 'sales',
+    'profit'            => 'profit',
+    'net'               => 'net sales',
+    'gross'             => 'gross sales',
     
     // Menu
     'dashboard'         => 'Dashboard',

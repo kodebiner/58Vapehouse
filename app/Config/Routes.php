@@ -226,6 +226,9 @@ $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('', 'Report::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('penjualan', 'Report::penjualan', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('keuntungan', 'Report::keuntungan', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('keuntungandasar', 'Report::keuntungandasar', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('diskon', 'Report::diskon', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('payment', 'Report::payment', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Sop Routes

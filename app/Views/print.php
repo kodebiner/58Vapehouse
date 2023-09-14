@@ -53,7 +53,7 @@
                         foreach ($members as $member){
                             if($transactions['memberid'] === $member['id']){
                                 $memphone = $member['phone'];
-                                echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62$memphone?text=$link></a>";
+                                // echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62$memphone?text=$link></a>";
                             }
                         }
                     }elseif(empty($member['id'])){
@@ -196,7 +196,7 @@
                                             x<?=$trxdet['qty']?> <?=lang('Global.bundle')?> <br> <?= $bundleName?> <br>
                                             <div class="uk-grid-collapse" uk-grid>
                                                 <div class="uk-width-2-3"> @<?=$variantval?></div>
-                                                <div class="uk-width-1-3"><?=$variantval * $trxdet['qty']?></div>
+                                                <div class="uk-width-1-3 uk-text-right"><?=$variantval * $trxdet['qty']?></div>
                                             </div>
                                             <?php 
                                             foreach ($bundets as $bundet){
