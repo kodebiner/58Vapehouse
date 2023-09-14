@@ -188,6 +188,10 @@ class Pay extends BaseController
                     }else{
                         $varPrice = 0;
                     }
+
+                    $marginmodal = $varPrice - $variant['hargamodal'];
+                    $margindasar = $varPrice - $variant['hargadasar'];
+
                     
                 $trxvar = [
                     'transactionid' => $trxId,
@@ -195,6 +199,8 @@ class Pay extends BaseController
                     'qty'           => $varqty,
                     'value'         => $varPrice,
                     'discvar'       => $discvar,
+                    'margindasar'   => $margindasar,
+                    'marginmodal'   => $marginmodal,
                 ];
                 $TrxdetailModel->save($trxvar);
 
@@ -269,6 +275,7 @@ class Pay extends BaseController
 
         }elseif(isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && empty($input['payment'])){
             // Split Payment Method
+            
             // First payment
             $firstpayment = $PaymentModel->where('id',$input['firstpayment'])->first();
             $paymet = [
@@ -288,8 +295,26 @@ class Pay extends BaseController
             $TrxpaymentModel->save($pay);
         }
         
-        // Insert Cash
-        if (!empty($input['payment'])){
+        // Debt Transaction
+        if (!empty($input['duedate']) && !empty($input['payment']) && empty($input['value'])) {
+            // Debt Payment
+            $debt = [
+                'memberid'      => $input['customerid'],
+                'transactionid' => $trxId,
+                'value'         => $input['debt'],
+                'deadline'      => $input['duedate'],
+            ];
+            $DebtModel->save($debt);
+        } elseif (!empty($input['duedate']) && !empty($input['payment']) && !empty($input['value'])) {
+            // Debt & Down Payment
+            $debt = [
+                'memberid'      => $input['customerid'],
+                'transactionid' => $trxId,
+                'value'         => $input['debt'],
+                'deadline'      => $input['duedate'],
+            ];
+            $DebtModel->save($debt);
+            
             $payment    = $PaymentModel->where('id',$input['payment'])->first();
             $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
             $cashUp     = $varvalue + $bundvalue + $cashPlus['qty'];
@@ -299,8 +324,15 @@ class Pay extends BaseController
                 'qty'   => $cashUp,
             ];
             $CashModel->save($cash);
+        } elseif (!empty($input['duedate']) && !isset($input['payment']) && isset($input['firstpayment'])) {
+            $debt = [
+                'memberid'      => $input['customerid'],
+                'transactionid' => $trxId,
+                'value'         => $input['debt'],
+                'deadline'      => $input['duedate'],
+            ];
+            $DebtModel->save($debt);
 
-        }elseif(!isset($input['payment']) && isset($input['firstpayment'])){
             // Insert First Payment
             $payment    = $PaymentModel->where('id',$input['firstpayment'])->first();
             $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
@@ -310,6 +342,7 @@ class Pay extends BaseController
                 'qty'   => $cashUp
             ];
             $CashModel->save($cash);
+
             $payment        = $PaymentModel->where('id',$input['secpayment'])->first();
             $cashPlus2      = $CashModel->where('id',$payment['cashid'])->first();
             // Insert Second Payment
@@ -319,7 +352,42 @@ class Pay extends BaseController
                 'qty'   => $cashUp2,
             ];
             $CashModel->save($cash2);
+        } else {
+            // Insert Cash
+            if (!empty($input['payment'])) {
+                $payment    = $PaymentModel->where('id',$input['payment'])->first();
+                $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
+                $cashUp     = $varvalue + $bundvalue + $cashPlus['qty'];
+    
+                $cash = [
+                    'id'    => $cashPlus['id'],
+                    'qty'   => $cashUp,
+                ];
+                $CashModel->save($cash);
+    
+            } elseif (!isset($input['payment']) && isset($input['firstpayment'])) {
+                // Insert First Payment
+                $payment    = $PaymentModel->where('id',$input['firstpayment'])->first();
+                $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
+                $cashUp     = $cashPlus['qty'] + $input['firstpay'];
+                $cash       = [
+                    'id'    => $cashPlus['id'],
+                    'qty'   => $cashUp
+                ];
+                $CashModel->save($cash);
+
+                $payment        = $PaymentModel->where('id',$input['secpayment'])->first();
+                $cashPlus2      = $CashModel->where('id',$payment['cashid'])->first();
+                // Insert Second Payment
+                $cashUp2     = $cashPlus2['qty']+ $input['secondpay'];
+                $cash2       = [
+                    'id'    => $cashPlus2['id'],
+                    'qty'   => $cashUp2,
+                ];
+                $CashModel->save($cash2);
+            }
         }
+        
 
         // Gconfig poin setup
         $minimTrx    = $Gconfig['poinorder'];
@@ -345,16 +413,6 @@ class Pay extends BaseController
                 'trx'   => $trx,
             ];
             $MemberModel->save($poin);
-        }
-        
-        if(!empty($input['duedate'])) {
-            $debt = [
-                'memberid'      => $input['customerid'],
-                'transactionid' => $trxId,
-                'value'         => $input['debt'],
-                'deadline'      => $input['duedate'],
-            ];
-            $DebtModel->save($debt);
         }
 
         $db                 = \Config\Database::connect();
@@ -401,6 +459,8 @@ class Pay extends BaseController
         $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
         $data['bookings']       = $BookingModel->findAll();
         $data['bundleVariants'] = $bundleVariants->getResult();
+        $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $data['link']          =  urlencode($actual_link);
         
         // Gconfig poin setup
         $minimTrx    = $Gconfig['poinorder'];
@@ -467,7 +527,7 @@ class Pay extends BaseController
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $trxId;
         $data['subtotal']       = $subtotal;
-        $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
+        $data['members']        = $MemberModel->findAll();
         $data['total']          = $total;
 
         return view('Views/print', $data);
@@ -827,7 +887,6 @@ class Pay extends BaseController
         $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $data['links']          =  urlencode($actual_link);
 
-        dd($data['links']);
 
         $data['discount'] = "0";
         if ((!empty($transactions['discvalue'])) && ($transactions['disctype'] === '0')) {
@@ -903,16 +962,6 @@ class Pay extends BaseController
             $data['pay']            = '0';
         }
 
-        // if (!empty($input['value'])){
-        //     $data['pay']            = $input['value'];
-        // } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
-        //     $data['pay']            = $input['firstpay'] + $input['secondpay'];
-        // }elseif(!empty($input['debt']) && (empty($input['value']))){
-        //     $data['pay']            = "0";
-        // } elseif(!empty($input['value']) && !empty($input['debt'])){
-        //     $data['pay']            = $input['value'] - $input['debt'];
-        // }
-
         if(!empty($debt['value'])){
             $data['debt']       = $debt['debt'];
             $data['totaldebt']  = $debt['value'];
@@ -921,13 +970,14 @@ class Pay extends BaseController
             $data['totaldebt']  = "0";
         }
          
-        
+        $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $data['link']          =  urlencode($actual_link);
 
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $id;
         $data['subtotal']       = $trxdetail['value'];
-        $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
+        $data['members']        = $MemberModel->findall();
         $data['total']          = $total;
 
         return view('Views/print', $data);
