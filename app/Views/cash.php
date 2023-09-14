@@ -15,21 +15,96 @@
             <h3 class="tm-h3"><?=lang('Global.cashinoutList')?></h3>
         </div>
 
-        <!-- Button Trigger Modal Add -->
-        <div class="uk-width-1-2@s uk-child-width-auto uk-flex-right uk-margin-remove-left" uk-grid>
-            <div>
-                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #withdraw"><?=lang('Global.withdraw')?></button>
-            </div>
-            <div>
-                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.cashin/out')?></button>
-            </div>
-        </div>
-        <!-- End Of Button Trigger Modal Add -->
+        <?php if ($outletPick != null) {
+            if (empty($dailyreports)) { ?>
+                <!-- Button Trigger Modal Open -->
+                <div class="uk-width-1-2@s uk-text-right">
+                    <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #open"><?=lang('Global.open')?></button>
+                </div>
+                <!-- Button Trigger Modal Open End -->
+            <?php } else {
+                foreach ($dailyreports as $dayrep) {
+                    if (!empty($dailyreports) && ($dayrep['dateclose'] < $today)) { ?>
+                        <div class="uk-width-1-2@s uk-child-width-auto uk-flex-middle uk-flex-right uk-margin-remove-left" uk-grid>
+                            <!-- Button Trigger Modal Close -->
+                            <div>
+                                <button type="button" class="uk-button uk-button-danger uk-preserve-color" uk-toggle="target: #close-<?= $dayrep['id'] ?>"><?=lang('Global.close')?></button>
+                            </div>
+                            <!-- Button Trigger Modal Close End -->
+
+                            <!-- Button Trigger Modal Withdraw -->
+                            <div>
+                                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #withdraw"><?=lang('Global.withdraw')?></button>
+                            </div>
+                            <!-- Button Trigger Modal Withdraw End -->
+                            
+                            <!-- Button Trigger Modal CashInOut -->
+                            <div>
+                                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.cashin/out')?></button>
+                            </div>
+                            <!-- Button Trigger Modal CashInOut End -->
+                        </div>
+                    <?php }
+                }
+            }
+        } ?>
     </div>
 </div>
 <!-- End Of Page Heading -->
 
 <?= view('Views/Auth/_message_block') ?>
+
+<!-- Modal Close NOT DONE YET -->
+<?php foreach ($dailyreports as $dayrep) { ?>
+    <div uk-modal class="uk-flex-top" id="close-<?= $dayrep['id'] ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-content">
+                <div class="uk-modal-header">
+                    <h3 class="tm-h2 uk-text-center"><?=lang('Global.close')?></h3>
+                </div>
+                <div class="uk-modal-body">
+                    <form class="uk-form-stacked" role="form" action="dayrep/close/<?= $dayrep['id'] ?>" method="post">
+                        <?= csrf_field() ?>
+
+                        <hr>
+
+                        <div class="uk-margin">
+                            <button type="submit" class="uk-button uk-button-primary uk-width-1-1" style="border-radius: 10px;"><?=lang('Global.close')?></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<!-- Modal Close End -->
+
+<!-- Modal Open -->
+<div uk-modal class="uk-flex-top" id="open">
+    <div class="uk-modal-dialog uk-margin-auto-vertical">
+        <div class="uk-modal-content">
+            <div class="uk-modal-header">
+                <h3 class="tm-h2 uk-text-center"><?=lang('Global.initialcash')?></h3>
+            </div>
+            <div class="uk-modal-body">
+                <form class="uk-form-stacked" role="form" action="dayrep/open" method="post">
+                    <?= csrf_field() ?>
+
+                    <div class="uk-form-controls">
+                        <input type="number" class="uk-input uk-form-large uk-text-center" style="border-radius: 10px;" id="initialcash" name="initialcash" placeholder="<?=lang('Global.initialcash')?>" required />
+                    </div>
+
+                    <hr>
+
+                    <div class="uk-margin">
+                        <button type="submit" class="uk-button uk-button-primary uk-width-1-1" style="border-radius: 10px;"><?=lang('Global.open')?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Open End -->
 
 <!-- Modal Add -->
 <div uk-modal class="uk-flex-top" id="tambahdata">

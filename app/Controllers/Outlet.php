@@ -160,6 +160,8 @@ class Outlet extends BaseController
         $StockModel             = new StockModel;
         $CashModel              = new CashModel;
         $PaymentModel           = new PaymentModel;
+        $OutletAccessModel      = new OutletaccessModel;
+        $GroupUserModel         = new GroupUserModel;
 
         // Delete Stock
         $stocks = $StockModel->where('outletid',$id)->find();
@@ -177,6 +179,12 @@ class Outlet extends BaseController
         $cash = $CashModel->where('outletid', $id)->find();
         foreach ($cash as $cas) {
             $CashModel->delete($cas['id']);
+        }
+        
+        // Outlet Access 
+        $accessId = $OutletAccessModel->where('outletid', $id)->find();
+        foreach ($accessId as $access){
+            $OutletAccessModel->delete($access['id']);
         }
 
         // Delete Outlet

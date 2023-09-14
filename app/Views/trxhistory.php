@@ -75,10 +75,12 @@
                     } else {
                         foreach ($debts as $debt) {
                             if ($debt['transactionid'] === $transaction['id']) {
-                                if ($transaction['amountpaid'] - $debt['value'] !== "0") {
+                                if ($transaction['amountpaid'] - $debt['value'] < "0") {
                                     echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.lang('Global.notpaid').'</div>';
+                                } elseif ($transaction['amountpaid'] - $debt['value'] >= "0") {
+                                    echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.lang('Global.paid').'</div>';
                                 }
-                            }
+                            } 
                         }
                     } ?>
                 </td>

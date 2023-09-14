@@ -302,10 +302,16 @@ $routes->group('presence', ['filter'=>'login'], function($routes){
     $routes->get('delete/(:num)', 'presence::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
-// reminder
+// Reminder
 $routes->group('reminder', ['filter'=>'login'], function($routes){
-    // presence
-    $routes->get('', 'reminder::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('', 'Reminder::index', ['filter' => 'role:owner,supervisor,operator']);
+});
+
+// Daily Report
+$routes->group('dayrep', ['filter'=>'login'], function($routes){
+    $routes->get('', 'DailyReport::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('open', 'DailyReport::open', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('close/(:num)', 'DailyReport::close/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 

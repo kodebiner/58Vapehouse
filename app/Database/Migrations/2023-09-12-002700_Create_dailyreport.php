@@ -18,8 +18,8 @@ class CreateDailyReport extends Migration
             'initialcash'       => ['type' => 'VARCHAR', 'constraint' => 255],
             'totalcashin'       => ['type' => 'VARCHAR', 'constraint' => 255],
             'totalcashout'      => ['type' => 'VARCHAR', 'constraint' => 255],
-            'cashclosed'        => ['type' => 'VARCHAR', 'constraint' => 255],
-            'noncashclosed'     => ['type' => 'VARCHAR', 'constraint' => 255],
+            'cashclose'         => ['type' => 'VARCHAR', 'constraint' => 255],
+            'noncashclose'      => ['type' => 'VARCHAR', 'constraint' => 255],
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);

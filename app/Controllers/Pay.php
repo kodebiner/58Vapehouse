@@ -73,8 +73,6 @@ class Pay extends BaseController
         $varvalues = array();
         $bundvalues = array();
         
-      
-        
         if (!empty($input['qty'])) {
             foreach ($input['qty'] as $varid => $varqty) {
                 $variant = $VariantModel->find($varid);
@@ -264,40 +262,9 @@ class Pay extends BaseController
         //Insert Trx Payment 
         $total = $subtotal - $discount - (int)$input['poin'] - $memberdisc + $ppn;
         
-        if(!isset($input['firstpayment']) && !isset($input['secpayment']) && isset($input['payment'])){
-            $payment = $PaymentModel->where('id',$input['payment'])->first();
-            $paymet = [
-                'paymentid'     => $payment['id'],
-                'transactionid' => $trxId,
-                'value'         => $total,
-            ];
-            $TrxpaymentModel->save($paymet);
-
-        }elseif(isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && empty($input['payment'])){
-            // Split Payment Method
-            
-            // First payment
-            $firstpayment = $PaymentModel->where('id',$input['firstpayment'])->first();
-            $paymet = [
-                'paymentid'     => $firstpayment['id'],
-                'transactionid' => $trxId,
-                'value'         => $input['firstpay'],
-            ];
-            $TrxpaymentModel->save($paymet);
-
-            $secpayment = $PaymentModel->where('id',$input['secpayment'])->first();
-            // Second Payment
-            $pay = [
-                'paymentid'     =>$secpayment['cashid'],
-                'transactionid' =>$trxId,
-                'value'         =>$input['secondpay'],
-            ];
-            $TrxpaymentModel->save($pay);
-        }
-        
         // Debt Transaction
         if (!empty($input['duedate']) && !empty($input['payment']) && empty($input['value'])) {
-            // Debt Payment
+            // Insert Debt
             $debt = [
                 'memberid'      => $input['customerid'],
                 'transactionid' => $trxId,
@@ -307,6 +274,8 @@ class Pay extends BaseController
             $DebtModel->save($debt);
         } elseif (!empty($input['duedate']) && !empty($input['payment']) && !empty($input['value'])) {
             // Debt & Down Payment
+
+            // Insert Debt
             $debt = [
                 'memberid'      => $input['customerid'],
                 'transactionid' => $trxId,
@@ -315,6 +284,7 @@ class Pay extends BaseController
             ];
             $DebtModel->save($debt);
             
+            // Insert Cash
             $payment    = $PaymentModel->where('id',$input['payment'])->first();
             $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
             $cashUp     = $varvalue + $bundvalue + $cashPlus['qty'];
@@ -325,6 +295,9 @@ class Pay extends BaseController
             ];
             $CashModel->save($cash);
         } elseif (!empty($input['duedate']) && !isset($input['payment']) && isset($input['firstpayment'])) {
+            // Debt and Down Payment with Split Payment
+
+            // Insert Debt
             $debt = [
                 'memberid'      => $input['customerid'],
                 'transactionid' => $trxId,
@@ -343,9 +316,9 @@ class Pay extends BaseController
             ];
             $CashModel->save($cash);
 
+            // Insert Second Payment
             $payment        = $PaymentModel->where('id',$input['secpayment'])->first();
             $cashPlus2      = $CashModel->where('id',$payment['cashid'])->first();
-            // Insert Second Payment
             $cashUp2     = $cashPlus2['qty']+ $input['secondpay'];
             $cash2       = [
                 'id'    => $cashPlus2['id'],
@@ -353,6 +326,8 @@ class Pay extends BaseController
             ];
             $CashModel->save($cash2);
         } else {
+            // Normal Transaction
+
             // Insert Cash
             if (!empty($input['payment'])) {
                 $payment    = $PaymentModel->where('id',$input['payment'])->first();
@@ -366,6 +341,8 @@ class Pay extends BaseController
                 $CashModel->save($cash);
     
             } elseif (!isset($input['payment']) && isset($input['firstpayment'])) {
+                // Normal Transaction with Split Payment
+                
                 // Insert First Payment
                 $payment    = $PaymentModel->where('id',$input['firstpayment'])->first();
                 $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
@@ -388,6 +365,37 @@ class Pay extends BaseController
             }
         }
         
+        // Transaction Payment
+        if (!isset($input['firstpayment']) && !isset($input['secpayment']) && isset($input['payment'])) {
+            // Insert Cash
+            $payment = $PaymentModel->where('id',$input['payment'])->first();
+            $paymet = [
+                'paymentid'     => $payment['id'],
+                'transactionid' => $trxId,
+                'value'         => $total,
+            ];
+            $TrxpaymentModel->save($paymet);
+
+        } elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && empty($input['payment'])) {
+            // Split Payment Method
+            // First payment
+            $firstpayment = $PaymentModel->where('id',$input['firstpayment'])->first();
+            $paymet = [
+                'paymentid'     => $firstpayment['id'],
+                'transactionid' => $trxId,
+                'value'         => $input['firstpay'],
+            ];
+            $TrxpaymentModel->save($paymet);
+
+            // Second Payment
+            $secpayment = $PaymentModel->where('id',$input['secpayment'])->first();
+            $pay = [
+                'paymentid'     =>$secpayment['cashid'],
+                'transactionid' =>$trxId,
+                'value'         =>$input['secondpay'],
+            ];
+            $TrxpaymentModel->save($pay);
+        }
 
         // Gconfig poin setup
         $minimTrx    = $Gconfig['poinorder'];
@@ -401,7 +409,7 @@ class Pay extends BaseController
             $poin = "0";
         }
 
-        //Update Point Member
+        // Update Point Member
         if (!empty($input['customerid'])){
             $member      = $MemberModel->where('id',$input['customerid'])->first();
             $trx = $member['trx'] + 1 ;
@@ -415,6 +423,7 @@ class Pay extends BaseController
             $MemberModel->save($poin);
         }
 
+        // Print Function
         $db                 = \Config\Database::connect();
         $bundles            = $BundleModel->findAll();
         $bundets            = $BundledetModel->findAll();

@@ -115,6 +115,9 @@ return [
     'notpaid'           => 'Belum Lunas',
     'paybill'           => 'Total Tagihan',
     'value'             => 'Nilai',
+    'phonenumber'       => 'No Telephone',
+    'instagram'         => 'Instagram',
+    'initialcash'       => 'Uang Tunai Awal',
 
     // Button
     'edit'              => 'Ubah',
@@ -154,8 +157,8 @@ return [
     'cashin/out'        => 'Uang Masuk / Keluar',
     'withdraw'          => 'Tarik Tunai',
     'submit'            => 'Kirim',
-    'phonenumber'       => 'No Telephone',
-    'instagram'         => 'Instagram',
+    'open'              => 'Buka Toko',
+    'close'             => 'Tutup Toko',
 
     // Menu
     'dashboard'         => 'Dasbor',

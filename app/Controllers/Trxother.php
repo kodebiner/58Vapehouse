@@ -2,10 +2,23 @@
 
 namespace App\Controllers;
 
-use App\Models\TrxotherModel;
-use App\Models\UserModel;
+use App\Models\BundledetailModel;
+use App\Models\BundleModel;
 use App\Models\CashModel;
+use App\Models\GconfigModel;
 use App\Models\OutletModel;
+use App\Models\UserModel;
+use App\Models\MemberModel;
+use App\Models\PaymentModel;
+use App\Models\ProductModel;
+use App\Models\StockModel;
+use App\Models\VariantModel;
+use App\Models\TransactionModel;
+use App\Models\TrxdetailModel;
+use App\Models\TrxotherModel;
+use App\models\TrxpaymentModel;
+use App\Models\DebtModel;
+use App\Models\DailyReportModel;
 
 class Trxother extends BaseController
 
@@ -23,25 +36,34 @@ class Trxother extends BaseController
             $this->auth    = service('authentication');
         }
 
-
     public function index()
     {
         // Calling Model
-        $TrxotherModel  = new TrxotherModel;
-        $UserModel      = new UserModel;
-        $CashModel      = new CashModel;
-        $OutletModel    = new OutletModel;
+        $TransactionModel   = new TransactionModel;
+        $TrxdetailModel     = new TrxdetailModel;
+        $TrxpaymentModel    = new TrxpaymentModel;
+        $TrxotherModel      = new TrxotherModel;
+        $ProductModel       = new ProductModel;
+        $VariantModel       = new VariantModel;
+        $BundleModel        = new BundleModel;
+        $BundledetailModel  = new BundledetailModel;
+        $PaymentModel       = new PaymentModel;
+        $DebtModel          = new DebtModel;
+        $UserModel          = new UserModel;
+        $CashModel          = new CashModel;
+        $OutletModel        = new OutletModel;
+        $DailyReportModel   = new DailyReportModel;
 
         // Find Data
-        $auth           = service('authentication');
-        $users          = $UserModel->findAll();
-        $userId         = $auth->id();
-        $GroupUser      = $this->GroupUserModel->where('user_id', $this->userId)->first();
-        $roleid         = $GroupUser['group_id'];
-        $user           = $UserModel->where('id',$userId)->first();
-        $userOutlet     = $user->outletid;
-        $outlets        = $OutletModel->findAll();
-        $cash           = $CashModel->findAll();
+        $auth               = service('authentication');
+        $users              = $UserModel->findAll();
+        $userId             = $auth->id();
+        $GroupUser          = $this->GroupUserModel->where('user_id', $this->userId)->first();
+        $roleid             = $GroupUser['group_id'];
+        $user               = $UserModel->where('id',$userId)->first();
+        $userOutlet         = $user->outletid;
+        $outlets            = $OutletModel->findAll();
+        $cash               = $CashModel->findAll();
         
         // Operator 
         if ($roleid === 4) {
@@ -53,15 +75,72 @@ class Trxother extends BaseController
                 $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->find();
             }
         }
+
+        // Find Data for Daily Report
+        $today                  = date('Y-m-d') .' 00:00:01';
+        $dailyreports           = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
+
+        // From Trx Other
+        $topups                 = $TrxotherModel->like('description', 'Top Up')->where('date >', $today)->find();
+        $debts                  = $TrxotherModel->like('description', 'Debt')->where('date >', $today)->find();
+        $cashinout              = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >', $today)->where('outletid', $this->data['outletPick'])->find();
         
         // Parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.cashinout');
         $data['description']    = lang('Global.cashinoutListDesc');
         $data['trxothers']      = $trxothers;
+        $data['topups']         = $topups;
+        $data['debts']          = $debts;
+        $data['cashinout']      = $cashinout;
         $data['users']          = $users;
         $data['cash']           = $cash;
         $data['outlets']        = $outlets;
+        $data['dailyreports']   = $dailyreports;
+        $data['today']          = $today;
+
+        // Get Transaction ID
+        $transactions                   = $TransactionModel->where('date >', $today)->where('outletid', $this->data['outletPick'])->find();
+        $data['transactions']           = $transactions;
+        
+        // Get Trx Detail ID
+        foreach ($transactions as $trx) {
+            $trxdetails                 = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+            $data['trxdetails']         = $trxdetails;
+            
+            // Get Variant ID & Bunlde ID
+            foreach ($trxdetails as $trxdet) {
+                // Get Variant ID
+                $variants               = $VariantModel->where('id', $trxdet['variantid'])->find();
+                $data['variants']       = $variants;
+                
+                // Get Product ID
+                foreach ($variants as $variant) {
+                    $products           = $ProductModel->where('id', $variant['productid'])->find();
+                    $data['products']   = $products;
+                }
+
+                // Get Bundle ID
+                $bundles                = $BundleModel->where('id', $trxdet['bundleid'])->find();
+                $data['bundles']        = $bundles;
+                
+                    // Get Bundle Detail ID
+                foreach ($bundles as $bundle) {
+                    $bundets            = $BundledetaiModel->where('bundleid', $bundle['id'])->find();
+                    $data['bundets']    = $bundets;
+                }
+            }
+            
+            // Get Trx Payment
+            $trxpayments                = $TrxpaymentModel->where('transactionid', $trx['id'])->find();
+            $data['trxpayments']        = $trxpayments;
+
+            // Get Payment ID
+            foreach ($trxpayments as $trxpay) {
+                $payments               = $PaymentModel->where('id', $trxpay['paymentid'])->find();
+                $data['payments']       = $payments;
+            }
+        }
 
         return view ('Views/cash', $data);
     }

@@ -137,6 +137,7 @@ class Debt extends BaseController
         } else {
             $data = [
                 'id'            => $id,
+                'value'         => $debts['value'] - $input['value'],
                 'deadline'      => NULL,
             ];
         }

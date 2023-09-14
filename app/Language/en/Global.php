@@ -118,6 +118,9 @@ return [
     'notpaid'           => 'Not Paid',
     'paybill'           => 'Bill',
     'value'             => 'Value',
+    'phonenumber'       => 'Phone Number',
+    'instagram'         => 'Instagram',
+    'initialcash'       => 'Initial Cash',
 
     // Button
     'edit'              => 'Edit',
@@ -157,8 +160,8 @@ return [
     'cashin/out'        => 'Cash In / Cash Out',
     'withdraw'          => 'Cash Withdraw',
     'submit'            => 'Submit',
-    'phonenumber'       => 'Phone Number',
-    'instagram'         => 'Instagram',
+    'open'              => 'Open Store',
+    'close'             => 'Close Store',
     
     // Menu
     'dashboard'         => 'Dashboard',
