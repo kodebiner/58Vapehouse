@@ -11,42 +11,38 @@
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
     <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-2@s">
+        <div class="uk-width-1-6@s">
             <h3 class="tm-h3"><?=lang('Global.cashinoutList')?></h3>
         </div>
 
         <?php if ($outletPick != null) {
-            if (empty($dailyreports)) { ?>
+            if (empty($dailyreport)) { ?>
                 <!-- Button Trigger Modal Open -->
-                <div class="uk-width-1-2@s uk-text-right">
+                <div class="uk-width-5-6@s uk-text-right">
                     <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #open"><?=lang('Global.open')?></button>
                 </div>
                 <!-- Button Trigger Modal Open End -->
-            <?php } else {
-                foreach ($dailyreports as $dayrep) {
-                    if (!empty($dailyreports) && ($dayrep['dateclose'] < $today)) { ?>
-                        <div class="uk-width-1-2@s uk-child-width-auto uk-flex-middle uk-flex-right uk-margin-remove-left" uk-grid>
-                            <!-- Button Trigger Modal Close -->
-                            <div>
-                                <button type="button" class="uk-button uk-button-danger uk-preserve-color" uk-toggle="target: #close-<?= $dayrep['id'] ?>"><?=lang('Global.close')?></button>
-                            </div>
-                            <!-- Button Trigger Modal Close End -->
+            <?php } elseif (($dailyreport['dateclose'] === '0000-00-00 00:00:00')) { ?>
+                <div class="uk-width-5-6@s uk-child-width-auto uk-flex-middle uk-flex-right uk-margin-remove-left uk-padding-remove" uk-grid>
+                    <!-- Button Trigger Modal Close -->
+                    <div>
+                        <button type="button" class="uk-button uk-button-danger uk-preserve-color" uk-toggle="target: #close-<?= $dailyreport['id'] ?>"><?=lang('Global.close')?></button>
+                    </div>
+                    <!-- Button Trigger Modal Close End -->
 
-                            <!-- Button Trigger Modal Withdraw -->
-                            <div>
-                                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #withdraw"><?=lang('Global.withdraw')?></button>
-                            </div>
-                            <!-- Button Trigger Modal Withdraw End -->
-                            
-                            <!-- Button Trigger Modal CashInOut -->
-                            <div>
-                                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.cashin/out')?></button>
-                            </div>
-                            <!-- Button Trigger Modal CashInOut End -->
-                        </div>
-                    <?php }
-                }
-            }
+                    <!-- Button Trigger Modal Withdraw -->
+                    <div>
+                        <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #withdraw"><?=lang('Global.withdraw')?></button>
+                    </div>
+                    <!-- Button Trigger Modal Withdraw End -->
+                    
+                    <!-- Button Trigger Modal CashInOut -->
+                    <div>
+                        <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.cashin/out')?></button>
+                    </div>
+                    <!-- Button Trigger Modal CashInOut End -->
+                </div>
+            <?php }
         } ?>
     </div>
 </div>
@@ -55,29 +51,98 @@
 <?= view('Views/Auth/_message_block') ?>
 
 <!-- Modal Close NOT DONE YET -->
-<?php foreach ($dailyreports as $dayrep) { ?>
-    <div uk-modal class="uk-flex-top" id="close-<?= $dayrep['id'] ?>">
+<?php if (!empty($dailyreport)) { ?>
+    <div uk-modal class="uk-flex-top" id="close-<?= $dailyreport['id'] ?>">
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
                 <div class="uk-modal-header">
                     <h3 class="tm-h2 uk-text-center"><?=lang('Global.close')?></h3>
                 </div>
                 <div class="uk-modal-body">
-                    <form class="uk-form-stacked" role="form" action="dayrep/close/<?= $dayrep['id'] ?>" method="post">
-                        <?= csrf_field() ?>
-
-                        <hr>
-
-                        <div class="uk-margin">
-                            <button type="submit" class="uk-button uk-button-primary uk-width-1-1" style="border-radius: 10px;"><?=lang('Global.close')?></button>
+                    <div class="uk-margin">
+                        <h5 class="tm-h3"><?= lang('Global.systemreceipts') ?></h5>
+                        <div class="uk-child-width-1-2" uk-grid>
+                            <div><?= lang('Global.cashflow') ?></div>
+                            <div class="uk-text-right">Rp <?= number_format($cashflow,0,',','.') ?></div>
                         </div>
-                    </form>
+
+                        <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
+                            <div><?= lang('Global.cashsales') ?></div>
+                            <div class="uk-text-right">Rp <?= number_format($cashtrxvalue,0,',','.') ?></div>
+                        </div>
+
+                        <hr class="uk-margin-small-top uk-margin-small-bottom">
+                        
+                        <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
+                            <div><?= lang('Global.expectedcash') ?></div>
+                            <div class="uk-text-right">Rp <?= number_format($expectedcash,0,',','.') ?></div>
+                        </div>
+                        
+                        <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
+                            <div><?= lang('Global.noncashreceived') ?></div>
+                            <div class="uk-text-right">Rp <?= number_format($noncashtrxvalue,0,',','.') ?></div>
+                        </div>
+
+                        <hr class="uk-margin-small-top uk-margin-small-bottom">
+                        
+                        <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
+                            <div><?= lang('Global.totalsystemrec') ?></div>
+                            <div class="uk-text-right">Rp <?= number_format($totalsystemrec,0,',','.') ?></div>
+                        </div>
+                    </div>
+
+                    <hr class="uk-divider-icon">
+
+                    <div class="uk-margin">
+                        <h5 class="tm-h3"><?= lang('Global.actualreceipts') ?></h5>
+                        <form class="uk-form-stacked" role="form" action="dayrep/close/<?= $dailyreport['id'] ?>" method="post">
+                            <?= csrf_field() ?>
+
+                            <div class="uk-form-controls uk-margin">
+                                <input type="number" class="uk-input cash" style="border-radius: 5px;" id="actualcash" name="actualcash" placeholder="<?=lang('Global.cashreceived')?>" required />
+                                <label class="uk-h6 uk-margin-small-left uk-text-muted"><?= lang('Global.includeinitcash') ?></label>
+                            </div>
+
+                            <div class="uk-form-controls uk-margin">
+                                <input type="number" class="uk-input noncash" style="border-radius: 5px;" id="actualnoncash" name="actualnoncash" placeholder="<?=lang('Global.noncashreceived')?>" required />
+                            </div>
+
+                            <div class="uk-margin" uk-grid>
+                                <div class="uk-width-1-2">
+                                    <div class=""><?=lang('Global.difference')?></div>
+                                </div>
+                                <div class="uk-width-1-2 uk-text-right">
+                                    <div class="uk-text-danger" id="fprice" value="0">-Rp <?= number_format($totalsystemrec,0,',','.') ?></div>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="uk-margin">
+                                <button type="submit" class="uk-button uk-button-primary uk-width-1-1" style="border-radius: 10px;"><?=lang('Global.close')?></button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 <?php } ?>
 <!-- Modal Close End -->
+<script>
+$(document).ready(function(){
+    
+    $("#actualcash").change(function(){
+        var cash =  $("#actualcash").val();
+        var noncash =  $("#actualnoncash").val();
+        var trec  = <?=$totalsystemrec?>;
+    
+        var fprice = (cash + noncash) - trec;
+        alert(fprice);
+        document.getElementById('fprice').innerHTML = fprice;
+    });
+});
+</script>
 
 <!-- Modal Open -->
 <div uk-modal class="uk-flex-top" id="open">
@@ -172,10 +237,10 @@
                         Webcam.attach( '#my_camera' );
 
                         function take_snapshot() {
-                            Webcam.snap( function(data_uri) {
+                            Webcam.snap(function(data_uri){
                                 $(".image-tag").val(data_uri);
                                 document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
-                            } );
+                            });
                         }
                     </script>
                     <!-- Webcam Cash End -->

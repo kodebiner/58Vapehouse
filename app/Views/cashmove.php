@@ -33,7 +33,7 @@
                 <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addWallMove')?></h5>
             </div>
             <div class="uk-modal-body">
-                <form class="uk-form-stacked" role="form" action="cashmove/create" method="post">
+                <form class="uk-form-stacked" role="form" action="walletmove/create" method="post">
                     <?= csrf_field() ?>
 
                     <div class="uk-margin">
@@ -49,9 +49,9 @@
                         <div class="uk-form-controls">
                             <select class="uk-select" name="origin" id="sel_ori">
                                 <option><?=lang('Global.origin')?></option>
-                                      <?php foreach ($cashmans as $cas) { ?>
+                                    <?php foreach ($cashmans as $cas) { ?>
                                         <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
-                                      <?php } ?>
+                                    <?php  } ?>
                             </select>
                         </div>
                     </div>
@@ -63,9 +63,9 @@
                         <div class="uk-form-controls">
                             <select class="uk-select" name="destination" id="sel_des">
                                 <option><?=lang('Global.destination')?></option>
-                                      <?php foreach ($cashmans as $cas) { ?>
+                                    <?php foreach ($cashmans as $cas) { ?>
                                         <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
-                                      <?php } ?>
+                                    <?php } ?>
                             </select>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                 <th class="uk-text-center uk-width-small">No</th>
                 <th class="uk-width-medium"><?=lang('Global.description')?></th>
                 <th class="uk-width-medium"><?=lang('Global.origin')?></th>
-                <th class="uk-text-center uk-width-small"><?=lang('Global.destination')?></th>
+                <th class="uk-width-small"><?=lang('Global.destination')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.quantity')?></th>
     
             </tr>

@@ -287,11 +287,10 @@ class Pay extends BaseController
             // Insert Cash
             $payment    = $PaymentModel->where('id',$input['payment'])->first();
             $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
-            $cashUp     = $varvalue + $bundvalue + $cashPlus['qty'];
 
             $cash = [
                 'id'    => $cashPlus['id'],
-                'qty'   => $cashUp,
+                'qty'   => $total + $cashPlus['qty'],
             ];
             $CashModel->save($cash);
         } elseif (!empty($input['duedate']) && !isset($input['payment']) && isset($input['firstpayment'])) {
@@ -308,7 +307,7 @@ class Pay extends BaseController
 
             // Insert First Payment
             $payment    = $PaymentModel->where('id',$input['firstpayment'])->first();
-            $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
+            $cashPlus   = $CashModel->find($payment['cashid']);
             $cashUp     = $cashPlus['qty'] + $input['firstpay'];
             $cash       = [
                 'id'    => $cashPlus['id'],
@@ -317,8 +316,8 @@ class Pay extends BaseController
             $CashModel->save($cash);
 
             // Insert Second Payment
-            $payment        = $PaymentModel->where('id',$input['secpayment'])->first();
-            $cashPlus2      = $CashModel->where('id',$payment['cashid'])->first();
+            $payment     = $PaymentModel->where('id',$input['secpayment'])->first();
+            $cashPlus2   = $CashModel->find($payment['cashid']);
             $cashUp2     = $cashPlus2['qty']+ $input['secondpay'];
             $cash2       = [
                 'id'    => $cashPlus2['id'],
@@ -332,11 +331,10 @@ class Pay extends BaseController
             if (!empty($input['payment'])) {
                 $payment    = $PaymentModel->where('id',$input['payment'])->first();
                 $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
-                $cashUp     = $varvalue + $bundvalue + $cashPlus['qty'];
     
                 $cash = [
                     'id'    => $cashPlus['id'],
-                    'qty'   => $cashUp,
+                    'qty'   => $total + $cashPlus['qty'],
                 ];
                 $CashModel->save($cash);
     
@@ -345,7 +343,7 @@ class Pay extends BaseController
                 
                 // Insert First Payment
                 $payment    = $PaymentModel->where('id',$input['firstpayment'])->first();
-                $cashPlus   = $CashModel->where('id',$payment['cashid'])->first();
+                $cashPlus   = $CashModel->find($payment['cashid']);
                 $cashUp     = $cashPlus['qty'] + $input['firstpay'];
                 $cash       = [
                     'id'    => $cashPlus['id'],
@@ -353,11 +351,11 @@ class Pay extends BaseController
                 ];
                 $CashModel->save($cash);
 
-                $payment        = $PaymentModel->where('id',$input['secpayment'])->first();
-                $cashPlus2      = $CashModel->where('id',$payment['cashid'])->first();
                 // Insert Second Payment
-                $cashUp2     = $cashPlus2['qty']+ $input['secondpay'];
-                $cash2       = [
+                $payment    = $PaymentModel->where('id',$input['secpayment'])->first();
+                $cashPlus2  = $CashModel->find($payment['cashid']);
+                $cashUp2    = $cashPlus2['qty']+ $input['secondpay'];
+                $cash2      = [
                     'id'    => $cashPlus2['id'],
                     'qty'   => $cashUp2,
                 ];
@@ -368,7 +366,7 @@ class Pay extends BaseController
         // Transaction Payment
         if (!isset($input['firstpayment']) && !isset($input['secpayment']) && isset($input['payment'])) {
             // Insert Cash
-            $payment = $PaymentModel->where('id',$input['payment'])->first();
+            $payment = $PaymentModel->find($input['payment']);
             $paymet = [
                 'paymentid'     => $payment['id'],
                 'transactionid' => $trxId,
@@ -379,7 +377,7 @@ class Pay extends BaseController
         } elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && empty($input['payment'])) {
             // Split Payment Method
             // First payment
-            $firstpayment = $PaymentModel->where('id',$input['firstpayment'])->first();
+            $firstpayment = $PaymentModel->find($input['firstpayment']);
             $paymet = [
                 'paymentid'     => $firstpayment['id'],
                 'transactionid' => $trxId,
@@ -388,11 +386,11 @@ class Pay extends BaseController
             $TrxpaymentModel->save($paymet);
 
             // Second Payment
-            $secpayment = $PaymentModel->where('id',$input['secpayment'])->first();
+            $secpayment = $PaymentModel->find($input['secpayment']);
             $pay = [
-                'paymentid'     =>$secpayment['cashid'],
-                'transactionid' =>$trxId,
-                'value'         =>$input['secondpay'],
+                'paymentid'     => $secpayment['cashid'],
+                'transactionid' => $trxId,
+                'value'         => $input['secondpay'],
             ];
             $TrxpaymentModel->save($pay);
         }

@@ -84,32 +84,19 @@ class DailyReport extends BaseController
         // Populating Data
         $outlets                = $OutletModel->findAll();
         $users                  = $UserModel->findAll();
-
-        // Creating Daily Report
-        $today                  = date('Y-m-d') .' 00:00:01';
-        $dailyreports           = $DailyReportModel->where('dateopen >', $today)->where('outletid', $this->data['outletPick'])->find();
+        
         $date                   = date_create();
         $tanggal                = date_format($date,'Y-m-d H:i:s');
         
-        if (empty($dailyreports)) {
-            $datadayrep = [
-                'dateopen'      => $tanggal,
-                'useridopen'    => $this->data['uid'],
-                'outletid'      => $this->data['outletPick'],
-                'initialcash'   => $input['initialcash'],
-            ];
-            $DailyReportModel->save($datadayrep);
-
-            // Insert Cash
-            $cash               = $CashModel->where('outletid', $this->data['outletPick'])->first();
-            $datacash = [
-                'id'            => $cash['id'],
-                'qty'           => $input['initialcash'] + $cash['qty'],
-            ];
-            $CashModel->save($datacash);
-        }
-
-        $dayrep = $DailyReportModel->where('dateopen >', $today)->find();
+        $datadayrep = [
+            'dateopen'      => $tanggal,
+            'useridopen'    => $this->data['uid'],
+            'outletid'      => $this->data['outletPick'],
+            'initialcash'   => $input['initialcash'],
+            'totalcashin'   => "0",
+            'totalcashout'  => "0"
+        ];
+        $DailyReportModel->save($datadayrep);
 
         // Return
         return redirect()->back();
@@ -136,6 +123,8 @@ class DailyReport extends BaseController
             'id'                => $id,
             'dateclose'         => $tanggal,
             'useridclose'       => $this->data['uid'],
+            'cashclose'         => $input['actualcash'],
+            'noncashclose'      => $input['actualnoncash'],
         ];
         $DailyReportModel->save($closedayrep);
 

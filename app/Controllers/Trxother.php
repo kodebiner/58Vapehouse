@@ -64,6 +64,9 @@ class Trxother extends BaseController
         $userOutlet         = $user->outletid;
         $outlets            = $OutletModel->findAll();
         $cash               = $CashModel->findAll();
+        $cashpayments       = $PaymentModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
+        
+        $noncashpayments    = $PaymentModel->notLike('name', 'Cash')->find();
         
         // Operator 
         if ($roleid === 4) {
@@ -78,69 +81,55 @@ class Trxother extends BaseController
 
         // Find Data for Daily Report
         $today                  = date('Y-m-d') .' 00:00:01';
-        $dailyreports           = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
+        $dailyreport            = $DailyReportModel->where('dateopen >', $today)->where('outletid', $this->data['outletPick'])->first();
 
-        // From Trx Other
-        $topups                 = $TrxotherModel->like('description', 'Top Up')->where('date >', $today)->find();
-        $debts                  = $TrxotherModel->like('description', 'Debt')->where('date >', $today)->find();
-        $cashinout              = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >', $today)->where('outletid', $this->data['outletPick'])->find();
+        // Cash Flow
+        if (!empty($dailyreport)) {
+            $cashflow           = (($dailyreport['initialcash'] + $dailyreport['totalcashin']) - $dailyreport['totalcashout']);
+            $outlet             = $OutletModel->find($this->data['outletPick']);
+            // Get Transaction Cash
+            $pettycash          = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
+            $cashpayment        = $PaymentModel->where('cashid', $pettycash['id'])->first();
+            $cashtrx            = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('paymentid', $cashpayment['id'])->find();
+            $cashtrxvalue       = array_sum(array_column($cashtrx, 'value'));
+
+            // Get Transaction Non Cash
+            $noncash            = $CashModel->notLike('name', 'Petty Cash')->find();
+            $noncashid          = array();
+            foreach ($noncash as $nocash) {
+                $noncashid[] = $nocash['id'];
+            }
+            $noncashpayments    = $PaymentModel->whereIn('cashid', $noncashid)->find();
+            $noncashpaymentid   = array();
+            foreach ($noncashpayments as $noncashpayment) {
+                $noncashpaymentid[] = $noncashpayment['id'];
+            }
+            $noncashtrx         = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->whereIn('paymentid', $noncashpaymentid)->find();
+            $noncashtrxvalue    = array_sum(array_column($noncashtrx, 'value'));
+
+            // Expected Cash
+            $expectedcash       = ($cashflow + $cashtrxvalue);
+
+            // Total System Receipts
+            $totalsystemrec     = $expectedcash + $noncashtrxvalue;
+        }
+        
         
         // Parsing data to view
-        $data                   = $this->data;
-        $data['title']          = lang('Global.cashinout');
-        $data['description']    = lang('Global.cashinoutListDesc');
-        $data['trxothers']      = $trxothers;
-        $data['topups']         = $topups;
-        $data['debts']          = $debts;
-        $data['cashinout']      = $cashinout;
-        $data['users']          = $users;
-        $data['cash']           = $cash;
-        $data['outlets']        = $outlets;
-        $data['dailyreports']   = $dailyreports;
-        $data['today']          = $today;
-
-        // Get Transaction ID
-        $transactions                   = $TransactionModel->where('date >', $today)->where('outletid', $this->data['outletPick'])->find();
-        $data['transactions']           = $transactions;
-        
-        // Get Trx Detail ID
-        foreach ($transactions as $trx) {
-            $trxdetails                 = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-            $data['trxdetails']         = $trxdetails;
-            
-            // Get Variant ID & Bunlde ID
-            foreach ($trxdetails as $trxdet) {
-                // Get Variant ID
-                $variants               = $VariantModel->where('id', $trxdet['variantid'])->find();
-                $data['variants']       = $variants;
-                
-                // Get Product ID
-                foreach ($variants as $variant) {
-                    $products           = $ProductModel->where('id', $variant['productid'])->find();
-                    $data['products']   = $products;
-                }
-
-                // Get Bundle ID
-                $bundles                = $BundleModel->where('id', $trxdet['bundleid'])->find();
-                $data['bundles']        = $bundles;
-                
-                    // Get Bundle Detail ID
-                foreach ($bundles as $bundle) {
-                    $bundets            = $BundledetaiModel->where('bundleid', $bundle['id'])->find();
-                    $data['bundets']    = $bundets;
-                }
-            }
-            
-            // Get Trx Payment
-            $trxpayments                = $TrxpaymentModel->where('transactionid', $trx['id'])->find();
-            $data['trxpayments']        = $trxpayments;
-
-            // Get Payment ID
-            foreach ($trxpayments as $trxpay) {
-                $payments               = $PaymentModel->where('id', $trxpay['paymentid'])->find();
-                $data['payments']       = $payments;
-            }
-        }
+        $data                       = $this->data;
+        $data['title']              = lang('Global.cashinout');
+        $data['description']        = lang('Global.cashinoutListDesc');
+        $data['trxothers']          = $trxothers;
+        $data['users']              = $users;
+        $data['cash']               = $cash;
+        $data['outlets']            = $outlets;
+        $data['dailyreport']        = $dailyreport;
+        $data['today']              = $today;
+        $data['cashflow']           = $cashflow;
+        $data['cashtrxvalue']       = $cashtrxvalue;
+        $data['expectedcash']       = $expectedcash;
+        $data['noncashtrxvalue']    = $noncashtrxvalue;
+        $data['totalsystemrec']     = $totalsystemrec;
 
         return view ('Views/cash', $data);
     }
@@ -148,27 +137,28 @@ class Trxother extends BaseController
     public function create()
     {
         // Calling Model
-        $TrxotherModel  = new TrxotherModel;
-        $UserModel      = new UserModel;
-        $CashModel      = new CashModel;
+        $TrxotherModel      = new TrxotherModel;
+        $UserModel          = new UserModel;
+        $CashModel          = new CashModel;
+        $DailyReportModel   = new DailyReportModel;
         
         // initialize
-        $input          = $this->request->getPost();
-        $cash           = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
+        $input              = $this->request->getPost();
+        $cash               = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
 
         // Get Date
-        $date           = date_create();
-        $tanggal        = date_format($date,'Y-m-d H:i:s');
+        $date               = date_create();
+        $tanggal            = date_format($date,'Y-m-d H:i:s');
 
         // Image Capture
-        $img            = $input['image'];
-        $folderPath     = "img";
-        $image_parts    = explode(";base64,", $img);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type     = $image_type_aux[1];
-        $image_base64   = base64_decode($image_parts[1]);
-        $fileName       = uniqid() . '.png';
-        $file           = $folderPath . $fileName;
+        $img                = $input['image'];
+        $folderPath         = "img";
+        $image_parts        = explode(";base64,", $img);
+        $image_type_aux     = explode("image/", $image_parts[0]);
+        $image_type         = $image_type_aux[1];
+        $image_base64       = base64_decode($image_parts[1]);
+        $fileName           = uniqid() . '.png';
+        $file               = $folderPath . $fileName;
         file_put_contents($file, $image_base64);
 
         // Data Input
@@ -182,7 +172,7 @@ class Trxother extends BaseController
             'qty'           => $input['quantity'],
             'photo'         => $fileName,
         ];
-        // Save Data Cash
+        // Save Data Trx Other
         $TrxotherModel->save($data);
 
         // Plus & Minus Cash Wallet
@@ -198,9 +188,27 @@ class Trxother extends BaseController
         ];
         $CashModel->save($wallet);
 
+        // Find Data for Daily Report
+        $today              = date('Y-m-d') .' 00:00:01';
+        $dailyreports       = $DailyReportModel->where('dateopen >', $today)->find();
+        foreach ($dailyreports as $dayrep) {
+            if ($input['cash'] === "0") {
+                $tcashin = [
+                    'id'            => $dayrep['id'],
+                    'totalcashin'   => $dayrep['totalcashin'] + $input['quantity'],
+                ];
+                $DailyReportModel->save($tcashin);
+            } else {
+                $tcashout = [
+                    'id'            => $dayrep['id'],
+                    'totalcashout'  => $dayrep['totalcashout'] + $input['quantity'],
+                ];
+                $DailyReportModel->save($tcashout);
+            }
+        }
+
         // return
         return redirect()->back()->with('message', lang('Global.saved'));
-
     }
 
     public function withdraw()
@@ -209,6 +217,7 @@ class Trxother extends BaseController
         $TrxotherModel  = new TrxotherModel;
         $UserModel      = new UserModel;
         $CashModel      = new CashModel;
+        $DailyReportModel   = new DailyReportModel;
         
         // initialize
         $input          = $this->request->getPost();
@@ -252,8 +261,19 @@ class Trxother extends BaseController
         ];
         $CashModel->save($wallet);
 
+        // Find Data for Daily Report
+        $today              = date('Y-m-d') .' 00:00:01';
+        $dailyreports       = $DailyReportModel->where('dateopen >', $today)->find();
+
+        foreach ($dailyreports as $dayrep) {
+            $tcashout = [
+                'id'            => $dayrep['id'],
+                'totalcashout'  => $dayrep['totalcashout'] + $input['value'],
+            ];
+            $DailyReportModel->save($tcashout);
+        }
+
         // return
         return redirect()->back()->with('message', lang('Global.saved'));
-
     }
 }

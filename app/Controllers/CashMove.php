@@ -20,14 +20,7 @@ class CashMove extends BaseController
         $outlets                = $OutletModel->findAll();
         $cash                   = $CashModel->findAll();
         $cashmoves              = $CashmoveModel->findAll();
-
-
-        // get outlet
-        if ($this->data['outletPick'] === null) {
-            $cashman      = $CashModel->orderBy('id', 'DESC')->findAll();
-        } else {
-            $cashman      = $CashModel->where('outletid', $this->data['outletPick'])->find();
-        }
+        $cashman                = $CashModel->orderBy('id', 'DESC')->findAll();
 
         // Parsing Data to View
         $data                   = $this->data;
