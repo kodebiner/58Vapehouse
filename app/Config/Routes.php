@@ -229,6 +229,10 @@ $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('keuntungandasar', 'Report::keuntungandasar', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('diskon', 'Report::diskon', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('payment', 'Report::payment', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('product', 'Report::product', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('presence', 'Report::presence', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('presence/(:num)', 'Report::presencedetail/$1', ['filter' => 'role:owner,supervisor,operator']);
+
 });
 
 // Sop Routes

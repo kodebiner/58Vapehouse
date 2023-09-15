@@ -5,27 +5,27 @@
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-  google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
 
-      function drawChart() {
+    function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Task', 'Hours per Day'],
-          ['<?=lang('Global.discount')?> <?=lang('Global.variant')?>', <?php echo ' '.$trxvardis.'';?>],
-          ['<?=lang('Global.discount')?> <?=lang('Global.transaction')?>', <?php echo ' '.$trxdisc.'';?>],
-          ['<?=lang('Global.discount')?> <?=lang('Global.point')?>',  <?php echo ' '.$poindisc.'';?>],
-          ['<?=lang('Global.discount')?> <?=lang('Global.member')?>',  <?php echo ' '.$memberdis.'';?>],
+            ['Task', 'Hours per Day'],
+            ['<?=lang('Global.discount')?> <?=lang('Global.variant')?>', <?php echo ' '.$trxvardis.'';?>],
+            ['<?=lang('Global.discount')?> <?=lang('Global.transaction')?>', <?php echo ' '.$trxdisc.'';?>],
+            ['<?=lang('Global.discount')?> <?=lang('Global.point')?>',  <?php echo ' '.$poindisc.'';?>],
+            ['<?=lang('Global.discount')?> <?=lang('Global.memberDiscount')?>',  <?php echo ' '.$memberdis.'';?>],
         ]);       
 
         var options = {
-          title: 'Discount Percentage %'
+            title: 'Discount Percentage %'
             
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 
         chart.draw(data, options);
-      }
+    }
 </script>
 <link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
 <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
@@ -75,8 +75,8 @@
     </div>
 
     <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin-top uk-width-1-1@m">
-      <h3 class="uk-card-title"><?=lang('Global.discount')?></h3>
-      <div id="piechart"></div>
+        <h3 class="uk-card-title"><?=lang('Global.discount')?></h3>
+        <div id="piechart"></div>
     </div>
 
     <div class="uk-child-width-1-2@s uk-grid-match uk-margin-top" uk-grid>
@@ -112,9 +112,9 @@
             <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.total')?> <?=lang('Global.discount')?> <?=lang('Global.variant')?></p>
             <hr>
             <div>
-              <div uk-grid>
-                  <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxvardis,2,',','.');" ";?></div>
-              </div>
+                <div uk-grid>
+                    <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxvardis,2,',','.');" ";?></div>
+                </div>
             </div>
         </div>
     </div>
@@ -125,14 +125,13 @@
             <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.total')?> <?=lang('Global.discount')?> <?=lang('Global.transaction')?></p>
             <hr>
             <div>
-              <div uk-grid>
-                  <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxdisc,2,',','.');" ";?></div>
-              </div>
+                <div uk-grid>
+                    <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxdisc,2,',','.');" ";?></div>
+                </div>
             </div>
         </div>
     </div>
-
-  </div>
+</div>
 
 <!-- End Of Page Heading -->
 
