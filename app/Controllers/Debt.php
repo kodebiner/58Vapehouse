@@ -17,26 +17,27 @@ use App\Models\TrxdetailModel;
 use App\Models\TrxotherModel;
 use App\models\TrxpaymentModel;
 use App\Models\DebtModel;
+use App\Models\DailyReportModel;
 
 class Debt extends BaseController
 {
     public function indextrx()
     {
         // Calling Models
-        $BundleModel            = new BundleModel();
-        $BundledetModel         = new BundledetailModel();
-        $CashModel              = new CashModel();
-        $OutletModel            = new OutletModel();
-        $UserModel              = new UserModel();
-        $MemberModel            = new MemberModel();
-        $PaymentModel           = new PaymentModel();
-        $ProductModel           = new ProductModel();
-        $VariantModel           = new VariantModel();
-        $StockModel             = new StockModel();
-        $TransactionModel       = new TransactionModel();
-        $TrxdetailModel         = new TrxdetailModel();
-        $TrxpaymentModel        = new TrxpaymentModel();
-        $DebtModel              = new DebtModel();
+        $BundleModel            = new BundleModel;
+        $BundledetModel         = new BundledetailModel;
+        $CashModel              = new CashModel;
+        $OutletModel            = new OutletModel;
+        $UserModel              = new UserModel;
+        $MemberModel            = new MemberModel;
+        $PaymentModel           = new PaymentModel;
+        $ProductModel           = new ProductModel;
+        $VariantModel           = new VariantModel;
+        $StockModel             = new StockModel;
+        $TransactionModel       = new TransactionModel;
+        $TrxdetailModel         = new TrxdetailModel;
+        $TrxpaymentModel        = new TrxpaymentModel;
+        $DebtModel              = new DebtModel;
 
         // Populating Data
         $bundles                = $BundleModel->findAll();
@@ -79,10 +80,10 @@ class Debt extends BaseController
     public function indexdebt()
     {
         // Calling Models
-        $OutletModel            = new OutletModel();
-        $MemberModel            = new MemberModel();
-        $TransactionModel       = new TransactionModel();
-        $DebtModel              = new DebtModel();
+        $OutletModel            = new OutletModel;
+        $MemberModel            = new MemberModel;
+        $TransactionModel       = new TransactionModel;
+        $DebtModel              = new DebtModel;
 
         // Populating Data
         $outlets                = $OutletModel->findAll();
@@ -108,12 +109,13 @@ class Debt extends BaseController
         $validation = \Config\Services::validation();
 
         // Calling Models
-        $DebtModel              = new DebtModel();
-        $CashModel              = new CashModel();
-        $TransactionModel       = new TransactionModel();
-        $TrxotherModel          = new TrxotherModel();
-        $PaymentModel           = new PaymentModel();
-        $MemberModel            = new MemberModel();
+        $DebtModel              = new DebtModel;
+        $CashModel              = new CashModel;
+        $TransactionModel       = new TransactionModel;
+        $TrxotherModel          = new TrxotherModel;
+        $PaymentModel           = new PaymentModel;
+        $MemberModel            = new MemberModel;
+        $DailyReportModel       = new DailyReportModel;
 
         // Populating Data
         $debts                  = $DebtModel->find($id);
@@ -176,6 +178,17 @@ class Debt extends BaseController
         ];
         $CashModel->save($wallet);
 
+        // Find Data for Daily Report
+        $today                  = date('Y-m-d') .' 00:00:01';
+        $dailyreports           = $DailyReportModel->where('dateopen >', $today)->find();
+        foreach ($dailyreports as $dayrep) {
+            $tcashin = [
+                'id'            => $dayrep['id'],
+                'totalcashin'   => $dayrep['totalcashin'] + $input['value'],
+            ];
+            $DailyReportModel->save($tcashin);
+        }
+
         // Return
         return redirect()->back()->with('massage', lang('global.saved'));
     }
@@ -183,19 +196,19 @@ class Debt extends BaseController
     public function indextopup()
     {
         // Calling Models
-        $BundleModel            = new BundleModel();
-        $BundledetModel         = new BundledetailModel();
-        $CashModel              = new CashModel();
-        $OutletModel            = new OutletModel();
-        $UserModel              = new UserModel();
-        $MemberModel            = new MemberModel();
-        $PaymentModel           = new PaymentModel();
-        $ProductModel           = new ProductModel();
-        $VariantModel           = new VariantModel();
-        $StockModel             = new StockModel();
-        $TransactionModel       = new TransactionModel();
-        $TrxotherModel          = new TrxotherModel();
-        $TrxpaymentModel        = new TrxpaymentModel();
+        $BundleModel            = new BundleModel;
+        $BundledetModel         = new BundledetailModel;
+        $CashModel              = new CashModel;
+        $OutletModel            = new OutletModel;
+        $UserModel              = new UserModel;
+        $MemberModel            = new MemberModel;
+        $PaymentModel           = new PaymentModel;
+        $ProductModel           = new ProductModel;
+        $VariantModel           = new VariantModel;
+        $StockModel             = new StockModel;
+        $TransactionModel       = new TransactionModel;
+        $TrxotherModel          = new TrxotherModel;
+        $TrxpaymentModel        = new TrxpaymentModel;
 
         // Populating Data
         $bundles                = $BundleModel->findAll();

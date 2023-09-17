@@ -123,9 +123,9 @@
                         <div class="uk-width-2-3">Cashier: <?= $fullname ?></div>
                         <div class="uk-text-right uk-width-1-3">
                             <?php if(!empty($transactionid)){
-                                if ($transactions['paymentid'] === "0") { ?>
+                                if ($transactions['paymentid'] === "0" && !empty($transactions['amountpaid'])) { ?>
                                     <?= lang('Global.splitbill')?>
-                                <?php } else {
+                                <?php } elseif ($transactions['paymentid'] !== "0" && ($transactions['amountpaid'] !== "0")) {
                                     foreach($payments as $payment) {
                                         if ($transactions['paymentid'] === $payment['id'] && ($transactions['paymentid'] !== "0")) {
                                             foreach ($trxpayments as $trxpay){
@@ -138,7 +138,9 @@
                                             }
                                         }
                                     }
-                                }
+                                } else { ?>
+                                    <?= lang('Global.debt')?>
+                                <?php }
                             } elseif (!empty($bookings['id'])) { ?>
                                 <?= lang('Global.bookorder')?>
                             <?php } ?>
@@ -320,7 +322,7 @@
                             }?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if ($change !== "0"){
+                            <?php if ($change > "0"){
                                 $changes = lang('Global.change');
                                 echo "<div class='uk-width-1-2'>$changes</div>";
                                 echo "<div class='uk-width-1-2 uk-text-right'>$change</div>";
@@ -365,8 +367,8 @@
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (!empty($totaldebt)) {
-                                 $totdebt = lang('Global.totaldebt');
-                                 echo " <div class='uk-width-1-2 uk-text-bold'>$totdebt</div>";
+                                $totdebt = lang('Global.totaldebt');
+                                echo " <div class='uk-width-1-2 uk-text-bold'>$totdebt</div>";
                                 echo "<div class='uk-width-1-2 uk-text-right'>$totaldebt</div>";
                             }?> 
                         </div>

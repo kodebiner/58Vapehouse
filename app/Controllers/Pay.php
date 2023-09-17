@@ -20,6 +20,8 @@ use App\Models\TransactionModel;
 use App\Models\TrxotherModel;
 use App\Models\TrxdetailModel;
 use App\models\TrxpaymentModel;
+use App\models\DailyReportModel;
+
 class Pay extends BaseController
 {
     public function create()
@@ -139,28 +141,62 @@ class Pay extends BaseController
         }
         
         $value = $subtotal - $memberdisc - $discount - $poin;
-
         
-        if (!empty($input['payment'])) {
+        if (!empty($input['payment']) && empty($input['duedate'])) {
             $paymentid = $input['payment'];
         } else {
             $paymentid = '0';
         }
         
-        $trx = [
-            'outletid'      => $this->data['outletPick'],
-            'userid'        => $this->data['uid'],
-            'memberid'      => $memberid,
-            'paymentid'     => $paymentid,
-            'value'         => $value,
-            'disctype'      => $input['disctype'],
-            'discvalue'     => $input['discvalue'],
-            'date'          => $date,
-            'pointused'     => $poin,
-            'amountpaid'    => $input['value'],
-            'photo'         => $fileName,
-        ];
-        $TransactionModel->insert($trx);
+        if (!empty($input['value'])) {
+            // Single Payment
+            $trx = [
+                'outletid'      => $this->data['outletPick'],
+                'userid'        => $this->data['uid'],
+                'memberid'      => $memberid,
+                'paymentid'     => $paymentid,
+                'value'         => $value,
+                'disctype'      => $input['disctype'],
+                'discvalue'     => $input['discvalue'],
+                'date'          => $date,
+                'pointused'     => $poin,
+                'amountpaid'    => $input['value'],
+                'photo'         => $fileName,
+            ];
+            $TransactionModel->insert($trx);
+        } elseif (!empty($input['firstpay'])) {
+            // Splitbill Payment
+            $trx = [
+                'outletid'      => $this->data['outletPick'],
+                'userid'        => $this->data['uid'],
+                'memberid'      => $memberid,
+                'paymentid'     => $paymentid,
+                'value'         => $value,
+                'disctype'      => $input['disctype'],
+                'discvalue'     => $input['discvalue'],
+                'date'          => $date,
+                'pointused'     => $poin,
+                'amountpaid'    => (Int)$input['firstpay'] + (Int)$input['secondpay'],
+                'photo'         => $fileName,
+            ];
+            $TransactionModel->insert($trx);
+        } else {
+            // Debt
+            $trx = [
+                'outletid'      => $this->data['outletPick'],
+                'userid'        => $this->data['uid'],
+                'memberid'      => $memberid,
+                'paymentid'     => $paymentid,
+                'value'         => $value,
+                'disctype'      => $input['disctype'],
+                'discvalue'     => $input['discvalue'],
+                'date'          => $date,
+                'pointused'     => $poin,
+                'amountpaid'    => "0",
+                'photo'         => $fileName,
+            ];
+            $TransactionModel->insert($trx);
+        }
         $trxId = $TransactionModel->getInsertID();
         
         // Transaction Detail & Stock
@@ -364,7 +400,7 @@ class Pay extends BaseController
         }
         
         // Transaction Payment
-        if (!isset($input['firstpayment']) && !isset($input['secpayment']) && isset($input['payment'])) {
+        if (!isset($input['firstpayment']) && !isset($input['secpayment']) && isset($input['payment']) && !isset($input['duedate'])) {
             // Insert Cash
             $payment = $PaymentModel->find($input['payment']);
             $paymet = [
@@ -374,7 +410,7 @@ class Pay extends BaseController
             ];
             $TrxpaymentModel->save($paymet);
 
-        } elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && empty($input['payment'])) {
+        } elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && !isset($input['duedate'])) {
             // Split Payment Method
             // First payment
             $firstpayment = $PaymentModel->find($input['firstpayment']);
@@ -393,6 +429,13 @@ class Pay extends BaseController
                 'value'         => $input['secondpay'],
             ];
             $TrxpaymentModel->save($pay);
+        } elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && !isset($input['payment']) && isset($input['duedate'])) {
+            $paymet = [
+                'paymentid'     => "0",
+                'transactionid' => $trxId,
+                'value'         => $total,
+            ];
+            $TrxpaymentModel->save($paymet);
         }
 
         // Gconfig poin setup
@@ -1163,56 +1206,68 @@ class Pay extends BaseController
     public function topup()
     {
         // Declaration Model
-        $MemberModel    = new MemberModel;
-        $TrxotherModel  = new TrxotherModel;
-        $CashModel      = new CashModel;
+        $MemberModel            = new MemberModel;
+        $TrxotherModel          = new TrxotherModel;
+        $CashModel              = new CashModel;
+        $DailyReportModel       = new DailyReportModel;
 
         // Get Data
-        $cashinout      = $TrxotherModel->findAll();
-        $input          = $this->request->getPost();
-        $cash           = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
-        $date           = date_create();
-        $tanggal        = date_format($date,'Y-m-d H:i:s');
-        $member         = $MemberModel->where('id',$input['customerid'])->first();
-        $poin           = $member['poin'] + $input['value'];
+        $cashinout              = $TrxotherModel->findAll();
+        $input                  = $this->request->getPost();
+        $cash                   = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
+        $date                   = date_create();
+        $tanggal                = date_format($date,'Y-m-d H:i:s');
+        $member                 = $MemberModel->where('id',$input['customerid'])->first();
+        $poin                   = $member['poin'] + $input['value'];
 
         // Image Capture
-        $img            = $input['image'];
-        $folderPath     = "img";
-        $image_parts    = explode(";base64,", $img);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type     = $image_type_aux[1];
-        $image_base64   = base64_decode($image_parts[1]);
-        $fileName       = uniqid() . '.png';
-        $file           = $folderPath . $fileName;
+        $img                    = $input['image'];
+        $folderPath             = "img";
+        $image_parts            = explode(";base64,", $img);
+        $image_type_aux         = explode("image/", $image_parts[0]);
+        $image_type             = $image_type_aux[1];
+        $image_base64           = base64_decode($image_parts[1]);
+        $fileName               = uniqid() . '.png';
+        $file                   = $folderPath . $fileName;
         file_put_contents($file, $image_base64);
         
         // Cash In 
         $cashin = [
-            'userid'        => $this->data['uid'],
-            'outletid'      => $this->data['outletPick'],
-            'cashid'        => $cash['id'],
-            'description'   => lang('Global.topup')." - ".$member['name'] ,
-            'type'          => "0",
-            'date'          => $tanggal,
-            'qty'           => $input['value'],
-            'photo'         => $fileName,
+            'userid'            => $this->data['uid'],
+            'outletid'          => $this->data['outletPick'],
+            'cashid'            => $cash['id'],
+            'description'       => lang('Global.topup')." - ".$member['name'] ,
+            'type'              => "0",
+            'date'              => $tanggal,
+            'qty'               => $input['value'],
+            'photo'             => $fileName,
         ];
         $TrxotherModel->save($cashin);
         
         // plus member poin
         $data=[
-            'id'   => $input['customerid'],
-            'poin' => $poin,
+            'id'                => $input['customerid'],
+            'poin'              => $poin,
         ];
         $MemberModel->save($data);
         
         $cas = $input['value'] + $cash['qty'];
         $wallet = [
-            'id'    => $cash['id'],
-            'qty'   => $cas,
+            'id'                => $cash['id'],
+            'qty'               => $cas,
         ];
         $CashModel->save($wallet);
+
+        // Find Data for Daily Report
+        $today                  = date('Y-m-d') .' 00:00:01';
+        $dailyreports           = $DailyReportModel->where('dateopen >', $today)->find();
+        foreach ($dailyreports as $dayrep) {
+            $tcashin = [
+                'id'            => $dayrep['id'],
+                'totalcashin'   => $dayrep['totalcashin'] + $input['value'],
+            ];
+            $DailyReportModel->save($tcashin);
+        }
 
         // return
         return redirect()->back()->with('message', lang('Global.saved'));

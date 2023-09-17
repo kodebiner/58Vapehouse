@@ -23,23 +23,32 @@ class DailyReport extends BaseController
     public function index()
     {
         // Calling Models
-        $BundleModel            = new BundleModel();
-        $BundledetModel         = new BundledetailModel();
-        $CashModel              = new CashModel();
-        $OutletModel            = new OutletModel();
-        $UserModel              = new UserModel();
-        $PaymentModel           = new PaymentModel();
-        $ProductModel           = new ProductModel();
-        $VariantModel           = new VariantModel();
-        $StockModel             = new StockModel();
-        $TransactionModel       = new TransactionModel();
-        $TrxotherModel          = new TrxotherModel();
-        $TrxpaymentModel        = new TrxpaymentModel();
-        $DebtModel              = new DebtModel();
+        $TransactionModel   = new TransactionModel;
+        $TrxdetailModel     = new TrxdetailModel;
+        $TrxpaymentModel    = new TrxpaymentModel;
+        $TrxotherModel      = new TrxotherModel;
+        $ProductModel       = new ProductModel;
+        $VariantModel       = new VariantModel;
+        $BundleModel        = new BundleModel;
+        $BundledetailModel  = new BundledetailModel;
+        $PaymentModel       = new PaymentModel;
+        $DebtModel          = new DebtModel;
+        $UserModel          = new UserModel;
+        $CashModel          = new CashModel;
+        $OutletModel        = new OutletModel;
+        $DailyReportModel   = new DailyReportModel;
+        $StockModel         = new StockModel;
 
         // Populating Data
+        $today                  = date('Y-m-d') .' 00:00:01';
+        if ($this->data['outletPick'] === null) {
+            $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->find();
+        } else {
+            $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->find();
+        }
+
         $bundles                = $BundleModel->findAll();
-        $bundets                = $BundledetModel->findAll();
+        $bundets                = $BundledetailModel->findAll();
         $cash                   = $CashModel->findAll();
         $outlets                = $OutletModel->findAll();
         $users                  = $UserModel->findAll();
@@ -53,8 +62,9 @@ class DailyReport extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.topup');
-        $data['description']    = lang('Global.topupListDesc');
+        $data['title']          = lang('Global.dailyreport');
+        $data['description']    = lang('Global.dailyreportListDesc');
+        $data['dailyreports']   = $dailyreports;
         $data['bundles']        = $bundles;
         $data['bundets']        = $bundets;
         $data['cash']           = $cash;
@@ -68,7 +78,7 @@ class DailyReport extends BaseController
         $data['trxothers']      = $trxothers;
         $data['trxpayments']    = $trxpayments;
 
-        return view('Views/topup', $data);
+        return view('Views/dailyreport', $data);
     }
 
     public function open() {
@@ -102,7 +112,7 @@ class DailyReport extends BaseController
         return redirect()->back();
     }
 
-    public function close($id) {
+    public function close() {
         // Calling Models
         $UserModel              = new UserModel();
         $DailyReportModel       = new DailyReportModel();
@@ -115,12 +125,12 @@ class DailyReport extends BaseController
 
         // Creating Daily Report
         $today                  = date('Y-m-d') .' 00:00:01';
-        $dailyreports           = $DailyReportModel->where('dateopen >', $today)->find();
+        $dailyreport            = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->first();
         $date                   = date_create();
         $tanggal                = date_format($date,'Y-m-d H:i:s');
         
         $closedayrep = [
-            'id'                => $id,
+            'id'                => $dailyreport['id'],
             'dateclose'         => $tanggal,
             'useridclose'       => $this->data['uid'],
             'cashclose'         => $input['actualcash'],

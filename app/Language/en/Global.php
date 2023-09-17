@@ -135,6 +135,14 @@ return [
     'profit'            => 'Profit',
     'net'               => 'Net',
     'gross'             => 'Gross',
+    'dateopen'          => 'Date Open',
+    'dateclose'         => 'Date Close',
+    'employeeopen'      => 'Employee Open',
+    'employeeclose'     => 'Employee Close',
+    'totalcashin'       => 'Total Cash In',
+    'totalcashout'      => 'Total Cash Out',
+    'totalcashclose'    => 'Total Cash Closed',
+    'totalnoncashclose' => 'Total Non Cash Closed',
 
     // Button
     'edit'              => 'Edit',
@@ -209,6 +217,7 @@ return [
     'sop'               => 'Oprational Standar',
     'shift1'            => 'Shift 1',
     'shift2'            => 'Shift 2',
+    'dailyreport'       => 'Daily Report',
 
     // Title
     'employeeList'              => 'Employee List',
@@ -237,6 +246,7 @@ return [
     'cashinoutList'             => 'Cash List',
     'debtList'                  => 'Debt List',
     'topupList'                 => 'Top Up List',
+    'dailyreportList'           => 'Daily Report List',
     'dosop'                     => 'Do SOP',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
@@ -262,6 +272,7 @@ return [
     'cashinoutListDesc'         => 'List of all your cash',
     'debtListDesc'              => 'List of all your Debt',
     'topupListDesc'             => 'List of all your Top Up',
+    'dailyreportListDesc'       => 'List of all your Daily Report',
     'userProfileDesc'           => 'Information about your profile',
     'businessInfoDesc'          => 'Information about your business',
 ];

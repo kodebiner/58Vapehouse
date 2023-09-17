@@ -64,9 +64,6 @@ class Trxother extends BaseController
         $userOutlet         = $user->outletid;
         $outlets            = $OutletModel->findAll();
         $cash               = $CashModel->findAll();
-        $cashpayments       = $PaymentModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
-        
-        $noncashpayments    = $PaymentModel->notLike('name', 'Cash')->find();
         
         // Operator 
         if ($roleid === 4) {
@@ -82,38 +79,6 @@ class Trxother extends BaseController
         // Find Data for Daily Report
         $today                  = date('Y-m-d') .' 00:00:01';
         $dailyreport            = $DailyReportModel->where('dateopen >', $today)->where('outletid', $this->data['outletPick'])->first();
-
-        // Cash Flow
-        if (!empty($dailyreport)) {
-            $cashflow           = (($dailyreport['initialcash'] + $dailyreport['totalcashin']) - $dailyreport['totalcashout']);
-            $outlet             = $OutletModel->find($this->data['outletPick']);
-            // Get Transaction Cash
-            $pettycash          = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
-            $cashpayment        = $PaymentModel->where('cashid', $pettycash['id'])->first();
-            $cashtrx            = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('paymentid', $cashpayment['id'])->find();
-            $cashtrxvalue       = array_sum(array_column($cashtrx, 'value'));
-
-            // Get Transaction Non Cash
-            $noncash            = $CashModel->notLike('name', 'Petty Cash')->find();
-            $noncashid          = array();
-            foreach ($noncash as $nocash) {
-                $noncashid[] = $nocash['id'];
-            }
-            $noncashpayments    = $PaymentModel->whereIn('cashid', $noncashid)->find();
-            $noncashpaymentid   = array();
-            foreach ($noncashpayments as $noncashpayment) {
-                $noncashpaymentid[] = $noncashpayment['id'];
-            }
-            $noncashtrx         = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->whereIn('paymentid', $noncashpaymentid)->find();
-            $noncashtrxvalue    = array_sum(array_column($noncashtrx, 'value'));
-
-            // Expected Cash
-            $expectedcash       = ($cashflow + $cashtrxvalue);
-
-            // Total System Receipts
-            $totalsystemrec     = $expectedcash + $noncashtrxvalue;
-        }
-        
         
         // Parsing data to view
         $data                       = $this->data;
@@ -125,11 +90,43 @@ class Trxother extends BaseController
         $data['outlets']            = $outlets;
         $data['dailyreport']        = $dailyreport;
         $data['today']              = $today;
-        $data['cashflow']           = $cashflow;
-        $data['cashtrxvalue']       = $cashtrxvalue;
-        $data['expectedcash']       = $expectedcash;
-        $data['noncashtrxvalue']    = $noncashtrxvalue;
-        $data['totalsystemrec']     = $totalsystemrec;
+
+        // Cash Flow
+        if (!empty($dailyreport)) {
+            $cashflow           = (($dailyreport['initialcash'] + $dailyreport['totalcashin']) - $dailyreport['totalcashout']);
+            $data['cashflow']   = $cashflow;
+
+            $outlet             = $OutletModel->find($this->data['outletPick']);
+            // Get Transaction Cash
+            $pettycash          = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
+            $cashpayment        = $PaymentModel->where('cashid', $pettycash['id'])->first();
+            $cashtrx            = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('paymentid', $cashpayment['id'])->find();
+            $cashtrxvalue       = array_sum(array_column($cashtrx, 'value'));
+            $data['cashtrxvalue']       = $cashtrxvalue;
+
+            // Get Transaction Non Cash
+            $noncash            = $CashModel->notLike('name', 'Petty Cash')->find();
+            $noncashid          = array();
+            foreach ($noncash as $nocash) {
+                $noncashid[] = $nocash['id'];
+            }
+            $noncashpayments    = $PaymentModel->whereIn('cashid', $noncashid)->find();
+            $noncashpaymentid   = array();
+            foreach ($noncashpayments as $noncashpayment) {
+                $noncashpaymentid[]     = $noncashpayment['id'];
+            }
+            $noncashtrx                 = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->whereIn('paymentid', $noncashpaymentid)->find();
+            $noncashtrxvalue            = array_sum(array_column($noncashtrx, 'value'));
+            $data['noncashtrxvalue']    = $noncashtrxvalue;
+
+            // Expected Cash
+            $expectedcash               = ($cashflow + $cashtrxvalue);
+            $data['expectedcash']       = $expectedcash;
+
+            // Total System Receipts
+            $totalsystemrec             = $expectedcash + $noncashtrxvalue;
+            $data['totalsystemrec']     = $totalsystemrec;
+        }
 
         return view ('Views/cash', $data);
     }

@@ -62,32 +62,54 @@
                     <div class="uk-margin">
                         <h5 class="tm-h3"><?= lang('Global.systemreceipts') ?></h5>
                         <div class="uk-child-width-1-2" uk-grid>
-                            <div><?= lang('Global.cashflow') ?></div>
-                            <div class="uk-text-right">Rp <?= number_format($cashflow,0,',','.') ?></div>
+                            <div>
+                                <div><?= lang('Global.cashflow') ?></div>
+                            </div>
+                            <div>
+                                <div class="uk-text-right">Rp <?= number_format($cashflow,2,',','.') ?></div>
+                            </div>
                         </div>
 
                         <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
-                            <div><?= lang('Global.cashsales') ?></div>
-                            <div class="uk-text-right">Rp <?= number_format($cashtrxvalue,0,',','.') ?></div>
+                            <div>
+                                <div><?= lang('Global.cashsales') ?></div>
+                            </div>
+                            <div>
+                                <div class="uk-text-right">Rp <?= number_format($cashtrxvalue,2,',','.') ?></div>
+                            </div>
+                        </div>
+
+                        <?php if (!empty($topup)) ?>
+
+                        <hr class="uk-margin-small-top uk-margin-small-bottom">
+                        
+                        <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
+                            <div>
+                                <div><?= lang('Global.expectedcash') ?></div>
+                            </div>
+                            <div>
+                                <div class="uk-text-right">Rp <?= number_format($expectedcash,2,',','.') ?></div>
+                            </div>
+                        </div>
+                        
+                        <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
+                            <div>
+                                <div><?= lang('Global.noncashreceived') ?></div>
+                            </div>
+                            <div>
+                                <div class="uk-text-right">Rp <?= number_format($noncashtrxvalue,2,',','.') ?></div>
+                            </div>
                         </div>
 
                         <hr class="uk-margin-small-top uk-margin-small-bottom">
                         
                         <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
-                            <div><?= lang('Global.expectedcash') ?></div>
-                            <div class="uk-text-right">Rp <?= number_format($expectedcash,0,',','.') ?></div>
-                        </div>
-                        
-                        <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
-                            <div><?= lang('Global.noncashreceived') ?></div>
-                            <div class="uk-text-right">Rp <?= number_format($noncashtrxvalue,0,',','.') ?></div>
-                        </div>
-
-                        <hr class="uk-margin-small-top uk-margin-small-bottom">
-                        
-                        <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
-                            <div><?= lang('Global.totalsystemrec') ?></div>
-                            <div class="uk-text-right">Rp <?= number_format($totalsystemrec,0,',','.') ?></div>
+                            <div>
+                                <div><?= lang('Global.totalsystemrec') ?></div>
+                            </div>
+                            <div>
+                                <div class="uk-text-right uk-text-bolder">Rp <?= number_format($totalsystemrec,2,',','.') ?></div>
+                            </div>
                         </div>
                     </div>
 
@@ -95,16 +117,16 @@
 
                     <div class="uk-margin">
                         <h5 class="tm-h3"><?= lang('Global.actualreceipts') ?></h5>
-                        <form class="uk-form-stacked" role="form" action="dayrep/close/<?= $dailyreport['id'] ?>" method="post">
+                        <form class="uk-form-stacked" role="form" action="dayrep/close" method="post">
                             <?= csrf_field() ?>
 
                             <div class="uk-form-controls uk-margin">
-                                <input type="number" class="uk-input cash" style="border-radius: 5px;" id="actualcash" name="actualcash" placeholder="<?=lang('Global.cashreceived')?>" required />
+                                <input type="number" class="uk-input cash" style="border-radius: 5px;" id="actualcash" name="actualcash" value="<?= $expectedcash ?>" placeholder="<?=lang('Global.cashreceived')?>" required />
                                 <label class="uk-h6 uk-margin-small-left uk-text-muted"><?= lang('Global.includeinitcash') ?></label>
                             </div>
 
                             <div class="uk-form-controls uk-margin">
-                                <input type="number" class="uk-input noncash" style="border-radius: 5px;" id="actualnoncash" name="actualnoncash" placeholder="<?=lang('Global.noncashreceived')?>" required />
+                                <input type="number" class="uk-input noncash" style="border-radius: 5px;" id="actualnoncash" name="actualnoncash" value="<?= $noncashtrxvalue ?>" placeholder="<?=lang('Global.noncashreceived')?>" required />
                             </div>
 
                             <div class="uk-margin" uk-grid>
@@ -112,7 +134,7 @@
                                     <div class=""><?=lang('Global.difference')?></div>
                                 </div>
                                 <div class="uk-width-1-2 uk-text-right">
-                                    <div class="uk-text-danger" id="fprice" value="0">-Rp <?= number_format($totalsystemrec,0,',','.') ?></div>
+                                    <div id="fprice"></div>
                                 </div>
                             </div>
 
@@ -127,22 +149,35 @@
             </div>
         </div>
     </div>
+
+    <script>
+        var cash      = document.getElementById('actualcash');
+        var noncash   = document.getElementById('actualnoncash');
+        var fprice    = document.getElementById('fprice');
+
+        totalprice();
+        cash.addEventListener('change', totalprice);
+        noncash.addEventListener('change', totalprice);
+
+        function totalprice() {
+            var actualcash      = Number(cash.value);
+            var actualnoncash   = Number(noncash.value);
+            var finalprice      = actualcash + actualnoncash - <?= $totalsystemrec ?>;
+            var marker = finalprice;
+
+            if (marker < '0'){
+                fprice.setAttribute('class', 'uk-text-danger');
+                fprice.innerHTML = finalprice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
+            } else if (marker > '0') {
+                fprice.setAttribute('class', 'uk-text-success');
+                fprice.innerHTML = finalprice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
+            } else {
+                fprice.innerHTML = finalprice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
+            }
+        }
+    </script>
 <?php } ?>
 <!-- Modal Close End -->
-<script>
-$(document).ready(function(){
-    
-    $("#actualcash").change(function(){
-        var cash =  $("#actualcash").val();
-        var noncash =  $("#actualnoncash").val();
-        var trec  = <?=$totalsystemrec?>;
-    
-        var fprice = (cash + noncash) - trec;
-        alert(fprice);
-        document.getElementById('fprice').innerHTML = fprice;
-    });
-});
-</script>
 
 <!-- Modal Open -->
 <div uk-modal class="uk-flex-top" id="open">

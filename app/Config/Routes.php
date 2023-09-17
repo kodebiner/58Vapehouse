@@ -318,7 +318,7 @@ $routes->group('reminder', ['filter'=>'login'], function($routes){
 $routes->group('dayrep', ['filter'=>'login'], function($routes){
     $routes->get('', 'DailyReport::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('open', 'DailyReport::open', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('close/(:num)', 'DailyReport::close/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('close', 'DailyReport::close', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 

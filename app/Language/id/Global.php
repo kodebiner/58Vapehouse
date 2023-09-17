@@ -132,6 +132,14 @@ return [
     'profit'            => 'Keuntungan',
     'net'               => 'Penjualan Bersih',
     'gross'             => 'Penjualan Kotor',
+    'dateopen'          => 'Tanggal Buka',
+    'dateclose'         => 'Tanggal Tutup',
+    'employeeopen'      => 'Peggawai Buka',
+    'employeeclose'     => 'Pegawai Tutup',
+    'totalcashin'       => 'Total Kas Masuk',
+    'totalcashout'      => 'Total Kas Keluar',
+    'totalcashclose'    => 'Total Tunai Akhir',
+    'totalnoncashclose' => 'Total Non Tunai Akhir',
 
     // Button
     'edit'              => 'Ubah',
@@ -202,6 +210,7 @@ return [
     'sop'               => 'Standar Operasional',
     'shift1'            => 'Shift 1',
     'shift2'            => 'Shift 2',
+    'dailyreport'       => 'Laporan Harian',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',
@@ -230,6 +239,7 @@ return [
     'cashinoutList'             => 'Daftar Kas',
     'debtList'                  => 'Daftar Kasbon',
     'topupList'                 => 'Daftar Top Up',
+    'dailyreportList'           => 'Daftar Laporan Harian',
     'dosop'                     => 'Lakukan SOP',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
@@ -255,6 +265,7 @@ return [
     'cashinoutListDesc'         => 'Daftar kas yang anda miliki',
     'debtListDesc'              => 'Daftar kasbon yang anda miliki',
     'topupListDesc'             => 'Daftar top up yang anda miliki',
+    'dailyreportListDesc'       => 'Daftar laporan harian yang anda miliki',
     'userProfileDesc'           => 'Informasi mengenai profil anda',
     'businessInfoDesc'          => 'Informasi mengenai bisnis anda',
 ];
