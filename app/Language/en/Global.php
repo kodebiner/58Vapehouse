@@ -143,7 +143,18 @@ return [
     'totalcashout'      => 'Total Cash Out',
     'totalcashclose'    => 'Total Cash Closed',
     'totalnoncashclose' => 'Total Non Cash Closed',
-
+    'sales'             => 'Sales',
+    'profit'            => 'Profit',
+    'basicprofit'       => 'Basic Profit',
+    'capitalgains'      => 'Capital Gains',
+    'totaltransaction'  => 'Total Transaction',
+    'totaldisctrx'      => 'Total Transaction Discount ',
+    'totaldiscmember'   => 'Total Member Discount',
+    'totaldiscvar'      => 'Total Variant Discount',
+    'totaldiscpoint'    => 'Total Point Discount',
+    'discpoint'         => 'Discount Point',
+   
+    
     // Button
     'edit'              => 'Edit',
     'delete'            => 'Delete',
@@ -184,10 +195,6 @@ return [
     'submit'            => 'Submit',
     'open'              => 'Open Store',
     'close'             => 'Close Store',
-    'sales'             => 'sales',
-    'profit'            => 'profit',
-    'net'               => 'net sales',
-    'gross'             => 'gross sales',
     
     // Menu
     'dashboard'         => 'Dashboard',
@@ -218,6 +225,14 @@ return [
     'shift1'            => 'Shift 1',
     'shift2'            => 'Shift 2',
     'dailyreport'       => 'Daily Report',
+    'salesreport'       => 'Sales Report',
+    'profitreport'      => 'Profit Report',
+    'paymentreport'     => 'Payment Report',
+    'discountreport'    => 'discount Report',
+    'productreport'     => 'Product Report',
+    'categoryreport'    => 'Category Report',
+    'presencereport'    => 'Presence Report',
+    'employereport'     => 'Employe Report',
 
     // Title
     'employeeList'              => 'Employee List',
@@ -250,7 +265,10 @@ return [
     'dosop'                     => 'Do SOP',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
-    
+    'net'                       => 'Net Sales',
+    'gross'                     => 'Gross Sales',
+    'salestotal'                => 'Sales Total',
+
     // Page Description
     'dashdesc'                  => 'Global information about your business',
     'employeeListDesc'          => 'List of all employee under you',

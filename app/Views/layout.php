@@ -267,25 +267,28 @@
                                 <a class="uk-h4 tm-h4" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.report');?> <?=lang('Global.sales');?></a>
+                                        <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/keuntungan') ?>"><?=lang('Global.report');?> <?=lang('Global.profit');?></a>
+                                        <a href="<?= base_url('report/keuntungan') ?>"><?=lang('Global.profitreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/payment') ?>"><?=lang('Global.report');?> <?=lang('Global.payment');?></a>
+                                        <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.report');?> <?=lang('Global.discount');?></a>
+                                        <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/product') ?>"><?=lang('Global.report');?> <?=lang('Global.product');?></a>
+                                        <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/category') ?>"><?=lang('Global.report');?> <?=lang('Global.category');?></a>
+                                        <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/presence') ?>"><?=lang('Global.report');?> <?=lang('Global.presence');?></a>
+                                        <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
+                                    </li>
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
                                     </li>
                                 </ul>
                             </li>
@@ -395,30 +398,32 @@
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('debt') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.debt');?></a>
                     </li>
-                    
                     <li class="tm-main-navbar uk-parent">
                         <a class="uk-h4 tm-h4" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                         <ul class="uk-nav-sub">
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.report');?> <?=lang('Global.sales');?></a>
+                                <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/keuntungan') ?>"><?=lang('Global.report');?> <?=lang('Global.profit');?></a>
+                                <a href="<?= base_url('report/keuntungan') ?>"><?=lang('Global.profitreport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/payment') ?>"><?=lang('Global.report');?> <?=lang('Global.payment');?></a>
+                                <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.report');?> <?=lang('Global.discount');?></a>
+                                <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/product') ?>"><?=lang('Global.report');?> <?=lang('Global.product');?></a>
+                                <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/category') ?>"><?=lang('Global.report');?> <?=lang('Global.category');?></a>
+                                <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/presence') ?>"><?=lang('Global.report');?> <?=lang('Global.presence');?></a>
+                                <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
+                            </li>
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
                             </li>
                         </ul>
                     </li>

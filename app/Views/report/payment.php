@@ -39,31 +39,31 @@
 <div class="tm-card-header uk-light">
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
-            <h3 class="tm-h3"><?=lang('Global.payment')?> <?=lang('Global.report')?></h3>
+            <h3 class="tm-h3"><?=lang('Global.paymentreport')?></h3>
         </div>
     </div>
 </div>
 
 <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
-    <h3 class="uk-card-title">Payment</h3>
+    <h3 class="uk-card-title"><?=lang('Global.paymentreport')?></h3>
     <div id="piechart" ></div>
 </div>
 
 <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-    <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;">Table Payment Report</caption>
+    <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.paymentreport')?></caption>
     <thead>
         <tr>
-            <th class="uk-text-large uk-text-bold">Payment Method</th>
-            <th class="uk-text-center uk-text-large uk-text-bold">Total Transaction</th>
-            <th class="uk-text-center uk-text-large uk-text-bold">Total Transaction Value</th>
+            <th class="uk-text-large uk-text-bold"><?=lang('Global.payment')?></th>
+            <th class="uk-text-large uk-text-bold"><?=lang('Global.totaltransaction')?></th>
+            <th class="uk-text-large uk-text-bold"><?=lang('Global.value')?></th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($payments as $pay ){ ?>
             <tr>
                 <td style="color:white;"><?=$pay['pname']?></td>
-                <td class="uk-text-center" style="color:white;"><?=$pay['qty']?></td>
-                <td class="uk-text-center" style="color:white;"><?=$pay['pvalue']?></td>
+                <td class="" style="color:white;"><?= $pay['qty']?></td>
+                <td class="" style="color:white;"><?php echo "Rp. ".number_format($pay['pvalue'],2,',','.');" ";?></td>
             </tr>
         <?php } ?>
     </tbody>

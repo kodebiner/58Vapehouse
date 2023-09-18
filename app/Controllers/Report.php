@@ -72,10 +72,10 @@ class Report extends BaseController
         // Calling Models
         $TransactionModel       = new TransactionModel;
         $TrxdetailModel         = new TrxdetailModel;
+        $VariantModel           = new VariantModel;
 
         $input = $this->request->getGet();
-        $trxdetails             = $TrxdetailModel->findAll();
-
+        
         if (!empty($input)) {
             $startdate = strtotime($input['startdate']);
             $enddata = strtotime($input['enddate']);
@@ -83,97 +83,55 @@ class Report extends BaseController
             $startdate = strtotime(date('Y-m-1'));
             $enddate = strtotime(date('Y-m-t'));
         }
-
+        
         $transactions = array();
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+            $trxdetails  = $TrxdetailModel->findAll();
+            $variants    = $VariantModel->findAll();
     
             $summary = array_sum(array_column($transaction, 'value'));
             $marginmodals = array();
             $margindasars = array();
+
             foreach ($transaction as $trx){
                 foreach ($trxdetails as $trxdetail){
                     if($trx['id'] === $trxdetail['transactionid']){
                         $marginmodal = $trxdetail['marginmodal'];
                         $margindasar = $trxdetail['margindasar'];
-    
                         $marginmodals[] = $marginmodal;
                         $margindasars[] = $margindasar;
                     }
                 }
-                $marginmodalsum = array_sum($marginmodals);
-                $margindasarsum = array_sum($margindasars);
-
-                $transactions[] = [
-                    'date'      => date('d/m/y', $date),
-                    'value'     => $summary,
-                    'modal'     => $marginmodalsum,
-                    'dasar'     => $margindasarsum,
-                ];  
+                
             }    
+
+            $marginmodalsum = array_sum($marginmodals);
+            $margindasarsum = array_sum($margindasars);
+
+            $transactions[] = [
+                'date'      => date('d/m/y', $date),
+                'value'     => $summary,
+                'modal'     => $marginmodalsum,
+                'dasar'     => $margindasarsum,
+            ];  
             
         }
-
+        
         $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
         $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
         $trxvalue        = array_sum(array_column($transactions, 'value'));
         // Parsing Data to View
-        $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc');
-        $data['transactions']   = $transactions;
-        $data['modals']         = $keuntunganmodal;
-        $data['dasars']         = $keuntungandasar;
-        $data['totaldasar']     = $trxvalue;
+        $data                       = $this->data;
+        $data['title']              = lang('Global.transaction');
+        $data['description']        = lang('Global.transactionListDesc');
+        $data['transactions']       = $transactions;
+        $data['modals']             = $keuntunganmodal;
+        $data['dasars']             = $keuntungandasar;
+        $data['penjualanDasar']     = $trxvalue;
+        $data['penjualanModal']     = $trxvalue;
 
         return view('Views/report/keuntungan', $data);
-    }
-
-    public function keuntungandasar(){
-        
-        // Calling Models
-        $TransactionModel       = new TransactionModel;
-        $TrxdetailModel         = new TrxdetailModel;
-
-        $input = $this->request->getGet();
-        $trxdetails             = $TrxdetailModel->findAll();
-
-        if (!empty($input)) {
-            $startdate = strtotime($input['startdate']);
-            $enddata = strtotime($input['enddate']);
-        } else {
-            $startdate = strtotime(date('Y-m-1'));
-            $enddate = strtotime(date('Y-m-t'));
-        }
-
-        $transactions = array();
-        for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
-            foreach ($transaction as $trx){
-                $margindasars = array();
-                foreach ($trxdetails as $trxdetail){
-                    if($trx['id'] === $trxdetail['transactionid']){
-                        $margindasar = $trxdetail['margindasar'];
-                        $margindasars[] = $margindasar;
-                    }
-                }
-                $margindasarsum = array_sum($margindasars);
-
-                $transactions[] = [
-                    'date'      => date('d/m/y', $date),
-                    'dasar'     => $margindasarsum,
-                ];  
-            }    
-            
-        }
-        
-        // Parsing Data to View
-        $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc');
-        $data['transactions']   = $transactions;
-
-        return view('Views/report/keuntungandasar', $data);
     }
     
     public function diskon(){
@@ -245,6 +203,7 @@ class Report extends BaseController
         $trxdis = array_sum(array_column($transactions, 'trxdisc'));
         $dispoint = array_sum(array_column($transactions, 'poindisc'));
         $discountmember = array_sum(array_column($transactions,'memberdisc'));
+       
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -530,5 +489,62 @@ class Report extends BaseController
         $data['presences']      = $presences;
 
         return view('Views/report/presencedetail',$data);
+    }
+
+    public function employe(){
+
+        // Calling Model
+        $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel;
+        $UserModel          = new UserModel;
+        $UserGroupModel     = new GroupUserModel;
+        $GroupModel         = new GroupModel; 
+
+        // Populating Data 
+        $transactions   = $TransactionModel->findAll();
+        $admin          = $UserModel->findAll();
+        $usergroups     = $UserGroupModel->findAll();
+        $groups         = $GroupModel->findAll();
+
+        foreach ($transactions as $transactions){
+            $users   = $UserModel->find($transactions['userid']);
+            $builder = $db->table('transaction')->where('userid',$users->id);
+            $builder->selectCount('userid','value');
+            $builder->select('userid');
+            $builder->selectSum('value');
+            $builder->groupBy('userid');
+            $query   = $builder->get();
+            $employe = $query->getResult();
+        }
+       
+        $employetrx = array();
+        foreach ($employe as $employ){
+            foreach ($admin as $user ){
+                if($employ->userid === $user->id){
+                    foreach ($usergroups as $ugroups){
+                        if($ugroups['user_id'] === $user->id){
+                            foreach ($groups as $group){
+                                if ($ugroups['group_id'] === $group->id){
+                                    $employetrx [] = [
+                                        'id'        => $user->id,
+                                        'name'      => $user->username,
+                                        'role'      => $group->name,
+                                        'value'     => $employ->value,
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // parsing data to view
+        $data                   = $this->data;
+        $data['title']          = lang('Global.transaction');
+        $data['description']    = lang('Global.transactionListDesc'); 
+        $data['employetrx']     = $employetrx;
+
+        return view('Views/report/employe',$data);
     }
 }

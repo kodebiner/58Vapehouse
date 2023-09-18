@@ -140,6 +140,16 @@ return [
     'totalcashout'      => 'Total Kas Keluar',
     'totalcashclose'    => 'Total Tunai Akhir',
     'totalnoncashclose' => 'Total Non Tunai Akhir',
+    'salestotal'        => 'Total Penjualan',
+    'basicprofit'       => 'Keuntungan Dasar',
+    'capitalgains'      => 'Keuntungan Modal',
+    'totaltransaction'  => 'Total Transaksi',
+    'totaldisctrx'      => 'Total Diskon Transaksi',
+    'totaldiscmember'   => 'Total Diskon Member',
+    'totaldiscvar'      => 'Total Diskon Variant',
+    'totaldiscpoint'    => 'Total Diskon Point',
+    'discpoint'         => 'Diskon Point',
+
 
     // Button
     'edit'              => 'Ubah',
@@ -181,6 +191,7 @@ return [
     'submit'            => 'Kirim',
     'open'              => 'Buka Toko',
     'close'             => 'Tutup Toko',
+    
 
     // Menu
     'dashboard'         => 'Dasbor',
@@ -211,6 +222,14 @@ return [
     'shift1'            => 'Shift 1',
     'shift2'            => 'Shift 2',
     'dailyreport'       => 'Laporan Harian',
+    'salesreport'       => 'Laporan Penjualan',
+    'profitreport'      => 'Laporan Keuntungan',
+    'paymentreport'     => 'Laporan Pembayaran',
+    'discountreport'    => 'Laporan Diskon',
+    'productreport'     => 'Laporan Produk',
+    'categoryreport'    => 'Laporan Category',
+    'presencereport'    => 'Laporan Presensi',
+    'employereport'     => 'Laporan Karyawan',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',

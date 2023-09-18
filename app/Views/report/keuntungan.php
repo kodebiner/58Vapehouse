@@ -61,78 +61,80 @@
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
-<div class="tm-card-header uk-light">
-    <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-2@m">
-            <h3 class="tm-h3"><?=lang('Global.report')?></h3>
-        </div>
-    </div>
-</div>
-
-<div class="uk-card uk-card-default uk-card-body uk-margin-top uk-width-1-1@m">
-    <h3 class="uk-card-title">Keuntungan</h3>
-    <div id="chart_div"></div>
-</div>
-
-<div class="uk-child-width-1-2@s uk-grid-match uk-margin-top" uk-grid>
-    <div>
-        <div class="uk-card uk-card-default uk-card-secondary uk-card-hover uk-card-body">
-            <h3 class="uk-card-title uk-margin-remove-bottom">Keuntungan Modal</h3>
-            <p class="uk-margin-remove-top uk-text-bolder"> Total keuntungan Dasar - Total Modal</p>
-            <hr>
-            <div>
-                <div uk-grid>
-                    <div class="uk-width-1-2 uk-margin-remove">Total Penjualan</div>
-                    <div class="uk-width-expand@m uk-text-right"><?php echo "Rp. ".number_format($totaldasar,2,',','.');" ";?></div>
-                </div>
-                <hr class="">
-                <div class="uk-margin-remove-top" uk-grid>
-                    <div class="uk-width-1-2@m">Total Modal Dasar</div>
-                    <div class="uk-width-expand@m uk-text-right"><?php echo "Rp. ".number_format($dasars,2,',','.');" ";?></div>
-                </div>
-                <hr class="">
-                <div class="uk-margin-remove-top" uk-grid>
-                    <div class="uk-width-1-2@m">Keuntungan Modal</div>
-                    <div class="uk-width-expand@m uk-text-right">
-                    <?php 
-                    $keuntungandasar = $totaldasar - $dasars;
-                    echo "Rp. ".number_format($keuntungandasar,2,',','.');" ";
-                    ?>
-                    </div>
-                </div>
+    <div class="tm-card-header uk-light">
+        <div uk-grid class="uk-flex-middle">
+            <div class="uk-width-1-2@m">
+                <h3 class="tm-h3"><?=lang('Global.profitreport')?></h3>
             </div>
         </div>
     </div>
 
-    <div>
-        <div class="uk-card uk-card-default uk-card-body">
-            <h3 class="uk-card-title uk-margin-remove-bottom">Keuntungan Dasar</h3>
-            <p class="uk-margin-remove-top uk-text-bolder"> Total keuntungan Dasar - Total Modal</p>
-            <hr>
-            <div>
-                <div uk-grid>
-                    <div class="uk-width-1-2 uk-margin-remove">Total Penjualan</div>
-                    <div class="uk-width-expand@m uk-text-right"><?php echo "Rp. ".number_format($totaldasar,2,',','.');" ";?></div>
-                </div>
-                <hr class="">
-                <div class="uk-margin-remove-top" uk-grid>
-                    <div class="uk-width-1-2@m">Total Modal</div>
-                    <div class="uk-width-expand@m uk-text-right"><?php echo "Rp. ".number_format($dasars,2,',','.');" ";?></div>
-                </div>
-                <hr class="">
-                <div class="uk-margin-remove-top" uk-grid>
-                    <div class="uk-width-1-2@m">Keuntungan Modal</div>
-                    <div class="uk-width-expand@m uk-text-right">
-                    <?php 
-                        $keuntungandasar = $totaldasar - $dasars;
+    <div class="uk-card uk-card-default uk-card-body uk-margin-top uk-width-1-1@m">
+        <h3 class="uk-card-title"><?=lang('Global.profitreport')?></h3>
+        <div id="chart_div"></div>
+    </div>
+
+    <div class="uk-child-width-1-2@s uk-grid-match uk-margin-top" uk-grid>
+
+        <div>
+            <div class="uk-card uk-card-default uk-card-secondary uk-card-hover uk-card-body">
+                <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.capitalgains')?></h3>
+                <p class="uk-margin-remove-top uk-text-bolder"> Total keuntungan Modal - Total Modal</p>
+                <hr>
+                <div>
+                    <div uk-grid>
+                        <div class="uk-width-1-2 uk-margin-remove">Total Keuntungan Modal</div>
+                        <div class="uk-width-expand@m uk-text-right"><?php echo "Rp. ".number_format($penjualanDasar,2,',','.');" ";?></div>
+                    </div>
+                    <hr class="">
+                    <div class="uk-margin-remove-top" uk-grid>
+                        <div class="uk-width-1-2@m">Total Modal Dasar</div>
+                        <div class="uk-width-expand@m uk-text-right"><?php echo "Rp. ".number_format($modals,2,',','.');" ";?></div>
+                    </div>
+                    <hr class="">
+                    <div class="uk-margin-remove-top" uk-grid>
+                        <div class="uk-width-1-2@m">Keuntungan Modal</div>
+                        <div class="uk-width-expand@m uk-text-right">
+                        <?php 
+                        $keuntungandasar = $penjualanDasar - $modals;
                         echo "Rp. ".number_format($keuntungandasar,2,',','.');" ";
-                    ?>
+                        ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div>
+            <div class="uk-card uk-card-default uk-card-body">
+                <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.basicprofit')?></h3>
+                <p class="uk-margin-remove-top uk-text-bolder">Total keuntungan Dasar - Total Modal Dasar</p>
+                <hr>
+                <div>
+                    <div uk-grid>
+                        <div class="uk-width-1-2 uk-margin-remove">Total Keuntungan Dasar</div>
+                        <div class="uk-width-expand@m uk-text-right"><?php echo "Rp. ".number_format($penjualanDasar,2,',','.');" ";?></div>
+                    </div>
+                    <hr class="">
+                    <div class="uk-margin-remove-top" uk-grid>
+                        <div class="uk-width-1-2@m">Total Modal Dasar</div>
+                        <div class="uk-width-expand@m uk-text-right"><?php echo "Rp. ".number_format($dasars,2,',','.');" ";?></div>
+                    </div>
+                    <hr class="">
+                    <div class="uk-margin-remove-top" uk-grid>
+                        <div class="uk-width-1-2@m">Keuntungan Modal</div>
+                        <div class="uk-width-expand@m uk-text-right">
+                        <?php 
+                            $keuntungandasar = $penjualanDasar - $dasars;
+                            echo "Rp. ".number_format($keuntungandasar,2,',','.');" ";
+                        ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>
  
 <!-- End Of Page Heading -->
 

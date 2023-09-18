@@ -20,7 +20,7 @@
     <thead>
         <tr>
             <th class="uk-text-large uk-text-bold">date</th>
-            <th class="uk-text-center uk-text-large uk-text-bold">status</th>
+            <th class="uk-text-large uk-text-bold">status</th>
             <th class="uk-text-large uk-text-center uk-text-bold"><?=lang('Global.photo')?></th>
         </tr>
     </thead>

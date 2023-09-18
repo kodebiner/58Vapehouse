@@ -232,6 +232,7 @@ $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('product', 'Report::product', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('presence', 'Report::presence', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('presence/(:num)', 'Report::presencedetail/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('employe', 'Report::employe', ['filter' => 'role:owner,supervisor,operator']);
 
 });
 

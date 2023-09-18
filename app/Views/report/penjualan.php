@@ -36,13 +36,13 @@
     <div class="tm-card-header uk-light">
         <div uk-grid class="uk-flex-middle">
             <div class="uk-width-1-2@m">
-                <h3 class="tm-h3"><?=lang('Global.sales')?> <?=lang('Global.report')?></h3>
+                <h3 class="tm-h3"><?=lang('Global.sales')?> <?=lang('Global.salesreport')?></h3>
             </div>
         </div>
     </div>
 
     <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-margin-top uk-width-1-1@m">
-        <h3 class="uk-card-title"><?=lang('Global.sales')?></h3>
+        <h3 class="uk-card-title"><?=lang('Global.salesreport')?></h3>
         <div id="line-chart"></div>
     </div>
 
@@ -50,7 +50,7 @@
         <div>
             <div class="uk-card uk-card-default uk-card-secondary uk-card-hover uk-card-body">
                 <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.net')?></h3>
-                <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.total')?> <?=lang('Global.sales')?></p>
+                <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.salestotal')?></p>
                 <hr>
                 <div>
                     <div uk-grid>
@@ -63,7 +63,7 @@
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body">
                 <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.gross')?></h3>
-                <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.total')?> <?=lang('Global.sales')?></p>
+                <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.salestotal')?></p>
                 <hr>
                 <div>
                     <div uk-grid>
