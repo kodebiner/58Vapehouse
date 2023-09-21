@@ -262,7 +262,7 @@
                             <?php if (in_groups('owner')) : ?>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
-                            </li>
+                            </li>          
                             <li class="tm-main-navbar uk-parent">
                                 <a class="uk-h4 tm-h4" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
@@ -276,22 +276,22 @@
                                         <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
+                                        <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
+                                        <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
+                                        <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> 
                             <?php endif ?>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
@@ -419,16 +419,19 @@
                                 <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
+                                <a href="<?= base_url('report/bundle') ?>"><?=lang('Global.bundlereport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
+                                <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
                                 <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
                             </li>
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
+                            </li>
                         </ul>
-                    </li>
+                    </li> 
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
                     </li>

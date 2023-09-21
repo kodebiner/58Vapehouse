@@ -254,6 +254,8 @@ return [
     'categoryreport'    => 'Category Report',
     'presencereport'    => 'Presence Report',
     'employereport'     => 'Employe Report',
+    'customerreport'    => 'Customer Report',
+    'bundlereport'      => 'Bundle Report',
 
     // Title
     'employeeList'              => 'Employee List',

@@ -6,6 +6,7 @@ use App\Models\BundledetailModel;
 use App\Models\BundleModel;
 use App\Models\CategoryModel;
 use App\Models\CashModel;
+use App\Models\DebtModel;
 use App\Models\GconfigModel;
 use App\Models\OutletModel;
 use App\Models\UserModel;
@@ -35,17 +36,19 @@ class Report extends BaseController
         $TransactionModel = new TransactionModel();
 
         // Populating Data
-        $input = $this->request->getGet();
+        $input = $this->request->getGet('daterange');
 
         if (!empty($input)) {
-            $startdate = strtotime($input['startdate']);
-            $enddata = strtotime($input['enddate']);
+            $daterange = explode(' - ', $input);
+            $startdate = strtotime($daterange[0]);
+            $enddate = strtotime($daterange[1]);
         } else {
             $startdate = strtotime(date('Y-m-1'));
             $enddate = strtotime(date('Y-m-t'));
         }
 
         $transactions = array();
+        $transactionarr = array();
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
             $summary = array_sum(array_column($transaction, 'value'));
@@ -53,6 +56,7 @@ class Report extends BaseController
                 'date'      => date('d/m/y', $date),
                 'value'     => $summary
             ];
+            $transactionarr[] = $transaction;
         }
 
         $result = array_sum(array_column($transactions, 'value'));
@@ -61,7 +65,10 @@ class Report extends BaseController
         $data                   = $this->data;
         $data['title']          = lang('Global.transaction');
         $data['description']    = lang('Global.transactionListDesc');
+        $data['startdate']      = $startdate;
+        $data['enddate']        = $enddate;
         $data['transactions']   = $transactions;
+        $data['transactionarr'] = $transactionarr;
         $data['result']         = $result;
 
         return view('Views/report/penjualan', $data);
@@ -74,17 +81,19 @@ class Report extends BaseController
         $TrxdetailModel         = new TrxdetailModel;
         $VariantModel           = new VariantModel;
 
-        $input = $this->request->getGet();
+        $input = $this->request->getGet('daterange');
         
         if (!empty($input)) {
-            $startdate = strtotime($input['startdate']);
-            $enddata = strtotime($input['enddate']);
+            $daterange = explode(' - ', $input);
+            $startdate = strtotime($daterange[0]);
+            $enddate = strtotime($daterange[1]);
         } else {
             $startdate = strtotime(date('Y-m-1'));
             $enddate = strtotime(date('Y-m-t'));
         }
         
         $transactions = array();
+        $transactionarr = array();
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
             $trxdetails  = $TrxdetailModel->findAll();
@@ -115,12 +124,14 @@ class Report extends BaseController
                 'modal'     => $marginmodalsum,
                 'dasar'     => $margindasarsum,
             ];  
-            
         }
+
+        $transactionarr [] = $transactions;
         
         $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
         $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
         $trxvalue        = array_sum(array_column($transactions, 'value'));
+        
         // Parsing Data to View
         $data                       = $this->data;
         $data['title']              = lang('Global.transaction');
@@ -130,6 +141,9 @@ class Report extends BaseController
         $data['dasars']             = $keuntungandasar;
         $data['penjualanDasar']     = $trxvalue;
         $data['penjualanModal']     = $trxvalue;
+        $data['startdate']          = $startdate;
+        $data['enddate']            = $enddate;
+        
 
         return view('Views/report/keuntungan', $data);
     }
@@ -141,69 +155,55 @@ class Report extends BaseController
         $TrxdetailModel         = new TrxdetailModel;
         $GconfigModel           = new GconfigModel;
         // Populating Data
-        $input = $this->request->getGet();
         $trxdetails             = $TrxdetailModel->findAll();
         $Gconfig                = $GconfigModel->first();
 
-
+        $input = $this->request->getGet('daterange');
+            
         if (!empty($input)) {
-            $startdate = strtotime($input['startdate']);
-            $enddata = strtotime($input['enddate']);
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
         } else {
-            $startdate = strtotime(date('Y-m-1'));
-            $enddate = strtotime(date('Y-m-t'));
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
         }
 
         $transactions = array();
-        for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
-            foreach ($transaction as $trx){
-                $discounttrx = array();
-                $discounttrxpersen = array();
-                $discountvariant = array();
-                $discountpoin = array();
-                $discountmember = array();
-                foreach ($trxdetails as $trxdetail){
-                    if($trx['id'] === $trxdetail['transactionid']){
-                        if ($trx['disctype'] === "0"){
-                            $discounttrx[]          = $trx['discvalue'];
-                        }
-                        if ($trx['disctype'] !== "0"){
-                            $discounttrxpersen[]    = $trx['value'] - ($trx['value'] - $trx['discvalue']/100);
-                        }
-                        if(!empty($trx['memberid']) && $trx['memberid'] !== "0"){
-                            if($Gconfig['memberdisctype'] === "0"){
-                                $discountmember[]       = $Gconfig['memberdisc'];
-                            }else{
-                                $discountmember[]       = $trx['value'] - ($trx['value'] - $Gconfig['memberdisc']/100);
-                            }
-                        }
-                        $discountvariant[]          = $trxdetail['discvar'];
-                        $discountpoin[]             = $trx['pointused'];
-                        
+        $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        foreach ($transaction as $trx){
+            $discounttrx = array();
+            $discounttrxpersen = array();
+            $discountvariant = array();
+            $discountpoin = array();
+            foreach ($trxdetails as $trxdetail){
+                if($trx['id'] === $trxdetail['transactionid']){
+                    if ($trx['disctype'] === "0"){
+                        $discounttrx[]          = $trx['discvalue'];
                     }
+                    if ($trx['disctype'] !== "0"){
+                        $discounttrxpersen[]    = $trx['value'] - ($trx['value'] - $trx['discvalue']/100);
+                    }
+                    $discountvariant[]          = $trxdetail['discvar'];
+                    $discountpoin[]             = $trx['pointused'];
+                    
                 }
-                $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen) ;
-                $variantdisc     = array_sum($discountvariant);
-                $poindisc        = array_sum($discountpoin);
-                $memberdisc      = array_sum($discountmember);
+            }
 
-                $transactions[] = [
-                    'date'          => date('d/m/y', $date),
-                    'trxdisc'       => $transactiondisc,
-                    'variantdis'    => $variantdisc,
-                    'poindisc'      => $poindisc,
-                    'memberdisc'    => $memberdisc,
-                ];  
-            }    
+            $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen) ;
+            $variantdisc     = array_sum($discountvariant);
+            $poindisc        = array_sum($discountpoin);
+
+            $transactions[] = [
+                'trxdisc'       => $transactiondisc,
+                'variantdis'    => $variantdisc,
+                'poindisc'      => $poindisc,
+            ];  
+        }    
             
-        }
-
         $trxvar = array_sum(array_column($transactions, 'variantdis'));
         $trxdis = array_sum(array_column($transactions, 'trxdisc'));
         $dispoint = array_sum(array_column($transactions, 'poindisc'));
-        $discountmember = array_sum(array_column($transactions,'memberdisc'));
-       
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -213,7 +213,8 @@ class Report extends BaseController
         $data['trxvardis']      = $trxvar;
         $data['trxdisc']        = $trxdis;
         $data['poindisc']       = $dispoint;
-        $data['memberdis']      = $discountmember;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
 
 
         return view('Views/report/diskon', $data);
@@ -221,74 +222,55 @@ class Report extends BaseController
 
     public function payment(){
         
-        $db      = \Config\Database::connect();
+        $db                     = \Config\Database::connect();
         $PaymentModel           = new PaymentModel;
         $TrxpaymentModel        = new TrxpaymentModel;
         $TransactionModel       = new TransactionModel;
 
-        // Populating Data
-        $input          = $this->request->getGet();
-        $trxpayments    = $TrxpaymentModel->findall();
-        $payments       = $PaymentModel->findAll();
+        if ($this->data['outletPick'] != null) {
+            $input = $this->request->getGet('daterange');
+            
+            if (!empty($input)) {
+                $daterange = explode(' - ', $input);
+                $startdate = $daterange[0];
+                $enddate = $daterange[1];
+            } else {
+                $startdate = date('Y-m-1');
+                $enddate = date('Y-m-t');
+            }
 
-        if (!empty($input)) {
-            $startdate = strtotime($input['startdate']);
-            $enddata = strtotime($input['enddate']);
-        } else {
-            $startdate = strtotime(date('Y-m-1'));
-            $enddate = strtotime(date('Y-m-t'));
-        }
-
-        $transactions = array();
-        for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
-            foreach ($transaction as $trx){
-
-                $builder = $db->table('trxpayment');
-                // $builder = $db->table('trxpayment')->where('transactionid',$trx['id'])->find();
-                // $builder = $db->table('trxpayment')->where($trx['id']);
-                $builder->selectCount('id','total_payment','payval');
-                // $builder->selectCount('id','total_payment','payval')->where('transactionid',$trx['id']);
-                $builder->select('paymentid');
-                $builder->selectSum('value');
-                $builder->groupBy('paymentid');
-                $query = $builder->get();
-                $pay = $query->getResult();
-
-        
-                $totalpay = array();
-                foreach ($pay as $p ){
-                    $totalpay[] =[
-                        'payqty'    => $p->total_payment,
-                        'payid'     => $p->paymentid,
-                        'payvalue'  => $p->value,
-                    ]; 
-                }
-
-                $paymethod = array();
-                foreach ($payments as $paymet){
-                    foreach ($totalpay as $totpay){
-                        if($paymet['id'] === $totpay['payid']){
-                        $paymethod[] = [
-                        'qty'       => $totpay['payqty'],
-                        'pid'       => $totpay['payid'],
-                        'pvalue'    => $totpay['payvalue'],
-                        'pname' => $paymet['name'],
-                        ];
+            $payments = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
+            $trxpayments = $TrxpaymentModel->findAll();
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $pay = array();
+            foreach ($payments as $payment) {
+                $qty = array();
+                foreach ($trxpayments as $trxpayment) {
+                    foreach ($transactions as $transaction) {
+                        if (($trxpayment['paymentid'] === $payment['id']) && ($trxpayment['transactionid'] === $transaction['id'])) {
+                            $qty[] = $trxpayment['value'];
                         }
                     }
                 }
-            }   
-        }
+                $pay[] = [
+                    'pvalue'    => array_sum($qty),
+                    'pqty'      => count($qty),
+                    'name'      => $payment['name']
+                ];
+            }
         
-        // Parsing Data to View
-        $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc');
-        $data['payments']       = $paymethod;
-        
+            // Parsing Data to View
+            $data                   = $this->data;
+            $data['title']          = lang('Global.transaction');
+            $data['description']    = lang('Global.transactionListDesc');
+            $data['payments']       = $pay;
+            $data['startdate']      = strtotime($startdate);
+            $data['enddate']        = strtotime($enddate);
 
-        return view('Views/report/payment', $data);
+            return view('Views/report/payment', $data);
+        } else {
+            return redirect()->to('');
+        }
     }
 
     public function product(){
@@ -313,88 +295,83 @@ class Report extends BaseController
 
 
         // Populating Data
-        $input = $this->request->getGet();
-
+        $input = $this->request->getGet('daterange');
+            
         if (!empty($input)) {
-            $startdate = strtotime($input['startdate']);
-            $enddata = strtotime($input['enddate']);
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
         } else {
-            $startdate = strtotime(date('Y-m-1'));
-            $enddate = strtotime(date('Y-m-t'));
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
         }
 
-        $transactions = array();
-        for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
-            
-            $builder = $db->table('trxdetail');
-            // $builder = $db->table('trxpayment')->where('transactionid',$trx)->find();
-            $builder->selectCount('variantid','variantsales','salesvalue','bundleid');
-            // $builder->selectCount('id','total_payment','payval')->where('transactionid',$trx['id']);
-            $builder->select('variantid');
-            $builder->select('bundleid');
-            $builder->selectSum('value');
-            $builder->groupBy('variantid');
-            $query   = $builder->get();
-            $variantval = $query->getResult();
 
+        $trxid = array();
+        $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        
+        foreach ($transactions as $transaction){
+            $trxid[] = $transaction['id'];
+        }
 
-            $varvalue = array();
-            foreach ($variantval as $varval) {
-                $varvalue[] = [
-                    'id'        => $varval->variantid,
-                    'value'     => $varval->value,
-                    'sold'      => $varval->variantsales,
-                    'bundleid'  => $varval->bundleid,
-                ];
-            }
+        $builder = $db->table('trxdetail')->WhereIn('transactionid',$trxid);
+        // $builder = $db->table('trxpayment')->where('transactionid',$trx)->find();
+        $builder->selectCount('variantid','variantsales','salesvalue','bundleid');
+        // $builder->selectCount('id','total_payment','payval')->where('transactionid',$trx['id']);
+        $builder->select('variantid');
+        $builder->select('bundleid');
+        $builder->selectSum('value');
+        $builder->groupBy('variantid');
+        $query   = $builder->get();
+        $variantval = $query->getResult();
 
-            $var = array();
-            foreach ($varvalue as $varv){
-                foreach ($variants as $varian){
-                    if($varian['id'] === $varv['id']){
-                        foreach ($products as $product){
-                            if($varian['productid'] === $product['id']){
-                                foreach ($category as $cate){
-                                    if($cate['id'] === $product['catid']){
-                                        $var[] = [
-                                            'id'        => $varv['id'],
-                                            'value'     => $varv['value'],
-                                            'sold'      => $varv['sold'],
-                                            'bundleid'  => $varv['bundleid'],
-                                            'productid' => $product['id'],
-                                            'product'   => $product['name'],
-                                            'category'  => $cate['name'],
-                                        ];
-                                    }
+        $varvalue = array();
+        foreach ($variantval as $varval) {
+            $varvalue[] = [
+                'id'        => $varval->variantid,
+                'value'     => $varval->value,
+                'sold'      => $varval->variantsales,
+                'bundleid'  => $varval->bundleid,
+            ];
+        }
+
+        $var = array();
+        foreach ($varvalue as $varv){
+            foreach ($variants as $varian){
+                if($varian['id'] === $varv['id']){
+                    foreach ($products as $product){
+                        if($varian['productid'] === $product['id']){
+                            foreach ($category as $cate){
+                                if($cate['id'] === $product['catid']){
+                                    $var[] = [
+                                        'id'        => $varv['id'],
+                                        'value'     => $varv['value'],
+                                        'sold'      => $varv['sold'],
+                                        'bundleid'  => $varv['bundleid'],
+                                        'productid' => $product['id'],
+                                        'product'   => $product['name'],
+                                        'category'  => $cate['name'],
+                                    ];
                                 }
                             }
                         }
                     }
                 }
             }
-
-            // Sum Total Product Sold
-            $produk = [];
-            foreach ($var as $vars) {
-                if (!isset($produk[$vars['productid'].$vars['product']])) {
-                    $produk[$vars['productid'].$vars['product']] = $vars;
-                } else {
-                    $produk[$vars['productid'].$vars['product']]['sold'] += $vars['sold'];
-                }
-            }
-            $produk = array_values($produk);
-
-            
-
-            $summary = array_sum(array_column($transaction, 'value'));
-            $transactions[] = [
-                'date'      => date('d/m/y', $date),
-                'value'     => $summary
-            ];
         }
 
-        $result = array_sum(array_column($transactions, 'value'));
+        // Sum Total Product Sold
+        $produk = [];
+        foreach ($var as $vars) {
+            if (!isset($produk[$vars['productid'].$vars['product']])) {
+                $produk[$vars['productid'].$vars['product']] = $vars;
+            } else {
+                $produk[$vars['productid'].$vars['product']]['sold'] += $vars['sold'];
+            }
+        }
+        $produk = array_values($produk);
+
+        
 
 
         // Parsing Data to View
@@ -402,7 +379,9 @@ class Report extends BaseController
         $data['title']          = lang('Global.transaction');
         $data['description']    = lang('Global.transactionListDesc');
         $data['transactions']   = $transactions;
-        $data['products']       = $produk; 
+        $data['products']       = $produk;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
 
         return view('Views/report/product', $data);
     }
@@ -546,5 +525,209 @@ class Report extends BaseController
         $data['employetrx']     = $employetrx;
 
         return view('Views/report/employe',$data);
+    }
+
+    public function customer(){
+        
+        // Calling Models
+        $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel;
+        $MemberModel        = new MemberModel;
+        $DebtModel          = new DebtModel;
+
+
+        // Populating Data
+        $members            = $MemberModel->findAll();
+        $debts              = $DebtModel->findAll();
+
+        if ($this->data['outletPick'] != null) {
+            $input = $this->request->getGet('daterange');
+            
+            if (!empty($input)) {
+                $daterange = explode(' - ', $input);
+                $startdate = $daterange[0];
+                $enddate = $daterange[1];
+            } else {
+                $startdate = date('Y-m-1');
+                $enddate = date('Y-m-t');
+            }
+
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+
+            
+            $customer = array();
+            foreach ($members as $member) {
+                $totaltrx = array();
+                $trxval = array();
+                $debtval    = array();
+                foreach ($debts as $debt) {
+                    if ($member['id'] === $debt['memberid']) {
+                        $debtval[]  = $debt['value'];
+                    }
+                }
+                foreach ($transactions as $trx) {
+                    if ($member['id'] === $trx['memberid']) {
+                        $totaltrx[] = $trx['memberid'];
+                        $trxval[]   = $trx['value'];
+                    }
+                }
+                
+                $customer[] =[
+                    'id'    => $member['id'],
+                    'name'  => $member['name'],
+                    'debt'  => array_sum($debtval),
+                    'trx'   => count($totaltrx),
+                    'value' => array_sum($trxval),
+                    'phone' => $member['phone'],
+                ];
+            }
+        
+            // Parsing Data to View
+            $data                       = $this->data;
+            $data['title']              = lang('Global.transaction');
+            $data['description']        = lang('Global.transactionListDesc');
+            $data['customers']          = $customer;
+            $data['startdate']          = strtotime($startdate);
+            $data['enddate']            = strtotime($enddate);
+
+            return view('Views/report/customer', $data);
+        } else {
+            return redirect()->to('');
+        }
+    }
+
+    public function customerdetail($id){
+
+        // Calling Models
+        $BundleModel            = new BundleModel;
+        $BundledetModel         = new BundledetailModel;
+        $CashModel              = new CashModel;
+        $OutletModel            = new OutletModel;
+        $UserModel              = new UserModel;
+        $MemberModel            = new MemberModel;
+        $PaymentModel           = new PaymentModel;
+        $ProductModel           = new ProductModel;
+        $VariantModel           = new VariantModel;
+        $StockModel             = new StockModel;
+        $TransactionModel       = new TransactionModel;
+        $TrxdetailModel         = new TrxdetailModel;
+        $TrxpaymentModel        = new TrxpaymentModel;
+        $DebtModel              = new DebtModel;
+
+        // Populating Data
+        $bundles                = $BundleModel->findAll();
+        $bundets                = $BundledetModel->findAll();
+        $cash                   = $CashModel->findAll();
+        $outlets                = $OutletModel->findAll();
+        $users                  = $UserModel->findAll();
+        $customers              = $MemberModel->findAll();
+        $payments               = $PaymentModel->findAll();
+        $products               = $ProductModel->findAll();
+        $variants               = $VariantModel->findAll();
+        $stocks                 = $StockModel->findAll();
+        $transactions           = $TransactionModel->orderBy('date', 'DESC')->where('memberid',$id)->find();
+        $trxdetails             = $TrxdetailModel->findAll();
+        $trxpayments            = $TrxpaymentModel->findAll();
+        $debts                  = $DebtModel->where('memberid',$id)->find();
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = lang('Global.trxHistory');
+        $data['description']    = lang('Global.trxHistoryListDesc');
+        $data['bundles']        = $bundles;
+        $data['bundets']        = $bundets;
+        $data['cash']           = $cash;
+        $data['users']          = $users;
+        $data['transactions']   = $transactions;
+        $data['outlets']        = $outlets;
+        $data['payments']       = $payments;
+        $data['customers']      = $customers;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['stocks']         = $stocks;
+        $data['trxdetails']     = $trxdetails;
+        $data['trxpayments']    = $trxpayments;
+        $data['debts']          = $debts;
+        
+        return view('Views/report/customerdetail',$data);
+    }
+
+    public function bundle(){
+
+        // Calling models
+        $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel();
+        $TrxdetailModel     = new TrxdetailModel();
+        $ProductModel       = new ProductModel();
+        $CategoryModel      = new CategoryModel();
+        $VariantModel       = new VariantModel();
+        $StockModel         = new StockModel();
+        $BundleModel        = new BundleModel();
+        $BundledetailModel  = new BundledetailModel();
+
+        // Populating Data
+        $products   = $ProductModel->findAll();
+        $category   = $CategoryModel->findAll();
+        $variants   = $VariantModel->findAll();
+        $stocks     = $StockModel->findAll();
+        $bundles    = $BundleModel->findAll();
+        $bundets    = $BundledetailModel->findAll();
+        $trxdetails = $TrxdetailModel->findAll();
+
+        // initialize
+        $input = $this->request->getGet('daterange');
+            
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
+       
+        $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+
+        $bund = [];
+        foreach($transactions as $transaction){
+            foreach ($trxdetails as $trxdetail){
+                foreach ($bundles as $bundle){
+                    if($trxdetail['transactionid'] === $transaction['id'] && $trxdetail['bundleid'] !=="0" && $bundle['id'] === $trxdetail['bundleid']){
+                        $bund[] = [
+                            'id'    => $trxdetail['bundleid'],
+                            'name'  => $bundle['name'],
+                            'qty'   => $trxdetail['qty'],
+                            'price' => $bundle['price'],
+                            'value' => $trxdetail['qty'] * $bundle['price'],
+                        ]; 
+                    }
+                }
+            }
+        }
+        
+        // Sum Total Bundle Sold
+        $paket = [];
+        foreach ($bund as $bundval) {
+    
+            if (!isset($paket[$bundval['id'].$bundval['name']])) {
+                $paket[$bundval['id'].$bundval['name']] = $bundval;
+            } else {
+                $paket[$bundval['id'].$bundval['name']]['value'] += $bundval['value'];
+                $paket[$bundval['id'].$bundval['name']]['qty'] += $bundval['qty'];
+            }
+        }
+
+        $paket = array_values($paket);
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = lang('Global.transaction');
+        $data['description']    = lang('Global.transactionListDesc');
+        $data['bundles']        = $paket;
+
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
+
+        return view('Views/report/bundle', $data);
     }
 }

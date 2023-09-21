@@ -31,6 +31,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
         <script src="js/uikit.min.js"></script>
         <script src="js/uikit-icons.min.js"></script>
+        <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
         <style>
             @media print {  
                 #btn{
@@ -58,42 +59,66 @@
                 <div class="uk-navbar-item uk-margin-right-left">
                     <a class="uk-icon-button" uk-icon="arrow-left" href="<?= base_url('transaction') ?>"></a>
                 </div>
-                <div class="uk-navbar-item uk-margin-right-small">
-                    <?php if (!empty($transactions['memberid'])){
+                <div class="uk-text-center">
+                    <!-- transaction member -->
+                    <?php if (!empty($transactions['id']) && !empty($transactions['memberid'])){
                         foreach ($members as $member){
                             if($transactions['memberid'] === $member['id']){
                                 $memphone = $member['phone'];
-                                echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62.$memphone.?text=I'm%20interested%20in%20your%20car%20for%20sale'></a>";
+                                echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62$memphone?text=$links'></a>";
                             }
                         }
-                    }elseif(empty($member['id'])){
-                        echo '<a class="uk-icon-button" uk-icon="whatsapp" href="#phonenumber" uk-toggle></a>';
-                    }?>
+                        // transactions non member
+                    } elseif ( !empty($transactions['id']) && $transactions['memberid'] ==="0" ){
+                        echo'<a class="uk-icon-button" uk-icon="whatsapp" id="phonenumber" uk-toggle="target: #phonenumber" href="" uk-toggle></a>';
+                        // bookings member
+                    } elseif ( !empty($bookings['id']) && !empty($bookings['memberid']) ){
+                        foreach ($members as $member){
+                            if($bookings['memberid'] === $member['id']){
+                                $memphone = $member['phone'];
+                                echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62$memphone?text=$links'></a>";
+                            }
+                        }
+                        // bookings non memeber
+                    } elseif ( !empty($bookings['id']) && empty($member['id']) ){
+                        echo'<a class="uk-icon-button" uk-icon="whatsapp" id="phonenumber" uk-toggle="target: #phonenumber" href="" uk-toggle></a>';
+                    } ?>
                     <!-- modal phonenumber -->
                     <div class="uk-flex-top" id="phonenumber" uk-modal>
+
                         <div class="uk-modal-dialog uk-margin-auto-vertical">
                             <button class="uk-modal-close-default" type="button" uk-close></button>
                             <div class="uk-modal-header">
                                 <h2 class="uk-modal-title"><?=lang('Global.phonenumber')?></h2>
                             </div>
+
                             <div class="uk-modal-body">
-                                <form class="uk-form-horizontal uk-margin-large" action="pay/phone" method="post">
+                                <form class="uk-form-horizontal uk-margin-large">
                                     <div class="uk-margin">
                                         <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.phonenumber')?></label>
                                         <div class="uk-form-controls">
                                             <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon">+62</span>
-                                                <input class="uk-input" min="1" name="phone" type="number" placeholder="phone" aria-label="Not clickable icon">
+                                                <input class="uk-input" min="1" id="phoneinput" name="phoneinput" type="number" placeholder="phone" aria-label="Not clickable icon">
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="uk-modal-footer uk-text-right">
-                                        <button class="uk-button uk-button-primary" type="submit" value="submit"><?= lang('Global.submit') ?></button>
+                                        <?php echo "<a class='uk-button uk-button-primary' id='phone' href=''>submit</a>"; ?>
                                     </div>
+                                    <script>
+                                       $(document).ready(function(){
+                                            $("#phoneinput").keyup(function(){
+                                                let phone = $("#phoneinput").val();
+                                                $("#phone").attr("href", "https://wa.me/62"+phone+"?text=<?=$links?>");
+                                                console.log(phone);
+                                            });
+                                        });
+                                    </script>
                                 </form>
                             </div>
                         </div>
+
                     </div>
                     <!-- end modal phonenumber -->
                 </div>
@@ -113,25 +138,45 @@
                     <?php } ?>
                 </div>
 
-                <div class="uk-flex uk-flex-center">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $transactions['outletid']) { ?>
-                            <div class="fpoutlet uk-margin-remove" style="font-size:12px;" ><?= $outlet['name'] ?></div>
-                        <?php }
-                    } ?>
-                </div>
-                <div class="uk-flex uk-flex-center">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $transactions['outletid']) { ?>
-                            <p class="fpaddress uk-margin-remove uk-text-bold" style="font-size:10px;"><?= $outlet['address'] ?></p>
-                        <?php }
-                    } ?>
-                </div>
-                    
+                <?php if(!empty($transaction['id'])) {?>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $transactions['outletid']) { ?>
+                                <div class="fpoutlet uk-margin-remove" style="font-size:12px;" ><?= $outlet['name'] ?></div>
+                            <?php }
+                        } ?>
+                    </div>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $transactions['outletid']) { ?>
+                                <p class="fpaddress uk-margin-remove uk-text-bold" style="font-size:10px;"><?= $outlet['address'] ?></p>
+                            <?php }
+                        } ?>
+                    </div>
+                <?php } elseif(!empty($bookings['id'])){?>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $bookings['outletid']) { ?>
+                                <div class="fpoutlet uk-margin-remove" style="font-size:12px;" ><?= $outlet['name'] ?></div>
+                            <?php }
+                        } ?>
+                    </div>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $bookings['outletid']) { ?>
+                                <p class="fpaddress uk-margin-remove uk-text-bold" style="font-size:10px;"><?= $outlet['address'] ?></p>
+                            <?php }
+                        } ?>
+                    </div>
+                <?php }?>
                 <div class="uk-text-xsmall uk-margin-top">
                     <div uk-grid>
                         <div class="uk-width-1-2"><?=lang('Global.invoice')?>: <?=(strtotime("now")) ?></div>
-                        <div class="uk-width-1-2 uk-text-right"><?= $transactions['date'] ?></div>
+                        <?php if (!empty($transactions['id'])){?>
+                            <div class="uk-width-1-2 uk-text-right"><?= $transactions['date'] ?></div>
+                        <?php }elseif(!empty($bookings['id'])){?>
+                            <div class="uk-width-1-2 uk-text-right"><?= $bookings['created_at'] ?></div>
+                        <?php }?>
                     </div>
                     <div class="uk-margin-remove-top" uk-grid>
                         <div class="uk-width-2-3">Cashier: <?= $fullname ?></div>
@@ -254,7 +299,7 @@
                                             echo '</div>';
                                             echo '<div class="uk-grid-collapse" uk-grid>';
                                             echo '<div class="uk-width-2-3">x'.$bookingdetail['qty'].' @'.$variantval.'</div>';
-                                            echo '<div class="uk-width-1-3">'.$variantval * $bookingdetail['qty'].'</div>';
+                                            echo '<div class="uk-width-1-3 uk-text-right">'.$variantval * $bookingdetail['qty'].'</div>';
                                             echo '</div>';
                                             if ($bookingdetail['discvar'] !== '0') {
                                                 echo '<div class="uk-grid-collapse" uk-grid>';
@@ -274,7 +319,7 @@
                                         echo 'x'.$bookingdetail['qty'].' Bundle <br>'.$bundle['name'].'<br>';
                                         echo '<div class="uk-grid-collapse" uk-grid>';
                                         echo '<div class="uk-width-2-3"> @'.$bookingdetail['value'].'</div>';
-                                        echo '<div class="uk-width-1-3">'.$bookingdetail['value'] * $bookingdetail['qty'].'</div>';
+                                        echo '<div class="uk-width-1-3 uk-text-right">'.$bookingdetail['value'] * $bookingdetail['qty'].'</div>';
                                         echo '</div>';
                                         foreach ($bundets as $bundet) {
                                             foreach ($products as $product) {
@@ -298,7 +343,9 @@
 
                 <!-- total booking -->
                 <?php 
-                if (!empty($bookings['id']) && empty ($transactions['id']) ){ ?>
+                if (!empty($bookings['id']) && empty($transactions['id']) && $bookings['id'] !== "0"){  ?>
+                   
+               
                     <hr style ="border-top: 3px double #8c8b8b">
                     <div class="uk-margin-small uk-text-xsmall">
                         <div class="uk-grid-collapse" uk-grid>

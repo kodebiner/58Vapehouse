@@ -31,6 +31,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
         <script src="js/uikit.min.js"></script>
         <script src="js/uikit-icons.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <style>
             @media print {  
                 #btn{
@@ -48,44 +49,14 @@
                 <div class="uk-text-center uk-margin">
                     <a class="uk-icon-button" uk-icon="print" onclick="printOut()"></a>
                 </div>
-                <div class="uk-text-center uk-margin-top ">
-                    <?php if (!empty($transactions['memberid'])){
-                        foreach ($members as $member){
-                            if($transactions['memberid'] === $member['id']){
-                                $memphone = $member['phone'];
-                                // echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62$memphone?text=$link></a>";
-                            }
-                        }
-                    }elseif(empty($member['id'])){
-                        echo'<a class="uk-icon-button" uk-icon="whatsapp" href="#phonenumber"  uk-toggle></a>';
-                    }?>
-                    <!-- modal phonenumber -->
-                    <div class="uk-flex-top" id="phonenumber" uk-modal>
-                        <div class="uk-modal-dialog uk-margin-auto-vertical">
-                            <button class="uk-modal-close-default" type="button" uk-close></button>
-                            <div class="uk-modal-header">
-                                <h2 class="uk-modal-title"><?=lang('Global.phonenumber')?></h2>
-                            </div>
-                            <div class="uk-modal-body">
-                                <form class="uk-form-horizontal uk-margin-large" action="pay/phone" method="post">
-                                    <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.phonenumber')?></label>
-                                        <div class="uk-form-controls">
-                                            <div class="uk-inline uk-width-1-1">
-                                                <span class="uk-form-icon">+62</span>
-                                                <input class="uk-input" min="1" name="phone" type="number" placeholder="phone" aria-label="Not clickable icon">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="uk-modal-footer uk-text-right">
-                                        <button class="uk-button uk-button-primary" type="submit" value="submit"><?= lang('Global.submit') ?></button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end modal phonenumber -->
+                <div class="uk-text-center uk-margin">
+                    <?php if(!empty($transactions['id']) && empty($bookings['id'])){?>
+                        <!-- for transaction -->
+                        <a class='uk-icon-button' uk-icon='whatsapp' href="pay/invoice/<?=$transactions['id']?>"></a>
+                    <?php } elseif (!empty($bookings['id']) && (empty($transactions['id']))){ ?>
+                        <!-- for bookings -->
+                        <a class='uk-icon-button' uk-icon='whatsapp' href="pay/invoicebook/<?=$bookings['id']?>"></a>
+                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -99,6 +70,7 @@
                     <?php } ?>
                 </div>
 
+                <?php if(!empty($transactions['id'])){ ?>
                 <div class="uk-flex uk-flex-center">
                     <?php foreach ($outlets as $outlet) {
                         if ($outlet['id'] === $transactions['outletid']) { ?>
@@ -113,11 +85,31 @@
                         <?php }
                     } ?>
                 </div>
+                <?php } elseif (!empty($bookings['id'])){ ?>
+                    <div class="uk-flex uk-flex-center">
+                    <?php foreach ($outlets as $outlet) {
+                        if ($outlet['id'] === $bookings['outletid']) { ?>
+                            <div class="fpoutlet uk-margin-remove" style="font-size:12px;" ><?= $outlet['name'] ?></div>
+                        <?php }
+                    } ?>
+                </div>
+                <div class="uk-flex uk-flex-center">
+                    <?php foreach ($outlets as $outlet) {
+                        if ($outlet['id'] === $bookings['outletid']) { ?>
+                            <p class="fpaddress uk-margin-remove uk-text-bold" style="font-size:10px;"><?= $outlet['address'] ?></p>
+                        <?php }
+                    } ?>
+                </div>
+                <?php } ?>
                     
                 <div class="uk-text-xsmall uk-margin-top">
                     <div uk-grid>
                         <div class="uk-width-1-2"><?=lang('Global.invoice')?>: <?=(strtotime("now")) ?></div>
-                        <div class="uk-width-1-2 uk-text-right"><?= $transactions['date'] ?></div>
+                        <?php if (!empty($transactions['id'])){ ?>
+                            <div class="uk-width-1-2 uk-text-right"><?= $transactions['date'] ?></div>
+                        <?php }elseif (!empty($bookings['id'])){ ?>
+                            <div class="uk-width-1-2 uk-text-right"><?= $bookings['created_at'] ?></div>
+                       <?php } ?>
                     </div>
                     <div class="uk-margin-remove-top" uk-grid>
                         <div class="uk-width-2-3">Cashier: <?= $fullname ?></div>
@@ -226,7 +218,7 @@
 
                 <!-- booking variant -->
                     <?php
-                    if(!empty($bookings) && (empty($transactions['id']))){
+                    if(!empty($bookings['id']) && (empty($transactions['id']))){
                         foreach ($bookingdetails as $bookingdetail) {
                             if ($bookingdetail['variantid'] !== '0') {
                                 foreach ($variants as $variant) {
@@ -242,7 +234,7 @@
                                             echo '</div>';
                                             echo '<div class="uk-grid-collapse" uk-grid>';
                                             echo '<div class="uk-width-2-3">x'.$bookingdetail['qty'].' @'.$variantval.'</div>';
-                                            echo '<div class="uk-width-1-3">'.$variantval * $bookingdetail['qty'].'</div>';
+                                            echo '<div class="uk-width-1-3 uk-text-right">'.$variantval * $bookingdetail['qty'].'</div>';
                                             echo '</div>';
                                             if ($bookingdetail['discvar'] !== '0') {
                                                 echo '<div class="uk-grid-collapse" uk-grid>';
@@ -315,7 +307,7 @@
                             <div class="uk-width-1-2  uk-text-bold uk-text-right"><?=$total?></div>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if ($pay !== "0"){
+                            <?php if (!empty($pay)){
                                 $pays =  lang('Global.pay');
                                 echo "<div class='uk-width-1-2'>$pays</div>";
                                 echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>$pay</div>";

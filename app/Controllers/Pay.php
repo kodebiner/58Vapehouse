@@ -551,8 +551,15 @@ class Pay extends BaseController
         $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
         $data['bookings']       = $BookingModel->findAll();
         $data['bundleVariants'] = $bundleVariants->getResult();
-        $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $data['link']          =  urlencode($actual_link);
+
+        if(empty($input['phone'])){
+            $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+            $data['link']           =  urlencode($actual_link);
+        }elseif(!empty($input['phone'])){
+            $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+            $data['link']           = "https://wa.me/62".$input['phone']."?text=".urlencode($actual_link)."";
+            
+        }
         
         // Gconfig poin setup
         $minimTrx    = $Gconfig['poinorder'];
@@ -898,6 +905,26 @@ class Pay extends BaseController
         }else{
             $data['total']          = "0";
         }
+
+        // Gconfig poin setup
+        $minimTrx    = $Gconfig['poinorder'];
+        $poinval     = $Gconfig['poinvalue'];
+        
+        if ($value  >= $minimTrx) {
+            $subval  = $value / $minimTrx;
+            $result = floor($subval);
+            $poin   = (int)$result * $poinval;
+        }
+
+        if (!empty($booking['memberid'])){
+            $data['cust']           = $MemberModel->where('id',$booking['memberid'])->first();
+            $data['mempoin']        = $member['poin'];
+            $data['poinearn']       = $poin;
+        }else{
+            $data['cust']           = "0";
+            $data['mempoin']        = "0";
+            $data['poinearn']       = "0";  
+        }
          
         $data['user']           = $user->username;
         $data['date']           = $booking['created_at'];
@@ -1139,6 +1166,26 @@ class Pay extends BaseController
         $data['bookings']       = $booking;
         $data['bookingdetails'] = $bookingdetails;
         $data['bundleVariants'] = $bundleVariants->getResult();
+
+         // Gconfig poin setup
+         $minimTrx    = $Gconfig['poinorder'];
+         $poinval     = $Gconfig['poinvalue'];
+         
+         if ($total  >= $minimTrx) {
+             $value  = $total / $minimTrx;
+             $result = floor($value);
+             $poin   = (int)$result * $poinval;
+         }
+ 
+         if (!empty($bookings['memberid'])){
+             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
+             $data['mempoin']        = $member['poin'];
+             $data['poinearn']       = $poin;
+         }else{
+             $data['cust']           = "0";
+             $data['mempoin']        = "0";
+             $data['poinearn']       = "0";  
+         }
         
         
         if (!empty($member)){
@@ -1379,7 +1426,6 @@ class Pay extends BaseController
         $data['trxdetails']     = $TrxdetailModel->where('transactionid',$id)->find();
         $data['trxpayments']    = $trxpayments;
         $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
-        $data['bookings']       = $BookingModel->findAll();
         $data['bundleVariants'] = $bundleVariants->getResult();
         $data['members']        = $MemberModel->findAll();
 
@@ -1449,15 +1495,15 @@ class Pay extends BaseController
         }
 
         if (!empty($transactions['amountpaid'])){
-            $data['pay']            = $transactions['amountpaid'];
+            $data['pay'] = $transactions['amountpaid'];
         } elseif (empty($transactions['amountpaid'])) {
             foreach ($trxdetails as $trxdetail){
                 if($trxdetail['transactionid']== $id){
-                    $data['pay']            = $trxdetail['value'];
+                    $data['pay'] = $trxdetail['value'];
                 }
             }
         }else{
-            $data['pay']            = '0';
+            $data['pay'] = '0';
         }
 
         if(!empty($debt['value'])){
@@ -1475,6 +1521,151 @@ class Pay extends BaseController
         $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
         $data['total']          = $total;
 
+        return view('Views/invoice', $data);
+    }
+    
+    public function invoicebook($id){
+        // Calling Models
+        $BundleModel            = new BundleModel();
+        $BundledetModel         = new BundledetailModel();
+        $CashModel              = new CashModel();
+        $DebtModel              = new DebtModel();
+        $GconfigModel           = new GconfigModel();
+        $OutletModel            = new OutletModel();
+        $UserModel              = new UserModel();
+        $MemberModel            = new MemberModel();
+        $PaymentModel           = new PaymentModel();
+        $ProductModel           = new ProductModel();
+        $VariantModel           = new VariantModel();
+        $StockModel             = new StockModel();
+        $BookingModel           = new BookingModel();
+        $BookingdetailModel     = new BookingdetailModel();
+        $TransactionModel       = new TransactionModel();
+        $TrxdetailModel         = new TrxdetailModel();
+        $TrxpaymentModel        = new TrxpaymentModel();
+        $MemberModel            = new MemberModel();
+        $GconfigModel           = new GconfigModel();
+        
+        $db                 = \Config\Database::connect();
+        $bundles            = $BundleModel->findAll();
+        $bundets            = $BundledetModel->findAll();
+        $booking            = $BookingModel->find($id);
+        $bookingdetails     = $BookingdetailModel->where('bookingid',$id)->find();
+        $Cash               = $CashModel->findAll();
+        $outlets            = $OutletModel->findAll();
+        $users              = $UserModel->findAll();
+        $customers          = $MemberModel->findAll();
+        $payments           = $PaymentModel->findAll();
+        $products           = $ProductModel->findAll();
+        $variants           = $VariantModel->findAll();
+        $stocks             = $StockModel->findAll();
+        $member             = $MemberModel->where('id',$booking['memberid'])->first();
+        $debt               = $DebtModel->where('memberid',$booking['memberid'])->first();
+        $user               = $UserModel->where('id',$booking['userid'])->first();
+        $Gconfig            = $GconfigModel->first();
+        
+        $bundleBuilder      = $db->table('bundledetail');
+        $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
+        $bundleVariants     = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
+        $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
+        $bundleVariants     = $bundleBuilder->get();
+        $data               = $this->data;
+        if (!empty($member)){
+            $data['cust']           = $MemberModel->where('id',$booking['memberid'])->first();
+            $data['mempoin']        = $member['poin'];
+        }else{
+            $data['cust']           = "0";
+            $data['mempoin']        = "0";
+            $data['poinused']       = "0";
+        }
+
+        if (!empty ($input['value']) && $input['value'] <= "0"){
+            $data['change']     = $input['value'] - $total;
+        }else{
+            $data['change']     = "0";
+        }
+
+        if (!empty($booking['discvar']) && $booking['discvar'] !== "0"){
+            $data['vardiscval']     = $bookingdetails['value']['variantid'];
+        }else{
+            $data['vardiscval']     = "0";
+        }
+
+        
+        if ((!empty($booking['discvalue'])) && ($booking['disctype'] === '0')) {
+            $data['discount'] = $booking['discvalue'];
+            $data['memberdisc'] = $booking['discvalue'];
+        } elseif ((!empty($booking['discvalue'])) && ($booking['disctype'] === '1')) {
+            $data['discount'] = ($booking['discvalue']/100) * $bookingdetails['value'];
+            $data['memberdisc'] = ($booking['discvalue'] / 100) * $bookingdetails['value'];
+        } else {
+            $data['discount'] = 0;
+            $data['memberdisc'] = 0;
+        }
+
+        if(!empty($input['debt'])){
+            $data['debt']       = $input['debt'];
+            $data['totaldebt']  = $member['kasbon'];
+        }else{
+            $data['debt']       = "0";
+            $data['totaldebt']  = "0";
+        }
+
+        
+        $subtotal = 0;
+        foreach ($bookingdetails as $bookingdetail) {
+            $subtotal += $bookingdetail['value'];
+        }
+        
+        // Gconfig poin setup
+        $minimTrx    = $Gconfig['poinorder'];
+        $poinval     = $Gconfig['poinvalue'];
+        
+        if ($subtotal  >= $minimTrx) {
+            $value  = $subtotal / $minimTrx;
+            $result = floor($value);
+            $poin   = (int)$result * $poinval;
+        }
+
+        if (!empty($booking['memberid'])){
+            $data['cust']           = $MemberModel->where('id',$booking['memberid'])->first();
+            $data['mempoin']        = $member['poin'];
+            $data['poinearn']       = $poin;
+        }else{
+            $data['cust']           = "0";
+            $data['mempoin']        = "0";
+            $data['poinearn']       = "0";  
+        }
+        
+        $data['total']          = $booking['value'];
+        $data['title']          = lang('Global.transaction');
+        $data['description']    = lang('Global.transactionListDesc');
+        $data['bundles']        = $bundles;
+        $data['bundets']        = $bundets;
+        $data['cash']           = $Cash;
+        $data['outlets']        = $outlets;
+        $data['payments']       = $payments;
+        $data['customers']      = $customers;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['stocks']         = $stocks;
+        $data['trxdetails']     = $TrxdetailModel->findAll();
+        $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
+        $data['bookings']       = $booking;
+        $data['bookingdetails'] = $bookingdetails;
+        $data['bundleVariants'] = $bundleVariants->getResult();
+        $data['members']        = $MemberModel->findAll();
+        
+        $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $data['links']          = $actual_link;
+        $data['pay']            = "UNPAID";
+        $data['user']           = $user->username;
+        $data['date']           = $booking['created_at'];
+        $data['bookingid']      = $booking['id'];
+        $data['subtotal']       = $subtotal;
+        $data['member']         = $MemberModel->where('id',$booking['memberid'])->first();
+        
         return view('Views/invoice', $data);
     }
 }

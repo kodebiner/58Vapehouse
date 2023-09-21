@@ -249,6 +249,8 @@ return [
     'categoryreport'    => 'Laporan Category',
     'presencereport'    => 'Laporan Presensi',
     'employereport'     => 'Laporan Karyawan',
+    'customerreport'    => 'Laporan Pelanggan',
+    'bundlereport'      => 'Laporan Bundle',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',

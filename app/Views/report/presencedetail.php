@@ -35,21 +35,14 @@
                         echo lang('Global.checkout');
                     } ?>
                 </td>
-                <td class="uk-text-left uk-text-center"><img class="uk-preserve-width uk-border-circle" id="img<?php echo $presence['id'];?>" src="img/profile<?php echo $presence['photo'];?>" width="40" height="40" alt=""></td>
+                <td class="uk-text-left uk-text-center">
+                    <div uk-lightbox>
+                        <a class="uk-inline" href="img/profile<?= $presence['photo'] ?>">
+                            <img class="uk-preserve-width uk-border-circle" id="img<?php echo $presence['id'];?>" src="img/profile<?php echo $presence['photo'];?>" width="40" height="40" alt="<?= $presence['photo'] ?>">
+                        </a>
+                    </div>
+                </td>
             </tr>
-
-            <div id="modal-id<?php echo $presence['id'];?>" class="uk-flex-top" uk-modal>
-                <div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical">
-                    <button class="uk-modal-close-outside" type="button" uk-close></button>
-                    <img src="img/profile<?php echo $presence['photo'];?>" width="1800" height="1200" alt="">
-                </div>
-            </div>
-
-            <script>
-                $("#img<?php echo $presence['id'];?>").click(function(){
-                    UIkit.modal('#modal-id<?php echo $presence['id'];?>').toggle();
-                });
-            </script>
         <?php } ?>
     </tbody>
 </table>

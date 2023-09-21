@@ -13,6 +13,9 @@
         <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.employereport')?></h3>
         </div>
+        <div class="uk-width-1-2@m uk-text-right">
+            <a target="_blank" class="uk-button uk-button-primary" href="export_excel.php">EXCEL</a>
+        </div>
     </div>
 </div>
 
