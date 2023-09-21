@@ -54,7 +54,7 @@ class Pay extends BaseController
         if (!empty($input['image'])){
 
             $img            = $input['image'];
-            $folderPath     = "img";
+            $folderPath     = "img/tfproof";
             $image_parts    = explode(";base64,", $img);
             $image_type_aux = explode("image/", $image_parts[0]);
             $image_type     = $image_type_aux[1];
@@ -244,7 +244,7 @@ class Pay extends BaseController
                     'sale'      => $date,
                     'qty'       => $stock['qty'] - $varqty
                 ];
-                $StockModel->save($saleVarStock);                
+                $StockModel->save($saleVarStock);
             }
         }
         
@@ -401,41 +401,83 @@ class Pay extends BaseController
         
         // Transaction Payment
         if (!isset($input['firstpayment']) && !isset($input['secpayment']) && isset($input['payment']) && !isset($input['duedate'])) {
-            // Insert Cash
+            // Single Payment Method
             $payment = $PaymentModel->find($input['payment']);
-            $paymet = [
-                'paymentid'     => $payment['id'],
+            $paymethod = [
+                'paymentid'     => $input['payment'],
                 'transactionid' => $trxId,
                 'value'         => $total,
             ];
-            $TrxpaymentModel->save($paymet);
+            $TrxpaymentModel->save($paymethod);
 
         } elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && !isset($input['duedate'])) {
             // Split Payment Method
             // First payment
-            $firstpayment = $PaymentModel->find($input['firstpayment']);
+            $firstpayment = $PaymentModel->find();
             $paymet = [
-                'paymentid'     => $firstpayment['id'],
+                'paymentid'     => $input['firstpayment'],
                 'transactionid' => $trxId,
                 'value'         => $input['firstpay'],
             ];
             $TrxpaymentModel->save($paymet);
 
             // Second Payment
-            $secpayment = $PaymentModel->find($input['secpayment']);
+            $secpayment = $PaymentModel->find();
             $pay = [
-                'paymentid'     => $secpayment['cashid'],
+                'paymentid'     => $input['secpayment'],
                 'transactionid' => $trxId,
                 'value'         => $input['secondpay'],
             ];
             $TrxpaymentModel->save($pay);
-        } elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && !isset($input['payment']) && isset($input['duedate'])) {
-            $paymet = [
+        } elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] === "0" && isset($input['payment']) && isset($input['duedate'])) {
+            // Debt Payment Method
+            $paymentmethod = [
                 'paymentid'     => "0",
                 'transactionid' => $trxId,
                 'value'         => $total,
             ];
+            $TrxpaymentModel->save($paymentmethod);
+        } elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] !== "0" && isset($input['payment']) && isset($input['duedate'])) {
+            // Debt With Down Payment Method
+            $paymentmethod = [
+                'paymentid'     => "0",
+                'transactionid' => $trxId,
+                'value'         => $total - $input['value'],
+            ];
+            $TrxpaymentModel->save($paymentmethod);
+
+            $paymentmethod = [
+                'paymentid'     => $input['payment'],
+                'transactionid' => $trxId,
+                'value'         => $input['value'],
+            ];
+            $TrxpaymentModel->save($paymentmethod);
+        } elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && isset($input['duedate'])) {
+            // Split Payment & Debt Method
+            $paymentmethod = [
+                'paymentid'     => "0",
+                'transactionid' => $trxId,
+                'value'         => ($total - ($input['firstpay'] + $input['secondpay'])),
+            ];
+            $TrxpaymentModel->save($paymentmethod);
+
+            // First payment
+            $firstpayment = $PaymentModel->find();
+            $paymet = [
+                'paymentid'     => $input['firstpayment'],
+                'transactionid' => $trxId,
+                'value'         => $input['firstpay'],
+            ];
             $TrxpaymentModel->save($paymet);
+
+            // Second Payment
+            $secpayment = $PaymentModel->find();
+            $pay = [
+                'paymentid'     => $input['secpayment'],
+                'transactionid' => $trxId,
+                'value'         => $input['secondpay'],
+            ];
+            $TrxpaymentModel->save($pay);
         }
 
         // Gconfig poin setup
@@ -1222,7 +1264,7 @@ class Pay extends BaseController
 
         // Image Capture
         $img                    = $input['image'];
-        $folderPath             = "img";
+        $folderPath             = "img/tfproof";
         $image_parts            = explode(";base64,", $img);
         $image_type_aux         = explode("image/", $image_parts[0]);
         $image_type             = $image_type_aux[1];
@@ -1236,7 +1278,7 @@ class Pay extends BaseController
             'userid'            => $this->data['uid'],
             'outletid'          => $this->data['outletPick'],
             'cashid'            => $cash['id'],
-            'description'       => lang('Global.topup')." - ".$member['name'] ,
+            'description'       => "Top Up - ".$member['name'] ,
             'type'              => "0",
             'date'              => $tanggal,
             'qty'               => $input['value'],
@@ -1260,7 +1302,7 @@ class Pay extends BaseController
 
         // Find Data for Daily Report
         $today                  = date('Y-m-d') .' 00:00:01';
-        $dailyreports           = $DailyReportModel->where('dateopen >', $today)->find();
+        $dailyreports           = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
         foreach ($dailyreports as $dayrep) {
             $tcashin = [
                 'id'            => $dayrep['id'],

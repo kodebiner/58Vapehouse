@@ -100,23 +100,51 @@ class Trxother extends BaseController
             // Get Transaction Cash
             $pettycash          = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
             $cashpayment        = $PaymentModel->where('cashid', $pettycash['id'])->first();
-            $cashtrx            = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('paymentid', $cashpayment['id'])->find();
-            $cashtrxvalue       = array_sum(array_column($cashtrx, 'value'));
+            $cashtrx            = $TransactionModel->where('date >', $dailyreport['dateopen'])->find();
+
+            $trxcashid          = array();
+            foreach ($cashtrx as $cashtr) {
+                $trxcashid[]    = $cashtr['id'];
+            }
+
+            if (!empty($cashtrx)) {
+                $trxpaycash         = $TrxpaymentModel->where('paymentid', $cashpayment['id'])->whereIn('transactionid', $trxcashid)->find();
+                $cashtrxvalue       = array_sum(array_column($trxpaycash, 'value'));
+            } else {
+                $cashtrxvalue       = '0';
+            }
+
             $data['cashtrxvalue']       = $cashtrxvalue;
 
             // Get Transaction Non Cash
             $noncash            = $CashModel->notLike('name', 'Petty Cash')->find();
             $noncashid          = array();
+
             foreach ($noncash as $nocash) {
-                $noncashid[] = $nocash['id'];
+                $noncashid[]    = $nocash['id'];
             }
+
             $noncashpayments    = $PaymentModel->whereIn('cashid', $noncashid)->find();
+            
             $noncashpaymentid   = array();
             foreach ($noncashpayments as $noncashpayment) {
                 $noncashpaymentid[]     = $noncashpayment['id'];
             }
-            $noncashtrx                 = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->whereIn('paymentid', $noncashpaymentid)->find();
-            $noncashtrxvalue            = array_sum(array_column($noncashtrx, 'value'));
+
+            $noncashtrx                 = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
+            $trxnoncashid               = array();
+
+            foreach ($noncashtrx as $noncashtr) {
+                $trxnoncashid[] = $noncashtr['id'];
+            }
+
+            if (!empty($noncashtrx)) {
+                $trxpaynoncash          = $TrxpaymentModel->whereIn('transactionid', $trxnoncashid)->whereIn('paymentid', $noncashpaymentid)->find();
+            } else {
+                $trxpaynoncash          = $TransactionModel->where('date >', $dailyreport['dateopen'])->find();
+            }
+
+            $noncashtrxvalue            = array_sum(array_column($trxpaynoncash, 'value'));
             $data['noncashtrxvalue']    = $noncashtrxvalue;
 
             // Expected Cash
@@ -149,7 +177,7 @@ class Trxother extends BaseController
 
         // Image Capture
         $img                = $input['image'];
-        $folderPath         = "img";
+        $folderPath         = "img/tfproof";
         $image_parts        = explode(";base64,", $img);
         $image_type_aux     = explode("image/", $image_parts[0]);
         $image_type         = $image_type_aux[1];
@@ -187,7 +215,7 @@ class Trxother extends BaseController
 
         // Find Data for Daily Report
         $today              = date('Y-m-d') .' 00:00:01';
-        $dailyreports       = $DailyReportModel->where('dateopen >', $today)->find();
+        $dailyreports       = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
         foreach ($dailyreports as $dayrep) {
             if ($input['cash'] === "0") {
                 $tcashin = [
@@ -226,7 +254,7 @@ class Trxother extends BaseController
 
         // Image Capture
         $img            = $input['image'];
-        $folderPath     = "img";
+        $folderPath     = "img/tfproof";
         $image_parts    = explode(";base64,", $img);
         $image_type_aux = explode("image/", $image_parts[0]);
         $image_type     = $image_type_aux[1];

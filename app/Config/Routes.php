@@ -198,6 +198,7 @@ $routes->group('trxhistory', ['filter'=>'login'], function($routes){
 // Debt
 $routes->group('debt', ['filter'=>'login'], function($routes){
     $routes->get('', 'Debt::indexdebt', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('debtpay', 'Debt::indexdebtins', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('pay/(:num)', 'Debt::paydebt/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 

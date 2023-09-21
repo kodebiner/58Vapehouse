@@ -50,7 +50,7 @@
 
 <?= view('Views/Auth/_message_block') ?>
 
-<!-- Modal Close NOT DONE YET -->
+<!-- Modal Close -->
 <?php if (!empty($dailyreport)) { ?>
     <div uk-modal class="uk-flex-top" id="close-<?= $dailyreport['id'] ?>">
         <div class="uk-modal-dialog uk-margin-auto-vertical">

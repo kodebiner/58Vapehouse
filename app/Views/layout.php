@@ -294,19 +294,27 @@
                             </li>
                             <?php endif ?>
                             <li class="tm-main-navbar">
+                                <a class="uk-h4 tm-h4" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
+                            </li>
+                            <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('transaction') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.transaction');?></a>
                             </li>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                             </li>
-                            <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('debt') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.debt');?></a>
+                            <li class="tm-main-navbar uk-parent">
+                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
+                                <ul class="uk-nav-sub">
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
+                                    </li>
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('debt/debtpay') ?>"><?=lang('Global.debtInstallments');?></a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.topup');?></a>
-                            </li>
-                            <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('payment') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
                             </li>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.sop');?></a>
@@ -358,16 +366,19 @@
                                 <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('cashinout') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.cash');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('cashinout') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashinout');?></a>
                             </li>
                             <li class="tm-main-navbar uk-parent">
-                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/cash.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
+                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
                                     <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('walletman') ?>"><?=lang('Global.walletManagement');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('walletmove') ?>"><?=lang('Global.walletMovement');?></a>
+                                    </li>
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('payment') ?>"><?=lang('Global.payment');?></a>
                                     </li>
                                 </ul>
                             </li>
@@ -389,15 +400,6 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                     </li>
                     <?php endif ?>
-                    <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('transaction') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.transaction');?></a>
-                    </li>
-                    <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
-                    </li>
-                    <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('debt') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.debt');?></a>
-                    </li>
                     <li class="tm-main-navbar uk-parent">
                         <a class="uk-h4 tm-h4" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                         <ul class="uk-nav-sub">
@@ -428,10 +430,27 @@
                         </ul>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.topup');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('payment') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.payment');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('transaction') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.transaction');?></a>
+                    </li>
+                    <li class="tm-main-navbar">
+                        <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
+                    </li>
+                    <li class="tm-main-navbar uk-parent">
+                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
+                        <ul class="uk-nav-sub">
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
+                            </li>
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('debt/debtpay') ?>"><?=lang('Global.debtInstallments');?></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="tm-main-navbar">
+                        <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.topup');?></a>
                     </li>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.sop');?></a>
@@ -483,16 +502,19 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('cashinout') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.cash');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('cashinout') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashinout');?></a>
                     </li>
                     <li class="tm-main-navbar uk-parent">
-                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/cash.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
+                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
                         <ul class="uk-nav-sub">
                             <li class="uk-h5 tm-h5">
                                 <a href="<?= base_url('walletman') ?>"><?=lang('Global.walletManagement');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
                                 <a href="<?= base_url('walletmove') ?>"><?=lang('Global.walletMovement');?></a>
+                            </li>
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('payment') ?>"><?=lang('Global.payment');?></a>
                             </li>
                         </ul>
                     </li>

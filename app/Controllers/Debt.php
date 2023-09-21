@@ -40,6 +40,12 @@ class Debt extends BaseController
         $DebtModel              = new DebtModel;
 
         // Populating Data
+        if ($this->data['outletPick'] === null) {
+            $transactions           = $TransactionModel->orderBy('date', 'DESC')->findAll();
+        } else {
+            $transactions           = $TransactionModel->where('outletid', $this->data['outletPick'])->orderBy('date', 'DESC')->find();
+        }
+
         $bundles                = $BundleModel->findAll();
         $bundets                = $BundledetModel->findAll();
         $cash                   = $CashModel->findAll();
@@ -50,7 +56,6 @@ class Debt extends BaseController
         $products               = $ProductModel->findAll();
         $variants               = $VariantModel->findAll();
         $stocks                 = $StockModel->findAll();
-        $transactions           = $TransactionModel->orderBy('date', 'DESC')->findAll();
         $trxdetails             = $TrxdetailModel->findAll();
         $trxpayments            = $TrxpaymentModel->findAll();
         $debts                  = $DebtModel->findAll();
@@ -149,7 +154,7 @@ class Debt extends BaseController
 
         // Image Capture
         $img                    = $input['image'];
-        $folderPath             = "img";
+        $folderPath             = "img/tfproof";
         $image_parts            = explode(";base64,", $img);
         $image_type_aux         = explode("image/", $image_parts[0]);
         $image_type             = $image_type_aux[1];
@@ -163,7 +168,7 @@ class Debt extends BaseController
             'userid'        => $this->data['uid'],
             'outletid'      => $this->data['outletPick'],
             'cashid'        => $cash['id'],
-            'description'   => lang('Global.debt')." - ".$customers['name'] ,
+            'description'   => "Debt - ".$customers['name'] ,
             'type'          => "0",
             'date'          => $tanggal,
             'qty'           => $input['value'],
@@ -180,7 +185,7 @@ class Debt extends BaseController
 
         // Find Data for Daily Report
         $today                  = date('Y-m-d') .' 00:00:01';
-        $dailyreports           = $DailyReportModel->where('dateopen >', $today)->find();
+        $dailyreports           = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
         foreach ($dailyreports as $dayrep) {
             $tcashin = [
                 'id'            => $dayrep['id'],
@@ -211,6 +216,11 @@ class Debt extends BaseController
         $TrxpaymentModel        = new TrxpaymentModel;
 
         // Populating Data
+        if ($this->data['outletPick'] === null) {
+            $trxothers              = $TrxotherModel->orderBy('date', 'DESC')->like('description', 'Top Up')->find();
+        } else {
+            $trxothers              = $TrxotherModel->where('outletid', $this->data['outletPick'])->orderBy('date', 'DESC')->like('description', 'Top Up')->find();
+        }
         $bundles                = $BundleModel->findAll();
         $bundets                = $BundledetModel->findAll();
         $cash                   = $CashModel->findAll();
@@ -222,7 +232,6 @@ class Debt extends BaseController
         $variants               = $VariantModel->findAll();
         $stocks                 = $StockModel->findAll();
         $transactions           = $TransactionModel->findAll();
-        $trxothers              = $TrxotherModel->orderBy('date', 'DESC')->like('description', 'Top Up')->find();
         $trxpayments            = $TrxpaymentModel->findAll();
 
         // Parsing Data to View
@@ -244,6 +253,36 @@ class Debt extends BaseController
         $data['trxpayments']    = $trxpayments;
 
         return view('Views/topup', $data);
+    }
+    
+    public function indexdebtins()
+    {
+        // Calling Model
+        $TrxotherModel      = new TrxotherModel;
+        $PaymentModel       = new PaymentModel;
+        $DebtModel          = new DebtModel;
+        $UserModel          = new UserModel;
+        $OutletModel        = new OutletModel;
+
+        // Find Data
+        $users              = $UserModel->findAll();
+        $outlets            = $OutletModel->findAll();
+        
+        if ($this->data['outletPick'] === null) {
+            $trxothers      = $TrxotherModel->orderBy('date', 'DESC')->like('description', 'Debt')->find();
+        } else {
+            $trxothers      = $TrxotherModel->orderBy('date', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->find();
+        }
+        
+        // Parsing data to view
+        $data                       = $this->data;
+        $data['title']              = lang('Global.debtInstallments');
+        $data['description']        = lang('Global.debtInstallmentsListDesc');
+        $data['trxothers']          = $trxothers;
+        $data['users']              = $users;
+        $data['outlets']            = $outlets;
+
+        return view('Views/debtpay', $data);
     }
 
     public function create()
