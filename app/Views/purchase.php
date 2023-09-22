@@ -293,7 +293,7 @@
 
             foreach ($purchases as $purchase) { ?>
                 <tr>
-                    <td class="uk-width-medium"><?= $purchase['date']; ?></td>
+                    <td class="uk-width-medium"><?= date('l, d M Y, H:i:s', strtotime($purchase['date'])); ?></td>
                     <td class="uk-width-small">
                         <?php foreach ($suppliers as $supplier) {
                             if ($supplier['id'] === $purchase['supplierid']) {
@@ -522,7 +522,7 @@ foreach ($purchases as $purchase) { ?>
                         
                         <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.date')?></label>
-                            <div class="uk-form-controls"><?= $purchase['date'] ?></div>
+                            <div class="uk-form-controls"><?= date('l, d M Y, H:i:s', strtotime($purchase['date'])); ?></div>
                         </div>
 
                         <div class="uk-margin">

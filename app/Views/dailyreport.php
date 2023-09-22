@@ -6,6 +6,7 @@
     <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
     <script src="js/jquery.validate.min.js"></script>
     <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
+    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 
@@ -18,60 +19,46 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
-<table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
-    <thead>
-        <tr>
-            <th class="uk-text-center"></th>
-            <th class=""><?= lang('Global.outlet') ?></th>
-            <th class=""><?= lang('Global.dateopen') ?></th>
-            <th class=""><?= lang('Global.employeeopen') ?></th>
-            <th class=""><?= lang('Global.dateclose') ?></th>
-            <th class=""><?= lang('Global.employeeclose') ?></th>
-            <th class=""><?= lang('Global.totalcashin') ?></th>
-            <th class=""><?= lang('Global.totalcashout') ?></th>
-            <th class=""><?= lang('Global.totalcashclose') ?></th>
-            <th class=""><?= lang('Global.totalnoncashclose') ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($dailyreports as $dayrep) { ?>
+<div class="uk-overflow-auto uk-margin">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example">
+        <thead>
             <tr>
-                <td class="uk-flex uk-flex-center">
-                    <a class="uk-icon-link uk-icon" uk-icon="eye" uk-toggle="target:#detail-<?= $dayrep['id'] ?>"></a>
-                </td>
-
-                <td class="">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $dayrep['outletid']) { ?>
-                            <?= $outlet['name'] ?>
-                        <?php }
-                    } ?>
-                </td>
-
-                <td><?= $dayrep['dateopen'] ?></td>
-
-                <?php foreach ($users as $user) {
-                    if ($user->id === $dayrep['useridopen']) { ?>
-                        <td class=""><?= $fullname ?></td>
-                    <?php }
-                } ?>
-
-                <td><?= $dayrep['dateclose'] ?></td>
-
-                <?php foreach ($users as $user) {
-                    if ($user->id === $dayrep['useridclose']) { ?>
-                        <td class=""><?= $fullname ?></td>
-                    <?php }
-                } ?>
-
-                <td><?= $dayrep['totalcashin'] ?></td>
-                <td><?= $dayrep['totalcashout'] ?></td>
-                <td><?= $dayrep['cashclose'] ?></td>
-                <td><?= $dayrep['noncashclose'] ?></td>
+                <th class="uk-text-center"></th>
+                <th class=""><?= lang('Global.outlet') ?></th>
+                <th class=""><?= lang('Global.dateopen') ?></th>
+                <th class=""><?= lang('Global.dateclose') ?></th>
+                <th class=""><?= lang('Global.totalcashin') ?></th>
+                <th class=""><?= lang('Global.totalcashout') ?></th>
+                <th class=""><?= lang('Global.totalcashclose') ?></th>
+                <th class=""><?= lang('Global.totalnoncashclose') ?></th>
             </tr>
-        <?php } ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php foreach ($dailyreports as $dayrep) { ?>
+                <tr>
+                    <td class="uk-flex uk-flex-center">
+                        <a class="uk-icon-link uk-icon" uk-icon="eye" uk-toggle="target:#detail-<?= $dayrep['id'] ?>"></a>
+                    </td>
+
+                    <td class="">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $dayrep['outletid']) { ?>
+                                <?= $outlet['name'] ?>
+                            <?php }
+                        } ?>
+                    </td>
+
+                    <td><?= date('l, d M Y, H:i:s', strtotime($dayrep['dateopen'])); ?></td>
+                    <td><?= date('l, d M Y, H:i:s', strtotime($dayrep['dateclose'])); ?></td>
+                    <td>Rp <?= number_format($dayrep['totalcashin'],2,',','.');?></td>
+                    <td>Rp <?= number_format($dayrep['totalcashout'],2,',','.');?></td>
+                    <td>Rp <?= number_format((Int)$dayrep['cashclose'],2,',','.');?></td>
+                    <td>Rp <?= number_format((Int)$dayrep['noncashclose'],2,',','.');?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
 <!-- Table Of Content End -->
 
 <?php foreach ($dailyreports as $dayrep) { ?>
@@ -820,4 +807,12 @@
     <!-- Modal Cash History End -->
 <?php } ?>
 <!-- Modal Detail End -->
+
+<!-- Search Engine Script -->
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+</script>
+<!-- Search Engine Script End -->
 <?= $this->endSection() ?>

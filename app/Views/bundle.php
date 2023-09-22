@@ -184,7 +184,7 @@
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td><?= $bundle['name']; ?></td>
-                    <td><?= $bundle['price']; ?></td>
+                    <td>Rp <?= number_format($bundle['price'],2,',','.'); ?></td>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                         <!-- Button Trigger Modal Edit -->
                         <div>

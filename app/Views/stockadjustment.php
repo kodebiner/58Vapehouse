@@ -127,7 +127,7 @@
             <?php foreach ($stockadj as $stokadj) : ?>
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
-                    <td class=""><?= $stokadj['date']; ?></td>
+                    <td class=""><?= date('l, d M Y, H:i:s', strtotime($stokadj['date'])); ?></td>
                     <td class="">
                         <?php 
                             foreach ($variants as $variant) {

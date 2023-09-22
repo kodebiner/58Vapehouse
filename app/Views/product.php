@@ -583,7 +583,7 @@
                         } elseif ($countvar === 1) {
                             foreach ($variants as $variant) {
                                 if ($variant['productid'] === $product['id']) {
-                                    echo $variant['hargamodal'] + $variant['hargajual'];
+                                    echo "Rp ".number_format(($variant['hargamodal'] + $variant['hargajual']),2,',','.');
                                 }
                             }
                         } else {
@@ -1022,7 +1022,7 @@
                                                 ?>
                                             </td>
                                             <td>
-                                                <?php echo $variant['hargamodal'] + $variant['hargajual']; ?>
+                                                <?= "Rp ".number_format(($variant['hargamodal'] + $variant['hargajual']),2,',','.'); ?>
                                             </td>
                                         </tr>
                                     <?php } ?>

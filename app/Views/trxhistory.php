@@ -1,6 +1,7 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('extraScript') ?>
     <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 
@@ -13,81 +14,83 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
-<table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
-    <thead>
-        <tr>
-            <th class="uk-text-center"></th>
-            <th class=""><?= lang('Global.date') ?></th>
-            <th class=""><?= lang('Global.outlet') ?></th>
-            <th class=""><?= lang('Global.employee') ?></th>
-            <th class=""><?= lang('Global.paymethod') ?></th>
-            <th class=""><?= lang('Global.total') ?></th>
-            <th class="uk-text-center"></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($transactions as $transaction) { ?>
+<div class="uk-overflow-auto uk-margin">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
+        <thead>
             <tr>
-                <td class="uk-flex uk-flex-center">
-                    <a class="uk-icon-link uk-icon" uk-toggle="target:#detail-<?= $transaction['id'] ?>" uk-icon="search"></a>
-                </td>
+                <th class="uk-text-center"></th>
+                <th class=""><?= lang('Global.date') ?></th>
+                <th class=""><?= lang('Global.outlet') ?></th>
+                <th class=""><?= lang('Global.employee') ?></th>
+                <th class=""><?= lang('Global.paymethod') ?></th>
+                <th class=""><?= lang('Global.total') ?></th>
+                <th class="uk-text-center"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($transactions as $transaction) { ?>
+                <tr>
+                    <td class="uk-flex uk-flex-center">
+                        <a class="uk-icon-link uk-icon" uk-toggle="target:#detail-<?= $transaction['id'] ?>" uk-icon="search"></a>
+                    </td>
 
-                <td class=""><?= $transaction['date'] ?></td>
+                    <td class=""><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></td>
 
-                <?php foreach ($outlets as $outlet) {
-                    if ($outlet['id'] === $transaction['outletid']) { ?>
-                        <td class=""><?= $outlet['name'] ?></td>
-                    <?php }
-                } ?>
-
-                <?php foreach ($users as $user) {
-                    if ($user->id === $transaction['userid']) {?>
-                        <td class=""><?= $user->name ?></td>
-                    <?php }
-                } ?>
-
-                <?php if ($transaction['paymentid'] === "0") { ?>
-                    <td class=""><?= lang('Global.splitbill') ?></td>
-                <?php } else {
-                    foreach ($payments as $payment) {
-                        if ($payment['id'] === $transaction['paymentid']) { ?>
-                            <td class=""><?= $payment['name'] ?></td>
+                    <?php foreach ($outlets as $outlet) {
+                        if ($outlet['id'] === $transaction['outletid']) { ?>
+                            <td class=""><?= $outlet['name'] ?></td>
                         <?php }
-                    }
-                } ?>
+                    } ?>
 
-                <td class="">
-                    <?php
-                    $prices = array();
-                    foreach ($trxdetails as $trxdet) {
-                        if ($trxdet['transactionid'] === $transaction['id']) {
-                            $total = $trxdet['qty'] * $trxdet['value'];
-                            $prices [] = $total;
-                        } ?>
-                    <?php }
-                    $sum = array_sum($prices);
-                    echo "Rp " . number_format($sum,2,',','.'); ?>
-                </td>
+                    <?php foreach ($users as $user) {
+                        if ($user->id === $transaction['userid']) {?>
+                            <td class=""><?= $user->name ?></td>
+                        <?php }
+                    } ?>
 
-                <td class="uk-text-center">
-                    <?php if (!empty($transaction['amountpaid'])) {
-                        echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.lang('Global.paid').'</div>';
-                    } else {
-                        foreach ($debts as $debt) {
-                            if ($debt['transactionid'] === $transaction['id']) {
-                                if ($transaction['amountpaid'] - $debt['value'] < "0") {
-                                    echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.lang('Global.notpaid').'</div>';
-                                } elseif ($transaction['amountpaid'] - $debt['value'] >= "0") {
-                                    echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.lang('Global.paid').'</div>';
-                                }
-                            } 
+                    <?php if ($transaction['paymentid'] === "0") { ?>
+                        <td class=""><?= lang('Global.splitbill') ?></td>
+                    <?php } else {
+                        foreach ($payments as $payment) {
+                            if ($payment['id'] === $transaction['paymentid']) { ?>
+                                <td class=""><?= $payment['name'] ?></td>
+                            <?php }
                         }
                     } ?>
-                </td>
-            </tr>
-        <?php } ?>
-    </tbody>
-</table>
+
+                    <td class="">
+                        <?php
+                        $prices = array();
+                        foreach ($trxdetails as $trxdet) {
+                            if ($trxdet['transactionid'] === $transaction['id']) {
+                                $total = $trxdet['qty'] * $trxdet['value'];
+                                $prices [] = $total;
+                            } ?>
+                        <?php }
+                        $sum = array_sum($prices);
+                        echo "Rp " . number_format($sum,2,',','.'); ?>
+                    </td>
+
+                    <td class="uk-text-center">
+                        <?php if (!empty($transaction['amountpaid'])) {
+                            echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.lang('Global.paid').'</div>';
+                        } else {
+                            foreach ($debts as $debt) {
+                                if ($debt['transactionid'] === $transaction['id']) {
+                                    if ($transaction['amountpaid'] - $debt['value'] < "0") {
+                                        echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.lang('Global.notpaid').'</div>';
+                                    } elseif ($transaction['amountpaid'] - $debt['value'] >= "0") {
+                                        echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.lang('Global.paid').'</div>';
+                                    }
+                                } 
+                            }
+                        } ?>
+                    </td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
 <!-- Table Of Content End -->
 
 <!-- Modal Detail -->
@@ -128,11 +131,25 @@
                                 <?php }
                             } ?>
                         </div>
+                        <div class="uk-flex uk-flex-center">
+                            <?php foreach ($outlets as $outlet) {
+                                if ($outlet['id'] === $transaction['outletid']) { ?>
+                                    <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="instagram"></span> : <?= $outlet['instagram'] ?></div>
+                                <?php }
+                            } ?>
+                        </div>
+                        <div class="uk-flex uk-flex-center">
+                            <?php foreach ($outlets as $outlet) {
+                                if ($outlet['id'] === $transaction['outletid']) { ?>
+                                    <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="whatsapp"></span> : <?= $outlet['phone'] ?></div>
+                                <?php }
+                            } ?>
+                        </div>
 
                         <div class="uk-padding-small">
                             <div uk-grid>
                                 <div class="uk-width-1-2">Invoice: <?=(strtotime("now")) ?></div>
-                                <div class="uk-width-1-2 uk-text-right"><?= $transaction['date'] ?></div>
+                                <div class="uk-width-1-2 uk-text-right"><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></div>
                             </div>
                             <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
                                 <div>Cashier: <?= $fullname ?></div>
@@ -261,7 +278,7 @@
                                     <?php } ?> 
                                 </div>
                                 <div class="uk-margin-remove-top" uk-grid>
-                                    <?php if (($transaction['memberid'] !== "0") && ($transaction['pointused'])) { ?>
+                                    <?php if (($transaction['memberid'] !== "0") && ($transaction['pointused'] !== "0")) { ?>
                                         <div class="uk-width-1-2">
                                             <div><?= lang('Global.redeemPoint') ?></div>
                                         </div>
@@ -345,4 +362,12 @@
     </div>
 <?php } ?>
 <!-- Modal Detail End -->
+
+<!-- Search Engine Script -->
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+</script>
+<!-- Search Engine Script End -->
 <?= $this->endSection() ?>

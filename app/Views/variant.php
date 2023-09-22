@@ -103,11 +103,11 @@
             <?php foreach ($variants as $variant) { ?>
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
-                    <td class="uk-text-center"><?=$variant['name']?></td>
-                    <td class="uk-text-center"><?=$variant['hargadasar']?></td>
-                    <td class="uk-text-center"><?=$variant['hargamodal']?></td>
-                    <td class="uk-text-center"><?=$variant['hargarekomendasi']?></td>
-                    <td class="uk-text-center"><?=$variant['hargajual'] + $variant['hargamodal']?></td>
+                    <td class="uk-text-center"><?= $variant['name'] ?></td>
+                    <td class="uk-text-center">Rp <?= number_format($variant['hargadasar'],2,',','.'); ?></td>
+                    <td class="uk-text-center">Rp <?= number_format($variant['hargamodal'],2,',','.'); ?></td>
+                    <td class="uk-text-center">Rp <?= number_format($variant['hargarekomendasi'],2,',','.'); ?></td>
+                    <td class="uk-text-center">Rp <?= number_format(($variant['hargajual'] + $variant['hargamodal']),2,',','.'); ?></td>
                     <td class="uk-text-center">
                         <?php
                         $qty = 0;

@@ -227,7 +227,7 @@
                                 <div class="uk-modal-body">
                                     <?php foreach ($bookings as $book) { ?>
                                         <div id="booklist<?=$book['id']?>">
-                                            <div class="uk-h3 tm-h4"><?= $book['created_at'] ?></div>
+                                            <div class="uk-h5 tm-h5"><?= date('l, d M Y', strtotime($book['created_at'])); ?></div>
                                             <div class="uk-margin-small-top" uk-grid>
                                                 <a class="uk-width-5-6 uk-link-reset" uk-toggle="target: #detail<?= $book['id'] ?>">
                                                     <?php
@@ -1195,17 +1195,53 @@
                                 </div>
                             </div>
                             <?= view('Views/Auth/_message_block') ?>
+
                             <ul class="uk-switcher switcher-class">
 
                                 <!-- Catalog List -->
                                 <li>
+                                    <div class="uk-margin uk-text-center">
+                                        <div class="uk-search uk-search-default uk-width-1-5@l uk-width-1-1">
+                                            <span class="uk-form-icon" uk-icon="icon: search"></span>
+                                            <input class="uk-input" type="text" placeholder="Search Item ..." id="prods" name="prods" aria-label="Not clickable icon" style="border-radius: 5px;">
+                                        </div>
+                                        <script type="text/javascript">
+                                            $(function() {
+                                                var prodsList = [
+                                                    {label: 'Show All', idx: '0'},
+                                                    <?php
+                                                        foreach ($products as $product) {
+                                                            echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
+                                                        }
+                                                    ?>
+                                                ];
+                                                $("#prods").autocomplete({
+                                                    source: prodsList,
+                                                    select: function(e, i) {
+                                                        if (i.item.idx != '0') {
+                                                            <?php foreach ($products as $product) { ?>
+                                                                $("#CreateOrder<?=$product['id']?>").prop('hidden',true);
+                                                            <?php } ?>
+                                                                $("#CreateOrder"+i.item.idx).prop('hidden',false);
+                                                        } else {
+                                                            <?php foreach ($products as $product) { ?>
+                                                                $("#CreateOrder<?=$product['id']?>").prop('hidden',false);
+                                                            <?php } ?>
+                                                        }
+                                                    },
+                                                    minLength: 1
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+
                                     <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                         <?php
                                             foreach ($products as $product) {
                                                 $productName    = $product['name'];
                                                 $productPhoto   = $product['thumbnail'];
                                         ?>
-                                            <div id="CreateOrder">
+                                            <div id="CreateOrder<?= $product['id'] ?>">
                                                 <div class="uk-card uk-card-hover uk-card-default" uk-toggle="target: #modalVar<?= $product['id'] ?>">
                                                     <div class="uk-card-header uk-flex uk-flex-center uk-flex-middle">
                                                         <div class="tm-h1 uk-text-bolder"><?= $productName ?></div>
@@ -1556,6 +1592,46 @@
                                 
                                 <!-- Favorite List -->
                                 <li>
+                                    <div class="uk-margin uk-text-center">
+                                        <div class="uk-search uk-search-default uk-width-1-5@l uk-width-1-1">
+                                            <span class="uk-form-icon" uk-icon="icon: search"></span>
+                                            <input class="uk-input" type="text" placeholder="Search Item ..." id="favs" name="favs" aria-label="Not clickable icon" style="border-radius: 5px;">
+                                        </div>
+                                        <script type="text/javascript">
+                                            $(function() {
+                                                var favsList = [
+                                                    {label: 'Show All', idx: '0'},
+                                                    <?php
+                                                        foreach ($products as $product) {
+                                                            if ($product['favorite'] === '1') {
+                                                                echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
+                                                            }
+                                                        }
+                                                    ?>
+                                                ];
+                                                $("#favs").autocomplete({
+                                                    source: favsList,
+                                                    select: function(e, i) {
+                                                        if (i.item.idx != '0') {
+                                                            <?php foreach ($products as $product) {
+                                                                if ($product['favorite'] === '1') { ?>
+                                                                    $("#CreateOrder<?=$product['id']?>").prop('hidden',true);
+                                                                <?php }
+                                                            } ?>
+                                                            $("#CreateOrder"+i.item.idx).prop('hidden',false);
+                                                        } else {
+                                                            <?php foreach ($products as $product) {
+                                                                if ($product['favorite'] === '1') { ?>
+                                                                    $("#CreateOrder<?=$product['id']?>").prop('hidden',false);
+                                                                <?php }
+                                                            } ?>
+                                                        }
+                                                    },
+                                                    minLength: 1
+                                                });
+                                            });
+                                        </script>
+                                    </div>
                                     <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                         <?php
                                             foreach ($products as $product) {
@@ -1563,7 +1639,7 @@
                                                     $productName    = $product['name'];
                                                     $productPhoto   = $product['thumbnail'];
                                         ?>
-                                            <div id="CreateOrder">
+                                            <div id="CreateOrder<?= $product['id'] ?>">
                                                 <div class="uk-card uk-card-hover uk-card-default" uk-toggle="target: #modalFav<?= $product['id'] ?>">
                                                     <div class="uk-card-header uk-flex uk-flex-center uk-flex-middle">
                                                         <div class="tm-h1 uk-text-bolder"><?= $productName ?></div>
@@ -1622,6 +1698,23 @@
                                                         <div class="uk-modal-body">
                                                             <div class="uk-child-width-1-1" uk-grid>
                                                                 <div id="">
+                                                                    <div class="uk-margin">
+                                                                        <div class="uk-flex uk-flex-middle" uk-grid>
+                                                                            <div class="uk-width-1-6">
+                                                                                <h5 style="text-transform: uppercase;"><?= lang('Global.variant'); ?></h5>
+                                                                            </div>
+                                                                            <div class="uk-width-1-4">
+                                                                                <h5 style="text-transform: uppercase;"><?= lang('Global.price'); ?></h5>
+                                                                            </div>
+                                                                            <div class="uk-width-1-4">
+                                                                                <h5 style="text-transform: uppercase;"><?= lang('Global.suggestPrice'); ?></h5>
+                                                                            </div>
+                                                                            <div class="uk-width-1-6">
+                                                                                <h5 style="text-transform: uppercase;"><?= lang('Global.stock'); ?></h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
                                                                     <?php foreach ($variants as $variant) {
                                                                         if ($variant['productid'] === $product['id']) {
                                                                             $VarName    = $variant['name'];
@@ -1630,11 +1723,14 @@
 
                                                                             <div class="uk-margin">
                                                                                 <div class="uk-flex uk-flex-middle" uk-grid>
-                                                                                    <div class="uk-width-1-3">
+                                                                                    <div class="uk-width-1-6">
                                                                                         <div class="uk-h4"><?= $VarName; ?></div>
                                                                                     </div>
-                                                                                    <div class="uk-width-1-3">
+                                                                                    <div class="uk-width-1-4">
                                                                                         <div class="uk-h4">Rp <?= $Price; ?>,-</div>
+                                                                                    </div>
+                                                                                    <div class="uk-width-1-4">
+                                                                                        <div class="uk-h4">Rp <?= $variant['hargarekomendasi']; ?>,-</div>
                                                                                     </div>
                                                                                     <div class="uk-width-1-6">
                                                                                         <?php foreach ($stocks as $stock) {
@@ -1668,12 +1764,47 @@
 
                                 <!-- Bundle List -->
                                 <li>
+                                    <div class="uk-margin uk-text-center">
+                                        <div class="uk-search uk-search-default uk-width-1-5@l uk-width-1-1">
+                                            <span class="uk-form-icon" uk-icon="icon: search"></span>
+                                            <input class="uk-input" type="text" placeholder="Search Item ..." id="bunds" name="bunds" aria-label="Not clickable icon" style="border-radius: 5px;">
+                                            <input id="bundso" name="productid" hidden />
+                                        </div>
+                                        <script type="text/javascript">
+                                            $(function() {
+                                                var bundsList = [
+                                                    {label: 'Show All', idx: '0'},
+                                                    <?php
+                                                        foreach ($bundles as $bundle) {
+                                                            echo '{label:"'.$bundle['name'].'",idx:'.$bundle['id'].'},';
+                                                        }
+                                                    ?>
+                                                ];
+                                                $("#bunds").autocomplete({
+                                                    source: bundsList,
+                                                    select: function(e, i) {
+                                                        if (i.item.idx != '0') {
+                                                            <?php foreach ($bundles as $bundle) { ?>
+                                                                $("#CreateOrder<?=$bundle['id']?>").prop('hidden',true);
+                                                            <?php } ?>
+                                                            $("#CreateOrder"+i.item.idx).prop('hidden',false);
+                                                        } else {
+                                                            <?php foreach ($bundles as $bundle) { ?>
+                                                                $("#CreateOrder<?=$bundle['id']?>").prop('hidden',false);
+                                                            <?php } ?>
+                                                        }
+                                                    },
+                                                    minLength: 1
+                                                });
+                                            });
+                                        </script>
+                                    </div>
                                     <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                         <?php foreach ($bundles as $bundle) {
                                             $BunName = $bundle['name']; 
                                             $BunPrice = $bundle['price'];
                                         ?>
-                                            <div id="CreateOrder">
+                                            <div id="CreateOrder<?= $bundle['id'] ?>">
                                                 <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrderBundle<?= $bundle['id'] ?>()">
                                                     <div class="uk-card-header">
                                                         <div class="tm-h1 uk-text-bolder uk-text-center"><?= $BunName; ?></div>

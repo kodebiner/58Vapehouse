@@ -85,6 +85,20 @@
                         <?php }
                     } ?>
                 </div>
+                <div class="uk-flex uk-flex-center">
+                    <?php foreach ($outlets as $outlet) {
+                        if ($outlet['id'] === $transactions['outletid']) { ?>
+                            <p class="fpaddress uk-margin-remove uk-text-bold" style="font-size:10px;"><span uk-icon="instagram" style="width: 10px;"></span> : <?= $outlet['instagram'] ?></p>
+                        <?php }
+                    } ?>
+                </div>
+                <div class="uk-flex uk-flex-center">
+                    <?php foreach ($outlets as $outlet) {
+                        if ($outlet['id'] === $transactions['outletid']) { ?>
+                            <p class="fpaddress uk-margin-remove uk-text-bold" style="font-size:10px;"><span uk-icon="whatsapp" style="width: 10px;"></span> : <?= $outlet['phone'] ?></p>
+                        <?php }
+                    } ?>
+                </div>
                 <?php } elseif (!empty($bookings['id'])){ ?>
                     <div class="uk-flex uk-flex-center">
                     <?php foreach ($outlets as $outlet) {
@@ -100,13 +114,27 @@
                         <?php }
                     } ?>
                 </div>
+                <div class="uk-flex uk-flex-center">
+                    <?php foreach ($outlets as $outlet) {
+                        if ($outlet['id'] === $bookings['outletid']) { ?>
+                            <span uk-icon="instagram" style="width: 10px;"></span> : <?= $outlet['instagram'] ?>
+                        <?php }
+                    } ?>
+                </div>
+                <div class="uk-flex uk-flex-center">
+                    <?php foreach ($outlets as $outlet) {
+                        if ($outlet['id'] === $bookings['outletid']) { ?>
+                            <span uk-icon="whatsapp" style="width: 10px;"></span> : <?= $outlet['phone'] ?>
+                        <?php }
+                    } ?>
+                </div>
                 <?php } ?>
                     
                 <div class="uk-text-xsmall uk-margin-top">
                     <div uk-grid>
                         <div class="uk-width-1-2"><?=lang('Global.invoice')?>: <?=(strtotime("now")) ?></div>
                         <?php if (!empty($transactions['id'])){ ?>
-                            <div class="uk-width-1-2 uk-text-right"><?= $transactions['date'] ?></div>
+                            <div class="uk-width-1-2 uk-text-right"><?= date('l, d M Y, H:i:s', strtotime($transactions['date'])); ?></div>
                         <?php }elseif (!empty($bookings['id'])){ ?>
                             <div class="uk-width-1-2 uk-text-right"><?= $bookings['created_at'] ?></div>
                        <?php } ?>
@@ -163,8 +191,8 @@
                                             <div class="uk-grid-collapse" uk-grid>
                                                 <?php
                                                 if (!empty($trxdet['discvar'])){
-                                                    echo "<div class='uk-width-1-2'>Discount</br> @" .$trxdet['discvar']. "</div>";
-                                                    echo "<div class='uk-width-1-2 uk-text-right'></br>-" .$trxdet['discvar']. "</div>";
+                                                    echo "<div class='uk-width-1-2'>(".$trxdet['discvar'].")</div>";
+                                                    echo "<div class='uk-width-1-2 uk-text-right'>-" .$trxdet['discvar']. "</div>";
                                                 }
                                                 ?>
                                             </div>

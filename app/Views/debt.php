@@ -6,6 +6,7 @@
     <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
     <script src="js/jquery.validate.min.js"></script>
     <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
+    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 
@@ -18,51 +19,53 @@
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
-<table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
-    <thead>
-        <tr>
-            <th class="uk-text-center"></th>
-            <th class=""><?= lang('Global.date') ?></th>
-            <th class=""><?= lang('Global.outlet') ?></th>
-            <th class=""><?= lang('Global.customer') ?></th>
-            <th class=""><?= lang('Global.duedate') ?></th>
-            <th class=""><?= lang('Global.total') ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($debts as $debt) {
-            if ($debt['value'] !== "0") { ?>
-                <tr>
-                    <td class="uk-flex uk-flex-center">
-                        <a class="uk-icon-link uk-icon" uk-icon="credit-card" uk-toggle="target:#pay-<?= $debt['id'] ?>"></a>
-                    </td>
+<div class="uk-overflow-auto uk-margin">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example">
+        <thead>
+            <tr>
+                <th class="uk-text-center"></th>
+                <th class=""><?= lang('Global.date') ?></th>
+                <th class=""><?= lang('Global.outlet') ?></th>
+                <th class=""><?= lang('Global.customer') ?></th>
+                <th class=""><?= lang('Global.duedate') ?></th>
+                <th class=""><?= lang('Global.total') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($debts as $debt) {
+                if ($debt['value'] !== "0") { ?>
+                    <tr>
+                        <td class="uk-flex uk-flex-center">
+                            <a class="uk-icon-link uk-icon" uk-icon="credit-card" uk-toggle="target:#pay-<?= $debt['id'] ?>"></a>
+                        </td>
 
-                    <?php foreach ($transactions as $trx) {
-                        if ($trx['id'] === $debt['transactionid']) { ?>
-                            <td class=""><?= $trx['date'] ?></td>
+                        <?php foreach ($transactions as $trx) {
+                            if ($trx['id'] === $debt['transactionid']) { ?>
+                                <td class=""><?= date('l, d M Y, H:i:s', strtotime($trx['date'])); ?></td>
 
-                            <?php foreach ($outlets as $outlet) {
-                                if ($outlet['id'] === $trx['outletid']) { ?>
-                                    <td class=""><?= $outlet['name'] ?></td>
-                                <?php }
-                            } ?>
-                        <?php }
-                    } ?>
-                    
-                    <?php foreach ($customers as $cust) {
-                        if ($cust['id'] === $debt['memberid']) {?>
-                            <td class=""><?= $cust['name'] ?></td>
-                        <?php }
-                    } ?>
+                                <?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $trx['outletid']) { ?>
+                                        <td class=""><?= $outlet['name'] ?></td>
+                                    <?php }
+                                } ?>
+                            <?php }
+                        } ?>
+                        
+                        <?php foreach ($customers as $cust) {
+                            if ($cust['id'] === $debt['memberid']) {?>
+                                <td class=""><?= $cust['name'] ?></td>
+                            <?php }
+                        } ?>
 
-                    <td class=""><?= $debt['deadline'] ?></td>
+                        <td class=""><?= date('l, d M Y, H:i:s', strtotime($debt['deadline'])); ?></td>
 
-                    <td class="">Rp <?= number_format($debt['value'],2,',','.') ?></td>
-                </tr>
-            <?php }
-        } ?>
-    </tbody>
-</table>
+                        <td class="">Rp <?= number_format($debt['value'],2,',','.') ?></td>
+                    </tr>
+                <?php }
+            } ?>
+        </tbody>
+    </table>
+</div>
 <!-- Table Of Content End -->
 
 <!-- Modal Pay Debt -->
@@ -209,4 +212,12 @@
     <!-- Modal Pay Proof End -->
 <?php } ?>
 <!-- Modal Pay Debt End -->
+
+<!-- Search Engine Script -->
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+</script>
+<!-- Search Engine Script End -->
 <?= $this->endSection() ?>

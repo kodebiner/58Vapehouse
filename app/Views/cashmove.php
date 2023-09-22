@@ -95,11 +95,11 @@
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
         <thead>
             <tr>
-                <th class="uk-text-center uk-width-small">No</th>
-                <th class="uk-width-medium"><?=lang('Global.description')?></th>
-                <th class="uk-width-medium"><?=lang('Global.origin')?></th>
-                <th class="uk-width-small"><?=lang('Global.destination')?></th>
-                <th class="uk-text-center uk-width-small"><?=lang('Global.quantity')?></th>
+                <th class="uk-text-center">No</th>
+                <th class=""><?=lang('Global.description')?></th>
+                <th class=""><?=lang('Global.origin')?></th>
+                <th class=""><?=lang('Global.destination')?></th>
+                <th class="uk-text-center"><?=lang('Global.quantity')?></th>
     
             </tr>
         </thead>
@@ -124,7 +124,7 @@
                         }
                         ?>
                     </td>
-                    <td class="uk-text-center"><?= $cashmv['qty']; ?></td>
+                    <td class="uk-text-center">Rp <?= number_format($cashmv['qty'],2,',','.'); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

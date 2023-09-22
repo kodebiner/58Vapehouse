@@ -168,6 +168,9 @@ return [
     'productsales'      => 'Penjualan Produk',
     'descproductsales'  => 'Produk yang terjual dari transaksi.',
     'totalproductsales' => 'Total Produk Terjual',
+    'stockremind'       => 'Jumlah Stok Mulai Menipis',
+    'saleremind'        => 'Produk tidak terjual selama',
+    'day'               => 'hari',
 
     // Button
     'edit'              => 'Ubah',

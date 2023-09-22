@@ -43,8 +43,8 @@
                                 }
                             } ?>
                     </td>
-                    <td class=""><?= $stock['restock']; ?></td>
-                    <td class=""><?= $stock['sale']; ?></td>
+                    <td class=""><?= date('l, d M Y, H:i:s', strtotime($stock['restock'])); ?></td>
+                    <td class=""><?= date('l, d M Y, H:i:s', strtotime($stock['sale'])); ?></td>
                     <td class=""><?= $stock['qty']; ?></td>
                 </tr>
             <?php endforeach; ?>

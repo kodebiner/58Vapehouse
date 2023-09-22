@@ -370,7 +370,7 @@
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
         <thead>
             <tr>
-                <th class="uk-text-center uk-width-small">No</th>
+                <th class="uk-text-center">No</th>
                 <th class=""><?=lang('Global.description')?></th>
                 <th class=""><?=lang('Global.outlet')?></th>
                 <th class="uk-text-center"><?=lang('Global.type')?></th>
@@ -407,7 +407,7 @@
                         } ?>   
                     </td>
                     <td class="uk-text-center">
-                        <?= $trx['date'];?>
+                        <?= date('l, d M Y, H:i:s', strtotime($trx['date']));?>
                     </td>
                     <td class="uk-text-left"> 
                         <?php foreach ($users as $user) {
@@ -424,7 +424,7 @@
                         } ?>
                     </td>
                     <td class="uk-text-center">
-                        <?= $trx['qty'];?>
+                        Rp <?= number_format($trx['qty'],2,',','.');?>
                     </td>
                 </tr>
             <?php endforeach; ?>

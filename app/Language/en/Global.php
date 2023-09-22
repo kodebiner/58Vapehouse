@@ -173,6 +173,9 @@ return [
     'productsales'      => 'Product Sales',
     'descproductsales'  => 'Products sold from transactions.',
     'totalproductsales' => 'Total Sold Product',
+    'stockremind'       => 'Stock Is Running Out',
+    'saleremind'        => 'The product has not been sold for',
+    'day'               => 'days',
    
     // Button
     'edit'              => 'Edit',
