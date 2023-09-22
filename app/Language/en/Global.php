@@ -144,8 +144,6 @@ return [
     'totalcashout'      => 'Total Cash Out',
     'totalcashclose'    => 'Total Cash Closed',
     'totalnoncashclose' => 'Total Non Cash Closed',
-    'sales'             => 'Sales',
-    'profit'            => 'Profit',
     'basicprofit'       => 'Basic Profit',
     'capitalgains'      => 'Capital Gains',
     'totaltransaction'  => 'Total Transaction',
