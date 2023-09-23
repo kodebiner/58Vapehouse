@@ -188,6 +188,7 @@ return [
     'avgsalespertrx'    => 'Average sales per transaction',
     'busiestday'        => 'Busiest day',
     'busiesthours'      => 'Busiest hours',
+    'descstockcycle'    => 'Products based on how long stock lasts until today.',
    
     // Button
     'edit'              => 'Edit',

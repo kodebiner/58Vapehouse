@@ -188,6 +188,7 @@ return [
     'avgsalespertrx'    => 'Rata-rata penjualan per transaksi',
     'busiestday'        => 'Hari paling ramai',
     'busiesthours'      => 'Jam paling ramai',
+    'descstockcycle'    => 'Produk berdasarkan lamanya stock mengendap hingga hari ini.',
 
     // Button
     'edit'              => 'Ubah',
