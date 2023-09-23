@@ -4,8 +4,400 @@
     <div>
         <?= view('Views/Auth/_permission_message') ?>
     </div>
-    <div class="uk-position-small uk-position-bottom">
+
+    <!-- Page Heading -->
+    <div class="tm-card-header uk-light uk-margin-bottom">
+        <div uk-grid class="uk-flex-middle uk-child-width-1-2@m">
+            <div>
+                <h3 class="tm-h3"><?=lang('Global.dashboard')?></h3>
+            </div>
+
+            <!-- Date Range Filter -->
+            <div>
+                <div class="uk-margin uk-text-right">
+                    <form id="short" action="report/customer" method="get">
+                        <div class="uk-inline">
+                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                            <input class="uk-input uk-width-medium" type="text" id="daterange" name="daterange" value="" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Date Range Filter End -->
+        </div>
+    </div>
+    <!-- End Of Page Heading -->
+
+    <!-- Transaction Section -->
+    <div class="uk-position-small">
         <a href="transaction" class="uk-button uk-button-primary uk-button-large uk-width-1-1 uk-light" style="border-radius: 10px;"><span class="uk-h3 tm-h3"><?=lang('Global.transaction')?></span></a>
     </div>
+    <!-- Transaction Section End -->
+
+    <!-- Main Section -->
+        <!-- Selling Report -->
+        <div class="uk-margin">
+            <div class="uk-child-width-1-4@l uk-child-width-1-2@s" uk-grid>
+                <!-- Total Sales -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <h5 class="tm-h2" style="color: #000;"><?= lang('Global.salestotal') ?></h5>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <h3 class="tm-h2" style="color: #000;">Rp <?= number_format(100000,2,',','.') ?></h3>
+                            </div>
+                            <div class="uk-text-right uk-margin-small-top">
+                                <a class="uk-link-reset" href="<?= base_url('report/penjualan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Sales End -->
+
+                <!-- Total Profit -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <h5 class="tm-h2" style="color: #000;"><?= lang('Global.profittotal') ?></h5>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <h3 class="tm-h2" style="color: #000;">Rp <?= number_format(100000,2,',','.') ?></h3>
+                            </div>
+                            <div class="uk-text-right uk-margin-small-top">
+                                <a class="uk-link-reset" href="<?= base_url('report/keuntungan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Profit End -->
+
+                <!-- Total Transaction -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <h5 class="tm-h2" style="color: #000;"><?= lang('Global.totaltransaction') ?></h5>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <h3 class="tm-h2" style="color: #000;">100</h3>
+                            </div>
+                            <div class="uk-text-right uk-margin-small-top">
+                                <a class="uk-link-reset" href="<?= base_url('trxhistory') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Transaction End -->
+
+                <!-- Total Product Sales -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <h5 class="tm-h2" style="color: #000;"><?= lang('Global.productsales') ?></h5>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <h3 class="tm-h2" style="color: #000;">100</h3>
+                            </div>
+                            <div class="uk-text-right uk-margin-small-top">
+                                <a class="uk-link-reset" href="<?= base_url('report/keuntungan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Total Product Sales End -->
+            </div>
+        </div>
+        <!-- Selling Report End -->
+
+        <!-- Detail Report -->
+        <div class="uk-margin">
+            <div class="uk-child-width-1-3@l uk-child-width-1-2@s" uk-grid uk-height-match="target: > div > .uk-card;">
+                <!-- Detail Total Sales -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <div class="uk-child-width-1-2" uk-grid id="descsales">
+                                    <div>
+                                        <h5 class="tm-h2" style="color: #000;"><?= lang('Global.salesdetails') ?></h5>
+                                    </div>
+                                    <div class="uk-padding-remove uk-inline">
+                                        <button uk-icon="question"></button>
+                                        <div class="uk-dropbar uk-dropbar-top uk-background-secondary uk-light uk-text-center" uk-drop="stretch: false; target: !#descsales;" style="border-radius: 10px;"><?= lang('Global.descsalestotal') ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.gross') ?></div>
+                                    </div>
+                                    <div class="uk-text-right uk-margin-remove-left">
+                                        <div>Rp <?= number_format(100000,2,',','.') ?></div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom"/>
+
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.discount') ?></div>
+                                    </div>
+                                    <div class="uk-text-right uk-margin-remove-left">
+                                        <div>- Rp <?= number_format(100000,2,',','.') ?></div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom"/>
+
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.redeemPoint') ?></div>
+                                    </div>
+                                    <div class="uk-text-right uk-margin-remove-left">
+                                        <div>Rp <?= number_format(100000,2,',','.') ?></div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom"/>
+
+                                <div class="uk-child-width-1-2 uk-text-bolder" style="color: #000;" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.salestotal') ?></div>
+                                    </div>
+                                    <div class="uk-text-right uk-margin-remove-left">
+                                        <div>Rp <?= number_format(100000,2,',','.') ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="uk-text-right uk-margin-top">
+                                <a class="uk-link-reset" href="<?= base_url('report/penjualan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Detail Total Sales End -->
+
+                <!-- Detail Debt -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <div class="uk-child-width-1-4" uk-grid id="descdebt">
+                                    <div>
+                                        <h5 class="tm-h2" style="color: #000;"><?= lang('Global.debt') ?></h5>
+                                    </div>
+                                    <div class="uk-padding-remove uk-inline">
+                                        <button uk-icon="question"></button>
+                                        <div class="uk-dropbar uk-dropbar-top uk-background-secondary uk-light uk-text-center" uk-drop="stretch: false; target: !#descdebt;" style="border-radius: 10px;"><?= lang('Global.descdebt') ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <div class="uk-child-width-1-1" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.totaldebt') ?></div>
+                                    </div>
+                                    <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
+                                        <div class="uk-h3 tm-h2">Rp <?= number_format(100000,2,',','.') ?></div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom"/>
+
+                                <div class="uk-child-width-1-1" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.totaldp') ?></div>
+                                    </div>
+                                    <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
+                                        <div class="uk-h3 tm-h2">Rp <?= number_format(100000,2,',','.') ?></div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom"/>
+
+                                <div class="uk-child-width-1-1" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.totalcustomer') ?></div>
+                                    </div>
+                                    <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
+                                        <div class="uk-h3 tm-h2">10</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="uk-text-right uk-margin-top">
+                                <a class="uk-link-reset" href="<?= base_url('report/penjualan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Detail Debt End -->
+
+                <!-- Cash Flow -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <div class="uk-child-width-1-2" uk-grid id="desccashflow">
+                                    <div>
+                                        <h5 class="tm-h2" style="color: #000;"><?= lang('Global.cashflow') ?></h5>
+                                    </div>
+                                    <div class="uk-padding-remove uk-inline">
+                                        <button uk-icon="question"></button>
+                                        <div class="uk-dropbar uk-dropbar-top uk-background-secondary uk-light uk-text-center" uk-drop="stretch: false; target: !#desccashflow;" style="border-radius: 10px;"><?= lang('Global.desccashflow') ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <div class="uk-child-width-1-1" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.totalcashin') ?></div>
+                                    </div>
+                                    <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
+                                        <div class="uk-h3 tm-h2">Rp <?= number_format(100000,2,',','.') ?></div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom"/>
+
+                                <div class="uk-child-width-1-1" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.totalcashout') ?></div>
+                                    </div>
+                                    <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
+                                        <div class="uk-h3 tm-h2">Rp <?= number_format(100000,2,',','.') ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="uk-text-right uk-margin-top">
+                                <a class="uk-link-reset" href="<?= base_url('cashinout') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Cash Flow End -->
+            </div>
+        </div>
+        <!-- Detail Report End -->
+
+        <!-- Popular Report -->
+        <div class="uk-margin">
+            <div class="uk-child-width-1-3@l uk-child-width-1-2@s" uk-grid uk-height-match="target: > div > .uk-card;">
+                <!-- Popular Product -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <h5 class="tm-h2" style="color: #000;"><?= lang('Global.bestsellprod') ?></h5>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <table class="uk-table uk-table-divider" style="backgorund-color: #fff;">
+                                    <tbody>
+                                        <?php $i = 1 ; ?>
+                                            <tr> <!-- Tinggal looping -->
+                                                <td><?= $i++; ?></td>
+                                                <td>Name</td>
+                                                <td>Qty</td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="uk-text-right uk-margin-top">
+                                <a class="uk-link-reset" href="<?= base_url('report/product') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Popular Product End -->
+
+                <!-- Popular Payment Method -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <h5 class="tm-h2" style="color: #000;"><?= lang('Global.poppaymethod') ?></h5>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <table class="uk-table uk-table-divider" style="backgorund-color: #fff;">
+                                    <tbody>
+                                        <?php $i = 1 ; ?>
+                                            <tr> <!-- Tinggal looping -->
+                                                <td><?= $i++; ?></td>
+                                                <td>Name</td>
+                                                <td>Qty</td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="uk-text-right uk-margin-top">
+                                <a class="uk-link-reset" href="<?= base_url('report/payment') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Popular Payment Method -->
+
+                <!-- Outlook -->
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <h5 class="tm-h2" style="color: #000;"><?= lang('Global.outlook') ?></h5>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.avgsalesperday') ?></div>
+                                    </div>
+                                    <div class="uk-text-right uk-margin-remove-left">
+                                        <div>Rp <?= number_format(100000,2,',','.') ?></div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom"/>
+
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.avgsalespertrx') ?></div>
+                                    </div>
+                                    <div class="uk-text-right uk-margin-remove-left">
+                                        <div>Rp <?= number_format(100000,2,',','.') ?></div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom"/>
+
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.busiestday') ?></div>
+                                    </div>
+                                    <div class="uk-text-right uk-margin-remove-left">
+                                        <div>Friday</div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom"/>
+
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.busiesthours') ?></div>
+                                    </div>
+                                    <div class="uk-text-right uk-margin-remove-left">
+                                        <div>20:00</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Outlook End -->
+            </div>
+        </div>
+        <!-- Popular Report End -->
+    <!-- Main Section End -->
 </div>
 <?= $this->endSection() ?>
