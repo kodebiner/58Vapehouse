@@ -289,11 +289,30 @@
                             <table class="uk-table uk-table-divider" style="backgorund-color: #fff;">
                                 <tbody>
                                     <?php $i = 1 ; ?>
-                                        <tr> <!-- Tinggal looping -->
+                                    <?php foreach ($top3prod as $top3pro) { ?>
+                                        <tr>
                                             <td><?= $i++; ?></td>
-                                            <td>Name</td>
-                                            <td class="uk-text-right">Qty</td>
+                                            <td>
+                                                <?php if ($top3pro['variantid'] != "0") {
+                                                    foreach ($products as $product) {
+                                                        foreach ($variants as $variant) {
+                                                            if (($variant['productid'] === $product['id']) && ($variant['id'] === $top3pro['variantid'])) {
+                                                                echo $product['name'].' - '.$variant['name'];
+                                                            }
+                                                        }
+                                                    }
+                                                } elseif ($top3pro['bundleid'] != "0") {
+                                                    foreach ($bundles as $bundle) {
+                                                        if ($bundle['id'] === $top3pro['bundleid']) {
+                                                            echo $bundle['name'];
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </td>
+                                            <td class="uk-text-right uk-text-bolder" style="color: #000;"><?= $top3pro['qty'] ?></td>
                                         </tr>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>

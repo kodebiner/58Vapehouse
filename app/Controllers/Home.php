@@ -93,9 +93,11 @@ class Home extends BaseController
             $id[] = $transaction['id'];
         }
 
-        $discvar = array();
-        $discval = array();
+        $discvar    = array();
+        $discval    = array();
+        $trxsid     = array();
         foreach ($transactions as $trxs) {
+            // Discount Total
             foreach ($trxdetails as $trxdets) {
                 if ($trxdets['transactionid'] === $trxs['id']) {
                     $subtotals = $trxdets['qty'] * $trxdets['value'];
@@ -108,7 +110,13 @@ class Home extends BaseController
                     }
                 }
             }
+            $trxsid[] = $trxs['id'];
+
+            // Best Selling Product
+            $trxvars        = $TrxdetailModel->orderBy('qty', 'DESC')->whereIn('transactionid', $trxsid)->find();
         }
+        $top3prod       = array_slice($trxvars, 0, 3);
+
         $discvarsum = array_sum($discvar);
         $discvalsum = array_sum($discval);
         $totaldisc  = $discvalsum + $discvarsum;
@@ -210,6 +218,10 @@ class Home extends BaseController
         $data['description']    = lang('Global.dashdesc');
         $data['sales']          = $summary;
         $data['profit']         = $keuntungandasar;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['bundles']        = $bundles;
+        $data['bundets']        = $bundets;
         $data['trxamount']      = $trxamount;
         $data['qtytrxsum']      = $qtytrxsum;
         $data['pointusedsum']   = $pointusedsum;
@@ -217,6 +229,7 @@ class Home extends BaseController
         $data['gross']          = $gross;
         $data['cashinsum']      = $cashinsum;
         $data['cashoutsum']     = $cashoutsum;
+        $data['top3prod']       = $top3prod;
         
         return view('dashboard', $data);
     }
