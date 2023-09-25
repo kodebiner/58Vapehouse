@@ -83,51 +83,50 @@ class Home extends BaseController
                 'discvalue' => $transaction['discvalue'],
             ];
             $id[] = $transaction['id'];
+        }
 
-            foreach ($trxdetails as $trxdet) {
-                if ($trxdet['transactionid'] === $transaction['id']) {
-                    $discvar  = $trxdet['discvar'];
-                    $subtotal = $trxdet['qty'] * $trxdet['value'];
-                }
-                
-                $trxdisc = array();
-                if ($transaction['disctype'] === 0) {
-                    $trxdisc[] = $transaction['discvalue'];
-                } else {
-                    $trxdisc[] = $transaction['discvalue'] * $subtotal;
-                }
-            }
-            dd($subtotal);
+        $subtotal = array();
+        foreach ($trxdetails as $trxdeta) {
+            $subtotal[] = ($trxdeta['value'] * $trxdeta['qty']) + $trxdeta['discvar'];
+        }
+        $subsum = array_sum($subtotal);
 
-            $trxdisc = array();
-            foreach ($sales as $sale) {
-                if ($sale['disctype'] === 0) {
-                    $trxdisc[] = $sale['discvalue'];
-                } else {
-                    
+        $discvar = array();
+        $discval = array();
+        foreach ($transactions as $trxs) {
+            foreach ($trxdetails as $trxdets) {
+                if ($trxdets['transactionid'] === $trxs['id']) {
+                    $subtotals = $trxdets['qty'] * $trxdets['value'];
+                    $discvar[] = $trxdets['discvar'];
+
+                    if ($trxs['disctype'] === "0") {
+                        $discval[] = $trxs['discvalue'];
+                    } else {
+                        $discval[] = $subtotals * $trxs['discvalue'];
+                    }
                 }
             }
         }
+        $discvarsum = array_sum($discvar);
+        $discvalsum = array_sum($discval);
+        $totaldisc  = $discvarsum + $discvalsum;
 
         $trxamount = count($id);
 
         // Profit Value
         $qtytrx = array();
-        $discvariant = array();
         foreach ($transactions as $trx){
             foreach ($trxdetails as $trxdetail){
                 if($trx['id'] === $trxdetail['transactionid']){
                     $marginmodal    = $trxdetail['marginmodal'];
                     $margindasar    = $trxdetail['margindasar'];
                     $qtytrx[]       = $trxdetail['qty'];
-                    $discvariant[]  = $trxdetail['discvar'];
                     $marginmodals[] = $marginmodal;
                     $margindasars[] = $margindasar;
                 }
             }
         }
-
-        $discvariantsum = array_sum($discvariant);
+        
         $marginmodalsum = array_sum($marginmodals);
         $margindasarsum = array_sum($margindasars);
 
@@ -148,67 +147,7 @@ class Home extends BaseController
 
         // Sales Details
         $pointusedsum = array_sum(array_column($sales, 'pointused'));
-
-        // // Data Produk
-        // $builder = $db->table('trxdetail')->WhereIn('transactionid',$trxid);
-        // // $builder = $db->table('trxpayment')->where('transactionid',$trx)->find();
-        // $builder->selectCount('variantid','variantsales','salesvalue','bundleid');
-        // // $builder->selectCount('id','total_payment','payval')->where('transactionid',$trx['id']);
-        // $builder->select('variantid');
-        // $builder->select('bundleid');
-        // $builder->selectSum('value');
-        // $builder->groupBy('variantid');
-        // $query   = $builder->get();
-        // $variantval = $query->getResult();
-
-        // $varvalue = array();
-        // foreach ($variantval as $varval) {
-        //     $varvalue[] = [
-        //         'id'        => $varval->variantid,
-        //         'value'     => $varval->value,
-        //         'sold'      => $varval->variantsales,
-        //         'bundleid'  => $varval->bundleid,
-        //     ];
-        // }
-
-        // $var = array();
-        // foreach ($varvalue as $varv){
-        //     foreach ($variants as $varian){
-        //         if($varian['id'] === $varv['id']){
-        //             foreach ($products as $product){
-        //                 if($varian['productid'] === $product['id']){
-        //                     foreach ($category as $cate){
-        //                         if($cate['id'] === $product['catid']){
-        //                             $var[] = [
-        //                                 'id'        => $varv['id'],
-        //                                 'value'     => $varv['value'],
-        //                                 'sold'      => $varv['sold'],
-        //                                 'bundleid'  => $varv['bundleid'],
-        //                                 'productid' => $product['id'],
-        //                                 'product'   => $product['name'],
-        //                                 'category'  => $cate['name'],
-        //                             ];
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // // Sum Total Product Sold
-        // $produk = [];
-        // foreach ($var as $vars) {
-        //     if (!isset($produk[$vars['productid'].$vars['product']])) {
-        //         $produk[$vars['productid'].$vars['product']] = $vars;
-        //     } else {
-        //         $produk[$vars['productid'].$vars['product']]['sold'] += $vars['sold'];
-        //     }
-        // }
-        // $produk = array_values($produk);
-
-        // dd($produk);
-
+        $gross           = $subsum;
 
         $data                   = $this->data;
         $data['title']          = lang('Global.dashboard');
@@ -218,6 +157,8 @@ class Home extends BaseController
         $data['trxamount']      = $trxamount;
         $data['qtytrxsum']      = $qtytrxsum;
         $data['pointusedsum']   = $pointusedsum;
+        $data['totaldisc']      = $totaldisc;
+        $data['gross']          = $gross;
         
         return view('dashboard', $data);
     }

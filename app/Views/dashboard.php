@@ -134,7 +134,7 @@
                                     <div><?= lang('Global.gross') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format(100000,2,',','.') ?></div>
+                                    <div>Rp <?= number_format($gross,2,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -145,7 +145,7 @@
                                     <div><?= lang('Global.discount') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>- Rp <?= number_format(100000,2,',','.') ?></div>
+                                    <div>- Rp <?= number_format($totaldisc,2,',','.') ?></div>
                                 </div>
                             </div>
 
