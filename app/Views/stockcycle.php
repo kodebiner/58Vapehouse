@@ -29,25 +29,47 @@
                 <th class=""><?=lang('Global.restock')?></th>
                 <th class=""><?=lang('Global.sale')?></th>
                 <th class=""><?=lang('Global.quantity')?></th>
+                <th class=""><?=lang('Global.information')?></th>
             </tr>
         </thead>
         <tbody>
             <?php $i = 1 ; ?>
-            <?php foreach ($stocks as $stock) : ?>
-                <tr>
-                    <td class="uk-text-center"><?= $i++; ?></td>
-                    <td class="">
-                            <?php foreach ($variants as $variant) {
-                                if ($variant['id'] === $stock['variantid']) {
-                                    echo ($variant['name']);
+            <?php foreach ($stocks as $stock) {
+                if (($stock['restock'] != "0000-00-00 00:00:00") && ($stock['sale'] != '0000-00-00 00:00:00')) { ?>
+                    <tr>
+                        <td class="uk-text-center"><?= $i++; ?></td>
+                        <td class="">
+                                <?php foreach ($variants as $variant) {
+                                    if ($variant['id'] === $stock['variantid']) {
+                                        echo ($variant['name']);
+                                    }
+                                } ?>
+                        </td>
+                        <td class=""><?= date('l, d M Y, H:i:s', strtotime($stock['restock'])); ?></td>
+                        <td class=""><?= date('l, d M Y, H:i:s', strtotime($stock['sale'])); ?></td>
+                        <td class=""><?= $stock['qty']; ?></td>
+                        <td>
+                            <?php
+                                $today      = $stock['restock'];
+                                $date       = date_create($today);
+                                date_add($date, date_interval_create_from_date_string('0 days'));
+                                $newdate    = date_format($date, 'Y-m-d H:i:s');
+                                if ($stock['sale'] > $newdate) {
+                                    $origin         = new DateTime($stock['sale']);
+                                    $target         = new DateTime('now');
+                                    $interval       = $origin->diff($target);
+                                    $formatday      = substr($interval->format('%R%a'), 1);
+                                    $stockremind    = lang('Global.stockremind');
+                                    $saleremind     = lang('Global.saleremind');
+                                    if ($formatday >= 0) {
+                                        echo '<div class="uk-text-danger uk-width-1-1">'.$saleremind.' '.$formatday.' '.lang('Global.day').'</div>';
+                                    }
                                 }
-                            } ?>
-                    </td>
-                    <td class=""><?= date('l, d M Y, H:i:s', strtotime($stock['restock'])); ?></td>
-                    <td class=""><?= date('l, d M Y, H:i:s', strtotime($stock['sale'])); ?></td>
-                    <td class=""><?= $stock['qty']; ?></td>
-                </tr>
-            <?php endforeach; ?>
+                            ?>
+                        </td>
+                    </tr>
+                <?php }
+            } ?>
         </tbody>
     </table>
 </div>

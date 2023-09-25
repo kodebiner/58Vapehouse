@@ -233,6 +233,7 @@ return [
     'close'             => 'Tutup Toko',
     'cashhistory'       => 'Riwayat Kas',
     'export'            => 'Export',
+    'information'       => 'Keterangan',
 
     // Menu
     'dashboard'         => 'Dasbor',

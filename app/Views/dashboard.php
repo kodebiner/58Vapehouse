@@ -255,7 +255,7 @@
                                     <div><?= lang('Global.totalcashin') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashin,2,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashinsum,2,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -266,7 +266,7 @@
                                     <div><?= lang('Global.totalcashout') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashout,2,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashoutsum,2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>

@@ -31,31 +31,36 @@ class Home extends BaseController
 {
     public function index()
     {
-
         // Calling models
         $db                 = \Config\Database::connect();
-        $TransactionModel   = new TransactionModel();
-        $TrxdetailModel     = new TrxdetailModel();
-        $TrxotherModel      = new TrxotherModel();
-        $ProductModel       = new ProductModel();
-        $CategoryModel      = new CategoryModel();
-        $VariantModel       = new VariantModel();
-        $StockModel         = new StockModel();
-        $BundleModel        = new BundleModel();
-        $BundledetailModel  = new BundledetailModel();
-
+        $TransactionModel   = new TransactionModel;
+        $TrxdetailModel     = new TrxdetailModel;
+        $TrxpaymentModel    = new TrxpaymentModel;
+        $TrxotherModel      = new TrxotherModel;
+        $ProductModel       = new ProductModel;
+        $CategoryModel      = new CategoryModel;
+        $VariantModel       = new VariantModel;
+        $StockModel         = new StockModel;
+        $BundleModel        = new BundleModel;
+        $BundledetailModel  = new BundledetailModel;
 
         // Populating Data
         $input = $this->request->getGet('daterange');
 
-        $trxdetails = $TrxdetailModel->findAll();
-        $trxothers  = $TrxotherModel->findAll();
-        $products   = $ProductModel->findAll();
-        $category   = $CategoryModel->findAll();
-        $variants   = $VariantModel->findAll();
-        $stocks     = $StockModel->findAll();
-        $bundles    = $BundleModel->findAll();
-        $bundets    = $BundledetailModel->findAll();
+        $trxdetails     = $TrxdetailModel->findAll();
+        $trxpayments    = $TrxpaymentModel->findAll();
+        $products       = $ProductModel->findAll();
+        $category       = $CategoryModel->findAll();
+        $variants       = $VariantModel->findAll();
+        $stocks         = $StockModel->findAll();
+        $bundles        = $BundleModel->findAll();
+        $bundets        = $BundledetailModel->findAll();
+
+        if ($this->data['outletPick'] === null) {
+            $trxothers  = $TrxotherModel->findAll();
+        } else {
+            $trxothers  = $TrxotherModel->where('outletid', $this->data['outletPick'])->find();
+        }
 
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
@@ -72,7 +77,6 @@ class Home extends BaseController
         } else {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
         }
-        dd($transactions);
 
         // Sales Value
         $sales = array();
@@ -149,15 +153,13 @@ class Home extends BaseController
         $pointusedsum = array_sum(array_column($sales, 'pointused'));
         $gross           = $summary + $pointusedsum + $totaldisc;
 
-        // Best Selling Product
-
         // Cashin Cash Out
         $cashin = [];
         $cashout = [];
-        foreach ($trxothers as  $trxother){
-            if ($trxother['type'] === "0"){
+        foreach ($trxothers as $trxother) {
+            if ($trxother['type'] === "0") {
                 $cashin[] = $trxother['qty'];
-            }elseif($trxoher['type' === "1"]){
+            } else {
                 $cashout[] = $trxother['qty'];
             }
         }
@@ -165,8 +167,27 @@ class Home extends BaseController
         $cashinsum = array_sum($cashin);
         $cashoutsum = array_sum($cashout);
 
-        // Debt
-        
+        // $debt = array();
+        // $debtid = array();
+        // $downpayment = [];
+        // foreach($transactions as $trx) {
+        //     if ($trx['paymentid'] === "0") {
+        //         foreach ($trxpayments as $trxpayment) {
+        //             if(($trxpayment['paymentid'] === "0") && ($trxpayment['transactionid'] === $trx['id'])) {
+        //                 $debtid[] = $trxpayment['value'];
+        //             }
+        //             // foreach ($debtid as $id){
+        //             //     if($trxpayment['transactionid'] === $id){
+        //             //         if($trxpayment['paymentid'] === "0"){
+        //             //             $debt[] = $trxpayment['value'];
+        //             //         }elseif($trxpayment['paymentid'] !== "0"){
+        //             //             $downpayment [] = $trxpayment['value'];
+        //             //         }
+        //             //     }
+        //             // }
+        //         }
+        //     }
+        // }
 
         $data                   = $this->data;
         $data['title']          = lang('Global.dashboard');
@@ -178,8 +199,8 @@ class Home extends BaseController
         $data['pointusedsum']   = $pointusedsum;
         $data['totaldisc']      = $totaldisc;
         $data['gross']          = $gross;
-        $data['cashin']         = $cashinsum;
-        $data['cashout']        = $cashoutsum;
+        $data['cashinsum']      = $cashinsum;
+        $data['cashoutsum']     = $cashoutsum;
         
         return view('dashboard', $data);
     }
