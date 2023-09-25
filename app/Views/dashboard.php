@@ -45,7 +45,7 @@
                             <h5 class="tm-h2" style="color: #000;"><?= lang('Global.salestotal') ?></h5>
                         </div>
                         <div class="uk-margin-small-top">
-                            <h3 class="tm-h2" style="color: #000;">Rp <?= number_format($sales,2,',','.') ?></h3>
+                            <h3 class="tm-h2" style="color: #000;">Rp <?= number_format($sales,0,',','.') ?></h3>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
                             <a class="uk-link-reset" href="<?= base_url('report/penjualan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
@@ -63,7 +63,7 @@
                             <h5 class="tm-h2" style="color: #000;"><?= lang('Global.profittotal') ?></h5>
                         </div>
                         <div class="uk-margin-small-top">
-                            <h3 class="tm-h2" style="color: #000;">Rp <?= number_format($profit,2,',','.') ?></h3>
+                            <h3 class="tm-h2" style="color: #000;">Rp <?= number_format($profit,0,',','.') ?></h3>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
                             <a class="uk-link-reset" href="<?= base_url('report/keuntungan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
@@ -134,7 +134,7 @@
                                     <div><?= lang('Global.gross') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format($gross,2,',','.') ?></div>
+                                    <div>Rp <?= number_format($gross,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -145,7 +145,7 @@
                                     <div><?= lang('Global.discount') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>- Rp <?= number_format($totaldisc,2,',','.') ?></div>
+                                    <div>- Rp <?= number_format($totaldisc,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -156,7 +156,7 @@
                                     <div><?= lang('Global.redeemPoint') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>- Rp <?= number_format($pointusedsum,2,',','.') ?></div>
+                                    <div>- Rp <?= number_format($pointusedsum,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -167,7 +167,7 @@
                                     <div><?= lang('Global.salestotal') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format($sales,2,',','.') ?></div>
+                                    <div>Rp <?= number_format($sales,0,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -200,7 +200,7 @@
                                     <div><?= lang('Global.totaldebt') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format($debt,2,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">Rp <?= number_format($debt,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -211,7 +211,7 @@
                                     <div><?= lang('Global.totaldp') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format($dp,2,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">Rp <?= number_format($dp,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -255,7 +255,7 @@
                                     <div><?= lang('Global.totalcashin') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashinsum,2,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashinsum,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -266,7 +266,7 @@
                                     <div><?= lang('Global.totalcashout') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashoutsum,2,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashoutsum,0,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -364,7 +364,7 @@
                                     <div><?= lang('Global.avgsalesperday') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format(100000,2,',','.') ?></div>
+                                    <div>Rp <?= number_format(100000,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -375,7 +375,7 @@
                                     <div><?= lang('Global.avgsalespertrx') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format(100000,2,',','.') ?></div>
+                                    <div>Rp <?= number_format(100000,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -406,7 +406,7 @@
             </div>
             <!-- Outlook End -->
 
-            <!-- Detail Debt -->
+            <!-- Stock Cycle -->
             <div>
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
@@ -437,7 +437,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Detail Debt End -->
+            <!-- Stock Cycle End -->
         </div>
     </div>
     <!-- Main Section End -->

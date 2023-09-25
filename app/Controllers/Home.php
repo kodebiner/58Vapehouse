@@ -37,12 +37,15 @@ class Home extends BaseController
         $TrxdetailModel     = new TrxdetailModel;
         $TrxpaymentModel    = new TrxpaymentModel;
         $TrxotherModel      = new TrxotherModel;
+        $PaymentModel       = new PaymentModel;
         $ProductModel       = new ProductModel;
         $CategoryModel      = new CategoryModel;
         $VariantModel       = new VariantModel;
         $StockModel         = new StockModel;
         $BundleModel        = new BundleModel;
         $BundledetailModel  = new BundledetailModel;
+        $DebtModel          = new DebtModel;
+        $MemberModel        = new MemberModel;
 
         // Populating Data
         $input = $this->request->getGet('daterange');
@@ -53,6 +56,8 @@ class Home extends BaseController
         $category       = $CategoryModel->findAll();
         $variants       = $VariantModel->findAll();
         $stocks         = $StockModel->findAll();
+        $debts          = $DebtModel->findAll();
+        $customers      = $MemberModel->findAll();
         $bundles        = $BundleModel->findAll();
         $bundets        = $BundledetailModel->findAll();
 
@@ -111,18 +116,13 @@ class Home extends BaseController
                 }
             }
             $trxsid[] = $trxs['id'];
-
-            // Best Selling Product
-            $trxvars        = $TrxdetailModel->orderBy('qty', 'DESC')->whereIn('transactionid', $trxsid)->find();
         }
-        $top3prod       = array_slice($trxvars, 0, 3);
 
         $discvarsum = array_sum($discvar);
         $discvalsum = array_sum($discval);
         $totaldisc  = $discvalsum + $discvarsum;
-
         $trxamount = count($id);
-
+        
         // debt
         $debtid = [];
         $debt = [];
@@ -149,6 +149,41 @@ class Home extends BaseController
         $debttrx = count($trxdebtid);
         $totaldebt = array_sum($debt);
         $dp =  array_sum($downpayment);
+
+        // Best Selling Product
+        if (!empty($transactions)) {
+            foreach ($transactions as $trxs) {
+                $trxvars        = $TrxdetailModel->orderBy('qty', 'DESC')->whereIn('transactionid', $trxsid)->find();
+            }
+        } else {
+            $trxvars        = $TrxdetailModel->orderBy('qty', 'DESC')->findAll();
+        }
+        $top3prod       = array_slice($trxvars, 0, 3);
+        
+        // Popular Payment Method
+        if (!empty($transactions)) {
+            $cashpaymet         = $PaymentModel->like('name', 'Cash')->find();
+            $noncashpaymet      = $PaymentModel->notLike('name', 'Cash')->find();
+            $cashmethodid = array();
+            foreach ($cashpaymet as $cashpay) {
+                $cashmethodid[] = $cashpay['id'];
+            }
+
+            $noncashmethodid = array();
+            foreach ($noncashpaymet as $noncashpay) {
+                $noncashmethodid[] = $noncashpay['id'];
+            }
+
+            foreach ($transactions as $trxs) {
+                // Cash Payment Method
+                $cashpaymethod          = $TrxpaymentModel->whereIn('paymentid', $cashmethodid)->whereIn('transactionid', $trxsid)->find();
+
+                // Non Cash Payment Method
+                $noncashpaymethod       = $TrxpaymentModel->whereIn('paymentid', $noncashmethodid)->whereIn('transactionid', $trxsid)->find();
+            }
+        } else {
+            $trxvars        = $TrxpaymentModel->findAll();
+        }
 
         // Profit Value
         $qtytrx = array();
@@ -222,6 +257,8 @@ class Home extends BaseController
         $data['debt']           = $totaldebt;
         $data['dp']             = $dp;
         $data['debttrx']        = $debttrx;
+        $data['debts']          = $debts;
+        $data['customers']      = $customers;
         
         return view('dashboard', $data);
     }
