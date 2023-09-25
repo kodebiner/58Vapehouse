@@ -306,9 +306,41 @@ class Report extends BaseController
         }
 
 
-        $trxid = array();
+        // Populating Data
+        if ($this->data['outletPick'] === null) {
         $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-        
+        } else {
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+        }
+
+        $variantval     = [];
+        $productval     = [];
+        $categoryval    = [];
+        foreach ($transactions as $transaction){
+            foreach ($trxdetails as $trxdetail){
+                if($transaction['id'] === $trxdetail['transactionid']){
+                    foreach ($variants as $variant){
+                        if($variant['id'] === $trxdetail['variantid']){
+                        $variatval [] = [
+                            'id'    => $variant['id'],
+                            'name'  => $variant['name'],
+                        ];
+                            foreach ($products as $product){
+                                if($variant['productid'] === $product['id']){
+                                    $productval [] = $product['name'];
+                                        foreach ($category as $cat){
+                                        if($product['catid'] === $cat['id']){
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $trxid = array();
         foreach ($transactions as $transaction){
             $trxid[] = $transaction['id'];
         }
@@ -322,15 +354,15 @@ class Report extends BaseController
         $builder->selectSum('value');
         $builder->groupBy('variantid');
         $query   = $builder->get();
-        $variantval = $query->getResult();
+        $variantval = $query->getResultArray();
 
         $varvalue = array();
         foreach ($variantval as $varval) {
             $varvalue[] = [
-                'id'        => $varval->variantid,
-                'value'     => $varval->value,
-                'sold'      => $varval->variantsales,
-                'bundleid'  => $varval->bundleid,
+                'id'        => $varval['variantid'],
+                'value'     => $varval['value'],
+                'sold'      => $varval['variantsales'],
+                'bundleid'  => $varval['bundleid'],
             ];
         }
 
