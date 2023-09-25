@@ -200,7 +200,7 @@
                                     <div><?= lang('Global.totaldebt') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format(100000,2,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">Rp <?= number_format($debt,2,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -211,7 +211,7 @@
                                     <div><?= lang('Global.totaldp') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format(100000,2,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">Rp <?= number_format($dp,2,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -222,7 +222,7 @@
                                     <div><?= lang('Global.totalcustomer') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">10</div>
+                                    <div class="uk-h3 tm-h2"><?=$debttrx?></div>
                                 </div>
                             </div>
                         </div>

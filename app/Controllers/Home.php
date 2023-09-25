@@ -123,6 +123,33 @@ class Home extends BaseController
 
         $trxamount = count($id);
 
+        // debt
+        $debtid = [];
+        $debt = [];
+        $downpayment = [];
+        $trxdebtid = [];
+        foreach ($transactions as $transaction){
+            foreach ($trxpayments as $trxpayment){
+                if($trxpayment['paymentid'] == "0" &&  $trxpayment['transactionid'] === $transaction['id']){
+                    $debtid [] = $trxpayment['transactionid'];
+                }
+                foreach ($debtid as $id){
+                    if($trxpayment['transactionid'] == $id && $trxpayment['paymentid'] == "0"){
+                        $trxdebtid [] = $transaction['id'];
+                        if($trxpayment['paymentid'] == "0"){
+                            $debt [] = $trxpayment['value'];
+                        }elseif($trxpayment['paymentid'] != "0" && $trxpayment['transactionid'] == $id){
+                            $downpayment [] = $trxpayment['value'];
+                        }
+                    }
+                }
+            }
+        }
+
+        $debttrx = count($trxdebtid);
+        $totaldebt = array_sum($debt);
+        $dp =  array_sum($downpayment);
+
         // Profit Value
         $qtytrx = array();
         $marginmodals = array();
@@ -143,42 +170,6 @@ class Home extends BaseController
         $margindasarsum = array_sum($margindasars);
 
         $summary = array_sum(array_column($sales,'value'));
-
-        // debt
-        $debt = array();
-        $debtid = array();
-        $downpayment = [];
-        foreach ($transactions as $trx){
-            if($trx['paymentid'] === "0"){
-                dd($trx['paymentid']);
-                foreach($trxpayments as $payment){
-                    if($payment['paymentid'] === "0"){
-                        $debtid[] = $payment['transactionid'];
-                    }
-                }
-            }
-            dd($debtid);
-        }
-        // foreach($transactions as $trx) {
-        //     if ($trx['paymentid'] === "0") {
-        //         foreach ($trxpayments as $trxpayment) {
-        //             if( ($trxpayment['transactionid'] === $trx['id'])) {
-        //                 $debtid[] = $trxpayment['value'];
-        //             }
-        //             foreach ($debtid as $id){
-        //                 if($trxpayment['transactionid'] === $id){
-        //                     if($trxpayment['paymentid'] === "0"){
-        //                         $debt[] = $trxpayment['value'];
-        //                     }elseif($trxpayment['paymentid'] !== "0"){
-        //                         $downpayment [] = $trxpayment['value'];
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-    
 
         $transactions[] = [
             'value'     => $summary,
@@ -211,8 +202,6 @@ class Home extends BaseController
         $cashinsum = array_sum($cashin);
         $cashoutsum = array_sum($cashout);
 
-        
-
         $data                   = $this->data;
         $data['title']          = lang('Global.dashboard');
         $data['description']    = lang('Global.dashdesc');
@@ -230,6 +219,9 @@ class Home extends BaseController
         $data['cashinsum']      = $cashinsum;
         $data['cashoutsum']     = $cashoutsum;
         $data['top3prod']       = $top3prod;
+        $data['debt']           = $totaldebt;
+        $data['dp']             = $dp;
+        $data['debttrx']        = $debttrx;
         
         return view('dashboard', $data);
     }
