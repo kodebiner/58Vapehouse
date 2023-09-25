@@ -136,6 +136,42 @@ class Home extends BaseController
 
         $summary = array_sum(array_column($sales,'value'));
 
+        // debt
+        $debt = array();
+        $debtid = array();
+        $downpayment = [];
+        foreach ($transactions as $trx){
+            if($trx['paymentid'] === "0"){
+                dd($trx['paymentid']);
+                foreach($trxpayments as $payment){
+                    if($payment['paymentid'] === "0"){
+                        $debtid[] = $payment['transactionid'];
+                    }
+                }
+            }
+            dd($debtid);
+        }
+        // foreach($transactions as $trx) {
+        //     if ($trx['paymentid'] === "0") {
+        //         foreach ($trxpayments as $trxpayment) {
+        //             if( ($trxpayment['transactionid'] === $trx['id'])) {
+        //                 $debtid[] = $trxpayment['value'];
+        //             }
+        //             foreach ($debtid as $id){
+        //                 if($trxpayment['transactionid'] === $id){
+        //                     if($trxpayment['paymentid'] === "0"){
+        //                         $debt[] = $trxpayment['value'];
+        //                     }elseif($trxpayment['paymentid'] !== "0"){
+        //                         $downpayment [] = $trxpayment['value'];
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+    
+
         $transactions[] = [
             'value'     => $summary,
             'modal'     => $marginmodalsum,
@@ -167,27 +203,7 @@ class Home extends BaseController
         $cashinsum = array_sum($cashin);
         $cashoutsum = array_sum($cashout);
 
-        // $debt = array();
-        // $debtid = array();
-        // $downpayment = [];
-        // foreach($transactions as $trx) {
-        //     if ($trx['paymentid'] === "0") {
-        //         foreach ($trxpayments as $trxpayment) {
-        //             if(($trxpayment['paymentid'] === "0") && ($trxpayment['transactionid'] === $trx['id'])) {
-        //                 $debtid[] = $trxpayment['value'];
-        //             }
-        //             // foreach ($debtid as $id){
-        //             //     if($trxpayment['transactionid'] === $id){
-        //             //         if($trxpayment['paymentid'] === "0"){
-        //             //             $debt[] = $trxpayment['value'];
-        //             //         }elseif($trxpayment['paymentid'] !== "0"){
-        //             //             $downpayment [] = $trxpayment['value'];
-        //             //         }
-        //             //     }
-        //             // }
-        //         }
-        //     }
-        // }
+        
 
         $data                   = $this->data;
         $data['title']          = lang('Global.dashboard');

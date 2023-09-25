@@ -291,6 +291,7 @@ class Report extends BaseController
         $stocks     = $StockModel->findAll();
         $bundles    = $BundleModel->findAll();
         $bundets    = $BundledetailModel->findAll();
+        $trxdetails = $TrxdetailModel->findAll();
 
 
         // Populating Data
@@ -313,24 +314,35 @@ class Report extends BaseController
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
         }
 
-        $variantval     = [];
         $productval     = [];
-        $categoryval    = [];
+        $variantvalue   = [];
+        $variantval     = [];
+        $trxvar = [];
         foreach ($transactions as $transaction){
             foreach ($trxdetails as $trxdetail){
                 if($transaction['id'] === $trxdetail['transactionid']){
                     foreach ($variants as $variant){
                         if($variant['id'] === $trxdetail['variantid']){
-                        $variatval [] = [
-                            'id'    => $variant['id'],
-                            'name'  => $variant['name'],
-                        ];
+                            $variantval[]  = [
+                                'id'    => $variant['id'],
+                                'name'  => $variant['name'],
+                                'value' => $trxdetail['value'],
+                                'qty'   => $trxdetail['qty'],
+                            ];
+                           
                             foreach ($products as $product){
                                 if($variant['productid'] === $product['id']){
                                     $productval [] = $product['name'];
-                                        foreach ($category as $cat){
+                                    foreach ($category as $cat){
                                         if($product['catid'] === $cat['id']){
-                                            
+                                            $variantvalue[] = [
+                                                'id'        => $variant['id'],
+                                                'variant'   => $variant['name'],
+                                                'product'   => $product['name'],
+                                                'category'  => $cat['name'],
+                                                'value'     => $trxdetail['value'],
+                                                'qty'       => $trxdetail['qty'],
+                                            ];
                                         }
                                     }
                                 }
@@ -340,64 +352,16 @@ class Report extends BaseController
                 }
             }
         }
-        $trxid = array();
-        foreach ($transactions as $transaction){
-            $trxid[] = $transaction['id'];
-        }
 
-        $builder = $db->table('trxdetail')->WhereIn('transactionid',$trxid);
-        // $builder = $db->table('trxpayment')->where('transactionid',$trx)->find();
-        $builder->selectCount('variantid','variantsales','salesvalue','bundleid');
-        // $builder->selectCount('id','total_payment','payval')->where('transactionid',$trx['id']);
-        $builder->select('variantid');
-        $builder->select('bundleid');
-        $builder->selectSum('value');
-        $builder->groupBy('variantid');
-        $query   = $builder->get();
-        $variantval = $query->getResultArray();
-
-        $varvalue = array();
-        foreach ($variantval as $varval) {
-            $varvalue[] = [
-                'id'        => $varval['variantid'],
-                'value'     => $varval['value'],
-                'sold'      => $varval['variantsales'],
-                'bundleid'  => $varval['bundleid'],
-            ];
-        }
-
-        $var = array();
-        foreach ($varvalue as $varv){
-            foreach ($variants as $varian){
-                if($varian['id'] === $varv['id']){
-                    foreach ($products as $product){
-                        if($varian['productid'] === $product['id']){
-                            foreach ($category as $cate){
-                                if($cate['id'] === $product['catid']){
-                                    $var[] = [
-                                        'id'        => $varv['id'],
-                                        'value'     => $varv['value'],
-                                        'sold'      => $varv['sold'],
-                                        'bundleid'  => $varv['bundleid'],
-                                        'productid' => $product['id'],
-                                        'product'   => $product['name'],
-                                        'category'  => $cate['name'],
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Sum Total Product Sold
+       
+        
         $produk = [];
-        foreach ($var as $vars) {
-            if (!isset($produk[$vars['productid'].$vars['product']])) {
-                $produk[$vars['productid'].$vars['product']] = $vars;
+        foreach ($variantvalue as $vars) {
+            if (!isset($produk[$vars['id'].$vars['variant']])) {
+                $produk[$vars['id'].$vars['variant']] = $vars;
             } else {
-                $produk[$vars['productid'].$vars['product']]['sold'] += $vars['sold'];
+                $produk[$vars['id'].$vars['variant']]['value'] += $vars['value'];
+                $produk[$vars['id'].$vars['variant']]['qty'] += $vars['qty'];
             }
         }
         $produk = array_values($produk);

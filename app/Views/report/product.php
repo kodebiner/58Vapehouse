@@ -13,17 +13,19 @@
 
     function drawChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'product');
+        data.addColumn('string', 'variant');
         data.addColumn('number', 'sold');
+        data.addColumn('string', 'product');
         data.addColumn('string', 'category');
         data.addColumn('number', 'value');
         data.addRows([
             <?php foreach ($products as $product){
+                $variant    = $product['variant'];
+                $sold       = $product['qty'];
                 $produk     = $product['product'];
-                $sold       = $product['sold'];
                 $category   = $product['category'];
                 $value      = $product['value'];
-                echo "['$produk', $sold,'$category',$value],";
+                echo "['$variant', $sold,'$produk','$category',$value],";
             }?>
         ]);
 
@@ -82,11 +84,12 @@
 </div>
 
 <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-    <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.paymentreport')?></caption>
+    <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.productreport')?></caption>
     <thead>
         <tr>
-            <th class="uk-text-large uk-text-bold"><?=lang('Global.product')?></th>
+            <th class="uk-text-large uk-text-bold"><?=lang('Global.variant')?></th>
             <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.transaction')?></th>
+            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.product')?></th>
             <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.category')?></th>
             <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.value')?></th>
         </tr>
@@ -94,8 +97,9 @@
     <tbody>
         <?php foreach ($products as $product ){ ?>
             <tr>
-                <td style="color:white;"><?=$product['product']?></td>
-                <td class="uk-text-center" style="color:white;"><?=$product['sold']?></td>
+                <td style="color:white;"><?=$product['variant']?></td>
+                <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
+                <td class="uk-text-center" style="color:white;"><?=$product['product']?></td>
                 <td class="uk-text-center" style="color:white;"><?=$product['category']?></td>
                 <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['value'],2,',','.');" ";?></td>
             </tr>
