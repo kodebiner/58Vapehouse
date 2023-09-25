@@ -18,6 +18,7 @@ use App\Models\VariantModel;
 use App\Models\TransactionModel;
 use App\Models\TrxdetailModel;
 use App\models\TrxpaymentModel;
+use App\Models\TrxotherModel;
 use App\Models\BookingModel;
 use App\Models\BookingdetailModel;
 use App\Models\PurchaseModel;
@@ -35,6 +36,7 @@ class Home extends BaseController
         $db                 = \Config\Database::connect();
         $TransactionModel   = new TransactionModel();
         $TrxdetailModel     = new TrxdetailModel();
+        $TrxotherModel      = new TrxotherModel();
         $ProductModel       = new ProductModel();
         $CategoryModel      = new CategoryModel();
         $VariantModel       = new VariantModel();
@@ -47,6 +49,7 @@ class Home extends BaseController
         $input = $this->request->getGet('daterange');
 
         $trxdetails = $TrxdetailModel->findAll();
+        $trxothers  = $TrxotherModel->findAll();
         $products   = $ProductModel->findAll();
         $category   = $CategoryModel->findAll();
         $variants   = $VariantModel->findAll();
@@ -69,6 +72,7 @@ class Home extends BaseController
         } else {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
         }
+        dd($transactions);
 
         // Sales Value
         $sales = array();
@@ -84,12 +88,6 @@ class Home extends BaseController
             ];
             $id[] = $transaction['id'];
         }
-
-        $subtotal = array();
-        foreach ($trxdetails as $trxdeta) {
-            $subtotal[] = ($trxdeta['value'] * $trxdeta['qty']) + $trxdeta['discvar'];
-        }
-        $subsum = array_sum($subtotal);
 
         $discvar = array();
         $discval = array();
@@ -109,12 +107,14 @@ class Home extends BaseController
         }
         $discvarsum = array_sum($discvar);
         $discvalsum = array_sum($discval);
-        $totaldisc  = $discvarsum + $discvalsum;
+        $totaldisc  = $discvalsum + $discvarsum;
 
         $trxamount = count($id);
 
         // Profit Value
         $qtytrx = array();
+        $marginmodals = array();
+        $margindasars = array();
         foreach ($transactions as $trx){
             foreach ($trxdetails as $trxdetail){
                 if($trx['id'] === $trxdetail['transactionid']){
@@ -147,7 +147,26 @@ class Home extends BaseController
 
         // Sales Details
         $pointusedsum = array_sum(array_column($sales, 'pointused'));
-        $gross           = $subsum;
+        $gross           = $summary + $pointusedsum + $totaldisc;
+
+        // Best Selling Product
+
+        // Cashin Cash Out
+        $cashin = [];
+        $cashout = [];
+        foreach ($trxothers as  $trxother){
+            if ($trxother['type'] === "0"){
+                $cashin[] = $trxother['qty'];
+            }elseif($trxoher['type' === "1"]){
+                $cashout[] = $trxother['qty'];
+            }
+        }
+
+        $cashinsum = array_sum($cashin);
+        $cashoutsum = array_sum($cashout);
+
+        // Debt
+        
 
         $data                   = $this->data;
         $data['title']          = lang('Global.dashboard');
@@ -159,6 +178,8 @@ class Home extends BaseController
         $data['pointusedsum']   = $pointusedsum;
         $data['totaldisc']      = $totaldisc;
         $data['gross']          = $gross;
+        $data['cashin']         = $cashinsum;
+        $data['cashout']        = $cashoutsum;
         
         return view('dashboard', $data);
     }

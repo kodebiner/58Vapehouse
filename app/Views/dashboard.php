@@ -36,7 +36,7 @@
 
     <!-- Main Section -->
     <div class="uk-margin">
-        <div class="uk-child-width-1-4@l uk-child-width-1-2@s" uk-grid>
+        <div class="uk-child-width-1-4@l uk-child-width-1-2@s" uk-grid uk-height-match="target: > div > .uk-card">
             <!-- Total Sales -->
             <div>
                 <div class="uk-card uk-card-default uk-card-body">
@@ -112,7 +112,7 @@
     </div>
 
     <div class="uk-margin">
-        <div class="uk-child-width-1-3@l uk-child-width-1-2@s" uk-grid uk-height-match="target: > div > .uk-card;">
+        <div class="uk-child-width-1-3@l uk-child-width-1-2@s" uk-grid uk-height-match="target: > div > .uk-card">
             <!-- Detail Total Sales -->
             <div>
                 <div class="uk-card uk-card-default uk-card-body">
@@ -156,7 +156,7 @@
                                     <div><?= lang('Global.redeemPoint') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format($pointusedsum,2,',','.') ?></div>
+                                    <div>- Rp <?= number_format($pointusedsum,2,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -255,7 +255,7 @@
                                     <div><?= lang('Global.totalcashin') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format(100000,2,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashin,2,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -266,7 +266,7 @@
                                     <div><?= lang('Global.totalcashout') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format(100000,2,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashout,2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
