@@ -65,14 +65,22 @@
 
 <?= $this->section('main') ?>
 
-    <!-- Page Heading -->
-    <div class="tm-card-header uk-light">
-        <div uk-grid class="uk-flex-middle">
-            <div class="uk-width-1-2@m">
-                <h3 class="tm-h3"><?=lang('Global.profitreport')?></h3>
-            </div>
+<!-- Page Heading -->
+<div class="tm-card-header uk-light">
+    <div uk-grid class="uk-flex-middle">
+        <div class="uk-width-1-2@m">
+            <h3 class="tm-h3"><?=lang('Global.profitreport')?></h3>
         </div>
+
+        <!-- Button Trigger Modal export -->
+        <div class="uk-width-1-2@m uk-text-right@m">
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/profit"><?=lang('Global.export')?></a>
+        </div>
+        <!-- End Of Button Trigger Modal export-->
+
     </div>
+</div>
+<!-- End Of Page Heading -->
 
 
     <!-- Filter -->

@@ -136,7 +136,23 @@ $routes->group('product', ['filter'=>'login'], function($routes){
     $routes->post('createvar/(:num)', 'Product::createvar/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('editvar/(:num)', 'Product::editvar/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('deletevar/(:num)', 'Product::deletevar/$1', ['filter' => 'role:owner,supervisor,operator']);
-  
+
+    $routes->get('export', 'Product::export', ['filter' => 'role:owner,supervisor,operator']);  
+});
+
+// Export
+$routes->group('export', ['filter'=>'login'], function($routes){
+    $routes->get('prod', 'Export::prod', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('transaction', 'Export::transaction', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('payment', 'Export::payment', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('product', 'Export::product', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('profit', 'Export::profit', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('employe', 'Export::employe', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('customer', 'Export::customer', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('presence', 'Export::presence', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('bundle', 'Export::bundle', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('diskon', 'Export::diskon', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('sales', 'Export::sales', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Customer Routes

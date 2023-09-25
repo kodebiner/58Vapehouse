@@ -45,7 +45,7 @@
                             <h5 class="tm-h2" style="color: #000;"><?= lang('Global.salestotal') ?></h5>
                         </div>
                         <div class="uk-margin-small-top">
-                            <h3 class="tm-h2" style="color: #000;">Rp <?= number_format(100000,2,',','.') ?></h3>
+                            <h3 class="tm-h2" style="color: #000;">Rp <?= number_format($sales,2,',','.') ?></h3>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
                             <a class="uk-link-reset" href="<?= base_url('report/penjualan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
@@ -63,7 +63,7 @@
                             <h5 class="tm-h2" style="color: #000;"><?= lang('Global.profittotal') ?></h5>
                         </div>
                         <div class="uk-margin-small-top">
-                            <h3 class="tm-h2" style="color: #000;">Rp <?= number_format(100000,2,',','.') ?></h3>
+                            <h3 class="tm-h2" style="color: #000;">Rp <?= number_format($profit,2,',','.') ?></h3>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
                             <a class="uk-link-reset" href="<?= base_url('report/keuntungan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
@@ -81,7 +81,7 @@
                             <h5 class="tm-h2" style="color: #000;"><?= lang('Global.totaltransaction') ?></h5>
                         </div>
                         <div class="uk-margin-small-top">
-                            <h3 class="tm-h2" style="color: #000;">100</h3>
+                            <h3 class="tm-h2" style="color: #000;"><?=$trxamount?></h3>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
                             <a class="uk-link-reset" href="<?= base_url('trxhistory') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
@@ -99,7 +99,7 @@
                             <h5 class="tm-h2" style="color: #000;"><?= lang('Global.productsales') ?></h5>
                         </div>
                         <div class="uk-margin-small-top">
-                            <h3 class="tm-h2" style="color: #000;">100</h3>
+                            <h3 class="tm-h2" style="color: #000;"><?= $qtytrxsum ?></h3>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
                             <a class="uk-link-reset" href="<?= base_url('report/keuntungan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
@@ -156,7 +156,7 @@
                                     <div><?= lang('Global.redeemPoint') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format(100000,2,',','.') ?></div>
+                                    <div>Rp <?= number_format($pointusedsum,2,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -167,7 +167,7 @@
                                     <div><?= lang('Global.salestotal') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format(100000,2,',','.') ?></div>
+                                    <div>Rp <?= number_format($sales,2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>

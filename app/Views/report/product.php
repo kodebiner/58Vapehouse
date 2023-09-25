@@ -44,17 +44,24 @@
 <div class="tm-card-header uk-light">
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
-            <h3 class="tm-h3"><?=lang('Global.product')?> <?=lang('Global.report')?></h3>
+            <h3 class="tm-h3"><?=lang('Global.productreport')?></h3>
         </div>
+
+        <!-- Button Trigger Modal export -->
+        <div class="uk-width-1-2@m uk-text-right@m">
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/product"><?=lang('Global.export')?></a>
+        </div>
+        <!-- End Of Button Trigger Modal export-->
+
     </div>
 </div>
-
+<!-- End Of Page Heading -->
  <!-- Filter -->
  <div class="uk-width-1-1 uk-margin">
     <form id="short" action="report/product" method="get">
         <div class="uk-inline">
             <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-            <input class="uk-input uk-width-medium" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+            <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
         </div>
     </form>
     <script>
@@ -70,18 +77,18 @@
 </div>
 
 <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
-    <h3 class="uk-card-title"><?=lang('Global.product')?></h3>
+    <h3 class="uk-card-title"><?=lang('Global.productreport')?></h3>
     <div id="piechart" ></div>
 </div>
 
 <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-    <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;">Table Payment Report</caption>
+    <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.paymentreport')?></caption>
     <thead>
         <tr>
             <th class="uk-text-large uk-text-bold"><?=lang('Global.product')?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold">Total Transaction</th>
-            <th class="uk-text-center uk-text-large uk-text-bold">Category</th>
-            <th class="uk-text-center uk-text-large uk-text-bold">Total Transaction Value</th>
+            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.transaction')?></th>
+            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.category')?></th>
+            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.value')?></th>
         </tr>
     </thead>
     <tbody>

@@ -14,12 +14,12 @@
 <!-- Page Heading -->
 <div class="tm-card-header uk-light uk-margin-bottom">
     <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-2@m">
-            <h3 class="tm-h3"><?=lang('Global.customer')?> <?=lang('Global.report')?></h3>
+        <div class="uk-width-1-3@m uk-margin-remove-right">
+            <h3 class="tm-h3 uk-width-1-1@m"><?=lang('Global.customer')?> <?=lang('Global.report')?></h3>
         </div>
-        <div class="uk-width-1-2@m">
+        <div class="uk-width-1-3@m">
             <!-- Filter -->
-            <div class="uk-width-1-1 uk-margin uk-text-right">
+            <div class="uk-width-1-1@m uk-margin uk-margin-remove-left uk-text-left">
                 <form id="short" action="report/customer" method="get">
                     <div class="uk-inline">
                         <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
@@ -37,6 +37,9 @@
                     });
                 </script>
             </div>
+        </div>
+        <div class="uk-width-1-3@m uk-text-right">
+        <a type="button" class="uk-button uk-button-primary uk-preserve-color" href="export/customer"><?=lang('Global.export')?></a>
         </div>
     </div>
 </div>

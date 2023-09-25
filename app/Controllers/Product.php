@@ -75,6 +75,41 @@ class Product extends BaseController
         return view('Views/product', $data);
     }
 
+    public function export()
+    {
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=Products.xls");
+        
+        $ProductModel   = new ProductModel();
+        $VariantModel   = new VariantModel();
+        $CategoryModel  = new CategoryModel();
+
+        $variants = $VariantModel->findAll();
+        $products = $ProductModel->findAll();
+        $categories = $CategoryModel->findall();
+
+        echo '<table>';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Nama</th>';
+        echo '<th>Kategori</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        foreach ($products as $product) {
+            echo '<tr>';
+            echo '<td>'.$product['name'].'</td>';
+            foreach ($categories as $category) {
+                if ($category['id'] === $product['catid']) {
+                    echo '<td>'.$category['name'].'</td>';
+                }
+            }
+            echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+    }
+
     public function create()
     {
         // calling Model

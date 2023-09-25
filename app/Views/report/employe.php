@@ -7,14 +7,17 @@
 
 <?= $this->section('main') ?>
 
+
 <!-- Page Heading -->
 <div class="tm-card-header uk-light uk-margin-bottom">
     <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-2@m">
+    <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.employereport')?></h3>
         </div>
-        <div class="uk-width-1-2@m uk-text-right">
-            <a target="_blank" class="uk-button uk-button-primary" href="export_excel.php">EXCEL</a>
+
+        <!-- Button Trigger Modal export -->
+        <div class="uk-width-1-2@m uk-text-right@m">
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/employe"><?=lang('Global.export')?></a>
         </div>
     </div>
 </div>

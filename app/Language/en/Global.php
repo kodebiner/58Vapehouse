@@ -189,6 +189,7 @@ return [
     'busiestday'        => 'Busiest day',
     'busiesthours'      => 'Busiest hours',
     'descstockcycle'    => 'Products based on how long stock lasts until today.',
+    'position'          => 'Position',
    
     // Button
     'edit'              => 'Edit',
@@ -265,13 +266,14 @@ return [
     'salesreport'       => 'Sales Report',
     'profitreport'      => 'Profit Report',
     'paymentreport'     => 'Payment Report',
-    'discountreport'    => 'discount Report',
+    'discountreport'    => 'Discount Report',
     'productreport'     => 'Product Report',
     'categoryreport'    => 'Category Report',
     'presencereport'    => 'Presence Report',
     'employereport'     => 'Employe Report',
     'customerreport'    => 'Customer Report',
     'bundlereport'      => 'Bundle Report',
+    'export'            => 'Export',
 
     // Title
     'employeeList'              => 'Employee List',

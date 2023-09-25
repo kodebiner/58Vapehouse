@@ -45,6 +45,9 @@
             <div class="uk-width-1-2@m">
                 <h3 class="tm-h3"><?=lang('Global.bundlereport')?></h3>
             </div>
+            <div class="uk-width-1-2@m uk-text-right@m">
+                <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/bundle"><?=lang('Global.export')?></a>
+            </div>
         </div>
     </div>
 

@@ -11,7 +11,10 @@
 <div class="tm-card-header uk-light uk-margin-bottom">
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
-            <h3 class="tm-h3"><?=lang('Global.presence')?> <?=lang('Global.report')?></h3>
+            <h3 class="tm-h3"><?=lang('Global.presencereport')?></h3>
+        </div>
+        <div class="uk-width-1-2@m uk-text-right@m">
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/presence"><?=lang('Global.export')?></a>
         </div>
     </div>
 </div>
@@ -19,8 +22,8 @@
 <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
     <thead>
         <tr>
-            <th class="uk-text-large uk-text-bold">Name</th>
-            <th class="uk-text-center uk-text-large uk-text-bold">Access</th>
+            <th class="uk-text-large uk-text-bold"><?=lang('Global.name')?></th>
+            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.position')?></th>
             <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.presence')?></th>
             <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.detail')?></th>
         </tr>

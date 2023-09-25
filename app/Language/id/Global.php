@@ -189,6 +189,7 @@ return [
     'busiestday'        => 'Hari paling ramai',
     'busiesthours'      => 'Jam paling ramai',
     'descstockcycle'    => 'Produk berdasarkan lamanya stock mengendap hingga hari ini.',
+    'position'          => 'Jabatan',
 
     // Button
     'edit'              => 'Ubah',
@@ -231,6 +232,7 @@ return [
     'open'              => 'Buka Toko',
     'close'             => 'Tutup Toko',
     'cashhistory'       => 'Riwayat Kas',
+    'export'            => 'Export',
 
     // Menu
     'dashboard'         => 'Dasbor',

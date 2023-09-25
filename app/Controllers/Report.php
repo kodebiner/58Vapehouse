@@ -23,7 +23,6 @@ use App\Models\BookingdetailModel;
 use App\Models\PurchaseModel;
 use App\Models\PurchasedetailModel;
 use App\Models\PresenceModel;
-
 use App\Models\GroupUserModel;
 use Myth\Auth\Models\GroupModel;
 
@@ -63,7 +62,7 @@ class Report extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
+        $data['title']          = lang('Global.salesreport');
         $data['description']    = lang('Global.transactionListDesc');
         $data['startdate']      = $startdate;
         $data['enddate']        = $enddate;
@@ -134,8 +133,8 @@ class Report extends BaseController
         
         // Parsing Data to View
         $data                       = $this->data;
-        $data['title']              = lang('Global.transaction');
-        $data['description']        = lang('Global.transactionListDesc');
+        $data['title']              = lang('Global.profitreport');
+        $data['description']        = lang('Global.profitListDesc');
         $data['transactions']       = $transactions;
         $data['modals']             = $keuntunganmodal;
         $data['dasars']             = $keuntungandasar;
@@ -182,7 +181,7 @@ class Report extends BaseController
                         $discounttrx[]          = $trx['discvalue'];
                     }
                     if ($trx['disctype'] !== "0"){
-                        $discounttrxpersen[]    = $trx['value'] - ($trx['value'] - $trx['discvalue']/100);
+                        $discounttrxpersen[]    = ($trxdetail['value'] * $trxdetail['qty']) - ($trx['value'] + $trxdetail['discvar']);
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
                     $discountpoin[]             = $trx['pointused'];
@@ -190,7 +189,7 @@ class Report extends BaseController
                 }
             }
 
-            $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen) ;
+            $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
             $variantdisc     = array_sum($discountvariant);
             $poindisc        = array_sum($discountpoin);
 
@@ -207,8 +206,8 @@ class Report extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc');
+        $data['title']          = lang('Global.discountreport');
+        $data['description']    = lang('Global.profitListDesc');
         $data['transactions']   = $transactions;
         $data['trxvardis']      = $trxvar;
         $data['trxdisc']        = $trxdis;
@@ -239,9 +238,9 @@ class Report extends BaseController
                 $enddate = date('Y-m-t');
             }
 
-            $payments = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
+            $payments = $PaymentModel->findAll();
             $trxpayments = $TrxpaymentModel->findAll();
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $pay = array();
             foreach ($payments as $payment) {
                 $qty = array();
@@ -261,8 +260,8 @@ class Report extends BaseController
         
             // Parsing Data to View
             $data                   = $this->data;
-            $data['title']          = lang('Global.transaction');
-            $data['description']    = lang('Global.transactionListDesc');
+            $data['title']          = lang('Global.paymentreport');
+            $data['description']    = lang('Global.paymentListDesc');
             $data['payments']       = $pay;
             $data['startdate']      = strtotime($startdate);
             $data['enddate']        = strtotime($enddate);
@@ -371,13 +370,10 @@ class Report extends BaseController
         }
         $produk = array_values($produk);
 
-        
-
-
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc');
+        $data['title']          = lang('Global.productreport');
+        $data['description']    = lang('Global.productListDesc');
         $data['transactions']   = $transactions;
         $data['products']       = $produk;
         $data['startdate']      = strtotime($startdate);
@@ -445,8 +441,8 @@ class Report extends BaseController
 
         // parsing data to view
         $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc'); 
+        $data['title']          = lang('Global.presencereport');
+        $data['description']    = lang('Global.presenceListDesc'); 
         $data['presences']      = $admin;
         $data['present']        = $presen;
 
@@ -463,8 +459,8 @@ class Report extends BaseController
 
         // parsing data to view
         $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc'); 
+        $data['title']          = lang('Global.presence');
+        $data['description']    = lang('Global.presencedetailListDesc'); 
         $data['presences']      = $presences;
 
         return view('Views/report/presencedetail',$data);
@@ -520,8 +516,8 @@ class Report extends BaseController
 
         // parsing data to view
         $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc'); 
+        $data['title']          = lang('Global.employereport');
+        $data['description']    = lang('Global.employeListDesc'); 
         $data['employetrx']     = $employetrx;
 
         return view('Views/report/employe',$data);
@@ -584,8 +580,8 @@ class Report extends BaseController
         
             // Parsing Data to View
             $data                       = $this->data;
-            $data['title']              = lang('Global.transaction');
-            $data['description']        = lang('Global.transactionListDesc');
+            $data['title']              = lang('Global.customer');
+            $data['description']        = lang('Global.customerListDesc');
             $data['customers']          = $customer;
             $data['startdate']          = strtotime($startdate);
             $data['enddate']            = strtotime($enddate);
@@ -721,8 +717,8 @@ class Report extends BaseController
 
         // Parsing Data to View
         $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc');
+        $data['title']          = lang('Global.bundlereport');
+        $data['description']    = lang('Global.bundleListDesc');
         $data['bundles']        = $paket;
 
         $data['startdate']      = strtotime($startdate);
