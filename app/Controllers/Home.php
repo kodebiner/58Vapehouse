@@ -110,7 +110,8 @@ class Home extends BaseController
 
         
         $salesresult = array_sum(array_column($sales, 'value'));
-        // Average Per days
+
+        // Average trnasaction
         if($salesresult !== 0){
             $salestrx = count($sales);
             $averagedays = $salesresult / $salestrx;
@@ -123,6 +124,29 @@ class Home extends BaseController
             $doblesale = ceil($sale);
             $saleaverage = sprintf("%.2f", $doblesale);
         }
+
+        // Average per days
+        $now = date_create($startdate); 
+        $your_date = date_create($enddate)->modify('+1 day');
+        $datediff = date_diff($now,$your_date);
+        $days = $datediff->format("%a");
+        $dateaverage = ceil($salesresult / (int)$days);
+        $resultaveragedays = sprintf("%.2f", $dateaverage);
+
+        // // Bussy Days
+        // $date1 = $startdate;
+        // $date2 = $startdate;
+        
+        // $f1 = strtotime($date1);
+        // $f2 = strtotime(substr($date1, 0, 10) . " 23:59:59");
+        
+        // while($f2 < strtotime($date2)) {
+        //    dd(date('Y-m-d H:i:s',$f1) .' - ' .date('Y-m-d H:i:s',$f2).'<br>');
+        //     $f1 = strtotime(date('Y-m-d H:i:s', $f2) .' +1 second');
+        //     $f2 = strtotime(date('Y-m-d H:i:s', $f2) .' +1 day');
+        // }
+        // dd($f2);
+        // dd(date('Y-m-d H:i:s',$f1) .' - ' .$date2);
        
 
         $discvar    = array();
@@ -328,6 +352,7 @@ class Home extends BaseController
         $data['trxdebtval']     = $trxdebtval;
         $data['debts']          = $debts;
         $data['totalcustdebt']  = $totalcustdebt;
+        $data['averagedays']    = $resultaveragedays;
         
         return view('dashboard', $data);
     }

@@ -404,7 +404,7 @@
                                     <div><?= lang('Global.avgsalesperday') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format($average,0,',','.') ?></div>
+                                    <div>Rp <?= number_format($averagedays,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -415,7 +415,7 @@
                                     <div><?= lang('Global.avgsalespertrx') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format(100000,0,',','.') ?></div>
+                                    <div>Rp <?= number_format($average,0,',','.') ?></div>
                                 </div>
                             </div>
 
