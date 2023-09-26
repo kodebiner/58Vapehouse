@@ -436,7 +436,6 @@ public function prod()
             echo '<tr>';
             echo '<td>'.$transaction['date'].'</td>';
             echo '<td>'.$transaction['value'].'</td>';
-            echo '<td>'.$result.'</td>';
             echo '</tr>';
         }
         echo '</tbody>';

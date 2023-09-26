@@ -163,10 +163,12 @@ class Home extends BaseController
 
         // Customer Debt
         $custdebt = array();
-        foreach ($customers as $customer) {
-            foreach ($debts as $debt) {
-                if ($debt['memberid'] === $customer['id']) {
-                    $custdebt[] = $debt;
+        foreach ($transactions as $trx) {
+            foreach ($customers as $customer) {
+                foreach ($debts as $debt) {
+                    if (($debt['memberid'] === $customer['id']) && ($debt['transactionid'] === $trx['id'])) {
+                        $custdebt[] = $debt;
+                    }
                 }
             }
         }
