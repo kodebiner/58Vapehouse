@@ -234,6 +234,7 @@ return [
     'cashhistory'       => 'Riwayat Kas',
     'export'            => 'Export',
     'information'       => 'Keterangan',
+    'pastday'           => 'hari yang lalu',
 
     // Menu
     'dashboard'         => 'Dasbor',

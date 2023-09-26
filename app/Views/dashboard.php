@@ -1,4 +1,10 @@
 <?= $this->extend('layout') ?>
+<?= $this->section('extraScript') ?>
+<script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<?= $this->endSection() ?>
 <?= $this->section('main') ?>
 <div class="uk-width-1-1 uk-height-1-1" class="uk-inline">
     <div>
@@ -15,12 +21,22 @@
             <!-- Date Range Filter -->
             <div>
                 <div class="uk-margin uk-text-right">
-                    <form id="short" action="report/customer" method="get">
+                    <form id="short" action="home/index" method="get">
                         <div class="uk-inline">
                             <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-                            <input class="uk-input uk-width-medium" type="text" id="daterange" name="daterange" value="" />
+                            <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
                         </div>
                     </form>
+                    <script>
+                        $(function() {
+                            $('input[name="daterange"]').daterangepicker({
+                                opens: 'left'
+                            }, function(start, end, label) {
+                                document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                                document.getElementById('short').submit();
+                            });
+                        });
+                    </script>
                 </div>
             </div>
             <!-- Date Range Filter End -->
@@ -249,7 +265,7 @@
                             </div>
                         </div>
                         <div class="uk-text-right uk-margin-top">
-                            <a class="uk-link-reset" href="<?= base_url('report/penjualan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            <a class="uk-link-reset" href="<?= base_url('debt') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
                         </div>
                     </div>
                 </div>
@@ -388,7 +404,7 @@
                                     <div><?= lang('Global.avgsalesperday') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Rp <?= number_format(100000,0,',','.') ?></div>
+                                    <div>Rp <?= number_format($average,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -448,10 +464,42 @@
                         <div class="uk-margin-small-top">
                             <table class="uk-table uk-table-divider" style="backgorund-color: #fff;">
                                 <tbody>
-                                    <tr> <!-- Tinggal looping -->
-                                        <td class="uk-padding-remove">Name</td>
-                                        <td class="uk-text-right uk-padding-remove">Description</td>
-                                    </tr>
+                                    <?php foreach ($stocks as $stock) { 
+                                        if (($stock['restock'] != "0000-00-00 00:00:00") && ($stock['sale'] != '0000-00-00 00:00:00')) {?>
+                                            <tr>
+                                                <td>
+                                                    <?php foreach ($variants as $variant) {
+                                                        foreach ($products as $product){
+                                                            if ($variant['id'] === $stock['variantid']) {
+                                                                if($variant['productid'] === $product['id']){
+                                                                    echo ($product['name']."-".$variant['name']);
+                                                                }
+                                                            }
+                                                        }
+                                                    } ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                        $today      = $stock['restock'];
+                                                        $date       = date_create($today);
+                                                        date_add($date, date_interval_create_from_date_string('0 days'));
+                                                        $newdate    = date_format($date, 'Y-m-d H:i:s');
+                                                        if ($stock['sale'] > $newdate) {
+                                                            $origin         = new DateTime($stock['sale']);
+                                                            $target         = new DateTime('now');
+                                                            $interval       = $origin->diff($target);
+                                                            $formatday      = substr($interval->format('%R%a'), 1);
+                                                            $stockremind    = lang('Global.stockremind');
+                                                            $saleremind     = lang('Global.saleremind');
+                                                            if ($formatday >= 0) {
+                                                                echo $formatday.' '.lang('Global.pastday');
+                                                            }
+                                                        }
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                        <?php }
+                                    } ?>
                                 </tbody>
                             </table>
                         </div>

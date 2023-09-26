@@ -321,28 +321,30 @@ class Report extends BaseController
         foreach ($transactions as $transaction){
             foreach ($trxdetails as $trxdetail){
                 if($transaction['id'] === $trxdetail['transactionid']){
-                    foreach ($variants as $variant){
-                        if($variant['id'] === $trxdetail['variantid']){
-                            $variantval[]  = [
-                                'id'    => $variant['id'],
-                                'name'  => $variant['name'],
-                                'value' => $trxdetail['value'],
-                                'qty'   => $trxdetail['qty'],
-                            ];
-                           
-                            foreach ($products as $product){
-                                if($variant['productid'] === $product['id']){
-                                    $productval [] = $product['name'];
-                                    foreach ($category as $cat){
-                                        if($product['catid'] === $cat['id']){
-                                            $variantvalue[] = [
-                                                'id'        => $variant['id'],
-                                                'variant'   => $variant['name'],
-                                                'product'   => $product['name'],
-                                                'category'  => $cat['name'],
-                                                'value'     => $trxdetail['value'],
-                                                'qty'       => $trxdetail['qty'],
-                                            ];
+                    foreach ($products as $product) {
+                        foreach ($variants as $variant){
+                            if(($variant['id'] === $trxdetail['variantid']) && ($variant['productid'] === $product['id'])){
+                                $variantval[]  = [
+                                    'id'    => $variant['id'],
+                                    'name'  => $product['name'].' - '.$variant['name'],
+                                    'value' => $trxdetail['value'],
+                                    'qty'   => $trxdetail['qty'],
+                                ];
+                            
+                                foreach ($products as $product){
+                                    if($variant['productid'] === $product['id']){
+                                        $productval [] = $product['name'];
+                                        foreach ($category as $cat){
+                                            if($product['catid'] === $cat['id']){
+                                                $variantvalue[] = [
+                                                    'id'        => $variant['id'],
+                                                    'variant'   => $product['name'].' - '.$variant['name'],
+                                                    'product'   => $product['name'],
+                                                    'category'  => $cat['name'],
+                                                    'value'     => $trxdetail['value'],
+                                                    'qty'       => $trxdetail['qty'],
+                                                ];
+                                            }
                                         }
                                     }
                                 }

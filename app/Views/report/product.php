@@ -87,11 +87,10 @@
     <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.productreport')?></caption>
     <thead>
         <tr>
-            <th class="uk-text-large uk-text-bold"><?=lang('Global.variant')?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.transaction')?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.product')?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.category')?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.value')?></th>
+            <th><?=lang('Global.product')?></th>
+            <th class="uk-text-center"><?=lang('Global.transaction')?></th>
+            <th><?=lang('Global.category')?></th>
+            <th><?=lang('Global.value')?></th>
         </tr>
     </thead>
     <tbody>
@@ -99,9 +98,8 @@
             <tr>
                 <td style="color:white;"><?=$product['variant']?></td>
                 <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
-                <td class="uk-text-center" style="color:white;"><?=$product['product']?></td>
-                <td class="uk-text-center" style="color:white;"><?=$product['category']?></td>
-                <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['value'],2,',','.');" ";?></td>
+                <td style="color:white;"><?=$product['category']?></td>
+                <td style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
             </tr>
         <?php } ?>
     </tbody>

@@ -46,6 +46,7 @@ class Home extends BaseController
         $BundledetailModel  = new BundledetailModel;
         $DebtModel          = new DebtModel;
         $MemberModel        = new MemberModel;
+        $StocksModel        = new StockModel;
 
         // Populating Data
         $input = $this->request->getGet('daterange');
@@ -55,7 +56,6 @@ class Home extends BaseController
         $products       = $ProductModel->findAll();
         $category       = $CategoryModel->findAll();
         $variants       = $VariantModel->findAll();
-        $stocks         = $StockModel->findAll();
         $debts          = $DebtModel->findAll();
         $customers      = $MemberModel->findAll();
         $bundles        = $BundleModel->findAll();
@@ -80,9 +80,18 @@ class Home extends BaseController
         // Populating Data
         if ($this->data['outletPick'] === null) {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $stocks         = $StockModel->findAll();
+            array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
         } else {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $stocks         = $StockModel->where('outletid',$this->data['outletPick'])->find();
+            array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
+
         }
+        
+        // Stock Cycle
+        $stok           = array_slice($stocks, 0, 3);
+        array_multisort(array_column($stok, 'restock'), SORT_DESC, $stok);
 
         // Sales Value
         $sales = array();
@@ -98,6 +107,23 @@ class Home extends BaseController
             ];
             $id[] = $transaction['id'];
         }
+
+        
+        $salesresult = array_sum(array_column($sales, 'value'));
+        // Average Per days
+        if($salesresult !== 0){
+            $salestrx = count($sales);
+            $averagedays = $salesresult / $salestrx;
+            $sale = sprintf("%.2f", $averagedays);
+            $doblesale = ceil($sale);
+            $saleaverage = sprintf("%.2f", $doblesale);
+        }else{
+            $averagedays = "0";
+            $sale = sprintf("%.2f", $averagedays);
+            $doblesale = ceil($sale);
+            $saleaverage = sprintf("%.2f", $doblesale);
+        }
+       
 
         $discvar    = array();
         $discval    = array();
@@ -223,7 +249,6 @@ class Home extends BaseController
         }
         $top3paymet = array_slice($paymentcount, 0, 3);
 
-        // Profit Value
         $qtytrx = array();
         $marginmodals = array();
         $margindasars = array();
@@ -294,6 +319,10 @@ class Home extends BaseController
         $data['top3prod']       = $top3prod;
         $data['top3paymet']     = $top3paymet;
         $data['customers']      = $customers;
+        $data['stocks']         = $stok;
+        $data['average']        = (int)$saleaverage;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
         $data['trxdebtval']     = $trxdebtval;
         $data['debts']          = $debts;
         $data['totalcustdebt']  = $totalcustdebt;

@@ -191,6 +191,7 @@ return [
     'descstockcycle'    => 'Products based on how long stock lasts until today.',
     'position'          => 'Position',
     'information'       => 'Information',
+    'pastday'           => 'days ago',
    
     // Button
     'edit'              => 'Edit',
