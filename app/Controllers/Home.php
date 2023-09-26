@@ -107,7 +107,6 @@ class Home extends BaseController
             ];
             $id[] = $transaction['id'];
         }
-
         
         $salesresult = array_sum(array_column($sales, 'value'));
 
@@ -133,20 +132,35 @@ class Home extends BaseController
         $dateaverage = ceil($salesresult / (int)$days);
         $resultaveragedays = sprintf("%.2f", $dateaverage);
 
-        // // Bussy Days
-        // $date1 = $startdate;
-        // $date2 = $startdate;
-        
-        // $f1 = strtotime($date1);
-        // $f2 = strtotime(substr($date1, 0, 10) . " 23:59:59");
-        
-        // while($f2 < strtotime($date2)) {
-        //    dd(date('Y-m-d H:i:s',$f1) .' - ' .date('Y-m-d H:i:s',$f2).'<br>');
-        //     $f1 = strtotime(date('Y-m-d H:i:s', $f2) .' +1 second');
-        //     $f2 = strtotime(date('Y-m-d H:i:s', $f2) .' +1 day');
-        // }
-        // dd($f2);
-        // dd(date('Y-m-d H:i:s',$f1) .' - ' .$date2);
+         // Bussy Days
+        $saly = [];
+        foreach ($sales as $sale){
+        $datesale = date_create($sale['date']);
+        $saledate = $datesale->format('Y-m-d');
+            $saly [] = [
+                'date'  => $saledate,
+                'value' => $sale['value'],
+            ];
+        }
+
+        $saledet = [];
+        foreach ($saly as $sels) {
+            if (!isset($saledet[$sels['date']])) {
+                $saledet[$sels['date']] = $sels;
+            } else {
+                $saledet[$sels['date']]['value'] += $sels['value'];
+            }
+        }
+
+        $saledet = array_values($saledet);
+        array_multisort(array_column($saledet, 'value'), SORT_DESC, $saledet);
+        $daysale = array_slice($saledet, 0, 1);
+        $day = 0;
+        foreach ($daysale as $days){
+            $datesale = date_create($days['date']);
+            $day= $datesale->format('l');
+        }
+
        
 
         $discvar    = array();
@@ -353,6 +367,7 @@ class Home extends BaseController
         $data['debts']          = $debts;
         $data['totalcustdebt']  = $totalcustdebt;
         $data['averagedays']    = $resultaveragedays;
+        $data['bussyday']       = $day;
         
         return view('dashboard', $data);
     }

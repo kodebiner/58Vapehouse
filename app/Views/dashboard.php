@@ -426,7 +426,7 @@
                                     <div><?= lang('Global.busiestday') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>Friday</div>
+                                    <div><?=$bussyday?></div>
                                 </div>
                             </div>
 
