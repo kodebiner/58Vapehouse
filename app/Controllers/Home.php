@@ -123,59 +123,35 @@ class Home extends BaseController
         $discvalsum = array_sum($discval);
         $totaldisc  = $discvalsum + $discvarsum;
         $trxamount = count($id);
-        
-        // Total Debt Dashboard 
-        $debtid = [];
-        $debt = [];
-        $downpayment = [];
-        $trxdebtid = [];
-        foreach ($transactions as $transaction){
-            foreach ($trxpayments as $trxpayment){
-                if($trxpayment['paymentid'] == "0" &&  $trxpayment['transactionid'] === $transaction['id']){
-                    $debtid [] = $trxpayment['transactionid'];
-                }
-                foreach ($debtid as $id){
-                    foreach($members as $member){
-                        if($trxpayment['transactionid'] == $id && $trxpayment['paymentid'] == "0" && $member['id'] == $transaction['memberid']){
-                            $trxdebtid [] = $transaction['id'];
-                            if($trxpayment['paymentid'] == "0"){
-                                $debt [] = [
-                                    'value'     => $trxpayment['value'],
-                                    'member'    => $transaction['memberid'],
-                                ];
-                            }elseif($trxpayment['paymentid'] != "0" && $trxpayment['transactionid'] == $id){
-                                $downpayment [] = $trxpayment['value'];
-                            }
-                        }
-                    }
+
+        // Debt Total
+        $debtpayment = array();
+        $debttrx = array();
+        $debtpaymentsid = array();
+        $trxdebtval = array();
+        foreach ($transactions as $trx) {
+            if ($trx['paymentid'] === "0") {
+                $trxdebtval[]   = $trx;
+            }
+        }
+
+        // Customer Debt
+        $custdebt = array();
+        foreach ($customers as $customer) {
+            foreach ($debts as $debt) {
+                if ($debt['memberid'] === $customer['id']) {
+                    $custdebt[] = $debt;
                 }
             }
         }
 
-       
-        $debttrx = count($trxdebtid);
-        
-        $dp =  array_sum($downpayment);
-
-        $debtval = [];
-        foreach ($debt as $deb) {
-            if (!isset($debtval[$deb['member'].$deb['value']])) {
-                $debtval[$deb['member'].$deb['value']] = $deb;
-            } else {
-                $debtval[$deb['member'].$deb['member']]['value'] += $deb['value'];
+        $customerdebt = array();
+        foreach ($custdebt as $cusdeb) {
+            if (!isset($customerdebt[$cusdeb['memberid']])) {
+                $customerdebt[$cusdeb['memberid']] = $cusdeb;
             }
         }
-        $customer = [];
-        $debtval = array_values($debtval);
-        $customer[] = count($debtval);
-
-        $debtvsum = [];
-        foreach ($debtval as $debt){
-            $debtvsum[] = $debt['value'];
-        }
-
-        $totaldebt = array_sum($debtvsum);
-    
+        $totalcustdebt = count($customerdebt);
 
         // Best Selling Product
         if (!empty($transactions)) {
@@ -317,12 +293,10 @@ class Home extends BaseController
         $data['cashoutsum']     = $cashoutsum;
         $data['top3prod']       = $top3prod;
         $data['top3paymet']     = $top3paymet;
-        $data['debt']           = $totaldebt;
-        $data['dp']             = $dp;
-        $data['debttrx']        = $debttrx;
-        $data['debts']          = $debts;
         $data['customers']      = $customers;
-        $data['custdebt']       = $customer;
+        $data['trxdebtval']     = $trxdebtval;
+        $data['debts']          = $debts;
+        $data['totalcustdebt']  = $totalcustdebt;
         
         return view('dashboard', $data);
     }

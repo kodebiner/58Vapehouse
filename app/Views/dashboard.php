@@ -200,7 +200,18 @@
                                     <div><?= lang('Global.totaldebt') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format($debt,0,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">
+                                        <?php
+                                            $debt[] = array();
+                                            foreach ($trxdebtval as $trxdebtva) {
+                                                if ($trxdebtva['value'] - $trxdebtva['amountpaid'] >= "0") {
+                                                    $debt[] = $trxdebtva['value'] - $trxdebtva['amountpaid'];
+                                                }
+                                            }
+                                            $debtsum = array_sum($debt);
+                                        ?>
+                                        Rp <?= number_format($debtsum,0,',','.') ?>
+                                    </div>
                                 </div>
                             </div>
 
@@ -211,7 +222,18 @@
                                     <div><?= lang('Global.totaldp') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format($dp,0,',','.') ?></div>
+                                    <div class="uk-h3 tm-h2">
+                                        <?php
+                                            $debtdp[] = array();
+                                            foreach ($trxdebtval as $trxdebtva) {
+                                                if ($trxdebtva['value'] - $trxdebtva['amountpaid'] >= "0") {
+                                                    $debtdp[] =$trxdebtva['amountpaid'];
+                                                }
+                                            }
+                                            $debtdpsum = array_sum($debtdp);
+                                        ?>
+                                        Rp <?= number_format($debtdpsum,0,',','.') ?>
+                                    </div>
                                 </div>
                             </div>
 
@@ -222,11 +244,7 @@
                                     <div><?= lang('Global.totalcustomer') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">
-                                        <?php foreach ($custdebt as $debttrx){ 
-                                            echo $debttrx; 
-                                        }?>
-                                    </div>
+                                    <div class="uk-h3 tm-h2"><?= $totalcustdebt ?></div>
                                 </div>
                             </div>
                         </div>
