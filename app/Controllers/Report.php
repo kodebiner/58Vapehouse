@@ -352,8 +352,6 @@ class Report extends BaseController
                 }
             }
         }
-
-       
         
         $produk = [];
         foreach ($variantvalue as $vars) {

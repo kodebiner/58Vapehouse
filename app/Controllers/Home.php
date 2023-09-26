@@ -60,6 +60,7 @@ class Home extends BaseController
         $customers      = $MemberModel->findAll();
         $bundles        = $BundleModel->findAll();
         $bundets        = $BundledetailModel->findAll();
+        $members        = $MemberModel->findAll();
 
         if ($this->data['outletPick'] === null) {
             $trxothers  = $TrxotherModel->findAll();
@@ -123,7 +124,7 @@ class Home extends BaseController
         $totaldisc  = $discvalsum + $discvarsum;
         $trxamount = count($id);
         
-        // debt
+        // Total Debt Dashboard 
         $debtid = [];
         $debt = [];
         $downpayment = [];
@@ -134,21 +135,47 @@ class Home extends BaseController
                     $debtid [] = $trxpayment['transactionid'];
                 }
                 foreach ($debtid as $id){
-                    if($trxpayment['transactionid'] == $id && $trxpayment['paymentid'] == "0"){
-                        $trxdebtid [] = $transaction['id'];
-                        if($trxpayment['paymentid'] == "0"){
-                            $debt [] = $trxpayment['value'];
-                        }elseif($trxpayment['paymentid'] != "0" && $trxpayment['transactionid'] == $id){
-                            $downpayment [] = $trxpayment['value'];
+                    foreach($members as $member){
+                        if($trxpayment['transactionid'] == $id && $trxpayment['paymentid'] == "0" && $member['id'] == $transaction['memberid']){
+                            $trxdebtid [] = $transaction['id'];
+                            if($trxpayment['paymentid'] == "0"){
+                                $debt [] = [
+                                    'value'     => $trxpayment['value'],
+                                    'member'    => $transaction['memberid'],
+                                ];
+                            }elseif($trxpayment['paymentid'] != "0" && $trxpayment['transactionid'] == $id){
+                                $downpayment [] = $trxpayment['value'];
+                            }
                         }
                     }
                 }
             }
         }
 
+       
         $debttrx = count($trxdebtid);
-        $totaldebt = array_sum($debt);
+        
         $dp =  array_sum($downpayment);
+
+        $debtval = [];
+        foreach ($debt as $deb) {
+            if (!isset($debtval[$deb['member'].$deb['value']])) {
+                $debtval[$deb['member'].$deb['value']] = $deb;
+            } else {
+                $debtval[$deb['member'].$deb['member']]['value'] += $deb['value'];
+            }
+        }
+        $customer = [];
+        $debtval = array_values($debtval);
+        $customer[] = count($debtval);
+
+        $debtvsum = [];
+        foreach ($debtval as $debt){
+            $debtvsum[] = $debt['value'];
+        }
+
+        $totaldebt = array_sum($debtvsum);
+    
 
         // Best Selling Product
         if (!empty($transactions)) {
@@ -162,28 +189,63 @@ class Home extends BaseController
         
         // Popular Payment Method
         if (!empty($transactions)) {
-            $cashpaymet         = $PaymentModel->like('name', 'Cash')->find();
-            $noncashpaymet      = $PaymentModel->notLike('name', 'Cash')->find();
-            $cashmethodid = array();
-            foreach ($cashpaymet as $cashpay) {
-                $cashmethodid[] = $cashpay['id'];
+            $paymentcount = array();
+
+            $trxid = array();
+            foreach ($transactions as $transaction) {
+                $trxid[] = $transaction['id'];
             }
 
-            $noncashmethodid = array();
-            foreach ($noncashpaymet as $noncashpay) {
-                $noncashmethodid[] = $noncashpay['id'];
+            $cashpayments = $PaymentModel->like('name', 'Cash')->find();
+            $cashid = array();
+            foreach ($cashpayments as $cashpayment) {
+                $cashid[] = $cashpayment['id'];
+            }            
+
+            $paymentcount[] = [
+                'name'      => 'Cash',
+                'qty'       => count($TrxpaymentModel->whereIn('transactionid', $trxid)->whereIn('paymentid', $cashid)->find())
+            ];
+
+            $noncashpayments      = $PaymentModel->notLike('name', 'Cash')->find();
+            foreach ($noncashpayments as $noncashpayment) {
+                $paymentcount[] = [
+                    'name'      => $noncashpayment['name'],
+                    'qty'       => count($TrxpaymentModel->whereIn('transactionid', $trxid)->where('paymentid', $noncashpayment['id'])->find())
+                ];
             }
 
-            foreach ($transactions as $trxs) {
-                // Cash Payment Method
-                $cashpaymethod          = $TrxpaymentModel->whereIn('paymentid', $cashmethodid)->whereIn('transactionid', $trxsid)->find();
-
-                // Non Cash Payment Method
-                $noncashpaymethod       = $TrxpaymentModel->whereIn('paymentid', $noncashmethodid)->whereIn('transactionid', $trxsid)->find();
-            }
+            array_multisort(array_column($paymentcount, 'qty'), SORT_DESC, $paymentcount);
         } else {
-            $trxvars        = $TrxpaymentModel->findAll();
+            $paymentcount = array();
+
+            $trxid = array();
+            foreach ($transactions as $transaction) {
+                $trxid[] = $transaction['id'];
+            }
+
+            $cashpayments = $PaymentModel->like('name', 'Cash')->find();
+            $cashid = array();
+            foreach ($cashpayments as $cashpayment) {
+                $cashid[] = $cashpayment['id'];
+            }            
+
+            $paymentcount[] = [
+                'name'      => 'Cash',
+                'qty'       => count($TrxpaymentModel->whereIn('paymentid', $cashid)->find())
+            ];
+
+            $noncashpayments      = $PaymentModel->notLike('name', 'Cash')->find();
+            foreach ($noncashpayments as $noncashpayment) {
+                $paymentcount[] = [
+                    'name'      => $noncashpayment['name'],
+                    'qty'       => count($TrxpaymentModel->where('paymentid', $noncashpayment['id'])->find())
+                ];
+            }
+
+            array_multisort(array_column($paymentcount, 'qty'), SORT_DESC, $paymentcount);
         }
+        $top3paymet = array_slice($paymentcount, 0, 3);
 
         // Profit Value
         $qtytrx = array();
@@ -254,11 +316,13 @@ class Home extends BaseController
         $data['cashinsum']      = $cashinsum;
         $data['cashoutsum']     = $cashoutsum;
         $data['top3prod']       = $top3prod;
+        $data['top3paymet']     = $top3paymet;
         $data['debt']           = $totaldebt;
         $data['dp']             = $dp;
         $data['debttrx']        = $debttrx;
         $data['debts']          = $debts;
         $data['customers']      = $customers;
+        $data['custdebt']       = $customer;
         
         return view('dashboard', $data);
     }

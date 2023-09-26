@@ -222,7 +222,11 @@
                                     <div><?= lang('Global.totalcustomer') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2"><?=$debttrx?></div>
+                                    <div class="uk-h3 tm-h2">
+                                        <?php foreach ($custdebt as $debttrx){ 
+                                            echo $debttrx; 
+                                        }?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -335,11 +339,13 @@
                             <table class="uk-table uk-table-divider" style="backgorund-color: #fff;">
                                 <tbody>
                                     <?php $i = 1 ; ?>
-                                        <tr> <!-- Tinggal looping -->
+                                    <?php foreach ($top3paymet as $top3pay) { ?>
+                                        <tr>
                                             <td><?= $i++; ?></td>
-                                            <td>Name</td>
-                                            <td class="uk-text-right">Qty</td>
+                                            <td><?= $top3pay['name'] ?></td>
+                                            <td class="uk-text-right"><?= $top3pay['qty'] ?></td>
                                         </tr>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
