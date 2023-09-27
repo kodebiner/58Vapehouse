@@ -59,6 +59,37 @@
                             </select>
                         </div>
                     </div>
+                    
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-horizontal-text">Name</label>
+                        <div class="uk-form-controls">
+                            <div class="uk-inline uk-width-1-1">
+                                <span class="uk-form-icon" uk-icon="icon: user"></span>
+                                <input class="uk-input ui-autocomplete-input1" type="text" placeholder="Name" id="customer" name="customer" aria-label="Not clickable icon">
+                                <input id="customerx" name="customerid" hidden />
+                            </div>
+                        </div>                                    
+                    </div>
+                    
+                    <script type="text/javascript">
+                        $(function() {
+                            var customerList = [
+                                {label: "Non Member", idx:0},
+                                <?php
+                                    foreach ($customers as $customer) {
+                                        echo '{label:"'.$customer['name'].' / '.$customer['phone'].'",idx:'.$customer['id'].'},';
+                                    }
+                                ?>
+                            ];
+                            $("#customer").autocomplete({
+                                source: customerList,
+                                select: function(e, i) {
+                                    $("#customerx").val(i.item.idx);
+                                },
+                                minLength: 1
+                            });
+                        });
+                    </script>
 
                     <div class="uk-margin">
                         <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>

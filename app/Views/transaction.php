@@ -122,7 +122,7 @@
                                                 {label: "Non Member", idx:0},
                                                 <?php
                                                     foreach ($customers as $customer) {
-                                                        echo '{label:"'.$customer['name'].'",idx:'.$customer['id'].'},';
+                                                        echo '{label:"'.$customer['name'].' / '.$customer['phone'].'",idx:'.$customer['id'].'},';
                                                     }
                                                 ?>
                                             ];
@@ -236,7 +236,7 @@
                                                     } else {
                                                         foreach ($customers as $cust) {
                                                             if ($book['memberid'] === $cust['id']) {
-                                                                $member = $cust['name'];
+                                                                $member = $cust['name'].' / '.$cust['phone'];
                                                             }
                                                         }
                                                     }
@@ -265,7 +265,7 @@
                                                         } else {
                                                             foreach ($customers as $cust) {
                                                                 if ($book['memberid'] === $cust['id']) {
-                                                                    $member = $cust['name'];
+                                                                    $member = $cust['name'].' / '.$cust['phone'];
                                                                 }
                                                             }
                                                         }
