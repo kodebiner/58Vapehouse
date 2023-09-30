@@ -1,8 +1,11 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
+<link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+<script src="js/code.jquery.com_jquery-3.6.0.js"></script>
 <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
+<script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -35,29 +38,6 @@
             <div class="uk-modal-body">
                 <form class="uk-form-stacked" role="form" action="stockmove/create" method="post">
                     <?= csrf_field() ?>
-                    
-                    <!-- ajax -->
-                    <div class="uk-margin">
-                        <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
-                        <div class="uk-form-controls">
-                            <select class="uk-select" name="product" id="sel_pro">
-                                <option><?=lang('Global.product')?></option>
-                                <?php foreach ($products as $product) {
-                                    echo '<option value="'.$product['id'].'">'.$product['name'].'</option>';
-                                } ?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="uk-margin">
-                        <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
-                        <div class="uk-form-controls">
-                            <select class="uk-select" name="variant" id="sel_variant">
-                                <option id="default_var"><?=lang('Global.variant')?></option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- End Of Ajax -->
 
                     <div class="uk-margin">
                         <label class="uk-form-label" for="origin"><?=lang('Global.origin')?></label>
@@ -92,13 +72,120 @@
                             </select>
                         </div>
                     </div>
-                                
-                    <div class="uk-margin">
-                        <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
+
+                    <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.quantity')) : ?>tm-form-invalid<?php endif ?>" name="qty" id="qty" placeholder="<?=lang('Global.quantity')?>" required/>
+                            <input type="text" class="uk-input" id="productname" name="productname" placeholder="<?=lang('Global.product')?>">
                         </div>
                     </div>
+
+                    <?php foreach ($products as $product) {?>
+                        <div id="tablevariant<?= $product['id']; ?>" hidden>
+                            <div class="uk-overflow-auto uk-margin-bottom">
+                                <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
+                                    <thead>
+                                        <tr>
+                                            <th class="uk-text-emphasis uk-width-medium"><?=lang('Global.variant')?></th>
+                                            <th class="uk-text-emphasis uk-width-small"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($variants as $variant) {?>
+                                            <?php if ($variant['productid'] === $product['id']) {
+                                                $VarName    = $variant['name'];
+                                                $CombName   = $product['name'].' - '.$VarName;
+                                                $basePrice  = $variant['hargadasar']; ?>
+                                            
+                                                <tr>
+                                                    <td class="uk-width-medium"><?= $VarName; ?></td>
+                                                    <td class="uk-width-small">
+                                                        <div>
+                                                            <a class="uk-icon-button" uk-icon="cart" onclick="createVar<?= $variant['id'] ?>()"></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <script type="text/javascript">
+                                                    var elemexist = document.getElementById('product<?=$variant['id']?>');
+                                                    function createVar<?=$variant['id']?>() {
+                                                        document.getElementById('tablevariant<?= $product['id']; ?>').setAttribute('hidden', '');
+
+                                                        var count = 1;
+
+                                                        if ( $( "#product<?=$variant['id']?>" ).length ) {
+                                                            alert('<?=lang('Global.readyAdd');?>');
+                                                        } else {
+                                                            <?php
+                                                            foreach ($stocks as $stock) {
+                                                                if (($stock['variantid'] === $variant['id']) && ($stock['outletid'] === $outletPick)) {
+                                                                    echo 'let stock = '.$stock['qty'].';';
+                                                                    if ($stock['qty'] === '0') {
+                                                                        echo 'alert("'.lang('Global.alertstock').'")';
+                                                                    } else { ?>
+                                                                        let minval = count;
+
+                                                                        const products = document.getElementById('tableproduct');
+                                                                        
+                                                                        const productgrid = document.createElement('div');
+                                                                        productgrid.setAttribute('id', 'product<?=$variant['id']?>');
+                                                                        productgrid.setAttribute('class', 'uk-margin-small');
+                                                                        productgrid.setAttribute('uk-grid', '');
+
+                                                                        const varcontainer = document.createElement('div');
+                                                                        varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2');
+                                                                                                        
+                                                                        const varname = document.createElement('div');
+                                                                        varname.setAttribute('id','var<?=$variant['id']?>');
+                                                                        varname.setAttribute('class','');
+                                                                        varname.innerHTML = '<?= $CombName ?>';
+
+                                                                        const totalcontainer = document.createElement('div');
+                                                                        totalcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2');
+
+                                                                        const total = document.createElement('input');
+                                                                        total.setAttribute('type', 'number');
+                                                                        total.setAttribute('id', "totalpcs[<?=$variant['id']?>]");
+                                                                        total.setAttribute('name', "totalpcs[<?=$variant['id']?>]");
+                                                                        total.setAttribute('class', 'uk-input');
+                                                                        total.setAttribute('value', '1');
+                                                                        total.setAttribute('max', '<?= $stock['qty'] ?>');
+                                                                        total.setAttribute('required', '');
+
+                                                                        const pcs = document.createElement('div');
+                                                                        pcs.setAttribute('class', 'uk-margin-small-left');
+                                                                        pcs.innerHTML = 'Pcs';
+
+                                                                        varcontainer.appendChild(varname);
+                                                                        totalcontainer.appendChild(total);
+                                                                        totalcontainer.appendChild(pcs);
+                                                                        productgrid.appendChild(varcontainer);
+                                                                        productgrid.appendChild(totalcontainer);
+                                                                        products.appendChild(productgrid);
+                                                                    <?php }
+                                                                }
+                                                            } ?>
+                                                        }
+                                                    }
+                                                </script>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <div class="uk-margin-small uk-flex uk-flex-middle " uk-grid>
+                        <div class="uk-width-1-2">
+                            <div class=""><?= lang('Global.variant') ?></div>
+                        </div>
+                        <div class="uk-width-1-2">
+                            <div class=""><?= lang('Global.quantity') ?></div>
+                        </div>
+                    </div>
+
+                    <div id="tableproduct"></div>
 
                     <hr>
                               
@@ -111,6 +198,35 @@
     </div>
 </div>
 <!-- End Of Modal Add -->
+
+<!-- Script Modal Add -->
+<script type="text/javascript">
+    // Autocomplete Product
+    $(function() {
+        var productList = [
+            <?php foreach ($products as $product) {
+                echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
+            }?>
+        ];
+        $("#productname").autocomplete({
+            source: productList,
+            select: function(e, i) {
+                //$("#productid").val(i.item.idx);
+                if (i.item.idx != 0) {
+                    var products = <?php echo json_encode($products); ?>;
+                    for (var x = 0; x < products.length; x++) {
+                        document.getElementById('tablevariant'+products[x]['id']).setAttribute('hidden', '');
+                        if (products[x]['id'] == i.item.idx) {
+                            document.getElementById('tablevariant'+products[x]['id']).removeAttribute('hidden');
+                        }
+                    }
+                }
+            },
+            minLength: 2
+        });
+    });
+</script>
+<!-- Script Modal Add End -->
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">

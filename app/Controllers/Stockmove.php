@@ -58,60 +58,60 @@ Class Stockmove extends BaseController{
         // initialize
         $input = $this->request->getPost();
 
-        // rules
-        $rule = [
-            'variant'            => 'required|max_length[255]',
-            'origin'             => 'required|max_length[255]',
-            'destination'        => 'required',
-            'qty'                => 'required',
-        ];
+        // // rules
+        // $rule = [
+        //     'variant'            => 'required|max_length[255]',
+        //     'origin'             => 'required|max_length[255]',
+        //     'destination'        => 'required',
+        //     'qty'                => 'required',
+        // ];
                 
-        // Validation
-        if (! $this->validate($rule)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
+        // // Validation
+        // if (! $this->validate($rule)) {
+        //     return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        // }
 
         // date time stamp
         $date=date_create();
         $tanggal = date_format($date,'Y-m-d H:i:s');
-          
-        // Input Data
-        $data = [
-            'variantid'     => $input['variant'],
-            'origin'        => $input['origin'],
-            'destination'   => $input['destination'],
-            'qty'           => $input['qty'],
-            'date'          => $tanggal,
-        ];
+
+        // Stock Movement
+        foreach ($input['totalpcs'] as $varid => $value) {
+            $data   = [
+                'variantid'     => $varid,
+                'qty'           => $value,
+                'origin'        => $input['origin'],
+                'destination'   => $input['destination'],
+                'date'          => $tanggal,
+            ];
     
-        // insert data Stockmove
-        $StockMove->insert($data);
+            // insert data Stockmove
+            $StockMove->insert($data);
 
-        // Minus Stock
-        $Stocks = $Stock->where('variantid', $input['variant'])->where('outletid',$input['origin'])->find(); 
-        $minstock=$input['qty'];
-        foreach ($Stocks as $stock) {
-            $hasilmin = $stock['qty'] -= $minstock;
-            $stok = [
-                'id'    => $stock['id'],
-                'qty'   => $hasilmin,
-            ];
+            // Minus Stock
+            $Stocks     = $Stock->where('variantid', $varid)->where('outletid',$input['origin'])->find(); 
+            $minstock   = $value;
+            foreach ($Stocks as $stock) {
+                $hasilmin = $stock['qty'] -= $minstock;
+                $stok = [
+                    'id'    => $stock['id'],
+                    'qty'   => $hasilmin,
+                ];
+            }
+            $Stock->save($stok);
+    
+            // Plus Stock
+            $Stocks = $Stock->where('variantid', $varid)->where('outletid',$input['destination'])->find();
+            $plusstock = $value;
+            foreach ($Stocks as $stock) {
+                $hasilplus = $stock['qty'] += $plusstock;
+                $stok = [
+                    'id'    => $stock['id'],
+                    'qty'   =>  $hasilplus,
+                ];
+            }
+            $Stock->save($stok);
         }
-
-        $Stock->save($stok);
-
-        // Plus Stock
-        $Stocks = $Stock->where('variantid', $input['variant'])->where('outletid',$input['destination'])->find();
-        $plusstock = $input['qty'];
-        foreach ($Stocks as $stock) {
-            $hasilplus = $stock['qty'] += $plusstock;
-            
-            $stok = [
-                'id'    => $stock['id'],
-                'qty'   =>  $hasilplus,
-            ];
-        }
-        $Stock->save($stok);
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }

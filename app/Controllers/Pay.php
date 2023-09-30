@@ -1325,7 +1325,7 @@ class Pay extends BaseController
             'userid'            => $this->data['uid'],
             'outletid'          => $this->data['outletPick'],
             'cashid'            => $cash['id'],
-            'description'       => "Top Up - ".$member['name'] ,
+            'description'       => "Top Up - ".$member['name']."/".$member['phone'] ,
             'type'              => "0",
             'date'              => $tanggal,
             'qty'               => $input['value'],

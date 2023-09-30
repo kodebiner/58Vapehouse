@@ -168,7 +168,7 @@ class Debt extends BaseController
             'userid'        => $this->data['uid'],
             'outletid'      => $this->data['outletPick'],
             'cashid'        => $cash['id'],
-            'description'   => "Debt - ".$customers['name'] ,
+            'description'   => "Debt - ".$customers['name'].'/'.$customers['phone'] ,
             'type'          => "0",
             'date'          => $tanggal,
             'qty'           => $input['value'],
@@ -217,9 +217,9 @@ class Debt extends BaseController
 
         // Populating Data
         if ($this->data['outletPick'] === null) {
-            $trxothers              = $TrxotherModel->orderBy('date', 'DESC')->like('description', 'Top Up')->find();
+            $trxothers              = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Top Up')->find();
         } else {
-            $trxothers              = $TrxotherModel->where('outletid', $this->data['outletPick'])->orderBy('date', 'DESC')->like('description', 'Top Up')->find();
+            $trxothers              = $TrxotherModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->like('description', 'Top Up')->find();
         }
         $bundles                = $BundleModel->findAll();
         $bundets                = $BundledetModel->findAll();
@@ -269,9 +269,9 @@ class Debt extends BaseController
         $outlets            = $OutletModel->findAll();
         
         if ($this->data['outletPick'] === null) {
-            $trxothers      = $TrxotherModel->orderBy('date', 'DESC')->like('description', 'Debt')->find();
+            $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->find();
         } else {
-            $trxothers      = $TrxotherModel->orderBy('date', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->find();
+            $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->find();
         }
         
         // Parsing data to view

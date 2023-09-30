@@ -53,7 +53,7 @@
                         
                         <?php foreach ($customers as $cust) {
                             if ($cust['id'] === $debt['memberid']) {?>
-                                <td class=""><?= $cust['name'] ?></td>
+                                <td class=""><?= $cust['name'].' / '.$cust['phone'] ?></td>
                             <?php }
                         } ?>
 
@@ -98,7 +98,7 @@
                             <div class="uk-form-controls">: 
                                 <?php foreach ($customers as $cust) {
                                     if ($debt['memberid'] === $cust['id']) {
-                                        echo $cust['name'];
+                                        echo $cust['name'].' / '.$cust['phone'];
                                     }
                                 } ?>
                             </div>
