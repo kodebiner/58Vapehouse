@@ -61,6 +61,46 @@ class Product extends BaseController
         // Checking filter
         $input = $this->request->getPost();
 
+        $productval = [];
+        foreach ($stock as $stk){
+            foreach ($variant as $var){
+                    foreach ($products as $product){
+                        foreach ($brand as $bran){
+                            foreach ($category as $cat){
+                                if($product['catid'] === $cat['id'] && $product['brandid'] === $bran['id'] && $var['productid'] == $product['id'] && $stk['variantid'] === $var['id']){
+                                $productval [] = [
+                                    'id'                => $cat['id'],
+                                    'catname'           => $cat['name'],
+                                    'prodname'          => $product['name'],
+                                    'desc'              => $product['description'],
+                                    'stock'             => $stk['qty'],                                
+                                    'hargamodal'        => $stk['qty'] * $var['hargamodal'],                                
+                                    'hargadasar'        => $stk['qty'] * ($var['hargajual'] + $var['hargadasar']),                                
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        
+        $modal = 0;
+        $produk = [];
+        foreach ($productval as $vars) {
+            if (!isset($produk[$vars['id'].$vars['catname']])) {
+                $produk[$vars['id'].$vars['catname']] = $vars;
+            } else {
+                $produk[$vars['id'].$vars['catname']]['stock'] += $vars['stock'];
+                $produk[$vars['id'].$vars['catname']]['hargamodal'] += $vars['hargamodal'];
+                $produk[$vars['id'].$vars['catname']]['hargadasar'] += $vars['hargadasar'];
+                $modal = $produk[$vars['id'].$vars['catname']]['hargamodal'] += $vars['hargamodal'];
+            }
+        }
+        $produk = array_values($produk);
+        $totstock = array_sum(array_column($produk,'stock'));
+        $totproduct = count($produk);
+
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.productList');
@@ -71,6 +111,10 @@ class Product extends BaseController
         $data['brand']          = $brand;
         $data['variants']       = $variant;
         $data['stocks']         = $stock;
+        $data['totstocks']      = $totstock;
+        $data['totpro']         = $totproduct;
+        $data['productschart']  = $produk;
+        $data['modal']          = $modal;
 
         return view('Views/product', $data);
     }

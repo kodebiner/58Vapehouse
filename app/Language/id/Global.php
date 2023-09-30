@@ -190,6 +190,7 @@ return [
     'busiesthours'      => 'Jam paling ramai',
     'descstockcycle'    => 'Produk berdasarkan lamanya stock mengendap hingga hari ini.',
     'position'          => 'Jabatan',
+    
 
     // Button
     'edit'              => 'Ubah',
@@ -276,6 +277,7 @@ return [
     'employereport'     => 'Laporan Karyawan',
     'customerreport'    => 'Laporan Pelanggan',
     'bundlereport'      => 'Laporan Bundle',
+    'stockproduct'      => 'Stok Produk',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',

@@ -2,12 +2,43 @@
 
 <?= $this->section('extraScript') ?>
 
-
 <link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
 <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
 <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'prodname');
+        data.addColumn('number', 'stock');
+        data.addColumn('string', 'catname');
+        data.addColumn('number', 'hargajual');
+        data.addColumn('number', 'hargamodal');
+        data.addRows([
+            <?php foreach ($productschart as $product){
+                $cate           = $product['catname'];
+                $sold           = $product['stock'];
+                $produk         = $product['prodname'];
+                $hargajual      = $product['hargadasar'];
+                $hargamodal     = $product['hargamodal'];
+                echo "['$produk',$sold,'$cate',$hargajual,$hargamodal],";
+            }?>
+        ]);
+
+        var options = {
+            title: 'Products Percentage %'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+    }
+</script>
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -32,6 +63,10 @@
 <!-- End Of Page Heading -->
 
 <?= view('Views/Auth/_message_block') ?>
+<div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
+    <h3 class="uk-card-title"><?=lang('Global.productreport')?></h3>
+    <div id="piechart" ></div>
+</div>
 
 <!-- Modal Add -->
 <div uk-modal class="uk-flex-top" id="tambahdata">
@@ -542,6 +577,14 @@
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light display" id="example" style="width:100%">
+
+    <div class="uk-column-1-3">
+    <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.capitalPrice')?> : <?php echo "Rp. ".number_format($modal,0,',','.');" ";?></p>
+
+    <p class="uk-text-large  uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.product')?> : <?php echo $totpro;?></p>
+
+    <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.stock')?> : <?php echo $totstocks;?></p>
+    </div>
         <thead>
             <tr>
                 <th class="uk-text-center"></th>

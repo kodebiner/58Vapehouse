@@ -81,7 +81,7 @@
 </div>
 
 <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-    <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.paymentreport')?></caption>
+    <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.total')?> <?=lang('Global.payment')?> : <?php echo "Rp. ".number_format($total,0,',','.');" ";?></caption>
     <thead>
         <tr>
             <th class="uk-text-large uk-text-bold"><?=lang('Global.payment')?></th>
@@ -94,7 +94,7 @@
             <tr>
                 <td style="color:white;"><?=$pay['name']?></td>
                 <td class="" style="color:white;"><?= $pay['pqty']?></td>
-                <td class="" style="color:white;"><?php echo "Rp. ".number_format($pay['pvalue'],2,',','.');" ";?></td>
+                <td class="" style="color:white;"><?php echo "Rp. ".number_format($pay['pvalue'],0,',','.');" ";?></td>
             </tr>
         <?php } ?>
     </tbody>

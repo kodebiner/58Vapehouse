@@ -137,32 +137,88 @@ class Home extends BaseController
         foreach ($sales as $sale){
         $datesale = date_create($sale['date']);
         $saledate = $datesale->format('Y-m-d');
+        $hoursale = $datesale->format('H');
             $saly [] = [
                 'date'  => $saledate,
                 'value' => $sale['value'],
+                'hours' => $hoursale,
+                'trx'   => '1',
             ];
         }
-
+        
         $saledet = [];
         foreach ($saly as $sels) {
             if (!isset($saledet[$sels['date']])) {
                 $saledet[$sels['date']] = $sels;
             } else {
                 $saledet[$sels['date']]['value'] += $sels['value'];
+                $saledet[$sels['date']]['trx'] += $sels['trx'];
             }
         }
-
         $saledet = array_values($saledet);
-        array_multisort(array_column($saledet, 'value'), SORT_DESC, $saledet);
+       
+
+        array_multisort(array_column($saledet, 'trx'), SORT_DESC, $saledet);
         $daysale = array_slice($saledet, 0, 1);
         $day = 0;
         foreach ($daysale as $days){
             $datesale = date_create($days['date']);
-            $day= $datesale->format('l');
+            $day = $datesale->format('l');
         }
 
-       
+        // Bussy Hours
+        $hour = [];
+        foreach ($sales as $sale){
+        $datesale = date_create($sale['date']);
+        $saledate = $datesale->format('Y-m-d-H');
+        $hoursale = $datesale->format('H');
+            $hour [] = [
+                'value'     => $sale['value'],
+                'datesale'  => $saledate,
+                'hours'     => $hoursale,
+                'qty'       => '1',
+            ];
+        }
 
+        $s = [];
+        foreach ($hour as $key){
+           $s[] = $key['hours'];
+        }
+
+        // time transaction by value
+        $hoursdata = [];
+        foreach ($hour as $sels) {
+            if (!isset($hoursdata[$sels['hours']])) {
+                $hoursdata[$sels['hours']] = $sels;
+            } else {
+                $hoursdata[$sels['hours']]['qty'] += $sels['qty'];
+            }
+        }
+        $hoursdata = array_values($hoursdata);
+        array_multisort(array_column($hoursdata, 'qty'), SORT_DESC, $hoursdata);
+        $time = [];
+        foreach ($hoursdata as $data){
+            $datesal        = strtotime($data['datesale']);
+            $datesalling    = date('H:i',$datesal);
+            $time [] = [
+                'value' => $data['value'],
+                'hours' => $datesalling,
+                'x'     => $data['hours'],
+                'sum'   => $data['qty'],
+            ]; 
+        }
+
+        $timehours = array_slice($time, 0, 1);
+        $timeH = 0;
+        foreach ($timehours as $t){
+            if (isset($t)){
+                $timeH = $t['hours'];
+            }else{
+                $timeH = "0";
+            }
+        }
+      
+        // Discount
         $discvar    = array();
         $discval    = array();
         $trxsid     = array();
@@ -368,6 +424,7 @@ class Home extends BaseController
         $data['totalcustdebt']  = $totalcustdebt;
         $data['averagedays']    = $resultaveragedays;
         $data['bussyday']       = $day;
+        $data['bussytime']      = $timeH;
         
         return view('dashboard', $data);
     }

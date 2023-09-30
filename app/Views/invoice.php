@@ -41,91 +41,91 @@
         </style>
     </head>
     <nav class="uk-navbar-container">
-    <div class="uk-container">
-        <div uk-navbar>
+        <div class="uk-container">
+            <div uk-navbar>
 
-            <div class="uk-navbar-left">
-                <div class="uk-navbar-item uk-logo">
-                    <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
-                        <img src="/img/<?=$gconfig['logo'];?>" alt="<?=$gconfig['bizname'];?>" style="height: 60px;">
-                    <?php } else { ?>
-                        <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 60px;">
-                    <?php } ?>
+                <div class="uk-navbar-left">
+                    <div class="uk-navbar-item uk-logo">
+                        <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
+                            <img src="/img/<?=$gconfig['logo'];?>" alt="<?=$gconfig['bizname'];?>" style="height: 60px;">
+                        <?php } else { ?>
+                            <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 60px;">
+                        <?php } ?>
+                    </div>
+                    <a class="uk-navbar-item uk-logo fptagline" style="font-size:35px;" href="#" aria-label="Back to Home">58 Vapehouse Invoice</a>
                 </div>
-                <a class="uk-navbar-item uk-logo fptagline" style="font-size:35px;" href="#" aria-label="Back to Home">58 Vapehouse Invoice</a>
-            </div>
 
-            <div class="uk-navbar-right">
-                <div class="uk-navbar-item uk-margin-right-left">
-                    <a class="uk-icon-button" uk-icon="arrow-left" href="<?= base_url('transaction') ?>"></a>
-                </div>
-                <div class="uk-text-center">
-                    <!-- transaction member -->
-                    <?php if (!empty($transactions['id']) && !empty($transactions['memberid'])){
-                        foreach ($members as $member){
-                            if($transactions['memberid'] === $member['id']){
-                                $memphone = $member['phone'];
-                                echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62$memphone?text=$links'></a>";
+                <div class="uk-navbar-right">
+                    <div class="uk-navbar-item uk-margin-right-left">
+                        <a class="uk-icon-button" uk-icon="arrow-left" href="<?= base_url('transaction') ?>"></a>
+                    </div>
+                    <div class="uk-text-center">
+                        <!-- transaction member -->
+                        <?php if (!empty($transactions['id']) && !empty($transactions['memberid'])){
+                            foreach ($members as $member){
+                                if($transactions['memberid'] === $member['id']){
+                                    $memphone = $member['phone'];
+                                    echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62$memphone?text=$links'></a>";
+                                }
                             }
-                        }
-                        // transactions non member
-                    } elseif ( !empty($transactions['id']) && $transactions['memberid'] ==="0" ){
-                        echo'<a class="uk-icon-button" uk-icon="whatsapp" id="phonenumber" uk-toggle="target: #phonenumber" href="" uk-toggle></a>';
-                        // bookings member
-                    } elseif ( !empty($bookings['id']) && !empty($bookings['memberid']) ){
-                        foreach ($members as $member){
-                            if($bookings['memberid'] === $member['id']){
-                                $memphone = $member['phone'];
-                                echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62$memphone?text=$links'></a>";
+                            // transactions non member
+                        } elseif ( !empty($transactions['id']) && $transactions['memberid'] ==="0" ){
+                            echo'<a class="uk-icon-button" uk-icon="whatsapp" id="phonenumber" uk-toggle="target: #phonenumber" href="" uk-toggle></a>';
+                            // bookings member
+                        } elseif ( !empty($bookings['id']) && !empty($bookings['memberid']) ){
+                            foreach ($members as $member){
+                                if($bookings['memberid'] === $member['id']){
+                                    $memphone = $member['phone'];
+                                    echo "<a class='uk-icon-button' uk-icon='whatsapp' href='https://wa.me/62$memphone?text=$links'></a>";
+                                }
                             }
-                        }
-                        // bookings non memeber
-                    } elseif ( !empty($bookings['id']) && empty($member['id']) ){
-                        echo'<a class="uk-icon-button" uk-icon="whatsapp" id="phonenumber" uk-toggle="target: #phonenumber" href="" uk-toggle></a>';
-                    } ?>
-                    <!-- modal phonenumber -->
-                    <div class="uk-flex-top" id="phonenumber" uk-modal>
+                            // bookings non memeber
+                        } elseif ( !empty($bookings['id']) && empty($member['id']) ){
+                            echo'<a class="uk-icon-button" uk-icon="whatsapp" id="phonenumber" uk-toggle="target: #phonenumber" href="" uk-toggle></a>';
+                        } ?>
+                        <!-- modal phonenumber -->
+                        <div class="uk-flex-top" id="phonenumber" uk-modal>
 
-                        <div class="uk-modal-dialog uk-margin-auto-vertical">
-                            <button class="uk-modal-close-default" type="button" uk-close></button>
-                            <div class="uk-modal-header">
-                                <h2 class="uk-modal-title"><?=lang('Global.phonenumber')?></h2>
-                            </div>
+                            <div class="uk-modal-dialog uk-margin-auto-vertical">
+                                <button class="uk-modal-close-default" type="button" uk-close></button>
+                                <div class="uk-modal-header">
+                                    <h2 class="uk-modal-title"><?=lang('Global.phonenumber')?></h2>
+                                </div>
 
-                            <div class="uk-modal-body">
-                                <form class="uk-form-horizontal uk-margin-large">
-                                    <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.phonenumber')?></label>
-                                        <div class="uk-form-controls">
-                                            <div class="uk-inline uk-width-1-1">
-                                                <span class="uk-form-icon">+62</span>
-                                                <input class="uk-input" min="1" id="phoneinput" name="phoneinput" type="number" placeholder="phone" aria-label="Not clickable icon">
+                                <div class="uk-modal-body">
+                                    <form class="uk-form-horizontal uk-margin-large">
+                                        <div class="uk-margin">
+                                            <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.phonenumber')?></label>
+                                            <div class="uk-form-controls">
+                                                <div class="uk-inline uk-width-1-1">
+                                                    <span class="uk-form-icon">+62</span>
+                                                    <input class="uk-input" min="1" id="phoneinput" name="phoneinput" type="number" placeholder="phone" aria-label="Not clickable icon">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="uk-modal-footer uk-text-right">
-                                        <?php echo "<a class='uk-button uk-button-primary' id='phone' href=''>submit</a>"; ?>
-                                    </div>
-                                    <script>
-                                       $(document).ready(function(){
-                                            $("#phoneinput").keyup(function(){
-                                                let phone = $("#phoneinput").val();
-                                                $("#phone").attr("href", "https://wa.me/62"+phone+"?text=<?=$links?>");
-                                                console.log(phone);
+                                        <div class="uk-modal-footer uk-text-right">
+                                            <?php echo "<a class='uk-button uk-button-primary' id='phone' href=''>submit</a>"; ?>
+                                        </div>
+                                        <script>
+                                        $(document).ready(function(){
+                                                $("#phoneinput").keyup(function(){
+                                                    let phone = $("#phoneinput").val();
+                                                    $("#phone").attr("href", "https://wa.me/62"+phone+"?text=<?=$links?>");
+                                                    console.log(phone);
+                                                });
                                             });
-                                        });
-                                    </script>
-                                </form>
+                                        </script>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
 
+                        </div>
+                        <!-- end modal phonenumber -->
                     </div>
-                    <!-- end modal phonenumber -->
                 </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
     
     <body style="background-color:#000;">
         <div class="uk-position-center">

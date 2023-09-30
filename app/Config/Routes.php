@@ -255,6 +255,7 @@ $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('employe', 'Report::employe', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('customer', 'Report::customer', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('customerdetail/(:num)', 'Report::customerdetail/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('category', 'Report::category', ['filter' => 'role:owner,supervisor,operator']);
 
 });
 

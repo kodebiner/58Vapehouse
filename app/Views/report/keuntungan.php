@@ -6,59 +6,29 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-    google.charts.load('current', {packages: ['corechart', 'line']});
-    google.charts.setOnLoadCallback(drawAxisTickColors);
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
-    function drawAxisTickColors() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'date');
-        data.addColumn('number', 'modal');
-        data.addColumn('number', 'dasar');
-
-        data.addRows([
-            <?php foreach ($transactions as $transaction) {
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['date', 'modal', 'dasar'],
+          <?php foreach ($transactions as $transaction) {
                 echo '["'.$transaction['date'].'", '.$transaction['modal'].', '.$transaction['dasar'].'],';
             } ?>
         ]);
 
         var options = {
-            hAxis: {
-                title: 'Time',
-                textStyle: {
-                    color: '#01579b',
-                    fontSize: 20,
-                    fontName: 'Arial',
-                    bold: true,
-                    italic: true
-                },
-                titleTextStyle: {
-                    color: '#01579b',
-                    fontSize: 16,
-                    fontName: 'Arial',
-                    bold: false,
-                    italic: true
-                }
-            },
-            vAxis: {
-                title: 'margin',
-                textStyle: {
-                    color: '#a52714', 
-                    fontSize: 14,
-                    bold: false
-                },
-                titleTextStyle: {
-                    color: '#1a237e',
-                    fontSize: 14,
-                    bold: true
-                }
-            },
-            colors: ['#000', '#097138']
+          title: 'Company Performance',
+          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
         };
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
         chart.draw(data, options);
-    }
-</script>
+      }
+    </script>
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
 <?= $this->endSection() ?>

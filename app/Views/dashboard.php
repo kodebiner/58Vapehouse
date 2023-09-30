@@ -437,7 +437,7 @@
                                     <div><?= lang('Global.busiesthours') ?></div>
                                 </div>
                                 <div class="uk-text-right uk-margin-remove-left">
-                                    <div>20:00</div>
+                                    <div><?=$bussytime?></div>
                                 </div>
                             </div>
                         </div>

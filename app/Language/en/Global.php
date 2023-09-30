@@ -192,6 +192,7 @@ return [
     'position'          => 'Position',
     'information'       => 'Information',
     'pastday'           => 'days ago',
+    'stockproduct'      => 'Product Stock',
    
     // Button
     'edit'              => 'Edit',

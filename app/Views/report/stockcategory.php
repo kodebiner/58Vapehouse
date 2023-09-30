@@ -13,17 +13,19 @@
 
     function drawChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'product');
-        data.addColumn('number', 'sold');
-        data.addColumn('string', 'category');
-        data.addColumn('number', 'value');
+        data.addColumn('string', 'prodname');
+        data.addColumn('number', 'stock');
+        data.addColumn('string', 'catname');
+        data.addColumn('number', 'hargajual');
+        data.addColumn('number', 'hargamodal');
         data.addRows([
             <?php foreach ($products as $product){
-                $produk     = $product['product'];
-                $sold       = $product['qty'];
-                $category   = $product['category'];
-                $value      = $product['value'];
-                echo "[ '$produk',$sold,'$category',$value],";
+                $category       = $product['catname'];
+                $sold           = $product['stock'];
+                $produk         = $product['prodname'];
+                $hargajual      = $product['hargadasar'];
+                $hargamodal     = $product['hargamodal'];
+                echo "['$produk',$sold,'$category',$hargajual,$hargamodal],";
             }?>
         ]);
 
@@ -57,26 +59,6 @@
     </div>
     <!-- End Of Page Heading -->
 
-    <!-- Filter -->
-    <div class="uk-width-1-1 uk-margin">
-        <form id="short" action="report/product" method="get">
-            <div class="uk-inline">
-                <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-                <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
-            </div>
-        </form>
-        <script>
-            $(function() {
-                $('input[name="daterange"]').daterangepicker({
-                    opens: 'right'
-                }, function(start, end, label) {
-                    document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
-                    document.getElementById('short').submit();
-                });
-            });
-        </script>
-    </div>
-
     <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
         <h3 class="uk-card-title"><?=lang('Global.productreport')?></h3>
         <div id="piechart" ></div>
@@ -86,21 +68,19 @@
         <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.productreport')?></caption>
         <thead>
             <tr>
-                <th><?=lang('Global.product')?></th>
                 <th><?=lang('Global.category')?></th>
-                <th class="uk-text-center"><?=lang('Global.transaction')?></th>
-                <th><?=lang('Global.gross')?></th>
-                <th><?=lang('Global.sales')?></th>
+                <th class="uk-text-center"><?=lang('Global.basePrice')?></th>
+                <th class="uk-text-center"><?=lang('Global.capitalPrice')?></th>
+                <th><?=lang('Global.stock')?></th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($products as $product ){ ?>
                 <tr>
-                    <td style="color:white;"><?=$product['product']?></td>
-                    <td style="color:white;"><?=$product['category']?></td>
-                    <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
-                    <td style="color:white;"><?php echo "Rp. ".number_format($product['gross'],0,',','.');" ";?></td>
-                    <td style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
+                    <td style="color:white;"><?=$product['catname']?></td>
+                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['hargadasar'],0,',','.');" ";?></td>
+                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['hargamodal'],0,',','.');" ";?></td>
+                    <td style="color:white;"><?=$product['stock']?></td>
                 </tr>
             <?php } ?>
         </tbody>
