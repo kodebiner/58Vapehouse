@@ -13,19 +13,17 @@
 
     function drawChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'prodname');
-        data.addColumn('number', 'stock');
-        data.addColumn('string', 'catname');
-        data.addColumn('number', 'hargajual');
-        data.addColumn('number', 'hargamodal');
+        data.addColumn('string', 'name');
+        data.addColumn('number', 'trx');
+        data.addColumn('number', 'sales');
+        data.addColumn('number', 'gross');
         data.addRows([
             <?php foreach ($products as $product){
-                $category       = $product['catname'];
-                $sold           = $product['stock'];
-                $produk         = $product['prodname'];
-                $hargajual      = $product['hargadasar'];
-                $hargamodal     = $product['hargamodal'];
-                echo "['$produk',$sold,'$category',$hargajual,$hargamodal],";
+                $category       = $product['name'];
+                $sold           = $product['trx'];
+                $sales          = $product['sales'];
+                $gross          = $product['gross'];
+                echo "['$category',$sold,$sales,$gross],";
             }?>
         ]);
 
@@ -77,10 +75,10 @@
         <tbody>
             <?php foreach ($products as $product ){ ?>
                 <tr>
-                    <td style="color:white;"><?=$product['catname']?></td>
-                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['hargadasar'],0,',','.');" ";?></td>
-                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['hargamodal'],0,',','.');" ";?></td>
-                    <td style="color:white;" class="uk-text-center"><?=$product['stock']?></td>
+                    <td style="color:white;"><?=$product['name']?></td>
+                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['sales'],0,',','.');" ";?></td>
+                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['gross'],0,',','.');" ";?></td>
+                    <td style="color:white;" class="uk-text-center"><?=$product['trx']?></td>
                 </tr>
             <?php } ?>
         </tbody>

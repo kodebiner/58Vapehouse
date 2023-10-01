@@ -43,10 +43,13 @@
                         </div>
                     </div>
 
-                    <div class="uk-margin">
+                    <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="phone"><?=lang('Global.phone')?></label>
                         <div class="uk-form-controls">
-                        <input type="text" class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>" name="phone" id="phone" placeholder="<?=lang('Global.phone')?>" required/>
+                            <div class="uk-inline uk-width-1-1">
+                                <span class="uk-form-icon">+62</span>
+                                <input class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>" min="1" id="phone" name="phone" type="number" placeholder="<?=lang('Global.phone')?>" aria-label="Not clickable icon" required/>
+                            </div>
                         </div>
                     </div>
 
@@ -137,12 +140,15 @@
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="phone"><?=lang('Global.phone')?></label>
                                 <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="phone" name="phone"  value="<?= $customer['phone']; ?>" />
+                                    <div class="uk-inline uk-width-1-1">
+                                        <span class="uk-form-icon">+62</span>
+                                        <input class="uk-input" min="1" id="phone" name="phone" type="number" value="<?= $customer['phone']; ?>" aria-label="Not clickable icon">
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="uk-margin-bottom">
-                                <label class="uk-form-label" for="emaila"><?=lang('Auth.email')?></label>
+                                <label class="uk-form-label" for="email"><?=lang('Auth.email')?></label>
                                 <div class="uk-form-controls">
                                 <input type="text" class="uk-input" id="email" name="email"  value="<?= $customer['email']; ?>" />
                                 </div>

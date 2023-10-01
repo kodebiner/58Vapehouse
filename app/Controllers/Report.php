@@ -460,7 +460,7 @@ class Report extends BaseController
         $variantval     = [];
         $trxvar         = [];
         $diskon         = [];
-        $productqty = [];
+        $productqty     = [];
         foreach ($transactions as $transaction){
             
             $discounttrx = array();
@@ -474,7 +474,6 @@ class Report extends BaseController
                     }
                     if ($transaction['disctype'] !== "0"){
                         $discounttrxpersen[]    = ($trxdetail['value'] * $trxdetail['qty']) * $transaction['discvalue'];
-                        // $discounttrxpersen[]    = ($trxdetail['value'] * $trxdetail['qty']) - ($transaction['value'] + $trxdetail['discvar']);
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
 
@@ -503,10 +502,6 @@ class Report extends BaseController
                                                     'product'       => $product['name'],
                                                     'category'      => $cat['name'],
                                                     'qty'           => $trxdetail['qty'],
-                                                    // 'trxdisc'       => $transactiondisc,
-                                                    // 'variantdis'    => $variantdisc,
-                                                    // 'poindisc'      => $poindisc,
-                                                    // 'gross'         => $transaction['value'] +  $transactiondisc +  $variantdisc  +  $poindisc,
                                                 ];
                                             }
                                         }
@@ -950,39 +945,39 @@ class Report extends BaseController
         }
 
         $categoryvalue =[];
+        $productqty =[];
+        $trxarr = [];
+        $trxdet = [];
+
+        //Discount Array
+        $discvar    = array();
+        $discval    = array();
+        $trxsid     = array();
         foreach ($transactions as $transaction){
             foreach ($trxdetails as $trxdetail){
-                if ($transaction['id'] === $trxdetail['transactionid']){
-                    foreach ($variants as $variant){
-                        if($trxdetail['variantid'] === $variant['id']){
-                            foreach ($products as $product){
-                                foreach ($brands as $brand){
-                                    foreach ($category as $cat){
-        
+                foreach ($variants as $variant){
+                    foreach ($products as $product){
+                        foreach ($category as $cat){
+                            if( $transaction['id'] === $trxdetail['id'] && $trxdetail['variantid'] === $variant['id'] &&
+                            $variant['productid'] === $product['id'] && $product['catid'] === $cat['id']){
+                                if ($trxdetail['transactionid'] === $transaction['id']) {
+
+                                    $subtotals = $trxdetail['qty'] * $trxdetail['value'];
+                                    $discvar[] = $trxdetail['discvar'];
+                
+                                    if ($transaction['disctype'] === "0") {
+                                        $discval[] = $transaction['discvalue'];
+                                    } else {
+                                        $discval[] = $subtotals * $transaction['discvalue'];
                                     }
                                 }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $productval = [];
-        foreach ($stocks as $stock){
-            foreach ($variants as $variant){
-                    foreach ($products as $product){
-                        foreach ($brands as $brand){
-                            foreach ($category as $cat){
-                                if($product['catid'] === $cat['id'] && $product['brandid'] === $brand['id'] && $variant['productid'] == $product['id'] && $stock['variantid'] === $variant['id']){
-                                $productval [] = [
-                                    'id'                => $cat['id'],
-                                    'catname'           => $cat['name'],
-                                    'prodname'          => $product['name'],
-                                    'desc'              => $product['description'],
-                                    'stock'             => $stock['qty'],                                
-                                    'hargamodal'        => $stock['qty'] * ($variant['hargajual'] + $variant['hargamodal']),                                
-                                    'hargadasar'        => $stock['qty'] * ($variant['hargajual'] + $variant['hargadasar']),                                
+                                $categoryvalue [] = [
+                                    'id'    => $cat['id'],
+                                    'trxid' => $transaction['id'],
+                                    'trx'   => $trxdetail['qty'],
+                                    'name'  => $cat['name'],
+                                    'sales' => $transaction['value'],
+                                    'gross' => $trxdetail['value'] + $transaction['pointused'] + $discval[0] + $discvar[0],
                                 ];
                             }
                         }
@@ -990,19 +985,19 @@ class Report extends BaseController
                 }
             }
         }
-
+       
         $produk = [];
-        foreach ($productval as $vars) {
-            if (!isset($produk[$vars['id'].$vars['catname']])) {
-                $produk[$vars['id'].$vars['catname']] = $vars;
+        foreach ($categoryvalue as $vars){
+            if (!isset($produk[$vars['id'].$vars['name']])) {
+                $produk[$vars['id'].$vars['name']] = $vars;
             } else {
-                $produk[$vars['id'].$vars['catname']]['stock'] += $vars['stock'];
-                $produk[$vars['id'].$vars['catname']]['hargamodal'] += $vars['hargamodal'];
-                $produk[$vars['id'].$vars['catname']]['hargadasar'] += $vars['hargadasar'];
+                $produk[$vars['id'].$vars['name']]['trx'] += $vars['trx'];
+                $produk[$vars['id'].$vars['name']]['sales'] += $vars['sales'];
+                $produk[$vars['id'].$vars['name']]['gross'] += $vars['gross'];
             }
+               
         }
         $produk = array_values($produk);
-
 
         // Parsing Data to View
         $data                   = $this->data;
