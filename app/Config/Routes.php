@@ -154,6 +154,8 @@ $routes->group('export', ['filter'=>'login'], function($routes){
     $routes->get('bundle', 'Export::bundle', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('diskon', 'Export::diskon', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('sales', 'Export::sales', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('category', 'Export::category', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('stockcategory', 'Export::stockcategory', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Customer Routes
@@ -256,6 +258,7 @@ $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('customer', 'Report::customer', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('customerdetail/(:num)', 'Report::customerdetail/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('category', 'Report::category', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('stockcategory', 'Report::stockcategory', ['filter' => 'role:owner,supervisor,operator']);
 
 });
 

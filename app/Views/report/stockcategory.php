@@ -23,7 +23,7 @@
                 $category       = $product['catname'];
                 $sold           = $product['stock'];
                 $produk         = $product['prodname'];
-                $hargajual      = $product['hargadasar'];
+                $hargajual      = $product['hargajual'];
                 $hargamodal     = $product['hargamodal'];
                 echo "['$produk',$sold,'$category',$hargajual,$hargamodal],";
             }?>
@@ -51,7 +51,7 @@
 
             <!-- Button Trigger Modal export -->
             <div class="uk-width-1-2@m uk-text-right@m">
-                <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/product"><?=lang('Global.export')?></a>
+                <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/stockcategory"><?=lang('Global.export')?></a>
             </div>
             <!-- End Of Button Trigger Modal export-->
 
@@ -60,12 +60,12 @@
     <!-- End Of Page Heading -->
 
     <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
-        <h3 class="uk-card-title"><?=lang('Global.productreport')?></h3>
+        <h3 class="uk-card-title"><?=lang('Global.product')?> <?=lang('Global.category')?></h3>
         <div id="piechart" ></div>
     </div>
 
     <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-        <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.productreport')?></caption>
+        <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.product')?> <?=lang('Global.category')?></caption>
         <thead>
             <tr>
                 <th><?=lang('Global.category')?></th>
@@ -78,7 +78,7 @@
             <?php foreach ($products as $product ){ ?>
                 <tr>
                     <td style="color:white;"><?=$product['catname']?></td>
-                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['hargadasar'],0,',','.');" ";?></td>
+                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['hargajual'],0,',','.');" ";?></td>
                     <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['hargamodal'],0,',','.');" ";?></td>
                     <td style="color:white;"><?=$product['stock']?></td>
                 </tr>

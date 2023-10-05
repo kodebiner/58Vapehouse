@@ -86,9 +86,11 @@
                     <div uk-grid >
                         <div class="uk-width-1-2@m">
                             <p class="uk-margin-remove-top uk-text-default"><?=lang("Global.quantity")?> <?=lang("Global.sales")?></p>
+                            <p class="uk-margin-remove-top uk-text-default"><?=lang("Global.total")?> <?=lang("Global.sales")?></p>
                         </div>
                         <div class="uk-width-1-2@m">
                             <p class="uk-margin-remove-top  uk-text-default uk-text-right"><?=$bundle['qty']?></p>
+                            <p class="uk-margin-remove-top  uk-text-default uk-text-right"><?=$bundle['value']?></p>
                         </div>
                     </div>
                 </div>

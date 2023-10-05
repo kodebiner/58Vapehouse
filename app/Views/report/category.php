@@ -13,17 +13,15 @@
 
     function drawChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'name');
-        data.addColumn('number', 'trx');
-        data.addColumn('number', 'sales');
-        data.addColumn('number', 'gross');
+        data.addColumn('string', 'category');
+        data.addColumn('number', 'qty');
+        data.addColumn('number', 'value');
         data.addRows([
             <?php foreach ($products as $product){
-                $category       = $product['name'];
-                $sold           = $product['trx'];
-                $sales          = $product['sales'];
-                $gross          = $product['gross'];
-                echo "['$category',$sold,$sales,$gross],";
+                $category       = $product['category'];
+                $sold           = $product['qty'];
+                $sales          = $product['value'];
+                echo "['$category',$sold,$sales],";
             }?>
         ]);
 
@@ -49,7 +47,7 @@
 
             <!-- Button Trigger Modal export -->
             <div class="uk-width-1-2@m uk-text-right@m">
-                <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/product"><?=lang('Global.export')?></a>
+                <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/category"><?=lang('Global.export')?></a>
             </div>
             <!-- End Of Button Trigger Modal export-->
 
@@ -57,9 +55,29 @@
     </div>
     <!-- End Of Page Heading -->
 
+    <!-- Daterange Filter -->
+    <div class="uk-width-1-1 uk-margin">
+        <form id="short" action="report/category" method="get">
+            <div class="uk-inline">
+                <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+            </div>
+        </form>
+        <script>
+            $(function() {
+                $('input[name="daterange"]').daterangepicker({
+                    opens: 'right'
+                }, function(start, end, label) {
+                    document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                    document.getElementById('short').submit();
+                });
+            });
+        </script>
+    </div>
+
     <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
         <h3 class="uk-card-title"><?=lang('Global.categoryreport')?></h3>
-        <div id="piechart" ></div>
+        <div id="piechart"></div>
     </div>
 
     <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
@@ -67,7 +85,7 @@
         <thead>
             <tr>
                 <th><?=lang('Global.category')?></th>
-                <th class="uk-text-center"><?=lang('Global.sales')?></th>
+                <th class="uk-text-center"><?=lang('Global.category')?></th>
                 <th class="uk-text-center"><?=lang('Global.gross')?></th>
                 <th class="uk-text-center"><?=lang('Global.transaction')?></th>
             </tr>
@@ -75,10 +93,10 @@
         <tbody>
             <?php foreach ($products as $product ){ ?>
                 <tr>
-                    <td style="color:white;"><?=$product['name']?></td>
-                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['sales'],0,',','.');" ";?></td>
-                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['gross'],0,',','.');" ";?></td>
-                    <td style="color:white;" class="uk-text-center"><?=$product['trx']?></td>
+                    <td style="color:white;"><?=$product['category']?></td>
+                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
+                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
+                    <td style="color:white;" class="uk-text-center"><?=$product['qty']?></td>
                 </tr>
             <?php } ?>
         </tbody>

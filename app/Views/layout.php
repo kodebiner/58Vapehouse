@@ -279,10 +279,10 @@
                                         <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
+                                        <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
+                                        <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
@@ -292,6 +292,9 @@
                                     </li>
                                     <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
+                                    </li>
+                                    <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('report/stockcategory') ?>"><?=lang('Global.stockproduct');?></a>
                                     </li>
                                 </ul>
                             </li> 
@@ -419,10 +422,10 @@
                                 <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
+                                <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
+                                <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
                             </li>
                             <li class="uk-h5 tm-h5">
                                 <a href="<?= base_url('report/bundle') ?>"><?=lang('Global.bundlereport');?></a>
@@ -435,6 +438,9 @@
                             </li>
                             <li class="uk-h5 tm-h5">
                                 <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
+                            </li>
+                            <li class="uk-h5 tm-h5">
+                                <a href="<?= base_url('report/stockcategory') ?>"><?=lang('Global.stockproduct');?></a>
                             </li>
                         </ul>
                     </li> 

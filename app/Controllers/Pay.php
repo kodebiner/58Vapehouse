@@ -1011,7 +1011,12 @@ class Pay extends BaseController
         if ((!empty($transactions['discvalue'])) && ($transactions['disctype'] === '0')) {
             $data['discount'] += $transactions['discvalue'];
         } elseif ((isset($transactions['discvalue'])) && ($transactions['disctype'] === '1')) {
-            $data['discount'] += ($transactions['discvalue'] / 100) * $subtotal;
+            foreach ($trxdetails as $trxdetail){
+                if($trxdetail['transactionid'] === $transactions['id']){
+                    $sub =  ($trxdetail['value']* $trxdetail['qty']);
+                    $data['discount'] += $sub * ($transactions['discvalue'] / 100);
+                }
+            }
         } else {
             $data['discount'] += 0;
         }
@@ -1410,33 +1415,19 @@ class Pay extends BaseController
         $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
         $bundleVariants     = $bundleBuilder->get();
 
-        $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc');
-        $data['bundles']        = $bundles;
-        $data['bundets']        = $bundets;
-        $data['cash']           = $Cash;
-        $data['transactions']   = $transactions;
-        $data['outlets']        = $outlets;
-        $data['payments']       = $payments;
-        $data['customers']      = $customers;
-        $data['products']       = $products;
-        $data['variants']       = $variants;
-        $data['stocks']         = $stocks;
-        $data['trxdetails']     = $TrxdetailModel->where('transactionid',$id)->find();
-        $data['trxpayments']    = $trxpayments;
-        $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
-        $data['bundleVariants'] = $bundleVariants->getResult();
-        $data['members']        = $MemberModel->findAll();
-
         $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $data['links']          = $actual_link;
+        $data                   = $this->data;
 
         $data['discount'] = "0";
         if ((!empty($transactions['discvalue'])) && ($transactions['disctype'] === '0')) {
             $data['discount'] += $transactions['discvalue'];
         } elseif ((isset($transactions['discvalue'])) && ($transactions['disctype'] === '1')) {
-            $data['discount'] += ($transactions['discvalue'] / 100) * $subtotal;
+            foreach ($trxdetails as $trxdetail){
+                if($trxdetail['transactionid'] === $transactions['id']){
+                    $sub =  ($trxdetail['value']* $trxdetail['qty']);
+                    $data['discount'] += $sub * ($transactions['discvalue'] / 100);
+                }
+            }
         } else {
             $data['discount'] += 0;
         }
@@ -1514,6 +1505,25 @@ class Pay extends BaseController
             $data['totaldebt']  = "0";
         }
 
+       
+        $data['title']          = lang('Global.transaction');
+        $data['description']    = lang('Global.transactionListDesc');
+        $data['links']          = $actual_link;
+        $data['bundles']        = $bundles;
+        $data['bundets']        = $bundets;
+        $data['cash']           = $Cash;
+        $data['transactions']   = $transactions;
+        $data['outlets']        = $outlets;
+        $data['payments']       = $payments;
+        $data['customers']      = $customers;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['stocks']         = $stocks;
+        $data['trxdetails']     = $TrxdetailModel->where('transactionid',$id)->find();
+        $data['trxpayments']    = $trxpayments;
+        $data['outid']          = $OutletModel->where('id',$this->data['outletPick'])->first();
+        $data['bundleVariants'] = $bundleVariants->getResult();
+        $data['members']        = $MemberModel->findAll();
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $id;
@@ -1592,12 +1602,21 @@ class Pay extends BaseController
             $data['vardiscval']     = "0";
         }
 
+        foreach ($trxdetails as $trxdetail){
+            if($trxdetail['transactionid'] === $transactions['id']){
+                $sub =  ($trxdetail['value']* $trxdetail['qty']);
+                $data['discount'] += $sub * ($transactions['discvalue'] / 100);
+            }
+        }
+
         
         if ((!empty($booking['discvalue'])) && ($booking['disctype'] === '0')) {
             $data['discount'] = $booking['discvalue'];
             $data['memberdisc'] = $booking['discvalue'];
         } elseif ((!empty($booking['discvalue'])) && ($booking['disctype'] === '1')) {
-            $data['discount'] = ($booking['discvalue']/100) * $bookingdetails['value'];
+            $sub = $bookingdetails['value'] * $bookingdetails['qty'];
+            $data['discount'] = ($booking['discvalue']/100) * $sub;
+            // $data['discount'] = ($booking['discvalue']/100) * $bookingdetails['value'];
             $data['memberdisc'] = ($booking['discvalue'] / 100) * $bookingdetails['value'];
         } else {
             $data['discount'] = 0;

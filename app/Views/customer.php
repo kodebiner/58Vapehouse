@@ -94,7 +94,7 @@
                 <td class="uk-text-center"><?= $i++; ?></td>
                 <td class="uk-text-center"><?= $customer['name']; ?></td>
                 <td class="uk-text-center"><?= $customer['email']; ?></td>
-                <td class="uk-text-center"><?= $customer['phone']; ?></td>
+                <td class="uk-text-center">+62<?= $customer['phone']; ?></td>
                 <td class="uk-text-center"><?= $customer['kasbon']; ?></td>
                 <td class="uk-text-center"><?= $customer['trx']; ?></td>
                 <td class="uk-text-center"><?= $customer['poin']; ?></td>

@@ -83,14 +83,22 @@
     </div>
 
     <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-        <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.productreport')?></caption>
+        <div class="uk-column-1-4">
+            <p class="uk-text-large  uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.sales')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p>
+            
+            <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($grosstotal,0,',','.');" ";?></p>
+
+            <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.transaction')?> : <?php echo $totalstock;?></p>
+
+            <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.bundle')?> : <?php echo $bundletotal;?></p>
+        </div>
         <thead>
             <tr>
                 <th><?=lang('Global.product')?></th>
                 <th><?=lang('Global.category')?></th>
-                <th class="uk-text-center"><?=lang('Global.transaction')?></th>
-                <th><?=lang('Global.gross')?></th>
                 <th><?=lang('Global.sales')?></th>
+                <th><?=lang('Global.gross')?></th>
+                <th class="uk-text-center"><?=lang('Global.transaction')?></th>
             </tr>
         </thead>
         <tbody>
@@ -98,9 +106,9 @@
                 <tr>
                     <td style="color:white;"><?=$product['product']?></td>
                     <td style="color:white;"><?=$product['category']?></td>
-                    <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
-                    <td style="color:white;"><?php echo "Rp. ".number_format($product['gross'],0,',','.');" ";?></td>
                     <td style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
+                    <td style="color:white;"><?php echo "Rp. ".number_format($product['gross'],0,',','.');" ";?></td>
+                    <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
                 </tr>
             <?php } ?>
         </tbody>
