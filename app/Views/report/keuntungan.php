@@ -44,7 +44,7 @@
 
         <!-- Button Trigger Modal export -->
         <div class="uk-width-1-2@m uk-text-right@m">
-            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/profit"><?=lang('Global.export')?></a>
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/profit?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
         </div>
         <!-- End Of Button Trigger Modal export-->
 

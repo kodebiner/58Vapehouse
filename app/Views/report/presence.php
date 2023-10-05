@@ -14,7 +14,7 @@
             <h3 class="tm-h3"><?=lang('Global.presencereport')?></h3>
         </div>
         <div class="uk-width-1-2@m uk-text-right@m">
-            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/presence"><?=lang('Global.export')?></a>
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/presence?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
         </div>
     </div>
 </div>
