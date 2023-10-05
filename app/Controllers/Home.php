@@ -441,8 +441,8 @@ class Home extends BaseController
             }
             $session->set('outlet', $id);
         }
-
-        return redirect()->back();
+        
+        return redirect()->to('');
     }
 
     public function trial()
