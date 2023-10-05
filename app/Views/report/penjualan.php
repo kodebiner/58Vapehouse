@@ -42,7 +42,7 @@
                 <h3 class="tm-h3"><?=lang('Global.salesreport')?></h3>
             </div>
             <div class="uk-width-1-2@m uk-text-right@m">
-                <a class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/sales?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>" target="_blank"><?=lang('Global.export')?></a>
+                <a class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" target="_blank" href="export/sales?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>" target="_blank"><?=lang('Global.export')?></a>
             </div>
         </div>
     </div>

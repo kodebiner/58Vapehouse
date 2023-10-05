@@ -620,8 +620,11 @@ public function prod()
 
         }else{
             $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            $outlets = $OutletModel->where('id',$this->data['outletPick'])->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $outletname [] = $outlets['name'];
+            $adress [] = $outlets['address'];
         }
+
 
         $productval     = [];
         $variantvalue   = [];
@@ -742,16 +745,16 @@ public function prod()
         // export
         echo '<table>';
         echo '<tr>';
-        echo'<td style="text-align: center; font-family: sans-serif; font-weight: bold;">'.$outletname[0].'</td>';
+        echo'<td style="text-align: center; font-family: sans-serif; font-weight: bold;">'.$outletname.'</td>';
         echo '</tr>';
         echo '<tr>';
-            echo'<td style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">'. $adress[0].'</td>';
+            echo'<td style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">'. $adress.'</td>';
         echo '</tr>';
         echo '<tr>';
             echo'<td style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">Ringkasan Produk</td>';
         echo '</tr>';
         echo '<tr>';
-            echo'<td style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">'.$date1.'-'.$date2.'</td>';
+            echo'<td style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">'.$day1.'-'.$day2.'</td>';
         echo '</tr>';
         echo '<thead>';
         echo '<tr>';
@@ -766,7 +769,7 @@ public function prod()
             echo '<tr>';
             echo '<td>'.$product['product'].'</td>';
             echo '<td>'.$product['category'].'</td>';
-            echo '<td>'.$product['sold'].'</td>';
+            echo '<td>'.$product['qty'].'</td>';
             echo '<td>'.$product['value'].'</td>';
             echo '</tr>';
         }

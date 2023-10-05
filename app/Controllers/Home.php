@@ -232,7 +232,7 @@ class Home extends BaseController
                     if ($trxs['disctype'] === "0") {
                         $discval[] = $trxs['discvalue'];
                     } else {
-                        $discval[] = $subtotals * $trxs['discvalue'];
+                        $discval[] = $subtotals * ($trxs['discvalue']/100);
                     }
                 }
             }

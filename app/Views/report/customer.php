@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="uk-width-1-3@m uk-text-right">
-        <a type="button" class="uk-button uk-button-primary uk-preserve-color" href="export/customer?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
+        <a type="button" class="uk-button uk-button-primary uk-preserve-color" target="_blank" href="export/customer?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
         </div>
     </div>
 </div>
