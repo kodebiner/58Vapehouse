@@ -611,18 +611,16 @@ public function prod()
         $day1 = date_create($startdate);
         $day2 = date_create($enddate);
         
-        $outletname = [];
-        $address = [];
         if($this->data['outletPick'] === null ){
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            $outletname [] = "All Outlets";
-            $adress [] = "58vapehouse";
+            $outletname = "All Outlets";
+            $adress = "58vapehouse";
 
         }else{
             $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $outlets = $OutletModel->find($this->data['outletPick']);
-            $outletname [] = $outlets['name'];
-            $adress [] = $outlets['address'];
+            $outletname = $outlets['name'];
+            $adress = $outlets['address'];
         }
 
 
