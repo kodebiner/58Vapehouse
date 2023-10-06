@@ -192,7 +192,8 @@ return [
     'position'          => 'Position',
     'information'       => 'Information',
     'pastday'           => 'days ago',
-    'stockproduct'      => 'Product Stock',
+    'active'            => 'Active',
+    'inactive'          => 'Inactive',
    
     // Button
     'edit'              => 'Edit',
@@ -214,6 +215,7 @@ return [
     'addCash'           => 'Add Cash',
     'addSupplier'       => 'Add Supplier',
     'addPurchase'       => 'Add Purchase',
+    'addPromo'          => 'Add Promo',
     'checkin'           => 'Check In',
     'checkout'          => 'Check Out',
     'addPay'            => 'Add Payment',
@@ -235,6 +237,7 @@ return [
     'open'              => 'Open Store',
     'close'             => 'Close Store',
     'cashhistory'       => 'Cash History',
+    'export'            => 'Export',
     
     // Menu
     'dashboard'         => 'Dashboard',
@@ -276,7 +279,8 @@ return [
     'employereport'     => 'Employe Report',
     'customerreport'    => 'Customer Report',
     'bundlereport'      => 'Bundle Report',
-    'export'            => 'Export',
+    'stockproduct'      => 'Product Stock',
+    'promo'             => 'Promo',
 
     // Title
     'employeeList'              => 'Employee List',
@@ -307,6 +311,7 @@ return [
     'debtInstallmentsList'      => 'Debt Installments List',
     'topupList'                 => 'Top Up List',
     'dailyreportList'           => 'Daily Report List',
+    'promoList'                 => 'Promo List',
     'dosop'                     => 'Do SOP',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
@@ -334,6 +339,7 @@ return [
     'debtInstallmentsListDesc'  => 'List of all your Debt',
     'topupListDesc'             => 'List of all your Top Up',
     'dailyreportListDesc'       => 'List of all your Daily Report',
+    'promoListDesc'             => 'List of all your promo',
     'userProfileDesc'           => 'Information about your profile',
     'businessInfoDesc'          => 'Information about your business',
 ];

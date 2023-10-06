@@ -482,8 +482,8 @@
                                         <div><?= lang('Global.photo') ?></div>
                                     </div>
                                     <div class="uk-text-right" uk-lightbox>
-                                        <a class="uk-inline" href="/img/trxproof<?= $transaction['photo'];?>">
-                                            <img src="/img/trxproof<?= $transaction['photo'];?>" alt="<?= $transaction['photo'];?>" style="width: 100px;">
+                                        <a class="uk-inline" href="/img/tfproof/<?= $transaction['photo'];?>">
+                                            <img src="/img/tfproof/<?= $transaction['photo'];?>" alt="<?= $transaction['photo'];?>" style="width: 100px;">
                                         </a>
                                     </div>
                                 </div>
@@ -736,8 +736,8 @@
                                     <div><?= lang('Global.photo') ?></div>
                                 </div>
                                 <div class="uk-text-right" uk-lightbox>
-                                    <a class="uk-inline" href="/img/trxproof<?= $trxot['photo'];?>">
-                                        <img src="/img/trxproof<?= $trxot['photo'];?>" alt="<?= $trxot['photo'];?>" style="width: 100px;">
+                                    <a class="uk-inline" href="/img/tfproof/<?= $trxot['photo'];?>">
+                                        <img src="/img/tfproof/<?= $trxot['photo'];?>" alt="<?= $trxot['photo'];?>" style="width: 100px;">
                                     </a>
                                 </div>
                             </div>

@@ -190,7 +190,10 @@ return [
     'busiesthours'      => 'Jam paling ramai',
     'descstockcycle'    => 'Produk berdasarkan lamanya stock mengendap hingga hari ini.',
     'position'          => 'Jabatan',
-    
+    'information'       => 'Keterangan',
+    'pastday'           => 'hari yang lalu',
+    'active'            => 'Aktif',
+    'inactive'          => 'Tidak Aktif',
 
     // Button
     'edit'              => 'Ubah',
@@ -212,6 +215,7 @@ return [
     'addCash'           => 'Tambah Kas',
     'addSupplier'       => 'Tambah Pemasok',
     'addPurchase'       => 'Tambah Pembelian',
+    'addPromo'          => 'Add Promo',
     'checkin'           => 'Masuk',
     'checkout'          => 'Keluar',
     'addPay'            => 'Tambah Pembayaran',
@@ -234,8 +238,6 @@ return [
     'close'             => 'Tutup Toko',
     'cashhistory'       => 'Riwayat Kas',
     'export'            => 'Export',
-    'information'       => 'Keterangan',
-    'pastday'           => 'hari yang lalu',
 
     // Menu
     'dashboard'         => 'Dasbor',
@@ -278,6 +280,7 @@ return [
     'customerreport'    => 'Laporan Pelanggan',
     'bundlereport'      => 'Laporan Bundle',
     'stockproduct'      => 'Stok Produk',
+    'promo'             => 'Promo',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',
@@ -308,6 +311,7 @@ return [
     'debtInstallmentsList'      => 'Daftar Angsuran Hutang',
     'topupList'                 => 'Daftar Top Up',
     'dailyreportList'           => 'Daftar Laporan Harian',
+    'promoList'                 => 'Daftar Promo',
     'dosop'                     => 'Lakukan SOP',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
@@ -335,6 +339,7 @@ return [
     'debtInstallmentsListDesc'  => 'Daftar angsuran kasbon yang anda miliki',
     'topupListDesc'             => 'Daftar top up yang anda miliki',
     'dailyreportListDesc'       => 'Daftar laporan harian yang anda miliki',
+    'promoListDesc'             => 'Daftar promo yang anda miliki',
     'userProfileDesc'           => 'Informasi mengenai profil anda',
     'businessInfoDesc'          => 'Informasi mengenai bisnis anda',
 ];

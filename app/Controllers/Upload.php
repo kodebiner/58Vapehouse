@@ -304,4 +304,136 @@ class Upload extends BaseController
         // Return Message
         die(json_encode(array('message' => lang('Global.deleted'))));
     }
+
+    public function promocreate()
+    {
+        $image      = \Config\Services::image();
+        $validation = \Config\Services::validation();
+        $input = $this->request->getFile('uploads');
+
+        // Validation Rules
+        $rules = [
+            'uploads'   => 'uploaded[uploads]|is_image[uploads]|max_size[uploads,2048]|ext_in[uploads,png,jpg,jpeg]',
+        ];
+
+        // Validating
+        if (! $this->validate($rules)) {
+            http_response_code(400);
+            die(json_encode(array('message' => $this->validator->getErrors())));
+        }
+
+        if ($input->isValid() && ! $input->hasMoved()) {
+            // Saving uploaded file
+            $filename = $input->getRandomName();
+            $truename = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
+            $input->move(FCPATH.'/img/promo/', $filename);
+
+            // Resizing Promo Image
+            $image->withFile(FCPATH.'/img/promo/'.$filename)
+                ->fit(300, 300, 'center')
+                ->crop(300, 300, 0, 0)
+                ->flatten(255, 255, 255)
+                ->convert(IMAGETYPE_JPEG)
+                ->save(FCPATH.'/img/promo/'.$truename.'.jpg');
+            
+            // Removing uploaded if it's not the same filename
+            if ($filename != $truename.'.jpg') {
+                unlink(FCPATH.'/img/promo/'.$filename);
+            }
+
+            // Getting True Filename
+            $returnFile = $truename.'.jpg';
+
+            // Returning Message
+            die(json_encode($returnFile));
+        }
+    }
+
+    public function removepromocreate()
+    {
+        // Removing File
+        $input = $this->request->getPost('photo');
+        unlink(FCPATH.'img/promo/'.$input);
+
+        // Return Message
+        die(json_encode(array('message' => lang('Global.deleted'))));
+    }
+
+    public function promoedit($id)
+    {
+        $image      = \Config\Services::image();
+        $validation = \Config\Services::validation();
+        $input = $this->request->getFile('uploads');
+
+        // Validation Rules
+        $rules = [
+            'uploads'   => 'uploaded[uploads]|is_image[uploads]|max_size[uploads,2048]|ext_in[uploads,png,jpg,jpeg]',
+        ];
+
+        // Validating
+        if (! $this->validate($rules)) {
+            http_response_code(400);
+            die(json_encode(array('message' => $this->validator->getErrors())));
+        }
+
+        if ($input->isValid() && ! $input->hasMoved()) {
+            // Saving uploaded file
+            $filename = $input->getRandomName();
+            $truename = preg_replace('/\\.[^.\\s]{3,4}$/', '', $filename);
+            $input->move(FCPATH.'/img/promo/', $filename);
+
+            // Resizing Promo Image
+            $image->withFile(FCPATH.'/img/promo/'.$filename)
+                ->fit(300, 300, 'center')
+                ->crop(300, 300, 0, 0)
+                ->flatten(255, 255, 255)
+                ->convert(IMAGETYPE_JPEG)
+                ->save(FCPATH.'/img/promo/'.$truename.'.jpg');
+
+            // Removing uploaded if it's not the same filename
+            if ($filename != $truename.'.jpg') {
+                unlink(FCPATH.'/img/promo/'.$filename);
+            }
+
+            // Getting True Filename
+            $returnFile = $truename.'.jpg';
+
+            // Calling Models
+            $PromoModel = new PromoModel();
+
+            // Updating Promo Photo
+            $promo = $PromoModel->find($id);
+            if (!empty($promo['photo'])) {
+                unlink(FCPATH.'/img/promo/'.$promo['photo']);
+            }
+            $update = [
+                'id'        => $id,
+                'photo'     => $truename.'.jpg',
+            ];
+            $PromoModel->save($update);
+
+            // Returning Message
+            die(json_encode($returnFile));
+        }
+    }
+
+    public function removepromoedit($id)
+    {
+        // Calling Models
+        $PromoModel = new PromoModel();
+
+        // Updating Promo
+        $update = [
+            'id'        => $id,
+            'photo'     => NULL,
+        ];
+        $PromoModel->save($update);
+
+        // Removing File
+        $input = $this->request->getPost('photo');
+        unlink(FCPATH.'/img/promo/'.$input);
+
+        // Return Message
+        die(json_encode(array('message' => lang('Global.deleted'))));
+    }
 }

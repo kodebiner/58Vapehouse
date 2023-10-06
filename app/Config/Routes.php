@@ -77,6 +77,10 @@ $routes->group('upload', ['filter' => 'login'], function($routes) {
     $routes->post('removeproductcreate', 'Upload::removeproductcreate', ['filter' => 'role:owner,supervisor']);
     $routes->post('productedit/(:num)', 'Upload::productedit/$1', ['filter' => 'role:owner,supervisor']);
     $routes->post('removeproductedit/(:num)', 'Upload::removeproductedit/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->post('promocreate', 'Upload::promocreate', ['filter' => 'role:owner,supervisor']);
+    $routes->post('removepromocreate', 'Upload::removepromocreate', ['filter' => 'role:owner,supervisor']);
+    $routes->post('promoedit/(:num)', 'Upload::promoedit/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->post('removepromoedit/(:num)', 'Upload::removepromoedit/$1', ['filter' => 'role:owner,supervisor']);
 });
 
 // Account Routes
@@ -346,6 +350,14 @@ $routes->group('dayrep', ['filter'=>'login'], function($routes){
     $routes->get('', 'DailyReport::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('open', 'DailyReport::open', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('close', 'DailyReport::close', ['filter' => 'role:owner,supervisor,operator']);
+});
+
+// Promo
+$routes->group('promo', ['filter'=>'login'], function($routes){
+    $routes->get('', 'Promo::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Promo::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'Promo::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Promo::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 

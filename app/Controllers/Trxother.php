@@ -177,7 +177,7 @@ class Trxother extends BaseController
 
         // Image Capture
         $img                = $input['image'];
-        $folderPath         = "img/tfproof";
+        $folderPath         = "img/tfproof/";
         $image_parts        = explode(";base64,", $img);
         $image_type_aux     = explode("image/", $image_parts[0]);
         $image_type         = $image_type_aux[1];
@@ -254,7 +254,7 @@ class Trxother extends BaseController
 
         // Image Capture
         $img            = $input['image'];
-        $folderPath     = "img/tfproof";
+        $folderPath     = "img/tfproof/";
         $image_parts    = explode(";base64,", $img);
         $image_type_aux = explode("image/", $image_parts[0]);
         $image_type     = $image_type_aux[1];

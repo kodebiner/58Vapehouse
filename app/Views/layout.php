@@ -392,7 +392,7 @@
                                 <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
                             </li>
                             <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('promo') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
                             </li>
                         </ul>
                     </nav>
@@ -537,7 +537,7 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
                     </li>
                     <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('promo') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
                     </li>
                 </ul>
             </nav>
