@@ -446,8 +446,7 @@ class Report extends BaseController
             $startdate = date('Y-m-1');
             $enddate = date('Y-m-t');
         }
-
-
+        
         // Populating Data
         if ($this->data['outletPick'] === null) {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
@@ -538,8 +537,6 @@ class Report extends BaseController
 
         $bundletotal = array_sum(array_column($bundleval,'value'));
 
-       
-
         $produk = [];
         foreach ($variantvalue as $vars) {
             if (!isset($produk[$vars['id'].$vars['product']])) {
@@ -593,8 +590,8 @@ class Report extends BaseController
         $PresenceModel  = new PresenceModel;
         $UserModel      = new UserModel;
         $UserGroupModel = new GroupUserModel;
-        $GroupModel     = new GroupModel; 
-
+        $GroupModel     = new GroupModel;
+        $OutletModel    = new OutletModel;
 
         // populating data
         $presences  = $PresenceModel->findAll();
@@ -602,6 +599,28 @@ class Report extends BaseController
         $usergroups = $UserGroupModel->findAll();
         $groups     = $GroupModel->findAll();
 
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
+
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
 
         $absen = array();
         foreach ($presences as $presence ){
@@ -628,6 +647,7 @@ class Report extends BaseController
 
         // Sum Total Product Sold
         $admin = [];
+        $presen = '';
         foreach ($absen as $abs) {
             $present = array();
             foreach ($absen as $abs){
@@ -650,6 +670,8 @@ class Report extends BaseController
         $data['description']    = lang('Global.presenceListDesc'); 
         $data['presences']      = $admin;
         $data['present']        = $presen;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
 
         return view('Views/report/presence',$data);
     }
@@ -678,38 +700,50 @@ class Report extends BaseController
         $TransactionModel   = new TransactionModel;
         $UserModel          = new UserModel;
         $UserGroupModel     = new GroupUserModel;
-        $GroupModel         = new GroupModel; 
+        $GroupModel         = new GroupModel;
+        $OutletModel        = new OutletModel;
 
         // Populating Data 
-        $transactions   = $TransactionModel->findAll();
         $admin          = $UserModel->findAll();
         $usergroups     = $UserGroupModel->findAll();
         $groups         = $GroupModel->findAll();
 
-        foreach ($transactions as $transactions){
-            $users   = $UserModel->find($transactions['userid']);
-            $builder = $db->table('transaction')->where('userid',$users->id);
-            $builder->selectCount('userid','value');
-            $builder->select('userid');
-            $builder->selectSum('value');
-            $builder->groupBy('userid');
-            $query   = $builder->get();
-            $employe = $query->getResult();
+        $input = $this->request->getGet('daterange');
+            
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
         }
-       
-        $employetrx = array();
-        foreach ($employe as $employ){
-            foreach ($admin as $user ){
-                if($employ->userid === $user->id){
-                    foreach ($usergroups as $ugroups){
-                        if($ugroups['user_id'] === $user->id){
-                            foreach ($groups as $group){
-                                if ($ugroups['group_id'] === $group->id){
-                                    $employetrx [] = [
-                                        'id'        => $user->id,
-                                        'name'      => $user->username,
-                                        'role'      => $group->name,
-                                        'value'     => $employ->value,
+
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
+        
+        $useradm = [];
+        foreach ($transactions as $transaction){
+            foreach ($admin as $adm){
+                if ($transaction['userid'] === $adm->id){
+                    foreach($usergroups as $userg){
+                        if ($adm->id === $userg['user_id']){
+                            foreach($groups as $group){
+                                if($userg['group_id'] === $group->id){
+                                    $useradm [] = [
+                                        'id'    => $adm->id,
+                                        'value' => $transaction['value'],
+                                        'name'  => $adm->username,
+                                        'role'  => $group->name,
                                     ];
                                 }
                             }
@@ -719,11 +753,23 @@ class Report extends BaseController
             }
         }
 
+        $produk = [];
+        foreach ($useradm as $vars) {
+            if (!isset($produk[$vars['id'].$vars['role']])) {
+                $produk[$vars['id'].$vars['name'].$vars['role']] = $vars;
+            } else {
+                $produk[$vars['id'].$vars['name'].$vars['role']]['value'] += $vars['value'];
+            }
+        }
+        $produk = array_values($produk);
+
         // parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.employereport');
         $data['description']    = lang('Global.employeListDesc'); 
-        $data['employetrx']     = $employetrx;
+        $data['employetrx']     = $produk;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
 
         return view('Views/report/employe',$data);
     }
@@ -735,7 +781,7 @@ class Report extends BaseController
         $TransactionModel   = new TransactionModel;
         $MemberModel        = new MemberModel;
         $DebtModel          = new DebtModel;
-
+        $OutletModel        = new OutletModel;
 
         // Populating Data
         $members            = $MemberModel->findAll();
@@ -753,7 +799,17 @@ class Report extends BaseController
                 $enddate = date('Y-m-t');
             }
 
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $addres = '';
+            if ($this->data['outletPick'] === null) {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+                $addres = "All Outlets";
+                $outletname = "58vapehouse";
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+                $outlets = $OutletModel->find($this->data['outletPick']);
+                $addres = $outlets['address'];
+                $outletname = $outlets['name'];
+            }
 
             
             $customer = array();
@@ -962,17 +1018,9 @@ class Report extends BaseController
             $startdate = date('Y-m-1');
             $enddate = date('Y-m-t');
         }
-
         
         // Filter Data Outlet & daterange 
          if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-        } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
-        }
-
-        // Populating Data
-        if ($this->data['outletPick'] === null) {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
         } else {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
@@ -1143,7 +1191,8 @@ class Report extends BaseController
                                     'hargamodal'        => $variant['hargamodal'],
                                     'hargajual'         => $variant['hargajual'],
                                     'hargarekomendasi'  => $variant['hargarekomendasi'],
-                                    'stock'             => $stock['qty'],                                
+                                    'stock'             => $stock['qty'],
+                                    'whole'             => $variant['hargamodal'] * $stock['qty'],                                
                                 ];
                             }
                         }
@@ -1151,12 +1200,29 @@ class Report extends BaseController
                 }
             }
         }
+       
+        $produk = [];
+        foreach ($productval as $vars) {
+            if (!isset($produk[$vars['id'].$vars['prodname']])) {
+                $produk[$vars['id'].$vars['prodname']] = $vars;
+            } else {
+                $produk[$vars['id'].$vars['prodname']]['stock'] += $vars['stock'];
+                $produk[$vars['id'].$vars['prodname']]['whole'] += $vars['whole'];
+            }
+        }
+        $produk = array_values($produk);
 
-         // Parsing Data to View
-         $data                   = $this->data;
-         $data['title']          = lang('Global.categoryreport');
-         $data['description']    = lang('Global.categoryListDesc');
-         $data['products']       = $productval;
+        $stock = array_sum(array_column($produk,'stock'));
+        $whole = array_sum(array_column($produk,'whole'));
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = lang('Global.category');
+        $data['description']    = lang('Global.categoryListDesc');
+        $data['products']       = $produk;
+        $data['stock']          = $stock;
+        $data['whole']          = $whole;
+
         return view('Views/report/stockcategory', $data);
     }
 }

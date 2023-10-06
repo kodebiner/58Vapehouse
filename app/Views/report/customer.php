@@ -14,32 +14,31 @@
 <!-- Page Heading -->
 <div class="tm-card-header uk-light uk-margin-bottom">
     <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-3@m uk-margin-remove-right">
+        <div class="uk-width-1-3@m">
             <h3 class="tm-h3 uk-width-1-1@m"><?=lang('Global.customer')?> <?=lang('Global.report')?></h3>
         </div>
-        <div class="uk-width-1-3@m">
-            <!-- Filter -->
-            <div class="uk-width-1-1@m uk-margin uk-margin-remove-left uk-text-left">
-                <form id="short" action="report/customer" method="get">
-                    <div class="uk-inline">
-                        <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-                        <input class="uk-input uk-width-medium" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
-                    </div>
-                </form>
-                <script>
-                    $(function() {
-                        $('input[name="daterange"]').daterangepicker({
-                            opens: 'left'
-                        }, function(start, end, label) {
-                            document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
-                            document.getElementById('short').submit();
-                        });
+        <div class="uk-width-expand@m uk-text-right uk-margin-right-remove">
+            <form id="short" action="report/customer" method="get">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+                </div>
+            </form>
+            <script>
+                $(function() {
+                    $('input[name="daterange"]').daterangepicker({
+                        opens: 'right'
+                    }, function(start, end, label) {
+                        document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                        document.getElementById('short').submit();
                     });
-                </script>
-            </div>
+                });
+            </script>
         </div>
-        <div class="uk-width-1-3@m uk-text-right">
-        <a type="button" class="uk-button uk-button-primary uk-preserve-color" target="_blank" href="export/customer?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
+        
+        <!-- Button Trigger Modal export -->
+        <div class="uk-width-auto@m uk-text-right@m">
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color" target="_blank" href="export/customer?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
         </div>
     </div>
 </div>

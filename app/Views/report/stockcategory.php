@@ -13,24 +13,22 @@
 
     function drawChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'prodname');
-        data.addColumn('number', 'stock');
         data.addColumn('string', 'catname');
+        data.addColumn('number', 'stock');
         data.addColumn('number', 'hargajual');
         data.addColumn('number', 'hargamodal');
         data.addRows([
             <?php foreach ($products as $product){
                 $category       = $product['catname'];
                 $sold           = $product['stock'];
-                $produk         = $product['prodname'];
                 $hargajual      = $product['hargajual'];
                 $hargamodal     = $product['hargamodal'];
-                echo "['$produk',$sold,'$category',$hargajual,$hargamodal],";
+                echo "['$category',$sold,$hargajual,$hargamodal],";
             }?>
         ]);
 
         var options = {
-            title: 'Products Percentage %'
+            title: '<?=lang('Global.category')?> percentage %'
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -46,12 +44,12 @@
     <div class="tm-card-header uk-light">
         <div uk-grid class="uk-flex-middle">
             <div class="uk-width-1-2@m">
-                <h3 class="tm-h3"><?=lang('Global.productreport')?></h3>
+                <h3 class="tm-h3"><?=lang('Global.category')?> <?=lang('Global.product')?></h3>
             </div>
 
             <!-- Button Trigger Modal export -->
             <div class="uk-width-1-2@m uk-text-right@m">
-                <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" target="_blank" href="export/stockcategory?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
+                <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" target="_blank" href="export/stockcategory"><?=lang('Global.export')?></a>
             </div>
             <!-- End Of Button Trigger Modal export-->
 
@@ -60,27 +58,28 @@
     <!-- End Of Page Heading -->
 
     <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
-        <h3 class="uk-card-title"><?=lang('Global.product')?> <?=lang('Global.category')?></h3>
+        <h3 class="uk-card-title"><?=lang('Global.category')?> <?=lang('Global.product')?></h3>
         <div id="piechart" ></div>
     </div>
 
     <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-        <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.product')?> <?=lang('Global.category')?></caption>
+        <div class="uk-column-1-3 uk-margin-bottom">
+            <p class="uk-text-large  uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.capitalPrice')?> : <?php echo "Rp. ".number_format($whole,0,',','.');" ";?></p>
+            
+            <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.stock')?> : <?php echo $stock;?></p>
+        </div>
         <thead>
             <tr>
                 <th><?=lang('Global.category')?></th>
-                <th class="uk-text-center"><?=lang('Global.basePrice')?></th>
                 <th class="uk-text-center"><?=lang('Global.capitalPrice')?></th>
-                <th><?=lang('Global.stock')?></th>
-            </tr>
+                <th class="uk-text-center"><?=lang('Global.stock')?></th>
         </thead>
         <tbody>
             <?php foreach ($products as $product ){ ?>
                 <tr>
                     <td style="color:white;"><?=$product['catname']?></td>
-                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['hargajual'],0,',','.');" ";?></td>
-                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['hargamodal'],0,',','.');" ";?></td>
-                    <td style="color:white;"><?=$product['stock']?></td>
+                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['whole'],0,',','.');" ";?></td>
+                    <td class="uk-text-center" style="color:white;"><?=$product['stock']?></td>
                 </tr>
             <?php } ?>
         </tbody>

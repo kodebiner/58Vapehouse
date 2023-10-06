@@ -518,56 +518,52 @@ public function prod()
         header("Content-Disposition: attachment; filename=sales$date1-$date2.xls");
 
         echo'<style type="text/css">
-        table {
-            font-family: arial, sans-serif;
-        }
-        td, th {
-            text-align: left
-        }
+
         </style>';
-        echo '<table style="width:50%">';
-        echo '<tr>';
-            echo'<td colspan="2" style="text-align: center; font-family: sans-serif; font-weight: bold;">'.$outletname[0].'</td>';
-        echo '</tr>';
-        echo '<tr>';
-            echo'<td colspan="2" style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">'. $adress[0].'</td>';
-        echo '</tr>';
-        echo '<tr>';
-            echo'<td colspan="2" style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">Ringkasan Penjualan</td>';
-        echo '</tr>';
-        echo '<tr>';
-            echo'<td colspan="2" style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">'.$date1.'-'.$date2.'</td>';
-        echo '</tr>';
-        echo '<tr>';
-            echo'<td colspan="2" style="text-align: center; font-family: arial, sans-serif; font-weight: bold;"></td>';
-        echo '</tr>';
+        echo '<table  style="width: 30%;">';
+        echo'<tr>';
+        echo'<th colspan="2" style="align-text:center;">Ringkasan Penjualan</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="2" style="align-text:center;">'.$outletname[0].'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="2" style="align-text:center;">'.$adress[0].'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="2" style="align-text:center;">'.$date1.' - '.$date2.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="2" style="align-text:center;"></th>';
+        echo'</tr>';
+       
         echo '<tr >';
-            echo'<th style="width:30%">Penjualan</th>';
-            echo'<td style="width:20%">'.$salesresult.'</td>';
+            echo'<th style="text-align: left;">Penjualan</th>';
+            echo'<td style="text-align: right;">'.$salesresult.'</td>';
         echo '</tr>';
         echo'<tr>';
-            echo'<th style="width:30%">Diskon</th>';
-            echo'<td style="width:20%">'.$alldisc.'</td>';
+            echo'<th style="text-align: left;">Diskon</th>';
+            echo'<td style="text-align: right;">'.$alldisc.'</td>';
         echo'</tr>';
         echo'<tr>';
-            echo'<th style="width:30%">Total Omset</th>';
-            echo'<td style="width:20%">'.$omsetestimate.'</td>';
+            echo'<th style="text-align: left;">Total Omset</th>';
+            echo'<td style="text-align: right;">'.$omsetestimate.'</td>';
         echo'</tr>';
         echo'<tr>';
-            echo'<th style="width:30%">Harga Modal</th>';
-            echo'<td style="width:20%">'.$capitalprice.'</td>';
+            echo'<th style="text-align: left;">Harga Modal</th>';
+            echo'<td style="text-align: right;">'.$capitalprice.'</td>';
         echo'</tr>';
         echo'<tr>';
-            echo'<th style="width:30%">Kas Masuk</th>';
-            echo'<td style="width:20%">'.$casin.'</td>';
+            echo'<th style="text-align: left;">Kas Masuk</th>';
+            echo'<td style="text-align: right;">'.$casin.'</td>';
         echo'</tr>';
         echo'<tr>';
-            echo'<th style="width:30%">Kas Keluar</th>';
-            echo'<td style="width:20%">'.$casout.'</td>';
+            echo'<th style="text-align: left;">Kas Keluar</th>';
+            echo'<td style="text-align: right;">'.$casout.'</td>';
         echo'</tr>';
         echo'<tr>';
-            echo'<th style="width:30%">Keuntungan</th>';
-            echo'<td style="text-align: left; font-family: arial, sans-serif; font-weight: bold;">'.$profitvalue.'</td>';
+            echo'<th style="text-align: left;">Keuntungan</th>';
+            echo'<td style="text-align: right; font-family: arial, sans-serif; font-weight: bold;">'.$profitvalue.'</td>';
         echo'</tr>';
         echo'</table>';
     }
@@ -596,7 +592,7 @@ public function prod()
 
 
         // Populating Data
-        $input = $this->request->getGet('daterange');
+        $input = $this->request->getVar('daterange');
             
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
@@ -611,6 +607,7 @@ public function prod()
         $day1 = date_create($startdate);
         $day2 = date_create($enddate);
         
+        $adress = [];
         if($this->data['outletPick'] === null ){
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $outletname = "All Outlets";
@@ -622,7 +619,6 @@ public function prod()
             $outletname = $outlets['name'];
             $adress = $outlets['address'];
         }
-
 
         $productval     = [];
         $variantvalue   = [];
@@ -742,19 +738,22 @@ public function prod()
 
         // export
         echo '<table>';
-        echo '<tr>';
-        echo'<td style="text-align: center; font-family: sans-serif; font-weight: bold;">'.$outletname.'</td>';
-        echo '</tr>';
-        echo '<tr>';
-            echo'<td style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">'. $adress.'</td>';
-        echo '</tr>';
-        echo '<tr>';
-            echo'<td style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">Ringkasan Produk</td>';
-        echo '</tr>';
-        echo '<tr>';
-            echo'<td style="text-align: center; font-family: arial, sans-serif; font-weight: bold;">'.$day1.'-'.$day2.'</td>';
-        echo '</tr>';
         echo '<thead>';
+        echo'<tr>';
+            echo'<th colspan="4" style="align-text:center;">Ringkasan Produk</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="4" style="align-text:center;">'.$outletname.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="4" style="align-text:center;">'.$adress.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="4" style="align-text:center;">'.$startdate.' - '.$enddate.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="4" style="align-text:center;"></th>';
+        echo'</tr>';
         echo '<tr>';
         echo '<th>Produk</th>';
         echo '<th>Kategory</th>';
@@ -782,6 +781,7 @@ public function prod()
         $PaymentModel           = new PaymentModel;
         $TrxpaymentModel        = new TrxpaymentModel;
         $TransactionModel       = new TransactionModel;
+        $OutletModel            = new OutletModel;
 
         if ($this->data['outletPick'] != null) {
             $input = $this->request->getGet('daterange');
@@ -795,9 +795,15 @@ public function prod()
                 $enddate = date('Y-m-t');
             }
 
+            $day1 = date_create($startdate);
+            $day2 = date_create($enddate);
+
             $payments = $PaymentModel->findAll();
             $trxpayments = $TrxpaymentModel->findAll();
             $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $outletname = $outlets['name'];
+            $adress = $outlets['address'];
             $pay = array();
             foreach ($payments as $payment) {
                 $qty = array();
@@ -820,10 +826,31 @@ public function prod()
 
             header("Content-type: application/vnd-ms-excel");
             header("Content-Disposition: attachment; filename=payment.xls");
+            echo'<style type="text/css">
+            caption {
+                font-family: arial, sans-serif;
+                text-align: center
+            }
+            </style>';
 
             // export
             echo '<table>';
             echo '<thead>';
+            echo'<tr>';
+                echo'<th colspan="3" style="align-text:center;">Ringkasan Pembayran</th>';
+            echo'</tr>';
+            echo'<tr>';
+                echo'<th colspan="3" style="align-text:center;">'.$outletname.'</th>';
+            echo'</tr>';
+            echo'<tr>';
+                echo'<th colspan="3" style="align-text:center;">'.$adress.'</th>';
+            echo'</tr>';
+            echo'<tr>';
+                echo'<th colspan="3" style="align-text:center;">'.$startdate.' - '.$enddate.'</th>';
+            echo'</tr>';
+            echo'<tr>';
+                echo'<th colspan="3" style="align-text:center;"></th>';
+            echo'</tr>';
             echo '<tr>';
             echo '<th>Nama</th>';
             echo '<th>Jumlah Transaksi</th>';
@@ -859,6 +886,7 @@ public function prod()
         $TransactionModel       = new TransactionModel;
         $TrxdetailModel         = new TrxdetailModel;
         $GconfigModel           = new GconfigModel;
+        $OutletModel            = new OutletModel;
         // Populating Data
         $trxdetails             = $TrxdetailModel->findAll();
         $Gconfig                = $GconfigModel->first();
@@ -874,8 +902,18 @@ public function prod()
             $enddate = date('Y-m-t');
         }
 
-        $transactions = array();
-        $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        $diskon = [];
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
         foreach ($transaction as $trx){
             $discounttrx = array();
             $discounttrxpersen = array();
@@ -887,7 +925,8 @@ public function prod()
                         $discounttrx[]          = $trx['discvalue'];
                     }
                     if ($trx['disctype'] !== "0"){
-                        $discounttrxpersen[]    = ($trxdetail['value'] * $trxdetail['qty']) - ($trx['value'] + $trxdetail['discvar']);
+                        $sub =  ($trxdetail['value']* $trxdetail['qty']);
+                        $discounttrxpersen[]    =  $sub * ($trx['discvalue'] / 100) ;
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
                     $discountpoin[]             = $trx['pointused'];
@@ -895,11 +934,11 @@ public function prod()
                 }
             }
 
-            $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen) ;
+            $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
             $variantdisc     = array_sum($discountvariant);
             $poindisc        = array_sum($discountpoin);
 
-            $transactions[] = [
+            $diskon[] = [
                 'id'            => $trx['id'],
                 'trxdisc'       => $transactiondisc,
                 'variantdis'    => $variantdisc,
@@ -907,16 +946,31 @@ public function prod()
             ];  
         }    
             
-        $trxvar = array_sum(array_column($transactions, 'variantdis'));
-        $trxdis = array_sum(array_column($transactions, 'trxdisc'));
-        $dispoint = array_sum(array_column($transactions, 'poindisc'));
+        $trxvar = array_sum(array_column($diskon, 'variantdis'));
+        $trxdis = array_sum(array_column($diskon, 'trxdisc'));
+        $dispoint = array_sum(array_column($diskon, 'poindisc'));
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=discount.xls");
+        header("Content-Disposition: attachment; filename=discount_$startdate - $enddate.xls");
 
         // export
         echo '<table>';
         echo '<thead>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">Ringkasan Pembayaran</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$outletname.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$addres.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$startdate.' - '.$enddate.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;"></th>';
+        echo'</tr>';
         echo '<tr>';
         echo '<th>Diskon Transaksi</th>';
         echo '<th>Diskon Variant</th>';
@@ -924,18 +978,15 @@ public function prod()
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
-        foreach ($transactions as $disc) {
+        foreach ($diskon as $disc){
             echo '<tr>';
-            echo '<td>'.$disc['trxdisc'].'</td>';
-            echo '<td>'.$disc['variantdis'].'</td>';
+            echo '<td >'.$disc['trxdisc'].'</td>';
+            echo '<td >'.$disc['variantdis'].'</td>';
             echo '<td>'.$disc['poindisc'].'</td>';
             echo '</tr>';
         }
         echo '</tbody>';
         echo '</table>';
-
-
-        
     }
 
     public function profit(){
@@ -1019,43 +1070,54 @@ public function prod()
 
     public function employe (){
 
-        // Calling Model
         $db                 = \Config\Database::connect();
         $TransactionModel   = new TransactionModel;
         $UserModel          = new UserModel;
         $UserGroupModel     = new GroupUserModel;
-        $GroupModel         = new GroupModel; 
+        $GroupModel         = new GroupModel;
+        $OutletModel        = new OutletModel;
 
         // Populating Data 
-        $transactions   = $TransactionModel->findAll();
         $admin          = $UserModel->findAll();
         $usergroups     = $UserGroupModel->findAll();
         $groups         = $GroupModel->findAll();
 
-        foreach ($transactions as $transactions){
-            $users   = $UserModel->find($transactions['userid']);
-            $builder = $db->table('transaction')->where('userid',$users->id);
-            $builder->selectCount('userid','value');
-            $builder->select('userid');
-            $builder->selectSum('value');
-            $builder->groupBy('userid');
-            $query   = $builder->get();
-            $employe = $query->getResult();
+        $input = $this->request->getGet('daterange');
+            
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
+
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
         }
         
-        $employetrx = array();
-        foreach ($employe as $employ){
-            foreach ($admin as $user ){
-                if($employ->userid === $user->id){
-                    foreach ($usergroups as $ugroups){
-                        if($ugroups['user_id'] === $user->id){
-                            foreach ($groups as $group){
-                                if ($ugroups['group_id'] === $group->id){
-                                    $employetrx [] = [
-                                        'id'        => $user->id,
-                                        'name'      => $user->username,
-                                        'role'      => $group->name,
-                                        'value'     => $employ->value,
+        $useradm = [];
+        foreach ($transactions as $transaction){
+            foreach ($admin as $adm){
+                if ($transaction['userid'] === $adm->id){
+                    foreach($usergroups as $userg){
+                        if ($adm->id === $userg['user_id']){
+                            foreach($groups as $group){
+                                if($userg['group_id'] === $group->id){
+                                    $useradm [] = [
+                                        'id'    => $adm->id,
+                                        'value' => $transaction['value'],
+                                        'name'  => $adm->username,
+                                        'role'  => $group->name,
                                     ];
                                 }
                             }
@@ -1065,12 +1127,37 @@ public function prod()
             }
         }
 
+        $produk = [];
+        foreach ($useradm as $vars) {
+            if (!isset($produk[$vars['id'].$vars['role']])) {
+                $produk[$vars['id'].$vars['name'].$vars['role']] = $vars;
+            } else {
+                $produk[$vars['id'].$vars['name'].$vars['role']]['value'] += $vars['value'];
+            }
+        }
+        $produk = array_values($produk);
+
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=employe.xls");
 
         // export
         echo '<table>';
         echo '<thead>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">Ringkasan Admin</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$outletname.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$addres.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$startdate.' - '.$enddate.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;"></th>';
+        echo'</tr>';
         echo '<tr>';
         echo '<th>Nama</th>';
         echo '<th>Posisi</th>';
@@ -1078,7 +1165,7 @@ public function prod()
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
-            foreach ($employetrx as $employe ){
+            foreach ($produk as $employe ){
                 echo '<tr>';
                 echo '<td>'.$employe['name'].'</td>';
                 echo '<td>'.$employe['role'].'</td>';
@@ -1096,81 +1183,104 @@ public function prod()
         $TransactionModel   = new TransactionModel;
         $MemberModel        = new MemberModel;
         $DebtModel          = new DebtModel;
-
+        $OutletModel        = new OutletMOdel;
 
         // Populating Data
         $members            = $MemberModel->findAll();
         $debts              = $DebtModel->findAll();
 
-        if ($this->data['outletPick'] != null) {
+        $input = $this->request->getGet('daterange');
 
-            $input = $this->request->getGet('daterange');
-    
-            if (!empty($input)) {
-                $daterange = explode(' - ', $input);
-                $startdate = $daterange[0];
-                $enddate = $daterange[1];
-            } else {
-                $startdate = date('Y-m-1');
-                $enddate = date('Y-m-t');
-            }
-
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-
-            $customer = array();
-            foreach ($members as $member) {
-                $totaltrx = array();
-                $trxval = array();
-                $debtval    = array();
-                foreach ($debts as $debt) {
-                    if ($member['id'] === $debt['memberid']) {
-                        $debtval[]  = $debt['value'];
-                    }
-                }
-                foreach ($transactions as $trx) {
-                    if ($member['id'] === $trx['memberid']) {
-                        $totaltrx[] = $trx['memberid'];
-                        $trxval[]   = $trx['value'];
-                    }
-                }
-                
-                $customer[] =[
-                    'id'    => $member['id'],
-                    'name'  => $member['name'],
-                    'debt'  => array_sum($debtval),
-                    'trx'   => count($totaltrx),
-                    'value' => array_sum($trxval),
-                    'phone' => $member['phone'],
-                ];
-            }
-
-            header("Content-type: application/vnd-ms-excel");
-            header("Content-Disposition: attachment; filename=employe.xls");
-    
-            // export
-            echo '<table>';
-            echo '<thead>';
-            echo '<tr>';
-            echo '<th>Nama</th>';
-            echo '<th>Jumlah Transaksi</th>';
-            echo '<th>Nominal Transaksi</th>';
-            echo '<th>Hutang</th>';
-            echo '<th>No Telphone</th>';
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-                foreach ($customer as $cust ){
-                    echo '<tr>';
-                    echo '<td>'.$cust['name'].'</td>';
-                    echo '<td>'.$cust['trx'].'</td>';
-                    echo '<td>'.$cust['value'].'</td>';
-                    echo '<td>'.$cust['debt'].'</td>';
-                    echo '<td>'.$cust['phone'].'</td>';
-                    echo '</tr>';
-                }
-            echo '</tbody>';
-            echo '</table>';
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
         }
+
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
+        $customer = array();
+        foreach ($members as $member) {
+            $totaltrx = array();
+            $trxval = array();
+            $debtval    = array();
+            foreach ($debts as $debt) {
+                if ($member['id'] === $debt['memberid']) {
+                    $debtval[]  = $debt['value'];
+                }
+            }
+            foreach ($transactions as $trx) {
+                if ($member['id'] === $trx['memberid']) {
+                    $totaltrx[] = $trx['memberid'];
+                    $trxval[]   = $trx['value'];
+                }
+            }
+            
+            $customer[] =[
+                'id'    => $member['id'],
+                'name'  => $member['name'],
+                'debt'  => array_sum($debtval),
+                'trx'   => count($totaltrx),
+                'value' => array_sum($trxval),
+                'phone' => $member['phone'],
+            ];
+
+        }
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=customer.xls");
+
+        // export
+        echo '<table>';
+        echo '<thead>';
+        echo'<tr>';
+        echo'<th colspan="5" style="align-text:center;">Ringkasan Pelanggan</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="5" style="align-text:center;">'.$outletname.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="5" style="align-text:center;">'.$addres.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="5" style="align-text:center;">'.$startdate.' - '.$enddate.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="5" style="align-text:center;"></th>';
+        echo'</tr>';
+        echo '<tr>';
+        echo '<th>Nama</th>';
+        echo '<th>Jumlah Transaksi</th>';
+        echo '<th>Nominal Transaksi</th>';
+        echo '<th>Hutang</th>';
+        echo '<th>No Telphone</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+            foreach ($customer as $cust ){
+                echo '<tr>';
+                echo '<td>'.$cust['name'].'</td>';
+                echo '<td>'.$cust['trx'].'</td>';
+                echo '<td>'.$cust['value'].'</td>';
+                echo '<td>'.$cust['debt'].'</td>';
+                echo '<td>'.$cust['phone'].'</td>';
+                echo '</tr>';
+            }
+        echo '</tbody>';
+        echo '</table>';
+       
     }
 
     public function presence(){
@@ -1181,12 +1291,45 @@ public function prod()
         $UserGroupModel = new GroupUserModel;
         $GroupModel     = new GroupModel; 
 
-
         // populating data
         $presences  = $PresenceModel->findAll();
         $users      = $UserModel->findAll();
         $usergroups = $UserGroupModel->findAll();
         $groups     = $GroupModel->findAll();
+
+        // Calling Models
+        $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel;
+        $MemberModel        = new MemberModel;
+        $DebtModel          = new DebtModel;
+        $OutletModel        = new OutletMOdel;
+
+        // Populating Data
+        $members            = $MemberModel->findAll();
+        $debts              = $DebtModel->findAll();
+
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
+
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
 
 
         $absen = array();
@@ -1231,11 +1374,26 @@ public function prod()
         $admin = array_values($admin);
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=presence.xls");
+        header("Content-Disposition: attachment; filename=presence'.$startdate.'_'.$enddate.'.xls");
 
         // export
         echo '<table>';
         echo '<thead>';
+        echo'<tr>';
+        echo'<th colspan="3" style="align-text:center;">Ringkasan Pelanggan</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$outletname.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$addres.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$startdate.' - '.$enddate.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;"></th>';
+        echo'</tr>';
         echo '<tr>';
         echo '<th>Nama</th>';
         echo '<th>Posisi</th>';
@@ -1266,6 +1424,7 @@ public function prod()
         $StockModel         = new StockModel();
         $BundleModel        = new BundleModel();
         $BundledetailModel  = new BundledetailModel();
+        $OutletModel        = new OutletModel();
 
         // Populating Data
         $products   = $ProductModel->findAll();
@@ -1288,7 +1447,17 @@ public function prod()
             $enddate = date('Y-m-t');
         }
        
-        $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
 
         $bund = [];
         foreach($transactions as $transaction){
@@ -1322,11 +1491,26 @@ public function prod()
         $paket = array_values($paket);
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=bundle.xls");
+        header("Content-Disposition: attachment; filename=bundle$startdate-$enddate.xls");
 
         // export
         echo '<table>';
         echo '<thead>';
+        echo'<tr>';
+        echo'<th colspan="3" style="align-text:center;">Ringkasan Paket Terjual</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$outletname.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$addres.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;">'.$startdate.' - '.$enddate.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="3" style="align-text:center;"></th>';
+        echo'</tr>';
         echo '<tr>';
         echo '<th>Nama</th>';
         echo '<th>Jumlah</th>';
@@ -1346,7 +1530,6 @@ public function prod()
     }
 
     public function category(){
-    
         // Calling models
         $TransactionModel   = new TransactionModel();
         $TrxdetailModel     = new TrxdetailModel();
@@ -1356,6 +1539,7 @@ public function prod()
         $StockModel         = new StockModel();
         $BrandModel         = new BrandModel(); 
         $BundleModel        = new BundleModel();
+        $OutletModel        = new OutletModel();
 
         // Populating Data
         $trxdetails = $TrxdetailModel->findAll();
@@ -1379,10 +1563,16 @@ public function prod()
 
 
         // Populating Data
+        $addres = '';
         if ($this->data['outletPick'] === null) {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
         } else {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
         }
 
         $productval     = [];
@@ -1487,11 +1677,26 @@ public function prod()
         $grosstotal = array_sum(array_column($produk,'value'));
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=category.xls");
+        header("Content-Disposition: attachment; filename=category'.$startdate.' _ '.$enddate.'.xls");
 
         // export
         echo '<table>';
         echo '<thead>';
+        echo'<tr>';
+        echo'<th colspan="4" style="align-text:center;">Ringkasan Kategori Produk Terjual</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="4" style="align-text:center;">'.$outletname.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="4" style="align-text:center;">'.$addres.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="4" style="align-text:center;">'.$startdate.' - '.$enddate.'</th>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th colspan="4" style="align-text:center;"></th>';
+        echo'</tr>';
         echo '<tr>';
         echo '<th>Nama</th>';
         echo '<th>Jumlah Penjualan</th>';
@@ -1518,6 +1723,123 @@ public function prod()
         echo '</tbody>';
         echo '</table>';
 
+    }
+
+    public function stockcategory(){
+
+        // Calling Data
+        $ProductModel   = new ProductModel();
+        $BrandModel     = new BrandModel();
+        $VariantModel   = new VariantModel();
+        $CategoryModel  = new CategoryModel();
+        $StockModel     = New StockModel();
+        $VariantModel   = New VariantModel();
+        $OutletModel    = New OutletModel();
+
+        $variants   = $VariantModel->findAll();
+        $brands     = $BrandModel->findAll();
+        $products   = $ProductModel->findAll();
+        $category   = $CategoryModel->findAll();
+        $variants   = $VariantModel->findAll();
+        $outlets    = $OutletModel->findAll();
+
+        if ($this->data['outletPick'] === null) {
+            $stocks = $StockModel->findAll();
+            foreach ($outlets as $outlet){
+                if($outlet['id'] === $this->data['outletPick']){
+                    $outletname = "58VapeHouse";
+                    $addres     = "All Outlets";
+                }
+            }
+        } else {
+            $stocks = $StockModel->where('outletid', $this->data['outletPick'])->find();
+            foreach ($outlets as $outlet){
+                $outletname = $outlet['name'];
+                $addres     = $outlet['address'];
+            }
+        }
+
+        $productval = [];
+        foreach ($stocks as $stock){
+            foreach ($variants as $variant){
+                    foreach ($products as $product){
+                        foreach ($brands as $brand){
+                            foreach ($category as $cat){
+                                if($product['catid'] === $cat['id'] && $product['brandid'] === $brand['id'] && $variant['productid'] == $product['id'] && $stock['variantid'] === $variant['id']){
+                                $productval [] = [
+                                    'id'                => $product['catid'],
+                                    'prodname'          => $product['name'],
+                                    'catname'           => $cat['name'],
+                                    'brandname'         => $brand['name'],
+                                    'desc'              => $product['description'],
+                                    'varname'           => $variant['name'],
+                                    'hargamodal'        => $variant['hargamodal'],
+                                    'hargajual'         => $variant['hargajual'],
+                                    'hargarekomendasi'  => $variant['hargarekomendasi'],
+                                    'stock'             => $stock['qty'],
+                                    'whole'             => $variant['hargamodal'] * $stock['qty'],                                
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
+        $produk = [];
+        foreach ($productval as $vars) {
+            if (!isset($produk[$vars['id'].$vars['prodname']])) {
+                $produk[$vars['id'].$vars['prodname']] = $vars;
+            } else {
+                $produk[$vars['id'].$vars['prodname']]['stock'] += $vars['stock'];
+                $produk[$vars['id'].$vars['prodname']]['whole'] += $vars['whole'];
+            }
+        }
+        $produk = array_values($produk);
+
+        $stock = array_sum(array_column($produk,'stock'));
+        $whole = array_sum(array_column($produk,'whole'));
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=stockcategory.xls");
+
+       // export
+       echo '<table>';
+       echo '<thead>';
+       echo'<tr>';
+       echo'<th colspan="4" style="align-text:center;">Ringkasan Stok Kategori Produk</th>';
+       echo'</tr>';
+       echo'<tr>';
+           echo'<th colspan="4" style="align-text:center;">'.$outletname.'</th>';
+       echo'</tr>';
+       echo'<tr>';
+           echo'<th colspan="4" style="align-text:center;">'.$addres.'</th>';
+       echo'</tr>';
+       echo'<tr>';
+           echo'<th colspan="4" style="align-text:center;"></th>';
+       echo'</tr>';
+       echo '<tr>';
+       echo '<th>Nama</th>';
+       echo '<th>Jumlah Penjualan</th>';
+       echo '<th>Penjualan Kotor</th>';
+       echo '</tr>';
+       echo '</thead>';
+       echo '<tbody>';
+       foreach ($produk as $prod) {
+           echo '<tr>';
+           echo '<td>'.$prod['prodname'].'</td>';
+           echo '<td>'.$prod['stock'].'</td>';
+           echo '<td>'.$prod['whole'].'</td>';
+           echo '</tr>';
+       }
+       
+       echo '<tr>';
+           echo'<th style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">Total</th>';
+           echo'<td style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">'.$stock.'</td>';
+           echo'<td style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">'.$whole.'</td>';
+       echo '</tr>';
+       echo '</tbody>';
+       echo '</table>';
     }
 
 }
