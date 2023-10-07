@@ -1,7 +1,10 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
+<link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+<script src="js/code.jquery.com_jquery-3.6.0.js"></script>
+<script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
 <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <?= $this->endSection() ?>
 
@@ -62,7 +65,7 @@
                         var bar = document.getElementById('js-progressbar-create');
 
                         UIkit.upload('.js-upload-create', {
-                            url: 'upload/productcreate',
+                            url: 'upload/promocreate',
                             multiple: false,
                             name: 'uploads',
                             method: 'POST',
@@ -154,7 +157,7 @@
                         function removeImgCreate() {                                
                             $.ajax ({
                                 type: 'post',
-                                url: 'upload/removeproductcreate',
+                                url: 'upload/removepromocreate',
                                 data: {'photo': document.getElementById('photocreate').value},
                                 dataType: 'json',
 
@@ -169,20 +172,12 @@
 
                                     document.getElementById('display-container-create').remove();
                                     document.getElementById('photocreate').value = '';
-                                    document.getElementById('photocreatethumb').value = '';
 
                                     alert(pesan);
                                 }
                             });
                         };
                     </script>
-
-                    <div class="uk-margin">
-                        <label class="uk-form-label" for="photo"><?=lang('Global.photo')?></label>
-                        <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.photo')) : ?>tm-form-invalid<?php endif ?>" name="photo" id="photo" placeholder="<?=lang('Global.photo')?>" required/>
-                        </div>
-                    </div>
 
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
@@ -229,7 +224,13 @@
                         <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail-<?= $promo['id'] ?>"></a>
                     </td>
                     <td><?= $promo['name']; ?></td>
-                    <td><?= $promo['status']; ?></td>
+                    <td>
+                        <?php if ($promo['status'] === "0") {
+                            echo "Inactive";
+                        } else {
+                            echo "Active";
+                        } ?>
+                    </td>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                         <!-- Button Trigger Modal Edit -->
                         <div>
@@ -270,17 +271,153 @@
                             </div>
                         </div>
 
-                        <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="photo"><?=lang('Global.photo')?></label>
-                            <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="photo" name="photo"  value="<?= $promo['photo']; ?>" />
+                        <div id="image-container-edit-<?=$promo['id']?>" class="uk-margin">
+                            <label class="uk-form-label" for="photocreate"><?=lang('Global.photo')?></label>
+                            <div id="image-container-<?=$promo['id']?>" class="uk-form-controls">
+                                <input id="photoedit<?=$promo['id']?>" value="<?= $promo['photo']; ?>" hidden />
+                                <div class="js-upload-edit-<?=$promo['id']?> uk-placeholder uk-text-center">
+                                    <span uk-icon="icon: cloud-upload"></span>
+                                    <span class="uk-text-middle"><?=lang('Global.photoUploadDesc')?></span>
+                                    <div uk-form-custom>
+                                        <input type="file">
+                                        <span class="uk-link uk-preserve-color"><?=lang('Global.selectOne')?></span>
+                                    </div>
+                                </div>
+                                <progress id="js-progressbar-edit-<?=$promo['id']?>" class="uk-progress" value="0" max="100" hidden></progress>
+                                <?php if (!empty($promo['thumbnail'])) { ?>
+                                    <div id="display-container-edit-<?=$promo['id']?>" class="uk-inline">
+                                        <img src="img/promo/<?=$promo['thumbnail']?>" width="150" height="150" />
+                                        <div class="uk-position-small uk-position-top-right">
+                                            <a class="tm-img-remove uk-border-circle" uk-icon="close" onclick="removeImgEdit<?=$promo['id']?>()"></a>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
+                        
+                        <script type="text/javascript">
+                            var bar = document.getElementById('js-progressbar-edit-<?=$promo['id']?>');
+
+                            UIkit.upload('.js-upload-edit-<?=$promo['id']?>', {
+                                url: 'upload/promoedit/<?=$promo['id']?>',
+                                multiple: false,
+                                name: 'uploads',
+                                method: 'POST',
+                                type: 'json',
+
+                                beforeSend: function () {
+                                    console.log('beforeSend', arguments);
+                                },
+                                beforeAll: function () {
+                                    console.log('beforeAll', arguments);
+                                },
+                                load: function () {
+                                    console.log('load', arguments);
+                                },
+                                error: function () {
+                                    console.log('error', arguments);
+                                    var error = arguments[0].xhr.response.message.uploads;
+                                    alert(error);
+                                },
+                                complete: function () {
+                                    console.log('complete', arguments);
+                                    
+                                    var filename = arguments[0].response;
+
+                                    if (document.getElementById('display-container-edit-<?=$promo['id']?>')) {
+                                        document.getElementById('display-container-edit-<?=$promo['id']?>').remove();
+                                    };
+
+                                    document.getElementById('photoedit<?=$promo['id']?>').value = filename;
+
+                                    var imgContainer = document.getElementById('image-container-edit-<?=$promo['id']?>');
+
+                                    var displayContainer = document.createElement('div');
+                                    displayContainer.setAttribute('id', 'display-container-edit-<?=$promo['id']?>');
+                                    displayContainer.setAttribute('class', 'uk-inline');
+
+                                    var displayImg = document.createElement('img');
+                                    displayImg.setAttribute('src', 'img/promo/thumb-'+filename);
+                                    displayImg.setAttribute('width', '150');
+                                    displayImg.setAttribute('height', '150');
+
+                                    var closeContainer = document.createElement('div');
+                                    closeContainer.setAttribute('class', 'uk-position-small uk-position-top-right');
+
+                                    var closeButton = document.createElement('a');
+                                    closeButton.setAttribute('class', 'tm-img-remove uk-border-circle');
+                                    closeButton.setAttribute('onClick', 'removeImgEdit<?=$promo['id']?>()');
+                                    closeButton.setAttribute('uk-icon', 'close');
+
+                                    closeContainer.appendChild(closeButton);
+                                    displayContainer.appendChild(displayImg);
+                                    displayContainer.appendChild(closeContainer);
+                                    imgContainer.appendChild(displayContainer);
+                                },
+
+                                loadStart: function (e) {
+                                    console.log('loadStart', arguments);
+
+                                    bar.removeAttribute('hidden');
+                                    bar.max = e.total;
+                                    bar.value = e.loaded;
+                                },
+
+                                progress: function (e) {
+                                    console.log('progress', arguments);
+
+                                    bar.max = e.total;
+                                    bar.value = e.loaded;
+                                },
+
+                                loadEnd: function (e) {
+                                    console.log('loadEnd', arguments);
+
+                                    bar.max = e.total;
+                                    bar.value = e.loaded;
+                                },
+
+                                completeAll: function () {
+                                    console.log('completeAll', arguments);                                   
+
+                                    setTimeout(function () {
+                                        bar.setAttribute('hidden', 'hidden');
+                                    }, 1000);
+
+                                    alert('<?=lang('Global.uploadComplete')?>');
+                                }
+                            });
+
+                            function removeImgEdit<?=$promo['id']?>() {                                
+                                $.ajax ({
+                                    type: 'post',
+                                    url: 'upload/removepromoedit/<?=$promo['id']?>',
+                                    data: {'photo': document.getElementById('photoedit<?=$promo['id']?>').value},
+                                    dataType: 'json',
+
+                                    error: function() {
+                                        console.log('error', arguments);
+                                    },
+
+                                    success:function() {
+                                        console.log('success', arguments);
+
+                                        var pesan = arguments[0].message;
+
+                                        document.getElementById('display-container-edit-<?=$promo['id']?>').remove();
+                                        document.getElementById('photoedit<?=$promo['id']?>').value = '';
+
+                                        alert(pesan);
+                                    }
+                                });
+                            };
+                        </script>
 
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="status"><?=lang('Global.status')?></label>
-                            <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="status" name="status"  value="<?= $promo['status']; ?>" />
+                            <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
+                                <label><input class="uk-radio" type="radio" name="status" value="1" <?php if ($promo['status'] === '1') { echo 'checked'; } ?>> <?= lang('Global.active') ?></label>
+                                <label><input class="uk-radio" type="radio" name="status" value="0" <?php if ($promo['status'] === '0') { echo 'checked'; } ?>> <?= lang('Global.inactive') ?></label>
                             </div>
                         </div>
 
@@ -317,7 +454,7 @@
                     <div class="uk-child-width-1-2@m uk-flex-middle" uk-grid>
                         <div>
                             <?php if (!empty($promo['photo'])) { ?>
-                                <img class="uk-width-1-1" src="/img/promo/<?= $promo['photo'] ?>" />
+                                <img class="uk-width-1-1" src="img/promo/<?= $promo['photo'] ?>" />
                             <?php } else { ?>
                                 <svg x="0px" y="0px" viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
                                     <g>
