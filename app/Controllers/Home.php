@@ -61,7 +61,7 @@ class Home extends BaseController
         $bundles        = $BundleModel->findAll();
         $bundets        = $BundledetailModel->findAll();
         $members        = $MemberModel->findAll();
-        $cash           = $CashModel->findAll();
+        $cash           = $CashModel->where('outletid',$this->data['outletPick'])->find();
 
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
