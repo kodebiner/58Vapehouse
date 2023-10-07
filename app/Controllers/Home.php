@@ -47,10 +47,10 @@ class Home extends BaseController
         $DebtModel          = new DebtModel;
         $MemberModel        = new MemberModel;
         $StocksModel        = new StockModel;
+        $CashModel          = new CashModel;
 
         // Populating Data
         $input = $this->request->getGet('daterange');
-
         $trxdetails     = $TrxdetailModel->findAll();
         $trxpayments    = $TrxpaymentModel->findAll();
         $products       = $ProductModel->findAll();
@@ -61,6 +61,7 @@ class Home extends BaseController
         $bundles        = $BundleModel->findAll();
         $bundets        = $BundledetailModel->findAll();
         $members        = $MemberModel->findAll();
+        $cash           = $CashModel->findAll();
 
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
@@ -219,6 +220,7 @@ class Home extends BaseController
         $trxsid     = array();
         // bestseller array
         $bestssell  = array();
+        $bestpay    = array();
         foreach ($transactions as $trxs) {
             // Discount Total
             foreach ($trxdetails as $trxdets) {
@@ -231,16 +233,52 @@ class Home extends BaseController
                     } else {
                         $discval[] = $subtotals * ($trxs['discvalue']/100);
                     }
-
+                    // Best seller 
                     $bestssell [] = [
                         'variantid' => $trxdets['variantid'],
+                        'bundleid'  => $trxdets['bundleid'],
                         'qty'       => $trxdets['qty'],
                     ];
 
                 }
+            
             }
             $trxsid[] = $trxs['id'];
+
+            
+            foreach ($trxpayments as $trxpay) {
+                if ($trxs['id'] == $trxpay['transactionid']){
+                    foreach($cash as $cas){
+                        if ($trxpay['paymentid'] === $cas['id'] && $trxpay['paymentid'] !== "0"){
+                            $bestpay [] = [
+                                'id'    => $cas['id'],
+                                'name'  => $cas['name'],
+                                'qty'   => "1",
+                            ];
+                        }else{
+                            $bestpay [] = [
+                                'id'    => $cas['id'],
+                                'name'  => $cas['name'],
+                                'qty'   => "0",
+                            ];
+                        }
+                    }
+                }
+            }
         }
+        
+        $bestpayment = [];
+        foreach ($bestpay as $best) {
+            if (!isset($bestpayment[$best['id']])) {
+                $bestpayment[$best['id']] = $best;
+            } else {
+                $bestpayment[$best['id']]['qty'] += $best['qty'];
+            }
+        }
+        $bestpayment = array_values($bestpayment);
+        array_multisort(array_column($bestpayment, 'qty'), SORT_DESC, $bestpayment);
+        $bestpay3       = array_slice($bestpayment, 0, 3);
+       
 
         $bestseller = [];
         foreach ($bestssell as $best) {
@@ -254,8 +292,6 @@ class Home extends BaseController
         array_multisort(array_column($bestseller, 'qty'), SORT_DESC, $bestseller);
         $best3       = array_slice($bestseller, 0, 3);
         
-        
-
         $discvarsum = array_sum($discvar);
         $discvalsum = array_sum($discval);
         $totaldisc  = $discvalsum + $discvarsum;
@@ -430,7 +466,7 @@ class Home extends BaseController
         $data['cashinsum']      = $cashinsum;
         $data['cashoutsum']     = $cashoutsum;
         $data['top3prod']       = $best3;
-        $data['top3paymet']     = $top3paymet;
+        $data['top3paymet']     = $bestpay3;
         $data['customers']      = $customers;
         $data['stocks']         = $stok;
         $data['average']        = (int)$saleaverage;
