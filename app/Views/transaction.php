@@ -984,6 +984,41 @@
                                 </div>
                             </div>
 
+                            <div id="custpoin" class="uk-margin" hidden>
+                                <h4 class="uk-margin-remove"><?=lang('Global.point')?></h4>
+                                <h5 id="curpoin" class="uk-margin-remove"></h5>
+                                <div class="uk-form-controls uk-margin-small">
+                                    <input type="number" class="uk-input" id="poin" name="poin" min="0" max="" placeholder="<?=lang('Global.point')?>"/>
+                                </div>
+                            </div>
+
+                            <div class="uk-margin" id="debtcontainer" hidden>
+                                <div class="uk-child-width-auto" uk-grid>
+                                    <div>
+                                        <label class="uk-form-label" for="debt"><?=lang('Global.debt')?></label>
+                                        <div class="uk-form-controls">
+                                            <input type="number" class="uk-input uk-form-width-medium" id="debt" name="debt" value="0" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="uk-form-label" for="duedate"><?=lang('Global.duedate')?></label>
+                                        <div class="uk-form-controls uk-inline">
+                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: calendar"></span>
+                                            <input class="uk-input uk-form-width-medium" id="duedate" name="duedate" disabled />
+                                            <script type="text/javascript">
+                                                $( function() {
+                                                    $( "#duedate" ).datepicker({
+                                                        dateFormat: "yy-mm-dd",
+                                                        minDate: 0,
+                                                        maxDate: "+1m +1w"
+                                                    });
+                                                } );
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div id="bills" class="uk-margin" hidden>
                                 <h4><?=lang('Global.splitbill')?></h4>
                                 <div class="uk-margin">
@@ -1021,51 +1056,16 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="uk-margin" id="amount">
-                                <h4 class="uk-margin-remove"><?=lang('Global.amountpaid')?></h4>
-                                <div class="uk-form-controls uk-margin-small">
-                                    <input type="number" class="uk-input" id="value" name="value" min="0" value="0" placeholder="<?=lang('Global.amountpaid')?>" />
-                                </div>
-                            </div>
                             
                             <div class="uk-margin">
                                 <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="splitbill"><?=lang('Global.wanttosplit')?></a>
                                 <a class="uk-margin-remove uk-text-bold uk-text-small uk-h4 uk-link-reset" id="cancelsplit" hidden><?=lang('Global.cancelsplit')?></a>
                             </div>
 
-                            <div class="uk-margin" id="debtcontainer" hidden>
-                                <div class="uk-child-width-auto" uk-grid>
-                                    <div>
-                                        <label class="uk-form-label" for="debt"><?=lang('Global.debt')?></label>
-                                        <div class="uk-form-controls">
-                                            <input type="number" class="uk-input uk-form-width-medium" id="debt" name="debt" value="0" readonly="readonly" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="uk-form-label" for="duedate"><?=lang('Global.duedate')?></label>
-                                        <div class="uk-form-controls uk-inline">
-                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: calendar"></span>
-                                            <input class="uk-input uk-form-width-medium" id="duedate" name="duedate" disabled />
-                                            <script type="text/javascript">
-                                                $( function() {
-                                                    $( "#duedate" ).datepicker({
-                                                        dateFormat: "yy-mm-dd",
-                                                        minDate: 0,
-                                                        maxDate: "+1m +1w"
-                                                    });
-                                                } );
-                                            </script>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="custpoin" class="uk-margin" hidden>
-                                <h4 class="uk-margin-remove"><?=lang('Global.point')?></h4>
-                                <h5 id="curpoin" class="uk-margin-remove"></h5>
+                            <div class="uk-margin" id="amount">
+                                <h4 class="uk-margin-remove"><?=lang('Global.amountpaid')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <input type="number" class="uk-input" id="poin" name="poin" min="0" max="" placeholder="<?=lang('Global.point')?>"/>
+                                    <input type="number" class="uk-input" id="value" name="value" min="0" value="0" placeholder="<?=lang('Global.amountpaid')?>" />
                                 </div>
                             </div>
 
