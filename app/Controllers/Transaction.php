@@ -18,6 +18,7 @@ use App\Models\TrxdetailModel;
 use App\models\TrxpaymentModel;
 use App\Models\BookingModel;
 use App\Models\BookingdetailModel;
+use App\Models\DailyReportModel;
 
 class Transaction extends BaseController
 {
@@ -41,6 +42,7 @@ class Transaction extends BaseController
         $TrxpaymentModel        = new TrxpaymentModel();
         $BookingModel           = new BookingModel();
         $BookingdetailModel     = new BookingdetailModel();
+        $DailyReportModel       = new DailyReportModel();
 
         // Populating Data
         $bundles                = $BundleModel->findAll();
@@ -66,6 +68,10 @@ class Transaction extends BaseController
         $bundleVariants         = $bundleBuilder->orderBy('stock.qty', 'ASC');
         $bundleVariants         = $bundleBuilder->get();
 
+        // Find Data for Daily Report
+        $today                  = date('Y-m-d') .' 00:00:01';
+        $dailyreport            = $DailyReportModel->where('dateopen >', $today)->where('outletid', $this->data['outletPick'])->first();
+
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -87,6 +93,7 @@ class Transaction extends BaseController
         $data['bundleVariants'] = $bundleVariants->getResult();
         $data['bookings']       = $bookings;
         $data['bookingdetails'] = $bookingdetails;
+        $data['dailyreport']    = $dailyreport;
 
         return view('Views/transaction', $data);
     }

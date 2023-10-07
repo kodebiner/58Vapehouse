@@ -80,6 +80,7 @@ return [
     'total'             => 'Total',
     'choosewallet'      => 'Choose a Wallet',
     'chooseoutlet'      => 'Choose an Outlet first',
+    'storeNotOpen'      => 'Open the store first',
     'alertstock'        => 'Insufficient stock',
     'splitbill'         => 'Split Bill',
     'wanttosplit'       => 'Need to split bill?',

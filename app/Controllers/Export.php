@@ -734,7 +734,7 @@ public function prod()
         $grosstotal = array_sum(array_column($produk,'gross'));
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=productreport.xls");
+        header("Content-Disposition: attachment; filename=productreport$startdate-$enddate.xls");
 
         // export
         echo '<table>';
@@ -951,7 +951,7 @@ public function prod()
         $dispoint = array_sum(array_column($diskon, 'poindisc'));
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=discount_$startdate - $enddate.xls");
+        header("Content-Disposition: attachment; filename=discount$startdate-$enddate.xls");
 
         // export
         echo '<table>';
@@ -1138,7 +1138,7 @@ public function prod()
         $produk = array_values($produk);
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=employe.xls");
+        header("Content-Disposition: attachment; filename=employe$startdate-$enddate.xls");
 
         // export
         echo '<table>';
@@ -1240,7 +1240,7 @@ public function prod()
         }
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=customer.xls");
+        header("Content-Disposition: attachment; filename=customer$startdate-$enddate.xls");
 
         // export
         echo '<table>';
@@ -1374,7 +1374,7 @@ public function prod()
         $admin = array_values($admin);
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=presence'.$startdate.'_'.$enddate.'.xls");
+        header("Content-Disposition: attachment; filename=presence$startdate-$enddate.xls");
 
         // export
         echo '<table>';
@@ -1677,7 +1677,7 @@ public function prod()
         $grosstotal = array_sum(array_column($produk,'value'));
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=category'.$startdate.' _ '.$enddate.'.xls");
+        header("Content-Disposition: attachment; filename=category$startdate-$enddate.xls");
 
         // export
         echo '<table>';

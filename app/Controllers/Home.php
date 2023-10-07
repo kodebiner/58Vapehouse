@@ -62,12 +62,6 @@ class Home extends BaseController
         $bundets        = $BundledetailModel->findAll();
         $members        = $MemberModel->findAll();
 
-        if ($this->data['outletPick'] === null) {
-            $trxothers  = $TrxotherModel->findAll();
-        } else {
-            $trxothers  = $TrxotherModel->where('outletid', $this->data['outletPick'])->find();
-        }
-
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -80,15 +74,17 @@ class Home extends BaseController
         // Populating Data
         if ($this->data['outletPick'] === null) {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $trxothers  = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $stocks         = $StockModel->findAll();
             array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
         } else {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $trxothers  = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
             $stocks         = $StockModel->where('outletid',$this->data['outletPick'])->find();
             array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
 
         }
-        
+    
         // Stock Cycle
         $stok           = array_slice($stocks, 0, 3);
         array_multisort(array_column($stok, 'restock'), SORT_DESC, $stok);
@@ -156,7 +152,6 @@ class Home extends BaseController
             }
         }
         $saledet = array_values($saledet);
-       
 
         array_multisort(array_column($saledet, 'trx'), SORT_DESC, $saledet);
         $daysale = array_slice($saledet, 0, 1);
@@ -222,6 +217,8 @@ class Home extends BaseController
         $discvar    = array();
         $discval    = array();
         $trxsid     = array();
+        // bestseller array
+        $bestssell  = array();
         foreach ($transactions as $trxs) {
             // Discount Total
             foreach ($trxdetails as $trxdets) {
@@ -234,10 +231,30 @@ class Home extends BaseController
                     } else {
                         $discval[] = $subtotals * ($trxs['discvalue']/100);
                     }
+
+                    $bestssell [] = [
+                        'variantid' => $trxdets['variantid'],
+                        'qty'       => $trxdets['qty'],
+                    ];
+
                 }
             }
             $trxsid[] = $trxs['id'];
         }
+
+        $bestseller = [];
+        foreach ($bestssell as $best) {
+            if (!isset($bestseller[$best['variantid']])) {
+                $bestseller[$best['variantid']] = $best;
+            } else {
+                $bestseller[$best['variantid']]['qty'] += $best['qty'];
+            }
+        }
+        $bestseller = array_values($bestseller);
+        array_multisort(array_column($bestseller, 'qty'), SORT_DESC, $bestseller);
+        $best3       = array_slice($bestseller, 0, 3);
+        
+        
 
         $discvarsum = array_sum($discvar);
         $discvalsum = array_sum($discval);
@@ -350,7 +367,7 @@ class Home extends BaseController
         $margindasars = array();
         foreach ($transactions as $trx){
             foreach ($trxdetails as $trxdetail){
-                if($trx['id'] === $trxdetail['transactionid']){
+                if($trx['id'] === $trxdetail['transactionid'] && $trxdetail['variantid'] !== "0"){
                     $marginmodal    = $trxdetail['marginmodal'];
                     $margindasar    = $trxdetail['margindasar'];
                     $qtytrx[]       = $trxdetail['qty'];
@@ -412,7 +429,7 @@ class Home extends BaseController
         $data['gross']          = $gross;
         $data['cashinsum']      = $cashinsum;
         $data['cashoutsum']     = $cashoutsum;
-        $data['top3prod']       = $top3prod;
+        $data['top3prod']       = $best3;
         $data['top3paymet']     = $top3paymet;
         $data['customers']      = $customers;
         $data['stocks']         = $stok;

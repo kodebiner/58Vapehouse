@@ -80,6 +80,7 @@ return [
     'total'             => 'Total',
     'choosewallet'      => 'Pilih Dompet',
     'chooseoutlet'      => 'Pilih Outlet Dahulu',
+    'storeNotOpen'      => 'Buka toko terlebih dahulu',
     'alertstock'        => 'Stock tidak mencukupi',
     'splitbill'         => 'Pecah Pembayaran',
     'wanttosplit'       => 'Ingin pisah pembayaran?',

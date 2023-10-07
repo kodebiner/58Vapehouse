@@ -1180,6 +1180,12 @@
                                     <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.chooseoutlet')?></div>
                                 </div>
                             </div>
+                        <?php } else if (empty($dailyreport)) { ?>
+                            <div class="uk-margin uk-flex uk-flex-center">
+                                <div class="uk-width-1-6@m uk-card uk-card-default uk-card-small uk-card-body">
+                                    <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.storeNotOpen')?></div>
+                                </div>
+                            </div>
                         <?php } else { ?>
                             <div class="uk-margin uk-flex uk-flex-center">
                                 <div class="uk-width-1-5@m uk-card uk-card-default uk-card-small uk-card-body">

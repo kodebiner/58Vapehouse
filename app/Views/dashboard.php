@@ -17,7 +17,7 @@
             <div>
                 <h3 class="tm-h3"><?=lang('Global.dashboard')?></h3>
             </div>
-
+            <?php if (in_groups('owner')) : ?>
             <!-- Date Range Filter -->
             <div>
                 <div class="uk-margin uk-text-right">
@@ -39,6 +39,7 @@
                     </script>
                 </div>
             </div>
+            <?php endif ?>
             <!-- Date Range Filter End -->
         </div>
     </div>
@@ -50,6 +51,7 @@
     </div>
     <!-- Transaction Section End -->
 
+    <?php if (in_groups('owner')) : ?>
     <!-- Main Section -->
     <div class="uk-margin">
         <div class="uk-child-width-1-4@l uk-child-width-1-2@s" uk-grid uk-height-match="target: > div > .uk-card">
@@ -118,7 +120,7 @@
                             <h3 class="tm-h2" style="color: #000;"><?= $qtytrxsum ?></h3>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
-                            <a class="uk-link-reset" href="<?= base_url('report/keuntungan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            <a class="uk-link-reset" href="<?= base_url('report/product') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
                         </div>
                     </div>
                 </div>
@@ -513,5 +515,6 @@
         </div>
     </div>
     <!-- Main Section End -->
+    <?php endif ?>
 </div>
 <?= $this->endSection() ?>
