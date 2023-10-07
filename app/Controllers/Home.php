@@ -61,7 +61,8 @@ class Home extends BaseController
         $bundles        = $BundleModel->findAll();
         $bundets        = $BundledetailModel->findAll();
         $members        = $MemberModel->findAll();
-        $cash           = $CashModel->where('outletid',$this->data['outletPick'])->find();
+       
+       
 
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
@@ -218,10 +219,13 @@ class Home extends BaseController
         $discvar    = array();
         $discval    = array();
         $trxsid     = array();
+
         // bestseller array
         $bestssell  = array();
         $bestpay    = array();
+
         foreach ($transactions as $trxs) {
+
             // Discount Total
             foreach ($trxdetails as $trxdets) {
                 if ($trxdets['transactionid'] === $trxs['id']) {
@@ -244,21 +248,23 @@ class Home extends BaseController
             
             }
             $trxsid[] = $trxs['id'];
-
             
+            // Best Payments
+            $payments           = $PaymentModel->where('outletid', $trxs['outletid'])->find();
+           
             foreach ($trxpayments as $trxpay) {
                 if ($trxs['id'] == $trxpay['transactionid']){
-                    foreach($cash as $cas){
-                        if ($trxpay['paymentid'] === $cas['id'] && $trxpay['paymentid'] !== "0"){
+                    foreach($payments as $pay){
+                        if ($trxpay['paymentid'] === $pay['id'] && $trxpay['paymentid'] !== "0"){
                             $bestpay [] = [
-                                'id'    => $cas['id'],
-                                'name'  => $cas['name'],
+                                'id'    => $pay['id'],
+                                'name'  => $pay['name'],
                                 'qty'   => "1",
                             ];
                         }else{
                             $bestpay [] = [
-                                'id'    => $cas['id'],
-                                'name'  => $cas['name'],
+                                'id'    => $pay['id'],
+                                'name'  => $pay['name'],
                                 'qty'   => "0",
                             ];
                         }
@@ -278,7 +284,6 @@ class Home extends BaseController
         $bestpayment = array_values($bestpayment);
         array_multisort(array_column($bestpayment, 'qty'), SORT_DESC, $bestpayment);
         $bestpay3       = array_slice($bestpayment, 0, 3);
-       
 
         $bestseller = [];
         foreach ($bestssell as $best) {
@@ -478,6 +483,8 @@ class Home extends BaseController
         $data['averagedays']    = $resultaveragedays;
         $data['bussyday']       = $day;
         $data['bussytime']      = $timeH;
+        $data['payments']   = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
+       
         
         return view('dashboard', $data);
     }

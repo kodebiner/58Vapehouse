@@ -1029,6 +1029,7 @@ class Pay extends BaseController
             } 
         }
         $sum = array_sum($prices);
+       
 
         $total = $sum - $data['discount'] - $transactions['pointused'] - $Gconfig['memberdisc'] + $Gconfig['ppn']; 
 
@@ -1062,6 +1063,7 @@ class Pay extends BaseController
         foreach ($trxdetails as $trxdetail){
             $trxdetval = $trxdetail['value'];
         }
+        
         if (!empty ($transactions['amountpaid'])){
             $data['change']     = $transactions['amountpaid'] - $transactions['value'];
         }else{
@@ -1100,12 +1102,11 @@ class Pay extends BaseController
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $id;
-        $data['subtotal']       = $trxdetail['value'];
+        $data['subtotal']       = $sum;
         $data['members']        = $MemberModel->findall();
-        $data['total']          = $total;
+        $data['total']          = $transactions['value'];
 
         return view('Views/print', $data);
-       
     }
 
     public function bookprint($id){

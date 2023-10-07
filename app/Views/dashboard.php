@@ -375,13 +375,23 @@
                             <table class="uk-table uk-table-divider" style="backgorund-color: #fff;">
                                 <tbody>
                                     <?php $i = 1 ; ?>
-                                    <?php foreach ($top3paymet as $top3pay) { ?>
+                                    <?php if(!empty($top3paymet)){
+                                        foreach ($top3paymet as $top3pay) {?>
+                                            <tr>
+                                                <td><?= $i++; ?></td>
+                                                <td><?= $top3pay['name'] ?></td>
+                                                <td class="uk-text-right"><?= $top3pay['qty'] ?></td>
+                                            </tr>
+                                        <?php } 
+                                    } else {
+                                        foreach ($payments as $pay) { ?>
                                         <tr>
                                             <td><?= $i++; ?></td>
-                                            <td><?= $top3pay['name'] ?></td>
-                                            <td class="uk-text-right"><?= $top3pay['qty'] ?></td>
+                                            <td><?= $pay['name'] ?></td>
+                                            <td class="uk-text-right">0</td>
                                         </tr>
-                                    <?php } ?>
+                                        <?php }
+                                    } ?>
                                 </tbody>
                             </table>
                         </div>

@@ -10,12 +10,15 @@
 
 <?= $this->section('main') ?>
 
+
 <!-- Page Heading -->
 <div class="tm-card-header uk-light uk-margin-bottom">
-    <h3 class="tm-h3"><?=lang('Global.employereport')?></h3>
     <div uk-grid class="uk-flex-middle">
-    <div class="uk-width-1-2@m">
-    <form id="short" action="report/employe" method="get">
+        <div class="uk-width-1-3@m">
+            <h3 class="tm-h3"><?=lang('Global.employereport')?></h3>
+        </div>
+        <div class="uk-width-expand@m uk-text-right uk-margin-right-remove">
+            <form id="short" action="report/employe" method="get">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
                     <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
@@ -34,12 +37,11 @@
         </div>
         
         <!-- Button Trigger Modal export -->
-        <div class="uk-width-1-2@m uk-text-right@m">
-            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove uk-width-1-3@m " target="_blank" href="export/employe?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
+        <div class="uk-width-auto@m uk-text-right@m">
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove"  target="_blank" href="export/employe?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
         </div>
     </div>
 </div>
-
 
 
 <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
