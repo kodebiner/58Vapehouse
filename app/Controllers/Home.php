@@ -510,7 +510,7 @@ class Home extends BaseController
 
         $authorize->removeUserFromGroup(1, 1);
 
-        $authorize->addUserToGroup(1, 'owners');
+        $authorize->addUserToGroup(1, 'owner');
     }
 
     public function trial()
