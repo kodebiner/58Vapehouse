@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use App\Models\GconfigModel;
 use App\Models\ProductModel;
+use App\Models\PromoModel;
 
 class Upload extends BaseController
 {
@@ -330,8 +331,8 @@ class Upload extends BaseController
 
             // Resizing Promo Image
             $image->withFile(FCPATH.'/img/promo/'.$filename)
-                ->fit(300, 300, 'center')
-                ->crop(300, 300, 0, 0)
+                ->fit(854, 480, 'center')
+                ->crop(854, 480, 0, 0)
                 ->flatten(255, 255, 255)
                 ->convert(IMAGETYPE_JPEG)
                 ->save(FCPATH.'/img/promo/'.$truename.'.jpg');
@@ -384,8 +385,8 @@ class Upload extends BaseController
 
             // Resizing Promo Image
             $image->withFile(FCPATH.'/img/promo/'.$filename)
-                ->fit(300, 300, 'center')
-                ->crop(300, 300, 0, 0)
+                ->fit(854, 480, 'center')
+                ->crop(854, 480, 0, 0)
                 ->flatten(255, 255, 255)
                 ->convert(IMAGETYPE_JPEG)
                 ->save(FCPATH.'/img/promo/'.$truename.'.jpg');

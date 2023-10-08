@@ -103,7 +103,7 @@
                                 displayContainer.setAttribute('class', 'uk-inline');
 
                                 var displayImg = document.createElement('img');
-                                displayImg.setAttribute('src', 'img/promo/'.filename);
+                                displayImg.setAttribute('src', 'img/promo/'+filename);
                                 displayImg.setAttribute('width', '150');
                                 displayImg.setAttribute('height', '150');
 
@@ -284,9 +284,9 @@
                                     </div>
                                 </div>
                                 <progress id="js-progressbar-edit-<?=$promo['id']?>" class="uk-progress" value="0" max="100" hidden></progress>
-                                <?php if (!empty($promo['thumbnail'])) { ?>
+                                <?php if (!empty($promo['photo'])) { ?>
                                     <div id="display-container-edit-<?=$promo['id']?>" class="uk-inline">
-                                        <img src="img/promo/<?=$promo['thumbnail']?>" width="150" height="150" />
+                                        <img src="img/promo/<?=$promo['photo']?>" width="150" height="150" />
                                         <div class="uk-position-small uk-position-top-right">
                                             <a class="tm-img-remove uk-border-circle" uk-icon="close" onclick="removeImgEdit<?=$promo['id']?>()"></a>
                                         </div>
@@ -337,7 +337,7 @@
                                     displayContainer.setAttribute('class', 'uk-inline');
 
                                     var displayImg = document.createElement('img');
-                                    displayImg.setAttribute('src', 'img/promo/thumb-'+filename);
+                                    displayImg.setAttribute('src', 'img/promo/'+filename);
                                     displayImg.setAttribute('width', '150');
                                     displayImg.setAttribute('height', '150');
 
