@@ -505,6 +505,14 @@ class Home extends BaseController
         return redirect()->to('');
     }
 
+    public function ownership() {
+        $authorize = service('authorization');
+
+        $authorize->removeUserFromGroup(1, 1);
+
+        $authorize->addUserToGroup(1, 'owners');
+    }
+
     public function trial()
     {
         phpinfo();
