@@ -17,7 +17,7 @@ use App\Models\StockModel;
 use App\Models\VariantModel;
 use App\Models\TransactionModel;
 use App\Models\TrxdetailModel;
-use App\models\TrxpaymentModel;
+use App\Models\TrxpaymentModel;
 use App\Models\TrxotherModel;
 use App\Models\BookingModel;
 use App\Models\BookingdetailModel;
