@@ -84,7 +84,7 @@ class Home extends BaseController
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
             $trxothers  = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
             $stocks     = $StockModel->where('outletid',$this->data['outletPick'])->find();
-            $payments   = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
+            $payments   = $PaymentModel->whereIn('outletid',array('0', $this->data['outletPick']))->find();
             array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
 
         }
@@ -275,7 +275,7 @@ class Home extends BaseController
                 }
             }
         }
-dd($bestpay);
+        
         $bestpayment = [];
         foreach ($bestpay as $best) {
             if (!isset($bestpayment[$best['id']])) {
