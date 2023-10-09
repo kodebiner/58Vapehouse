@@ -274,22 +274,17 @@ class Pay extends BaseController
         }
 
         // Poin Minus
-        if (!empty($input['poin'])){
-            foreach ($customers as $customer){
-                $cust       = $MemberModel->where('id',$input['customerid'])->first();
-
-                if (!empty($input['poin'])){
-                    $poin   = $cust['poin'] - $input['poin'];
-                } else {
-                    $poin   = $cust['poin'];
-                }
-                $point = [
-                    'id'    => $cust['id'],
-                    'poin'  => $poin,
-                ];
-                $MemberModel->save($point);
-
-            }
+        $pointres = '';
+        if (!empty($poin)){
+            $cust       = $MemberModel->find($input['customerid']);
+            if (!empty($input['poin'])){
+                $pointres   = $cust['poin'] - $poin;
+            } 
+            $point = [
+                'id'    => $cust['id'],
+                'poin'  => $pointres,
+            ];
+            $MemberModel->save($point);
         }
         
         // PPN Value
@@ -487,23 +482,23 @@ class Pay extends BaseController
         if ($total  >= $minimTrx) {
             $value  = $total / $minimTrx;
             $result = floor($value);
-            $poin   = (int)$result * $poinval;
+            $poinresult   = (int)$result * $poinval;
         } else {
-            $poin = "0";
+            $poinresult = "0";
         }
 
         // Update Point Member
         if (!empty($input['customerid'])){
-            $member      = $MemberModel->where('id',$input['customerid'])->first();
+            $member      = $MemberModel->find($input['customerid']);
             $trx = $member['trx'] + 1 ;
             $memberPoint = $member['poin'];
-            $poinPlus = (int)$memberPoint + $poin;           
-            $poin = [
+            $poinPlus = $pointres + $poinresult;           
+            $pointvalue = [
                 'id'    => $member['id'],
                 'poin'  => $poinPlus,
                 'trx'   => $trx,
             ];
-            $MemberModel->save($poin);
+            $MemberModel->save($pointvalue);
         }
 
         // Print Function
@@ -1243,8 +1238,9 @@ class Pay extends BaseController
 
         $sub = [];
         foreach ($bookingdetails as $bookingdetail) {
-            $subtotal += $bookingdetail['value']+$bookingdetail['discvar'];
+            $sub []= $bookingdetail['value']+$bookingdetail['discvar'];
         }
+        $subtotal = array_sum($sub);
 
         $data['pay']            = "UNPAID";
         $data['user']           = $user->username;
