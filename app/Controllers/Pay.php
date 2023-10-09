@@ -1241,9 +1241,9 @@ class Pay extends BaseController
             $data['total']          = "0";
         }
 
-        $subtotal = 0;
+        $sub = [];
         foreach ($bookingdetails as $bookingdetail) {
-            $subtotal += $bookingdetail['value'];
+            $subtotal += $bookingdetail['value']+$bookingdetail['discvar'];
         }
 
         $data['pay']            = "UNPAID";
@@ -1471,9 +1471,13 @@ class Pay extends BaseController
             $data['poinused']       = "0";
         }
         
+        $sub = [];
         foreach ($trxdetails as $trxdetail){
             $trxdetval = $trxdetail['value'];
+            $sub [] = $trxdetail['value'] + $trxdetail['discvar'] * $trxdetail['qty'] ;
         }
+        $subtotal = (array_sum($sub));
+
         if (!empty ($transactions['amountpaid'])){
             $data['change']     = $transactions['amountpaid'] - $transactions['value'];
         }else{
@@ -1528,7 +1532,7 @@ class Pay extends BaseController
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $id;
-        $data['subtotal']       = $trxdetail['value'];
+        $data['subtotal']       = $subtotal;
         $data['member']         = $MemberModel->where('id',$transactions['memberid'])->first();
         $data['total']          = $total;
 

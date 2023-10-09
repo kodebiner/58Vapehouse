@@ -254,8 +254,8 @@
                                         <div>
                                             x<?=$trxdet['qty']?> <?=lang('Global.bundle')?> <br> <?= $bundleName?> <br>
                                             <div class="uk-grid-collapse" uk-grid>
-                                                <div class="uk-width-2-3"> @<?=$variantval?></div>
-                                                <div class="uk-width-1-3"><?=$variantval * $trxdet['qty']?></div>
+                                                <div class="uk-width-1-2"> @<?=$variantval?></div>
+                                                <div class="uk-width-1-2 uk-text-right"><?=$variantval * $trxdet['qty']?></div>
                                             </div>
                                             <?php 
                                             foreach ($bundets as $bundet){
