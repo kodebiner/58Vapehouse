@@ -231,7 +231,8 @@ public function prod()
             }
         }
         
-        $outletname = [];
+        $outletname = '';
+        $address = '';
         foreach ($trxid as $trx){
             foreach ($users as $user){
                 foreach ($variants as $variant){
@@ -264,7 +265,8 @@ public function prod()
                                 }
                             }
                             if($trx['userid'] === $user->id && $trx['paymentid'] === $payment['id'] && $variant['productid'] === $product['id'] && $outlet['id'] === $trx['outletid']){  
-                            $outletname [] = $outlet['name'];
+                            $outletname  = $outlet['name'];
+                            $address = $outlet['address'];
                             $trxval [] = [
                                 'id'            => $trx['trxid'],
                                 'trxdetid'      => $trx['trdetid'],
@@ -292,13 +294,29 @@ public function prod()
                 }
             }
         }
+
         
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=transaction.xls");
+        header("Content-Disposition: attachment; filename=transaction$startdate-$enddate.xls");
 
         // export
         echo '<table>';
         echo '<thead>';
+        echo'<tr>';
+                echo'<th colspan="14" style="align-text:center;">Ringkasan Transaksi</th>';
+            echo'</tr>';
+            echo'<tr>';
+                echo'<th colspan="14" style="align-text:center;">'.$outletname.'</th>';
+            echo'</tr>';
+            echo'<tr>';
+                echo'<th colspan="14" style="align-text:center;">'.$address.'</th>';
+            echo'</tr>';
+            echo'<tr>';
+                echo'<th colspan="14" style="align-text:center;">'.$startdate.' - '.$enddate.'</th>';
+            echo'</tr>';
+            echo'<tr>';
+                echo'<th colspan="14" style="align-text:center;"></th>';
+            echo'</tr>';
         echo '<tr>';
         echo '<th>Date</th>';
         echo '<th>Nama Outlet</th>';

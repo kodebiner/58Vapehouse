@@ -1,15 +1,10 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('extraScript') ?>
-    <!-- <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" /> -->
-    <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 
@@ -20,7 +15,7 @@
             <h3 class="tm-h3"><?=lang('Global.trxHistory')?></h3>
         </div>
         <div class="uk-width-expand@m uk-text-right uk-margin-right-remove">
-            <form id="short" action="debt/indetrx" method="get">
+            <form id="short" action="trxhistory/trx" method="get">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
                     <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />

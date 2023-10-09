@@ -217,6 +217,9 @@ $routes->group('transaction', ['filter'=>'login'], function($routes){
 // Transaction History
 $routes->group('trxhistory', ['filter'=>'login'], function($routes){
     $routes->get('', 'Debt::indextrx', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('trx', 'Debt::indextrx', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('debt', 'Debt::indexdebt', ['filter' => 'role:owner,supervisor,operator']);
+
 });
 
 // Debt

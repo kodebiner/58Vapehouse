@@ -39,22 +39,15 @@ class Debt extends BaseController
         $TrxpaymentModel        = new TrxpaymentModel;
         $DebtModel              = new DebtModel;
 
-        // Populating Data
-        // if ($this->data['outletPick'] === null) {
-        //     $transactions           = $TransactionModel->orderBy('date', 'DESC')->findAll();
-        // } else {
-        //     $transactions           = $TransactionModel->where('outletid', $this->data['outletPick'])->orderBy('date', 'DESC')->find();
-        // }
-
         $input = $this->request->getGet('daterange');
         
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
-            $startdate = strtotime($daterange[0]);
-            $enddate = strtotime($daterange[1]);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
         } else {
-            $startdate = strtotime(date('Y-m-1'));
-            $enddate = strtotime(date('Y-m-t'));
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
         }
 
         // Populating Data
@@ -113,8 +106,26 @@ class Debt extends BaseController
         // Populating Data
         $outlets                = $OutletModel->findAll();
         $customers              = $MemberModel->findAll();
-        $transactions           = $TransactionModel->findAll();
-        $debts                  = $DebtModel->orderBy('deadline', 'ASC')->findAll();
+
+        $input = $this->request->getGet('daterange');
+        
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
+
+        // Populating Data
+        if ($this->data['outletPick'] === null) {
+            $transactions = $TransactionModel->where('deadline <=', $enddate)->find();
+        } else {
+            $transactions = $TransactionModel->where('outletid',$this->data['outletPick'])->find();
+        }
+
+        $debts = $DebtModel->orderBy('deadline', 'DESC')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->find();
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -124,6 +135,9 @@ class Debt extends BaseController
         $data['outlets']        = $outlets;
         $data['customers']      = $customers;
         $data['debts']          = $debts;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
+
 
         return view('Views/debt', $data);
     }
