@@ -511,9 +511,9 @@ class Home extends BaseController
     public function ownership() {
         $authorize = service('authorization');
 
-        $authorize->removeUserFromGroup(2, 1);
+        $authorize->removeUserFromGroup(3, 1);
 
-        $authorize->addUserToGroup(2, 'owner');
+        $authorize->addUserToGroup(3, 'operator');
     }
 
     public function trial()

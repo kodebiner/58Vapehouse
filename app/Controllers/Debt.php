@@ -301,11 +301,22 @@ class Debt extends BaseController
         // Find Data
         $users              = $UserModel->findAll();
         $outlets            = $OutletModel->findAll();
+
+        $input = $this->request->getGet('daterange');
+        
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
         
         if ($this->data['outletPick'] === null) {
-            $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->find();
+            $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->find();
         } else {
-            $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->find();
+            $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->find();
         }
         
         // Parsing data to view
@@ -315,6 +326,8 @@ class Debt extends BaseController
         $data['trxothers']          = $trxothers;
         $data['users']              = $users;
         $data['outlets']            = $outlets;
+        $data['startdate']          = strtotime($startdate);
+        $data['enddate']           = strtotime($enddate);
 
         return view('Views/debtpay', $data);
     }
