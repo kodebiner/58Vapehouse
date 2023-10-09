@@ -250,11 +250,23 @@ class Debt extends BaseController
         $TrxpaymentModel        = new TrxpaymentModel;
 
         // Populating Data
-        if ($this->data['outletPick'] === null) {
-            $trxothers              = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Top Up')->find();
+        $input = $this->request->getGet('daterange');
+        
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
         } else {
-            $trxothers              = $TrxotherModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->like('description', 'Top Up')->find();
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
         }
+        
+        if ($this->data['outletPick'] === null) {
+            $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Top Up')->find();
+        } else {
+            $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->orderBy('id', 'DESC')->like('description', 'Top Up')->where('outletid', $this->data['outletPick'])->find();
+        }
+
         $bundles                = $BundleModel->findAll();
         $bundets                = $BundledetModel->findAll();
         $cash                   = $CashModel->findAll();
@@ -285,6 +297,8 @@ class Debt extends BaseController
         $data['stocks']         = $stocks;
         $data['trxothers']      = $trxothers;
         $data['trxpayments']    = $trxpayments;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
 
         return view('Views/topup', $data);
     }
@@ -327,7 +341,7 @@ class Debt extends BaseController
         $data['users']              = $users;
         $data['outlets']            = $outlets;
         $data['startdate']          = strtotime($startdate);
-        $data['enddate']           = strtotime($enddate);
+        $data['enddate']            = strtotime($enddate);
 
         return view('Views/debtpay', $data);
     }

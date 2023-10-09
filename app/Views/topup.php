@@ -2,16 +2,43 @@
 <?= $this->section('extraScript') ?>
     <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
     <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <div class="uk-flex-middle">
-        <h3 class="tm-h3"><?=lang('Global.topupList')?></h3>
+    <div uk-grid class="uk-flex-middle">
+        <div class="uk-width-1-2@m">
+            <h3 class="tm-h3"><?=lang('Global.topupList')?></h3>
+        </div>
+
+        <!-- Button Daterange -->
+        <div class="uk-width-1-2@m uk-text-right@m">
+            <form id="short" action="trxhistory/topup" method="get">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+                </div>
+            </form>
+            <script>
+                $(function() {
+                    $('input[name="daterange"]').daterangepicker({
+                        opens: 'right'
+                    }, function(start, end, label) {
+                        document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                        document.getElementById('short').submit();
+                    });
+                });
+            </script>
+        </div>
+        <!-- End Of Button Daterange-->
     </div>
 </div>
 <!-- End Of Page Heading -->
+
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
