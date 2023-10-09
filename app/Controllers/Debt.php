@@ -40,10 +40,28 @@ class Debt extends BaseController
         $DebtModel              = new DebtModel;
 
         // Populating Data
-        if ($this->data['outletPick'] === null) {
-            $transactions           = $TransactionModel->orderBy('date', 'DESC')->findAll();
+        // if ($this->data['outletPick'] === null) {
+        //     $transactions           = $TransactionModel->orderBy('date', 'DESC')->findAll();
+        // } else {
+        //     $transactions           = $TransactionModel->where('outletid', $this->data['outletPick'])->orderBy('date', 'DESC')->find();
+        // }
+
+        $input = $this->request->getGet('daterange');
+        
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = strtotime($daterange[0]);
+            $enddate = strtotime($daterange[1]);
         } else {
-            $transactions           = $TransactionModel->where('outletid', $this->data['outletPick'])->orderBy('date', 'DESC')->find();
+            $startdate = strtotime(date('Y-m-1'));
+            $enddate = strtotime(date('Y-m-t'));
+        }
+
+        // Populating Data
+        if ($this->data['outletPick'] === null) {
+            $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        } else {
+            $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
         }
 
         $bundles                = $BundleModel->findAll();
@@ -78,6 +96,8 @@ class Debt extends BaseController
         $data['trxdetails']     = $trxdetails;
         $data['trxpayments']    = $trxpayments;
         $data['debts']          = $debts;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
 
         return view('Views/trxhistory', $data);
     }

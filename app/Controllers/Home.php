@@ -78,11 +78,13 @@ class Home extends BaseController
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $trxothers  = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $stocks         = $StockModel->findAll();
+            $payments           = $PaymentModel->findAll();
             array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
         } else {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
             $trxothers  = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
-            $stocks         = $StockModel->where('outletid',$this->data['outletPick'])->find();
+            $stocks     = $StockModel->where('outletid',$this->data['outletPick'])->find();
+            $payments   = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
             array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
 
         }
@@ -250,12 +252,13 @@ class Home extends BaseController
             $trxsid[] = $trxs['id'];
             
             // Best Payments
-            $payments           = $PaymentModel->where('outletid', $trxs['outletid'])->find();
+            // $payments           = $PaymentModel->where('outletid', $trxs['outletid'])->find();
+            // $payments           = $PaymentModel->findAll();
            
             foreach ($trxpayments as $trxpay) {
                 if ($trxs['id'] == $trxpay['transactionid']){
                     foreach($payments as $pay){
-                        if ($trxpay['paymentid'] === $pay['id'] && $trxpay['paymentid'] !== "0"){
+                        if (($trxpay['paymentid'] === $pay['id']) && $trxpay['paymentid'] !== "0" ){
                             $bestpay [] = [
                                 'id'    => $pay['id'],
                                 'name'  => $pay['name'],
@@ -272,7 +275,7 @@ class Home extends BaseController
                 }
             }
         }
-        
+dd($bestpay);
         $bestpayment = [];
         foreach ($bestpay as $best) {
             if (!isset($bestpayment[$best['id']])) {

@@ -1,26 +1,49 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('extraScript') ?>
+    <!-- <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" /> -->
     <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
     <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
-<div class="tm-card-header uk-light">
+<div class="tm-card-header uk-light uk-margin-bottom">
     <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-2@m">
+        <div class="uk-width-1-3@m">
             <h3 class="tm-h3"><?=lang('Global.trxHistory')?></h3>
         </div>
-
-        <!-- Button Trigger Modal export -->
-        <div class="uk-width-1-2@m uk-text-right@m">
-            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" href="export/transaction"><?=lang('Global.export')?></a>
+        <div class="uk-width-expand@m uk-text-right uk-margin-right-remove">
+            <form id="short" action="debt/indetrx" method="get">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+                </div>
+            </form>
+            <script>
+                $(function() {
+                    $('input[name="daterange"]').daterangepicker({
+                        opens: 'right'
+                    }, function(start, end, label) {
+                        document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                        document.getElementById('short').submit();
+                    });
+                });
+            </script>
         </div>
-        <!-- End Of Button Trigger Modal export-->
-
+        
+        <!-- Button Trigger Modal export -->
+        <div class="uk-width-auto@m uk-text-right@m">
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove"  target="_blank" href="export/transaction?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
+        </div>
     </div>
 </div>
-<!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
