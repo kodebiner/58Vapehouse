@@ -43,7 +43,6 @@
     <nav class="uk-navbar-container">
         <div class="uk-container">
             <div uk-navbar>
-
                 <div class="uk-navbar-left">
                     <div class="uk-navbar-item uk-logo">
                         <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
@@ -52,10 +51,11 @@
                             <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 60px;">
                         <?php } ?>
                     </div>
-                    <a class="uk-navbar-item uk-logo fptagline" style="font-size:35px;" href="#" aria-label="Back to Home">58 Vapehouse Invoice</a>
+                    <a class="uk-navbar-item uk-logo fptagline" style="font-size:35px;" href="#" aria-label="Back to Home"><?=$gconfig['bizname'];?> <?=lang('Global.invoice')?></a>
                 </div>
 
                 <div class="uk-navbar-right">
+                    <?php if (in_groups(['owner','supervisor','operator'])) : ?>
                     <div class="uk-navbar-item uk-margin-right-left">
                         <a class="uk-icon-button" uk-icon="arrow-left" href="<?= base_url('transaction') ?>"></a>
                     </div>
@@ -122,6 +122,7 @@
                         </div>
                         <!-- end modal phonenumber -->
                     </div>
+                    <?php endif ?>
                 </div>
             </div>
         </div>

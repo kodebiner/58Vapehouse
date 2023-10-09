@@ -368,6 +368,7 @@ public function prod()
         $StockModel             = new StockModel;
         $OutletModel            = new OutletModel;
         $TrxotherModel          = new TrxotherModel;
+        $BundleModel            = new BundleModel;
 
         $input  = $this->request->getGet('daterange');
         $cash   = $TrxotherModel->findAll();
@@ -391,6 +392,8 @@ public function prod()
         $varvalues = [];
         $outletname = [];
         $adress = [];
+        $bundval = [];
+        $omsetvalue = [];
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
             if($this->data['outletPick'] === null ){
                 $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
@@ -405,17 +408,18 @@ public function prod()
             }
 
             $trxdetails  = $TrxdetailModel->findAll();
-            $summary = array_sum(array_column($transaction, 'value'));
+            $summary     = array_sum(array_column($transaction, 'value'));
             $variants    = $VariantModel->findAll();
+            $bundles     = $BundleModel->findAll();
 
             $marginmodals = array();
             $margindasars = array();
-           
            
             foreach ($transaction as $trx){
                 foreach ($trxdetails as $trxdetail){
                     if($trx['id'] == $trxdetail['transactionid']){
 
+                        $omsetvalue [] = ($trxdetail['value'] + $trxdetail['discvar']) * $trxdetail['qty'];
                         // margin
                         $marginmodal = $trxdetail['marginmodal'];
                         $margindasar = $trxdetail['margindasar'];
@@ -433,6 +437,16 @@ public function prod()
                         $discountvariant[]          = $trxdetail['discvar'];
                         $discountpoin[]             = $trx['pointused'];
 
+                        foreach ($bundles as $bundle){
+                            if ($trxdetail['bundleid'] === $bundle['id']){
+                                $bundval [] = [
+                                    'id' => $bundle['id'],
+                                    'name' => $bundle['name'],
+                                    'price'=> $trxdetail['value'],
+                                ];
+                            }
+                        }
+
                         foreach ($variants as $variant){
                             if($variant['id'] === $trxdetail['variantid']){
                                 foreach ($stocks as $stock){
@@ -443,16 +457,20 @@ public function prod()
                                             'hargadasar'    => $variant['hargadasar'],
                                             'hargajual'     => $variant['hargajual'],
                                             'qty'           => $stock['qty'],
-                                            'price'         => $variant['hargamodal'] + $variant['hargajual'],
+                                            'trxqty'        => $trxdetail['qty'],
+                                            'omset'         => ($trxdetail['value'] * $trxdetail['qty']) - $trxdetail['discvar'],
+                                            'modalprice'    => (($trxdetail['value'] * $trxdetail['qty']) - ($trxdetail['discvar'])) - $trxdetail['marginmodal'] * $trxdetail['qty'],
+                                            'basicprice'    => (($trxdetail['value'] * $trxdetail['qty']) - ($trxdetail['discvar'])) - $trxdetail['margindasar'] * $trxdetail['qty'],
                                         ];
                                     }
                                 }
                             }
                         }
+
                     }
                     
                 }
-            }    
+            }
 
             $marginmodalsum = array_sum($marginmodals);
             $margindasarsum = array_sum($margindasars);
@@ -479,6 +497,9 @@ public function prod()
         $totalvardisc = array_sum(array_column($discount,'variantdis'));
         $totalpoindisc = array_sum(array_column($discount,'poindisc'));
 
+        // bundle total price
+        $bundleprice = array_sum(array_column($bundval,'price'));
+
         // Total Discount
         $alldisc = (int)$totaltrxdisc + (int)$totalvardisc + (int)$totalpoindisc;
         $transactionarr [] = $transactions;
@@ -489,17 +510,15 @@ public function prod()
         $day2 = date_create($date2);
         $interval = date_diff($day1,$day2)->format("%a");
 
+        //sales
+        $salesresult = array_sum(array_column($transactions, 'value'));
+        $grossales = $salesresult + $alldisc;
+
         // Profit Calculation
-        $omset = [];
-        $capPrice =[];
-        foreach ($varvalues as $varvalue){
-            $omset [] = $varvalue['price'] * $varvalue['qty'];
-            $capPrice [] = $varvalue['hargamodal'] * $varvalue['qty'];
-        }
-        
-        $omsetestimate  = array_sum($omset);
-        $capitalprice   = array_sum($capPrice);
-        $profitvalue    = $omsetestimate - $capitalprice;
+        $modalprice     = array_sum(array_column($varvalues,'modalprice'));
+        $basicprice     = array_sum(array_column($varvalues,'basicprice'));
+        $omsetbaru      = array_sum(array_column($varvalues,'omset'));
+        $profitvalue    = $omsetbaru - $modalprice ;
 
         $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
         $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
@@ -512,12 +531,6 @@ public function prod()
                 $adress [] = $outlet['address'];
             }
         }
-
-        //sales
-        $salesresult = array_sum(array_column($transactions, 'value'));
-    
-        // Groos Sales
-        $grossales = $salesresult + $variantdisc +  $transactiondisc +  $poindisc;
 
         // Set Cash In Cash Out
         $cashin  = [];
@@ -565,11 +578,15 @@ public function prod()
         echo'</tr>';
         echo'<tr>';
             echo'<th style="text-align: left;">Total Omset</th>';
-            echo'<td style="text-align: right;">'.$omsetestimate.'</td>';
+            echo'<td style="text-align: right;">'.$omsetbaru.'</td>';
         echo'</tr>';
         echo'<tr>';
             echo'<th style="text-align: left;">Harga Modal</th>';
-            echo'<td style="text-align: right;">'.$capitalprice.'</td>';
+            echo'<td style="text-align: right;">'.$modalprice.'</td>';
+        echo'</tr>';
+        echo'<tr>';
+            echo'<th style="text-align: left;">Harga Dasar</th>';
+            echo'<td style="text-align: right;">'.$basicprice.'</td>';
         echo'</tr>';
         echo'<tr>';
             echo'<th style="text-align: left;">Kas Masuk</th>';

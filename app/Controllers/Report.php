@@ -237,8 +237,8 @@ class Report extends BaseController
             foreach ($transaction as $trx){
                 foreach ($trxdetails as $trxdetail){
                     if($trx['id'] === $trxdetail['transactionid']){
-                        $marginmodal = $trxdetail['marginmodal'];
-                        $margindasar = $trxdetail['margindasar'];
+                        $marginmodal = $trxdetail['marginmodal'] * $trxdetail['qty'];
+                        $margindasar = $trxdetail['margindasar'] * $trxdetail['qty'];
                         $marginmodals[] = $marginmodal;
                         $margindasars[] = $margindasar;
                     }

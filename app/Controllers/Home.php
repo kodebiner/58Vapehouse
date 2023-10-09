@@ -48,6 +48,8 @@ class Home extends BaseController
         $MemberModel        = new MemberModel();
         $StocksModel        = new StockModel();
         $CashModel          = new CashModel();
+        $PurchaseModel      = new PurchaseModel();
+        $PurchasedetModel   = new PurchasedetailModel();
 
         // Populating Data
         $input = $this->request->getGet('daterange');
@@ -61,6 +63,7 @@ class Home extends BaseController
         $bundles        = $BundleModel->findAll();
         $bundets        = $BundledetailModel->findAll();
         $members        = $MemberModel->findAll();
+        $purchasedet    = $PurchasedetModel->findAll();
        
        
 
@@ -75,18 +78,19 @@ class Home extends BaseController
         
         // Populating Data
         if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            $trxothers  = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $stocks         = $StockModel->findAll();
-            $payments           = $PaymentModel->findAll();
+            $payments       = $PaymentModel->findAll();
             array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
         } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
-            $trxothers  = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
-            $stocks     = $StockModel->where('outletid',$this->data['outletPick'])->find();
-            $payments   = $PaymentModel->whereIn('outletid',array('0', $this->data['outletPick']))->find();
+            $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $stocks         = $StockModel->where('outletid',$this->data['outletPick'])->find();
+            $payments       = $PaymentModel->whereIn('outletid',array('0', $this->data['outletPick']))->find();
             array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
-
         }
     
         // Stock Cycle
@@ -109,6 +113,24 @@ class Home extends BaseController
         }
         
         $salesresult = array_sum(array_column($sales, 'value'));
+
+        
+        $purchval = [];
+        foreach($purchase as $purch){
+            foreach ($purchasedet as $purdet){
+                if($purch['id'] === $purdet['purchaseid']){
+                    $purchval [] = [
+                        'id'        => $purch['id'],
+                        'variant'   => $purdet['variantid'],
+                        'qty'       => $purdet['qty'],
+                        'value'     => $purdet['qty'] * $purdet['price'],
+                    ];
+                }
+            }
+        }
+        
+        // net profit purchase
+        $profitnet = $salesresult - array_sum(array_column($purchval,'value'));
 
         // Average trnasaction
         if($salesresult !== 0){
@@ -250,10 +272,6 @@ class Home extends BaseController
             
             }
             $trxsid[] = $trxs['id'];
-            
-            // Best Payments
-            // $payments           = $PaymentModel->where('outletid', $trxs['outletid'])->find();
-            // $payments           = $PaymentModel->findAll();
            
             foreach ($trxpayments as $trxpay) {
                 if ($trxs['id'] == $trxpay['transactionid']){
@@ -412,8 +430,8 @@ class Home extends BaseController
         foreach ($transactions as $trx){
             foreach ($trxdetails as $trxdetail){
                 if($trx['id'] === $trxdetail['transactionid'] && $trxdetail['variantid'] !== "0"){
-                    $marginmodal    = $trxdetail['marginmodal'];
-                    $margindasar    = $trxdetail['margindasar'];
+                    $marginmodal    = $trxdetail['marginmodal'] * $trxdetail['qty'];
+                    $margindasar    = $trxdetail['margindasar'] * $trxdetail['qty'];
                     $qtytrx[]       = $trxdetail['qty'];
                     $marginmodals[] = $marginmodal;
                     $margindasars[] = $margindasar;
@@ -431,6 +449,8 @@ class Home extends BaseController
             'modal'     => $marginmodalsum,
             'dasar'     => $margindasarsum,
         ];  
+
+
     
         $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
         $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
@@ -461,7 +481,7 @@ class Home extends BaseController
         $data['title']          = lang('Global.dashboard');
         $data['description']    = lang('Global.dashdesc');
         $data['sales']          = $summary;
-        $data['profit']         = $keuntungandasar;
+        $data['profit']         = $profitnet;
         $data['products']       = $products;
         $data['variants']       = $variants;
         $data['bundles']        = $bundles;
