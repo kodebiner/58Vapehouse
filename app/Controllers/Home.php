@@ -333,75 +333,75 @@ class Home extends BaseController
         }
         $totalcustdebt = count($customerdebt);
 
-        // Best Selling Product
-        if (!empty($transactions)) {
-            foreach ($transactions as $trxs) {
-                $trxvars        = $TrxdetailModel->orderBy('qty', 'DESC')->whereIn('transactionid', $trxsid)->find();
-            }
-        } else {
-            $trxvars        = $TrxdetailModel->orderBy('qty', 'DESC')->findAll();
-        }
-        $top3prod       = array_slice($trxvars, 0, 3);
+        // // Best Selling Product
+        // if (!empty($transactions)) {
+        //     foreach ($transactions as $trxs) {
+        //         $trxvars        = $TrxdetailModel->orderBy('qty', 'DESC')->whereIn('transactionid', $trxsid)->find();
+        //     }
+        // } else {
+        //     $trxvars        = $TrxdetailModel->orderBy('qty', 'DESC')->findAll();
+        // }
+        // $top3prod       = array_slice($trxvars, 0, 3);
         
-        // Popular Payment Method
-        if (!empty($transactions)) {
-            $paymentcount = array();
+        // // Popular Payment Method
+        // if (!empty($transactions)) {
+        //     $paymentcount = array();
 
-            $trxid = array();
-            foreach ($transactions as $transaction) {
-                $trxid[] = $transaction['id'];
-            }
+        //     $trxid = array();
+        //     foreach ($transactions as $transaction) {
+        //         $trxid[] = $transaction['id'];
+        //     }
 
-            $cashpayments = $PaymentModel->like('name', 'Cash')->find();
-            $cashid = array();
-            foreach ($cashpayments as $cashpayment) {
-                $cashid[] = $cashpayment['id'];
-            }            
+        //     $cashpayments = $PaymentModel->like('name', 'Cash')->find();
+        //     $cashid = array();
+        //     foreach ($cashpayments as $cashpayment) {
+        //         $cashid[] = $cashpayment['id'];
+        //     }            
 
-            $paymentcount[] = [
-                'name'      => 'Cash',
-                'qty'       => count($TrxpaymentModel->whereIn('transactionid', $trxid)->whereIn('paymentid', $cashid)->find())
-            ];
+        //     $paymentcount[] = [
+        //         'name'      => 'Cash',
+        //         'qty'       => count($TrxpaymentModel->whereIn('transactionid', $trxid)->whereIn('paymentid', $cashid)->find())
+        //     ];
 
-            $noncashpayments      = $PaymentModel->notLike('name', 'Cash')->find();
-            foreach ($noncashpayments as $noncashpayment) {
-                $paymentcount[] = [
-                    'name'      => $noncashpayment['name'],
-                    'qty'       => count($TrxpaymentModel->whereIn('transactionid', $trxid)->where('paymentid', $noncashpayment['id'])->find())
-                ];
-            }
+        //     $noncashpayments      = $PaymentModel->notLike('name', 'Cash')->find();
+        //     foreach ($noncashpayments as $noncashpayment) {
+        //         $paymentcount[] = [
+        //             'name'      => $noncashpayment['name'],
+        //             'qty'       => count($TrxpaymentModel->whereIn('transactionid', $trxid)->where('paymentid', $noncashpayment['id'])->find())
+        //         ];
+        //     }
 
-            array_multisort(array_column($paymentcount, 'qty'), SORT_DESC, $paymentcount);
-        } else {
-            $paymentcount = array();
+        //     array_multisort(array_column($paymentcount, 'qty'), SORT_DESC, $paymentcount);
+        // } else {
+        //     $paymentcount = array();
 
-            $trxid = array();
-            foreach ($transactions as $transaction) {
-                $trxid[] = $transaction['id'];
-            }
+        //     $trxid = array();
+        //     foreach ($transactions as $transaction) {
+        //         $trxid[] = $transaction['id'];
+        //     }
 
-            $cashpayments = $PaymentModel->like('name', 'Cash')->find();
-            $cashid = array();
-            foreach ($cashpayments as $cashpayment) {
-                $cashid[] = $cashpayment['id'];
-            }            
+        //     $cashpayments = $PaymentModel->like('name', 'Cash')->find();
+        //     $cashid = array();
+        //     foreach ($cashpayments as $cashpayment) {
+        //         $cashid[] = $cashpayment['id'];
+        //     }            
 
-            $paymentcount[] = [
-                'name'      => 'Cash',
-                'qty'       => count($TrxpaymentModel->whereIn('paymentid', $cashid)->find())
-            ];
+        //     $paymentcount[] = [
+        //         'name'      => 'Cash',
+        //         'qty'       => count($TrxpaymentModel->whereIn('paymentid', $cashid)->find())
+        //     ];
 
-            $noncashpayments      = $PaymentModel->notLike('name', 'Cash')->find();
-            foreach ($noncashpayments as $noncashpayment) {
-                $paymentcount[] = [
-                    'name'      => $noncashpayment['name'],
-                    'qty'       => count($TrxpaymentModel->where('paymentid', $noncashpayment['id'])->find())
-                ];
-            }
+        //     $noncashpayments      = $PaymentModel->notLike('name', 'Cash')->find();
+        //     foreach ($noncashpayments as $noncashpayment) {
+        //         $paymentcount[] = [
+        //             'name'      => $noncashpayment['name'],
+        //             'qty'       => count($TrxpaymentModel->where('paymentid', $noncashpayment['id'])->find())
+        //         ];
+        //     }
 
-            array_multisort(array_column($paymentcount, 'qty'), SORT_DESC, $paymentcount);
-        }
-        $top3paymet = array_slice($paymentcount, 0, 3);
+        //     array_multisort(array_column($paymentcount, 'qty'), SORT_DESC, $paymentcount);
+        // }
+        // $top3paymet = array_slice($paymentcount, 0, 3);
 
         $qtytrx = array();
         $marginmodals = array();
