@@ -33,21 +33,21 @@ class Home extends BaseController
     {
         // Calling models
         $db                 = \Config\Database::connect();
-        $TransactionModel   = new TransactionModel;
-        $TrxdetailModel     = new TrxdetailModel;
-        $TrxpaymentModel    = new TrxpaymentModel;
-        $TrxotherModel      = new TrxotherModel;
-        $PaymentModel       = new PaymentModel;
-        $ProductModel       = new ProductModel;
-        $CategoryModel      = new CategoryModel;
-        $VariantModel       = new VariantModel;
-        $StockModel         = new StockModel;
-        $BundleModel        = new BundleModel;
-        $BundledetailModel  = new BundledetailModel;
-        $DebtModel          = new DebtModel;
-        $MemberModel        = new MemberModel;
-        $StocksModel        = new StockModel;
-        $CashModel          = new CashModel;
+        $TransactionModel   = new TransactionModel();
+        $TrxdetailModel     = new TrxdetailModel();
+        $TrxpaymentModel    = new TrxpaymentModel();
+        $TrxotherModel      = new TrxotherModel();
+        $PaymentModel       = new PaymentModel();
+        $ProductModel       = new ProductModel();
+        $CategoryModel      = new CategoryModel();
+        $VariantModel       = new VariantModel();
+        $StockModel         = new StockModel();
+        $BundleModel        = new BundleModel();
+        $BundledetailModel  = new BundledetailModel();
+        $DebtModel          = new DebtModel();
+        $MemberModel        = new MemberModel();
+        $StocksModel        = new StockModel();
+        $CashModel          = new CashModel();
 
         // Populating Data
         $input = $this->request->getGet('daterange');

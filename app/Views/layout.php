@@ -285,6 +285,9 @@
                                         <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
+                                        <a href="<?= base_url('report/bundle') ?>"><?=lang('Global.bundlereport');?></a>
+                                    </li>
+                                    <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
                                     </li>
                                     <li class="uk-h5 tm-h5">
@@ -309,7 +312,7 @@
                                 <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                             </li>
                             <li class="tm-main-navbar uk-parent">
-                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
+                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
                                     <li class="uk-h5 tm-h5">
                                         <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
@@ -458,7 +461,7 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                     </li>
                     <li class="tm-main-navbar uk-parent">
-                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
+                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
                         <ul class="uk-nav-sub">
                             <li class="uk-h5 tm-h5">
                                 <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
