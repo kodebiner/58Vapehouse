@@ -1091,6 +1091,7 @@
                             <div class="uk-margin" id="outlet" hidden>
                                 <div class="uk-form-controls uk-margin-small">
                                     <?php
+                                        $outid = '';
                                         foreach ($outlets as $baseoutlet) {
                                             if ($baseoutlet['id'] === $outletPick) {
                                                 $outid = $baseoutlet['id'];
