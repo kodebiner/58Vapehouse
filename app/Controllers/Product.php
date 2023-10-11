@@ -55,6 +55,9 @@ class Product extends BaseController
         $brand      = $BrandModel->findAll();
         $variant    = $VariantModel->whereIn('productid', $productid)->find();
 
+        $productchart = $ProductModel->findAll();
+        $variantchart = $VariantModel->findAll();
+
         
         if ($this->data['outletPick'] === null) {
             $stock      = $StockModel->findAll();
@@ -67,8 +70,8 @@ class Product extends BaseController
 
         $productval = [];
         foreach ($stock as $stk){
-            foreach ($variant as $var){
-                    foreach ($products as $product){
+            foreach ($variantchart as $var){
+                    foreach ($productchart as $product){
                         foreach ($brand as $bran){
                             foreach ($category as $cat){
                                 if($product['catid'] === $cat['id'] && $product['brandid'] === $bran['id'] && $var['productid'] == $product['id'] && $stk['variantid'] === $var['id']){
