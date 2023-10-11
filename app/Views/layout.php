@@ -263,44 +263,44 @@
                                 <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                             </li>          
                             <?php if (in_groups('owner')) : ?>
-                            <li class="tm-main-navbar uk-parent">
-                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
-                                <ul class="uk-nav-sub">
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/keuntungan') ?>"><?=lang('Global.profitreport');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/bundle') ?>"><?=lang('Global.bundlereport');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('report/stockcategory') ?>"><?=lang('Global.stockproduct');?></a>
-                                    </li>
-                                </ul>
-                            </li> 
+                                <li class="tm-main-navbar uk-parent">
+                                    <a class="uk-h4 tm-h4" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
+                                    <ul class="uk-nav-sub">
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/keuntungan') ?>"><?=lang('Global.profitreport');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/bundle') ?>"><?=lang('Global.bundlereport');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('report/stockcategory') ?>"><?=lang('Global.stockproduct');?></a>
+                                        </li>
+                                    </ul>
+                                </li>
                             <?php endif ?>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
@@ -328,79 +328,85 @@
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.sop');?></a>
                             </li>
-                            <li class="tm-main-navbar uk-parent">
-                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
-                                <ul class="uk-nav-sub">
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('product') ?>"><?=lang('Global.product');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('bundle') ?>"><?=lang('Global.bundle');?></a>
-                                    </li>
-                                </ul>
-                            </li>
+                            <?php if(in_groups('owner')) : ?>
+                                <li class="tm-main-navbar uk-parent">
+                                    <a class="uk-h4 tm-h4" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
+                                    <ul class="uk-nav-sub">
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('product') ?>"><?=lang('Global.product');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('bundle') ?>"><?=lang('Global.bundle');?></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            <?php endif ?>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/calendar.svg" uk-svg><?=lang('Global.reminder');?></a>
                             </li>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('presence') ?>"><img src="img/layout/presensi.svg" uk-svg><?=lang('Global.presence');?></a>
                             </li>
+                            <?php if (in_groups('owner') && in_groups('supervisor')) : ?>
+                                <li class="tm-main-navbar">
+                                    <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
+                                </li>
+                            <?php endif ?>
                             <?php if (in_groups('owner')) : ?>
-                            <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
-                            </li>
-                            <li class="tm-main-navbar uk-parent">
-                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
-                                <ul class="uk-nav-sub">
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="tm-main-navbar">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
-                            </li>
+                                <li class="tm-main-navbar uk-parent">
+                                    <a class="uk-h4 tm-h4" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
+                                    <ul class="uk-nav-sub">
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            <?php endif ?>
+                            <?php if (in_groups('owner')) : ?>
+                                <li class="tm-main-navbar">
+                                    <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
+                                </li>
                             <?php endif ?>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('cashinout') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashinout');?></a>
                             </li>
                             <?php if (in_groups('owner')) : ?>
-                            <li class="tm-main-navbar uk-parent">
-                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
-                                <ul class="uk-nav-sub">
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('walletman') ?>"><?=lang('Global.walletManagement');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('walletmove') ?>"><?=lang('Global.walletMovement');?></a>
-                                    </li>
-                                    <li class="uk-h5 tm-h5">
-                                        <a href="<?= base_url('payment') ?>"><?=lang('Global.payment');?></a>
-                                    </li>
-                                </ul>
-                            </li>
+                                <li class="tm-main-navbar uk-parent">
+                                    <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
+                                    <ul class="uk-nav-sub">
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('walletman') ?>"><?=lang('Global.walletManagement');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('walletmove') ?>"><?=lang('Global.walletMovement');?></a>
+                                        </li>
+                                        <li class="uk-h5 tm-h5">
+                                            <a href="<?= base_url('payment') ?>"><?=lang('Global.payment');?></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            <?php endif ?>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
                             </li>
                             <li class="tm-main-navbar">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('promo') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
                             </li>
-                            <?php endif ?>
                         </ul>
                     </nav>
                 </div>
@@ -412,44 +418,44 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                     </li>
                     <?php if (in_groups('owner')) : ?>
-                    <li class="tm-main-navbar uk-parent">
-                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
-                        <ul class="uk-nav-sub">
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/keuntungan') ?>"><?=lang('Global.profitreport');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/bundle') ?>"><?=lang('Global.bundlereport');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('report/stockcategory') ?>"><?=lang('Global.stockproduct');?></a>
-                            </li>
-                        </ul>
-                    </li> 
+                        <li class="tm-main-navbar uk-parent">
+                            <a class="uk-h4 tm-h4" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
+                            <ul class="uk-nav-sub">
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/keuntungan') ?>"><?=lang('Global.profitreport');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/bundle') ?>"><?=lang('Global.bundlereport');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('report/stockcategory') ?>"><?=lang('Global.stockproduct');?></a>
+                                </li>
+                            </ul>
+                        </li> 
                     <?php endif ?>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
@@ -477,18 +483,18 @@
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.sop');?></a>
                     </li>
-                    <?php if(in_groups('owner,supervisor')) : ?>
-                    <li class="tm-main-navbar uk-parent">
-                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
-                        <ul class="uk-nav-sub">
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('product') ?>"><?=lang('Global.product');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('bundle') ?>"><?=lang('Global.bundle');?></a>
-                            </li>
-                        </ul>
-                    </li>
+                    <?php if(in_groups('owner')) : ?>
+                        <li class="tm-main-navbar uk-parent">
+                            <a class="uk-h4 tm-h4" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
+                            <ul class="uk-nav-sub">
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('product') ?>"><?=lang('Global.product');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('bundle') ?>"><?=lang('Global.bundle');?></a>
+                                </li>
+                            </ul>
+                        </li>
                     <?php endif ?>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('reminder') ?>"><img src="img/layout/calendar.svg" uk-svg><?=lang('Global.reminder');?></a>
@@ -497,61 +503,65 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('presence') ?>"><img src="img/layout/presensi.svg" uk-svg><?=lang('Global.presence');?></a>
                     </li>
                     <?php if (in_groups('owner')) : ?>
-                    <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
-                    </li>
-                    <li class="tm-main-navbar uk-parent">
-                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
-                        <ul class="uk-nav-sub">
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="tm-main-navbar">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
-                    </li>
+                        <li class="tm-main-navbar">
+                            <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
+                        </li>
+                    <?php endif ?>
+                    <?php if (in_groups('owner')) : ?>
+                        <li class="tm-main-navbar uk-parent">
+                            <a class="uk-h4 tm-h4" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
+                            <ul class="uk-nav-sub">
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php endif ?>
+                    <?php if(in_groups('owner')) : ?>
+                        <li class="tm-main-navbar">
+                            <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
+                        </li>
                     <?php endif ?>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('cashinout') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashinout');?></a>
                     </li>
                     <?php if (in_groups('owner')) : ?>
-                    <li class="tm-main-navbar uk-parent">
-                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
-                        <ul class="uk-nav-sub">
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('walletman') ?>"><?=lang('Global.walletManagement');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('walletmove') ?>"><?=lang('Global.walletMovement');?></a>
-                            </li>
-                            <li class="uk-h5 tm-h5">
-                                <a href="<?= base_url('payment') ?>"><?=lang('Global.payment');?></a>
-                            </li>
-                        </ul>
-                    </li>
+                        <li class="tm-main-navbar uk-parent">
+                            <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
+                            <ul class="uk-nav-sub">
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('walletman') ?>"><?=lang('Global.walletManagement');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('walletmove') ?>"><?=lang('Global.walletMovement');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('payment') ?>"><?=lang('Global.payment');?></a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php endif ?>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
                     </li>
                     <li class="tm-main-navbar">
                         <a class="uk-h4 tm-h4" href="<?= base_url('promo') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
                     </li>
-                    <?php endif ?>
                 </ul>
             </nav>
         <?php } ?>
