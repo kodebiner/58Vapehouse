@@ -54,7 +54,6 @@ class Product extends BaseController
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
         $variant    = $VariantModel->whereIn('productid', $productid)->find();
-        dd($variant);
 
         
         if ($this->data['outletPick'] === null) {

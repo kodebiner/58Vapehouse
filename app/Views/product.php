@@ -576,7 +576,7 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light display" id="example" style="width:100%">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light display" style="width:100%">
 
     <div class="uk-column-1-3">
     <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.capitalPrice')?> : <?php echo "Rp. ".number_format($modal,0,',','.');" ";?></p>
