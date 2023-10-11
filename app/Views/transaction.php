@@ -1096,8 +1096,8 @@
                                                 $outid = $baseoutlet['id'];
                                             }
                                         }
-                                        ?>
-                                        <input type="number" class="uk-input" id="outlet" name="outlet" value="<?=$baseoutlet['id']?>" />
+                                    ?>
+                                    <input type="number" class="uk-input" id="outlet" name="outlet" value="<?= $outid ?>" />
                                 </div>
                             </div>
 
