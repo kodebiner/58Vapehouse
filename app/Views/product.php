@@ -631,7 +631,6 @@
                         } elseif ($countvar === 1) {
                             foreach ($variants as $variant) {
                                 if ($variant['productid'] === $product['id']) {
-                                    dd($variant['hargamodal']);
                                     echo "Rp ".number_format(($variant['hargamodal'] + $variant['hargajual']),2,',','.');
                                 }
                             }
@@ -1071,7 +1070,7 @@
                                                 ?>
                                             </td>
                                             <td>
-                                                <?= "Rp ".number_format(($variant['hargamodal'] + $variant['hargajual']),2,',','.'); ?>
+                                                <?//= "Rp ".number_format(($variant['hargamodal'] + $variant['hargajual']),2,',','.'); ?>
                                             </td>
                                         </tr>
                                     <?php } ?>
