@@ -577,9 +577,9 @@
 <!-- Table Of Content -->
 <div class="uk-overflow-auto">
     <!-- <div class="uk-child-width-1-3 uk-flex-middle" uk-grid>
-        <p class="uk-text-large" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.capitalPrice')?> : <?php echo "Rp. ".number_format($modal,0,',','.');" ";?></p>
-        <p class="uk-text-large" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.product')?> : <?php echo $totpro;?></p>
-        <p class="uk-text-large" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.stock')?> : <?php echo $totstocks;?></p>
+        <p class="uk-text-large" style="font-size:20px;color:white;"><?//=lang('Global.total')?> <?//=lang('Global.capitalPrice')?> : <?php //echo "Rp. ".number_format($modal,0,',','.');" ";?></p>
+        <p class="uk-text-large" style="font-size:20px;color:white;"><?//=lang('Global.total')?> <?//=lang('Global.product')?> : <?php //echo $totpro;?></p>
+        <p class="uk-text-large" style="font-size:20px;color:white;"><?//=lang('Global.total')?> <?//=lang('Global.stock')?> : <?php //echo $totstocks;?></p>
     </div> -->
 
     <!-- Search Engine -->
