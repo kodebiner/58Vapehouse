@@ -46,7 +46,7 @@ class Product extends BaseController
         $StockModel     = new StockModel();
 
         // Populating Data
-        $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20);
+        $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
         $productid  = array();
         foreach ($products as $product) {
             $productid[] = $product['id'];
@@ -122,6 +122,7 @@ class Product extends BaseController
         $data['totpro']         = $totproduct;
         $data['productschart']  = $produk;
         $data['modal']          = $modal;
+        $data['pager']          = $ProductModel->pager;
 
         return view('Views/product', $data);
     }

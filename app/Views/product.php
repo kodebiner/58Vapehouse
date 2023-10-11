@@ -688,6 +688,9 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    <div>
+        <?= $pager->links('product', 'front_full') ?>
+    </div>
 </div>
 <!-- End Of Table Content -->
 
