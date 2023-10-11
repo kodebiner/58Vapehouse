@@ -19,8 +19,8 @@ use App\Models\BookingdetailModel;
 use App\Models\TransactionModel;
 use App\Models\TrxotherModel;
 use App\Models\TrxdetailModel;
-use App\models\TrxpaymentModel;
-use App\models\DailyReportModel;
+use App\Models\TrxpaymentModel;
+use App\Models\DailyReportModel;
 
 class Pay extends BaseController
 {
