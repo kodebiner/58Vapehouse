@@ -625,7 +625,11 @@
                     </td>
                     <td>
                         <?php
-                        $countvar = array_count_values(array_column($variants, 'productid'))[$product['id']];
+                        if (!empty($variants)) {
+                            $countvar = array_count_values(array_column($variants, 'productid'))[$product['id']];
+                        } else {
+                            $countvar = 0;
+                        }
                         if ($countvar > 1) {
                             echo $countvar.' '.lang('Global.variant');
                         } elseif ($countvar === 1) {
