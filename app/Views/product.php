@@ -1070,7 +1070,7 @@
                                                 ?>
                                             </td>
                                             <td>
-                                                <?//= "Rp ".number_format(($variant['hargamodal'] + $variant['hargajual']),2,',','.'); ?>
+                                                <?= "Rp ".number_format(($variant['hargamodal'] + $variant['hargajual']),2,',','.'); ?>
                                             </td>
                                         </tr>
                                     <?php } ?>
