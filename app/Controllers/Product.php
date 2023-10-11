@@ -92,7 +92,7 @@ class Product extends BaseController
         }
 
         
-        $modal = 0;
+        $modal = '';
         $produk = [];
         foreach ($productval as $vars) {
             if (!isset($produk[$vars['id'].$vars['catname']])) {

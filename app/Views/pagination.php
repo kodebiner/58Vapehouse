@@ -16,7 +16,7 @@
         <?php endif ?>
 
         <?php foreach ($pager->links() as $link) : ?>
-            <li class="" <?= $link['active'] ? 'class="uk-active"' : '' ?>>
+            <li <?= $link['active'] ? ($uri->getSegment(1)===$link['uri'])?'uk-active':'' : '' ?>>
                 <a href="<?= $link['uri'] ?>">
                     <?= $link['title'] ?>
                 </a>

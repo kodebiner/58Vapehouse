@@ -575,16 +575,65 @@
 <!-- End Of Modal Add Category -->
 
 <!-- Table Of Content -->
-<div class="uk-overflow-auto uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light display" style="width:100%">
+<div class="uk-overflow-auto">
+    <!-- <div class="uk-child-width-1-3 uk-flex-middle" uk-grid>
+        <p class="uk-text-large" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.capitalPrice')?> : <?php echo "Rp. ".number_format($modal,0,',','.');" ";?></p>
+        <p class="uk-text-large" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.product')?> : <?php echo $totpro;?></p>
+        <p class="uk-text-large" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.stock')?> : <?php echo $totstocks;?></p>
+    </div> -->
 
-    <div class="uk-column-1-3">
-    <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.capitalPrice')?> : <?php echo "Rp. ".number_format($modal,0,',','.');" ";?></p>
-
-    <p class="uk-text-large  uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.product')?> : <?php echo $totpro;?></p>
-
-    <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.stock')?> : <?php echo $totstocks;?></p>
+    <!-- Search Engine -->
+    <div class="">
+        <form class="uk-search uk-search-default" method="GET" action="product" style="background-color: #fff; border-radius: 7px;">
+            <span uk-search-icon style="color: #000;"></span>
+            <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" style="border-radius: 7px;">
+        </form>
     </div>
+    <!-- Search Engine End -->
+
+    <!-- Counter Total -->
+    <div class="uk-light" uk-grid>
+        <!-- Product-->
+        <div class="uk-width-1-6 uk-form-horizontal">
+            <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.product') ?> :</div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= count($products) ?></div>
+        </div>
+        <!-- Product End -->
+
+        <!-- Stock -->
+        <div class="uk-width-1-6 uk-form-horizontal">
+            <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> :</div>
+            <?php
+            $totalstock = array();
+            foreach ($stocks as $stock) {
+                $stock = $stock['qty'];
+                $totalstock[] = $stock; }
+            $sum = array_sum($totalstock);
+            echo '<div class="uk-form-controls uk-margin-top uk-margin-remove-left">'.$sum.'</div>'
+            ?>
+        </div>
+        <!-- Stock End -->
+
+        <!-- Capital Price -->
+        <div class="uk-width-1-3 uk-form-horizontal">
+            <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
+            <?php
+            $totalcap = array();
+            foreach ($variants as $variant) {
+                foreach ($stocks as $stock) {
+                    if ($variant['id'] === $stock['variantid']) {
+                        $varcap = $variant['hargamodal'] * $stock['qty'];
+                        $totalcap[] = $varcap; ?>
+                    <?php }
+                }
+            }
+            $capsum = array_sum($totalcap);
+            echo '<div class="uk-form-controls uk-margin-top uk-margin-remove-left">'.'Rp ' . number_format($capsum,2,',','.').'</div>';
+            ?>
+        </div>
+        <!-- Capital Price End -->
+    </div>
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light display" style="width:100%">
         <thead>
             <tr>
                 <th class="uk-text-center"></th>
