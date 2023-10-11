@@ -46,10 +46,12 @@ class Product extends BaseController
         $StockModel     = new StockModel();
 
         // Populating Data
-        $products   = $ProductModel->orderBy('id', 'DESC')->findAll(); // Hapus kalau sudah implementasi filter
+        $products   = $ProductModel->orderBy('id', 'DESC')->paginate(10); // Hapus kalau sudah implementasi filter
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
         $variant    = $VariantModel->findAll();
+
+        dd($products);
 
         
         if ($this->data['outletPick'] === null) {
