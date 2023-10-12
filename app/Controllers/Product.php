@@ -80,7 +80,7 @@ class Product extends BaseController
         $stockcap       = $capbuilder->get();
         $caps           = $stockcap->getResult();
         foreach ($caps as $cap) {
-            $totalcap[] = $cap->qty * $cap->price;
+            $totalcap[] = (int)$cap->qty * (int)$cap->price;
         }
 
         $categories = $CategoryModel->findAll();
