@@ -288,8 +288,8 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
 
 // Stock Movement
 $routes->group('stockmove', ['filter'=>'login'], function($routes){
-    $routes->get('', 'StockMove::index', ['filter' => 'role:owner']);
-    $routes->post('create', 'StockMove::create', ['filter' => 'role:owner']);
+    $routes->get('', 'Stockmove::index', ['filter' => 'role:owner']);
+    $routes->post('create', 'Stockmove::create', ['filter' => 'role:owner']);
 });
 
 // Stock Adjustment

@@ -108,14 +108,14 @@
 <!-- Counter Total -->
 <div class="uk-light" uk-grid>
     <!-- Product-->
-    <div class="uk-width-1-6 uk-form-horizontal">
+    <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
         <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.product') ?> :</div>
         <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= count($variants) * count($outlets) ?></div>
     </div>
     <!-- Product End -->
 
     <!-- Stock -->
-    <div class="uk-width-1-6 uk-form-horizontal">
+    <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
         <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> :</div>
         <?php
         $totalstock = array();
@@ -129,14 +129,14 @@
     <!-- Stock End -->
 
     <!-- Capital Price -->
-    <div class="uk-width-1-3 uk-form-horizontal">
+    <div class="uk-width-1-3 uk-width-1-3@m uk-form-horizontal">
         <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
         <?php
         $totalcap = array();
         foreach ($variants as $variant) {
             foreach ($stocks as $stock) {
                 if ($variant['id'] === $stock['variantid']) {
-                    $varcap = $variant['hargamodal'] * $stock['qty'];
+                    $varcap = (Int)$variant['hargamodal'] * (Int)$stock['qty'];
                     $totalcap[] = $varcap; ?>
                 <?php }
             }

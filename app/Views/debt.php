@@ -6,10 +6,9 @@
     <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
     <script src="js/jquery.validate.min.js"></script>
     <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
-    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 
@@ -60,40 +59,38 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($debts as $debt) {
-                if ($debt['value'] !== "0") { ?>
-                    <tr>
-                        <td class="uk-flex uk-flex-center">
-                            <a class="uk-icon-link uk-icon" uk-icon="credit-card" uk-toggle="target:#pay-<?= $debt['id'] ?>"></a>
-                        </td>
+            <?php foreach ($debts as $debt) { ?>
+                <tr>
+                    <td class="uk-flex uk-flex-center">
+                        <a class="uk-icon-link uk-icon" uk-icon="credit-card" uk-toggle="target:#pay-<?= $debt['id'] ?>"></a>
+                    </td>
 
-                        <?php foreach ($transactions as $trx) {
-                            if ($trx['id'] === $debt['transactionid']) { ?>
-                                <td class=""><?= date('l, d M Y', strtotime($trx['date'])); ?></td>
+                    <?php foreach ($transactions as $trx) {
+                        if ($trx['id'] === $debt['transactionid']) { ?>
+                            <td class=""><?= date('l, d M Y', strtotime($trx['date'])); ?></td>
 
-                                <?php foreach ($outlets as $outlet) {
-                                    if ($outlet['id'] === $trx['outletid']) { ?>
-                                        <td class=""><?= $outlet['name'] ?></td>
-                                    <?php }
-                                } ?>
-                            <?php }
-                        } ?>
-                        
-                        <?php foreach ($customers as $cust) {
-                            if ($cust['id'] === $debt['memberid']) {?>
-                                <td class=""><?= $cust['name'].' / '.$cust['phone'] ?></td>
-                            <?php }
-                        } ?>
+                            <?php foreach ($outlets as $outlet) {
+                                if ($outlet['id'] === $trx['outletid']) { ?>
+                                    <td class=""><?= $outlet['name'] ?></td>
+                                <?php }
+                            } ?>
+                        <?php }
+                    } ?>
+                    
+                    <?php foreach ($customers as $cust) {
+                        if ($cust['id'] === $debt['memberid']) {?>
+                            <td class=""><?= $cust['name'].' / '.$cust['phone'] ?></td>
+                        <?php }
+                    } ?>
 
-                        <td class=""><?= date('l, d M Y', strtotime($debt['deadline'])); ?></td>
+                    <td class=""><?= date('l, d M Y', strtotime($debt['deadline'])); ?></td>
 
-                        <td class="">Rp <?= number_format($debt['value'],2,',','.') ?></td>
-                    </tr>
-                <?php }
-            } ?>
+                    <td class="">Rp <?= number_format($debt['value'],2,',','.') ?></td>
+                </tr>
+            <?php } ?>
         </tbody>
     </table>
-    <div>
+    <div class="uk-light">
         <?= $pager->links('debt', 'front_full') ?>
     </div>
 </div>

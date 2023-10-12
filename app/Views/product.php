@@ -51,7 +51,6 @@
         </div>
         <!-- End Of Button Trigger Modal Add -->
 
-
     </div>
 </div>
 <!-- End Of Page Heading -->
@@ -712,7 +711,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div>
+    <div class="uk-light">
         <?= $pager->links('product', 'front_full') ?>
     </div>
 </div>

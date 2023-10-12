@@ -8,17 +8,25 @@ class Customer extends BaseController
 {
     public function index()
     {
+        $pager      = \Config\Services::pager();
+        
         // Calling Models
         $MemberModel             = new MemberModel();
 
         // Populating Data
-        $customers              = $MemberModel->orderBy('id', 'DESC')->findAll();
+        $input      = $this->request->getGet('search');
+        if (!empty($input)) {
+            $customers  = $MemberModel->like('name', $input)->orLike('phone', $input)->orderBy('id', 'DESC')->paginate(20, 'customer');
+        } else {
+            $customers  = $MemberModel->orderBy('id', 'DESC')->paginate(20, 'customer');
+        }
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.customerList');
         $data['description']    = lang('Global.customerListDesc');
         $data['customers']      = $customers;
+        $data['pager']          = $MemberModel->pager;
 
         return view('Views/customer', $data);
     }

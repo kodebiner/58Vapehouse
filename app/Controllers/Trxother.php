@@ -16,7 +16,7 @@ use App\Models\VariantModel;
 use App\Models\TransactionModel;
 use App\Models\TrxdetailModel;
 use App\Models\TrxotherModel;
-use App\models\TrxpaymentModel;
+use App\Models\TrxpaymentModel;
 use App\Models\DebtModel;
 use App\Models\DailyReportModel;
 
@@ -28,16 +28,18 @@ class Trxother extends BaseController
     protected $config;
 
     public function __construct()
-        {
-            $this->db      = \Config\Database::connect();
-            $validation    = \Config\Services::validation();
-            $this->builder = $this->db->table('trxother');
-            $this->config  = config('Auth');
-            $this->auth    = service('authentication');
-        }
+    {
+        $this->db      = \Config\Database::connect();
+        $validation    = \Config\Services::validation();
+        $this->builder = $this->db->table('trxother');
+        $this->config  = config('Auth');
+        $this->auth    = service('authentication');
+    }
 
     public function index()
     {
+        $pager      = \Config\Services::pager();
+
         // Calling Model
         $TransactionModel   = new TransactionModel;
         $TrxdetailModel     = new TrxdetailModel;
@@ -64,15 +66,34 @@ class Trxother extends BaseController
         $userOutlet         = $user->outletid;
         $outlets            = $OutletModel->findAll();
         $cash               = $CashModel->findAll();
+
+        $input  = $this->request->getGet('daterange');
+        
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
         
         // Operator 
         if ($roleid === 4) {
-            $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid',$userOutlet)->find();
+            $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid',$userOutlet)->paginate(20, 'cashinout');
         } else {
             if ($this->data['outletPick'] === null) {
-                $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->find();
+                $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->paginate(20, 'cashinout');
+
+                if (!empty($input)) {
+                    $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
+                }
             } else {
-                $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->find();
+                $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'cashinout');
+
+                if (!empty($input)) {
+                    $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
+                }
             }
         }
 
@@ -90,6 +111,14 @@ class Trxother extends BaseController
         $data['outlets']            = $outlets;
         $data['dailyreport']        = $dailyreport;
         $data['today']              = $today;
+        $data['pager']              = $TrxotherModel->pager;
+        $data['startdate']          = strtotime($startdate);
+        $data['enddate']            = strtotime($enddate);
+
+        $trxdate = array();
+        foreach ($trxothers as $trxot) {
+            $trxdate[]    = $trxot['date'];
+        }
 
         // Cash Flow
         if (!empty($dailyreport)) {
@@ -100,7 +129,7 @@ class Trxother extends BaseController
             // Get Transaction Cash
             $pettycash          = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
             $cashpayment        = $PaymentModel->where('cashid', $pettycash['id'])->first();
-            $cashtrx            = $TransactionModel->where('date >', $dailyreport['dateopen'])->find();
+            $cashtrx            = $TransactionModel->whereIn('date', $trxdate)->where('date >', $dailyreport['dateopen'])->find();
 
             $trxcashid          = array();
             foreach ($cashtrx as $cashtr) {
@@ -131,7 +160,7 @@ class Trxother extends BaseController
                 $noncashpaymentid[]     = $noncashpayment['id'];
             }
 
-            $noncashtrx                 = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
+            $noncashtrx                 = $TransactionModel->whereIn('date', $trxdate)->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
             $trxnoncashid               = array();
 
             foreach ($noncashtrx as $noncashtr) {
@@ -141,7 +170,7 @@ class Trxother extends BaseController
             if (!empty($noncashtrx)) {
                 $trxpaynoncash          = $TrxpaymentModel->whereIn('transactionid', $trxnoncashid)->whereIn('paymentid', $noncashpaymentid)->find();
             } else {
-                $trxpaynoncash          = $TransactionModel->where('date >', $dailyreport['dateopen'])->find();
+                $trxpaynoncash          = $TransactionModel->whereIn('date', $trxdate)->where('date >', $dailyreport['dateopen'])->find();
             }
 
             $noncashtrxvalue            = array_sum(array_column($trxpaynoncash, 'value'));

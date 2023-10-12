@@ -11,16 +11,33 @@ class CashMove extends BaseController
 {
     public function index()
     {
+        $pager      = \Config\Services::pager();
+        
         // Calling Models
         $CashModel              = new CashModel;
         $CashmoveModel          = new CashmovementModel;
         $OutletModel            = new OutletModel;
 
         // Populating Data
+        $input  = $this->request->getGet('daterange');
+        
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
+
         $outlets                = $OutletModel->findAll();
-        $cash                   = $CashModel->findAll();
-        $cashmoves              = $CashmoveModel->findAll();
-        $cashman                = $CashModel->orderBy('id', 'DESC')->findAll();
+        $cashman                = $CashModel->findAll();
+
+        if (!empty($input)) {
+            $cashmoves              = $CashmoveModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashmove');
+        } else {
+            $cashmoves              = $CashmoveModel->orderBy('id', 'DESC')->paginate(20, 'cashmove');
+        }
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -29,6 +46,9 @@ class CashMove extends BaseController
         $data['cashmoves']      = $cashmoves;
         $data['cashmans']       = $cashman;
         $data['outlets']        = $outlets;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
+        $data['pager']          = $CashmoveModel->pager;
 
         return view('Views/cashmove', $data);
     }

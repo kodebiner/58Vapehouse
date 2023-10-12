@@ -37,7 +37,8 @@ class Product extends BaseController
 
     public function index()
     {
-        $db      = \Config\Database::connect();
+        $db         = \Config\Database::connect();
+        $pager      = \Config\Services::pager();
 
         // Calling Model        
         $GroupModel     = new GroupModel();

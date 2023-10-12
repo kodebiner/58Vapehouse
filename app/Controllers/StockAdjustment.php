@@ -7,6 +7,7 @@ use App\Models\ProductModel;
 use App\Models\VariantModel;
 use App\Models\OutletModel;
 use App\Models\StockModel;
+use App\Models\MemberModel;
 use App\Models\StockAdjustmentModel;
 
 Class StockAdjustment extends BaseController{
@@ -18,6 +19,7 @@ Class StockAdjustment extends BaseController{
         $Variant    = new VariantModel;
         $Outlet     = new OutletModel;
         $Stock      = new StockModel;
+        $customers  = new MemberModel;
         $StockAdj   = new StockAdjustmentModel;
 
         //Populating Data
@@ -31,6 +33,7 @@ Class StockAdjustment extends BaseController{
         $data['variants']       = $Variant->findAll();
         $data['outlets']        = $Outlet->findAll();
         $data['stocks']         = $Stock->findAll();
+        $data['customers']      = $customers->findAll();
         $data['stockadj']       = $StockAdj->findAll();
 
         return view ('Views/stockadjustment', $data);

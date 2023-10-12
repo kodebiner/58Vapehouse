@@ -2,8 +2,9 @@
 
 <?= $this->section('extraScript') ?>
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script type="text/javascript" src="js/moment.min.js"></script>
+<script type="text/javascript" src="js/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
 <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
@@ -34,7 +35,6 @@
         chart.draw(data, options);
     }
 </script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>

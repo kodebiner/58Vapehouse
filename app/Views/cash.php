@@ -4,6 +4,9 @@
     <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
     <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
     <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -44,6 +47,24 @@
                 </div>
             <?php }
         } ?>
+    </div>
+    <div class="uk-width-expand@m uk-margin uk-text-right@l uk-text-center">
+        <form id="short" action="cashinout" method="get">
+            <div class="uk-inline">
+                <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+            </div>
+        </form>
+        <script>
+            $(function() {
+                $('input[name="daterange"]').daterangepicker({
+                    opens: 'right'
+                }, function(start, end, label) {
+                    document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                    document.getElementById('short').submit();
+                });
+            });
+        </script>
     </div>
 </div>
 <!-- End Of Page Heading -->
@@ -367,7 +388,7 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
                 <th class="uk-text-center">No</th>
@@ -430,6 +451,9 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    <div class="uk-light">
+        <?= $pager->links('cashinout', 'front_full') ?>
+    </div>
 </div>
 <!-- End Of Table Content -->
 
