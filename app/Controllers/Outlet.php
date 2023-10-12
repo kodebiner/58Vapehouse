@@ -97,7 +97,7 @@ class Outlet extends BaseController
             ];
             $StockModel->save($stock);
         }
-        // Finding Group User
+        // Finding Owners
         $group = $GroupUserModel->where('group_id', '2')->find();
         
         $userarr = array();
@@ -106,15 +106,13 @@ class Outlet extends BaseController
         }
         
         // Owner Outlet 
-        $accessId = $OutletAccessModel->whereIn('userid', $userarr)->find();
-        foreach ($accessId as $access){
+        foreach ($userarr as $user){
             $outletAcc = [
-                'userid'   => $access['userid'],
+                'userid'   => $user,
                 'outletid' => $outletID,
             ];
+            $OutletAccessModel->save($outletAcc);
         }
-        
-        $OutletAccessModel->save($outletAcc);
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }
