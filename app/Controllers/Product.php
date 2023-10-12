@@ -37,6 +37,8 @@ class Product extends BaseController
 
     public function index()
     {
+        $db      = \Config\Database::connect();
+
         // Calling Model        
         $GroupModel     = new GroupModel();
         $CategoryModel  = new CategoryModel();
@@ -69,56 +71,78 @@ class Product extends BaseController
         $variantchart = $VariantModel->findAll();
 
         $totalcap = array();
+
+        $categories = $CategoryModel->findAll();
+        $stockchart = array();
+        foreach ($categories as $cat) {
+            $stockbuilder       = $db->table('stock');
+            $stockchartbuilder  = $stockbuilder->select('stock.qty as qty');
+            $stockchartbuilder  = $stockbuilder->join('variant', 'stock.variantid = variant.id', 'left');
+            $stockchartbuilder  = $stockbuilder->join('product', 'variant.productid = product.id', 'left');
+            $stockchartbuilder  = $stockbuilder->where('product.catid', $cat['id']);
+            if ($this->data['outletPick'] != null) {
+                $stockchartbuilder  = $stockbuilder->where('stock.outletid', $this->data['outletPick']);
+            }
+            $stockchartbuilder = $stockbuilder->get();
+            $stockqty = $stockchartbuilder->getResult();
+            $stkqty = array();
+            foreach ($stockqty as $qty) {
+                $stkqty[] = $qty->qty;
+            }
+            $stockchart[] = [
+                'name'  => $cat['name'],
+                'qty'   => array_sum($stkqty)
+            ];
+        }
+
         if ($this->data['outletPick'] === null) {
             $stock      = $StockModel->whereIn('variantid', $variantid)->find();
             $stockcount = array_sum(array_column($StockModel->findAll(), 'qty'));
         } else {
             $stock      = $StockModel->whereIn('variantid', $variantid)->where('outletid', $this->data['outletPick'])->find();
             $stockcount = array_sum(array_column($StockModel->where('outletid', $this->data['outletPick'])->find(), 'qty'));
-        }
+        }       
+        
 
-        // Checking filter
-        $input = $this->request->getPost();
-
-        $productval = [];
-        foreach ($stock as $stk){
-            foreach ($variantchart as $var){
-                    foreach ($productchart as $product){
-                        foreach ($brand as $bran){
-                            foreach ($category as $cat){
-                                if($product['catid'] === $cat['id'] && $product['brandid'] === $bran['id'] && $var['productid'] == $product['id'] && $stk['variantid'] === $var['id']){
-                                $productval [] = [
-                                    'id'                => $cat['id'],
-                                    'catname'           => $cat['name'],
-                                    'prodname'          => $product['name'],
-                                    'desc'              => $product['description'],
-                                    'stock'             => $stk['qty'],                                
-                                    'hargamodal'        => $stk['qty'] * $var['hargamodal'],                                
-                                    'hargadasar'        => $stk['qty'] * ($var['hargajual'] + $var['hargadasar']),                                
-                                ];
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // $productval = [];
+        // foreach ($stock as $stk){
+        //     foreach ($variantchart as $var){
+        //             foreach ($productchart as $product){
+        //                 foreach ($brand as $bran){
+        //                     foreach ($category as $cat){
+        //                         if($product['catid'] === $cat['id'] && $product['brandid'] === $bran['id'] && $var['productid'] == $product['id'] && $stk['variantid'] === $var['id']){
+        //                         $productval [] = [
+        //                             'id'                => $cat['id'],
+        //                             'catname'           => $cat['name'],
+        //                             'prodname'          => $product['name'],
+        //                             'desc'              => $product['description'],
+        //                             'stock'             => $stk['qty'],                                
+        //                             'hargamodal'        => $stk['qty'] * $var['hargamodal'],                                
+        //                             'hargadasar'        => $stk['qty'] * ($var['hargajual'] + $var['hargadasar']),                                
+        //                         ];
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         
-        $modal = '';
-        $produk = [];
-        foreach ($productval as $vars) {
-            if (!isset($produk[$vars['id'].$vars['catname']])) {
-                $produk[$vars['id'].$vars['catname']] = $vars;
-            } else {
-                $produk[$vars['id'].$vars['catname']]['stock'] += $vars['stock'];
-                $produk[$vars['id'].$vars['catname']]['hargamodal'] += $vars['hargamodal'];
-                $produk[$vars['id'].$vars['catname']]['hargadasar'] += $vars['hargadasar'];
-                $modal = $produk[$vars['id'].$vars['catname']]['hargamodal'] += $vars['hargamodal'];
-            }
-        }
-        $produk = array_values($produk);
-        $totstock = array_sum(array_column($produk,'stock'));
-        $totproduct = count($produk);
+        // $modal = '';
+        // $produk = [];
+        // foreach ($productval as $vars) {
+        //     if (!isset($produk[$vars['id'].$vars['catname']])) {
+        //         $produk[$vars['id'].$vars['catname']] = $vars;
+        //     } else {
+        //         $produk[$vars['id'].$vars['catname']]['stock'] += $vars['stock'];
+        //         $produk[$vars['id'].$vars['catname']]['hargamodal'] += $vars['hargamodal'];
+        //         $produk[$vars['id'].$vars['catname']]['hargadasar'] += $vars['hargadasar'];
+        //         $modal = $produk[$vars['id'].$vars['catname']]['hargamodal'] += $vars['hargamodal'];
+        //     }
+        // }
+        // $produk = array_values($produk);
+        // $totstock = array_sum(array_column($produk,'stock'));
+        // $totproduct = count($produk);
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -130,13 +154,14 @@ class Product extends BaseController
         $data['brand']          = $brand;
         $data['variants']       = $variant;
         $data['stocks']         = $stock;
-        $data['totstocks']      = $totstock;
-        $data['totpro']         = $totproduct;
-        $data['productschart']  = $produk;
-        $data['modal']          = $modal;
+        // $data['totstocks']      = $totstock;
+        // $data['totpro']         = $totproduct;
+        // $data['productschart']  = $produk;
+        // $data['modal']          = $modal;
         $data['pager']          = $ProductModel->pager;
         $data['productcount']   = $productcount;
         $data['stockcount']     = $stockcount;
+        $data['stockchart']     = $stockchart;
 
         return view('Views/product', $data);
     }

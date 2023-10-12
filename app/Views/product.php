@@ -14,24 +14,18 @@
 
     function drawChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'prodname');
+        data.addColumn('string', 'name');
         data.addColumn('number', 'stock');
-        data.addColumn('string', 'catname');
-        data.addColumn('number', 'hargajual');
-        data.addColumn('number', 'hargamodal');
         data.addRows([
-            <?php foreach ($productschart as $product){
-                $cate           = $product['catname'];
-                $sold           = $product['stock'];
-                $produk         = $product['prodname'];
-                $hargajual      = $product['hargadasar'];
-                $hargamodal     = $product['hargamodal'];
-                echo "['$produk',$sold,'$cate',$hargajual,$hargamodal],";
-            }?>
+        <?php foreach ($stockchart as $product) {
+        $cate = $product['name'];
+        $sold = $product['qty'];
+        echo "['$cate',$sold],";
+        }?>
         ]);
 
         var options = {
-            title: 'Products Percentage %'
+        title: 'Category Percentage %'
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
