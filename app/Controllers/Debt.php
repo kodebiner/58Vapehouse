@@ -23,6 +23,8 @@ class Debt extends BaseController
 {
     public function indextrx()
     {
+        $db         = \Config\Database::connect();
+
         // Calling Models
         $BundleModel            = new BundleModel;
         $BundledetModel         = new BundledetailModel;
@@ -33,7 +35,6 @@ class Debt extends BaseController
         $PaymentModel           = new PaymentModel;
         $ProductModel           = new ProductModel;
         $VariantModel           = new VariantModel;
-        $StockModel             = new StockModel;
         $TransactionModel       = new TransactionModel;
         $TrxdetailModel         = new TrxdetailModel;
         $TrxpaymentModel        = new TrxpaymentModel;
@@ -57,19 +58,55 @@ class Debt extends BaseController
             $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->paginate(20, 'trxhistory');
         }
 
+        $trxid = array();
+        $memberid = array();
+        foreach ($transactions as $transaction) {
+            $trxid[] = $transaction['id'];
+            if ($transaction['memberid'] != '0') {
+                $memberid[] = $transaction['memberid'];
+            }
+        }
+
         $bundles                = $BundleModel->findAll();
         $bundets                = $BundledetModel->findAll();
         $cash                   = $CashModel->findAll();
         $outlets                = $OutletModel->findAll();
         $users                  = $UserModel->findAll();
-        $customers              = $MemberModel->findAll();
         $payments               = $PaymentModel->findAll();
-        $products               = $ProductModel->findAll();
-        $variants               = $VariantModel->findAll();
-        $stocks                 = $StockModel->findAll();
-        $trxdetails             = $TrxdetailModel->findAll();
-        $trxpayments            = $TrxpaymentModel->findAll();
-        $debts                  = $DebtModel->findAll();
+
+        if (!empty($memberid)) {            
+            $customers              = $MemberModel->find($memberid);
+        } else {
+            $customers              = array();
+        }
+
+        if (!empty($trxid)) {
+            $trxdetails             = $TrxdetailModel->whereIn('transactionid', $trxid)->find();
+            $trxpayments            = $TrxpaymentModel->whereIn('transactionid', $trxid)->find();
+            $debts                  = $DebtModel->whereIn('transactionid', $trxid)->find();
+            $variantid = array();
+            foreach ($trxdetails as $trxdetail) {
+                $variantid[] = $trxdetail['variantid'];
+            }
+            $productbuilder         = $db->table('variant');
+            $productarray           = $productbuilder->select('product.name as product, variant.name as variant, variant.id as id');
+            $productarray           = $productbuilder->join('product', 'variant.productid = product.id', 'left');
+            $productarray           = $productbuilder->whereIn('variant.id', $variantid);            
+            $productarray           = $productbuilder->get();
+            $productsresult         = $productarray->getResult();
+            $products = array();
+            foreach ($productsresult as $prod) {
+                $products[] = [
+                    'id'    => $prod->id,
+                    'name'  => $prod->product.' - '.$prod->variant
+                ];
+            }
+        } else {
+            $trxdetails             = array();
+            $trxpayments            = array();
+            $debts                  = array();
+            $products               = array();
+        }
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -84,8 +121,6 @@ class Debt extends BaseController
         $data['payments']       = $payments;
         $data['customers']      = $customers;
         $data['products']       = $products;
-        $data['variants']       = $variants;
-        $data['stocks']         = $stocks;
         $data['trxdetails']     = $trxdetails;
         $data['trxpayments']    = $trxpayments;
         $data['debts']          = $debts;
@@ -106,7 +141,6 @@ class Debt extends BaseController
 
         // Populating Data
         $outlets                = $OutletModel->findAll();
-        $customers              = $MemberModel->findAll();
 
         $input = $this->request->getGet('daterange');
         
@@ -120,22 +154,21 @@ class Debt extends BaseController
         }
 
         // Populating Data
-        if ($this->data['outletPick'] === null) {
-            $transactions           = $TransactionModel->orderBy('date', 'DESC')->findAll();
-        } else {
-            $transactions           = $TransactionModel->where('outletid', $this->data['outletPick'])->orderBy('date', 'DESC')->find();
-        }
-
-        $trxid  = array();
-        foreach ($transactions as $trx) {
-            $trxid[]  = $trx['id'];
-        }
-
         if (!empty($input)) {
-            $debts = $DebtModel->orderBy('deadline', 'DESC')->whereIn('transactionid', $trxid)->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(20, 'debt');
+            $debts = $DebtModel->orderBy('deadline', 'DESC')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(20, 'debt');
         } else {
-            $debts = $DebtModel->orderBy('deadline', 'DESC')->whereIn('transactionid', $trxid)->paginate(20, 'debt');
+            $debts = $DebtModel->orderBy('deadline', 'DESC')->paginate(20, 'debt');
         }
+
+        $trxid      = array();
+        $memberid   = array();
+        foreach ($debts as $debt) {
+            $trxid[]    = $debt['transactionid'];
+            $memberid[] = $debt['memberid'];
+        }
+
+        $transactions           = $TransactionModel->find($trxid);
+        $customers              = $MemberModel->find($memberid);
 
         // Parsing Data to View
         $data                   = $this->data;

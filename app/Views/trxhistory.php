@@ -201,32 +201,28 @@
                             <?php foreach ($trxdetails as $trxdet) {
                                 // Variant
                                 if ($trxdet['variantid'] !== "0") {
-                                    foreach ($variants as $variant) {
-                                        foreach ($products as $product) { 
-                                            if (($trxdet['variantid'] === $variant['id']) && ($product['id'] === $variant['productid']) && ($trxdet['transactionid'] === $transaction['id']) ) {
-                                                $variantName     = $variant['name'];
-                                                $productName     = $product['name']; 
-                                                $variantval      = $trxdet['value'];
-                                                ?>
-                                                <div class="uk-margin-small">
-                                                    <div class="uk-h5 uk-text-bolder uk-margin-remove"><?=$productName.' - '.$variantName?></div>
-                                                    <div uk-grid>
-                                                        <div class="uk-width-1-2">
-                                                            <div>x<?=$trxdet['qty']?> @<?=$variantval?></div>
-                                                        </div>
-                                                        <div class="uk-width-1-2 uk-text-right">
-                                                            <div><?=$variantval * $trxdet['qty'] - $trxdet['discvar'] ?></div>
-                                                        </div>
+                                    foreach ($products as $product) {
+                                        if (($trxdet['variantid'] === $product['id']) && ($trxdet['transactionid'] === $transaction['id']) ) {
+                                            $variantval      = $trxdet['value'];
+                                            ?>
+                                            <div class="uk-margin-small">
+                                                <div class="uk-h5 uk-text-bolder uk-margin-remove"><?= $product['name'] ?></div>
+                                                <div uk-grid>
+                                                    <div class="uk-width-1-2">
+                                                        <div>x<?=$trxdet['qty']?> @<?=$variantval?></div>
                                                     </div>
-                                                    <?php if (!empty($trxdet['discvar'])) { ?>
-                                                        <div class="uk-margin-remove-top">
-                                                            <div class="uk-width-1-2">(<?= $trxdet['discvar'] ?>)</div>
-                                                        </div>
-                                                    <?php } ?>
+                                                    <div class="uk-width-1-2 uk-text-right">
+                                                        <div><?=$variantval * $trxdet['qty'] - $trxdet['discvar'] ?></div>
+                                                    </div>
                                                 </div>
-                                            <?php }
-                                        } 
-                                    } 
+                                                <?php if (!empty($trxdet['discvar'])) { ?>
+                                                    <div class="uk-margin-remove-top">
+                                                        <div class="uk-width-1-2">(<?= $trxdet['discvar'] ?>)</div>
+                                                    </div>
+                                                <?php } ?>
+                                            </div>
+                                        <?php }
+                                    }
                                 }
                                 // Variant End
 
@@ -241,13 +237,8 @@
                                                     <div class="uk-margin-small-left">
                                                         <?php foreach ($bundets as $bundet) {
                                                             foreach ($products as $product) { 
-                                                                foreach ($variants as $variant){    
-                                                                    $productName     = $product ['name']; 
-                                                                    $variantName     = $variant ['name'];
-                                                                    if(($variant['id'] === $bundet['variantid'])  && ($product['id'] === $variant['productid'])&& 
-                                                                    ($trxdet['bundleid'] === $bundet['bundleid']) && ($bundle['id'] === $bundet['bundleid'])){
-                                                                        echo "# ".$productName."-".$variantName."</br>";
-                                                                    }
+                                                                if(($product['id'] === $bundet['variantid']) && ($trxdet['bundleid'] === $bundet['bundleid']) && ($bundle['id'] === $bundet['bundleid'])) {
+                                                                    echo "# ".$product['name']."</br>";
                                                                 }
                                                             }
                                                         } ?>
