@@ -17,7 +17,7 @@
 
         <!-- Button Trigger Modal export -->
         <div class="uk-width-1-2@m uk-text-right@m">
-            <form id="short" action="trxhistory/debtpay" method="get">
+            <form id="short" action="debt/debtpay" method="get">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
                     <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
@@ -41,7 +41,7 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
                 <th class=""><?=lang('Global.date')?></th>
@@ -67,6 +67,9 @@
             <?php } ?>
         </tbody>
     </table>
+    <div>
+        <?= $pager->links('debtpay', 'front_full') ?>
+    </div>
 </div>
 <!-- Table Of Content End -->
 

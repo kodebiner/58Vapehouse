@@ -23,7 +23,7 @@
 
         <!-- Button Trigger Modal export -->
         <div class="uk-width-1-2@m uk-text-right@m">
-            <form id="short" action="trxhistory/debt" method="get">
+            <form id="short" action="debt" method="get">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
                     <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
@@ -48,7 +48,7 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
                 <th class="uk-text-center"></th>
@@ -69,7 +69,7 @@
 
                         <?php foreach ($transactions as $trx) {
                             if ($trx['id'] === $debt['transactionid']) { ?>
-                                <td class=""><?= date('l, d M Y, H:i:s', strtotime($trx['date'])); ?></td>
+                                <td class=""><?= date('l, d M Y', strtotime($trx['date'])); ?></td>
 
                                 <?php foreach ($outlets as $outlet) {
                                     if ($outlet['id'] === $trx['outletid']) { ?>
@@ -85,7 +85,7 @@
                             <?php }
                         } ?>
 
-                        <td class=""><?= date('l, d M Y, H:i:s', strtotime($debt['deadline'])); ?></td>
+                        <td class=""><?= date('l, d M Y', strtotime($debt['deadline'])); ?></td>
 
                         <td class="">Rp <?= number_format($debt['value'],2,',','.') ?></td>
                     </tr>
@@ -93,6 +93,9 @@
             } ?>
         </tbody>
     </table>
+    <div>
+        <?= $pager->links('debt', 'front_full') ?>
+    </div>
 </div>
 <!-- Table Of Content End -->
 

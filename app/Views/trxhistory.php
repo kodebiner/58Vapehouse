@@ -41,8 +41,8 @@
 </div>
 
 <!-- Table Of Content -->
-<div class="uk-overflow-auto uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
+<div class="uk-overflow-auto">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" style="width:100%">
         <thead>
             <tr>
                 <th class="uk-text-center"></th>
@@ -117,6 +117,9 @@
             <?php } ?>
         </tbody>
     </table>
+    <div>
+        <?= $pager->links('trxhistory', 'front_full') ?>
+    </div>
 </div>
 <!-- Table Of Content End -->
 

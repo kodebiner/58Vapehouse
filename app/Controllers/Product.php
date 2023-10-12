@@ -48,7 +48,7 @@ class Product extends BaseController
         $StockModel     = new StockModel();
 
         // Populating Data
-        $input      =  $this->request->getGet('search');
+        $input      = $this->request->getGet('search');
         if (!empty($input)) {
             $products   = $ProductModel->like('name', $input)->orderBy('id', 'DESC')->paginate(20, 'product');
         } else {
