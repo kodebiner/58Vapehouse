@@ -586,7 +586,7 @@
     <div class="">
         <form class="uk-search uk-search-default" method="GET" action="product" style="background-color: #fff; border-radius: 7px;">
             <span uk-search-icon style="color: #000;"></span>
-            <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" style="border-radius: 7px;">
+            <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
         </form>
     </div>
     <!-- Search Engine End -->
@@ -596,21 +596,14 @@
         <!-- Product-->
         <div class="uk-width-1-6 uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.product') ?> :</div>
-            <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= count($products) ?></div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $productcount ?></div>
         </div>
         <!-- Product End -->
 
         <!-- Stock -->
         <div class="uk-width-1-6 uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> :</div>
-            <?php
-            $totalstock = array();
-            foreach ($stocks as $stock) {
-                $stock = $stock['qty'];
-                $totalstock[] = $stock; }
-            $sum = array_sum($totalstock);
-            echo '<div class="uk-form-controls uk-margin-top uk-margin-remove-left">'.$sum.'</div>'
-            ?>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $stockcount ?></div>
         </div>
         <!-- Stock End -->
 

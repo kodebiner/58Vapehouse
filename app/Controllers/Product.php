@@ -46,7 +46,13 @@ class Product extends BaseController
         $StockModel     = new StockModel();
 
         // Populating Data
-        $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+        $input      =  $this->request->getGet('search');
+        if (!empty($input)) {
+            $products   = $ProductModel->like('name', $input)->orderBy('id', 'DESC')->paginate(20, 'product');
+        } else {
+            $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        $productcount = count($ProductModel->findAll());
         $productid  = array();
         foreach ($products as $product) {
             $productid[] = $product['id'];
@@ -54,15 +60,21 @@ class Product extends BaseController
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
         $variant    = $VariantModel->whereIn('productid', $productid)->find();
+        $variantid  = array();
+        foreach ($variant as $var) {
+            $variantid[] = $var['id'];
+        }
 
         $productchart = $ProductModel->findAll();
         $variantchart = $VariantModel->findAll();
 
-        
+        $totalcap = array();
         if ($this->data['outletPick'] === null) {
-            $stock      = $StockModel->findAll();
+            $stock      = $StockModel->whereIn('variantid', $variantid)->find();
+            $stockcount = array_sum(array_column($StockModel->findAll(), 'qty'));
         } else {
-            $stock      = $StockModel->where('outletid', $this->data['outletPick'])->find();
+            $stock      = $StockModel->whereIn('variantid', $variantid)->where('outletid', $this->data['outletPick'])->find();
+            $stockcount = array_sum(array_column($StockModel->where('outletid', $this->data['outletPick'])->find(), 'qty'));
         }
 
         // Checking filter
@@ -123,6 +135,8 @@ class Product extends BaseController
         $data['productschart']  = $produk;
         $data['modal']          = $modal;
         $data['pager']          = $ProductModel->pager;
+        $data['productcount']   = $productcount;
+        $data['stockcount']     = $stockcount;
 
         return view('Views/product', $data);
     }
