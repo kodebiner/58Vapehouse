@@ -604,19 +604,7 @@
         <!-- Capital Price -->
         <div class="uk-width-1-3 uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
-            <?php
-            $totalcap = array();
-            foreach ($variants as $variant) {
-                foreach ($stocks as $stock) {
-                    if ($variant['id'] === $stock['variantid']) {
-                        $varcap = $variant['hargamodal'] * $stock['qty'];
-                        $totalcap[] = $varcap; ?>
-                    <?php }
-                }
-            }
-            $capsum = array_sum($totalcap);
-            echo '<div class="uk-form-controls uk-margin-top uk-margin-remove-left">'.'Rp ' . number_format($capsum,2,',','.').'</div>';
-            ?>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalcap,2,',','.') ?></div>
         </div>
         <!-- Capital Price End -->
     </div>

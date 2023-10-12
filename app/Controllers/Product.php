@@ -71,6 +71,17 @@ class Product extends BaseController
         $variantchart = $VariantModel->findAll();
 
         $totalcap = array();
+        $capbuilder     = $db->table('stock');
+        $stockcap       = $capbuilder->select('stock.qty as qty, variant.hargamodal as price');
+        $stockcap       = $capbuilder->join('variant', 'stock.variantid = variant.id', 'left');
+        if ($this->data['outletPick'] != null) {
+            $stockcap       = $capbuilder->where('stock.outletid', $this->data['outletPick']);
+        }
+        $stockcap       = $capbuilder->get();
+        $caps           = $stockcap->getResult();
+        foreach ($caps as $cap) {
+            $totalcap[] = $cap->qty * $cap->price;
+        }
 
         $categories = $CategoryModel->findAll();
         $stockchart = array();
@@ -161,6 +172,7 @@ class Product extends BaseController
         $data['pager']          = $ProductModel->pager;
         $data['productcount']   = $productcount;
         $data['stockcount']     = $stockcount;
+        $data['totalcap']       = array_sum($totalcap);
         $data['stockchart']     = $stockchart;
 
         return view('Views/product', $data);
