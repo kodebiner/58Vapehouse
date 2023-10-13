@@ -25,132 +25,33 @@
 
 <?= view('Views/Auth/_message_block') ?>
 
-<!-- Modal Add -->
-<div uk-modal class="uk-flex-top" id="tambahdata">
-    <div class="uk-modal-dialog uk-margin-auto-vertical">
-        <div class="uk-modal-content">
-            <div class="uk-modal-header">
-                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addRestock')?></h5>
-            </div>
-            <div class="uk-modal-body">
-                <form class="uk-form-stacked" role="form" action="/stock/restock" method="post">
-                    <?= csrf_field() ?>
-                    <!-- ajax -->
-                    <!-- select oulet -->
-                    <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
-                    <div class="uk-form-controls">
-                        <select class="uk-select" name="outlet" id="sel_out">
-                            <option><?=lang('Global.outlet')?></option>
-                            <?php foreach ($outlets as $outlet) {
-                                if ($outlet['id'] === $outletPick) {
-                                    $checked = 'selected';
-                                } else {
-                                    $checked = '';
-                                } ?>
-                                <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                          
-                    <!-- select Product -->
-                    <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
-                    <div class="uk-form-controls">
-                        <select class="uk-select" name="product" id="sel_pro">
-                            <option><?=lang('Global.product')?></option>
-                            <?php foreach ($products as $product) {
-                                echo '<option value="'.$product['id'].'">'.$product['name'].'</option>';
-                            } ?>
-                        </select>
-                    </div>
-                          
-                    <!-- select variant -->
-                    <label class="uk-form-label" for="variant"><?=lang('Global.variant')?></label>
-                    <div class="uk-form-controls">
-                        <select class="uk-select" name="variant" id="sel_variant">
-                            <option id="default_var"><?=lang('Global.variant')?></option>
-                        </select>
-                    </div>
-                    <!-- end of ajax -->
-
-                    <div class="uk-margin">
-                        <label class="uk-form-label" for="address"><?=lang('Global.basePrice')?></label>
-                        <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.basePrice')) : ?>tm-form-invalid<?php endif ?>" name="hargadasar" id="hargadasar" placeholder="<?=lang('Global.basePrice')?>" required/>
-                        </div>
-                    </div>
-
-                    <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="maps"><?=lang('Global.capitalPrice')?></label>
-                        <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.capitalPrice')) : ?>tm-form-invalid<?php endif ?>" id="hargamodal" name="hargamodal" placeholder="<?=lang('Global.capitalPrice')?>" autofocus required />
-                        </div>
-                    </div>
-
-                    <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="maps"><?=lang('Global.stock')?></label>
-                        <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.stock')) : ?>tm-form-invalid<?php endif ?>" id="qty" name="qty" placeholder="<?=lang('Global.stock')?>" autofocus required />
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="uk-margin">
-                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End Of Modal Add -->
-
-<!-- Counter Total -->
-<div class="uk-light" uk-grid>
-    <!-- Product-->
-    <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
-        <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.product') ?> :</div>
-        <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= count($variants) * count($outlets) ?></div>
-    </div>
-    <!-- Product End -->
-
-    <!-- Stock -->
-    <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
-        <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> :</div>
-        <?php
-        $totalstock = array();
-        foreach ($stocks as $stock) {
-            $stock = $stock['qty'];
-            $totalstock[] = $stock; }
-        $sum = array_sum($totalstock);
-        echo '<div class="uk-form-controls uk-margin-top uk-margin-remove-left">'.$sum.'</div>'
-        ?>
-    </div>
-    <!-- Stock End -->
-
-    <!-- Capital Price -->
-    <div class="uk-width-1-3 uk-width-1-3@m uk-form-horizontal">
-        <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
-        <?php
-        $totalcap = array();
-        foreach ($variants as $variant) {
-            foreach ($stocks as $stock) {
-                if ($variant['id'] === $stock['variantid']) {
-                    $varcap = (Int)$variant['hargamodal'] * (Int)$stock['qty'];
-                    $totalcap[] = $varcap; ?>
-                <?php }
-            }
-        }
-        $capsum = array_sum($totalcap);
-        echo '<div class="uk-form-controls uk-margin-top uk-margin-remove-left">'.'Rp ' . number_format($capsum,2,',','.').'</div>';
-        ?>
-    </div>
-    <!-- Capital Price End -->
-</div>
-<!-- Counter Total End -->
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example">
+    <!-- Counter Total -->
+    <div class="uk-light" uk-grid>
+        <!-- Product-->
+        <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
+            <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.product') ?> :</div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $stockcount ?></div>
+        </div>
+        <!-- Product End -->
+
+        <!-- Stock -->
+        <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
+            <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> :</div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $totalstock ?></div>
+        </div>
+        <!-- Stock End -->
+
+        <!-- Capital Price -->
+        <div class="uk-width-1-3 uk-width-1-3@m uk-form-horizontal">
+            <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($capsum,2,',','.') ?></div>
+        </div>
+        <!-- Capital Price End -->
+    </div>
+    <!-- Counter Total End -->
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
                 <th class="uk-text-center">No</th>
@@ -185,6 +86,9 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    <div class="uk-light">
+        <?= $pager->links('stock', 'front_full') ?>
+    </div>
 </div>
 <!-- End Table Content -->
 

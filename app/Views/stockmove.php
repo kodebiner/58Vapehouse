@@ -48,9 +48,9 @@
                                 <option disabled><?=lang('Global.origin')?></option>
                                 <?php foreach ($outlets as $outlet) {
                                     if ($outlet['id'] === $outletPick) {
-                                        $checked = 'selected';
+                                        $checked = 'selected disabled';
                                     } else {
-                                        $checked = '';
+                                        $checked = 'disabled';
                                     } ?>
                                     <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
                                 <?php } ?>
@@ -61,11 +61,11 @@
                     <div class="uk-margin">
                         <label class="uk-form-label" for="destination"><?=lang('Global.destination')?></label>
                         <div class="uk-form-controls">
-                            <select class="uk-select" name="destination" id="sel_out">
-                                <option disabled><?=lang('Global.destination')?></option>
+                            <select class="uk-select" name="destination" id="sel_out" required>
+                                <option value="" selected disabled><?=lang('Global.destination')?></option>
                                 <?php foreach ($outlets as $outlet) {
                                     if ($outlet['id'] === $outletPick) {
-                                        $checked = 'selected';
+                                        $checked = 'disabled';
                                     } else {
                                         $checked = '';
                                     } ?>
@@ -81,6 +81,12 @@
                             <input type="text" class="uk-input" id="productname" name="productname" placeholder="<?=lang('Global.product')?>">
                         </div>
                     </div>
+
+                    <div id="tablevariant"></div>
+
+                    <?php foreach ($products as $product) {?>
+                        <div class="prodvar" id="tablevariant" hidden></div>
+                    <?php } ?>
 
                     <div class="uk-margin-small uk-flex uk-flex-middle " uk-grid>
                         <div class="uk-width-1-2">
@@ -112,25 +118,118 @@
         var productList = [
             <?php foreach ($products as $product) {
                 echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
-            }?>
+            } ?>
         ];
         $("#productname").autocomplete({
             source: productList,
             select: function(e, i) {
-                //$("#productid").val(i.item.idx);
-                if (i.item.idx != 0) {
-                    var products = <?php echo json_encode($products); ?>;
-                    for (var x = 0; x < products.length; x++) {
-                        document.getElementById('tablevariant'+products[x]['id']).setAttribute('hidden', '');
-                        if (products[x]['id'] == i.item.idx) {
-                            document.getElementById('tablevariant'+products[x]['id']).removeAttribute('hidden');
+                var data = { 'id' : i.item.idx };
+                $.ajax({
+                    url:"stockmove/product",
+                    method:"POST",
+                    data: data,
+                    dataType: "json",
+                    error:function() {
+                        console.log('error', arguments);
+                    },
+                    success:function() {
+                        console.log('success', arguments);
+                        document.getElementById('tablevariant').removeAttribute('hidden');
+                        var elements = document.getElementsByClassName('prodvar');
+                        while(elements.length > 0){
+                            elements[0].parentNode.removeChild(elements[0]);
                         }
-                    }
-                }
+                        var products = document.getElementById('tablevariant');
+                        
+                        var productgrid = document.createElement('div');
+                        productgrid.setAttribute('id', 'variantlist');
+                        productgrid.setAttribute('class', 'uk-padding uk-padding-remove-vertical');
+                        productgrid.setAttribute('uk-grid', '');
+
+                        variantarray = arguments[0];
+
+                        for (k in variantarray) {
+                            //alert(variantarray[k]['name']);
+                            var varcontainer = document.createElement('div');
+                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2 uk-margin-small');
+                                                            
+                            var varname = document.createElement('div');
+                            varname.setAttribute('class','');
+                            varname.innerHTML = variantarray[k]['name'];
+
+                            var cartcontainer = document.createElement('div');
+                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2 uk-margin-small');
+
+                            var cart = document.createElement('a');
+                            cart.setAttribute('class', 'uk-icon-button');
+                            cart.setAttribute('uk-icon', 'cart');
+                            cart.setAttribute('onclick', 'createVar('+variantarray[k]['id']+')');
+
+                            varcontainer.appendChild(varname);
+                            cartcontainer.appendChild(cart);
+                            productgrid.appendChild(varcontainer);
+                            productgrid.appendChild(cartcontainer);
+                        };
+                        
+                        products.appendChild(productgrid);
+                    },
+                })
             },
             minLength: 2
         });
     });
+    function createVar(id) {
+        for (k in variantarray) {
+            if (variantarray[k]['id'] == id) {
+                document.getElementById('variantlist').remove();
+                var elemexist = document.getElementById('product'+variantarray[k]['id']);
+                document.getElementById('tablevariant').setAttribute('hidden', '');
+                var count = 1;
+                if ( $( "#product"+variantarray[k]['id'] ).length ) {
+                    alert('<?=lang('Global.readyAdd');?>');
+                } else {
+                    let minval = count;
+                    var prods = document.getElementById('tableproduct');
+                                                
+                    var pgrid = document.createElement('div');
+                    pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
+                    pgrid.setAttribute('class', 'uk-margin-small');
+                    pgrid.setAttribute('uk-grid', '');
+
+                    var vcontainer = document.createElement('div');
+                    vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2');
+                                                    
+                    var vname = document.createElement('div');
+                    vname.setAttribute('id','var'+variantarray[k]['id']);
+                    vname.setAttribute('class','');
+                    vname.innerHTML = variantarray[k]['name'];
+
+                    var tcontainer = document.createElement('div');
+                    tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2');
+
+                    var tot = document.createElement('input');
+                    tot.setAttribute('type', 'number');
+                    tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
+                    tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
+                    tot.setAttribute('class', 'uk-input');
+                    tot.setAttribute('value', '1');
+                    tot.setAttribute('max', variantarray[k]['qty']);
+                    tot.setAttribute('required', '');
+
+                    var pieces = document.createElement('div');
+                    pieces.setAttribute('class', 'uk-margin-small-left');
+                    pieces.innerHTML = 'Pcs';
+
+                    vcontainer.appendChild(vname);
+                    tcontainer.appendChild(tot);
+                    tcontainer.appendChild(pieces);
+                    pgrid.appendChild(vcontainer);
+                    pgrid.appendChild(tcontainer);
+                    prods.appendChild(pgrid);
+                }
+            }
+        }
+    };
 </script>
 <!-- Script Modal Add End -->
 

@@ -9,28 +9,27 @@ use App\Models\OutletModel;
 use App\Models\StockModel;
 use App\Models\StockmovementModel;
 
-Class Stockmove extends BaseController{
-
-
+Class Stockmove extends BaseController
+{
     public function __construct()
     {
-            $this->db      = \Config\Database::connect();
-            $validation    = \Config\Services::validation();
-            $this->builder = $this->db->table('stock');
-            $this->config  = config('Auth');
-            $this->auth    = service('authentication');
-        
+        $this->db      = \Config\Database::connect();
+        $validation    = \Config\Services::validation();
+        $this->builder = $this->db->table('stock');
+        $this->config  = config('Auth');
+        $this->auth    = service('authentication');
     }
 
-
-    public function index(){
-
+    public function index()
+    {
         // Calling Database
         $Product    = new ProductModel;
         $Variant    = new VariantModel;
         $Outlet     = new OutletModel;
         $Stock      = new StockModel;
         $StockMove  = new StockmovementModel;
+
+        // Find Data
 
         // Parsing Data To View
         $data                   = $this->data;
@@ -43,11 +42,48 @@ Class Stockmove extends BaseController{
         $data['stockmoves']     = $StockMove->findAll();
 
         return view ('Views/stockmove', $data);
-
     }
 
-    public function create() {
+    public function product()
+    {
+        // Calling Model
+        $VariantModel   = new VariantModel();
+        $StockModel     = new StockModel();
+        $ProductModel   = new ProductModel();
 
+        // initialize
+        $input      = $this->request->getPost('id');
+
+        $product    = $ProductModel->find($input);
+
+        $variants   = $VariantModel->where('productid', $input)->find();
+
+        $variantid = array();
+        foreach ($variants as $var) {
+            $variantid[]    = $var['id'];
+        }
+
+        $stocks     = $StockModel->whereIn('variantid', $variantid)->where('outletid', $this->data['outletPick'])->find();
+
+        $return = array();
+        foreach ($stocks as $stock) {
+            foreach ($variants as $variant) {
+                if ($stock['variantid'] === $variant['id']) {
+                    $return[] = [
+                        'id'    => $variant['id'],
+                        'name'  => $product['name'].' - '.$variant['name'],
+                        'qty'   => $stock['qty'],
+
+                    ];
+                }
+            }
+        }
+        
+        die(json_encode($return));
+    }
+
+    public function create()
+    {
         // Calling Database
         $Product    = new ProductModel;
         $Variant    = new VariantModel;
@@ -116,5 +152,3 @@ Class Stockmove extends BaseController{
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 }
-
-?>

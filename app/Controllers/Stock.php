@@ -13,7 +13,6 @@ use App\Models\PurchaseModel;
 use App\Models\PurchasedetailModel;
 
 class Stock extends BaseController
-
 {
     protected $db, $builder;
     protected $auth;
@@ -31,6 +30,9 @@ class Stock extends BaseController
     // Stock
     public function index()
     {
+        $db         = \Config\Database::connect();
+        $pager      = \Config\Services::pager();
+
         // Calling Model
         $StockModel     = new StockModel;
         $VariantModel   = new VariantModel;
@@ -42,16 +44,31 @@ class Stock extends BaseController
         $outlets        = $OutletModel->findAll();
 
         if ($this->data['outletPick'] === null) {
-            $stock      = $StockModel->orderBy('id', 'DESC')->findAll();
+            $stock          = $StockModel->orderBy('id', 'DESC')->paginate(20, 'stock');
+            $stockcount     = count($StockModel->findAll());
+            $totalstock     = array_sum(array_column($StockModel->findAll(), 'qty'));
         } else {
-            $stock      = $StockModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
+            $stock          = $StockModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'stock');
+            $stockcount     = count($StockModel->where('outletid', $this->data['outletPick'])->find());
+            $totalstock     = array_sum(array_column($StockModel->where('outletid', $this->data['outletPick'])->find(), 'qty'));
         }
+
+        $variantid   = array();
+        foreach ($stock as $stok) {
+            $variantid[]  = $stok['variantid'];
+        }
+        $variants           = $VariantModel->find($variantid);
+
+        $productid = array();
+        foreach ($variants as $variant) {
+            $productid[]    = $variant['productid'];
+        }
+        $products           = $ProductModel->find($productid);
 
         $totalcap = array();
         $capbuilder     = $db->table('stock');
         $stockcap       = $capbuilder->select('stock.qty as qty, variant.hargamodal as price');
         $stockcap       = $capbuilder->join('variant', 'stock.variantid = variant.id', 'left');
-        $stockcap       = $capbuilder->join('product', 'variant.productid = product.id', 'left');
         if ($this->data['outletPick'] != null) {
             $stockcap       = $capbuilder->where('stock.outletid', $this->data['outletPick']);
         }
@@ -60,16 +77,19 @@ class Stock extends BaseController
         foreach ($caps as $cap) {
             $totalcap[] = (int)$cap->qty * (int)$cap->price;
         }
-        $variants       = $VariantModel->findAll();
-        $products       = $ProductModel->findAll();
+        $capsum = array_sum($totalcap);
 
         // Parsing data to view
         $data['title']          = lang('Global.stockList');
         $data['description']    = lang('Global.stockListDesc');
         $data['stocks']         = $stock;
+        $data['stockcount']     = $stockcount;
         $data['variants']       = $variants;
         $data['products']       = $products;
         $data['outlets']        = $outlets;
+        $data['totalstock']     = $totalstock;
+        $data['capsum']         = $capsum;
+        $data['pager']          = $StockModel->pager;
 
         return view ('Views/stock', $data);
     }

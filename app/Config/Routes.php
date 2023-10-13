@@ -290,6 +290,7 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
 $routes->group('stockmove', ['filter'=>'login'], function($routes){
     $routes->get('', 'Stockmove::index', ['filter' => 'role:owner']);
     $routes->post('create', 'Stockmove::create', ['filter' => 'role:owner']);
+    $routes->post('product', 'Stockmove::product', ['filter' => 'role:owner']);
 });
 
 // Stock Adjustment
