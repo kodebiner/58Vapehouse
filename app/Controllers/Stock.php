@@ -39,15 +39,29 @@ class Stock extends BaseController
         
         // Find Data
         $data           = $this->data;
-        $products       = $ProductModel->findAll();
         $outlets        = $OutletModel->findAll();
-        $variants       = $VariantModel->findAll();
 
         if ($this->data['outletPick'] === null) {
             $stock      = $StockModel->orderBy('id', 'DESC')->findAll();
         } else {
             $stock      = $StockModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
         }
+
+        $totalcap = array();
+        $capbuilder     = $db->table('stock');
+        $stockcap       = $capbuilder->select('stock.qty as qty, variant.hargamodal as price');
+        $stockcap       = $capbuilder->join('variant', 'stock.variantid = variant.id', 'left');
+        $stockcap       = $capbuilder->join('product', 'variant.productid = product.id', 'left');
+        if ($this->data['outletPick'] != null) {
+            $stockcap       = $capbuilder->where('stock.outletid', $this->data['outletPick']);
+        }
+        $stockcap       = $capbuilder->get();
+        $caps           = $stockcap->getResult();
+        foreach ($caps as $cap) {
+            $totalcap[] = (int)$cap->qty * (int)$cap->price;
+        }
+        $variants       = $VariantModel->findAll();
+        $products       = $ProductModel->findAll();
 
         // Parsing data to view
         $data['title']          = lang('Global.stockList');
