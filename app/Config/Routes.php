@@ -263,11 +263,12 @@ $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('product', 'Report::product', ['filter' => 'role:owner']);
     $routes->get('presence', 'Report::presence', ['filter' => 'role:owner']);
     $routes->get('presence/(:num)', 'Report::presencedetail/$1', ['filter' => 'role:owner']);
+    $routes->get('presence/(:any)', 'Report::presencedetail/$1', ['filter' => 'role:owner']);
     $routes->get('employe', 'Report::employe', ['filter' => 'role:owner']);
     $routes->get('customer', 'Report::customer', ['filter' => 'role:owner']);
     $routes->get('customerdetail/(:num)', 'Report::customerdetail/$1', ['filter' => 'role:owner']);
     $routes->get('category', 'Report::category', ['filter' => 'role:owner']);
-    $routes->get('stockcategory', 'Report::stockcategory', ['filter' => 'role:owner']);
+    // $routes->get('stockcategory', 'Report::stockcategory', ['filter' => 'role:owner']);
 
 });
 

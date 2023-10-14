@@ -80,34 +80,42 @@
         <div id="piechart"></div>
     </div>
 
-    <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-        <caption class="uk-text-large uk-text-bold uk-margin" style="font-size:20px;"><?=lang('Global.categoryreport')?></caption>
-        <thead>
-            <tr>
-                <th><?=lang('Global.category')?></th>
-                <th class="uk-text-center"><?=lang('Global.category')?></th>
-                <th class="uk-text-center"><?=lang('Global.gross')?></th>
-                <th class="uk-text-center"><?=lang('Global.transaction')?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($products as $product ){ ?>
-                <tr>
-                    <td style="color:white;"><?=$product['category']?></td>
-                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
-                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
-                    <td style="color:white;" class="uk-text-center"><?=$product['qty']?></td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+    <div uk-grid class="uk-flex-middle uk-margin-bottom">
+        <!-- Search Filter -->
+        <div class="uk-width-1-2@m">
+            <form class="uk-search uk-search-default" method="GET" action="report/category" style="background-color: #fff; border-radius: 7px;">
+                <span uk-search-icon style="color: #000;"></span>
+                <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
+            </form>
+        </div>
+        <!-- End Search Filter -->
+    </div>
 
-    <!-- End Of Page Heading -->
-    <script>
-        $(document).ready(function () {
-            $('#example').DataTable();
-        });
-    </script>
+    <div class="uk-overflow-auto">
+        <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
+            <thead>
+                <tr>
+                    <th><?=lang('Global.category')?></th>
+                    <th class="uk-text-center"><?=lang('Global.category')?></th>
+                    <th class="uk-text-center"><?=lang('Global.gross')?></th>
+                    <th class="uk-text-center"><?=lang('Global.transaction')?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($products as $product ){ ?>
+                    <tr>
+                        <td style="color:white;"><?=$product['category']?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
+                        <td style="color:white;" class="uk-text-center"><?=$product['qty']?></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+        <div class="uk-light">
+            <?= $pager->links('reportcategory', 'front_full') ?>
+        </div>
+    </div>
     <?= view('Views/Auth/_message_block') ?>
 
     <?= $this->endSection() ?>

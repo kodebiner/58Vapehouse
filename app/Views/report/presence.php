@@ -54,11 +54,19 @@
         </thead>
         <tbody>
             <?php foreach ($presences as $presence){ ?>
+                <?php 
+                    $paramet = [];
+                    $paramet [] = [
+                        'id' => $presence['id'],
+                        'date'=> date('Y-m-d', $startdate) ."-". date('Y-m-d', $enddate),
+                    ];
+                    $pram = [$presence['id'],date('Y-m-d', $startdate) ."-". date('Y-m-d', $enddate)];
+                ?>
                 <tr>
                     <td style="color:white;"><?=$presence['name']?></td>
                     <td class="uk-text-center" style="color:white;"><?=$presence['role']?></td>
                     <td class="uk-text-center" style="color:white;"><?=$present?></td>
-                    <td class="uk-text-center"><a class="uk-icon-link uk-margin-small-right" uk-icon="icon: eye;" href="report/presence/<?=$presence['id']?>"></a></td>
+                    <td class="uk-text-center"><a class="uk-icon-link uk-margin-small-right" uk-icon="icon: eye;" href="report/presence/<?=$presence['id']."-".date('Ymd', $startdate) ."-". date('Ymd', $enddate)?>"></a></td>
                 </tr>
             <?php } ?>
         </tbody>

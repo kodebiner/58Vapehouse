@@ -376,7 +376,22 @@ class Report extends BaseController
                 $enddate = date('Y-m-t');
             }
 
-            $payments = $PaymentModel->findAll();
+            $this->db       = \Config\Database::connect();
+            $validation     = \Config\Services::validation();
+            $this->builder  = $this->db->table('payment');
+            $this->config   = config('Auth');
+            $this->auth     = service('authentication');
+            $pager          = \Config\Services::pager();
+
+            
+            $inputsearch    = $this->request->getGet('search');
+
+            if (!empty($inputsearch)) {
+                $payments   = $PaymentModel->like('name', $inputsearch)->orderBy('id', 'DESC')->paginate(20, 'reportpayment');
+            } else {
+                $payments   = $PaymentModel->orderBy('id', 'DESC')->paginate(20, 'reportpayment');
+            }
+
             $trxpayments = $TrxpaymentModel->findAll();
             $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $pay = array();
@@ -406,6 +421,7 @@ class Report extends BaseController
             $data['startdate']      = strtotime($startdate);
             $data['enddate']        = strtotime($enddate);
             $data['total']          = $payresult;
+            $data['pager']          = $PaymentModel->pager;
 
             return view('Views/report/payment', $data);
         } else {
@@ -434,6 +450,20 @@ class Report extends BaseController
         $bundets    = $BundledetailModel->findAll();
         $trxdetails = $TrxdetailModel->findAll();
 
+        $this->db       = \Config\Database::connect();
+        $validation     = \Config\Services::validation();
+        $this->builder  = $this->db->table('product');
+        $this->config   = config('Auth');
+        $this->auth     = service('authentication');
+        $pager          = \Config\Services::pager();
+
+        // Search Filter
+        $inputsearch    = $this->request->getGet('search');
+        if (!empty($inputsearch)) {
+            $products   = $ProductModel->like('name', $inputsearch)->orderBy('id', 'DESC')->paginate(20, 'product');
+        } else {
+            $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
 
         // Populating Data
         $input = $this->request->getGet('daterange');
@@ -549,6 +579,8 @@ class Report extends BaseController
         }
         $produk = array_values($produk);
 
+
+        
         // disc calculation
         $trxdisc    = array_sum(array_column($diskon,'trxdisc'));
         $poindisc   = array_sum(array_column($diskon,'poindisc'));
@@ -556,7 +588,11 @@ class Report extends BaseController
         $proval     = array_sum(array_column($produk,'value'));
 
         // if want to get net sales with trx disc and without bundle value
-        $netsales = $proval - ($trxdisc + $poindisc);
+        if(!empty($proval)){
+            $netsales = $proval - ($trxdisc + $poindisc);
+        }else{
+            $netsales = "0";
+        }
 
         // Total Stock
         $stoktotal = array_sum(array_column($produk,'qty'));
@@ -580,6 +616,7 @@ class Report extends BaseController
         $data['bundletotal']    = $bundletotal;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
+        $data['pager']          = $ProductModel->pager;
 
         return view('Views/report/product', $data);
     }
@@ -664,6 +701,7 @@ class Report extends BaseController
         }
         $admin = array_values($admin);
 
+
         // parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.presencereport');
@@ -679,16 +717,27 @@ class Report extends BaseController
     public function presencedetail($id)
     {
         // Calling Model
-        $PresenceModel     = new PresenceModel;
+        $PresenceModel      = new PresenceModel;
+        $pager              = \Config\Services::pager();
 
-        // Populating Data
-        $presences         = $PresenceModel->where('userid',$id)->find();
+        $datas = explode('-', $id);
+       
+        $iduser = $datas[0];
+        $starts = $datas[1];
+        $ends   = $datas[2];
 
+        if (!empty($iduser)) {
+            $presences  = $PresenceModel->where('datetime >=', $starts)->where('datetime <=', $ends)->where('userid',$iduser)->orderBy('id', 'DESC')->paginate(20, 'reportpresecendet');
+        } else {
+            $presences  = $PresenceModel->where('datetime >=', $starts)->where('datetime <=', $ends)->orderBy('id', 'DESC')->paginate(20, 'reportpresencedet');
+        }
+  
         // parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.presence');
         $data['description']    = lang('Global.presencedetailListDesc'); 
         $data['presences']      = $presences;
+        $data['pager']          = $PresenceModel->pager;
 
         return view('Views/report/presencedetail',$data);
     }
@@ -783,8 +832,18 @@ class Report extends BaseController
         $DebtModel          = new DebtModel;
         $OutletModel        = new OutletModel;
 
+        $this->db       = \Config\Database::connect();
+        $pager          = \Config\Services::pager();
+
+        // Search Filter
+        $inputsearch    = $this->request->getGet('search');
+        if (!empty($inputsearch)) {
+            $members   = $MemberModel->like('name', $inputsearch)->orderBy('id', 'DESC')->paginate(20, 'reportmember');
+        } else {
+            $members   = $MemberModel->orderBy('id', 'DESC')->paginate(20, 'reportmember');
+        }
+
         // Populating Data
-        $members            = $MemberModel->findAll();
         $debts              = $DebtModel->findAll();
 
         if ($this->data['outletPick'] != null) {
@@ -1007,6 +1066,23 @@ class Report extends BaseController
         $brands     = $BrandModel->findAll();
         $bundles    = $BundleModel->findAll();
 
+        // Search Category
+        $this->db       = \Config\Database::connect();
+        $validation     = \Config\Services::validation();
+        $this->builder  = $this->db->table('category');
+        $this->config   = config('Auth');
+        $this->auth     = service('authentication');
+        $pager          = \Config\Services::pager();
+
+        // Search Filter
+        $inputsearch    = $this->request->getGet('search');
+        if (!empty($inputsearch)) {
+            $category   = $CategoryModel->like('name', $inputsearch)->orderBy('id', 'DESC')->paginate(20, 'reportcategory');
+        } else {
+            $category   = $CategoryModel->orderBy('id', 'DESC')->paginate(20, 'reportcategory');
+        }
+
+
         // Daterange Filter System
         $input = $this->request->getGet('daterange');
         
@@ -1076,7 +1152,7 @@ class Report extends BaseController
                                         foreach ($category as $cat){
                                             if($product['catid'] === $cat['id']){
                                                 $variantvalue[] = [
-                                                    'id'            => $cat['id'],
+                                                    'id'            => $product['catid'],
                                                     'trxid'         => $transaction['id'],
                                                     'product'       => $product['name'],
                                                     'category'      => $cat['name'],
@@ -1109,17 +1185,16 @@ class Report extends BaseController
         $bundletotal = array_sum(array_column($bundleval,'value'));
 
         $produk = [];
-
         foreach ($variantvalue as $vars) {
-            if (!isset($produk[$vars['id'].$vars['product']])) {
-                $produk[$vars['id'].$vars['product']] = $vars;
+            if (!isset($produk[$vars['id'].$vars['category']])) {
+                $produk[$vars['id'].$vars['category']] = $vars;
             } else {
-                $produk[$vars['id'].$vars['product']]['value'] += $vars['value'];
-                $produk[$vars['id'].$vars['product']]['qty'] += $vars['qty'];
+                $produk[$vars['id'].$vars['category']]['value'] += $vars['value'];
+                $produk[$vars['id'].$vars['category']]['qty'] += $vars['qty'];
             }
         }
-
         $produk = array_values($produk);
+
 
         // Total Stock
         $stoktotal = array_sum(array_column($produk,'qty'));
@@ -1138,6 +1213,7 @@ class Report extends BaseController
         $data['bundles']        = $bundletotal;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
+        $data['pager']          = $CategoryModel->pager;
 
         return view('Views/report/category', $data);
     }

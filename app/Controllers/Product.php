@@ -62,7 +62,11 @@ class Product extends BaseController
         }
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
-        $variant    = $VariantModel->whereIn('productid', $productid)->find();
+        if (!empty($productid)) {
+            $variant    = $VariantModel->whereIn('productid', $productid)->find();
+        } else {
+            $variant = array();
+        }
         $variantid  = array();
         foreach ($variant as $var) {
             $variantid[] = $var['id'];
@@ -108,53 +112,21 @@ class Product extends BaseController
         }
 
         if ($this->data['outletPick'] === null) {
-            $stock      = $StockModel->whereIn('variantid', $variantid)->find();
+            if (!empty($variantid)) {
+                $stock      = $StockModel->whereIn('variantid', $variantid)->find();
+            } else {
+                $stock = array();
+            }
             $stockcount = array_sum(array_column($StockModel->findAll(), 'qty'));
         } else {
-            $stock      = $StockModel->whereIn('variantid', $variantid)->where('outletid', $this->data['outletPick'])->find();
+            if (!empty($variantid)) {
+                $stock      = $StockModel->whereIn('variantid', $variantid)->where('outletid', $this->data['outletPick'])->find();
+            } else {
+                $stock = array();
+            }
             $stockcount = array_sum(array_column($StockModel->where('outletid', $this->data['outletPick'])->find(), 'qty'));
         }       
         
-
-        // $productval = [];
-        // foreach ($stock as $stk){
-        //     foreach ($variantchart as $var){
-        //             foreach ($productchart as $product){
-        //                 foreach ($brand as $bran){
-        //                     foreach ($category as $cat){
-        //                         if($product['catid'] === $cat['id'] && $product['brandid'] === $bran['id'] && $var['productid'] == $product['id'] && $stk['variantid'] === $var['id']){
-        //                         $productval [] = [
-        //                             'id'                => $cat['id'],
-        //                             'catname'           => $cat['name'],
-        //                             'prodname'          => $product['name'],
-        //                             'desc'              => $product['description'],
-        //                             'stock'             => $stk['qty'],                                
-        //                             'hargamodal'        => $stk['qty'] * $var['hargamodal'],                                
-        //                             'hargadasar'        => $stk['qty'] * ($var['hargajual'] + $var['hargadasar']),                                
-        //                         ];
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        
-        // $modal = '';
-        // $produk = [];
-        // foreach ($productval as $vars) {
-        //     if (!isset($produk[$vars['id'].$vars['catname']])) {
-        //         $produk[$vars['id'].$vars['catname']] = $vars;
-        //     } else {
-        //         $produk[$vars['id'].$vars['catname']]['stock'] += $vars['stock'];
-        //         $produk[$vars['id'].$vars['catname']]['hargamodal'] += $vars['hargamodal'];
-        //         $produk[$vars['id'].$vars['catname']]['hargadasar'] += $vars['hargadasar'];
-        //         $modal = $produk[$vars['id'].$vars['catname']]['hargamodal'] += $vars['hargamodal'];
-        //     }
-        // }
-        // $produk = array_values($produk);
-        // $totstock = array_sum(array_column($produk,'stock'));
-        // $totproduct = count($produk);
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -166,10 +138,6 @@ class Product extends BaseController
         $data['brand']          = $brand;
         $data['variants']       = $variant;
         $data['stocks']         = $stock;
-        // $data['totstocks']      = $totstock;
-        // $data['totpro']         = $totproduct;
-        // $data['productschart']  = $produk;
-        // $data['modal']          = $modal;
         $data['pager']          = $ProductModel->pager;
         $data['productcount']   = $productcount;
         $data['stockcount']     = $stockcount;

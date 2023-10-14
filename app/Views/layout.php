@@ -296,9 +296,6 @@
                                         <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/customer')?'uk-active':''?>">
                                             <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/stockcategory')?'uk-active':''?>">
-                                            <a href="<?= base_url('report/stockcategory') ?>"><?=lang('Global.stockproduct');?></a>
-                                        </li>
                                     </ul>
                                 </li>
                             <?php endif ?>
@@ -450,9 +447,6 @@
                                 </li>
                                 <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/customer')?'uk-active':''?>">
                                     <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
-                                </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/stockcategory')?'uk-active':''?>">
-                                    <a href="<?= base_url('report/stockcategory') ?>"><?=lang('Global.stockproduct');?></a>
                                 </li>
                             </ul>
                         </li>

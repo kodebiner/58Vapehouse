@@ -785,9 +785,6 @@
                                 <li class="uk-h5 tm-h5">
                                     <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5">
-                                    <a href="<?= base_url('report/stockcategory') ?>"><?=lang('Global.stockproduct');?></a>
-                                </li>
                             </ul>
                         </li> 
                         <?php endif ?>

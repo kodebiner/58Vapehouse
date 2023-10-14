@@ -6,7 +6,6 @@
 <script type="text/javascript" src="js/moment.min.js"></script>
 <script type="text/javascript" src="js/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
-<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -43,37 +42,42 @@
     </div>
 </div>
 
-<table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-    <thead>
-        <tr>
-            <th class="uk-text-large uk-text-bold"><?=lang('Global.name')?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.transaction')?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.value')?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.debt')?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.phone')?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.detail')?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($customers as $customer){ ?>
-            <tr>
-                <td style="color:white;"><?=$customer['name']?></td>
-                <td class="uk-text-center" style="color:white;"><?=$customer['trx']?></td>
-                <td class="uk-text-center" style="color:white;"><?= "Rp. ".number_format($customer['value'],2,',','.');" ";?></td>
-                <td class="uk-text-center" style="color:white;"><?= "Rp. ".number_format($customer['debt'],2,',','.');" ";?></td>
-                <td class="uk-text-center" style="color:white;"><?="+62".$customer['phone']?></td>
-                <td class="uk-text-center"><a class="uk-icon-link uk-margin-small-right" uk-icon="icon: eye;" href="report/customerdetail/<?=$customer['id']?>"></a></td>
-            </tr>
-        <?php } ?>
-    </tbody>
-</table>
+<div uk-grid class="uk-flex-middle uk-margin-bottom">
+    <!-- Search Filter -->
+    <div class="uk-width-1-2@m">
+        <form class="uk-search uk-search-default" method="GET" action="report/customer" style="background-color: #fff; border-radius: 7px;">
+            <span uk-search-icon style="color: #000;"></span>
+            <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
+        </form>
+    </div>
+    <!-- End Search Filter -->
+</div>
 
-<!-- End Of Page Heading -->
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
+<div class="uk-overflow-auto">
+    <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
+        <thead>
+            <tr>
+                <th class="uk-text-large uk-text-bold"><?=lang('Global.name')?></th>
+                <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.transaction')?></th>
+                <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.value')?></th>
+                <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.debt')?></th>
+                <th class="uk-text-center uk-text-large uk-text-bold"><?=lang('Global.phone')?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($customers as $customer){ ?>
+                <tr>
+                    <td style="color:white;"><?=$customer['name']?></td>
+                    <td class="uk-text-center" style="color:white;"><?=$customer['trx']?></td>
+                    <td class="uk-text-center" style="color:white;"><?= "Rp. ".number_format($customer['value'],2,',','.');" ";?></td>
+                    <td class="uk-text-center" style="color:white;"><?= "Rp. ".number_format($customer['debt'],2,',','.');" ";?></td>
+                    <td class="uk-text-center" style="color:white;"><?="+62".$customer['phone']?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
+
 <?= view('Views/Auth/_message_block') ?>
 
 <?= $this->endSection() ?>

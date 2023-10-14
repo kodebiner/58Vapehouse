@@ -82,44 +82,56 @@
         <div id="piechart" ></div>
     </div>
 
-    <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-        <div class="uk-column-1-4">
-            <p class="uk-text-large  uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.sales')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p>
-            
-            <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($grosstotal,0,',','.');" ";?></p>
-
-            <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.transaction')?> : <?php echo $totalstock;?></p>
-
-            <p class="uk-text-large uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.bundle')?> : <?php echo $bundletotal;?></p>
+        <div uk-grid class="uk-flex-middle uk-margin-bottom">
+            <!-- Search Filter -->
+            <div class="uk-width-1-4@m">
+                <form class="uk-search uk-search-default" method="GET" action="report/product" style="background-color: #fff; border-radius: 7px;">
+                    <span uk-search-icon style="color: #000;"></span>
+                    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
+                </form>
+            </div>
+            <!-- End Search Filter -->
+            <div class="uk-width-1-4@m uk-text-left@m">
+                <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.sales')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p> 
+            </div>
+            <div class="uk-width-1-4@m uk-text-left@m">
+                <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($grosstotal,0,',','.');" ";?></p>
+            </div>
+            <div class="uk-width-1-4@m uk-text-left@m">
+                <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.transaction')?> : <?php echo $totalstock;?></p>
+            </div>
         </div>
-        <thead>
-            <tr>
-                <th><?=lang('Global.product')?></th>
-                <th><?=lang('Global.category')?></th>
-                <th><?=lang('Global.sales')?></th>
-                <th><?=lang('Global.gross')?></th>
-                <th class="uk-text-center"><?=lang('Global.transaction')?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($products as $product ){ ?>
-                <tr>
-                    <td style="color:white;"><?=$product['product']?></td>
-                    <td style="color:white;"><?=$product['category']?></td>
-                    <td style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
-                    <td style="color:white;"><?php echo "Rp. ".number_format($product['gross'],0,',','.');" ";?></td>
-                    <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
 
-    <!-- End Of Page Heading -->
-    <script>
-        $(document).ready(function () {
-            $('#example').DataTable();
-        });
-    </script>
+        <div class="uk-overflow-auto">
+            <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
+                <div class="uk-column-1-3@m">
+                </div>
+                <thead>
+                    <tr>
+                        <th><?=lang('Global.product')?></th>
+                        <th><?=lang('Global.category')?></th>
+                        <th><?=lang('Global.sales')?></th>
+                        <th><?=lang('Global.gross')?></th>
+                        <th class="uk-text-center"><?=lang('Global.transaction')?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($products as $product ){ ?>
+                        <tr>
+                            <td style="color:white;"><?=$product['product']?></td>
+                            <td style="color:white;"><?=$product['category']?></td>
+                            <td style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
+                            <td style="color:white;"><?php echo "Rp. ".number_format($product['gross'],0,',','.');" ";?></td>
+                            <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <div class="uk-light">
+                <?= $pager->links('reportproduct', 'front_full') ?>
+            </div>
+        </div>
+
     <?= view('Views/Auth/_message_block') ?>
 
     <?= $this->endSection() ?>
