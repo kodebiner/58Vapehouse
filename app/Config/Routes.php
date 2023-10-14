@@ -190,6 +190,7 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
 
     // Purchase
     $routes->get('purchase', 'Stock::indexpurchase', ['filter' => 'role:owner']);
+    $routes->post('product', 'Stock::product', ['filter' => 'role:owner']);
     $routes->post('createpur', 'Stock::createpur', ['filter' => 'role:owner']);
     $routes->post('confirm/(:num)', 'Stock::confirmpur/$1', ['filter' => 'role:owner']);
     $routes->post('updatepur/(:num)', 'Stock::updatepur/$1', ['filter' => 'role:owner']);
