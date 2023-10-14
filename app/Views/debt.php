@@ -240,12 +240,4 @@
     <!-- Modal Pay Proof End -->
 <?php } ?>
 <!-- Modal Pay Debt End -->
-
-<!-- Search Engine Script -->
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
-<!-- Search Engine Script End -->
 <?= $this->endSection() ?>

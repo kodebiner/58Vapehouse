@@ -53,17 +53,22 @@ class Stock extends BaseController
             $totalstock     = array_sum(array_column($StockModel->where('outletid', $this->data['outletPick'])->find(), 'qty'));
         }
 
-        $variantid   = array();
-        foreach ($stock as $stok) {
-            $variantid[]  = $stok['variantid'];
-        }
-        $variants           = $VariantModel->find($variantid);
+        if (!empty($stock)) {
+            $variantid   = array();
+            foreach ($stock as $stok) {
+                $variantid[]  = $stok['variantid'];
+            }
+            $variants           = $VariantModel->find($variantid);
 
-        $productid = array();
-        foreach ($variants as $variant) {
-            $productid[]    = $variant['productid'];
+            $productid = array();
+            foreach ($variants as $variant) {
+                $productid[]    = $variant['productid'];
+            }
+            $products           = $ProductModel->find($productid);
+        } else {
+            $products = array();
+            $variants = array();
         }
-        $products           = $ProductModel->find($productid);
 
         $totalcap = array();
         $capbuilder     = $db->table('stock');
@@ -94,88 +99,44 @@ class Stock extends BaseController
         return view ('Views/stock', $data);
     }
 
-    // Restock
-    public function restock()
-    {
-        // Calling Model
-        $StockModel     = new StockModel;
-        $VariantModel   = new VariantModel;
-        $OldStockModel  = new OldStockModel;
-
-        // initialize
-        $input = $this->request->getPost();
-
-        // Finding Total Stock
-        $Stocks = $StockModel->where('variantid', $input['variant'])->find();
-        $totalstock = 0;
-        foreach ($Stocks as $stock) {
-            $totalstock += $stock['qty'];
-        }
-
-        // Finding new price
-        $variant    = $VariantModel->find($input['variant']);
-        $hargadasar = (($variant['hargadasar']*$totalstock)+($input['hargadasar']*$input['qty']))/($totalstock+$input['qty']);
-        $hargamodal = (($variant['hargamodal']*$totalstock)+($input['hargamodal']*$input['qty']))/($totalstock+$input['qty']);
-
-        // Update Old Variant Price
-        $oldstock = $OldStockModel->where('variantid', $variant['id'])->first();
-        $updateoldstock = [
-            'id'            => $oldstock['id'],
-            'hargadasar'    => $variant['hargadasar'],
-            'hargamodal'    => $variant['hargamodal']
-        ];
-        $OldStockModel->save($updateoldstock);
-
-        // Updating variant
-        $var        = [
-            'id'            => $input['variant'],
-            'hargadasar'    => $hargadasar,
-            'hargamodal'    => $hargamodal,
-            
-        ];  
-        $VariantModel->save($var);
-
-        // date time stamp
-        $date=date_create();
-        $tanggal = date_format($date,'Y-m-d H:i:s');
-
-        $stocks = $StockModel->where('variantid',$input['variant'])->where('outletid',$input['outlet'])->first();
-        $stk = [
-            'id'         => $stocks['id'],
-            'qty'        => $input['qty'],
-            'restock'    => $tanggal,
-        ];
-
-        // Save Data Stok
-        $StockModel->save($stk);
-
-        // return
-        return redirect()->back()->with('message', lang('Global.saved'));
-    }
-
     // Stock Cycle
-    public function stockcycle() {
+    public function stockcycle()
+    {
+        $pager      = \Config\Services::pager();
 
         // Calling Model
         $StockModel     = new StockModel;
         $VariantModel   = new VariantModel;
+        $ProductModel   = new ProductModel;
 
         // Find Data
         $data           = $this->data;
-        $variants       = $VariantModel->findAll();
         
         if ($this->data['outletPick'] === null) {
-            $stock      = $StockModel->orderBy('id', 'DESC')->findAll();
+            $stock      = $StockModel->orderBy('restock', 'DESC')->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->paginate(20, 'stockcycle');
         } else {
-            $stock      = $StockModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
+            $stock      = $StockModel->orderBy('restock', 'DESC')->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockcycle');
         }
+
+        $varid  = array();
+        foreach ($stock as $stok) {
+            $varid[]    = $stok['variantid'];
+        }
+        $variants       = $VariantModel->find($varid);
+
+        $prodid = array();
+        foreach ($variants as $var) {
+            $prodid[]   = $var['productid'];
+        }
+        $products   = $ProductModel->find($prodid);
 
         // Parsing data to view
         $data['title']          = lang('Global.stockCycle');
         $data['description']    = lang('Global.stockCycleDesc');
         $data['stocks']         = $stock;
         $data['variants']       = $variants;
-
+        $data['products']       = $products;
+        $data['pager']          = $StockModel->pager;
 
         return view ('Views/stockcycle', $data);
     }
@@ -257,6 +218,9 @@ class Stock extends BaseController
     // Purchase Stock
     public function indexpurchase()
     {
+        $db         = \Config\Database::connect();
+        $pager      = \Config\Services::pager();
+
         // Calling Model
         $SupplierModel              = new SupplierModel;
         $ProductModel               = new ProductModel;
@@ -268,20 +232,42 @@ class Stock extends BaseController
 
         // Find Data
         $data                       = $this->data;
+
+        if ($this->data['outletPick'] === null) {
+            $purchases              = $PurchaseModel->orderBy('id', 'DESC')->paginate(20, 'purchase');
+        } else {
+            $purchases              = $PurchaseModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->paginate(20, 'purchase');
+        }
+
         $suppliers                  = $SupplierModel->findAll();
-        $products                   = $ProductModel->findAll();
-        $variants                   = $VariantModel->findAll();
         $outlets                    = $OutletModel->findAll();
         $users                      = $UserModel->findAll();
-        $purchasedetails            = $PurchasedetailModel->findAll();
+        $productlist                = $ProductModel->findAll();
 
-        // get outlet
-        if ($this->data['outletPick'] === null) {
-            $purchases              = $PurchaseModel->orderBy('id', 'DESC')->findAll();
+        if (!empty($purchases)) {
+            $purchaseid = array();
+            foreach ($purchases as $purchase) {
+                $purchaseid[]   = $purchase['id'];
+            }
+            $purchasedetails    = $PurchasedetailModel->whereIn('purchaseid', $purchaseid)->find();
+
+            $varid = array();
+            foreach ($purchasedetails as $purdet) {
+                $varid[]    = $purdet['variantid'];
+            }
+            $variants       = $VariantModel->find($varid);
+
+            $prodid = array();
+            foreach ($variants as $var) {
+                $prodid[]   = $var['productid'];
+            }
+            $products       = $ProductModel->find($prodid);
         } else {
-            $out                    = $this->data['outletPick'];
-            $purchases              = $PurchaseModel->where("outletid = {$out} OR outletid='0'")->orderBy('outletid', 'ASC')->find();
+            $purchasedetails    = array();
+            $variants           = array();
+            $products           = array();
         }
+        // dd($purchasedetails);
 
         // Parsing data to view
         $data['title']              = lang('Global.purchase');
@@ -290,11 +276,52 @@ class Stock extends BaseController
         $data['purchasedetails']    = $purchasedetails;
         $data['suppliers']          = $suppliers;
         $data['products']           = $products;
+        $data['productlist']        = $productlist;
         $data['variants']           = $variants;
         $data['outlets']            = $outlets;
         $data['users']              = $users;
+        $data['pager']              = $PurchaseModel->pager;
 
         return view ('Views/purchase', $data);
+    }
+
+    public function product()
+    {
+        // Calling Model
+        $VariantModel   = new VariantModel();
+        $StockModel     = new StockModel();
+        $ProductModel   = new ProductModel();
+
+        // initialize
+        $input      = $this->request->getPost('id');
+
+        $product    = $ProductModel->find($input);
+
+        $variants   = $VariantModel->where('productid', $input)->find();
+
+        $variantid = array();
+        foreach ($variants as $var) {
+            $variantid[]    = $var['id'];
+        }
+
+        $stocks     = $StockModel->whereIn('variantid', $variantid)->where('outletid', $this->data['outletPick'])->find();
+
+        $return = array();
+        foreach ($stocks as $stock) {
+            foreach ($variants as $variant) {
+                if ($stock['variantid'] === $variant['id']) {
+                    $return[] = [
+                        'id'        => $variant['id'],
+                        'name'      => $product['name'].' - '.$variant['name'],
+                        'qty'       => $stock['qty'],
+                        'price'     => $variant['hargadasar'],
+
+                    ];
+                }
+            }
+        }
+        
+        die(json_encode($return));
     }
 
     public function createpur()
@@ -389,16 +416,18 @@ class Stock extends BaseController
             $PurchasedetailModel->save($datadetail);
         }
 
-        foreach ($input['addtotalpcs'] as $var => $val) {
-            $adddata = [
-                'purchaseid'    => $id,
-                'variantid'     => $var,
-                'qty'           => $val,
-                'price'         => $input['addbprice'][$var],
-            ];
+        if (isset($input['addtotalpcs'])) {
+            foreach ($input['addtotalpcs'] as $var => $val) {
+                $adddata = [
+                    'purchaseid'    => $id,
+                    'variantid'     => $var,
+                    'qty'           => $val,
+                    'price'         => $input['addbprice'][$var],
+                ];
 
-            // Save Data Purchase Detail
-            $PurchasedetailModel->save($adddata);
+                // Save Data Purchase Detail
+                $PurchasedetailModel->save($adddata);
+            }
         }
 
         // return

@@ -2,7 +2,6 @@
 
 <?= $this->section('extraScript') ?>
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -165,13 +164,4 @@
         });
     });
 </script>
-
-<!-- Search Engine Script -->
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
-<!-- Search Engine Script End -->
-
 <?= $this->endSection() ?>

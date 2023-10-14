@@ -4,7 +4,6 @@
 
 <link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
 <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -1114,14 +1113,4 @@
     </div>
 <?php } ?>
 <!-- End of Products Detail -->
-
-<!-- Search Engine Script -->
-<script>
-    $(document).ready(function () {
-        $.noConflict();
-        new DataTable('#example', {});
-        
-    });
-</script>
-<!-- Search Engine Script End -->
 <?= $this->endSection() ?>

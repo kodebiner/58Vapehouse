@@ -175,6 +175,7 @@ return [
     'totalproductsales' => 'Total Produk Terjual',
     'stockremind'       => 'Jumlah Stok Mulai Menipis',
     'saleremind'        => 'Produk tidak terjual selama',
+    'restockremind'     => 'Stok ditambahkan',
     'day'               => 'hari',
     'seedetails'        => 'Lihat Detail',
     'salesdetails'      => 'Detail Penjualan',

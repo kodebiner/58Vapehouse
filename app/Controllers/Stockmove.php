@@ -25,6 +25,8 @@ Class Stockmove extends BaseController
         $db         = \Config\Database::connect();
         $pager      = \Config\Services::pager();
 
+        // JANGAN LUPA DATE RANGE
+
         // Calling Database
         $ProductModel           = new ProductModel();
         $VariantModel           = new VariantModel();
@@ -123,8 +125,8 @@ Class Stockmove extends BaseController
         $input = $this->request->getPost();
 
         // date time stamp
-        $date=date_create();
-        $tanggal = date_format($date,'Y-m-d H:i:s');
+        $date       = date_create();
+        $tanggal    = date_format($date,'Y-m-d H:i:s');
 
         // Stock Movement
         foreach ($input['totalpcs'] as $varid => $value) {
@@ -157,8 +159,9 @@ Class Stockmove extends BaseController
             foreach ($Stocks as $stock) {
                 $hasilplus = $stock['qty'] += $plusstock;
                 $stok = [
-                    'id'    => $stock['id'],
-                    'qty'   =>  $hasilplus,
+                    'id'        => $stock['id'],
+                    'qty'       => $hasilplus,
+                    'restock'   => $tanggal,
                 ];
             }
             $Stock->save($stok);

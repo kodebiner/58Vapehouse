@@ -382,12 +382,4 @@
     </div>
 <?php } ?>
 <!-- Modal Detail End -->
-
-<!-- Search Engine Script -->
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
-<!-- Search Engine Script End -->
 <?= $this->endSection() ?>

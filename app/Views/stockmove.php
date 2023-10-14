@@ -16,6 +16,8 @@
             <h3 class="tm-h3"><?=lang('Global.stockmoveList')?></h3>
         </div>
 
+        <!-- JANGAN LUPA DATE RANGE -->
+
         <?php if ($outletPick != null) { ?>
             <!-- Button Trigger Modal Add -->
             <div class="uk-width-1-2@m uk-text-right@m">
@@ -157,7 +159,7 @@
 
                             var cart = document.createElement('a');
                             cart.setAttribute('class', 'uk-icon-button');
-                            cart.setAttribute('uk-icon', 'cart');
+                            cart.setAttribute('uk-icon', 'plus');
                             cart.setAttribute('onclick', 'createVar('+variantarray[k]['id']+')');
 
                             varcontainer.appendChild(varname);

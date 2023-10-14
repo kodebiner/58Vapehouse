@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
 <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
-<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
 <?= $this->endSection() ?>
 
@@ -56,124 +55,7 @@
                         </div>
                     </div>
 
-                    <?php foreach ($products as $product) {?>
-                        <div id="tablevariant<?= $product['id']; ?>" hidden>
-                            <div class="uk-overflow-auto uk-margin-bottom">
-                                <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
-                                    <thead>
-                                        <tr>
-                                            <th class="uk-text-emphasis uk-width-medium"><?=lang('Global.variant')?></th>
-                                            <th class="uk-text-emphasis uk-width-small"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($variants as $variant) {?>
-                                            <?php if ($variant['productid'] === $product['id']) {
-                                                $VarName    = $variant['name'];
-                                                $CombName   = $product['name'].' - '.$VarName;
-                                                $basePrice  = $variant['hargadasar']; ?>
-                                            
-                                                <tr>
-                                                    <td class="uk-width-medium"><?= $VarName; ?></td>
-                                                    <td class="uk-width-small">
-                                                        <div>
-                                                            <a class="uk-icon-button" uk-icon="cart" onclick="createVar<?= $variant['id'] ?>()"></a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-
-                                                <script type="text/javascript">
-                                                    var elemexist = document.getElementById('product<?=$variant['id']?>');
-                                                    function createVar<?=$variant['id']?>() {
-                                                        document.getElementById('tablevariant<?= $product['id']; ?>').setAttribute('hidden', '');
-
-                                                        var count = 1;
-
-                                                        if ( $( "#product<?=$variant['id']?>" ).length ) {
-                                                            alert('<?=lang('Global.readyAdd');?>');
-                                                        } else {
-                                                            let minval = count;
-
-                                                            const products = document.getElementById('tableproduct');
-                                                            
-                                                            const productgrid = document.createElement('div');
-                                                            productgrid.setAttribute('id', 'product<?=$variant['id']?>');
-                                                            productgrid.setAttribute('class', 'uk-margin-small');
-                                                            productgrid.setAttribute('uk-grid', '');
-
-                                                            const varcontainer = document.createElement('div');
-                                                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
-                                                                                            
-                                                            const varname = document.createElement('div');
-                                                            varname.setAttribute('id','var<?=$variant['id']?>');
-                                                            varname.setAttribute('class','');
-                                                            varname.innerHTML = '<?= $CombName ?>';
-
-                                                            const totalcontainer = document.createElement('div');
-                                                            totalcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
-
-                                                            const total = document.createElement('input');
-                                                            total.setAttribute('type', 'number');
-                                                            total.setAttribute('id', "totalpcs[<?=$variant['id']?>]");
-                                                            total.setAttribute('name', "totalpcs[<?=$variant['id']?>]");
-                                                            total.setAttribute('class', 'uk-input');
-                                                            total.setAttribute('value', '1');
-                                                            total.setAttribute('required', '');
-
-                                                            const pcs = document.createElement('div');
-                                                            pcs.setAttribute('class', 'uk-margin-small-left');
-                                                            pcs.innerHTML = 'Pcs';
-
-                                                            const pricecontainer = document.createElement('div');
-                                                            pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
-
-                                                            const price = document.createElement('input');
-                                                            price.setAttribute('type', 'number');
-                                                            price.setAttribute('id', "bprice[<?=$variant['id']?>]");
-                                                            price.setAttribute('name', "bprice[<?=$variant['id']?>]");
-                                                            price.setAttribute('class', 'uk-input');
-                                                            price.setAttribute('value', '<?= $basePrice; ?>');
-                                                            price.setAttribute('required', '');
-
-                                                            const subtotcontainer = document.createElement('div');
-                                                            subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
-
-                                                            const subtotal = document.createElement('div');
-                                                            subtotal.setAttribute('id', "subtotal<?=$variant['id']?>");
-                                                            subtotal.setAttribute('class', 'subvariant');
-
-                                                            totalprice();
-                                                            total.addEventListener('change', totalprice);
-                                                            price.addEventListener('change', totalprice);
-
-                                                            function totalprice() {
-                                                                var varprice = price.value;
-                                                                var varqty = total.value;
-                                                                var subprice = varprice * varqty;
-                                                                subtotal.setAttribute('value', subprice);
-                                                                subtotal.innerHTML = subprice;
-                                                            }
-
-                                                            varcontainer.appendChild(varname);
-                                                            totalcontainer.appendChild(total);
-                                                            totalcontainer.appendChild(pcs);
-                                                            pricecontainer.appendChild(price);
-                                                            subtotcontainer.appendChild(subtotal);
-                                                            productgrid.appendChild(varcontainer);
-                                                            productgrid.appendChild(totalcontainer);
-                                                            productgrid.appendChild(pricecontainer);
-                                                            productgrid.appendChild(subtotcontainer);
-                                                            products.appendChild(productgrid);
-                                                        }
-                                                    }
-                                                </script>
-                                            <?php } ?>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    <?php } ?>
+                    <div id="tablevariant"></div>
 
                     <div class="uk-margin-small" uk-grid>
                         <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
@@ -232,27 +114,163 @@
     // Autocomplete Product
     $(function() {
         var productList = [
-            <?php foreach ($products as $product) {
+            <?php foreach ($productlist as $product) {
                 echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
-            }?>
+            } ?>
         ];
         $("#productname").autocomplete({
             source: productList,
             select: function(e, i) {
-                //$("#productid").val(i.item.idx);
-                if (i.item.idx != 0) {
-                    var products = <?php echo json_encode($products); ?>;
-                    for (var x = 0; x < products.length; x++) {
-                        document.getElementById('tablevariant'+products[x]['id']).setAttribute('hidden', '');
-                        if (products[x]['id'] == i.item.idx) {
-                            document.getElementById('tablevariant'+products[x]['id']).removeAttribute('hidden');
+                var data = { 'id' : i.item.idx };
+                $.ajax({
+                    url:"stock/product",
+                    method:"POST",
+                    data: data,
+                    dataType: "json",
+                    error:function() {
+                        console.log('error', arguments);
+                    },
+                    success:function() {
+                        console.log('success', arguments);
+                        document.getElementById('tablevariant').removeAttribute('hidden');
+                        var elements = document.getElementById('variantlist');
+                        if (elements){
+                            elements.remove();
                         }
-                    }
-                }
+                        var products = document.getElementById('tablevariant');
+                        
+                        var productgrid = document.createElement('div');
+                        productgrid.setAttribute('id', 'variantlist');
+                        productgrid.setAttribute('class', 'uk-padding uk-padding-remove-vertical');
+                        productgrid.setAttribute('uk-grid', '');
+
+                        variantarray = arguments[0];
+
+                        for (k in variantarray) {
+                            //alert(variantarray[k]['name']);
+                            var varcontainer = document.createElement('div');
+                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2 uk-margin-small');
+                                                            
+                            var varname = document.createElement('div');
+                            varname.setAttribute('class','');
+                            varname.innerHTML = variantarray[k]['name'];
+
+                            var cartcontainer = document.createElement('div');
+                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2 uk-margin-small');
+
+                            var cart = document.createElement('a');
+                            cart.setAttribute('class', 'uk-icon-button');
+                            cart.setAttribute('uk-icon', 'cart');
+                            cart.setAttribute('onclick', 'createVar('+variantarray[k]['id']+')');
+
+                            varcontainer.appendChild(varname);
+                            cartcontainer.appendChild(cart);
+                            productgrid.appendChild(varcontainer);
+                            productgrid.appendChild(cartcontainer);
+                        };
+                        
+                        products.appendChild(productgrid);
+                    },
+                })
             },
             minLength: 2
         });
     });
+    function createVar(id) {
+        for (k in variantarray) {
+            if (variantarray[k]['id'] == id) {
+                if (variantarray[k]['qty'] != "0") {
+                    document.getElementById('variantlist').remove();
+                    var elemexist = document.getElementById('product'+variantarray[k]['id']);
+                    document.getElementById('tablevariant').setAttribute('hidden', '');
+                    var count = 1;
+                    if ( $( "#product"+variantarray[k]['id'] ).length ) {
+                        alert('<?=lang('Global.readyAdd');?>');
+                    } else {
+                        let minval = count;
+                        var prods = document.getElementById('tableproduct');
+                                                    
+                        var pgrid = document.createElement('div');
+                        pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
+                        pgrid.setAttribute('class', 'uk-margin-small');
+                        pgrid.setAttribute('uk-grid', '');
+
+                        var vcontainer = document.createElement('div');
+                        vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                        
+                        var vname = document.createElement('div');
+                        vname.setAttribute('id','var'+variantarray[k]['id']);
+                        vname.setAttribute('class','');
+                        vname.innerHTML = variantarray[k]['name'];
+
+                        var tcontainer = document.createElement('div');
+                        tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                        var tot = document.createElement('input');
+                        tot.setAttribute('type', 'number');
+                        tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
+                        tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
+                        tot.setAttribute('class', 'uk-input');
+                        tot.setAttribute('value', '1');
+                        tot.setAttribute('required', '');
+
+                        var pieces = document.createElement('div');
+                        pieces.setAttribute('class', 'uk-margin-small-left');
+                        pieces.innerHTML = 'Pcs';
+
+                        var pricecontainer = document.createElement('div');
+                        pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                        var price = document.createElement('input');
+                        price.setAttribute('type', 'number');
+                        price.setAttribute('id', "bprice["+variantarray[k]['id']+"]");
+                        price.setAttribute('name', "bprice["+variantarray[k]['id']+"]");
+                        price.setAttribute('class', 'uk-input');
+                        price.setAttribute('value', variantarray[k]['price']);
+                        price.setAttribute('required', '');
+
+                        var subtotcontainer = document.createElement('div');
+                        subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+
+                        var subtotal = document.createElement('div');
+                        subtotal.setAttribute('id', "subtotal"+variantarray[k]['id']+"");
+                        subtotal.setAttribute('class', 'subvariant');
+
+                        totalprice();
+                        tot.addEventListener('change', totalprice);
+                        price.addEventListener('change', totalprice);
+
+                        function totalprice() {
+                            var varprice = price.value;
+                            var varqty = tot.value;
+                            var subprice = varprice * varqty;
+                            subtotal.setAttribute('value', subprice);
+                            subtotal.innerHTML = subprice;
+                        }
+
+                        vcontainer.appendChild(vname);
+                        tcontainer.appendChild(tot);
+                        tcontainer.appendChild(pieces);
+                        pricecontainer.appendChild(price);
+                        subtotcontainer.appendChild(subtotal);
+                        pgrid.appendChild(vcontainer);
+                        pgrid.appendChild(tcontainer);
+                        pgrid.appendChild(pricecontainer);
+                        pgrid.appendChild(subtotcontainer);
+                        prods.appendChild(pgrid);
+
+                        tot.addEventListener("change", function removeproduct() {
+                            if (tot.value == '0') {
+                                pgrid.remove();
+                            }
+                        });
+                    }
+                } else {
+                    alert('<?=lang('Global.alertstock');?>');
+                }
+            }
+        }
+    };
 
     $('#tableproduct').on('DOMSubtreeModified', function() {
         var prices = document.querySelectorAll(".subvariant");
@@ -275,7 +293,7 @@
 
 <!-- Table Of Content -->
 <div class="uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
                 <th class="uk-width-medium"><?=lang('Global.date')?></th>
@@ -367,17 +385,11 @@
             <?php } ?>
         </tbody>
     </table>
+    <div class="uk-light">
+        <?= $pager->links('purchase', 'front_full') ?>
+    </div>
 </div>
 <!-- Table Content End -->
-
-<!-- Script Data Table -->
-<script type="text/javascript">
-    // Data Table
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
-<!-- Script Data Table End -->
 
 <!-- Modal Confirm -->
 <?php foreach ($purchases as $purchase) { ?>
@@ -658,32 +670,7 @@ foreach ($purchases as $purchase) { ?>
                             </div>
                         </div>
 
-                        <!-- Autocomplete Product Edit Purchase -->
-                        <script type="text/javascript">
-                            $(function() {
-                                var eproductList = [
-                                    <?php foreach ($products as $product) {
-                                        echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
-                                    }?>
-                                ];
-                                $("#prodname<?= $purchase['id'] ?>").autocomplete({
-                                    source: eproductList,
-                                    select: function(e, i) {
-                                        if (i.item.idx != 0) {
-                                            var eproducts = <?php echo json_encode($products); ?>;
-                                            for (var x = 0; x < eproducts.length; x++) {
-                                                document.getElementById('tabvar<?= $purchase['id'] ?>'+eproducts[x]['id']).setAttribute('hidden', '');
-                                                if (eproducts[x]['id'] == i.item.idx) {
-                                                    document.getElementById('tabvar<?= $purchase['id'] ?>'+eproducts[x]['id']).removeAttribute('hidden');
-                                                }
-                                            }
-                                        }
-                                    },
-                                    minLength: 2
-                                });
-                            });
-                        </script>
-                        <!-- Autocomplete Product Edit Purchase End -->
+                        <div id="tabvar<?= $purchase['id'] ?>"></div>
 
                         <div class="uk-margin-small" uk-grid>
                             <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
@@ -700,7 +687,180 @@ foreach ($purchases as $purchase) { ?>
                             </div>
                         </div>
 
-                        <?php foreach ($products as $product) {?>
+                        <!-- Autocomplete Product Edit Purchase -->
+                        <script type="text/javascript">
+                            $(function() {
+                                var eproductList = [
+                                    <?php foreach ($productlist as $product) {
+                                        echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
+                                    }?>
+                                ];
+                                $("#prodname<?= $purchase['id'] ?>").autocomplete({
+                                    source: eproductList,
+                                    select: function(e, i) {
+                                        // if (i.item.idx != 0) {
+                                        //     var eproducts = <?php echo json_encode($products); ?>;
+                                        //     for (var x = 0; x < eproducts.length; x++) {
+                                        //         document.getElementById('tabvar<?= $purchase['id'] ?>'+eproducts[x]['id']).setAttribute('hidden', '');
+                                        //         if (eproducts[x]['id'] == i.item.idx) {
+                                        //             document.getElementById('tabvar<?= $purchase['id'] ?>'+eproducts[x]['id']).removeAttribute('hidden');
+                                        //         }
+                                        //     }
+                                        // }
+                                        var data = { 'id' : i.item.idx };
+                                        $.ajax({
+                                            url:"stock/product",
+                                            method:"POST",
+                                            data: data,
+                                            dataType: "json",
+                                            error:function() {
+                                                console.log('error', arguments);
+                                            },
+                                            success:function() {
+                                                console.log('success', arguments);
+                                                document.getElementById('tabvar<?= $purchase['id'] ?>').removeAttribute('hidden');
+                                                var elements = document.getElementById('variantliste');
+                                                if (elements){
+                                                    elements.remove();
+                                                }
+                                                var products = document.getElementById('tabvar<?= $purchase['id'] ?>');
+                                                
+                                                var productgrid = document.createElement('div');
+                                                productgrid.setAttribute('id', 'variantliste');
+                                                productgrid.setAttribute('class', 'uk-padding uk-padding-remove-vertical');
+                                                productgrid.setAttribute('uk-grid', '');
+
+                                                variantarray = arguments[0];
+
+                                                for (x in variantarray) {
+                                                    //alert(variantarray[k]['name']);
+                                                    var varcontainer = document.createElement('div');
+                                                    varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2 uk-margin-small');
+                                                                                    
+                                                    var varname = document.createElement('div');
+                                                    varname.setAttribute('class','');
+                                                    varname.innerHTML = variantarray[x]['name'];
+
+                                                    var cartcontainer = document.createElement('div');
+                                                    cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2 uk-margin-small');
+
+                                                    var cart = document.createElement('a');
+                                                    cart.setAttribute('class', 'uk-icon-button');
+                                                    cart.setAttribute('uk-icon', 'cart');
+                                                    cart.setAttribute('onclick', 'createVare<?=$purchase['id']?>('+variantarray[x]['id']+')');
+
+                                                    varcontainer.appendChild(varname);
+                                                    cartcontainer.appendChild(cart);
+                                                    productgrid.appendChild(varcontainer);
+                                                    productgrid.appendChild(cartcontainer);
+                                                };
+                                                
+                                                products.appendChild(productgrid);
+                                            },
+                                        })
+                                    },
+                                    minLength: 2
+                                });
+                            });
+                            function createVare<?=$purchase['id']?>(id) {
+                                for (x in variantarray) {
+                                    if (variantarray[x]['id'] == id) {
+                                        if (variantarray[x]['qty'] != "0") {
+                                            document.getElementById('variantliste').remove();
+                                            var eelemexist = document.getElementById('eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
+                                            document.getElementById('tabvar<?= $purchase['id'] ?>').setAttribute('hidden', '');
+                                            var count = 1;
+                                            if ( $( "#eproduct<?=$purchase['id']?>"+variantarray[x]['id'] ).length ) {
+                                                alert('<?=lang('Global.readyAdd');?>');
+                                            } else {
+                                                let minval = count;
+                                                var eprods = document.getElementById('tableprod<?= $purchase['id'] ?>');
+                                                                            
+                                                var epgrid = document.createElement('div');
+                                                epgrid.setAttribute('id', 'eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
+                                                epgrid.setAttribute('class', 'uk-margin-small');
+                                                epgrid.setAttribute('uk-grid', '');
+
+                                                var evcontainer = document.createElement('div');
+                                                evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                                                
+                                                var evname = document.createElement('div');
+                                                evname.setAttribute('id','var'+variantarray[x]['id']);
+                                                evname.setAttribute('class','');
+                                                evname.innerHTML = variantarray[x]['name'];
+
+                                                var etcontainer = document.createElement('div');
+                                                etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                                                var etot = document.createElement('input');
+                                                etot.setAttribute('type', 'number');
+                                                etot.setAttribute('id', "addtotalpcs["+variantarray[x]['id']+"]");
+                                                etot.setAttribute('name', "addtotalpcs["+variantarray[x]['id']+"]");
+                                                etot.setAttribute('class', 'uk-input');
+                                                etot.setAttribute('value', '1');
+                                                etot.setAttribute('required', '');
+
+                                                var epieces = document.createElement('div');
+                                                epieces.setAttribute('class', 'uk-margin-small-left');
+                                                epieces.innerHTML = 'Pcs';
+
+                                                var epricecontainer = document.createElement('div');
+                                                epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                                                var eprice = document.createElement('input');
+                                                eprice.setAttribute('type', 'number');
+                                                eprice.setAttribute('id', "addbprice["+variantarray[x]['id']+"]");
+                                                eprice.setAttribute('name', "addbprice["+variantarray[x]['id']+"]");
+                                                eprice.setAttribute('class', 'uk-input');
+                                                eprice.setAttribute('value', variantarray[x]['price']);
+                                                eprice.setAttribute('required', '');
+
+                                                var esubtotcontainer = document.createElement('div');
+                                                esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+
+                                                var esubtotal = document.createElement('div');
+                                                esubtotal.setAttribute('id', "esubtotal"+variantarray[x]['id']+"");
+                                                esubtotal.setAttribute('class', 'subvariant');
+
+                                                etotalprice();
+                                                etot.addEventListener('change', etotalprice);
+                                                eprice.addEventListener('change', etotalprice);
+
+                                                function etotalprice() {
+                                                    var varprice = eprice.value;
+                                                    var varqty = etot.value;
+                                                    var subprice = varprice * varqty;
+                                                    esubtotal.setAttribute('value', subprice);
+                                                    esubtotal.innerHTML = subprice;
+                                                }
+
+                                                evcontainer.appendChild(evname);
+                                                etcontainer.appendChild(etot);
+                                                etcontainer.appendChild(epieces);
+                                                epricecontainer.appendChild(eprice);
+                                                esubtotcontainer.appendChild(esubtotal);
+                                                epgrid.appendChild(evcontainer);
+                                                epgrid.appendChild(etcontainer);
+                                                epgrid.appendChild(epricecontainer);
+                                                epgrid.appendChild(esubtotcontainer);
+                                                eprods.appendChild(epgrid);
+
+                                                etot.addEventListener("change", function removeproduct() {
+                                                    if (etot.value == '0') {
+                                                        epgrid.remove();
+                                                    }
+                                                });
+                                            }
+                                        } else {
+                                            alert('<?=lang('Global.alertstock');?>');
+                                        }
+                                    }
+                                }
+                            };
+                        </script>
+                        <!-- Autocomplete Product Edit Purchase End -->
+
+                        <!-- <?php foreach ($products as $product) {?>
                             <div id="tabvar<?= $purchase['id'] ?><?= $product['id']; ?>" hidden>
                                 <div class="uk-overflow-auto uk-margin-bottom">
                                     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
@@ -817,7 +977,7 @@ foreach ($purchases as $purchase) { ?>
                                     </table>
                                 </div>
                             </div>
-                        <?php } ?>
+                        <?php } ?> -->
 
                         <?php
                         $tot[$purchase['id']] = array();
@@ -826,7 +986,7 @@ foreach ($purchases as $purchase) { ?>
                                 <?php foreach ($variants as $variant) { ?>
                                     <?php foreach ($products as $product) { ?>
                                         <?php if (($variant['id'] === $purdet['variantid']) && ($variant['productid'] === $product['id'])) { ?>
-                                            <div class="uk-margin-small" uk-grid>
+                                            <div id="eproduct<?=$purchase['id'].$variant['id']?>" class="uk-margin-small" uk-grid>
                                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
                                                     <div class=""><?= $product['name'].' - '.$variant['name'] ?></div>
                                                 </div>
@@ -891,7 +1051,7 @@ foreach ($purchases as $purchase) { ?>
     </div>
 
     <!-- Script Total Purchase -->
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         
         // Total Purchase
         $('#tableprod<?= $purchase['id'] ?>').on('DOMSubtreeModified', function() {
@@ -910,9 +1070,8 @@ foreach ($purchases as $purchase) { ?>
                 document.getElementById('finalprice<?= $purchase['id'] ?>').innerHTML = 'Rp. ' + subtotalvar + ',-';
             }
         });
-    </script>
+    </script> -->
     <!-- Script Total Purchase End -->
 <?php } ?>
 <!-- Modal Edit End -->
-
 <?= $this->endSection() ?>

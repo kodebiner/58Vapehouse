@@ -7,41 +7,108 @@ use App\Models\ProductModel;
 use App\Models\VariantModel;
 use App\Models\OutletModel;
 use App\Models\StockModel;
-use App\Models\MemberModel;
 use App\Models\StockAdjustmentModel;
 
 Class StockAdjustment extends BaseController{
 
-    public function index(){
+    public function index()
+    {
+        $pager      = \Config\Services::pager();
+
+        // JANGAN LUPA DATE RANGE
 
         // Calling Model
-        $Product    = new ProductModel;
-        $Variant    = new VariantModel;
-        $Outlet     = new OutletModel;
-        $Stock      = new StockModel;
-        $customers  = new MemberModel;
-        $StockAdj   = new StockAdjustmentModel;
+        $ProductModel           = new ProductModel;
+        $VariantModel           = new VariantModel;
+        $OutletModel            = new OutletModel;
+        $StockModel             = new StockModel;
+        $StockAdjustmentModel   = new StockAdjustmentModel;
 
-        //Populating Data
-        $stockadjust    = $StockAdj->orderBy('id', 'DESC')->findAll();
+        // Populating Data
+        if ($this->data['outletPick'] === null) {
+            $stockadjust     = $StockAdjustmentModel->orderBy('id', 'DESC')->paginate(20, 'stockadjustment');
+        } else {
+            $stockadjust     = $StockAdjustmentModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockadjustment');
+        }
+        $outlets        = $OutletModel->findAll();
+        $productlist    = $ProductModel->findAll();
+
+        if (!empty($stockadjust)) {
+            $stockid    = array();
+            $varid      = array();
+            foreach ($stockadjust as $stockadj) {
+                $stockid[]  = $stockadj['stockid'];
+                $varid[]    = $stockadj['variantid'];
+            }
+            $variants       = $VariantModel->find($varid);
+            $stocks         = $StockModel->find($stockid);
+    
+            $prodid = array();
+            foreach ($variants as $var) {
+                $prodid[]   = $var['productid'];
+            }
+            $products       = $ProductModel->find($prodid);
+        } else {
+            $variants       = array();
+            $stocks         = array();
+            $products       = array();
+        }
 
         // Parsing Data To View
         $data                   = $this->data;
         $data['title']          = lang('Global.stockadjList');
         $data['description']    = lang('Global.stockadjListDesc');
-        $data['products']       = $Product->findAll();
-        $data['variants']       = $Variant->findAll();
-        $data['outlets']        = $Outlet->findAll();
-        $data['stocks']         = $Stock->findAll();
-        $data['customers']      = $customers->findAll();
-        $data['stockadj']       = $StockAdj->findAll();
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['outlets']        = $outlets;
+        $data['stocks']         = $stocks;
+        $data['stockadj']       = $stockadjust;
+        $data['productlist']    = $productlist;
+        $data['pager']          = $StockAdjustmentModel->pager;
 
         return view ('Views/stockadjustment', $data);
-
     }
 
-    public function create(){
+    public function product()
+    {
+        // Calling Model
+        $VariantModel   = new VariantModel();
+        $StockModel     = new StockModel();
+        $ProductModel   = new ProductModel();
 
+        // initialize
+        $input      = $this->request->getPost('id');
+
+        $product    = $ProductModel->find($input);
+
+        $variants   = $VariantModel->where('productid', $input)->find();
+
+        $variantid = array();
+        foreach ($variants as $var) {
+            $variantid[]    = $var['id'];
+        }
+
+        $stocks     = $StockModel->whereIn('variantid', $variantid)->where('outletid', $this->data['outletPick'])->find();
+
+        $return = array();
+        foreach ($stocks as $stock) {
+            foreach ($variants as $variant) {
+                if ($stock['variantid'] === $variant['id']) {
+                    $return[] = [
+                        'id'    => $variant['id'],
+                        'name'  => $product['name'].' - '.$variant['name'],
+                        'qty'   => $stock['qty'],
+
+                    ];
+                }
+            }
+        }
+        
+        die(json_encode($return));
+    }
+
+    public function create()
+    {
         // Calling Model
         $ProductModel           = new ProductModel;
         $VariantModel           = new VariantModel;
@@ -51,50 +118,44 @@ Class StockAdjustment extends BaseController{
         
         // initialize
         $input = $this->request->getPost();
-  
-        // // Date
-        $tanggal = date("Y-m-d H:i:s");
 
-        if ((int)$input['type'] === 0){
-            $hasil = "+".$input['qty'];    
-        } else {
-            $hasil = "-".$input['qty'];
-        }
+        // date time stamp
+        $date       = date_create();
+        $tanggal    = date_format($date,'Y-m-d H:i:s');
 
-        $Stocks = $StockModel->where('variantid',$input['variant'])->where('outletid',$input['outlet'])->first();
         // Stock Adjusment 
-        $adj = [
-            'variantid' => $input['variant'],
-            'outletid'  => $input['outlet'],
-            'stockid'   => $Stocks['id'],
-            'type'      => $input['type'],
-            'date'      => date("Y-m-d H:i:s"),
-            'qty'       => $hasil,
-            'note'      => $input['note'],
-        ];
-        
-        $StockAdjModel->insert($adj);
-        
-        // Update Stock
-        $Stocks = $StockModel->where('variantid', $input['variant'])->where('outletid',$input['outlet'])->first();
-        $totalstock = $Stocks['qty'];
+        foreach ($input['totalpcs'] as $varid => $value) {
+            $Stocks = $StockModel->where('variantid', $varid)->where('outletid',$input['outlet'])->first();
+            $adj = [
+                'variantid' => $varid,
+                'outletid'  => $input['outlet'],
+                'stockid'   => $Stocks['id'],
+                'type'      => $input['type'],
+                'date'      => $tanggal,
+                'qty'       => $value,
+                'note'      => $input['note'],
+            ];
+            $StockAdjModel->insert($adj);
+            
+            // Update Stock
+            $Stocks = $StockModel->where('variantid', $varid)->where('outletid',$input['outlet'])->first();
+            $totalstock = $Stocks['qty'];
 
-        if ((int)$input['type'] === 0) {
-                $totalstock += $input['qty'];
-        } else {
-                $totalstock -= $input['qty']; 
-        }
+            if ((int)$input['type'] === 0) {
+                $totalstock += $value;
+            } else {
+                $totalstock -= $value; 
+            }
 
             $stok = [
-                'id'     => $Stocks['id'],
-                'qty'    => $totalstock,
-            ];  
-        $StockModel->save($stok);
+                'id'        => $Stocks['id'],
+                'qty'       => $totalstock,
+                'restock'   => $tanggal,
+            ];
+            $StockModel->save($stok);
+        }
         
         // return
         return redirect()->back()->with('message', lang('Global.saved'));
     }
-
 }
-
-?>

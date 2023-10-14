@@ -176,12 +176,4 @@
     </div>
 <?php endforeach; ?>
 <!-- End Of Modal Edit -->
-
-<!-- Search Engine Script -->
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
-<!-- Search Engine Script End -->
 <?= $this->endSection() ?>

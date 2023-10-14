@@ -175,6 +175,7 @@ return [
     'totalproductsales' => 'Total Sold Product',
     'stockremind'       => 'Stock Is Running Out',
     'saleremind'        => 'The product has not been sold for',
+    'restockremind'     => 'Stock added',
     'day'               => 'days',
     'seedetails'        => 'See Details',
     'salesdetails'      => 'Sales Details',
