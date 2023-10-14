@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
 <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
-<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
 <?= $this->endSection() ?>
 
@@ -44,11 +43,11 @@
                     <div class="uk-margin">
                         <label class="uk-form-label" for="origin"><?=lang('Global.origin')?></label>
                         <div class="uk-form-controls">
-                            <select class="uk-select" name="origin" id="sel_out">
+                            <select class="uk-select" name="origin">
                                 <option disabled><?=lang('Global.origin')?></option>
                                 <?php foreach ($outlets as $outlet) {
                                     if ($outlet['id'] === $outletPick) {
-                                        $checked = 'selected disabled';
+                                        $checked = 'selected';
                                     } else {
                                         $checked = 'disabled';
                                     } ?>
@@ -61,7 +60,7 @@
                     <div class="uk-margin">
                         <label class="uk-form-label" for="destination"><?=lang('Global.destination')?></label>
                         <div class="uk-form-controls">
-                            <select class="uk-select" name="destination" id="sel_out" required>
+                            <select class="uk-select" name="destination" required>
                                 <option value="" selected disabled><?=lang('Global.destination')?></option>
                                 <?php foreach ($outlets as $outlet) {
                                     if ($outlet['id'] === $outletPick) {
@@ -83,10 +82,6 @@
                     </div>
 
                     <div id="tablevariant"></div>
-
-                    <?php foreach ($products as $product) {?>
-                        <div class="prodvar" id="tablevariant" hidden></div>
-                    <?php } ?>
 
                     <div class="uk-margin-small uk-flex uk-flex-middle " uk-grid>
                         <div class="uk-width-1-2">
@@ -116,7 +111,7 @@
     // Autocomplete Product
     $(function() {
         var productList = [
-            <?php foreach ($products as $product) {
+            <?php foreach ($productlist as $product) {
                 echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
             } ?>
         ];
@@ -135,14 +130,14 @@
                     success:function() {
                         console.log('success', arguments);
                         document.getElementById('tablevariant').removeAttribute('hidden');
-                        var elements = document.getElementsByClassName('prodvar');
-                        while(elements.length > 0){
-                            elements[0].parentNode.removeChild(elements[0]);
+                        var elements = document.getElementById('prodvar');
+                        if (elements){
+                            elements.remove();
                         }
                         var products = document.getElementById('tablevariant');
                         
                         var productgrid = document.createElement('div');
-                        productgrid.setAttribute('id', 'variantlist');
+                        productgrid.setAttribute('id', 'prodvar');
                         productgrid.setAttribute('class', 'uk-padding uk-padding-remove-vertical');
                         productgrid.setAttribute('uk-grid', '');
 
@@ -181,51 +176,62 @@
     function createVar(id) {
         for (k in variantarray) {
             if (variantarray[k]['id'] == id) {
-                document.getElementById('variantlist').remove();
-                var elemexist = document.getElementById('product'+variantarray[k]['id']);
-                document.getElementById('tablevariant').setAttribute('hidden', '');
-                var count = 1;
-                if ( $( "#product"+variantarray[k]['id'] ).length ) {
-                    alert('<?=lang('Global.readyAdd');?>');
-                } else {
-                    let minval = count;
-                    var prods = document.getElementById('tableproduct');
-                                                
-                    var pgrid = document.createElement('div');
-                    pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
-                    pgrid.setAttribute('class', 'uk-margin-small');
-                    pgrid.setAttribute('uk-grid', '');
-
-                    var vcontainer = document.createElement('div');
-                    vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2');
+                if (variantarray[k]['qty'] != "0") {
+                    document.getElementById('prodvar').remove();
+                    var elemexist = document.getElementById('product'+variantarray[k]['id']);
+                    document.getElementById('tablevariant').setAttribute('hidden', '');
+                    var count = 1;
+                    if ( $( "#product"+variantarray[k]['id'] ).length ) {
+                        alert('<?=lang('Global.readyAdd');?>');
+                    } else {
+                        let minval = count;
+                        var prods = document.getElementById('tableproduct');
                                                     
-                    var vname = document.createElement('div');
-                    vname.setAttribute('id','var'+variantarray[k]['id']);
-                    vname.setAttribute('class','');
-                    vname.innerHTML = variantarray[k]['name'];
+                        var pgrid = document.createElement('div');
+                        pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
+                        pgrid.setAttribute('class', 'uk-margin-small');
+                        pgrid.setAttribute('uk-grid', '');
 
-                    var tcontainer = document.createElement('div');
-                    tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2');
+                        var vcontainer = document.createElement('div');
+                        vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2');
+                                                        
+                        var vname = document.createElement('div');
+                        vname.setAttribute('id','var'+variantarray[k]['id']);
+                        vname.setAttribute('class','');
+                        vname.innerHTML = variantarray[k]['name'];
 
-                    var tot = document.createElement('input');
-                    tot.setAttribute('type', 'number');
-                    tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
-                    tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
-                    tot.setAttribute('class', 'uk-input');
-                    tot.setAttribute('value', '1');
-                    tot.setAttribute('max', variantarray[k]['qty']);
-                    tot.setAttribute('required', '');
+                        var tcontainer = document.createElement('div');
+                        tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2');
 
-                    var pieces = document.createElement('div');
-                    pieces.setAttribute('class', 'uk-margin-small-left');
-                    pieces.innerHTML = 'Pcs';
+                        var tot = document.createElement('input');
+                        tot.setAttribute('type', 'number');
+                        tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
+                        tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
+                        tot.setAttribute('class', 'uk-input');
+                        tot.setAttribute('value', '1');
+                        tot.setAttribute('max', variantarray[k]['qty']);
+                        tot.setAttribute('min', minval);
+                        tot.setAttribute('required', '');
 
-                    vcontainer.appendChild(vname);
-                    tcontainer.appendChild(tot);
-                    tcontainer.appendChild(pieces);
-                    pgrid.appendChild(vcontainer);
-                    pgrid.appendChild(tcontainer);
-                    prods.appendChild(pgrid);
+                        var pieces = document.createElement('div');
+                        pieces.setAttribute('class', 'uk-margin-small-left');
+                        pieces.innerHTML = 'Pcs';
+
+                        vcontainer.appendChild(vname);
+                        tcontainer.appendChild(tot);
+                        tcontainer.appendChild(pieces);
+                        pgrid.appendChild(vcontainer);
+                        pgrid.appendChild(tcontainer);
+                        prods.appendChild(pgrid);
+
+                        tot.addEventListener("change", function removeproduct() {
+                            if (tot.value == '0') {
+                                pgrid.remove();
+                            }
+                        });
+                    }
+                } else {
+                    alert('<?=lang('Global.alertstock');?>');
                 }
             }
         }
@@ -235,14 +241,15 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
-                <th class="uk-text-center uk-width-small">No</th>
-                <th class="uk-width-medium"><?=lang('Global.variant')?></th>
-                <th class="uk-width-medium"><?=lang('Global.origin')?></th>
-                <th class="uk-width-medium"><?=lang('Global.destination')?></th>
-                <th class="uk-text-center uk-width-small"><?=lang('Global.quantity')?></th>
+                <th class="uk-text-center">No</th>
+                <th class=""><?=lang('Global.date')?></th>
+                <th class=""><?=lang('Global.variant')?></th>
+                <th class=""><?=lang('Global.origin')?></th>
+                <th class=""><?=lang('Global.destination')?></th>
+                <th class="uk-text-center"><?=lang('Global.quantity')?></th>
             </tr>
         </thead>
         <tbody>
@@ -250,10 +257,13 @@
             <?php foreach ($stockmoves as $stockmove) { ?>
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
+                    <td><?= date('l, d M Y, H:i:s', strtotime($stockmove['date'])); ?></td>
                     <td class="">
-                        <?php foreach ($variants as $variant) {
-                            if ($variant['id'] === $stockmove['variantid']) {
-                                echo $variant['name'];
+                        <?php foreach ($products as $product) {
+                            foreach ($variants as $variant) {
+                                if ($variant['id'] === $stockmove['variantid'] && $product['id'] === $variant['productid']) {
+                                    echo $product['name'].' - '.$variant['name'];   
+                                }
                             }
                         } ?>
                     </td>
@@ -276,75 +286,9 @@
             <?php } ?>
         </tbody>
     </table>
+    <div class="uk-light">
+        <?= $pager->links('stockmove', 'front_full') ?>
+    </div>
 </div>
 <!-- End Of Table Content -->
-
-<!-- Script -->
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-        
-        // Product change
-        $("#sel_pro").change(function(){
-
-            // Selected country id
-            var productid = $(this).val();
-
-            // Fetch country states
-            $.ajax({
-                type: 'post',
-                url: 'coba',
-                data: {request:'getPro',productid:productid},
-                dataType: 'json',
-                success:function(response) {
-                    console.log('success', arguments);
-
-                    var len     = response.length;
-                    var variant = arguments[0][0];
-                    let option  = '<option>Variant</option>';
-
-                    variant.forEach(itter);
-
-                    document.getElementById('sel_variant').innerHTML = option;
-
-                    function itter(value) {
-                        option += '<option value="'+value.id+'">'+value.name+'</option>';
-                    }
-                }
-            });
-        });
-
-        // Variant Change
-        $("#sel_variant").change(function() {
-
-            // Selected country id
-            var variantid = $(this).val();
-
-            // Fetch country states
-            $.ajax({
-                type: 'post',
-                url: 'coba',
-                data: {request:'getVariant',variantid:variantid},
-                dataType: 'json',
-                success:function(response) {
-                    console.log('success', arguments);
-
-                    var len = response.length;
-                    var variant = arguments[0][0];
-
-                    variant.forEach(itter);
-
-                    var option = '<option value="'+value.id+'">'+value.name+'</option>';
-
-                    document.getElementById('sel_variant').innerHTML = option;
-
-                    function itter(value) {
-                        option += '<option value="'+value.id+'">'+value.name+'</option>';
-                    }
-                }
-            });
-        }); 
-    });
-</script>
-<!-- Script End -->
 <?= $this->endSection() ?>

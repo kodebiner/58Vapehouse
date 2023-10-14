@@ -22,24 +22,52 @@ Class Stockmove extends BaseController
 
     public function index()
     {
+        $db         = \Config\Database::connect();
+        $pager      = \Config\Services::pager();
+
         // Calling Database
-        $Product    = new ProductModel;
-        $Variant    = new VariantModel;
-        $Outlet     = new OutletModel;
-        $Stock      = new StockModel;
-        $StockMove  = new StockmovementModel;
+        $ProductModel           = new ProductModel();
+        $VariantModel           = new VariantModel();
+        $OutletModel            = new OutletModel();
+        $StockmovementModel     = new StockmovementModel();
 
         // Find Data
+        $data                   = $this->data;
+        $outlets                = $OutletModel->findAll();
+        $productlist            = $ProductModel->findAll();
+
+        if ($this->data['outletPick'] === null) {
+            $stockmoves         = $StockmovementModel->orderBy('id', 'DESC')->paginate(20, 'stockmove');
+        } else {
+            $stockmoves         = $StockmovementModel->orderBy('id', 'DESC')->where('origin', $this->data['outletPick'])->paginate(20, 'stockmove');
+        }
+
+        if (!empty($stockmoves)) {
+            $varid  = array();
+            foreach ($stockmoves as $stkmv) {
+                $varid[]    = $stkmv['variantid'];
+            }
+            $variants       = $VariantModel->find($varid);
+    
+            $productid = array();
+            foreach ($variants as $var) {
+                $productid[]    = $var['productid'];
+            }
+            $products           = $ProductModel->find($productid);
+        } else {
+            $variants           = array();
+            $products           = array();
+        }
 
         // Parsing Data To View
-        $data                   = $this->data;
         $data['title']          = lang('Global.stockmoveList');
         $data['description']    = lang('Global.stockmoveListDesc');
-        $data['products']       = $Product->findAll();
-        $data['variants']       = $Variant->findAll();
-        $data['outlets']        = $Outlet->findAll();
-        $data['stocks']         = $Stock->findAll();
-        $data['stockmoves']     = $StockMove->findAll();
+        $data['stockmoves']     = $stockmoves;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['outlets']        = $outlets;
+        $data['productlist']    = $productlist;
+        $data['pager']          = $StockmovementModel->pager;
 
         return view ('Views/stockmove', $data);
     }
@@ -93,19 +121,6 @@ Class Stockmove extends BaseController
 
         // initialize
         $input = $this->request->getPost();
-
-        // // rules
-        // $rule = [
-        //     'variant'            => 'required|max_length[255]',
-        //     'origin'             => 'required|max_length[255]',
-        //     'destination'        => 'required',
-        //     'qty'                => 'required',
-        // ];
-                
-        // // Validation
-        // if (! $this->validate($rule)) {
-        //     return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        // }
 
         // date time stamp
         $date=date_create();
