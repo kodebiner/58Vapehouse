@@ -81,14 +81,14 @@ class Home extends BaseController
             $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            $stocks         = $StockModel->findAll();
+            $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->findAll();
             $payments       = $PaymentModel->findAll();
             array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
         } else {
             $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
             $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
             $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
-            $stocks         = $StockModel->where('outletid',$this->data['outletPick'])->find();
+            $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid',$this->data['outletPick'])->find();
             $payments       = $PaymentModel->whereIn('outletid',array('0', $this->data['outletPick']))->find();
             array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
         }

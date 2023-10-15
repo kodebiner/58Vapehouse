@@ -42,11 +42,7 @@ class DailyReport extends BaseController
 
             // Populating Data
             $today                  = date('Y-m-d') .' 00:00:01';
-            if ($this->data['outletPick'] === null) {
-                $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->findAll();
-            } else {
-                $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->find();
-            }
+            $dailyreports           = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->find();
 
             $cashs                  = $CashModel->findAll();
             $payments               = $PaymentModel->findAll();

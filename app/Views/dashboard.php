@@ -477,41 +477,59 @@
                             <table class="uk-table uk-table-divider" style="backgorund-color: #fff;">
                                 <tbody>
                                     <?php foreach ($stocks as $stock) { 
-                                        if (($stock['restock'] != "0000-00-00 00:00:00") && ($stock['sale'] != '0000-00-00 00:00:00')) {?>
-                                            <tr>
-                                                <td>
-                                                    <?php foreach ($variants as $variant) {
-                                                        foreach ($products as $product){
-                                                            if ($variant['id'] === $stock['variantid']) {
-                                                                if($variant['productid'] === $product['id']){
-                                                                    echo ($product['name']."-".$variant['name']);
+                                        $today      = $stock['restock'];
+                                        $date       = date_create($today);
+                                        $now        = date_create();
+                                        $nowdates   = date_format($now,'Y-m-d H:i:s');
+                                        $todays     = strtotime($today);
+                                        $dates      = strtotime($nowdates);
+                                        date_add($date, date_interval_create_from_date_string('0 days'));
+                                        $newdate        = date_format($date, 'Y-m-d H:i:s');
+                                        $origin         = new DateTime($stock['sale']);
+                                        $restock        = new DateTime($stock['restock']);
+                                        $target         = new DateTime('now');
+                                        $interval       = $origin->diff($target);
+                                        $formatday      = substr($interval->format('%R%a'), 1);
+                                        $saleremind     = lang('Global.saleremind');
+                                        $restockremind  = lang('Global.restockremind');
+                                        $intervals      = $restock->diff($target);
+
+                                        if ($stock['sale'] > $newdate) {
+                                            if ($formatday >= 0) { ?>
+                                                <tr>
+                                                    <td>
+                                                        <?php foreach ($variants as $variant) {
+                                                            foreach ($products as $product){
+                                                                if ($variant['id'] === $stock['variantid']) {
+                                                                    if($variant['productid'] === $product['id']){
+                                                                        echo ($product['name']."-".$variant['name']);
+                                                                    }
                                                                 }
                                                             }
-                                                        }
-                                                    } ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                        $today      = $stock['restock'];
-                                                        $date       = date_create($today);
-                                                        date_add($date, date_interval_create_from_date_string('0 days'));
-                                                        $newdate    = date_format($date, 'Y-m-d H:i:s');
-                                                        if ($stock['sale'] > $newdate) {
-                                                            $origin         = new DateTime($stock['sale']);
-                                                            $target         = new DateTime('now');
-                                                            $interval       = $origin->diff($target);
-                                                            $formatday      = substr($interval->format('%R%a'), 1);
-                                                            $stockremind    = lang('Global.stockremind');
-                                                            $saleremind     = lang('Global.saleremind');
-                                                            if ($formatday >= 0) {
-                                                                echo $formatday.' '.lang('Global.pastday');
+                                                        } ?>
+                                                    </td>
+                                                    <td><?= $formatday.' '.lang('Global.pastday') ?></td>
+                                                </tr>
+                                            <?php }
+                                        } elseif ($intervals = "30") {
+                                            if ($formatday >= 0) { ?>
+                                                <tr>
+                                                    <td>
+                                                        <?php foreach ($variants as $variant) {
+                                                            foreach ($products as $product){
+                                                                if ($variant['id'] === $stock['variantid']) {
+                                                                    if($variant['productid'] === $product['id']){
+                                                                        echo ($product['name']."-".$variant['name']);
+                                                                    }
+                                                                }
                                                             }
-                                                        }
-                                                    ?>
-                                                </td>
-                                            </tr>
-                                        <?php }
-                                    } ?>
+                                                        } ?>
+                                                    </td>
+                                                    <td><?= $formatday.' '.lang('Global.pastday'); ?></td>
+                                                </tr>
+                                            <?php }
+                                        } ?>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>

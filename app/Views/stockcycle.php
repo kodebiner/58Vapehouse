@@ -41,13 +41,17 @@
                 $todays     = strtotime($today);
                 $dates      = strtotime($nowdates);
                 date_add($date, date_interval_create_from_date_string('0 days'));
-                $newdate    = date_format($date, 'Y-m-d H:i:s');
+                $newdate        = date_format($date, 'Y-m-d H:i:s');
+                $origin         = new DateTime($stock['sale']);
+                $restock        = new DateTime($stock['restock']);
+                $target         = new DateTime('now');
+                $interval       = $origin->diff($target);
+                $formatday      = substr($interval->format('%R%a'), 1);
+                $saleremind     = lang('Global.saleremind');
+                $restockremind  = lang('Global.restockremind');
+                $intervals      = $restock->diff($target);
+
                 if ($stock['sale'] > $newdate) {
-                    $origin         = new DateTime($stock['sale']);
-                    $target         = new DateTime('now');
-                    $interval       = $origin->diff($target);
-                    $formatday      = substr($interval->format('%R%a'), 1);
-                    $saleremind     = lang('Global.saleremind');
                     if ($formatday >= 0) { ?>
                         <tr>
                             <td class="uk-text-center"><?= $i++; ?></td>
@@ -66,12 +70,7 @@
                             <td><div class="uk-text-danger uk-width-1-1"><?= $saleremind.' '.$formatday.' '.lang('Global.day') ?></div></td>
                         </tr>
                     <?php }
-                } elseif ($todays - $dates >= "30") {
-                    $origin         = new DateTime($today);
-                    $target         = new DateTime('now');
-                    $interval       = $origin->diff($target);
-                    $formatday      = substr($interval->format('%R%a'), 1);
-                    $restockremind  = lang('Global.restockremind');
+                } elseif ($intervals = "30") {
                     if ($formatday >= 0) { ?>
                         <tr>
                             <td class="uk-text-center"><?= $i++; ?></td>
