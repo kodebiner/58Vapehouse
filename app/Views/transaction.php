@@ -1932,7 +1932,7 @@
             var memberdisc = 0;
             var min = 0;
 
-            $('#products').on('DOMSubtreeModified', function() {
+            let subtotalobserve = new MutationObserver(mutationRecords => {
                 var prices = document.querySelectorAll("div[name='price[]']");
                 var discvars = document.querySelectorAll(".varprice");
                 
@@ -2020,8 +2020,20 @@
                    
                 });
             });
-            
-            subtotalelem.addEventListener('DOMSubtreeModified', totalcount);
+
+            let totalobserve = new MutationObserver(totalcount);
+
+            totalobserve.observe(subtotal, {
+                childList: true, // observe direct children
+                subtree: true, // and lower descendants too
+                characterDataOldValue: true // pass old data to callback
+            });
+
+            subtotalobserve.observe(products, {
+                childList: true, // observe direct children
+                subtree: true, // and lower descendants too
+                characterDataOldValue: true // pass old data to callback
+            });
 
             document.getElementById('discvalue').addEventListener('change', totalcount);
 
