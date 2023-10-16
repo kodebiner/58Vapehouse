@@ -480,7 +480,7 @@ class Pay extends BaseController
         $poinval     = $Gconfig['poinvalue'];
         
         if ($total  >= $minimTrx) {
-            $value  = $total / $minimTrx;
+            $value  = (Int)$total / (Int)$minimTrx;
             $result = floor($value);
             $poinresult   = (int)$result * (Int)$poinval;
         } else {
