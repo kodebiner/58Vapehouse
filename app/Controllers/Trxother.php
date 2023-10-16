@@ -142,13 +142,17 @@ class Trxother extends BaseController
 
             // Get Transaction Non Cash
             $noncash            = $CashModel->notLike('name', 'Petty Cash')->find();
-            $noncashid          = array();
 
+            $noncashid          = array();
             foreach ($noncash as $nocash) {
                 $noncashid[]    = $nocash['id'];
             }
 
-            $noncashpayments    = $PaymentModel->whereIn('cashid', $noncashid)->find();
+            if (!empty($noncashid)) {
+                $noncashpayments    = $PaymentModel->whereIn('cashid', $noncashid)->find();
+            } else {
+                $noncashpayments    = array();
+            }
             
             $noncashpaymentid   = array();
             foreach ($noncashpayments as $noncashpayment) {
@@ -166,7 +170,7 @@ class Trxother extends BaseController
                 $trxnoncashid[] = $noncashtr['id'];
             }
 
-            if (!empty($noncashtrx)) {
+            if (!empty($trxnoncashid) && !empty($noncashpaymentid)) {
                 $trxpaynoncash          = $TrxpaymentModel->whereIn('transactionid', $trxnoncashid)->whereIn('paymentid', $noncashpaymentid)->find();
             } else {
                 $trxpaynoncash          = array();
