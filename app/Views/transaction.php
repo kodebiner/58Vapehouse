@@ -38,6 +38,14 @@
             .dummyproduct{fill:#666666;}
         </style>
 
+        <script>
+            document.onreadystatechange = () => {
+                if (document.readyState === 'complete') {
+                    document.getElementById('pageload').removeAttribute('hidden');
+                }
+            };
+        </script>
+
     </head>
     <body style="background-color: #363636;">
 
@@ -1215,7 +1223,7 @@
                             </div>
                             <?= view('Views/Auth/_message_block') ?>
 
-                            <ul class="uk-switcher switcher-class">
+                            <ul id="pageload" class="uk-switcher switcher-class" hidden>
 
                                 <!-- Catalog List -->
                                 <li>
