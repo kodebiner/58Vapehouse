@@ -2084,9 +2084,9 @@
                     if (member.value != 0) {
                         <?php
                         if ($gconfig['memberdisctype'] === '0') {
-                            echo 'var memberdisc = '.$gconfig['memberdisc'].';';
+                            echo 'var memberdisc = '.(int)$gconfig['memberdisc'].';';
                         } elseif ($gconfig['memberdisctype'] === '1') {
-                            echo 'var memberdisc = ('.$gconfig['memberdisc'].'/100)*subtotal;';
+                            echo 'var memberdisc = ('.(int)$gconfig['memberdisc'].'/100)*subtotal;';
                         }
                         ?>
                     } else {
