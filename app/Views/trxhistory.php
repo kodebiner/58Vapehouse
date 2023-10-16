@@ -10,10 +10,10 @@
 <!-- Page Heading -->
 <div class="tm-card-header uk-light uk-margin-bottom">
     <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-3@m">
+        <div class="uk-width-1-3@m uk-width-1-1">
             <h3 class="tm-h3"><?=lang('Global.trxHistory')?></h3>
         </div>
-        <div class="uk-width-expand@m uk-text-right uk-margin-right-remove">
+        <div class="uk-width-1-3@m uk-width-1-2 uk-margin-right-remove">
             <form id="short" action="trxhistory" method="get">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
@@ -33,7 +33,7 @@
         </div>
         
         <!-- Button Trigger Modal export -->
-        <div class="uk-width-auto@m uk-text-right@m">
+        <div class="uk-width-1-3@m uk-width-1-2 uk-text-right">
             <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove"  target="_blank" href="export/transaction?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
         </div>
     </div>

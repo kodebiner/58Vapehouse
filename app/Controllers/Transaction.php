@@ -95,7 +95,7 @@ class Transaction extends BaseController
         $data['bookingdetails'] = $bookingdetails;
         $data['dailyreport']    = $dailyreport;
 
-        return view('Views/transaction', $data);
+        return view('Views/transactionnew', $data);
     }
 
     public function create() 
@@ -766,5 +766,4 @@ class Transaction extends BaseController
         // Return message
         die(json_encode('success'));
     }
-    
 }

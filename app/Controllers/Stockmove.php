@@ -25,8 +25,6 @@ Class Stockmove extends BaseController
         $db         = \Config\Database::connect();
         $pager      = \Config\Services::pager();
 
-        // JANGAN LUPA DATE RANGE
-
         // Calling Database
         $ProductModel           = new ProductModel();
         $VariantModel           = new VariantModel();
@@ -38,10 +36,29 @@ Class Stockmove extends BaseController
         $outlets                = $OutletModel->findAll();
         $productlist            = $ProductModel->findAll();
 
+        $input = $this->request->getGet('daterange');
+        
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
+
         if ($this->data['outletPick'] === null) {
             $stockmoves         = $StockmovementModel->orderBy('id', 'DESC')->paginate(20, 'stockmove');
+
+            if (!empty($input)) {
+                $stockmoves     = $StockmovementModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'stockmove');
+            }
         } else {
             $stockmoves         = $StockmovementModel->orderBy('id', 'DESC')->where('origin', $this->data['outletPick'])->paginate(20, 'stockmove');
+
+            if (!empty($input)) {
+                $stockmoves     = $StockmovementModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->where('origin',$this->data['outletPick'])->paginate(20, 'stockmove');
+            }
         }
 
         if (!empty($stockmoves)) {
@@ -70,6 +87,8 @@ Class Stockmove extends BaseController
         $data['outlets']        = $outlets;
         $data['productlist']    = $productlist;
         $data['pager']          = $StockmovementModel->pager;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
 
         return view ('Views/stockmove', $data);
     }

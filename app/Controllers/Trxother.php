@@ -59,11 +59,6 @@ class Trxother extends BaseController
         // Find Data
         $auth               = service('authentication');
         $users              = $UserModel->findAll();
-        $userId             = $auth->id();
-        $GroupUser          = $this->GroupUserModel->where('user_id', $this->userId)->first();
-        $roleid             = $GroupUser['group_id'];
-        $user               = $UserModel->where('id',$userId)->first();
-        $userOutlet         = $user->outletid;
         $outlets            = $OutletModel->findAll();
         $cash               = $CashModel->findAll();
 
@@ -78,22 +73,17 @@ class Trxother extends BaseController
             $enddate = date('Y-m-t');
         }
         
-        // Operator 
-        if ($roleid === 4) {
-            $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid',$userOutlet)->paginate(20, 'cashinout');
+        if ($this->data['outletPick'] === null) {
+            $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->paginate(20, 'cashinout');
+
+            if (!empty($input)) {
+                $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
+            }
         } else {
-            if ($this->data['outletPick'] === null) {
-                $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->paginate(20, 'cashinout');
+            $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'cashinout');
 
-                if (!empty($input)) {
-                    $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
-                }
-            } else {
-                $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'cashinout');
-
-                if (!empty($input)) {
-                    $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
-                }
+            if (!empty($input)) {
+                $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
             }
         }
 
@@ -129,7 +119,12 @@ class Trxother extends BaseController
             // Get Transaction Cash
             $pettycash          = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
             $cashpayment        = $PaymentModel->where('cashid', $pettycash['id'])->first();
-            $cashtrx            = $TransactionModel->whereIn('date', $trxdate)->where('date >', $dailyreport['dateopen'])->find();
+
+            if (!empty($trxdate)) {
+                $cashtrx            = $TransactionModel->whereIn('date', $trxdate)->where('date >', $dailyreport['dateopen'])->find();
+            } else {
+                $cashtrx            = array();
+            }
 
             $trxcashid          = array();
             foreach ($cashtrx as $cashtr) {
@@ -160,9 +155,13 @@ class Trxother extends BaseController
                 $noncashpaymentid[]     = $noncashpayment['id'];
             }
 
-            $noncashtrx                 = $TransactionModel->whereIn('date', $trxdate)->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
-            $trxnoncashid               = array();
+            if (!empty($trxdate)) {
+                $noncashtrx                 = $TransactionModel->whereIn('date', $trxdate)->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
+            } else {
+                $noncashtrx                 = array();
+            }
 
+            $trxnoncashid               = array();
             foreach ($noncashtrx as $noncashtr) {
                 $trxnoncashid[] = $noncashtr['id'];
             }
@@ -170,7 +169,7 @@ class Trxother extends BaseController
             if (!empty($noncashtrx)) {
                 $trxpaynoncash          = $TrxpaymentModel->whereIn('transactionid', $trxnoncashid)->whereIn('paymentid', $noncashpaymentid)->find();
             } else {
-                $trxpaynoncash          = $TransactionModel->whereIn('date', $trxdate)->where('date >', $dailyreport['dateopen'])->find();
+                $trxpaynoncash          = array();
             }
 
             $noncashtrxvalue            = array_sum(array_column($trxpaynoncash, 'value'));
@@ -205,15 +204,19 @@ class Trxother extends BaseController
         $tanggal            = date_format($date,'Y-m-d H:i:s');
 
         // Image Capture
-        $img                = $input['image'];
-        $folderPath         = "img/tfproof/";
-        $image_parts        = explode(";base64,", $img);
-        $image_type_aux     = explode("image/", $image_parts[0]);
-        $image_type         = $image_type_aux[1];
-        $image_base64       = base64_decode($image_parts[1]);
-        $fileName           = uniqid() . '.png';
-        $file               = $folderPath . $fileName;
-        file_put_contents($file, $image_base64);
+        if (!empty($input['image'])){
+            $img                = $input['image'];
+            $folderPath         = "img/tfproof/";
+            $image_parts        = explode(";base64,", $img);
+            $image_type_aux     = explode("image/", $image_parts[0]);
+            $image_type         = $image_type_aux[1];
+            $image_base64       = base64_decode($image_parts[1]);
+            $fileName           = uniqid() . '.png';
+            $file               = $folderPath . $fileName;
+            file_put_contents($file, $image_base64);
+        } else {
+            $fileName = "NULL";
+        }
 
         // Data Input
         $data  = [

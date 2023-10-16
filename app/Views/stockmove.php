@@ -1,10 +1,13 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
-<link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
-<script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-<script src="js/code.jquery.com_jquery-3.6.0.js"></script>
-<script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
+    <link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
+    <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+    <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
+    <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -12,19 +15,38 @@
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
     <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-2@m">
+        <div class="uk-width-1-3@m uk-width-1-1">
             <h3 class="tm-h3"><?=lang('Global.stockmoveList')?></h3>
         </div>
 
-        <!-- JANGAN LUPA DATE RANGE -->
-
         <?php if ($outletPick != null) { ?>
             <!-- Button Trigger Modal Add -->
-            <div class="uk-width-1-2@m uk-text-right@m">
+            <div class="uk-width-1-3@m uk-width-1-2">
                 <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addStockMove')?></button>
             </div>
             <!-- End Of Button Trigger Modal Add -->
         <?php } ?>
+
+        <!-- Button Daterange -->
+        <div class="uk-width-1-3@m uk-width-1-2 uk-text-right@m">
+            <form id="short" action="stockmove" method="get">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+                </div>
+            </form>
+            <script>
+                $(function() {
+                    $('input[name="daterange"]').daterangepicker({
+                        opens: 'right'
+                    }, function(start, end, label) {
+                        document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                        document.getElementById('short').submit();
+                    });
+                });
+            </script>
+        </div>
+        <!-- End Of Button Daterange-->
     </div>
 </div>
 <!-- End Of Page Heading -->

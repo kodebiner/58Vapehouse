@@ -23,6 +23,8 @@ class DailyReport extends BaseController
     public function index()
     {
         if ($this->data['outletPick'] != null) {
+            $pager      = \Config\Services::pager();
+
             // Calling Models
             $TransactionModel   = new TransactionModel;
             $TrxdetailModel     = new TrxdetailModel;
@@ -41,42 +43,101 @@ class DailyReport extends BaseController
             $MemberModel        = new MemberModel;
 
             // Populating Data
+            $input = $this->request->getGet('daterange');
+            
+            if (!empty($input)) {
+                $daterange = explode(' - ', $input);
+                $startdate = $daterange[0];
+                $enddate = $daterange[1];
+            } else {
+                $startdate = date('Y-m-1');
+                $enddate = date('Y-m-t');
+            }
+
             $today                  = date('Y-m-d') .' 00:00:01';
-            $dailyreports           = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->find();
+            $dailyreports           = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
+            if (!empty($input)) {
+                $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->where('dateopen >=', $startdate)->where('dateopen <=', $enddate)->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
+            }
+
+            $lastreport             = end($dailyreports);
+            $firstreport            = $dailyreports[0];
 
             $cashs                  = $CashModel->findAll();
             $payments               = $PaymentModel->findAll();
-            $transactions           = $TransactionModel->findAll();
-            $variants               = $VariantModel->findAll();
-            $bundles                = $BundleModel->findAll();
-            $bundets                = $BundledetailModel->findAll();
+            $transactions           = $TransactionModel->where('date <=', $firstreport['dateopen'])->where('date >=', $lastreport['dateclose'])->where('outletid', $this->data['outletPick'])->find();
+            $trxothers              = $TrxotherModel->where('date <=', $firstreport['dateopen'])->where('date >=', $lastreport['dateclose'])->where('outletid', $this->data['outletPick'])->find();
+
+            $trxid = array();
+            $memberid = array();
+            foreach ($transactions as $transaction) {
+                $trxid[] = $transaction['id'];
+                $memberid[] = $transaction['memberid'];
+            }
+
             $outlets                = $OutletModel->findAll();
             $users                  = $UserModel->findAll();
-            $products               = $ProductModel->findAll();
-            $variants               = $VariantModel->findAll();
-            $customers              = $MemberModel->findAll();
-            $trxothers              = $TrxotherModel->findAll();
-            $trxpayments            = $TrxpaymentModel->findAll();
-            $trxdetails             = $TrxdetailModel->findAll();
-            $outlet                 = $OutletModel->find($this->data['outletPick']);
 
-            // Get Cash Transaction
-            $pettycash              = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
-            $cashpayment            = $PaymentModel->where('outletid', $this->data['outletPick'])->where('name', 'Cash')->first();
-            $cashtrx                = $TransactionModel->where('paymentid', $cashpayment['id'])->find();
+            if (!empty($transactions)) {
+                $trxdetails             = $TrxdetailModel->whereIn('transactionid', $trxid)->find();
+                $trxpayments            = $TrxpaymentModel->whereIn('transactionid', $trxid)->find();
+                $customers              = $MemberModel->find($memberid);
 
-            // Get Non Cash Transaction
-            $noncash            = $CashModel->notLike('name', 'Petty Cash')->find();
-            $noncashid          = array();
-            foreach ($noncash as $nocash) {
-                $noncashid[] = $nocash['id'];
+                $variantid = array();
+                $bundleid = array();
+                foreach ($trxdetails as $trxdetail) {
+                    $variantid[] = $trxdetail['variantid'];
+                    $bundleid[] = $trxdetail['bundleid'];
+                }
+    
+                $bundles                = $BundleModel->find($bundleid);
+                $bundets                = $BundledetailModel->whereIn('bundleid', $bundleid)->find();
+    
+                foreach ($bundets as $bundet) {
+                    $variantid[] = $bundet['variantid'];
+                }
+    
+                $variants               = $VariantModel->find($variantid);
+    
+                $productid = array();
+                foreach ($variants as $variant) {
+                    $productid[] = $variant['productid'];
+                }
+                
+                $products               = $ProductModel->find($productid);
+    
+                // Get Cash Transaction
+                $pettycash              = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
+                $cashpayment            = $PaymentModel->where('outletid', $this->data['outletPick'])->where('name', 'Cash')->first();
+                $cashtrx                = $TransactionModel->where('paymentid', $cashpayment['id'])->find();
+    
+                // Get Non Cash Transaction
+                $noncash            = $CashModel->notLike('name', 'Petty Cash')->find();
+                $noncashid          = array();
+                foreach ($noncash as $nocash) {
+                    $noncashid[] = $nocash['id'];
+                }
+                $noncashpayments    = $PaymentModel->whereIn('cashid', $noncashid)->find();
+                $noncashpaymentid   = array();
+                foreach ($noncashpayments as $noncashpayment) {
+                    $noncashpaymentid[]     = $noncashpayment['id'];
+                }
+                $noncashtrx                 = $TransactionModel->where('outletid', $this->data['outletPick'])->whereIn('paymentid', $noncashpaymentid)->find();
+            } else {
+                $trxdetails             = array();
+                $trxpayments            = array();
+                $customers              = array();
+                $bundles                = array();
+                $bundets                = array();
+                $variants               = array();
+                $products               = array();
+                $pettycash              = array();
+                $cashpayment            = array();
+                $cashtrx                = array();
+                $noncash                = array();
+                $noncashpayments        = array();
+                $noncashtrx             = array();
             }
-            $noncashpayments    = $PaymentModel->whereIn('cashid', $noncashid)->find();
-            $noncashpaymentid   = array();
-            foreach ($noncashpayments as $noncashpayment) {
-                $noncashpaymentid[]     = $noncashpayment['id'];
-            }
-            $noncashtrx                 = $TransactionModel->where('outletid', $this->data['outletPick'])->whereIn('paymentid', $noncashpaymentid)->find();
 
             // Parsing Data to View
             $data                       = $this->data;
@@ -100,6 +161,9 @@ class DailyReport extends BaseController
             $data['trxothers']          = $trxothers;
             $data['trxdetails']         = $trxdetails;
             $data['trxpayments']        = $trxpayments;
+            $data['pager']              = $DailyReportModel->pager;
+            $data['startdate']          = strtotime($startdate);
+            $data['enddate']            = strtotime($enddate);
 
             return view('Views/dailyreport', $data);
         } else {

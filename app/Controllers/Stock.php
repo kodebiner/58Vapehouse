@@ -312,10 +312,13 @@ class Stock extends BaseController
                 if ($stock['variantid'] === $variant['id']) {
                     $return[] = [
                         'id'        => $variant['id'],
+                        'product'   => $product['name'],
+                        'variant'   => $variant['name'],
                         'name'      => $product['name'].' - '.$variant['name'],
                         'qty'       => $stock['qty'],
                         'price'     => $variant['hargadasar'],
-
+                        'sellprice' => (int)$variant['hargamodal'] + (int)$variant['hargajual'],
+                        'msrp'      => $variant['hargarekomendasi']
                     ];
                 }
             }

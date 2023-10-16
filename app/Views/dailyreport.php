@@ -5,22 +5,46 @@
     <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
     <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
     <script src="js/jquery.validate.min.js"></script>
-    <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
-    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <div class="uk-flex-middle">
-        <h3 class="tm-h3"><?=lang('Global.dailyreportList')?></h3>
+    <div uk-grid class="uk-flex-middle">
+        <div class="uk-width-1-2@m">
+            <h3 class="tm-h3"><?=lang('Global.dailyreportList')?></h3>
+        </div>
+
+        <!-- Button Daterange -->
+        <div class="uk-width-1-2@m uk-text-right@m">
+            <form id="short" action="dayrep" method="get">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+                </div>
+            </form>
+            <script>
+                $(function() {
+                    $('input[name="daterange"]').daterangepicker({
+                        opens: 'right'
+                    }, function(start, end, label) {
+                        document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                        document.getElementById('short').submit();
+                    });
+                });
+            </script>
+        </div>
+        <!-- End Of Button Daterange-->
     </div>
 </div>
 <!-- End Of Page Heading -->
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
-    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
                 <th class="uk-text-center"></th>
@@ -58,6 +82,9 @@
             <?php } ?>
         </tbody>
     </table>
+    <div class="uk-light">
+        <?= $pager->links('dailyreport', 'front_full') ?>
+    </div>
 </div>
 <!-- Table Of Content End -->
 
@@ -807,12 +834,4 @@
     <!-- Modal Cash History End -->
 <?php } ?>
 <!-- Modal Detail End -->
-
-<!-- Search Engine Script -->
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
-<!-- Search Engine Script End -->
 <?= $this->endSection() ?>

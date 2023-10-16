@@ -15,8 +15,6 @@ Class StockAdjustment extends BaseController{
     {
         $pager      = \Config\Services::pager();
 
-        // JANGAN LUPA DATE RANGE
-
         // Calling Model
         $ProductModel           = new ProductModel;
         $VariantModel           = new VariantModel;
@@ -25,10 +23,29 @@ Class StockAdjustment extends BaseController{
         $StockAdjustmentModel   = new StockAdjustmentModel;
 
         // Populating Data
+        $input = $this->request->getGet('daterange');
+        
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
+
         if ($this->data['outletPick'] === null) {
             $stockadjust     = $StockAdjustmentModel->orderBy('id', 'DESC')->paginate(20, 'stockadjustment');
+
+            if (!empty($input)) {
+                $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'stockadjustment');
+            }
         } else {
             $stockadjust     = $StockAdjustmentModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockadjustment');
+
+            if (!empty($input)) {
+                $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->paginate(20, 'stockadjustment');
+            }
         }
         $outlets        = $OutletModel->findAll();
         $productlist    = $ProductModel->findAll();
@@ -65,6 +82,8 @@ Class StockAdjustment extends BaseController{
         $data['stockadj']       = $stockadjust;
         $data['productlist']    = $productlist;
         $data['pager']          = $StockAdjustmentModel->pager;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
 
         return view ('Views/stockadjustment', $data);
     }

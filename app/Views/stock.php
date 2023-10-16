@@ -12,12 +12,6 @@
         <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.stockList')?></h3>
         </div>
-
-        <!-- Button Trigger Modal Add -->
-        <!-- <div class="uk-width-1-2@m uk-text-right@m">
-            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addRestock')?></button>
-        </div> -->
-        <!-- End Of Button Trigger Modal Add -->
     </div>
 </div>
 <!-- End Of Page Heading -->
@@ -90,78 +84,4 @@
     </div>
 </div>
 <!-- End Table Content -->
-
-<script>
-    $(document).ready(function() {
-        // Country change
-        $("#sel_pro").change(function() {
-
-            // Selected country id
-            var productid = $(this).val();
-
-            // Empty state and city dropdown
-            //$('#sel_variant').find('option').not(':first').remove();
-
-            // Fetch country states
-            $.ajax({
-                type: 'post',
-                url: 'coba',
-                data: {request:'getPro',productid:productid},
-                dataType: 'json',
-                success:function(response) {
-
-                    console.log('success', arguments);
-
-                    var len = response.length;
-                    var variant = arguments[0][0];
-
-                    let option = '<option>Variant</option>';
-
-                    variant.forEach(itter);
-
-                    document.getElementById('sel_variant').innerHTML = option;
-
-                    function itter(value) {
-                        option += '<option value="'+value.id+'">'+value.name+'</option>';
-                    }
-                }
-            });
-        });
-
-        // Country change
-        $("#sel_variant").change(function() {
-
-            // Selected country id
-            var variantid = $(this).val();
-
-            // Empty state and city dropdown
-            //$('#sel_variant').find('option').not(':first').remove();
-
-            // Fetch country states
-            $.ajax({
-                type: 'post',
-                url: 'coba',
-                data: {request:'getVariant',variantid:variantid},
-                dataType: 'json',
-                success:function(response) {
-
-                    console.log('success', arguments);
-
-                    var len = response.length;
-                    var variant = arguments[0][0];
-
-                    // let option = '<option>Variant</option>';
-
-                    variant.forEach(itter);
-
-                    document.getElementById('sel_variant').innerHTML = option;
-
-                    function itter(value) {
-                        option += '<option value="'+value.id+'">'+value.name+'</option>';
-                    }
-                }
-            });
-        });
-    });
-</script>
 <?= $this->endSection() ?>
