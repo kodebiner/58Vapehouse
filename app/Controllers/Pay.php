@@ -475,24 +475,24 @@ class Pay extends BaseController
             $TrxpaymentModel->save($pay);
         }
 
-        // Gconfig poin setup
-        $minimTrx    = $Gconfig['poinorder'];
-        $poinval     = $Gconfig['poinvalue'];
-        
-        if ($total  >= $minimTrx) {
-            $value  = (Int)$total / (Int)$minimTrx;
-            $result = floor($value);
-            $poinresult   = (int)$result * (Int)$poinval;
-        } else {
-            $poinresult = "0";
-        }
-
         // Update Point Member
-        if (!empty($input['customerid'])){
-            $member      = $MemberModel->find($input['customerid']);
-            $trx = $member['trx'] + 1 ;
-            $memberPoint = $member['poin'];
-            $poinPlus = (Int)$pointres + (Int)$poinresult;           
+        if (!empty($input['customerid'])) {
+            // Gconfig poin setup
+            $minimTrx    = $Gconfig['poinorder'];
+            $poinval     = $Gconfig['poinvalue'];
+            
+            if (($minimTrx != 0) && ($total  >= $minimTrx)) {
+                $value          = (Int)$total / (Int)$minimTrx;
+                $result         = floor($value);
+                $poinresult     = (int)$result * (Int)$poinval;
+            } else {
+                $poinresult = "0";
+            }
+            
+            $member         = $MemberModel->find($input['customerid']);
+            $trx            = $member['trx'] + 1 ;
+            $memberPoint    = $member['poin'];
+            $poinPlus       = (Int)$pointres + (Int)$poinresult;           
             $pointvalue = [
                 'id'    => $member['id'],
                 'poin'  => $poinPlus,
