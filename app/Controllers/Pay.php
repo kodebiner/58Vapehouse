@@ -556,17 +556,19 @@ class Pay extends BaseController
             
         }
         
-        // Gconfig poin setup
-        $minimTrx    = $Gconfig['poinorder'];
-        $poinval     = $Gconfig['poinvalue'];
-        
-        if ($total  >= $minimTrx) {
-            $value  = $total / $minimTrx;
-            $result = floor($value);
-            $poin   = (int)$result * $poinval;
-        }
-        
-        if (!empty($input['customerid'])){
+        if (!empty($input['customerid'])) {
+            // Gconfig poin setup
+            $minimTrx    = $Gconfig['poinorder'];
+            $poinval     = $Gconfig['poinvalue'];
+            
+            if (($minimTrx != 0) && ($total  >= $minimTrx)) {
+                $value          = (Int)$total / (Int)$minimTrx;
+                $result         = floor($value);
+                $poinresult     = (int)$result * (Int)$poinval;
+            } else {
+                $poinresult = "0";
+            }
+
             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
             $data['mempoin']        = $member['poin'];
             $data['poinused']       = $input['poin'];
