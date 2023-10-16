@@ -186,7 +186,7 @@
                                             </div>
                                             <div class="uk-grid-collapse" uk-grid>
                                                 <div class="uk-width-1-2">x<?=$trxdet['qty']?> @<?=$variantval?></div>
-                                                <div class="uk-width-1-2 uk-text-right"><?=$variantval * $trxdet['qty']?></div>
+                                                <div class="uk-width-1-2 uk-text-right"><?= (Int)$variantval * (Int)$trxdet['qty']?></div>
                                             </div>
                                             <div class="uk-grid-collapse" uk-grid>
                                                 <?php
@@ -218,7 +218,7 @@
                                             x<?=$trxdet['qty']?> <?=lang('Global.bundle')?> <br> <?= $bundleName?> <br>
                                             <div class="uk-grid-collapse" uk-grid>
                                                 <div class="uk-width-2-3"> @<?=$variantval?></div>
-                                                <div class="uk-width-1-3 uk-text-right"><?=$variantval * $trxdet['qty']?></div>
+                                                <div class="uk-width-1-3 uk-text-right"><?= (Int)$variantval * (Int)$trxdet['qty']?></div>
                                             </div>
                                             <?php 
                                             foreach ($bundets as $bundet){
@@ -262,7 +262,7 @@
                                             echo '</div>';
                                             echo '<div class="uk-grid-collapse" uk-grid>';
                                             echo '<div class="uk-width-2-3">x'.$bookingdetail['qty'].' @'.$variantval.'</div>';
-                                            echo '<div class="uk-width-1-3 uk-text-right">'.$variantval * $bookingdetail['qty'].'</div>';
+                                            echo '<div class="uk-width-1-3 uk-text-right">'.(Int)$variantval * (Int)$bookingdetail['qty'].'</div>';
                                             echo '</div>';
                                             if ($bookingdetail['discvar'] !== '0') {
                                                 echo '<div class="uk-grid-collapse" uk-grid>';
@@ -282,7 +282,7 @@
                                         echo 'x'.$bookingdetail['qty'].' Bundle <br>'.$bundle['name'].'<br>';
                                         echo '<div class="uk-grid-collapse" uk-grid>';
                                         echo '<div class="uk-width-2-3"> @'.$bookingdetail['value'].'</div>';
-                                        echo '<div class="uk-width-1-3">'.$bookingdetail['value'] * $bookingdetail['qty'].'</div>';
+                                        echo '<div class="uk-width-1-3">'.(Int)$bookingdetail['value'] * (Int)$bookingdetail['qty'].'</div>';
                                         echo '</div>';
                                         foreach ($bundets as $bundet) {
                                             foreach ($products as $product) {

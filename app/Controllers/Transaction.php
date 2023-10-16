@@ -95,7 +95,7 @@ class Transaction extends BaseController
         $data['bookingdetails'] = $bookingdetails;
         $data['dailyreport']    = $dailyreport;
 
-        return view('Views/transactionnew', $data);
+        return view('Views/transaction', $data);
     }
 
     public function create() 

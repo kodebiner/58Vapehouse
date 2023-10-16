@@ -255,7 +255,7 @@ class Pay extends BaseController
                     'transactionid' => $trxId,
                     'bundleid'      => $bunid,
                     'qty'           => $bunqty,
-                    'value'         => $bundle['price'] * $bunqty
+                    'value'         => $bundle['price']
                 ];
                 $TrxdetailModel->save($trxbun);
 
@@ -482,7 +482,7 @@ class Pay extends BaseController
         if ($total  >= $minimTrx) {
             $value  = $total / $minimTrx;
             $result = floor($value);
-            $poinresult   = (int)$result * $poinval;
+            $poinresult   = (int)$result * (Int)$poinval;
         } else {
             $poinresult = "0";
         }
@@ -492,7 +492,7 @@ class Pay extends BaseController
             $member      = $MemberModel->find($input['customerid']);
             $trx = $member['trx'] + 1 ;
             $memberPoint = $member['poin'];
-            $poinPlus = $pointres + $poinresult;           
+            $poinPlus = (Int)$pointres + (Int)$poinresult;           
             $pointvalue = [
                 'id'    => $member['id'],
                 'poin'  => $poinPlus,
@@ -792,7 +792,7 @@ class Pay extends BaseController
                     'bookingid'     => $bookId,
                     'bundleid'      => $bunid,
                     'qty'           => $bunqty,
-                    'value'         => $bundle['price'] * $bunqty
+                    'value'         => $bundle['price']
                 ];
                 $BookingdetailModel->save($trxbun);
 
