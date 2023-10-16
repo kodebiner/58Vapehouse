@@ -479,7 +479,7 @@ class Pay extends BaseController
 
         // Update Point Member
         if (!empty($input['customerid'])) {
-            if (($minimTrx != 0) && ($total >= $minimTrx)) {
+            if (($minimTrx != "0") && ($total >= $minimTrx)) {
                 $value          = (Int)$total / (Int)$minimTrx;
                 $result         = floor($value);
                 $poinresult     = (int)$result * (Int)$poinval;
@@ -559,7 +559,7 @@ class Pay extends BaseController
         
         if (!empty($input['customerid'])) {
             
-            if (($minimTrx != 0) && ($total >= $minimTrx)) {
+            if (($minimTrx != "0") && ($total >= $minimTrx)) {
                 $value          = (Int)$total / (Int)$minimTrx;
                 $result         = floor($value);
                 $poinresult     = (int)$result * (Int)$poinval;
@@ -903,7 +903,7 @@ class Pay extends BaseController
         $minimTrx    = $Gconfig['poinorder'];
         $poinval     = $Gconfig['poinvalue'];
         
-        if (($minimTrx != null) && ($value >= $minimTrx)) {
+        if (($minimTrx != "0") && ($value >= $minimTrx)) {
             $subval  = (int)$value / (int)$minimTrx;
             $result = floor($subval);
             $poin   = (int)$result * (int)$poinval;
@@ -1029,7 +1029,7 @@ class Pay extends BaseController
         $minimTrx       = $Gconfig['poinorder'];
         $poinval        = $Gconfig['poinvalue'];
         
-        if (($minimTrx != 0) && ($total >= $minimTrx)) {
+        if (($minimTrx != "0") && ($total >= $minimTrx)) {
             $value          = (Int)$total / (Int)$minimTrx;
             $result         = floor($value);
             $poinresult     = (int)$result * (Int)$poinval;
@@ -1168,7 +1168,7 @@ class Pay extends BaseController
         $minimTrx    = $Gconfig['poinorder'];
         $poinval     = $Gconfig['poinvalue'];
         
-        if (($minimTrx != 0) && ($total >= $minimTrx)) {
+        if (($minimTrx != "0") && ($total >= $minimTrx)) {
             $value          = (Int)$total / (Int)$minimTrx;
             $result         = floor($value);
             $poinresult     = (int)$result * (Int)$poinval;
@@ -1439,7 +1439,7 @@ class Pay extends BaseController
         $minimTrx       = $Gconfig['poinorder'];
         $poinval        = $Gconfig['poinvalue'];
 
-        if (($minimTrx != 0) && ($total >= $minimTrx)) {
+        if (($minimTrx != "0") && ($total >= $minimTrx)) {
             $value          = (Int)$total / (Int)$minimTrx;
             $result         = floor($value);
             $poinresult     = (int)$result * (Int)$poinval;
@@ -1635,7 +1635,7 @@ class Pay extends BaseController
         $minimTrx    = $Gconfig['poinorder'];
         $poinval     = $Gconfig['poinvalue'];
         
-        if (($minimTrx != 0) && ($subtotal  >= $minimTrx)) {
+        if (($minimTrx != "0") && ($subtotal  >= $minimTrx)) {
             $value  = (int)$subtotal / (int)$minimTrx;
             $result = floor($value);
             $poin   = (int)$result * $poinval;
