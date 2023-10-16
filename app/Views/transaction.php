@@ -2097,13 +2097,13 @@
                 }
 
                 // Tax
-                var tax = (<?=$gconfig['ppn']?>/100)*subtotal;
+                var tax = (<?=(int)$gconfig['ppn']?>/100)*subtotal;
                 
                  // Count Total Price
                 var totalprice = subtotal - discount - memberdisc - poin;             
 
                 // Tax
-                var tax = (<?=$gconfig['ppn']?>/100)*totalprice;
+                var tax = (<?=(int)$gconfig['ppn']?>/100)*totalprice;
 
                 // Count Paid Price
                 var paidprice = totalprice + tax;
