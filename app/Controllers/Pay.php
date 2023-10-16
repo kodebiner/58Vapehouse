@@ -473,12 +473,12 @@ class Pay extends BaseController
             $TrxpaymentModel->save($pay);
         }
 
+        // Gconfig poin setup
+        $minimTrx    = $Gconfig['poinorder'];
+        $poinval     = $Gconfig['poinvalue'];
+
         // Update Point Member
         if (!empty($input['customerid'])) {
-            // Gconfig poin setup
-            $minimTrx    = $Gconfig['poinorder'];
-            $poinval     = $Gconfig['poinvalue'];
-            
             if (($minimTrx != 0) && ($total >= $minimTrx)) {
                 $value          = (Int)$total / (Int)$minimTrx;
                 $result         = floor($value);
@@ -552,11 +552,12 @@ class Pay extends BaseController
             $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
             $data['link']           = "https://wa.me/62".$input['phone']."?text=".urlencode($actual_link)."";
         }
+
+        // Gconfig poin setup
+        $minimTrx    = $Gconfig['poinorder'];
+        $poinval     = $Gconfig['poinvalue'];
         
         if (!empty($input['customerid'])) {
-            // Gconfig poin setup
-            $minimTrx    = $Gconfig['poinorder'];
-            $poinval     = $Gconfig['poinvalue'];
             
             if (($minimTrx != 0) && ($total >= $minimTrx)) {
                 $value          = (Int)$total / (Int)$minimTrx;
@@ -1023,11 +1024,12 @@ class Pay extends BaseController
         $sum = array_sum($prices);
 
         $total = (int)$sum - (int)$data['discount'] - (int)$transactions['pointused'] - (int)$Gconfig['memberdisc'] + (int)$Gconfig['ppn'];
+
+        // Gconfig poin setup
+        $minimTrx       = $Gconfig['poinorder'];
+        $poinval        = $Gconfig['poinvalue'];
         
         if (($minimTrx != 0) && ($total >= $minimTrx)) {
-            // Gconfig poin setup
-            $minimTrx       = $Gconfig['poinorder'];
-            $poinval        = $Gconfig['poinvalue'];
             $value          = (Int)$total / (Int)$minimTrx;
             $result         = floor($value);
             $poinresult     = (int)$result * (Int)$poinval;
@@ -1433,10 +1435,11 @@ class Pay extends BaseController
 
         $total = (Int)$sum - (Int)$data['discount'] - (Int)$transactions['pointused'] - (Int)$Gconfig['memberdisc'] + (Int)$Gconfig['ppn'];
         
+        // Gconfig poin setup
+        $minimTrx       = $Gconfig['poinorder'];
+        $poinval        = $Gconfig['poinvalue'];
+
         if (($minimTrx != 0) && ($total >= $minimTrx)) {
-            // Gconfig poin setup
-            $minimTrx       = $Gconfig['poinorder'];
-            $poinval        = $Gconfig['poinvalue'];
             $value          = (Int)$total / (Int)$minimTrx;
             $result         = floor($value);
             $poinresult     = (int)$result * (Int)$poinval;
