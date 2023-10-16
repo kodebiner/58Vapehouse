@@ -315,7 +315,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="uk-light">
+    <div>
         <?= $pager->links('stockadjustment', 'front_full') ?>
     </div>
 </div>

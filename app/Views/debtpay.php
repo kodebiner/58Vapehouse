@@ -66,7 +66,7 @@
             <?php } ?>
         </tbody>
     </table>
-    <div class="uk-light">
+    <div>
         <?= $pager->links('debtpay', 'front_full') ?>
     </div>
 </div>

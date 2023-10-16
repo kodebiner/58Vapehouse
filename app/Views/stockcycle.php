@@ -93,7 +93,7 @@
             <?php } ?>
         </tbody>
     </table>
-    <div class="uk-light">
+    <div>
         <?= $pager->links('stockcycle', 'front_full') ?>
     </div>
 </div>

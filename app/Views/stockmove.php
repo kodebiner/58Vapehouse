@@ -310,7 +310,7 @@
             <?php } ?>
         </tbody>
     </table>
-    <div class="uk-light">
+    <div>
         <?= $pager->links('stockmove', 'front_full') ?>
     </div>
 </div>

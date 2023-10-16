@@ -90,7 +90,7 @@
             <?php } ?>
         </tbody>
     </table>
-    <div class="uk-light">
+    <div>
         <?= $pager->links('debt', 'front_full') ?>
     </div>
 </div>

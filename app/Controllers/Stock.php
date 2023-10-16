@@ -118,17 +118,22 @@ class Stock extends BaseController
             $stock      = $StockModel->orderBy('restock', 'DESC')->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockcycle');
         }
 
-        $varid  = array();
-        foreach ($stock as $stok) {
-            $varid[]    = $stok['variantid'];
+        if (!empty($stock)) {
+            $varid  = array();
+            foreach ($stock as $stok) {
+                $varid[]    = $stok['variantid'];
+            }
+            $variants       = $VariantModel->find($varid);
+    
+            $prodid = array();
+            foreach ($variants as $var) {
+                $prodid[]   = $var['productid'];
+            }
+            $products   = $ProductModel->find($prodid);
+        } else {
+            $variants       = array();
+            $products       = array();
         }
-        $variants       = $VariantModel->find($varid);
-
-        $prodid = array();
-        foreach ($variants as $var) {
-            $prodid[]   = $var['productid'];
-        }
-        $products   = $ProductModel->find($prodid);
 
         // Parsing data to view
         $data['title']          = lang('Global.stockCycle');

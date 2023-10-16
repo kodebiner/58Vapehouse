@@ -79,7 +79,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="uk-light">
+    <div>
         <?= $pager->links('stock', 'front_full') ?>
     </div>
 </div>

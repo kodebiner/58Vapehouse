@@ -85,8 +85,8 @@
         <thead>
             <tr>
                 <th class="uk-text-center">No</th>
-                <th class="uk-text-center"><?=lang('Global.name')?></th>
-                <th class="uk-text-center"><?=lang('Auth.email')?></th>
+                <th><?=lang('Global.name')?></th>
+                <th><?=lang('Auth.email')?></th>
                 <th class="uk-text-center"><?=lang('Global.phone')?></th>
                 <th class="uk-text-center"><?=lang('Global.transaction')?></th>
                 <th class="uk-text-center"><?=lang('Global.point')?></th>
@@ -98,8 +98,8 @@
             <?php foreach ($customers as $customer) : ?>
                 <tr>
                 <td class="uk-text-center"><?= $i++; ?></td>
-                <td class="uk-text-center"><?= $customer['name']; ?></td>
-                <td class="uk-text-center"><?= $customer['email']; ?></td>
+                <td><?= $customer['name']; ?></td>
+                <td><?= $customer['email']; ?></td>
                 <td class="uk-text-center">+62<?= $customer['phone']; ?></td>
                 <td class="uk-text-center"><?= $customer['trx']; ?></td>
                 <td class="uk-text-center"><?= $customer['poin']; ?></td>
@@ -120,7 +120,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="uk-light">
+    <div>
         <?= $pager->links('customer', 'front_full') ?>
     </div>
 </div>
