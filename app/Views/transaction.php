@@ -356,7 +356,6 @@
                                                 var products = document.getElementById('products');
 
                                                 document.getElementById('booklist<?= $book['id'] ?>').remove();
-                                                //var count = 1;
                                                 
                                                 var oldproducts = document.querySelector('#products');
                                                 var oldproductschild = oldproducts.lastElementChild;
@@ -598,7 +597,6 @@
                                                                         if (($variant->bundleid === $bundle['id']) && ($variant->outletid === $outletPick)) {
                                                                             $i++;
                                                                             if ($i === 1) {
-                                                                                //$bundlestock = $variant->qty;
                                                                                 echo 'var bstock = '.$variant->qty.';';
                                                                                 $bookbundqty[$variant->id] = $bookdet['qty'];
                                                                             }
@@ -2006,7 +2004,6 @@
                             required: true,
                         });
                         $('#order').submit();
-                        // UIkit.modal('#modalsucces').toggle();
                     });
                     
                     $('#save').click(function(){
@@ -2046,8 +2043,6 @@
             document.getElementById('value').addEventListener('change', totalcount);
             document.getElementById('firstpay').addEventListener('change', totalcount);
             document.getElementById('secondpay').addEventListener('change', totalcount);
-
-            //document.getElementById('customerid').addEventListener('change', totalcount);
 
             function totalcount(e) {
                 // Subtotal
@@ -2099,7 +2094,7 @@
                 // Tax
                 var tax = (<?=(int)$gconfig['ppn']?>/100)*subtotal;
                 
-                 // Count Total Price
+                // Count Total Price
                 var totalprice = subtotal - discount - memberdisc - poin;             
 
                 // Tax
@@ -2178,7 +2173,6 @@
                     document.getElementById('value').removeAttribute('min');
                 }
 
-                // document.getElementById('value').setAttribute('max', printprice);
                 document.getElementById('firstpay').setAttribute('max', printprice);
                 document.getElementById('secondpay').setAttribute('max', printprice - firstpay);
 
