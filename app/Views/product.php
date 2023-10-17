@@ -568,12 +568,6 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto">
-    <!-- <div class="uk-child-width-1-3 uk-flex-middle" uk-grid>
-        <p class="uk-text-large" style="font-size:20px;color:white;"><?//=lang('Global.total')?> <?//=lang('Global.capitalPrice')?> : <?php //echo "Rp. ".number_format($modal,0,',','.');" ";?></p>
-        <p class="uk-text-large" style="font-size:20px;color:white;"><?//=lang('Global.total')?> <?//=lang('Global.product')?> : <?php //echo $totpro;?></p>
-        <p class="uk-text-large" style="font-size:20px;color:white;"><?//=lang('Global.total')?> <?//=lang('Global.stock')?> : <?php //echo $totstocks;?></p>
-    </div> -->
-
     <!-- Search Engine -->
     <div class="">
         <form class="uk-search uk-search-default" method="GET" action="product" style="background-color: #fff; border-radius: 7px;">
@@ -586,21 +580,21 @@
     <!-- Counter Total -->
     <div class="uk-light" uk-grid>
         <!-- Product-->
-        <div class="uk-width-1-6 uk-form-horizontal">
+        <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.product') ?> :</div>
             <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $productcount ?></div>
         </div>
         <!-- Product End -->
 
         <!-- Stock -->
-        <div class="uk-width-1-6 uk-form-horizontal">
+        <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> :</div>
             <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $stockcount ?></div>
         </div>
         <!-- Stock End -->
 
         <!-- Capital Price -->
-        <div class="uk-width-1-3 uk-form-horizontal">
+        <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
             <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalcap,2,',','.') ?></div>
         </div>
