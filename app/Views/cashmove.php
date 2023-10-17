@@ -154,7 +154,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="uk-light">
+    <div>
         <?= $pager->links('trxhistory', 'front_full') ?>
     </div>
 </div>

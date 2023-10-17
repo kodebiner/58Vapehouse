@@ -4660,7 +4660,7 @@ ul.uk-nav-sub {
 }
 
 .uk-pagination>.uk-active>* {
-    color: #666
+    color: #fff
 }
 
 .uk-pagination>.uk-disabled>* {

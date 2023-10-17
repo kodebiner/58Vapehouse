@@ -82,7 +82,7 @@
             <?php } ?>
         </tbody>
     </table>
-    <div class="uk-light">
+    <div>
         <?= $pager->links('dailyreport', 'front_full') ?>
     </div>
 </div>

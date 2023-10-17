@@ -79,20 +79,20 @@ class Pay extends BaseController
             foreach ($input['qty'] as $varid => $varqty) {
                 $variant = $VariantModel->find($varid);
 
-                $discvar = (int)$input['varprice'][$varid]  * $varqty;
-                $discbargain = (int)$input['varbargain'][$varid]* $varqty;
+                $discvar = (int)$input['varprice'][$varid] * (int)$varqty;
+                $discbargain = (int)$input['varbargain'][$varid] * (int)$varqty;
                 // Bargain And Varprice Added
                 if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
-                    $varvalues[]  = $discbargain - $discvar;
+                    $varvalues[]  = (int)$discbargain - (int)$discvar;
                     // Vaprice Added And Null Bargain
                 }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
-                    $varvalues[]  = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar;
+                    $varvalues[]  = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar;
                     // Bargain Added And Null Varprice
                 }elseif((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)){
-                    $varvalues[]  = $discbargain;
+                    $varvalues[]  = (int)$discbargain;
                     // Null Bargain & Varprice
                 }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
-                    $varvalues[] = $varqty * ($variant['hargamodal'] + $variant['hargajual']);
+                    $varvalues[] = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
                 }
             }
         } else {
@@ -101,8 +101,8 @@ class Pay extends BaseController
         
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bundqty) {
-                $bundle = $BundleModel->find($bunid);
-                $bundvalues[] = $bundqty * $bundle['price'];
+                $bundle         = $BundleModel->find($bunid);
+                $bundvalues[]   = $bundqty * $bundle['price'];
             }
         } else {
             $bundvalues[] = '0';
@@ -110,7 +110,6 @@ class Pay extends BaseController
 
         $varvalue = array_sum($varvalues);
         $bundvalue = array_sum($bundvalues);
-
         
         $subtotal = $varvalue + $bundvalue;
         
@@ -119,7 +118,7 @@ class Pay extends BaseController
             if ($this->data['gconfig']['memberdisctype'] === '0') {
                 $memberdisc = $this->data['gconfig']['memberdisc'];
             } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                $memberdisc = ($this->data['gconfig']['memberdisc']/100) * $subtotal;
+                $memberdisc = ((int)$this->data['gconfig']['memberdisc']/100) * (int)$subtotal;
             }
         } else {
             $memberid = '';
@@ -129,7 +128,7 @@ class Pay extends BaseController
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
             $discount = $input['discvalue'];
         } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
-            $discount = ($input['discvalue']/100) * $subtotal;
+            $discount = ((int)$input['discvalue']/100) * (int)$subtotal;
         } else {
             $discount = 0;
         }
@@ -140,7 +139,7 @@ class Pay extends BaseController
             $poin = 0;
         }
         
-        $value = $subtotal - $memberdisc - $discount - $poin;
+        $value = (int)$subtotal - (int)$memberdisc - (int)$discount - (int)$poin;
         
         if (!empty($input['payment']) && empty($input['duedate'])) {
             $paymentid = $input['payment'];
@@ -202,29 +201,29 @@ class Pay extends BaseController
         // Transaction Detail & Stock
         if (!empty($input['qty'])) {
             foreach ($input['qty'] as $varid => $varqty) {
-                $variant = $VariantModel->find($varid);
+                $variant        = $VariantModel->find($varid);
 
-                    $discvar = (int)$input['varprice'][$varid] * $varqty;
-                    $discbargain = (int)$input['varbargain'][$varid]* $varqty;
-                    
-                    // Bargain And Varprice Added
-                    if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
-                        $varPrice  = ($discbargain - $discvar)/$varqty;
-                        // Vaprice Added And Null Bargain
-                    }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
-                        $varPrice  = (($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar) / $varqty;
-                        // Bargain Added And Null Varprice
-                    }elseif((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)){
-                        $varPrice  = $discbargain / $varqty;
-                        // Null Bargain & Varprice
-                    }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
-                        $varPrice = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) / $varqty;
-                    }else{
-                        $varPrice = 0;
-                    }
+                $discvar        = (int)$input['varprice'][$varid] * $varqty;
+                $discbargain    = (int)$input['varbargain'][$varid]* $varqty;
+                
+                // Bargain And Varprice Added
+                if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
+                    $varPrice  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
+                    // Vaprice Added And Null Bargain
+                }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
+                    $varPrice  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
+                    // Bargain Added And Null Varprice
+                }elseif((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)){
+                    $varPrice  = (int)$discbargain / (int)$varqty;
+                    // Null Bargain & Varprice
+                }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
+                    $varPrice = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
+                }else{
+                    $varPrice = 0;
+                }
 
-                    $marginmodal = $varPrice - $variant['hargamodal'];
-                    $margindasar = $varPrice - $variant['hargadasar'];
+                $marginmodal = (int)$varPrice - (int)$variant['hargamodal'];
+                $margindasar = (int)$varPrice - (int)$variant['hargadasar'];
 
                     
                 $trxvar = [
@@ -242,7 +241,7 @@ class Pay extends BaseController
                 $saleVarStock = [
                     'id'        => $stock['id'],
                     'sale'      => $date,
-                    'qty'       => $stock['qty'] - $varqty
+                    'qty'       => (int)$stock['qty'] - (int)$varqty
                 ];
                 $StockModel->save($saleVarStock);
             }
@@ -265,10 +264,9 @@ class Pay extends BaseController
                     $saleBunStock = [
                         'id'        => $bunstock['id'],
                         'sale'      => $date,
-                        'qty'       => $bunstock['qty'] - $bunqty
+                        'qty'       => (int)$bunstock['qty'] - (int)$bunqty
                     ];
                     $StockModel->save($saleBunStock);
-                    
                 }
             }
         }
@@ -278,7 +276,7 @@ class Pay extends BaseController
         if (!empty($poin)){
             $cust       = $MemberModel->find($input['customerid']);
             if (!empty($input['poin'])){
-                $pointres   = $cust['poin'] - $poin;
+                $pointres   = (int)$cust['poin'] - (int)$poin;
             } 
             $point = [
                 'id'    => $cust['id'],
@@ -288,10 +286,10 @@ class Pay extends BaseController
         }
         
         // PPN Value
-        $ppn = $value * ($Gconfig['ppn']/100);
+        $ppn = (int)$value * ((int)$Gconfig['ppn'] / 100);
         
         //Insert Trx Payment 
-        $total = $subtotal - $discount - (int)$input['poin'] - $memberdisc + $ppn;
+        $total = (int)$subtotal - (int)$discount - (int)$input['poin'] - (int)$memberdisc + (int)$ppn;
         
         // Debt Transaction
         if (!empty($input['duedate']) && !empty($input['payment']) && empty($input['value'])) {
@@ -321,7 +319,7 @@ class Pay extends BaseController
 
             $cash = [
                 'id'    => $cashPlus['id'],
-                'qty'   => $total + $cashPlus['qty'],
+                'qty'   => (int)$total + (int)$cashPlus['qty'],
             ];
             $CashModel->save($cash);
         } elseif (!empty($input['duedate']) && !isset($input['payment']) && isset($input['firstpayment'])) {
@@ -339,7 +337,7 @@ class Pay extends BaseController
             // Insert First Payment
             $payment    = $PaymentModel->where('id',$input['firstpayment'])->first();
             $cashPlus   = $CashModel->find($payment['cashid']);
-            $cashUp     = $cashPlus['qty'] + $input['firstpay'];
+            $cashUp     = (int)$cashPlus['qty'] + (int)$input['firstpay'];
             $cash       = [
                 'id'    => $cashPlus['id'],
                 'qty'   => $cashUp
@@ -349,7 +347,7 @@ class Pay extends BaseController
             // Insert Second Payment
             $payment     = $PaymentModel->where('id',$input['secpayment'])->first();
             $cashPlus2   = $CashModel->find($payment['cashid']);
-            $cashUp2     = $cashPlus2['qty']+ $input['secondpay'];
+            $cashUp2     = (int)$cashPlus2['qty']+ (int)$input['secondpay'];
             $cash2       = [
                 'id'    => $cashPlus2['id'],
                 'qty'   => $cashUp2,
@@ -365,7 +363,7 @@ class Pay extends BaseController
     
                 $cash = [
                     'id'    => $cashPlus['id'],
-                    'qty'   => $total + $cashPlus['qty'],
+                    'qty'   => (int)$total + (int)$cashPlus['qty'],
                 ];
                 $CashModel->save($cash);
     
@@ -375,7 +373,7 @@ class Pay extends BaseController
                 // Insert First Payment
                 $payment    = $PaymentModel->where('id',$input['firstpayment'])->first();
                 $cashPlus   = $CashModel->find($payment['cashid']);
-                $cashUp     = $cashPlus['qty'] + $input['firstpay'];
+                $cashUp     = (int)$cashPlus['qty'] + (int)$input['firstpay'];
                 $cash       = [
                     'id'    => $cashPlus['id'],
                     'qty'   => $cashUp
@@ -385,7 +383,7 @@ class Pay extends BaseController
                 // Insert Second Payment
                 $payment    = $PaymentModel->where('id',$input['secpayment'])->first();
                 $cashPlus2  = $CashModel->find($payment['cashid']);
-                $cashUp2    = $cashPlus2['qty']+ $input['secondpay'];
+                $cashUp2    = (int)$cashPlus2['qty'] + (int)$input['secondpay'];
                 $cash2      = [
                     'id'    => $cashPlus2['id'],
                     'qty'   => $cashUp2,
@@ -437,7 +435,7 @@ class Pay extends BaseController
             $paymentmethod = [
                 'paymentid'     => "0",
                 'transactionid' => $trxId,
-                'value'         => $total - $input['value'],
+                'value'         => (int)$total - (int)$input['value'],
             ];
             $TrxpaymentModel->save($paymentmethod);
 
@@ -452,7 +450,7 @@ class Pay extends BaseController
             $paymentmethod = [
                 'paymentid'     => "0",
                 'transactionid' => $trxId,
-                'value'         => ($total - ($input['firstpay'] + $input['secondpay'])),
+                'value'         => ((int)$total - ((int)$input['firstpay'] + (int)$input['secondpay'])),
             ];
             $TrxpaymentModel->save($paymentmethod);
 
@@ -478,21 +476,21 @@ class Pay extends BaseController
         // Gconfig poin setup
         $minimTrx    = $Gconfig['poinorder'];
         $poinval     = $Gconfig['poinvalue'];
-        
-        if ($total  >= $minimTrx) {
-            $value  = $total / $minimTrx;
-            $result = floor($value);
-            $poinresult   = (int)$result * (Int)$poinval;
-        } else {
-            $poinresult = "0";
-        }
 
         // Update Point Member
-        if (!empty($input['customerid'])){
-            $member      = $MemberModel->find($input['customerid']);
-            $trx = $member['trx'] + 1 ;
-            $memberPoint = $member['poin'];
-            $poinPlus = (Int)$pointres + (Int)$poinresult;           
+        if (!empty($input['customerid'])) {
+            if (($minimTrx != "0") && ($total >= $minimTrx)) {
+                $value          = (Int)$total / (Int)$minimTrx;
+                $result         = floor($value);
+                $poinresult     = (int)$result * (Int)$poinval;
+            } else {
+                $poinresult = "0";
+            }
+            
+            $member         = $MemberModel->find($input['customerid']);
+            $trx            = $member['trx'] + 1 ;
+            $memberPoint    = $member['poin'];
+            $poinPlus       = (Int)$pointres + (Int)$poinresult;           
             $pointvalue = [
                 'id'    => $member['id'],
                 'poin'  => $poinPlus,
@@ -553,20 +551,22 @@ class Pay extends BaseController
         }elseif(!empty($input['phone'])){
             $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
             $data['link']           = "https://wa.me/62".$input['phone']."?text=".urlencode($actual_link)."";
-            
         }
-        
+
         // Gconfig poin setup
         $minimTrx    = $Gconfig['poinorder'];
         $poinval     = $Gconfig['poinvalue'];
         
-        if ($total  >= $minimTrx) {
-            $value  = $total / $minimTrx;
-            $result = floor($value);
-            $poin   = (int)$result * $poinval;
-        }
-        
-        if (!empty($input['customerid'])){
+        if (!empty($input['customerid'])) {
+            
+            if (($minimTrx != "0") && ($total >= $minimTrx)) {
+                $value          = (Int)$total / (Int)$minimTrx;
+                $result         = floor($value);
+                $poinresult     = (int)$result * (Int)$poinval;
+            } else {
+                $poinresult = "0";
+            }
+
             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
             $data['mempoin']        = $member['poin'];
             $data['poinused']       = $input['poin'];
@@ -579,7 +579,7 @@ class Pay extends BaseController
         }
 
         if (!empty ($input['value'])){
-            $data['change']     = $input['value'] - $total;
+            $data['change']     = (int)$input['value'] - (int)$total;
         }else{
             $data['change']     = "0";
         }
@@ -593,7 +593,7 @@ class Pay extends BaseController
         if (!empty($input['value'])){
             $data['pay']            = $input['value'];
         } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
-            $data['pay']            = $input['firstpay'] + $input['secondpay'];
+            $data['pay']            = (int)$input['firstpay'] + (int)$input['secondpay'];
         } elseif(!empty($input['duedate']) && empty($input['value'])){
             $data['pay']            = "0";
         }
@@ -603,7 +603,7 @@ class Pay extends BaseController
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
             $data['discount'] += $input['discvalue'];
         } elseif ((isset($input['discvalue'])) && ($input['disctype'] === '1')) {
-            $data['discount'] += ($input['discvalue'] / 100) * $subtotal;
+            $data['discount'] += ((int)$input['discvalue'] / 100) * (int)$subtotal;
         } else {
             $data['discount'] += 0;
         }
@@ -666,31 +666,30 @@ class Pay extends BaseController
             foreach ($input['qty'] as $varid => $varqty) {
                 $variant = $VariantModel->find($varid);
 
-                $discvar = (int)$input['varprice'][$varid]  * $varqty;
-                $discbargain = (int)$input['varbargain'][$varid]* $varqty;
+                $discvar = (int)$input['varprice'][$varid] * (int)$varqty;
+                $discbargain = (int)$input['varbargain'][$varid] * (int)$varqty;
                 // Bargain And Varprice Added
                 if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0){
-                    $varvalues[]  = $discbargain - $discvar;
+                    $varvalues[]    = (int)$discbargain - (int)$discvar;
                     // Vaprice Added And Null Bargain
                 }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
-                    $varvalues[]  = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar;
+                    $varvalues[]    = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar;
                     // Bargain Added And Null Varprice
                 }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
-                    $varvalues[]  = $discbargain;
+                    $varvalues[]    = $discbargain;
                     // Null Bargain & Varprice
                 }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
-                    $varvalues[] = $varqty * ($variant['hargamodal'] + $variant['hargajual']);
+                    $varvalues[]    = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
                 }
             }
         } else {
             $varvalues[] = '0';
         }
-        
     
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bundqty) {
-                $bundle = $BundleModel->find($bunid);
-                $bundvalues[] = $bundqty * $bundle['price'];
+                $bundle         = $BundleModel->find($bunid);
+                $bundvalues[]   = $bundqty * $bundle['price'];
             }
         } else {
             $bundvalues[] = '0';
@@ -706,7 +705,7 @@ class Pay extends BaseController
             if ($this->data['gconfig']['memberdisctype'] === '0') {
                 $memberdisc = $this->data['gconfig']['memberdisc'];
             } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                $memberdisc = ($this->data['gconfig']['memberdisc']/100) * $subtotal;
+                $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$subtotal;
             }
         } else {
             $memberid = '';
@@ -716,7 +715,7 @@ class Pay extends BaseController
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
             $discount = $input['discvalue'];
         } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
-            $discount = ($input['discvalue']/100) * $subtotal;
+            $discount = ((int)$input['discvalue'] / 100) * (int)$subtotal;
         } else {
             $discount = 0;
         }
@@ -727,7 +726,7 @@ class Pay extends BaseController
             $poin = 0;
         }
         
-        $value = $subtotal - $memberdisc - $discount - $poin;
+        $value = (int)$subtotal - (int)$memberdisc - (int)$discount - (int)$poin;
         foreach ($input['varprice'] as $variantprice){
             $varprice = $variantprice;
         }
@@ -751,21 +750,21 @@ class Pay extends BaseController
             foreach ($input['qty'] as $varid => $varqty) {
                 $variant = $VariantModel->find($varid);
 
-                    $discvar = (int)$input['varprice'][$varid] * $varqty;
-                    $discbargain = (int)$input['varbargain'][$varid]* $varqty;
-                    // Bargain And Varprice Added
-                    if (isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid]) && $discbargain !== 0){
-                        $varPrice  = ($discbargain - $discvar)/$varqty;
-                        // Vaprice Added And Null Bargain
-                    }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
-                        $varPrice  = (($varqty * ($variant['hargamodal'] + $variant['hargajual'])) - $discvar) / $varqty;
-                        // Bargain Added And Null Varprice
-                    }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
-                        $varPrice  = $discbargain / $varqty;
-                        // Null Bargain & Varprice
-                    }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
-                        $varPrice = ($varqty * ($variant['hargamodal'] + $variant['hargajual'])) / $varqty;
-                    }
+                $discvar = (int)$input['varprice'][$varid] * (int)$varqty;
+                $discbargain = (int)$input['varbargain'][$varid] * (int)$varqty;
+                // Bargain And Varprice Added
+                if (isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid]) && $discbargain !== 0){
+                    $varPrice  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
+                    // Vaprice Added And Null Bargain
+                }elseif(isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0){
+                    $varPrice  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
+                    // Bargain Added And Null Varprice
+                }elseif(!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])){
+                    $varPrice  = (int)$discbargain / (int)$varqty;
+                    // Null Bargain & Varprice
+                }elseif(empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])){
+                    $varPrice = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
+                }
                 $trxvar = [
                     'bookingid'     => $bookId,
                     'variantid'     => $varid,
@@ -779,7 +778,7 @@ class Pay extends BaseController
                 $saleVarStock = [
                     'id'        => $stock['id'],
                     'sale'      => $date,
-                    'qty'       => $stock['qty'] - $varqty
+                    'qty'       => (int)$stock['qty'] - (int)$varqty
                 ];
                 $StockModel->save($saleVarStock);                
             }
@@ -802,10 +801,9 @@ class Pay extends BaseController
                     $saleBunStock = [
                         'id'        => $bunstock['id'],
                         'sale'      => $date,
-                        'qty'       => $bunstock['qty'] - $bunqty
+                        'qty'       => (int)$bunstock['qty'] - (int)$bunqty
                     ];
                     $StockModel->save($saleBunStock);
-                    
                 }
             }
         }
@@ -864,7 +862,7 @@ class Pay extends BaseController
         }
 
         if (!empty ($input['value']) && $input['value'] <= "0"){
-            $data['change']     = $input['value'] - $total;
+            $data['change']     = (int)$input['value'] - (int)$total;
         }else{
             $data['change']     = "0";
         }
@@ -873,7 +871,7 @@ class Pay extends BaseController
         if (!empty($input['value'])){
             $data['pay']            = "UNPAID";
         } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
-            $data['pay']            = $input['firstpay'] + $input['secondpay'];
+            $data['pay']            = (int)$input['firstpay'] + (int)$input['secondpay'];
         }
 
         $data['discount'] = "0";
@@ -881,7 +879,7 @@ class Pay extends BaseController
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
             $data['discount'] += $input['discvalue'];
         } elseif ((isset($input['discvalue'])) && ($input['disctype'] === '1')) {
-            $data['discount'] += ($input['discvalue'] / 100) * $subtotal;
+            $data['discount'] += ((int)$input['discvalue'] / 100) * (int)$subtotal;
         } else {
             $data['discount'] += 0;
         }
@@ -905,10 +903,10 @@ class Pay extends BaseController
         $minimTrx    = $Gconfig['poinorder'];
         $poinval     = $Gconfig['poinvalue'];
         
-        if ($value  >= $minimTrx) {
-            $subval  = $value / $minimTrx;
+        if (($minimTrx != "0") && ($value >= $minimTrx)) {
+            $subval  = (int)$value / (int)$minimTrx;
             $result = floor($subval);
-            $poin   = (int)$result * $poinval;
+            $poin   = (int)$result * (int)$poinval;
         }
 
         if (!empty($booking['memberid'])){
@@ -1008,8 +1006,8 @@ class Pay extends BaseController
         } elseif ((isset($transactions['discvalue'])) && ($transactions['disctype'] === '1')) {
             foreach ($trxdetails as $trxdetail){
                 if($trxdetail['transactionid'] === $transactions['id']){
-                    $sub =  ($trxdetail['value']* $trxdetail['qty']);
-                    $data['discount'] += $sub * ($transactions['discvalue'] / 100);
+                    $sub =  ((int)$trxdetail['value'] * (int)$trxdetail['qty']);
+                    $data['discount'] += (int)$sub * ((int)$transactions['discvalue'] / 100);
                 }
             }
         } else {
@@ -1019,39 +1017,37 @@ class Pay extends BaseController
         $prices = array();
         foreach ($trxdetails as $trxdet) {
             if ($trxdet['transactionid'] === $id) {
-                $total = $trxdet['qty'] * $trxdet['value'];
-                $prices [] = $total;
+                $total      = (int)$trxdet['qty'] * (int)$trxdet['value'];
+                $prices[]   = $total;
             } 
         }
         $sum = array_sum($prices);
-       
 
-        $total = $sum - $data['discount'] - $transactions['pointused'] - $Gconfig['memberdisc'] + $Gconfig['ppn']; 
+        $total = (int)$sum - (int)$data['discount'] - (int)$transactions['pointused'] - (int)$Gconfig['memberdisc'] + (int)$Gconfig['ppn'];
 
         // Gconfig poin setup
-        $minimTrx    = $Gconfig['poinorder'];
-        $poinval     = $Gconfig['poinvalue'];
+        $minimTrx       = $Gconfig['poinorder'];
+        $poinval        = $Gconfig['poinvalue'];
         
-        if ($total  >= $minimTrx) {
-            $value  = $total / $minimTrx;
-            $result = floor($value);
-            $poin   = (int)$result * $poinval;
+        if (($minimTrx != "0") && ($total >= $minimTrx)) {
+            $value          = (Int)$total / (Int)$minimTrx;
+            $result         = floor($value);
+            $poinresult     = (int)$result * (Int)$poinval;
         }
 
-        if (!empty($transactions['memberid'])){
+        if (!empty($transactions['memberid'])) {
             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
             $data['mempoin']        = $member['poin'];
             $data['poinearn']       = $poin;
-        }else{
+        } else {
             $data['cust']           = "0";
             $data['mempoin']        = "0";
             $data['poinearn']       = "0";  
         }
-        
      
-        if(!empty($transactions['pointused'])){
+        if (!empty($transactions['pointused'])) {
             $data['poinused']       = $transactions['pointused'];
-        }else{
+        } else {
             $data['poinused']       = "0";
         }
         
@@ -1059,9 +1055,9 @@ class Pay extends BaseController
             $trxdetval = $trxdetail['value'];
         }
         
-        if (!empty ($transactions['amountpaid'])){
-            $data['change']     = $transactions['amountpaid'] - $transactions['value'];
-        }else{
+        if (!empty ($transactions['amountpaid'])) {
+            $data['change']     = (int)$transactions['amountpaid'] - (int)$transactions['value'];
+        } else {
             $data['change']     = "0";
         }
         
@@ -1071,28 +1067,28 @@ class Pay extends BaseController
             $data['vardiscval']     = "0";
         }
 
-        if (!empty($transactions['amountpaid'])){
+        if (!empty($transactions['amountpaid'])) {
             $data['pay']            = $transactions['amountpaid'];
         } elseif (empty($transactions['amountpaid'])) {
             foreach ($trxdetails as $trxdetail){
-                if($trxdetail['transactionid']== $id){
-                    $data['pay']            = $trxdetail['value'];
+                if ($trxdetail['transactionid']== $id) {
+                    $data['pay']    = $trxdetail['value'];
                 }
             }
-        }else{
+        } else {
             $data['pay']            = '0';
         }
 
-        if(!empty($debt['value'])){
+        if (!empty($debt['value'])) {
             $data['debt']       = $debt['debt'];
             $data['totaldebt']  = $debt['value'];
-        }else{
+        } else {
             $data['debt']       = "0";
             $data['totaldebt']  = "0";
         }
          
         $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $data['link']          =  urlencode($actual_link);
+        $data['link']           =  urlencode($actual_link);
 
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
@@ -1168,77 +1164,76 @@ class Pay extends BaseController
         $data['bookingdetails'] = $bookingdetails;
         $data['bundleVariants'] = $bundleVariants->getResult();
 
-         // Gconfig poin setup
-         $minimTrx    = $Gconfig['poinorder'];
-         $poinval     = $Gconfig['poinvalue'];
-         
-         if ($total  >= $minimTrx) {
-             $value  = $total / $minimTrx;
-             $result = floor($value);
-             $poin   = (int)$result * $poinval;
-         }
- 
-         if (!empty($bookings['memberid'])){
-             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
-             $data['mempoin']        = $member['poin'];
-             $data['poinearn']       = $poin;
-         }else{
-             $data['cust']           = "0";
-             $data['mempoin']        = "0";
-             $data['poinearn']       = "0";  
-         }
+        // Gconfig poin setup
+        $minimTrx    = $Gconfig['poinorder'];
+        $poinval     = $Gconfig['poinvalue'];
         
+        if (($minimTrx != "0") && ($total >= $minimTrx)) {
+            $value          = (Int)$total / (Int)$minimTrx;
+            $result         = floor($value);
+            $poinresult     = (int)$result * (Int)$poinval;
+        }
+
+        if (!empty($bookings['memberid'])) {
+            $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
+            $data['mempoin']        = (Int)$member['poin'];
+            $data['poinearn']       = $poin;
+        } else {
+            $data['cust']           = "0";
+            $data['mempoin']        = "0";
+            $data['poinearn']       = "0";  
+        }
         
-        if (!empty($member)){
+        if (!empty($member)) {
             $data['cust']           = $MemberModel->where('id',$booking['memberid'])->first();
-            $data['mempoin']        = $member['poin'];
-        }else{
+            $data['mempoin']        = (Int)$member['poin'];
+        } else {
             $data['cust']           = "0";
             $data['mempoin']        = "0";
             $data['poinused']       = "0";
         }
 
-        if (!empty ($input['value']) && $input['value'] <= "0"){
-            $data['change']     = $input['value'] - $total;
-        }else{
+        if (!empty ($input['value']) && $input['value'] <= "0") {
+            $data['change']     = (Int)$input['value'] - (Int)$total;
+        } else {
             $data['change']     = "0";
         }
 
-        if (!empty($booking['discvar']) && $booking['discvar'] !== "0"){
+        if (!empty($booking['discvar']) && $booking['discvar'] !== "0") {
             $data['vardiscval']     = $bookingdetails['value']['variantid'];
-        }else{
+        } else {
             $data['vardiscval']     = "0";
         }
  
         
         if ((!empty($booking['discvalue'])) && ($booking['disctype'] === '0')) {
-            $data['discount'] = $booking['discvalue'];
+            $data['discount']   = $booking['discvalue'];
             $data['memberdisc'] = $booking['discvalue'];
         } elseif ((!empty($booking['discvalue'])) && ($booking['disctype'] === '1')) {
-            $data['discount'] = ($booking['discvalue']/100) * $bookingdetails['value'];
-            $data['memberdisc'] = ($booking['discvalue'] / 100) * $bookingdetails['value'];
+            $data['discount']   = ((Int)$booking['discvalue'] / 100) * (Int)$bookingdetails['value'];
+            $data['memberdisc'] = ((Int)$booking['discvalue'] / 100) * (Int)$bookingdetails['value'];
         } else {
             $data['discount'] = 0;
             $data['memberdisc'] = 0;
         }
 
-        if(!empty($input['debt'])){
+        if (!empty($input['debt'])) {
             $data['debt']       = $input['debt'];
             $data['totaldebt']  = $member['kasbon'];
-        }else{
+        } else {
             $data['debt']       = "0";
             $data['totaldebt']  = "0";
         }
 
-        if(!empty($bookingdetails)){
+        if (!empty($bookingdetails)) {
             $data['total']          = $booking['value'];
-        }else{
+        } else {
             $data['total']          = "0";
         }
 
         $sub = [];
         foreach ($bookingdetails as $bookingdetail) {
-            $sub []= $bookingdetail['value']+$bookingdetail['discvar'];
+            $sub []= (Int)$bookingdetail['value'] + (Int)$bookingdetail['discvar'];
         }
         $subtotal = array_sum($sub);
 
@@ -1269,7 +1264,7 @@ class Pay extends BaseController
                 $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $bookdet['variantid'])->first();
                 $stockdata = [
                     'id'    => $stock['id'],
-                    'qty'   => $stock['qty'] + $bookdet['qty'],
+                    'qty'   => (int)$stock['qty'] + (int)$bookdet['qty'],
                 ];
                 $StockModel->save($stockdata);
             } else {
@@ -1278,7 +1273,7 @@ class Pay extends BaseController
                     $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $bundle['variantid'])->first();
                     $stockdata = [
                         'id'    => $stock['id'],
-                        'qty'   => $stock['qty'] + $bookdet['qty'],
+                        'qty'   => (int)$stock['qty'] + (int)$bookdet['qty'],
                     ];
                     $StockModel->save($stockdata);
                 }
@@ -1342,7 +1337,7 @@ class Pay extends BaseController
         ];
         $MemberModel->save($data);
         
-        $cas = $input['value'] + $cash['qty'];
+        $cas = (int)$input['value'] + (int)$cash['qty'];
         $wallet = [
             'id'                => $cash['id'],
             'qty'               => $cas,
@@ -1355,7 +1350,7 @@ class Pay extends BaseController
         foreach ($dailyreports as $dayrep) {
             $tcashin = [
                 'id'            => $dayrep['id'],
-                'totalcashin'   => $dayrep['totalcashin'] + $input['value'],
+                'totalcashin'   => (int)$dayrep['totalcashin'] + (int)$input['value'],
             ];
             $DailyReportModel->save($tcashin);
         }
@@ -1421,8 +1416,8 @@ class Pay extends BaseController
         } elseif ((isset($transactions['discvalue'])) && ($transactions['disctype'] === '1')) {
             foreach ($trxdetails as $trxdetail){
                 if($trxdetail['transactionid'] === $transactions['id']){
-                    $sub =  ($trxdetail['value']* $trxdetail['qty']);
-                    $data['discount'] += $sub * ($transactions['discvalue'] / 100);
+                    $sub =  ((int)$trxdetail['value'] * (int)$trxdetail['qty']);
+                    $data['discount'] += (int)$sub * ((int)$transactions['discvalue'] / 100);
                 }
             }
         } else {
@@ -1432,65 +1427,65 @@ class Pay extends BaseController
         $prices = array();
         foreach ($trxdetails as $trxdet) {
             if ($trxdet['transactionid'] === $id) {
-                $total = $trxdet['qty'] * $trxdet['value'];
+                $total = (int)$trxdet['qty'] * (int)$trxdet['value'];
                 $prices [] = $total;
             } 
         }
         $sum = array_sum($prices);
 
-        $total = $sum - $data['discount'] - $transactions['pointused'] - $Gconfig['memberdisc'] + $Gconfig['ppn']; 
-
-        // Gconfig poin setup
-        $minimTrx    = $Gconfig['poinorder'];
-        $poinval     = $Gconfig['poinvalue'];
+        $total = (Int)$sum - (Int)$data['discount'] - (Int)$transactions['pointused'] - (Int)$Gconfig['memberdisc'] + (Int)$Gconfig['ppn'];
         
-        if ($total  >= $minimTrx) {
-            $value  = $total / $minimTrx;
-            $result = floor($value);
-            $poin   = (int)$result * $poinval;
+        // Gconfig poin setup
+        $minimTrx       = $Gconfig['poinorder'];
+        $poinval        = $Gconfig['poinvalue'];
+
+        if (($minimTrx != "0") && ($total >= $minimTrx)) {
+            $value          = (Int)$total / (Int)$minimTrx;
+            $result         = floor($value);
+            $poinresult     = (int)$result * (Int)$poinval;
         }
 
-        if (!empty($transactions['memberid'])){
+        if (!empty($transactions['memberid'])) {
             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
             $data['mempoin']        = $members['poin'];
             $data['poinearn']       = $poin;
-        }else{
+        } else {
             $data['cust']           = "0";
             $data['mempoin']        = "0";
             $data['poinearn']       = "0";  
         }
         
     
-        if(!empty($transactions['pointused'])){
+        if (!empty($transactions['pointused'])) {
             $data['poinused']       = $transactions['pointused'];
-        }else{
+        } else {
             $data['poinused']       = "0";
         }
         
         $sub = [];
         foreach ($trxdetails as $trxdetail){
-            $trxdetval = $trxdetail['value'];
-            $sub [] = $trxdetail['value'] + $trxdetail['discvar'] * $trxdetail['qty'] ;
+            $trxdetval  = $trxdetail['value'];
+            $sub []     = (Int)$trxdetail['value'] + (Int)$trxdetail['discvar'] * (Int)$trxdetail['qty'] ;
         }
         $subtotal = (array_sum($sub));
 
-        if (!empty ($transactions['amountpaid'])){
-            $data['change']     = $transactions['amountpaid'] - $transactions['value'];
-        }else{
+        if (!empty ($transactions['amountpaid'])) {
+            $data['change']     = (int)$transactions['amountpaid'] - (int)$transactions['value'];
+        } else {
             $data['change']     = "0";
         }
         
-        if (!empty($trxdetails['discvar'])){
+        if (!empty($trxdetails['discvar'])) {
             $data['vardiscval']     = $trxdetails['discvar']['variantid'];
-        }else{
+        } else {
             $data['vardiscval']     = "0";
         }
 
-        if (!empty($transactions['amountpaid'])){
+        if (!empty($transactions['amountpaid'])) {
             $data['pay'] = $transactions['amountpaid'];
         } elseif (empty($transactions['amountpaid'])) {
             foreach ($trxdetails as $trxdetail){
-                if($trxdetail['transactionid']== $id){
+                if ($trxdetail['transactionid']== $id) {
                     $data['pay'] = $trxdetail['value'];
                 }
             }
@@ -1505,7 +1500,6 @@ class Pay extends BaseController
             $data['debt']       = "0";
             $data['totaldebt']  = "0";
         }
-
        
         $data['title']          = lang('Global.transaction');
         $data['description']    = lang('Global.transactionListDesc');
@@ -1582,56 +1576,55 @@ class Pay extends BaseController
         $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
         $bundleVariants     = $bundleBuilder->get();
         $data               = $this->data;
-        if (!empty($member)){
+        if (!empty($member)) {
             $data['cust']           = $MemberModel->where('id',$booking['memberid'])->first();
             $data['mempoin']        = $member['poin'];
-        }else{
+        } else {
             $data['cust']           = "0";
             $data['mempoin']        = "0";
             $data['poinused']       = "0";
         }
 
-        if (!empty ($input['value']) && $input['value'] <= "0"){
-            $data['change']     = $input['value'] - $total;
-        }else{
+        if (!empty ($input['value']) && $input['value'] <= "0") {
+            $data['change']     = (int)$input['value'] - (int)$total;
+        } else {
             $data['change']     = "0";
         }
 
-        if (!empty($booking['discvar']) && $booking['discvar'] !== "0"){
+        if (!empty($booking['discvar']) && $booking['discvar'] !== "0") {
             $data['vardiscval']     = $bookingdetails['value']['variantid'];
-        }else{
+        } else {
             $data['vardiscval']     = "0";
         }
 
         foreach ($trxdetails as $trxdetail){
-            if($trxdetail['transactionid'] === $transactions['id']){
-                $sub =  ($trxdetail['value']* $trxdetail['qty']);
-                $data['discount'] += $sub * ($transactions['discvalue'] / 100);
+            if ($trxdetail['transactionid'] === $transactions['id']) {
+                $sub =  ((int)$trxdetail['value'] * (int)$trxdetail['qty']);
+                $data['discount'] += (int)$sub * ((int)$transactions['discvalue'] / 100);
             }
         }
 
         
         if ((!empty($booking['discvalue'])) && ($booking['disctype'] === '0')) {
-            $data['discount'] = $booking['discvalue'];
+            $data['discount']   = $booking['discvalue'];
             $data['memberdisc'] = $booking['discvalue'];
         } elseif ((!empty($booking['discvalue'])) && ($booking['disctype'] === '1')) {
-            $sub = $bookingdetails['value'] * $bookingdetails['qty'];
-            $data['discount'] = ($booking['discvalue']/100) * $sub;
+            $sub = (int)$bookingdetails['value'] * (int)$bookingdetails['qty'];
+            $data['discount']   = ((int)$booking['discvalue'] / 100) * (int)$sub;
             // $data['discount'] = ($booking['discvalue']/100) * $bookingdetails['value'];
-            $data['memberdisc'] = ($booking['discvalue'] / 100) * $bookingdetails['value'];
+            $data['memberdisc'] = ((int)$booking['discvalue'] / 100) * (int)$bookingdetails['value'];
         } else {
             $data['discount'] = 0;
             $data['memberdisc'] = 0;
         }
 
-        if(!empty($input['debt'])){
+        if (!empty($input['debt'])) {
             $data['debt']       = $input['debt'];
             $data['totaldebt']  = $member['kasbon'];
-        }else{
+        } else {
             $data['debt']       = "0";
             $data['totaldebt']  = "0";
         }
-
         
         $subtotal = 0;
         foreach ($bookingdetails as $bookingdetail) {
@@ -1642,17 +1635,17 @@ class Pay extends BaseController
         $minimTrx    = $Gconfig['poinorder'];
         $poinval     = $Gconfig['poinvalue'];
         
-        if ($subtotal  >= $minimTrx) {
-            $value  = $subtotal / $minimTrx;
+        if (($minimTrx != "0") && ($subtotal  >= $minimTrx)) {
+            $value  = (int)$subtotal / (int)$minimTrx;
             $result = floor($value);
             $poin   = (int)$result * $poinval;
         }
 
-        if (!empty($booking['memberid'])){
+        if (!empty($booking['memberid'])) {
             $data['cust']           = $MemberModel->where('id',$booking['memberid'])->first();
             $data['mempoin']        = $member['poin'];
             $data['poinearn']       = $poin;
-        }else{
+        } else {
             $data['cust']           = "0";
             $data['mempoin']        = "0";
             $data['poinearn']       = "0";  

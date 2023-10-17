@@ -2,7 +2,6 @@
 
 <?= $this->section('extraScript') ?>
     <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-    <script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
     <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
     <script type="text/javascript" src="js/moment.min.js"></script>
     <script type="text/javascript" src="js/daterangepicker.min.js"></script>
@@ -451,18 +450,9 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="uk-light">
+    <div>
         <?= $pager->links('cashinout', 'front_full') ?>
     </div>
 </div>
 <!-- End Of Table Content -->
-
-<!-- Search Engine Script -->
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable();
-    });
-</script>
-<!-- Search Engine Script End -->
-
 <?= $this->endSection() ?>

@@ -263,37 +263,37 @@
                                 <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                             </li>          
                             <?php if (in_groups('owner')) : ?>
-                                <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report/penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report/keuntungan')?'uk-active':''?><?=($uri->getSegment(1)==='report/payment')?'uk-active':''?><?=($uri->getSegment(1)==='report/employe')?'uk-active':''?><?=($uri->getSegment(1)==='report/product')?'uk-active':''?><?=($uri->getSegment(1)==='report/category')?'uk-active':''?><?=($uri->getSegment(1)==='report/bundle')?'uk-active':''?><?=($uri->getSegment(1)==='report/diskon')?'uk-active':''?><?=($uri->getSegment(1)==='report/presence')?'uk-active':''?><?=($uri->getSegment(1)==='report/customer')?'uk-active':''?><?=($uri->getSegment(1)==='report/stockcategory')?'uk-active':''?>">
+                                <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?>">
                                     <a class="uk-h4 tm-h4" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                                     <ul class="uk-nav-sub">
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/penjualan')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?>">
                                             <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/keuntungan')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?>">
                                             <a href="<?= base_url('report/keuntungan') ?>"><?=lang('Global.profitreport');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/payment')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?>">
                                             <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/employe')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?>">
                                             <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/product')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?>">
                                             <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/category')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?>">
                                             <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/bundle')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?>">
                                             <a href="<?= base_url('report/bundle') ?>"><?=lang('Global.bundlereport');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/diskon')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?>">
                                             <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/presence')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?>">
                                             <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/customer')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?>">
                                             <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
                                         </li>
                                     </ul>
@@ -308,13 +308,13 @@
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                             </li>
-                            <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='debt')?'uk-active':''?><?=($uri->getSegment(1)==='debt/debtpay')?'uk-active':''?>">
+                            <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
                                 <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
-                                    <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt')?'uk-active':''?>">
+                                    <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                         <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
                                     </li>
-                                    <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt/debtpay')?'uk-active':''?>">
+                                    <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
                                         <a href="<?= base_url('debt/debtpay') ?>"><?=lang('Global.debtInstallments');?></a>
                                     </li>
                                 </ul>
@@ -350,16 +350,16 @@
                                 </li>
                             <?php endif ?>
                             <?php if (in_groups('owner')) : ?>
-                                <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='stock')?'uk-active':''?><?=($uri->getSegment(1)==='stock/supplier')?'uk-active':''?><?=($uri->getSegment(1)==='stock/purchase')?'uk-active':''?><?=($uri->getSegment(1)==='stockmove')?'uk-active':''?><?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?><?=($uri->getSegment(1)==='stock/stockcycle')?'uk-active':''?>">
+                                <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?><?=($uri->getSegment(1)==='stockmove')?'uk-active':''?><?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>">
                                     <a class="uk-h4 tm-h4" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
                                     <ul class="uk-nav-sub">
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                             <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock/supplier')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
                                             <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock/purchase')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
                                             <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
                                         </li>
                                         <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stockmove')?'uk-active':''?>">
@@ -368,7 +368,7 @@
                                         <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?>">
                                             <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
                                         </li>
-                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock/stockcycle')?'uk-active':''?>">
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>">
                                             <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
                                         </li>
                                     </ul>
@@ -415,37 +415,37 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                     </li>          
                     <?php if (in_groups('owner')) : ?>
-                        <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report/penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report/keuntungan')?'uk-active':''?><?=($uri->getSegment(1)==='report/payment')?'uk-active':''?><?=($uri->getSegment(1)==='report/employe')?'uk-active':''?><?=($uri->getSegment(1)==='report/product')?'uk-active':''?><?=($uri->getSegment(1)==='report/category')?'uk-active':''?><?=($uri->getSegment(1)==='report/bundle')?'uk-active':''?><?=($uri->getSegment(1)==='report/diskon')?'uk-active':''?><?=($uri->getSegment(1)==='report/presence')?'uk-active':''?><?=($uri->getSegment(1)==='report/customer')?'uk-active':''?><?=($uri->getSegment(1)==='report/stockcategory')?'uk-active':''?>">
+                        <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?>">
                             <a class="uk-h4 tm-h4" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/penjualan')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?>">
                                     <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/keuntungan')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?>">
                                     <a href="<?= base_url('report/keuntungan') ?>"><?=lang('Global.profitreport');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/payment')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?>">
                                     <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/employe')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?>">
                                     <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/product')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?>">
                                     <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/category')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?>">
                                     <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/bundle')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?>">
                                     <a href="<?= base_url('report/bundle') ?>"><?=lang('Global.bundlereport');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/diskon')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?>">
                                     <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/presence')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?>">
                                     <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report/customer')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?>">
                                     <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
                                 </li>
                             </ul>
@@ -460,13 +460,13 @@
                     <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
                         <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                     </li>
-                    <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='debt')?'uk-active':''?><?=($uri->getSegment(1)==='debt/debtpay')?'uk-active':''?>">
+                    <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
                         <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
                         <ul class="uk-nav-sub">
-                            <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt')?'uk-active':''?>">
+                            <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                 <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
                             </li>
-                            <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt/debtpay')?'uk-active':''?>">
+                            <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
                                 <a href="<?= base_url('debt/debtpay') ?>"><?=lang('Global.debtInstallments');?></a>
                             </li>
                         </ul>
@@ -502,16 +502,16 @@
                         </li>
                     <?php endif ?>
                     <?php if (in_groups('owner')) : ?>
-                        <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='stock')?'uk-active':''?><?=($uri->getSegment(1)==='stock/supplier')?'uk-active':''?><?=($uri->getSegment(1)==='stock/purchase')?'uk-active':''?><?=($uri->getSegment(1)==='stockmove')?'uk-active':''?><?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?><?=($uri->getSegment(1)==='stock/stockcycle')?'uk-active':''?>">
+                        <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?><?=($uri->getSegment(1)==='stockmove')?'uk-active':''?><?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>">
                             <a class="uk-h4 tm-h4" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                     <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock/supplier')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
                                     <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock/purchase')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
                                     <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
                                 </li>
                                 <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stockmove')?'uk-active':''?>">
@@ -520,7 +520,7 @@
                                 <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?>">
                                     <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
                                 </li>
-                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock/stockcycle')?'uk-active':''?>">
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>">
                                     <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
                                 </li>
                             </ul>
