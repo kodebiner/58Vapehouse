@@ -131,7 +131,7 @@
 <!-- End Of Modal Add -->
 
 <!-- Table Of Content -->
-<?php if (in_groups('owner')) { ?>
+<?php if (in_groups(['owner','supervisor'])) { ?>
     <div class="uk-overflow-auto uk-margin">
         <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
             <thead>
