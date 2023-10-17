@@ -13,12 +13,13 @@
         <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.outletList')?></h3>
         </div>
-
+        <?php if (in_groups('owner')) : ?>
         <!-- Button Trigger Modal Add -->
         <div class="uk-width-1-2@m uk-text-right@m">
             <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addOutlet')?></button>
         </div>
         <!-- End Of Button Trigger Modal Add -->
+        <?php endif ?>
     </div>
 </div>
 <!-- End Of Page Heading -->
@@ -91,7 +92,9 @@
                 <th class="uk-text-center uk-width-small">No</th>
                 <th class="uk-width-medium"><?=lang('Global.name')?></th>
                 <th class="uk-width-large"><?=lang('Global.address')?></th>
+                <?php if (in_groups('owner')) : ?>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
+                <?php endif ?>
             </tr>
         </thead>
         <tbody>
@@ -101,6 +104,7 @@
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td><?= $outlet['name']; ?></td>
                     <td><?= $outlet['address']; ?></td>
+                    <?php if (in_groups('owner')) : ?>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                         <!-- Button Trigger Modal Edit -->
                         <div>
@@ -114,6 +118,7 @@
                         </div>
                         <!-- End Of Button Delete -->
                     </td>
+                    <?php endif ?>
                 </tr>
             <?php } ?>
         </tbody>

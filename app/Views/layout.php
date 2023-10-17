@@ -344,7 +344,7 @@
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='presence')?'uk-active':''?>">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('presence') ?>"><img src="img/layout/presensi.svg" uk-svg><?=lang('Global.presence');?></a>
                             </li>
-                            <?php if (in_groups('owner') && in_groups('supervisor')) : ?>
+                            <?php if (in_groups((['owner','supervisor']))) : ?>
                                 <li class="tm-main-navbar <?=($uri->getSegment(1)==='user')?'uk-active':''?>">
                                     <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
                                 </li>
@@ -374,7 +374,7 @@
                                     </ul>
                                 </li>
                             <?php endif ?>
-                            <?php if (in_groups('owner')) : ?>
+                            <?php if (in_groups(['owner','supervisor'])) : ?>
                                 <li class="tm-main-navbar <?=($uri->getSegment(1)==='outlet')?'uk-active':''?>">
                                     <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                                 </li>
@@ -496,7 +496,7 @@
                     <li class="tm-main-navbar <?=($uri->getSegment(1)==='presence')?'uk-active':''?>">
                         <a class="uk-h4 tm-h4" href="<?= base_url('presence') ?>"><img src="img/layout/presensi.svg" uk-svg><?=lang('Global.presence');?></a>
                     </li>
-                    <?php if (in_groups('owner') && in_groups('supervisor')) : ?>
+                    <?php if (in_groups(['owner','supervisor'])) : ?>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='user')?'uk-active':''?>">
                             <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
                         </li>
@@ -526,7 +526,7 @@
                             </ul>
                         </li>
                     <?php endif ?>
-                    <?php if (in_groups('owner')) : ?>
+                    <?php if (in_groups(['owner','supervisor'])) : ?>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='outlet')?'uk-active':''?>">
                             <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                         </li>

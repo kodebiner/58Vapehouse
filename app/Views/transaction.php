@@ -839,10 +839,12 @@
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('presence') ?>"><img src="img/layout/presensi.svg" uk-svg><?=lang('Global.presence');?></a>
                         </li>
-                        <?php if (in_groups('owner')) : ?>
+                        <?php if (in_groups(['owner','supervisor'])) : ?>
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
                         </li>
+                        <?php endif ?>
+                        <?php if (in_groups('owner')) : ?>
                         <li class="tm-main-navbar uk-parent">
                             <a class="uk-h4 tm-h4" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">
@@ -866,6 +868,8 @@
                                 </li>
                             </ul>
                         </li>
+                        <?php endif ?>
+                        <?php if (in_groups(['owner','supervisor'])) : ?>
                         <li class="tm-main-navbar">
                             <a class="uk-h4 tm-h4" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                         </li>

@@ -98,11 +98,11 @@ $routes->group('business', ['filter'=>'login'], function($routes){
 
 // User Routes
 $routes->group('user', ['filter'=>'login'], function($routes){
-    $routes->get('', 'User::index', ['filter' => 'role:owner']);
-    $routes->post('create', 'User::create', ['filter' => 'role:owner']);
-    $routes->get('edit(:num)', 'User::edit/$1', ['filter' => 'role:owner']);
-    $routes->post('update/(:num)', 'User::update/$1', ['filter' => 'role:owner']);
-    $routes->get('delete/(:num)', 'User::delete/$1', ['filter' => 'role:owner']);
+    $routes->get('', 'User::index', ['filter' => 'role:owner,supervisor']);
+    $routes->post('create', 'User::create', ['filter' => 'role:owner,supervisor']);
+    $routes->get('edit(:num)', 'User::edit/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->post('update/(:num)', 'User::update/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->get('delete/(:num)', 'User::delete/$1', ['filter' => 'role:owner,supervisor']);
 });
 
 // Outlet Routes
@@ -165,10 +165,10 @@ $routes->group('export', ['filter'=>'login'], function($routes){
 
 // Customer Routes
 $routes->group('customer', ['filter'=>'login'], function($routes){
-    $routes->get('', 'Customer::index', ['filter' => 'role:owner']);
-    $routes->post('create', 'Customer::create', ['filter' => 'role:owner']);
-    $routes->post('update/(:num)', 'CUstomer::update/$1', ['filter' => 'role:owner']);
-    $routes->get('delete/(:num)', 'Customer::delete/$1', ['filter' => 'role:owner']);
+    $routes->get('', 'Customer::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Customer::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'CUstomer::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Customer::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Stock

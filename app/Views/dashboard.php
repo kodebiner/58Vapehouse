@@ -543,6 +543,6 @@
         </div>
     </div>
     <!-- Main Section End -->
-    <?php endif ?>
+    <?php endif; ?>
 </div>
 <?= $this->endSection() ?>
