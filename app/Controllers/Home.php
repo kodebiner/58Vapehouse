@@ -546,19 +546,19 @@ class Home extends BaseController
 
         foreach ($variants as $variant) {
             if ($variant['id'] != "2358") {
-                $variantdata = [
-                    'id'        => $variant['id'],
-                    'hargadasar' => $variant['hargamodal'],
-                    'hargarekomendasi' => (Int)$variant['hargamodal'] + (Int)$variant['hargajual'],
-                ];
-                $VariantModel->save($variantdata);
-    
-                // $data = [
-                //     'variantid' => $variant['id'],
+                // $variantdata = [
+                //     'id'        => $variant['id'],
                 //     'hargadasar' => $variant['hargamodal'],
-                //     'hargamodal' => $variant['hargamodal'],
+                //     'hargarekomendasi' => (Int)$variant['hargamodal'] + (Int)$variant['hargajual'],
                 // ];
-                // $OldStockModel->insert($data);
+                // $VariantModel->save($variantdata);
+    
+                $data = [
+                    'variantid' => $variant['id'],
+                    'hargadasar' => $variant['hargamodal'],
+                    'hargamodal' => $variant['hargamodal'],
+                ];
+                $OldStockModel->insert($data);
             }
         }
     }
