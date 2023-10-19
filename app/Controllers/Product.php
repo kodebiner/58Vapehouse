@@ -198,7 +198,7 @@ class Product extends BaseController
         // rules
         $rule = [
             'name'          => 'required|max_length[255]|is_unique[product.name]',
-            'description'   => 'required|max_length[255]',
+            'description'   => 'max_length[255]',
             'category'      => 'required',
             'brand'         => 'required',
         ];
@@ -391,7 +391,7 @@ class Product extends BaseController
         // rules validation
         $rule = [
             'name'          => 'required|max_length[255]',
-            'description'   => 'required|max_length[255]',
+            'description'   => 'max_length[255]',
             //'category'      => 'required',
             // 'brand'         => 'required',
         ];
@@ -420,42 +420,35 @@ class Product extends BaseController
     public function editvar($id){
 
         // calling model
-        $ProductModel   = new ProductModel();
-        $StockModel     = new StockModel();
+        $OldStockModel  = new OldStockModel();
         $VariantModel   = new VariantModel();
 
         // initialize
-        $data['variants']        = $VariantModel->where('productid',$id)->first();
-        $products                = $ProductModel->findAll();
-        $stocks                  = $StockModel->where('variantid',$id);
-        $input                   = $this->request->getPost();
+        $oldstocks                  = $OldStockModel->where('variantid',$id)->first();
+        
+        $input                      = $this->request->getPost();
 
         //update variant
-        foreach ( $products as $product) {
         $variants =  [
-                'id'                    => $id,
-                'name'                  => $input['name'],
-                'hargadasar'            => $input['hargadasar'],
-                'hargamodal'            => $input['hargamodal'],
-                'hargarekomendasi'      => $input['hargarekomendasi'],
-                'hargajual'             => $input['margin'],
-                ];
-            }
+            'id'                    => $id,
+            'name'                  => $input['name'],
+            'hargadasar'            => $input['hargadasar'],
+            'hargamodal'            => $input['hargamodal'],
+            'hargarekomendasi'      => $input['hargarekomendasi'],
+            'hargajual'             => $input['margin'],
+        ];
 
         // saving variant
-        $VariantModel->save($variants); 
+        $VariantModel->save($variants);
 
-        // get variant id
-        $variantid = $VariantModel->getInsertID();
-
-        // saving stocks
-        foreach ( $stocks as $stock) {
-            $var =  [
-                'variantid' => $variantid,
-                'qty'       => '0',
-            ];
-            $StockModel->save($var); 
-        }
+        // Update Old Stock
+        $oldstockdata   = [
+            'id'            => $oldstocks['id'],
+            'hargadasar'    => $input['hargadasar'],
+            'hargamodal'    => $input['hargamodal'],
+        ];
+        // Save Data Old Stock
+        $OldStockModel->save($oldstockdata);
 
         // redirect back
         return redirect()->back()->with('message', lang('Global.saved'));
@@ -473,6 +466,12 @@ class Product extends BaseController
         $stocks = $StockModel->where('variantid', $id)->find();
         foreach ($stocks as $stock) {
             $StockModel->delete($stock['id']);
+        }
+
+        // Populating $ Remove Old Stock Data
+        $oldstocks = $OldStockModel->where('variantid', $id)->find();
+        foreach ($oldstocks as $oldstock) {
+            $OldStockModel->delete($oldstock['id']);
         }
 
         // Populating & Removing Bundle & Bundle Detail Data
@@ -510,6 +509,12 @@ class Product extends BaseController
             $stocks = $StockModel->where('variantid', $varian['id'])->find();
             foreach ($stocks as $stock) {
                 $StockModel->delete($stock['id']);
+            }
+            
+            // Populating & Removing Old Stocks Data
+            $oldstocks = $OldStockModel->where('variantid', $varian['id'])->find();
+            foreach ($oldstocks as $oldstock) {
+                $OldStockModel->delete($oldstock['id']);
             }
 
             // Populating & Removing Bundle & Bundle Detail Data

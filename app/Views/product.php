@@ -74,14 +74,14 @@
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" required />
                         </div>
                     </div>
 
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?=lang('Global.description')?>" autofocus required />
+                            <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?=lang('Global.description')?>" />
                         </div>
                     </div>
 
@@ -280,19 +280,19 @@
                     <div id="createVariant" class="uk-margin-bottom">
                         <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
                         <div class="uk-text-right"><a onclick="createNewVariant()">+ Add More Variant</a></div>
-                        <div class="uk-margin uk-margin-remove-top uk-child-width-1-6" uk-grid>
+                        <!-- <div class="uk-margin uk-margin-remove-top uk-child-width-1-3" uk-grid>
                             <div class="uk-text-bold"><?=lang('Global.name')?></div>
                             <div class="uk-text-bold"><?=lang('Global.basePrice')?></div>
                             <div class="uk-text-bold"><?=lang('Global.capitalPrice')?></div>
                             <div class="uk-text-bold"><?=lang('Global.suggestPrice')?></div>
                             <div class="uk-text-bold"><?=lang('Global.margin')?></div>
-                        </div>
-                        <div id="create0" class="uk-margin uk-child-width-1-6" uk-grid>
-                            <div id="createVarName0"><input type="text" class="uk-input" id="varName[0]" name="varName[0]" /></div>
-                            <div id="createVarBase0"><input type="number" class="uk-input" id="varBase[0]" name="varBase[0]" required/></div>
-                            <div id="createVarCap0"><input type="number" class="uk-input" id="varCap[0]" name="varCap[0]" required/></div>
-                            <div id="createSugCap0"><input type="number" class="uk-input" id="varSug[0]" name="varSug[0]" required/></div>
-                            <div id="createVarMargin0"><input type="number" class="uk-input" id="varMargin[0]" name="varMargin[0]" required/></div>
+                        </div> -->
+                        <div id="create0" class="uk-margin uk-child-width-1-3" uk-grid>
+                            <div id="createVarName0"><input type="text" class="uk-input" id="varName[0]" name="varName[0]" placeholder="<?=lang('Global.name')?>" /></div>
+                            <div id="createVarBase0"><input type="number" class="uk-input" id="varBase[0]" name="varBase[0]" placeholder="<?=lang('Global.basePrice')?>" required/></div>
+                            <div id="createVarCap0"><input type="number" class="uk-input" id="varCap[0]" name="varCap[0]" placeholder="<?=lang('Global.capitalPrice')?>" required/></div>
+                            <div id="createSugCap0"><input type="number" class="uk-input" id="varSug[0]" name="varSug[0]" placeholder="<?=lang('Global.suggestPrice')?>" required/></div>
+                            <div id="createVarMargin0"><input type="number" class="uk-input" id="varMargin[0]" name="varMargin[0]" placeholder="<?=lang('Global.margin')?>" required/></div>
                         </div>
                     </div>
                     <script type="text/javascript">
@@ -304,7 +304,7 @@
 
                             const newCreateVariant = document.createElement('div');
                             newCreateVariant.setAttribute('id','create'+createCount);
-                            newCreateVariant.setAttribute('class','uk-margin uk-child-width-1-6');
+                            newCreateVariant.setAttribute('class','uk-margin uk-child-width-1-3');
                             newCreateVariant.setAttribute('uk-grid','');
 
                             const createVarName = document.createElement('div');
@@ -313,6 +313,7 @@
                             const createVarNameInput = document.createElement('input');
                             createVarNameInput.setAttribute('type','text');
                             createVarNameInput.setAttribute('class','uk-input');
+                            createVarNameInput.setAttribute('placeholder','<?=lang('Global.name')?>');
                             createVarNameInput.setAttribute('id','varName['+createCount+']');
                             createVarNameInput.setAttribute('name','varName['+createCount+']');
 
@@ -322,6 +323,7 @@
                             const createVarBaseInput = document.createElement('input');
                             createVarBaseInput.setAttribute('type','number');
                             createVarBaseInput.setAttribute('class','uk-input');
+                            createVarBaseInput.setAttribute('placeholder','<?=lang('Global.basePrice')?>');
                             createVarBaseInput.setAttribute('id','varBase['+createCount+']');
                             createVarBaseInput.setAttribute('name','varBase['+createCount+']');
 
@@ -331,6 +333,7 @@
                             const createVarCapInput = document.createElement('input');
                             createVarCapInput.setAttribute('type','number');
                             createVarCapInput.setAttribute('class','uk-input');
+                            createVarCapInput.setAttribute('placeholder','<?=lang('Global.capitalPrice')?>');
                             createVarCapInput.setAttribute('id','varCap['+createCount+']');
                             createVarCapInput.setAttribute('name','varCap['+createCount+']');
 
@@ -340,6 +343,7 @@
                             const createSugCapInput = document.createElement('input');
                             createSugCapInput.setAttribute('type','number');
                             createSugCapInput.setAttribute('class','uk-input');
+                            createSugCapInput.setAttribute('placeholder','<?=lang('Global.suggestPrice')?>');
                             createSugCapInput.setAttribute('id','varSug['+createCount+']');
                             createSugCapInput.setAttribute('name','varSug['+createCount+']');
 
@@ -349,6 +353,7 @@
                             const createVarMarginInput = document.createElement('input');
                             createVarMarginInput.setAttribute('type','number');
                             createVarMarginInput.setAttribute('class','uk-input');
+                            createVarMarginInput.setAttribute('placeholder','<?=lang('Global.margin')?>');
                             createVarMarginInput.setAttribute('id','varMargin['+createCount+']');
                             createVarMarginInput.setAttribute('name','varMargin['+createCount+']');
 

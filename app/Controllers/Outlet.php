@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\OutletModel;
 use App\Models\ProductModel;
 use App\Models\StockModel;
+use App\Models\OldStockModel;
 use App\Models\VariantModel;
 use App\Models\CashModel;
 use App\Models\PaymentModel;
@@ -20,7 +21,7 @@ class Outlet extends BaseController
         $OutletModel    = new OutletModel();
 
         // Populating Data
-        $outlets    = $OutletModel->orderBy('id', 'DESC')->findAll();
+        $outlets    = $OutletModel->orderBy('id', 'ASC')->findAll();
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -164,6 +165,7 @@ class Outlet extends BaseController
         // Delete Stock
         $stocks = $StockModel->where('outletid',$id)->find();
         foreach ($stocks as $stock) {
+            // Delete Stock
             $StockModel->delete($stock['id']);
         }
 

@@ -196,6 +196,9 @@ return [
     'pastday'           => 'days ago',
     'active'            => 'Active',
     'inactive'          => 'Inactive',
+    'adjprice'          => 'Adjustment Price',
+    'oldprice'          => 'Previous Price',
+    'diffprice'         => 'Difference Price',
    
     // Button
     'edit'              => 'Edit',

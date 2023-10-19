@@ -196,6 +196,9 @@ return [
     'pastday'           => 'hari yang lalu',
     'active'            => 'Aktif',
     'inactive'          => 'Tidak Aktif',
+    'adjprice'          => 'Harga Penyesuaian',
+    'oldprice'          => 'Harga Sebelumnya',
+    'diffprice'         => 'Selisih Harga',
 
     // Button
     'edit'              => 'Ubah',

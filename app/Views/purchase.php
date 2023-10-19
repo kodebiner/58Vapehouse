@@ -179,100 +179,97 @@
     function createVar(id) {
         for (k in variantarray) {
             if (variantarray[k]['id'] == id) {
-                if (variantarray[k]['qty'] != "0") {
-                    document.getElementById('variantlist').remove();
-                    var elemexist = document.getElementById('product'+variantarray[k]['id']);
-                    document.getElementById('tablevariant').setAttribute('hidden', '');
-                    var count = 1;
-                    if ( $( "#product"+variantarray[k]['id'] ).length ) {
-                        alert('<?=lang('Global.readyAdd');?>');
-                    } else {
-                        let minval = count;
-                        var prods = document.getElementById('tableproduct');
-                                                    
-                        var pgrid = document.createElement('div');
-                        pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
-                        pgrid.setAttribute('class', 'uk-margin-small');
-                        pgrid.setAttribute('uk-grid', '');
-
-                        var vcontainer = document.createElement('div');
-                        vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
-                                                        
-                        var vname = document.createElement('div');
-                        vname.setAttribute('id','var'+variantarray[k]['id']);
-                        vname.setAttribute('class','');
-                        vname.innerHTML = variantarray[k]['name'];
-
-                        var tcontainer = document.createElement('div');
-                        tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
-
-                        var tot = document.createElement('input');
-                        tot.setAttribute('type', 'number');
-                        tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
-                        tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
-                        tot.setAttribute('class', 'uk-input');
-                        tot.setAttribute('value', '1');
-                        tot.setAttribute('required', '');
-
-                        var pieces = document.createElement('div');
-                        pieces.setAttribute('class', 'uk-margin-small-left');
-                        pieces.innerHTML = 'Pcs';
-
-                        var pricecontainer = document.createElement('div');
-                        pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
-
-                        var price = document.createElement('input');
-                        price.setAttribute('type', 'number');
-                        price.setAttribute('id', "bprice["+variantarray[k]['id']+"]");
-                        price.setAttribute('name', "bprice["+variantarray[k]['id']+"]");
-                        price.setAttribute('class', 'uk-input');
-                        price.setAttribute('value', variantarray[k]['price']);
-                        price.setAttribute('required', '');
-
-                        var subtotcontainer = document.createElement('div');
-                        subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
-
-                        var subtotal = document.createElement('div');
-                        subtotal.setAttribute('id', "subtotal"+variantarray[k]['id']+"");
-                        subtotal.setAttribute('class', 'subvariant');
-
-                        totalprice();
-                        tot.addEventListener('change', totalprice);
-                        price.addEventListener('change', totalprice);
-
-                        function totalprice() {
-                            var varprice = price.value;
-                            var varqty = tot.value;
-                            var subprice = varprice * varqty;
-                            subtotal.setAttribute('value', subprice);
-                            subtotal.innerHTML = subprice;
-                        }
-
-                        vcontainer.appendChild(vname);
-                        tcontainer.appendChild(tot);
-                        tcontainer.appendChild(pieces);
-                        pricecontainer.appendChild(price);
-                        subtotcontainer.appendChild(subtotal);
-                        pgrid.appendChild(vcontainer);
-                        pgrid.appendChild(tcontainer);
-                        pgrid.appendChild(pricecontainer);
-                        pgrid.appendChild(subtotcontainer);
-                        prods.appendChild(pgrid);
-
-                        tot.addEventListener("change", function removeproduct() {
-                            if (tot.value == '0') {
-                                pgrid.remove();
-                            }
-                        });
-                    }
+                document.getElementById('variantlist').remove();
+                var elemexist = document.getElementById('product'+variantarray[k]['id']);
+                document.getElementById('tablevariant').setAttribute('hidden', '');
+                var count = 1;
+                if ( $( "#product"+variantarray[k]['id'] ).length ) {
+                    alert('<?=lang('Global.readyAdd');?>');
                 } else {
-                    alert('<?=lang('Global.alertstock');?>');
+                    let minval = count;
+                    var prods = document.getElementById('tableproduct');
+                                                
+                    var pgrid = document.createElement('div');
+                    pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
+                    pgrid.setAttribute('class', 'uk-margin-small');
+                    pgrid.setAttribute('uk-grid', '');
+
+                    var vcontainer = document.createElement('div');
+                    vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                    
+                    var vname = document.createElement('div');
+                    vname.setAttribute('id','var'+variantarray[k]['id']);
+                    vname.setAttribute('class','');
+                    vname.innerHTML = variantarray[k]['name'];
+
+                    var tcontainer = document.createElement('div');
+                    tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                    var tot = document.createElement('input');
+                    tot.setAttribute('type', 'number');
+                    tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
+                    tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
+                    tot.setAttribute('class', 'uk-input');
+                    tot.setAttribute('value', '1');
+                    tot.setAttribute('required', '');
+
+                    var pieces = document.createElement('div');
+                    pieces.setAttribute('class', 'uk-margin-small-left');
+                    pieces.innerHTML = 'Pcs';
+
+                    var pricecontainer = document.createElement('div');
+                    pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                    var price = document.createElement('input');
+                    price.setAttribute('type', 'number');
+                    price.setAttribute('id', "bprice["+variantarray[k]['id']+"]");
+                    price.setAttribute('name', "bprice["+variantarray[k]['id']+"]");
+                    price.setAttribute('class', 'uk-input');
+                    price.setAttribute('value', variantarray[k]['price']);
+                    price.setAttribute('required', '');
+
+                    var subtotcontainer = document.createElement('div');
+                    subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+
+                    var subtotal = document.createElement('div');
+                    subtotal.setAttribute('id', "subtotal"+variantarray[k]['id']+"");
+                    subtotal.setAttribute('class', 'subvariant');
+
+                    totalprice();
+                    tot.addEventListener('change', totalprice);
+                    price.addEventListener('change', totalprice);
+
+                    function totalprice() {
+                        var varprice = price.value;
+                        var varqty = tot.value;
+                        var subprice = varprice * varqty;
+                        subtotal.setAttribute('value', subprice);
+                        subtotal.innerHTML = subprice;
+                    }
+
+                    vcontainer.appendChild(vname);
+                    tcontainer.appendChild(tot);
+                    tcontainer.appendChild(pieces);
+                    pricecontainer.appendChild(price);
+                    subtotcontainer.appendChild(subtotal);
+                    pgrid.appendChild(vcontainer);
+                    pgrid.appendChild(tcontainer);
+                    pgrid.appendChild(pricecontainer);
+                    pgrid.appendChild(subtotcontainer);
+                    prods.appendChild(pgrid);
+
+                    tot.addEventListener("change", function removeproduct() {
+                        if (tot.value == '0') {
+                            pgrid.remove();
+                        }
+                    });
                 }
             }
         }
     };
 
-    $('#tableproduct').on('DOMSubtreeModified', function() {
+    var totalcount = document.getElementById('tableproduct');
+    let totalpurchase = new MutationObserver(mutationRecords => {
         var prices = document.querySelectorAll(".subvariant");
         var subarr = [];
 
@@ -287,6 +284,12 @@
             var subtotalvar = subarr.reduce(function(a, b){ return a + b; });
             document.getElementById('finalprice').innerHTML = 'Rp. ' + subtotalvar + ',-';
         }
+    });
+                            
+    totalpurchase.observe(totalcount, {
+        childList: true, // observe direct children
+        subtree: true, // and lower descendants too
+        characterDataOldValue: true // pass old data to callback
     });
 </script>
 <!-- Script Modal Add End -->
@@ -410,35 +413,61 @@
                                     <th class="uk-width-small uk-text-emphasis"><?=lang('Global.product')?></th>
                                     <th class="uk-width-small uk-text-emphasis"><?=lang('Global.variant')?></th>
                                     <th class="uk-width-small uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
-                                    <th class="uk-width-small uk-text-emphasis"><?=lang('Global.pcsPrice')?></th>
+                                    <th class="uk-width-medium uk-text-emphasis"><?=lang('Global.pcsPrice')?></th>
+                                    <th class="uk-width-small uk-text-emphasis"><?=lang('Global.adjprice')?></th>
                                     <th class="uk-width-small uk-text-emphasis"><?=lang('Global.total')?></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php foreach ($purchasedetails as $purdet) { ?>
-                                    <?php if ($purchase['id'] === $purdet['purchaseid']) { ?>
-                                        <?php foreach ($variants as $variant) { ?>
-                                            <?php foreach ($products as $product) { ?>
-                                                <?php if ($variant['id'] === $purdet['variantid'] && $product['id'] === $variant['productid']) {
+                            <tbody id="ctableproduct<?=$purchase['id']?>">
+                                <?php
+                                $subtotalpurchase = array();
+                                foreach ($purchasedetails as $purdet) {
+                                    if ($purchase['id'] === $purdet['purchaseid']) {
+                                        foreach ($variants as $variant) {
+                                            foreach ($products as $product) {
+                                                if ($variant['id'] === $purdet['variantid'] && $product['id'] === $variant['productid']) {
                                                     $pName  = $product['name'];
-                                                    $vName  = $variant['name']; ?>
-                                                    <tr id="ctableproduct">
-                                                        <td class="uk-width-small"><?= $pName; ?></td>
-                                                        <td class="uk-width-small"><?= $vName; ?></td>
+                                                    $vName  = $variant['name'];
+                                                    $subtotalpurchase[] = (Int)$purdet['qty'] * (Int)$purdet['price']; ?>
+                                                    <tr>
+                                                        <td><?= $pName; ?></td>
+                                                        <td><?= $vName; ?></td>
                                                             
-                                                        <td class="uk-width-small">
+                                                        <td>
                                                             <input type="number" class="uk-input" id="ctotalpcs[<?=$purchase['id']?>][<?=$variant['id']?>]" name="ctotalpcs[<?=$purchase['id']?>][<?=$variant['id']?>]" value="<?= $purdet['qty']; ?>" required />
                                                         </td>
-                                                        <td class="uk-width-small">
+                                                        <td>
                                                             <input type="number" class="uk-input" id="cbprice[<?=$purchase['id']?>][<?=$variant['id']?>]" name="cbprice[<?=$purchase['id']?>][<?=$variant['id']?>]" value="<?= $purdet['price']; ?>" required />
                                                         </td>
-                                                        <td id="csubtotal<?=$purchase['id']?><?=$variant['id']?>" class="uk-width-small csubvariant<?=$purchase['id']?>"><?= $purdet['price'] * $purdet['qty']; ?></td>
+                                                        <td id="adjprice<?=$purchase['id']?><?=$variant['id']?>">
+                                                            <?php foreach ($stocks as $stock) {
+                                                                foreach ($oldstocks as $oldstock) {
+                                                                    if (($stock['variantid'] === $variant['id']) && ($oldstock['variantid'] === $variant['id'])) { ?>
+                                                                        <?= floor((($oldstock['hargadasar'] * $stock['qty']) + ($purdet['price'] * $purdet['qty'])) / ($stock['qty'] + $purdet['qty'])); ?>
+
+                                                                        <script type="text/javascript">
+                                                                            var cqty<?=$purchase['id']?><?=$variant['id']?>         = document.getElementById('ctotalpcs[<?=$purchase['id']?>][<?=$variant['id']?>]');
+                                                                            var cprice<?=$purchase['id']?><?=$variant['id']?>       = document.getElementById('cbprice[<?=$purchase['id']?>][<?=$variant['id']?>]');
+                                                                            var adjprice<?=$purchase['id']?><?=$variant['id']?>     = document.getElementById('adjprice<?=$purchase['id']?><?=$variant['id']?>');
+
+                                                                            cqty<?=$purchase['id']?><?=$variant['id']?>.addEventListener('change', adjustprice<?=$purchase['id']?><?=$variant['id']?>);
+                                                                            cprice<?=$purchase['id']?><?=$variant['id']?>.addEventListener('change', adjustprice<?=$purchase['id']?><?=$variant['id']?>);
+
+                                                                            function adjustprice<?=$purchase['id']?><?=$variant['id']?>() {
+                                                                                adjprice<?=$purchase['id']?><?=$variant['id']?>.innerHTML = Math.floor((<?= (Int)$oldstock['hargadasar'] * (Int)$stock['qty'] ?> + (cqty<?=$purchase['id']?><?=$variant['id']?>.value * cprice<?=$purchase['id']?><?=$variant['id']?>.value)) / (<?= $stock['qty'] ?> + cqty<?=$purchase['id']?><?=$variant['id']?>.value));
+                                                                            }
+                                                                        </script>
+                                                                    <?php }
+                                                                }
+                                                            } ?>
+                                                        </td>
+                                                        <td id="csubtotal<?=$purchase['id']?><?=$variant['id']?>" class="uk-width-small csubvariant<?=$purchase['id']?>"><?= (Int)$purdet['price'] * (Int)$purdet['qty']; ?></td>
                                                     </tr>
 
                                                     <script type="text/javascript">
-                                                        var cqty<?=$purchase['id']?><?=$variant['id']?> = document.getElementById('ctotalpcs[<?=$purchase['id']?>][<?=$variant['id']?>]');
-                                                        var cprice<?=$purchase['id']?><?=$variant['id']?> = document.getElementById('cbprice[<?=$purchase['id']?>][<?=$variant['id']?>]');
-                                                        var csubtotal<?=$purchase['id']?><?=$variant['id']?> = document.getElementById('csubtotal<?=$purchase['id']?><?=$variant['id']?>');
+                                                        var cqty<?=$purchase['id']?><?=$variant['id']?>         = document.getElementById('ctotalpcs[<?=$purchase['id']?>][<?=$variant['id']?>]');
+                                                        var cprice<?=$purchase['id']?><?=$variant['id']?>       = document.getElementById('cbprice[<?=$purchase['id']?>][<?=$variant['id']?>]');
+                                                        var csubtotal<?=$purchase['id']?><?=$variant['id']?>    = document.getElementById('csubtotal<?=$purchase['id']?><?=$variant['id']?>');
                                                         
                                                         cqty<?=$purchase['id']?><?=$variant['id']?>.addEventListener('change', ctotalprice<?=$purchase['id']?><?=$variant['id']?>);
                                                         cprice<?=$purchase['id']?><?=$variant['id']?>.addEventListener('change', ctotalprice<?=$purchase['id']?><?=$variant['id']?>);
@@ -447,15 +476,13 @@
                                                             csubtotal<?=$purchase['id']?><?=$variant['id']?>.innerHTML = cqty<?=$purchase['id']?><?=$variant['id']?>.value * cprice<?=$purchase['id']?><?=$variant['id']?>.value;
                                                         }
                                                     </script>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        <?php } ?>
-                                    <?php } ?>
-                                <?php } ?>
+                                                <?php }
+                                            }
+                                        }
+                                    }
+                                } ?>
                             </tbody>
                         </table>
-
-                        <hr>
 
                         <div class="uk-modal-footer">
                             <div class="uk-margin">
@@ -463,7 +490,7 @@
                                     <div class="uk-flex-top tm-h3"><?=lang('Global.total')?></div>
                                 </div>
                                 <div class="uk-width-1-1 uk-text-center">
-                                    <div class="tm-h2 uk-text-bold" id="cfinalprice<?=$purchase['id']?>" value="0"></div>
+                                    <div class="tm-h2 uk-text-bold" id="cfinalprice<?=$purchase['id']?>">Rp <?= array_sum($subtotalpurchase) ?>,-</div>
                                 </div>
                             </div>
                             <div class="uk-margin uk-flex uk-flex-center">
@@ -473,8 +500,9 @@
 
                         <!-- Script Confirm -->
                         <script type="text/javascript">
+                            var totalcount<?=$purchase['id']?> = document.getElementById('ctableproduct<?=$purchase['id']?>');
                             // Count Total Price
-                            $('#ctableproduct').on('DOMSubtreeModified', function() {
+                            let totalpurchase<?=$purchase['id']?> = new MutationObserver(mutationRecords<?=$purchase['id']?> => {
                                 var cprices<?=$purchase['id']?> = document.querySelectorAll(".csubvariant<?=$purchase['id']?>");
                                 var csubarr<?=$purchase['id']?> = [];
 
@@ -489,6 +517,12 @@
                                     var csubtotalvar<?=$purchase['id']?> = csubarr<?=$purchase['id']?>.reduce(function(a, b){ return a + b; });
                                     document.getElementById('cfinalprice<?=$purchase['id']?>').innerHTML = 'Rp. ' + csubtotalvar<?=$purchase['id']?> + ',-';
                                 }
+                            });
+                            
+                            totalpurchase<?=$purchase['id']?>.observe(totalcount<?=$purchase['id']?>, {
+                                childList: true, // observe direct children
+                                subtree: true, // and lower descendants too
+                                characterDataOldValue: true // pass old data to callback
                             });
                         </script>
                         <!-- Script Confirm End -->
@@ -507,7 +541,7 @@ $cancel     = lang('Global.cancel');
 $pending    = lang('Global.pending');
 
 foreach ($purchases as $purchase) { ?>
-    <div uk-modal class="uk-flex-top" id="detail<?= $purchase['id'] ?>">
+    <div uk-modal class="uk-flex-top uk-modal-container" id="detail<?= $purchase['id'] ?>">
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
                 <div class="uk-modal-header">
@@ -558,40 +592,68 @@ foreach ($purchases as $purchase) { ?>
 
                     <div class="uk-divider-icon"></div>
                     
-                    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" style="background-color: #fff;">
-                        <thead>
-                            <tr>
-                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.product')?></th>
-                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.variant')?></th>
-                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
-                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.pcsPrice')?></th>
-                                <th class="uk-width-small uk-text-emphasis"><?=lang('Global.total')?></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($purchasedetails as $purdet) { ?>
-                                <?php if ($purchase['id'] === $purdet['purchaseid']) { ?>
-                                    <tr>
-                                        <?php foreach ($variants as $variant) { ?>
-                                            <?php foreach ($products as $product) { ?>
-                                                <?php if ($variant['id'] === $purdet['variantid'] && $product['id'] === $variant['productid']) {
-                                                    $pName  = $product['name'];
-                                                    $vName  = $variant['name']; ?>
+                    <div class="uk-overflow-auto">
+                        <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" style="background-color: #fff;">
+                            <thead>
+                                <tr>
+                                    <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
+                                    <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
+                                    <?php if ($purchase['status'] === "1") { ?>
+                                        <th class="uk-text-emphasis"><?=lang('Global.oldprice')?></th>
+                                        <th class="uk-text-emphasis"><?=lang('Global.adjprice')?></th>
+                                        <th class="uk-text-emphasis"><?=lang('Global.diffprice')?></th>
+                                    <?php } ?>
+                                    <th class="uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
+                                    <th class="uk-text-emphasis"><?=lang('Global.pcsPrice')?></th>
+                                    <th class="uk-text-emphasis"><?=lang('Global.total')?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($purchasedetails as $purdet) { ?>
+                                    <?php if ($purchase['id'] === $purdet['purchaseid']) { ?>
+                                        <tr>
+                                            <?php foreach ($variants as $variant) {
+                                                if ($variant['id'] === $purdet['variantid']) {
+                                                    foreach ($products as $product) {
+                                                        if ($product['id'] === $variant['productid']) {
+                                                            $pName  = $product['name'];
+                                                            $vName  = $variant['name']; ?>
+    
+                                                            <td><?= $pName; ?></td>
+                                                            <td><?= $vName; ?></td>
+                                                        <?php }
+                                                    }
 
-                                                    <td class="uk-width-small"><?= $pName; ?></td>
-                                                    <td class="uk-width-small"><?= $vName; ?></td>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        <?php } ?>
-                                            
-                                        <td class="uk-width-small"><?= $purdet['qty']; ?> Pcs</td>
-                                        <td class="uk-width-small"><?= $purdet['price']; ?></td>
-                                        <td class="uk-width-small"><?= $purdet['price'] * $purdet['qty']; ?></td>
-                                    </tr>
+                                                    if ($purchase['status'] === "1") {
+                                                        foreach ($oldstocks as $oldstock) {
+                                                            if ($oldstock['variantid'] === $variant['id']) {
+                                                                $oldprice   = $oldstock['hargadasar'];
+                                                                $newprice   = $variant['hargadasar'];
+                                                                $diffprice  = (Int)$newprice - (Int)$oldprice; ?>
+                                                                <td>
+                                                                    <?= $oldprice ?>
+                                                                </td>
+                                                                <td>
+                                                                    <?= $newprice ?>
+                                                                </td>
+                                                                <td>
+                                                                    <?= $diffprice ?>
+                                                                </td>
+                                                            <?php }
+                                                        }
+                                                    }
+                                                }
+                                            } ?>
+                                                
+                                            <td><?= $purdet['qty']; ?> Pcs</td>
+                                            <td><?= $purdet['price']; ?></td>
+                                            <td><?= (Int)$purdet['price'] * (Int)$purdet['qty']; ?></td>
+                                        </tr>
+                                    <?php } ?>
                                 <?php } ?>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <hr>
 
@@ -756,94 +818,90 @@ foreach ($purchases as $purchase) { ?>
                             function createVare<?=$purchase['id']?>(id) {
                                 for (x in variantarray) {
                                     if (variantarray[x]['id'] == id) {
-                                        if (variantarray[x]['qty'] != "0") {
-                                            document.getElementById('variantliste').remove();
-                                            var eelemexist = document.getElementById('eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
-                                            document.getElementById('tabvar<?= $purchase['id'] ?>').setAttribute('hidden', '');
-                                            var count = 1;
-                                            if ( $( "#eproduct<?=$purchase['id']?>"+variantarray[x]['id'] ).length ) {
-                                                alert('<?=lang('Global.readyAdd');?>');
-                                            } else {
-                                                let minval = count;
-                                                var eprods = document.getElementById('tableprod<?= $purchase['id'] ?>');
-                                                                            
-                                                var epgrid = document.createElement('div');
-                                                epgrid.setAttribute('id', 'eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
-                                                epgrid.setAttribute('class', 'uk-margin-small');
-                                                epgrid.setAttribute('uk-grid', '');
-
-                                                var evcontainer = document.createElement('div');
-                                                evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
-                                                                                
-                                                var evname = document.createElement('div');
-                                                evname.setAttribute('id','var'+variantarray[x]['id']);
-                                                evname.setAttribute('class','');
-                                                evname.innerHTML = variantarray[x]['name'];
-
-                                                var etcontainer = document.createElement('div');
-                                                etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
-
-                                                var etot = document.createElement('input');
-                                                etot.setAttribute('type', 'number');
-                                                etot.setAttribute('id', "addtotalpcs["+variantarray[x]['id']+"]");
-                                                etot.setAttribute('name', "addtotalpcs["+variantarray[x]['id']+"]");
-                                                etot.setAttribute('class', 'uk-input');
-                                                etot.setAttribute('value', '1');
-                                                etot.setAttribute('required', '');
-
-                                                var epieces = document.createElement('div');
-                                                epieces.setAttribute('class', 'uk-margin-small-left');
-                                                epieces.innerHTML = 'Pcs';
-
-                                                var epricecontainer = document.createElement('div');
-                                                epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
-
-                                                var eprice = document.createElement('input');
-                                                eprice.setAttribute('type', 'number');
-                                                eprice.setAttribute('id', "addbprice["+variantarray[x]['id']+"]");
-                                                eprice.setAttribute('name', "addbprice["+variantarray[x]['id']+"]");
-                                                eprice.setAttribute('class', 'uk-input');
-                                                eprice.setAttribute('value', variantarray[x]['price']);
-                                                eprice.setAttribute('required', '');
-
-                                                var esubtotcontainer = document.createElement('div');
-                                                esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
-
-                                                var esubtotal = document.createElement('div');
-                                                esubtotal.setAttribute('id', "esubtotal"+variantarray[x]['id']+"");
-                                                esubtotal.setAttribute('class', 'subvariant');
-
-                                                etotalprice();
-                                                etot.addEventListener('change', etotalprice);
-                                                eprice.addEventListener('change', etotalprice);
-
-                                                function etotalprice() {
-                                                    var varprice = eprice.value;
-                                                    var varqty = etot.value;
-                                                    var subprice = varprice * varqty;
-                                                    esubtotal.setAttribute('value', subprice);
-                                                    esubtotal.innerHTML = subprice;
-                                                }
-
-                                                evcontainer.appendChild(evname);
-                                                etcontainer.appendChild(etot);
-                                                etcontainer.appendChild(epieces);
-                                                epricecontainer.appendChild(eprice);
-                                                esubtotcontainer.appendChild(esubtotal);
-                                                epgrid.appendChild(evcontainer);
-                                                epgrid.appendChild(etcontainer);
-                                                epgrid.appendChild(epricecontainer);
-                                                epgrid.appendChild(esubtotcontainer);
-                                                eprods.appendChild(epgrid);
-
-                                                etot.addEventListener("change", function removeproduct() {
-                                                    if (etot.value == '0') {
-                                                        epgrid.remove();
-                                                    }
-                                                });
-                                            }
+                                        document.getElementById('variantliste').remove();
+                                        var eelemexist = document.getElementById('eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
+                                        document.getElementById('tabvar<?= $purchase['id'] ?>').setAttribute('hidden', '');
+                                        var count = 1;
+                                        if ( $( "#eproduct<?=$purchase['id']?>"+variantarray[x]['id'] ).length ) {
+                                            alert('<?=lang('Global.readyAdd');?>');
                                         } else {
-                                            alert('<?=lang('Global.alertstock');?>');
+                                            let minval = count;
+                                            var eprods = document.getElementById('tableprod<?= $purchase['id'] ?>');
+                                                                        
+                                            var epgrid = document.createElement('div');
+                                            epgrid.setAttribute('id', 'eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
+                                            epgrid.setAttribute('class', 'uk-margin-small');
+                                            epgrid.setAttribute('uk-grid', '');
+
+                                            var evcontainer = document.createElement('div');
+                                            evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                                            
+                                            var evname = document.createElement('div');
+                                            evname.setAttribute('id','var'+variantarray[x]['id']);
+                                            evname.setAttribute('class','');
+                                            evname.innerHTML = variantarray[x]['name'];
+
+                                            var etcontainer = document.createElement('div');
+                                            etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                                            var etot = document.createElement('input');
+                                            etot.setAttribute('type', 'number');
+                                            etot.setAttribute('id', "addtotalpcs["+variantarray[x]['id']+"]");
+                                            etot.setAttribute('name', "addtotalpcs["+variantarray[x]['id']+"]");
+                                            etot.setAttribute('class', 'uk-input');
+                                            etot.setAttribute('value', '1');
+                                            etot.setAttribute('required', '');
+
+                                            var epieces = document.createElement('div');
+                                            epieces.setAttribute('class', 'uk-margin-small-left');
+                                            epieces.innerHTML = 'Pcs';
+
+                                            var epricecontainer = document.createElement('div');
+                                            epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                                            var eprice = document.createElement('input');
+                                            eprice.setAttribute('type', 'number');
+                                            eprice.setAttribute('id', "addbprice["+variantarray[x]['id']+"]");
+                                            eprice.setAttribute('name', "addbprice["+variantarray[x]['id']+"]");
+                                            eprice.setAttribute('class', 'uk-input');
+                                            eprice.setAttribute('value', variantarray[x]['price']);
+                                            eprice.setAttribute('required', '');
+
+                                            var esubtotcontainer = document.createElement('div');
+                                            esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+
+                                            var esubtotal = document.createElement('div');
+                                            esubtotal.setAttribute('id', "esubtotal"+variantarray[x]['id']+"");
+                                            esubtotal.setAttribute('class', 'subvariant');
+
+                                            etotalprice();
+                                            etot.addEventListener('change', etotalprice);
+                                            eprice.addEventListener('change', etotalprice);
+
+                                            function etotalprice() {
+                                                var varprice = eprice.value;
+                                                var varqty = etot.value;
+                                                var subprice = varprice * varqty;
+                                                esubtotal.setAttribute('value', subprice);
+                                                esubtotal.innerHTML = subprice;
+                                            }
+
+                                            evcontainer.appendChild(evname);
+                                            etcontainer.appendChild(etot);
+                                            etcontainer.appendChild(epieces);
+                                            epricecontainer.appendChild(eprice);
+                                            esubtotcontainer.appendChild(esubtotal);
+                                            epgrid.appendChild(evcontainer);
+                                            epgrid.appendChild(etcontainer);
+                                            epgrid.appendChild(epricecontainer);
+                                            epgrid.appendChild(esubtotcontainer);
+                                            eprods.appendChild(epgrid);
+
+                                            etot.addEventListener("change", function removeproduct() {
+                                                if (etot.value == '0') {
+                                                    epgrid.remove();
+                                                }
+                                            });
                                         }
                                     }
                                 }

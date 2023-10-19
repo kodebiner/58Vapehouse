@@ -234,6 +234,8 @@ class Stock extends BaseController
         $UserModel                  = new UserModel;
         $PurchaseModel              = new PurchaseModel;
         $PurchasedetailModel        = new PurchasedetailModel;
+        $OldStockModel              = new OldStockModel;
+        $StockModel                 = new StockModel;
 
         // Find Data
         $data                       = $this->data;
@@ -262,6 +264,9 @@ class Stock extends BaseController
             }
             $variants       = $VariantModel->find($varid);
 
+            $stocks         = $StockModel->whereIn('variantid', $varid)->find();
+            $oldstocks      = $OldStockModel->whereIn('variantid', $varid)->find();
+
             $prodid = array();
             foreach ($variants as $var) {
                 $prodid[]   = $var['productid'];
@@ -271,8 +276,8 @@ class Stock extends BaseController
             $purchasedetails    = array();
             $variants           = array();
             $products           = array();
+            $oldstocks          = array();
         }
-        // dd($purchasedetails);
 
         // Parsing data to view
         $data['title']              = lang('Global.purchase');
@@ -285,6 +290,8 @@ class Stock extends BaseController
         $data['variants']           = $variants;
         $data['outlets']            = $outlets;
         $data['users']              = $users;
+        $data['stocks']             = $stocks;
+        $data['oldstocks']          = $oldstocks;
         $data['pager']              = $PurchaseModel->pager;
 
         return view ('Views/purchase', $data);

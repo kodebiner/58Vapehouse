@@ -25,6 +25,7 @@ use App\Models\PurchaseModel;
 use App\Models\PurchasedetailModel;
 use App\Models\PresenceModel;
 use App\Models\GroupUserModel;
+use App\Models\OldStockModel;
 use Myth\Auth\Models\GroupModel;
 
 class Home extends BaseController
@@ -538,6 +539,27 @@ class Home extends BaseController
 
     public function trial()
     {
-        phpinfo();
+        $VariantModel   = new VariantModel;
+        $OldStockModel = new OldStockModel;
+
+        $variants = $VariantModel->findAll();
+
+        foreach ($variants as $variant) {
+            if ($variant['id'] != "2358") {
+                $variantdata = [
+                    'id'        => $variant['id'],
+                    'hargadasar' => $variant['hargamodal'],
+                    'hargarekomendasi' => (Int)$variant['hargamodal'] + (Int)$variant['hargajual'],
+                ];
+                $VariantModel->save($variantdata);
+    
+                // $data = [
+                //     'variantid' => $variant['id'],
+                //     'hargadasar' => $variant['hargamodal'],
+                //     'hargamodal' => $variant['hargamodal'],
+                // ];
+                // $OldStockModel->insert($data);
+            }
+        }
     }
 }
