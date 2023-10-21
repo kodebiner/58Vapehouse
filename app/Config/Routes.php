@@ -337,10 +337,10 @@ $routes->group('bundle', ['filter'=>'login'], function($routes){
 // Presence
 $routes->group('presence', ['filter'=>'login'], function($routes){
     // presence
-    $routes->get('', 'presence::index', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('create', 'presence::create', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('update/(:num)', 'presence::update/$1', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('delete/(:num)', 'presence::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('', 'Presence::index', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('create', 'Presence::create', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'Presence::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('delete/(:num)', 'Presence::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Reminder

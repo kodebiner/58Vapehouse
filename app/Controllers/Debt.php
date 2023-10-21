@@ -178,8 +178,17 @@ class Debt extends BaseController
             $memberid[] = $debt['memberid'];
         }
 
-        $transactions           = $TransactionModel->find($trxid);
-        $customers              = $MemberModel->find($memberid);
+        if (!empty($trxid)) {
+            $transactions           = $TransactionModel->find($trxid);
+        } else {
+            $transactions           = array();
+        }
+
+        if (!empty($memberid)) {
+            $customers              = $MemberModel->find($memberid);
+        } else {
+            $customers              = array();
+        }
 
         // Parsing Data to View
         $data                   = $this->data;
