@@ -77,7 +77,7 @@
                         <div class="uk-navbar-right">
                             <div class="uk-child-width-1-3 uk-flex uk-flex-middle" uk-grid>
                                 <div>
-                                    <a class="uk-button uk-button-text" uk-toggle="#modal-sections">Top Up Point</a>
+                                    <a class="uk-button uk-button-text" uk-toggle="#modal-sections"><?=lang('Global.topup')?></a>
                                 </div>
                                 <div>
                                     <button type="button" class="uk-button" uk-toggle="target: #bookinglist" uk-icon="folder" width="35" height="35" style="color: #fff;"></button>
@@ -90,14 +90,14 @@
                     <?php } else { ?>
                         <div class="uk-navbar-right">
                             <div class="uk-child-width-1-3 uk-flex uk-flex-middle" uk-grid>
-                                <div class="uk-padding-remove uk-flex uk-flex-center">
-                                    <a class="uk-button uk-button-text" uk-toggle="#modal-sections"><?=lang('Global.topup')?></a>
+                                <div class="uk-padding-small uk-padding-remove-right uk-flex uk-flex-center">
+                                    <a class="uk-button uk-button-text uk-padding-remove" uk-toggle="#modal-sections"><?=lang('Global.topup')?></a>
                                 </div>
-                                <div class="uk-padding-remove uk-flex uk-flex-center">
-                                    <button type="button" class="uk-button" uk-toggle="target: #bookinglist" uk-icon="folder" width="30" height="30" style="color: #fff;"></button>
+                                <div class="uk-padding-small uk-padding-remove-right uk-flex uk-flex-center">
+                                    <button type="button" class="uk-button uk-padding-remove" uk-toggle="target: #bookinglist" uk-icon="folder" width="30" height="30" style="color: #fff;"></button>
                                 </div>
-                                <div class="uk-padding-remove uk-flex uk-flex-center">
-                                    <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="30" height="30" style="color: #fff;"></button>
+                                <div class="uk-padding-small uk-padding-remove-right uk-flex uk-flex-center">
+                                    <button type="button" class="uk-button uk-padding-remove" uk-toggle="target: #tambahdata" uk-icon="cart" width="30" height="30" style="color: #fff;"></button>
                                 </div>
                             </div>
                         </div>
