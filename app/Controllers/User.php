@@ -32,7 +32,7 @@ class User extends BaseController
         $GroupModel             = new GroupModel();
         $OutletModel            = new OutletModel();
         $OutletAccessModel      = new OutletaccessModel();
-
+        $GroupUserModel         = new GroupUserModel();
 
         // Populating data
 
@@ -55,6 +55,7 @@ class User extends BaseController
         $data['users']          = $query->getResult();
         $data['outlets']        = $OutletModel->findAll();
         $data['outletAccess']   = $OutletAccessModel->findAll();
+        $data['groups']         = $GroupUserModel->findAll();
 
         return view('Views/user', $data);
     }

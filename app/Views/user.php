@@ -89,16 +89,16 @@
                         <label class="uk-form-label" for="role"><?=lang('Global.accessLevel')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select" name="role" required>
-                                <option>Role</option>
-                                <?php foreach ($roles as $role) {
-                                    if ($role->name != 'guests') {
+                                <option value="" selected disabled>Role</option>
+                                <?php foreach ($roles as $rl) {
+                                    if ($role != 'guests') {
                                         if ($authorize->inGroup('owner', $uid) === true) {
-                                            if ($role->name != 'owner') {
-                                                echo '<option value="'.$role->id.'">'.$role->name.'</option>';
+                                            if (($rl->name != 'owner') && ($rl->name != 'guests')) {
+                                                echo '<option value="'.$rl->id.'">'.$rl->name.'</option>';
                                             }
                                         } elseif ($authorize->inGroup('supervisor', $uid) === true) {
-                                            if (($role->name != 'owner') && ($role->name != 'supervisor')) {
-                                                echo '<option value="'.$role->id.'">'.$role->name.'</option>';
+                                            if (($rl->name != 'owner') && ($rl->name != 'guests') && ($rl->name != 'supervisor')) {
+                                                echo '<option value="'.$rl->id.'">'.$rl->name.'</option>';
                                             }
                                         }                   
                                     }
@@ -190,21 +190,21 @@
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="username"><?=lang('Auth.username')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="username" name="username" placeholder="<?= $user->username; ?>" autofocus />
+                                <input type="text" class="uk-input" id="username" name="username" placeholder="<?= $user->username; ?>" />
                             </div>
                         </div>
 
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="firstname"><?=lang('Global.firstname')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="firstname" name="firstname" placeholder="<?= $user->firstname; ?>" autofocus />
+                                <input type="text" class="uk-input" id="firstname" name="firstname" placeholder="<?= $user->firstname; ?>" />
                             </div>
                         </div>
 
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="username"><?=lang('Global.lastname')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="lastname" name="lastname" placeholder="<?= $user->lastname; ?>" autofocus />
+                                <input type="text" class="uk-input" id="lastname" name="lastname" placeholder="<?= $user->lastname; ?>" />
                             </div>
                         </div>
 
@@ -243,17 +243,17 @@
                         <div class="uk-margin">
                             <label class="uk-form-label" for="role"><?=lang('Global.accessLevel')?></label>
                             <div class="uk-form-controls">
-                                <select class="uk-select" name="role" required>
+                                <select class="uk-select" name="role">
                                     <option value="" selected disabled>Role</option>
-                                    <?php foreach ($roles as $role) {
-                                        if ($role->name != 'guests') {
+                                    <?php foreach ($roles as $rl) {
+                                        if ($rl->name != 'guests') {
                                             if ($authorize->inGroup('owner', $uid) === true) {
-                                                if ($role->name != 'owner') {
-                                                    echo '<option value="'.$role->id.'">'.$role->name.'</option>';
+                                                if (($rl->name != 'owner') && ($rl->name != 'guests')) {
+                                                    echo '<option value="'.$rl->id.'">'.$rl->name.'</option>';
                                                 }
                                             } elseif ($authorize->inGroup('supervisor', $uid) === true) {
-                                                if (($role->name != 'owner') && ($role->name != 'supervisor')) {
-                                                    echo '<option value="'.$role->id.'">'.$role->name.'</option>';
+                                                if (($rl->name != 'owner') && ($rl->name != 'guests') && ($rl->name != 'supervisor')) {
+                                                    echo '<option value="'.$rl->id.'">'.$rl->name.'</option>';
                                                 }
                                             }
                                         }
