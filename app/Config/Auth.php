@@ -31,7 +31,7 @@ class Auth extends BaseConfig
      *
      * @var string
      */
-    public $landingRoute = 'dashboard';
+    public $landingRoute = '';
 
     /**
      * --------------------------------------------------------------------
