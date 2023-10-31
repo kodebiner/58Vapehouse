@@ -401,9 +401,11 @@
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='customer')?'uk-active':''?>">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
                             </li>
-                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='promo')?'uk-active':''?>">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('promo') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
-                            </li>
+                            <?php if (in_groups(['owner','supervisor'])) : ?>
+                                <li class="tm-main-navbar <?=($uri->getSegment(1)==='promo')?'uk-active':''?>">
+                                    <a class="uk-h4 tm-h4" href="<?= base_url('promo') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
+                                </li>
+                            <?php endif ?>
                         </ul>
                     </nav>
                 </div>
@@ -553,9 +555,11 @@
                     <li class="tm-main-navbar <?=($uri->getSegment(1)==='customer')?'uk-active':''?>">
                         <a class="uk-h4 tm-h4" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
                     </li>
-                    <li class="tm-main-navbar <?=($uri->getSegment(1)==='promo')?'uk-active':''?>">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('promo') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
-                    </li>
+                    <?php if (in_groups(['owner','supervisor'])) : ?>
+                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='promo')?'uk-active':''?>">
+                            <a class="uk-h4 tm-h4" href="<?= base_url('promo') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
+                        </li>
+                    <?php endif ?>
                 </ul>
             </nav>
         <?php } ?>

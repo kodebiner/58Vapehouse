@@ -585,25 +585,32 @@
     <!-- Counter Total -->
     <div class="uk-light" uk-grid>
         <!-- Product-->
-        <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
+        <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.product') ?> :</div>
             <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $productcount ?></div>
         </div>
         <!-- Product End -->
 
         <!-- Stock -->
-        <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
+        <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> :</div>
             <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $stockcount ?></div>
         </div>
         <!-- Stock End -->
 
         <!-- Capital Price -->
-        <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
+        <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
             <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalcap,2,',','.') ?></div>
         </div>
         <!-- Capital Price End -->
+
+        <!-- Base Price -->
+        <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
+            <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.basePrice') ?> :</div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalbase,2,',','.') ?></div>
+        </div>
+        <!-- Base Price End -->
     </div>
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light display" style="width:100%">
         <thead>

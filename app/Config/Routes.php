@@ -357,10 +357,10 @@ $routes->group('dayrep', ['filter'=>'login'], function($routes){
 
 // Promo
 $routes->group('promo', ['filter'=>'login'], function($routes){
-    $routes->get('', 'Promo::index', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('create', 'Promo::create', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('update/(:num)', 'Promo::update/$1', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('delete/(:num)', 'Promo::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('', 'Promo::index', ['filter' => 'role:owner,supervisor']);
+    $routes->post('create', 'Promo::create', ['filter' => 'role:owner,supervisor']);
+    $routes->post('update/(:num)', 'Promo::update/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->get('delete/(:num)', 'Promo::delete/$1', ['filter' => 'role:owner,supervisor']);
 });
 
 
