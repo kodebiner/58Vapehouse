@@ -195,6 +195,12 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->post('confirm/(:num)', 'Stock::confirmpur/$1', ['filter' => 'role:owner']);
     $routes->post('updatepur/(:num)', 'Stock::updatepur/$1', ['filter' => 'role:owner']);
     $routes->post('cancelpur/(:num)', 'Stock::cancelpur/$1', ['filter' => 'role:owner']);
+
+    // Inventory
+    $routes->get('inventory', 'Stock::indexinventory', ['filter' => 'role:owner']);
+    $routes->post('createinv', 'Stock::createinv', ['filter' => 'role:owner']);
+    $routes->post('updateinv/(:num)', 'Stock::updateinv/$1', ['filter' => 'role:owner']);
+    $routes->get('deleteinv/(:num)', 'Stock::deleteinv/$1', ['filter' => 'role:owner']);
 });
 
 // Transaction Other / cashin cashout

@@ -356,6 +356,9 @@
                                         <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                             <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
                                         </li>
+                                        <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='inventory')?'uk-active':''?>">
+                                            <a href="<?= base_url('stock/inventory') ?>"><?=lang('Global.store');?></a>
+                                        </li>
                                         <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
                                             <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
                                         </li>
@@ -509,6 +512,9 @@
                             <ul class="uk-nav-sub">
                                 <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                     <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='inventory')?'uk-active':''?>">
+                                    <a href="<?= base_url('stock/inventory') ?>"><?=lang('Global.store');?></a>
                                 </li>
                                 <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
                                     <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>

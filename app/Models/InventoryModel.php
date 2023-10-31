@@ -2,14 +2,14 @@
 
 use CodeIgniter\Model;
 
-class PromoModel extends Model
+class InventoryModel extends Model
 {
     protected $allowedFields = [
-        'name','photo','status','description',
+        'outletid','name','qty',
 
     ];
 
-    protected $table      = 'promo';
+    protected $table      = 'inventory';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType     = 'array';

@@ -182,7 +182,10 @@
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?=lang('Global.description')?>" required />
+                            <select class="uk-select" name="description" required>
+                                <option name="description" value="0" >Promo</option>
+                                <option name="description" value="1" >Event</option>
+                            </select>
                         </div>
                     </div>
 
@@ -213,6 +216,7 @@
             <tr>
                 <th class="uk-text-center"></th>
                 <th class=""><?=lang('Global.name')?></th>
+                <th class=""><?=lang('Global.description')?></th>
                 <th class=""><?=lang('Global.status')?></th>
                 <th class="uk-text-center"><?=lang('Global.action')?></th>
             </tr>
@@ -224,6 +228,13 @@
                         <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail-<?= $promo['id'] ?>"></a>
                     </td>
                     <td><?= $promo['name']; ?></td>
+                    <td>
+                        <?php if ($promo['description'] === "0") {
+                            echo "Promo";
+                        } else {
+                            echo "Event";
+                        } ?>
+                    </td>
                     <td>
                         <?php if ($promo['status'] === "0") {
                             echo "Inactive";
@@ -414,17 +425,21 @@
                         </script>
 
                         <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="status"><?=lang('Global.status')?></label>
-                            <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
-                                <label><input class="uk-radio" type="radio" name="status" value="1" <?php if ($promo['status'] === '1') { echo 'checked'; } ?>> <?= lang('Global.active') ?></label>
-                                <label><input class="uk-radio" type="radio" name="status" value="0" <?php if ($promo['status'] === '0') { echo 'checked'; } ?>> <?= lang('Global.inactive') ?></label>
+                            <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
+                            <div class="uk-form-controls">
+                                <select class="uk-select" name="description" required>
+                                    <option disabled><?=lang('Global.description')?></option>
+                                    <option name="description" value="0" <?php if ($promo['description'] === "0") {echo 'selected';} ?>>Promo</option>
+                                    <option name="description" value="1" <?php if ($promo['description'] === "1") {echo 'selected';} ?>>Event</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
-                            <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="description" name="description"  value="<?= $promo['description']; ?>" />
+                            <label class="uk-form-label" for="status"><?=lang('Global.status')?></label>
+                            <div class="uk-form-controls uk-grid-small uk-child-width-auto uk-grid">
+                                <label><input class="uk-radio" type="radio" name="status" value="1" <?php if ($promo['status'] === '1') { echo 'checked'; } ?>> <?= lang('Global.active') ?></label>
+                                <label><input class="uk-radio" type="radio" name="status" value="0" <?php if ($promo['status'] === '0') { echo 'checked'; } ?>> <?= lang('Global.inactive') ?></label>
                             </div>
                         </div>
 
@@ -496,7 +511,13 @@
                         </div>
                         <div>
                             <div class="uk-h3 tm-h3"><?= lang('Global.description') ?></div>
-                            <h6 class="uk-h4 tm-h4 uk-margin-remove"><?= $promo['description'] ?></h6>
+                            <h6 class="uk-h4 tm-h4 uk-margin-remove">
+                                <?php if ($promo['description'] === "0") {
+                                    echo "Promo";
+                                } else {
+                                    echo "Event";
+                                } ?>
+                            </h6>
                         </div>
                     </div>
                 </div>

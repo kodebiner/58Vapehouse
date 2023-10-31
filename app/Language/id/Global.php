@@ -220,7 +220,8 @@ return [
     'addCash'           => 'Tambah Kas',
     'addSupplier'       => 'Tambah Pemasok',
     'addPurchase'       => 'Tambah Pembelian',
-    'addPromo'          => 'Add Promo',
+    'addPromo'          => 'Tambah Promo',
+    'addInventory'      => 'Tambah Inventaris',
     'checkin'           => 'Masuk',
     'checkout'          => 'Keluar',
     'addPay'            => 'Tambah Pembayaran',
@@ -286,6 +287,7 @@ return [
     'bundlereport'      => 'Laporan Bundle',
     'stockproduct'      => 'Stok Produk',
     'promo'             => 'Promo',
+    'store'             => 'Toko',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',
@@ -317,6 +319,7 @@ return [
     'topupList'                 => 'Daftar Top Up',
     'dailyreportList'           => 'Daftar Laporan Harian',
     'promoList'                 => 'Daftar Promo',
+    'inventoryList'             => 'Daftar Inventaris',
     'dosop'                     => 'Lakukan SOP',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
@@ -345,6 +348,7 @@ return [
     'topupListDesc'             => 'Daftar top up yang anda miliki',
     'dailyreportListDesc'       => 'Daftar laporan harian yang anda miliki',
     'promoListDesc'             => 'Daftar promo yang anda miliki',
+    'inventoryListDesc'         => 'Daftar inventaris yang anda miliki',
     'userProfileDesc'           => 'Informasi mengenai profil anda',
     'businessInfoDesc'          => 'Informasi mengenai bisnis anda',
 ];

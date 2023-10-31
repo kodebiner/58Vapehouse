@@ -852,6 +852,9 @@
                                     <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
                                 </li>
                                 <li class="uk-h5 tm-h5">
+                                    <a href="<?= base_url('stock/inventory') ?>"><?=lang('Global.store');?></a>
+                                </li>
+                                <li class="uk-h5 tm-h5">
                                     <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
                                 </li>
                                 <li class="uk-h5 tm-h5">

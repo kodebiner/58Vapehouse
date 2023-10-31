@@ -221,6 +221,7 @@ return [
     'addSupplier'       => 'Add Supplier',
     'addPurchase'       => 'Add Purchase',
     'addPromo'          => 'Add Promo',
+    'addInventory'      => 'Add Inventory',
     'checkin'           => 'Check In',
     'checkout'          => 'Check Out',
     'addPay'            => 'Add Payment',
@@ -286,6 +287,7 @@ return [
     'bundlereport'      => 'Bundle Report',
     'stockproduct'      => 'Product Stock',
     'promo'             => 'Promo',
+    'store'             => 'Store',
 
     // Title
     'employeeList'              => 'Employee List',
@@ -317,6 +319,7 @@ return [
     'topupList'                 => 'Top Up List',
     'dailyreportList'           => 'Daily Report List',
     'promoList'                 => 'Promo List',
+    'inventoryList'             => 'Inventory List',
     'dosop'                     => 'Do SOP',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
@@ -345,6 +348,7 @@ return [
     'topupListDesc'             => 'List of all your Top Up',
     'dailyreportListDesc'       => 'List of all your Daily Report',
     'promoListDesc'             => 'List of all your promo',
+    'inventoryListDesc'         => 'List of all your inventory',
     'userProfileDesc'           => 'Information about your profile',
     'businessInfoDesc'          => 'Information about your business',
 ];
