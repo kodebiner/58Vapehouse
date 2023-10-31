@@ -550,78 +550,78 @@ class Stock extends BaseController
     }
 
     // Inventory
-    public function indexinventory()
-    {
-        // Calling Model
-        $InventoryModel = new InventoryModel;
-        $OutletModel    = new OutletModel;
+    // public function indexinventory()
+    // {
+    //     // Calling Model
+    //     $InventoryModel = new InventoryModel;
+    //     $OutletModel    = new OutletModel;
 
-        // Find Data
-        $data           = $this->data;
+    //     // Find Data
+    //     $data           = $this->data;
 
-        if ($this->data['outletPick'] === null) {
-            $inventory      = $InventoryModel->orderBy('id', 'DESC')->findAll();
-        } else {
-            $inventory      = $InventoryModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->find();
-        }
-        $outlets        = $OutletModel->findAll();
+    //     if ($this->data['outletPick'] === null) {
+    //         $inventory      = $InventoryModel->orderBy('id', 'DESC')->findAll();
+    //     } else {
+    //         $inventory      = $InventoryModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->find();
+    //     }
+    //     $outlets        = $OutletModel->findAll();
 
-        // Parsing data to view
-        $data['title']          = lang('Global.inventoryList');
-        $data['description']    = lang('Global.inventoryListDesc');
-        $data['inventory']      = $inventory;
-        $data['outlets']        = $outlets;
+    //     // Parsing data to view
+    //     $data['title']          = lang('Global.inventoryList');
+    //     $data['description']    = lang('Global.inventoryListDesc');
+    //     $data['inventory']      = $inventory;
+    //     $data['outlets']        = $outlets;
 
-        return view ('Views/inventory', $data);
-    }
+    //     return view ('Views/inventory', $data);
+    // }
 
-    public function createinv()
-    {
-        // Calling Models
-        $InventoryModel  = new InventoryModel;
+    // public function createinv()
+    // {
+    //     // Calling Models
+    //     $InventoryModel  = new InventoryModel;
 
-        // initialize
-        $input          = $this->request->getPost();
+    //     // initialize
+    //     $input          = $this->request->getPost();
 
-        // save data
-        $data = [
-            'name'      => $input['name'],
-            'outletid'  => $input['outlet'],
-            'qty'       => $input['qty'],
+    //     // save data
+    //     $data = [
+    //         'name'      => $input['name'],
+    //         'outletid'  => $input['outlet'],
+    //         'qty'       => $input['qty'],
             
-        ];
-        $InventoryModel->save($data);
+    //     ];
+    //     $InventoryModel->save($data);
 
-        return redirect()->back()->with('message', lang('Global.saved'));
-    }
+    //     return redirect()->back()->with('message', lang('Global.saved'));
+    // }
 
-    public function updateinv($id) 
-    {
-        // calling Model
-        $InventoryModel  = new InventoryModel;
+    // public function updateinv($id) 
+    // {
+    //     // calling Model
+    //     $InventoryModel  = new InventoryModel;
 
-        // initialize
-        $input              = $this->request->getpost();
+    //     // initialize
+    //     $input              = $this->request->getpost();
 
-        // validation
-        $data = [
-            'id'            => $id,
-            'name'          => $input['name'],
-            'outletid'      => $input['outlet'],
-            'qty'           => $input['qty'],
-        ];
-        $InventoryModel->save($data);
+    //     // validation
+    //     $data = [
+    //         'id'            => $id,
+    //         'name'          => $input['name'],
+    //         'outletid'      => $input['outlet'],
+    //         'qty'           => $input['qty'],
+    //     ];
+    //     $InventoryModel->save($data);
 
-        return redirect()->back()->with('massage', lang('global.saved'));
-    }
+    //     return redirect()->back()->with('massage', lang('global.saved'));
+    // }
 
-    public function deleteinv($id)
-    {
-        // Calling Model
-        $InventoryModel  = new InventoryModel();
+    // public function deleteinv($id)
+    // {
+    //     // Calling Model
+    //     $InventoryModel  = new InventoryModel();
 
-        $InventoryModel->delete($id);
+    //     $InventoryModel->delete($id);
 
-        return redirect()->back()->with('error', lang('Global.deleted'));
-    }
+    //     return redirect()->back()->with('error', lang('Global.deleted'));
+    // }
 }
