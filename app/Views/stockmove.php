@@ -20,7 +20,7 @@
         </div>
 
         <!-- Button Daterange -->
-        <div class="uk-width-1-3@m uk-width-1-2 uk-text-right@m">
+        <div class="uk-width-1-3@m uk-width-1-2 uk-margin-right-remove">
             <form id="short" action="stockmove" method="get">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
@@ -42,7 +42,7 @@
 
         <?php if ($outletPick != null) { ?>
             <!-- Button Trigger Modal Add -->
-            <div class="uk-width-1-3@m uk-width-1-2">
+            <div class="uk-width-1-3@m uk-width-1-2 uk-text-right">
                 <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addStockMove')?></button>
             </div>
             <!-- End Of Button Trigger Modal Add -->
