@@ -278,6 +278,7 @@ class Stock extends BaseController
             $variants           = array();
             $products           = array();
             $oldstocks          = array();
+            $stocks             = array();
         }
 
         // Parsing data to view
