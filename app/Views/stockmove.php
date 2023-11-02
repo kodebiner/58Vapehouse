@@ -19,14 +19,6 @@
             <h3 class="tm-h3"><?=lang('Global.stockmoveList')?></h3>
         </div>
 
-        <?php if ($outletPick != null) { ?>
-            <!-- Button Trigger Modal Add -->
-            <div class="uk-width-1-3@m uk-width-1-2">
-                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addStockMove')?></button>
-            </div>
-            <!-- End Of Button Trigger Modal Add -->
-        <?php } ?>
-
         <!-- Button Daterange -->
         <div class="uk-width-1-3@m uk-width-1-2 uk-text-right@m">
             <form id="short" action="stockmove" method="get">
@@ -47,6 +39,14 @@
             </script>
         </div>
         <!-- End Of Button Daterange-->
+
+        <?php if ($outletPick != null) { ?>
+            <!-- Button Trigger Modal Add -->
+            <div class="uk-width-1-3@m uk-width-1-2">
+                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addStockMove')?></button>
+            </div>
+            <!-- End Of Button Trigger Modal Add -->
+        <?php } ?>
     </div>
 </div>
 <!-- End Of Page Heading -->
