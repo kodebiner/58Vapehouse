@@ -464,6 +464,7 @@ class Product extends BaseController
         $VariantModel           = new VariantModel();
         $BundleModel            = new BundleModel();
         $BundledetailModel      = new BundledetailModel();
+        $OldStockModel          = new OldStockModel();
 
         // Populating & Removing Stock Data
         $stocks = $StockModel->where('variantid', $id)->find();
