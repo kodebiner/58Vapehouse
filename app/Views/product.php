@@ -792,6 +792,9 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            <div class="uk-h6 uk-margin-remove">
+                                <?=lang('Global.morecate')?><a uk-toggle="target: #tambahcat"><?=lang('Global.addCategory')?></a>
+                            </div>
 
                             <script type="text/javascript">
                                 $(function() {
@@ -822,6 +825,9 @@
                                         <?php } ?>
                                     <?php } ?>
                                 </div>
+                            </div>
+                            <div class="uk-h6 uk-margin-remove">
+                                <?=lang('Global.morebrand')?><a uk-toggle="target: #tambahbrand"><?=lang('Global.addBrand')?></a>
                             </div>
 
                             <script type="text/javascript">
