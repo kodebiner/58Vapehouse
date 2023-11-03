@@ -34,96 +34,66 @@ class export extends BaseController{
 public function prod()
 
     {
-        // Calling Data
-        $ProductModel   = new ProductModel();
-        $BrandModel     = new BrandModel();
-        $VariantModel   = new VariantModel();
-        $CategoryModel  = new CategoryModel();
-        $StockModel     = New StockModel();
-        $VariantModel   = New VariantModel();
-        $OutletModel    = New OutletModel();
+        // Calling Services & Libraries
+        $db         = \Config\Database::connect();
 
-        $variants   = $VariantModel->findAll();
-        $brands     = $BrandModel->findAll();
-        $products   = $ProductModel->findAll();
-        $category   = $CategoryModel->findAll();
-        $variants   = $VariantModel->findAll();
-        $outlets    = $OutletModel->findAll();
+        // Calling Models
+        $OutletModel = new OutletModel();
 
+        // Populating Data
         if ($this->data['outletPick'] === null) {
-            $stocks      = $StockModel->findAll();
-            foreach ($outlets as $outlet){
-                if($outlet['id'] === $this->data['outletPick']){
-                    $outletname = $outlet['name'];
-                }
-            }
+            return redirect()->back()->with('error', lang('Global.chooseoutlet'));
         } else {
-            $stocks      = $StockModel->where('outletid', $this->data['outletPick'])->find();
-            foreach ($outlets as $outlet){
-                $outletname = $outlet['name'];
-            }
-        }
+            $outlet     = $OutletModel->find($this->data['outletPick']);
+            $outletname = $outlet['name'];
 
-        $productval = [];
-        foreach ($stocks as $stock){
-            foreach ($variants as $variant){
-                    foreach ($products as $product){
-                        foreach ($brands as $brand){
-                            foreach ($category as $cat){
-                                if($product['catid'] === $cat['id'] && $product['brandid'] === $brand['id'] && $variant['productid'] == $product['id'] && $stock['variantid'] === $variant['id']){
-                                $productval [] = [
-                                    'id'                => $product['id'],
-                                    'prodname'          => $product['name'],
-                                    'catname'           => $cat['name'],
-                                    'brandname'         => $brand['name'],
-                                    'desc'              => $product['description'],
-                                    'varname'           => $variant['name'],
-                                    'hargamodal'        => $variant['hargamodal'],
-                                    'hargajual'         => $variant['hargajual'],
-                                    'hargarekomendasi'  => $variant['hargarekomendasi'],
-                                    'stock'             => $stock['qty'],                                
-                                ];
-                            }
-                        }
-                    }
-                }
-            }
-        }
+            $exported   = $db->table('stock');
+            $stockexp   = $exported->select('stock.qty as qty, variant.hargamodal as hargamodal, variant.hargadasar as hargadasar, variant.hargajual as hargajual, variant.hargarekomendasi as hargarekomendasi, variant.name as varname, product.name as prodname, category.name as catname, brand.name as brandname');
+            $stockexp   = $exported->join('variant', 'stock.variantid = variant.id', 'left');
+            $stockexp   = $exported->join('product', 'variant.productid = product.id', 'left');
+            $stockexp   = $exported->join('category', 'product.catid = category.id', 'left');
+            $stockexp   = $exported->join('brand', 'product.brandid = brand.id', 'left');
+            $stockexp   = $exported->where('stock.outletid', $this->data['outletPick']);
+            $stockexp   = $exported->orderBy('category.id', 'DESC');
+            $stockexp   = $exported->get();
+            $productval = $stockexp->getResultArray();
 
 
-        header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=Products.xls");
+            header("Content-type: application/vnd-ms-excel");
+            header("Content-Disposition: attachment; filename=product-$outletname.xls");
 
-        // export
-        echo $outletname;
-        echo '<table>';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th>Nama</th>';
-        echo '<th>Merek</th>';
-        echo '<th>Kategori</th>';
-        echo '<th>Description</th>';
-        echo '<th>Harga Jual</th>';
-        echo '<th>Harga Modal</th>';
-        echo '<th>Harga Rekomendasi</th>';
-        echo '<th>Stok</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        foreach ($productval as $product) {
+            // export
+            echo $outletname;
+            echo '<table>';
+            echo '<thead>';
             echo '<tr>';
-            echo '<td>'.$product['prodname'].'-'.$product['varname'].'</td>';
-            echo '<td>'.$product['brandname'].'</td>';
-            echo '<td>'.$product['catname'].'</td>';
-            echo '<td>'.$product['desc'].'</td>';
-            echo '<td>'.$product['hargajual'].'</td>';
-            echo '<td>'.$product['hargamodal'].'</td>';
-            echo '<td>'.$product['hargarekomendasi'].'</td>';
-            echo '<td>'.$product['stock'].'</td>';
+            echo '<th>Nama</th>';
+            echo '<th>Merek</th>';
+            echo '<th>Kategori</th>';
+            echo '<th>Harga Jual</th>';
+            echo '<th>Harga Dasar</th>';
+            echo '<th>Harga Modal</th>';
+            echo '<th>Harga Rekomendasi</th>';
+            echo '<th>Stok</th>';
             echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+            foreach ($productval as $product) {
+                $hargajual = (int)$product['hargamodal']+(int)$product['hargajual'];
+                echo '<tr>';
+                echo '<td>'.$product['prodname'].'-'.$product['varname'].'</td>';
+                echo '<td>'.$product['brandname'].'</td>';
+                echo '<td>'.$product['catname'].'</td>';
+                echo '<td>'.$hargajual.'</td>';
+                echo '<td>'.$product['hargadasar'].'</td>';
+                echo '<td>'.$product['hargamodal'].'</td>';
+                echo '<td>'.$product['hargarekomendasi'].'</td>';
+                echo '<td>'.$product['qty'].'</td>';
+                echo '</tr>';
+            }
+            echo '</tbody>';
+            echo '</table>';
         }
-        echo '</tbody>';
-        echo '</table>';
     }
 
     public function transaction(){

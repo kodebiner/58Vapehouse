@@ -121,6 +121,7 @@ return [
     'value'             => 'Value',
     'phonenumber'       => 'Phone Number',
     'instagram'         => 'Instagram',
+    'facebook'          => 'Facebook',
     'initialcash'       => 'Initial Cash',
     'systemreceipts'    => 'System Receipts',
     'cashflow'          => 'Cash Flow',

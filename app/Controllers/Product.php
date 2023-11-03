@@ -94,7 +94,7 @@ class Product extends BaseController
         $stockchart = array();
         foreach ($categories as $cat) {
             $stockbuilder       = $db->table('stock');
-            $stockchartbuilder  = $stockbuilder->select('stock.qty as qty');
+            $stockchartbuilder  = $stockbuilder->select('stock.qty as qty, variant.hargamodal as price');
             $stockchartbuilder  = $stockbuilder->join('variant', 'stock.variantid = variant.id', 'left');
             $stockchartbuilder  = $stockbuilder->join('product', 'variant.productid = product.id', 'left');
             $stockchartbuilder  = $stockbuilder->where('product.catid', $cat['id']);
@@ -105,7 +105,7 @@ class Product extends BaseController
             $stockqty = $stockchartbuilder->getResult();
             $stkqty = array();
             foreach ($stockqty as $qty) {
-                $stkqty[] = $qty->qty;
+                $stkqty[] = (Int)$qty->qty * (Int)$qty->price;
             }
             $stockchart[] = [
                 'name'  => $cat['name'],

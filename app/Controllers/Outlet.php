@@ -56,6 +56,7 @@ class Outlet extends BaseController
             'maps'      => $input['maps'],
             'instagram' => $input['instagram'],
             'phone'     => $input['phone'],
+            'facebook'  => $input['facebook'],
         ];
             
         // Inserting Outlet
@@ -135,6 +136,7 @@ class Outlet extends BaseController
             'maps'      => $input['maps'],
             'instagram' => $input['instagram'],
             'phone'     => $input['phone'],
+            'facebook'  => $input['facebook'],
         ];
 
         // Validasi
@@ -144,6 +146,7 @@ class Outlet extends BaseController
             'maps'      => "max_length[255]",
             'instagram' => "max_length[255]",
             'phone'     => "max_length[255]",
+            'facebook'  => "max_length[255]",
         ])) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }

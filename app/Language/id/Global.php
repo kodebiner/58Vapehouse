@@ -121,6 +121,7 @@ return [
     'value'             => 'Nilai',
     'phonenumber'       => 'No Telephone',
     'instagram'         => 'Instagram',
+    'facebook'          => 'Facebook',
     'initialcash'       => 'Kas Awal',
     'systemreceipts'    => 'Pemasukan Sistem',
     'cashflow'          => 'Arus Kas',

@@ -72,6 +72,13 @@
                         </div>
                     </div>
 
+                    <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="maps"><?=lang('Global.facebook')?></label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input <?php if (session('errors.facebook')) : ?>tm-form-invalid<?php endif ?>" id="facebook" name="facebook" placeholder="<?=lang('Global.facebook')?>" required />
+                        </div>
+                    </div>
+
                     <hr>
 
                     <div class="uk-margin">
@@ -172,6 +179,13 @@
                             <label class="uk-form-label" for="phone"><?=lang('Global.phone')?></label>
                             <div class="uk-form-controls">
                                 <input type="text" class="uk-input" id="phone" name="phone"  value="<?= $outlet['phone']; ?>" />
+                            </div>
+                        </div>
+
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="facebook"><?=lang('Global.facebook')?></label>
+                            <div class="uk-form-controls">
+                                <input type="text" class="uk-input" id="facebook" name="facebook"  value="<?= $outlet['facebook']; ?>" />
                             </div>
                         </div>
 

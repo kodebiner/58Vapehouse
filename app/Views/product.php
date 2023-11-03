@@ -46,7 +46,7 @@
         <!-- Button Trigger Modal Add -->
         <div class="uk-width-1-2@m uk-text-right@m">
             <button type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right" uk-toggle="target: #tambahdata"><?=lang('Global.addProduct')?></button>
-            <a type="button" class="uk-button uk-button-primary uk-preserve-color" href="export/prod"><?=lang('Global.export')?></a>
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color" href="export/prod" target="_blank"><?=lang('Global.export')?></a>
         </div>
         <!-- End Of Button Trigger Modal Add -->
 
