@@ -163,17 +163,17 @@
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="name" name="name" value="<?= $cash['name']; ?>"autofocus />
+                                <input type="text" class="uk-input" id="name" name="name" value="<?= $cash['name']; ?>" />
                             </div>
                         </div>
                     
 
-                        <!-- <div class="uk-margin">
+                        <div class="uk-margin">
                             <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="qty" name="qty" value="<?= $cash['qty']; ?>"autofocus />
+                                <input type="text" class="uk-input" id="qty" name="qty" value="<?= $cash['qty']; ?>" />
                             </div>
-                        </div> -->
+                        </div>
 
                         <hr>
 

@@ -92,6 +92,7 @@ class CashMan extends BaseController
             'id'                => $id,
             'name'              => $input['name'],
             'outletid'          => $input['outlet'],
+            'qty'               => $input['qty'],
         ];
 
         // validation
