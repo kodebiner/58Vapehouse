@@ -574,10 +574,34 @@
 <!-- Table Of Content -->
 <div class="uk-overflow-auto">
     <!-- Search Engine -->
-    <div class="">
+    <!-- <div class="">
         <form class="uk-search uk-search-default" method="GET" action="product" style="background-color: #fff; border-radius: 7px;">
             <span uk-search-icon style="color: #000;"></span>
             <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
+        </form>
+    </div> -->
+            
+    <div class="uk-margin-medium-bottom">
+        <form action="product" method="GET">
+            <div class="uk-child-width-1-1 uk-child-width-1-3@m uk-flex-middle" uk-grid>
+                <div class="uk-text-right@l uk-margin-small-top">
+                    <div class="uk-search uk-search-default uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: search" style="color: #000;"></span>
+                        <input class="uk-width-1-1 uk-input" type="search" name="search" style="border-radius: 7px;" placeholder="Search Item ..." aria-label="Search" value="<?= (!empty($input['search']) ? $input['search'] : '') ?>">
+                    </div>
+                </div>
+                <div class="uk-margin-small-top">
+                    <select class="uk-select" id="filter" name="category" style="border-radius: 5px; border-style: solid;">
+                        <option value="" selected disabled><?=lang('Global.selectcat')?></option>
+                        <?php foreach ($category as $cate) { ?>
+                            <option value="<?= $cate['id'] ?>" <?= ((!empty($input['category'])) && ($input['category'] === $cate['id'])) ? 'selected' : '' ?>><?= $cate['name'] ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="uk-text-center">
+                    <button class="uk-button uk-button-primary" type="submit">Search</button>
+                </div>
+            </div>
         </form>
     </div>
     <!-- Search Engine End -->

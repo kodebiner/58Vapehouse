@@ -245,6 +245,7 @@ return [
     'close'             => 'Close Store',
     'cashhistory'       => 'Cash History',
     'export'            => 'Export',
+    'selectcat'         => 'Select Category',
     
     // Menu
     'dashboard'         => 'Dashboard',

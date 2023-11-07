@@ -1,20 +1,44 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
-<script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+    <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-2-3 uk-width-1-2@m">
+    <div uk-grid class="uk-child-width-1-1 uk-child-width-1-3@m uk-flex-middle">
+        <div class="">
             <h3 class="tm-h3"><?=lang('Global.customerList')?></h3>
         </div>
 
+        <!-- Date Range -->
+        <div class="">
+            <form id="short" action="customer" method="get">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+                </div>
+            </form>
+            <script>
+                $(function() {
+                    $('input[name="daterange"]').daterangepicker({
+                        opens: 'right'
+                    }, function(start, end, label) {
+                        document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                        document.getElementById('short').submit();
+                    });
+                });
+            </script>
+        </div>
+        <!-- Date Range -->
+
         <!-- Button Trigger Modal Add -->
-        <div class="uk-width-1-3 uk-width-1-2@m uk-text-right">
+        <div class="uk-text-right">
             <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addCustomer')?></button>
         </div>
         <!-- End Of Button Trigger Modal Add -->
@@ -89,6 +113,7 @@
                 <th><?=lang('Auth.email')?></th>
                 <th class="uk-text-center"><?=lang('Global.phone')?></th>
                 <th class="uk-text-center"><?=lang('Global.transaction')?></th>
+                <th class="uk-text-center"><?=lang('Global.debt')?></th>
                 <th class="uk-text-center"><?=lang('Global.point')?></th>
                 <th class="uk-text-center"><?=lang('Global.action')?></th>
             </tr>
@@ -101,7 +126,12 @@
                 <td><?= $customer['name']; ?></td>
                 <td><?= $customer['email']; ?></td>
                 <td class="uk-text-center">+62<?= $customer['phone']; ?></td>
-                <td class="uk-text-center"><?= $customer['trx']; ?></td>
+                <?php foreach ($member as $mem) {
+                    if ($mem['id'] === $customer['id']) { ?>
+                        <td class="uk-text-center"><?= $mem['trx']; ?></td>
+                        <td class="uk-text-center"><?= $mem['debt']; ?></td>
+                    <?php }
+                } ?>
                 <td class="uk-text-center"><?= $customer['poin']; ?></td>
                 <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                     <!-- Button Trigger Modal Edit -->

@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\MemberModel;
+use App\Models\TransactionModel;
+use App\Models\DebtModel;
 
 class Customer extends BaseController
 {
@@ -11,7 +13,9 @@ class Customer extends BaseController
         $pager      = \Config\Services::pager();
         
         // Calling Models
-        $MemberModel             = new MemberModel();
+        $MemberModel            = new MemberModel();
+        $DebtModel              = new DebtModel;
+        $TransactionModel       = new TransactionModel;
 
         // Populating Data
         $input      = $this->request->getGet('search');
@@ -21,12 +25,59 @@ class Customer extends BaseController
             $customers  = $MemberModel->orderBy('id', 'DESC')->paginate(20, 'customer');
         }
 
+        if ($this->data['outletPick'] != null) {
+            // Date Range
+            $inputdate = $this->request->getGet('daterange');
+            if (!empty($inputdate)) {
+                $daterange = explode(' - ', $inputdate);
+                $startdate = $daterange[0];
+                $enddate = $daterange[1];
+            } else {
+                $startdate = date('Y-m-1');
+                $enddate = date('Y-m-t');
+            }
+
+            // Transactions
+            $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+
+            // Debts
+            $debts          = $DebtModel->findAll();
+
+            // Customer History
+            $customer = array();
+            foreach ($customers as $member) {
+                $totaltrx   = array();
+                $debtval    = array();
+                foreach ($debts as $debt) {
+                    if ($member['id'] === $debt['memberid']) {
+                        $debtval[]  = $debt['value'];
+                    }
+                }
+                foreach ($transactions as $trx) {
+                    if ($member['id'] === $trx['memberid']) {
+                        $totaltrx[] = $trx['memberid'];
+                    }
+                }
+                
+                $customer[] =[
+                    'id'    => $member['id'],
+                    'debt'  => array_sum($debtval),
+                    'trx'   => count($totaltrx),
+                ];
+            }
+        } else {
+            return redirect()->to('');
+        }
+
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.customerList');
         $data['description']    = lang('Global.customerListDesc');
         $data['customers']      = $customers;
         $data['pager']          = $MemberModel->pager;
+        $data['member']         = $customer;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
 
         return view('Views/customer', $data);
     }

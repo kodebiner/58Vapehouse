@@ -245,6 +245,7 @@ return [
     'close'             => 'Tutup Toko',
     'cashhistory'       => 'Riwayat Kas',
     'export'            => 'Export',
+    'selectcat'         => 'Pilih Kategori',
 
     // Menu
     'dashboard'         => 'Dasbor',

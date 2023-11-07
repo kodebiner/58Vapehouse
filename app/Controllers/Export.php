@@ -54,7 +54,7 @@ public function prod()
             $stockexp   = $exported->join('category', 'product.catid = category.id', 'left');
             $stockexp   = $exported->join('brand', 'product.brandid = brand.id', 'left');
             $stockexp   = $exported->where('stock.outletid', $this->data['outletPick']);
-            $stockexp   = $exported->orderBy('category.id', 'DESC');
+            $stockexp   = $exported->orderBy('product.name', 'ASC');
             $stockexp   = $exported->get();
             $productval = $stockexp->getResultArray();
 

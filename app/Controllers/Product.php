@@ -49,12 +49,17 @@ class Product extends BaseController
         $StockModel     = new StockModel();
 
         // Populating Data
-        $input      = $this->request->getGet('search');
-        if (!empty($input)) {
-            $products   = $ProductModel->like('name', $input)->orderBy('id', 'DESC')->paginate(20, 'product');
+        $input      = $this->request->getGet();
+        if (!empty($input['search']) && empty($input['category'])) {
+            $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        } elseif (empty($input['search']) && !empty($input['category'])) {
+            $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        } elseif (!empty($input['search']) && !empty($input['category'])) {
+            $products   = $ProductModel->where('catid', $input['category'])->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
         } else {
             $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
         }
+
         $productcount = count($ProductModel->findAll());
         $productid  = array();
         foreach ($products as $product) {
@@ -146,6 +151,9 @@ class Product extends BaseController
         $data['totalcap']       = array_sum($totalcap);
         $data['totalbase']      = array_sum($totalbase);
         $data['stockchart']     = $stockchart;
+        if (!empty($input)) {
+            $data['input']     = $input;
+        }
 
         return view('Views/product', $data);
     }
@@ -291,8 +299,12 @@ class Product extends BaseController
         // Populating Data
         $category   = $CategoryModel->findAll();
         $brand      = $BrandModel->findAll();
-        $stock      = $StockModel->findAll(); 
         $variant    = $VariantModel->where('productid', $id)->find();
+        if ($this->data['outletPick'] === null) {
+            $stock      = $StockModel->findAll();
+        } else {
+            $stock      = $StockModel->where('outletid', $this->data['outletPick'])->find();
+        }
 
         // Parsing Data to View
         $data                   = $this->data;
