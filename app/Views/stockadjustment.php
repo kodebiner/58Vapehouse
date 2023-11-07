@@ -168,14 +168,21 @@
                         for (k in variantarray) {
                             //alert(variantarray[k]['name']);
                             var varcontainer = document.createElement('div');
-                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2 uk-margin-small');
+                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-2-3 uk-margin-small');
                                                             
                             var varname = document.createElement('div');
                             varname.setAttribute('class','');
                             varname.innerHTML = variantarray[k]['name'];
+                            
+                            var stockcontainer = document.createElement('div');
+                            stockcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6 uk-margin-small');
+                                                            
+                            var stock = document.createElement('div');
+                            stock.setAttribute('class','');
+                            stock.innerHTML = variantarray[k]['qty'];
 
                             var cartcontainer = document.createElement('div');
-                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2 uk-margin-small');
+                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-6 uk-margin-small');
 
                             var cart = document.createElement('a');
                             cart.setAttribute('class', 'uk-icon-button');
@@ -183,8 +190,10 @@
                             cart.setAttribute('onclick', 'createVar('+variantarray[k]['id']+')');
 
                             varcontainer.appendChild(varname);
+                            stockcontainer.appendChild(stock);
                             cartcontainer.appendChild(cart);
                             productgrid.appendChild(varcontainer);
+                            productgrid.appendChild(stockcontainer);
                             productgrid.appendChild(cartcontainer);
                         };
                         
