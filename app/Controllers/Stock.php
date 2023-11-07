@@ -259,9 +259,13 @@ class Stock extends BaseController
             }
             $purchasedetails    = $PurchasedetailModel->whereIn('purchaseid', $purchaseid)->find();
 
-            $varid = array();
+            $varid  = array();
+            $pcs    = array();
+            $buying = array();
             foreach ($purchasedetails as $purdet) {
                 $varid[]    = $purdet['variantid'];
+                $pcs[]      = $purdet['qty'];
+                $buying[]   = (Int)$purdet['qty'] * (Int)$purdet['price'];
             }
             $variants       = $VariantModel->find($varid);
 
@@ -273,12 +277,17 @@ class Stock extends BaseController
                 $prodid[]   = $var['productid'];
             }
             $products       = $ProductModel->find($prodid);
+
+            $totalpcs       = array_sum($pcs);
+            $totalbuy       = array_sum($buying);
         } else {
             $purchasedetails    = array();
             $variants           = array();
             $products           = array();
             $oldstocks          = array();
             $stocks             = array();
+            $totalpcs           = array();
+            $totalbuy           = array();
         }
 
         // Parsing data to view
@@ -294,6 +303,8 @@ class Stock extends BaseController
         $data['users']              = $users;
         $data['stocks']             = $stocks;
         $data['oldstocks']          = $oldstocks;
+        $data['totalpcs']           = $totalpcs;
+        $data['totalbuy']           = $totalbuy;
         $data['pager']              = $PurchaseModel->pager;
 
         return view ('Views/purchase', $data);

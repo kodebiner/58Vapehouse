@@ -598,12 +598,12 @@ foreach ($purchases as $purchase) { ?>
                                 <tr>
                                     <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
+                                    <th class="uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
                                     <?php if ($purchase['status'] === "1") { ?>
                                         <th class="uk-text-emphasis"><?=lang('Global.oldprice')?></th>
                                         <th class="uk-text-emphasis"><?=lang('Global.adjprice')?></th>
                                         <th class="uk-text-emphasis"><?=lang('Global.diffprice')?></th>
                                     <?php } ?>
-                                    <th class="uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.pcsPrice')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.total')?></th>
                                 </tr>
@@ -618,9 +618,10 @@ foreach ($purchases as $purchase) { ?>
                                                         if ($product['id'] === $variant['productid']) {
                                                             $pName  = $product['name'];
                                                             $vName  = $variant['name']; ?>
-    
+
                                                             <td><?= $pName; ?></td>
                                                             <td><?= $vName; ?></td>
+                                                            <td><?= $purdet['qty']; ?> Pcs</td>
                                                         <?php }
                                                     }
 
@@ -645,35 +646,25 @@ foreach ($purchases as $purchase) { ?>
                                                 }
                                             } ?>
                                                 
-                                            <td><?= $purdet['qty']; ?> Pcs</td>
                                             <td><?= $purdet['price']; ?></td>
                                             <td><?= (Int)$purdet['price'] * (Int)$purdet['qty']; ?></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } ?>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td><?= lang('Global.totalPurchase'); ?></td>
+                                    <td></td>
+                                    <td><?= $totalpcs; ?> Pcs</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><?= "Rp ".number_format($totalbuy,0,',','.'); ?></td>
+                                </tr>
+                            </tfoot>
                         </table>
-                    </div>
-
-                    <hr>
-
-                    <div class="uk-form-horizontal">
-                        <div class="uk-margin">
-                            <label class="uk-form-label"><?=lang('Global.totalPurchase')?></label>
-                            <div class="uk-form-controls">
-                                <?php
-                                $prices = array();
-                                foreach ($purchasedetails as $purdet) {
-                                    if ($purchase['id'] === $purdet['purchaseid']) {
-                                        $total = $purdet['qty'] * $purdet['price'];
-                                        $prices [] = $total;
-                                    }
-                                }
-                                $sum = array_sum($prices);
-                                echo "Rp " . number_format($sum,2,',','.');
-                                ?>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
