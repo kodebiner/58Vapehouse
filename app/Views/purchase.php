@@ -613,13 +613,14 @@ foreach ($purchases as $purchase) { ?>
 
                     <div class="uk-divider-icon"></div>
                     
-                        <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" style="background-color: #fff;">
+                    <div class="uk-overflow-auto">
+                        <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-table-small" style="background-color: #fff;">
                             <thead>
                                 <tr>
                                     <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
-                                    <?php if ($purchase['status'] != "2") { ?>
+                                    <?php if ($purchase['status'] != "0") { ?>
                                         <th class="uk-text-emphasis"><?=lang('Global.oldprice')?></th>
                                         <th class="uk-text-emphasis"><?=lang('Global.adjprice')?></th>
                                         <th class="uk-text-emphasis"><?=lang('Global.diffprice')?></th>
@@ -687,7 +688,7 @@ foreach ($purchases as $purchase) { ?>
                                     <td></td>
                                     <td><?= array_sum($arrayqty); ?> Pcs</td>
                                     <td></td>
-                                    <?php if ($purchase['status'] != "2") { ?>
+                                    <?php if ($purchase['status'] != "0") { ?>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -696,6 +697,7 @@ foreach ($purchases as $purchase) { ?>
                                 </tr>
                             </tfoot>
                         </table>
+                    </div>
                 </div>
             </div>
         </div>
