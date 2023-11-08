@@ -568,7 +568,7 @@ foreach ($purchases as $purchase) { ?>
                         </div>
                     </div>
                 </div>
-                <div class="uk-modal-body">
+                <div class="uk-modal-body" uk-overflow-auto>
                     <div class="uk-form-horizontal">
                         <div class="uk-margin">
                             <div class="tm-h2 uk-h4"><?=lang('Global.purchaseInfo')?></div>
@@ -613,7 +613,7 @@ foreach ($purchases as $purchase) { ?>
 
                     <div class="uk-divider-icon"></div>
                     
-                    <div class="uk-padding">
+                    <!-- <div class="uk-overflow-auto"> -->
                         <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-table-small" style="background-color: #fff;">
                             <thead>
                                 <tr>
@@ -697,7 +697,7 @@ foreach ($purchases as $purchase) { ?>
                                 </tr>
                             </tfoot>
                         </table>
-                    </div>
+                    <!-- </div> -->
                 </div>
             </div>
         </div>
