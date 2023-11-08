@@ -613,7 +613,6 @@ foreach ($purchases as $purchase) { ?>
 
                     <div class="uk-divider-icon"></div>
                     
-                    <div class="uk-overflow-auto">
                         <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" style="background-color: #fff;">
                             <thead>
                                 <tr>
@@ -697,7 +696,6 @@ foreach ($purchases as $purchase) { ?>
                                 </tr>
                             </tfoot>
                         </table>
-                    </div>
                 </div>
             </div>
         </div>
