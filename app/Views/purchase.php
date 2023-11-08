@@ -620,7 +620,7 @@ foreach ($purchases as $purchase) { ?>
                                     <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
-                                    <?php if ($purchase['status'] != 0) { ?>
+                                    <?php if ($purchase['status'] != "0") { ?>
                                         <th class="uk-text-emphasis"><?=lang('Global.oldprice')?></th>
                                         <th class="uk-text-emphasis"><?=lang('Global.adjprice')?></th>
                                         <th class="uk-text-emphasis"><?=lang('Global.diffprice')?></th>
@@ -646,7 +646,7 @@ foreach ($purchases as $purchase) { ?>
                                                         <?php }
                                                     }
 
-                                                    if ($purchase['status'] != "2") {
+                                                    if ($purchase['status'] != "0") {
                                                         foreach ($oldstocks as $oldstock) {
                                                             if ($oldstock['variantid'] === $variant['id']) {
                                                                 $oldprice   = $oldstock['hargadasar'];
@@ -688,7 +688,7 @@ foreach ($purchases as $purchase) { ?>
                                     <td></td>
                                     <td><?= array_sum($arrayqty); ?> Pcs</td>
                                     <td></td>
-                                    <?php if ($purchase['status'] != 0) { ?>
+                                    <?php if ($purchase['status'] != "0") { ?>
                                         <td></td>
                                         <td></td>
                                         <td></td>
