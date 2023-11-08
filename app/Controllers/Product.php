@@ -117,6 +117,17 @@ class Product extends BaseController
                 'qty'   => array_sum($stkqty)
             ];
         }
+        
+        $percentage = array_sum(array_column($stockchart, 'qty'));
+        // dd($percentage);
+        $presentase = array();
+        foreach ($stockchart as $srkchrt) {
+            $presentase[] = [
+                'name'      => $srkchrt['name'],
+                'qty'       => $srkchrt['qty'],
+                'persen'    => floor($srkchrt['qty'] / $percentage * 100),
+            ];
+        }
 
         if ($this->data['outletPick'] === null) {
             if (!empty($variantid)) {
@@ -133,7 +144,6 @@ class Product extends BaseController
             }
             $stockcount = array_sum(array_column($StockModel->where('outletid', $this->data['outletPick'])->find(), 'qty'));
         }       
-        
 
         // Parsing Data to View
         $data                   = $this->data;
