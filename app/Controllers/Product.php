@@ -125,7 +125,7 @@ class Product extends BaseController
             $presentase[] = [
                 'name'      => $srkchrt['name'],
                 'qty'       => $srkchrt['qty'],
-                'persen'    => floor($srkchrt['qty'] / $percentage * 100),
+                'persen'    => ceil($srkchrt['qty'] / $percentage * 100),
             ];
         }
 
@@ -161,6 +161,7 @@ class Product extends BaseController
         $data['totalcap']       = array_sum($totalcap);
         $data['totalbase']      = array_sum($totalbase);
         $data['stockchart']     = $stockchart;
+        $data['presentase']     = $presentase;
         if (!empty($input)) {
             $data['input']     = $input;
         }

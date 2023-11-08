@@ -8,7 +8,9 @@
 <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-    google.charts.load('current', {'packages':['corechart']});
+    google.charts.load('current', {
+        'packages': ['corechart']
+    });
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
@@ -16,15 +18,15 @@
         data.addColumn('string', 'name');
         data.addColumn('number', 'stock');
         data.addRows([
-        <?php foreach ($stockchart as $product) {
-        $cate = $product['name'];
-        $sold = $product['qty'];
-        echo "['$cate',$sold],";
-        }?>
+            <?php foreach ($stockchart as $product) {
+                $cate = $product['name'];
+                $sold = $product['qty'];
+                echo "['$cate',$sold],";
+            } ?>
         ]);
 
         var options = {
-        title: 'Category Percentage %'
+            title: 'Category Percentage %'
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -40,13 +42,13 @@
 <div class="tm-card-header uk-light">
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
-            <h3 class="tm-h3"><?=lang('Global.productList')?></h3>
+            <h3 class="tm-h3"><?= lang('Global.productList') ?></h3>
         </div>
 
         <!-- Button Trigger Modal Add -->
         <div class="uk-width-1-2@m uk-text-right@m">
-            <button type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right" uk-toggle="target: #tambahdata"><?=lang('Global.addProduct')?></button>
-            <a type="button" class="uk-button uk-button-primary uk-preserve-color" href="export/prod" target="_blank"><?=lang('Global.export')?></a>
+            <button type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right" uk-toggle="target: #tambahdata"><?= lang('Global.addProduct') ?></button>
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color" href="export/prod" target="_blank"><?= lang('Global.export') ?></a>
         </div>
         <!-- End Of Button Trigger Modal Add -->
 
@@ -55,9 +57,39 @@
 <!-- End Of Page Heading -->
 
 <?= view('Views/Auth/_message_block') ?>
+
 <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
-    <h3 class="uk-card-title"><?=lang('Global.productreport')?></h3>
-    <div id="piechart" ></div>
+    <h3 class="uk-card-title"><?= lang('Global.productreport') ?></h3>
+    <div id="piechart"></div>
+</div>
+
+<div class="uk-card uk-card-default uk-card-body uk-width-1-1@m">
+    <h3 class="uk-card-title"><?= lang('Global.productreport') ?></h3>
+    <div class="uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
+        <div>
+            <p>category</p>
+        </div>
+        <div>
+            <p>harga modal</p>
+        </div>
+        <div>
+            <p>presentase</p>
+        </div>
+    </div>
+
+    <?php foreach ($presentase as $kategori){ ?>
+    <div class="uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
+        <div>
+            <p><?=$kategori['name']?></p>
+        </div>
+        <div>
+            <p>Rp.<?= number_format($kategori['qty'],0,',','.') ?> </p>
+        </div>
+        <div>
+            <p><?=$kategori['persen']?> %</p>
+        </div>
+    </div>
+    <?php } ?>
 </div>
 
 <!-- Modal Add -->
@@ -67,7 +99,7 @@
             <div class="uk-modal-header">
                 <div class="uk-child-width-1-2" uk-grid>
                     <div>
-                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addProduct')?></h5>
+                        <h5 class="uk-modal-title" id="tambahdata"><?= lang('Global.addProduct') ?></h5>
                     </div>
                     <div class="uk-text-right">
                         <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
@@ -79,39 +111,39 @@
                     <?= csrf_field() ?>
 
                     <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                        <label class="uk-form-label" for="name"><?= lang('Global.name') ?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" required />
+                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?= lang('Global.name') ?>" required />
                         </div>
                     </div>
 
                     <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="description"><?=lang('Global.description')?></label>
+                        <label class="uk-form-label" for="description"><?= lang('Global.description') ?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?=lang('Global.description')?>" />
+                            <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?= lang('Global.description') ?>" />
                         </div>
                     </div>
 
                     <div class="uk-margin">
-                        <label class="uk-form-label" for="category"><?=lang('Global.category')?></label>
+                        <label class="uk-form-label" for="category"><?= lang('Global.category') ?></label>
                         <div class="uk-form-controls">
-                            <input class="uk-input" id="category" name="category" placeholder="<?=lang('Global.category')?>" required>
-                            <input id="catid" name="catid" hidden/>
+                            <input class="uk-input" id="category" name="category" placeholder="<?= lang('Global.category') ?>" required>
+                            <input id="catid" name="catid" hidden />
                         </div>
                         <div class="uk-h6 uk-margin-remove">
-                            <?=lang('Global.morecate')?><a uk-toggle="target: #tambahcat"><?=lang('Global.addCategory')?></a>
+                            <?= lang('Global.morecate') ?><a uk-toggle="target: #tambahcat"><?= lang('Global.addCategory') ?></a>
                         </div>
 
                         <script type="text/javascript">
                             $(function() {
                                 var category = [
                                     <?php foreach ($category as $cat) {
-                                        echo '{label:"'.$cat['name'].'",idx:'.(int)$cat['id'].'},';
+                                        echo '{label:"' . $cat['name'] . '",idx:' . (int)$cat['id'] . '},';
                                     } ?>
                                 ];
                                 $("#category").autocomplete({
                                     source: category,
-                                    select: function (e, i) {
+                                    select: function(e, i) {
                                         $("#catid").val(i.item.idx); // save selected id to hidden input
                                     },
                                     minLength: 2
@@ -121,25 +153,25 @@
                     </div>
 
                     <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="brand"><?=lang('Global.brand')?></label>
+                        <label class="uk-form-label" for="brand"><?= lang('Global.brand') ?></label>
                         <div class="uk-form-controls">
-                            <input class="uk-input" id="brand" name="brand" placeholder="<?=lang('Global.brand')?>" required>
-                            <input id="brandid" name="brandid" hidden/>
+                            <input class="uk-input" id="brand" name="brand" placeholder="<?= lang('Global.brand') ?>" required>
+                            <input id="brandid" name="brandid" hidden />
                         </div>
                         <div class="uk-h6 uk-margin-remove">
-                            <?=lang('Global.morebrand')?><a uk-toggle="target: #tambahbrand"><?=lang('Global.addBrand')?></a>
+                            <?= lang('Global.morebrand') ?><a uk-toggle="target: #tambahbrand"><?= lang('Global.addBrand') ?></a>
                         </div>
 
                         <script type="text/javascript">
                             $(function() {
                                 var brand = [
                                     <?php foreach ($brand as $bran) {
-                                        echo '{label:"'.$bran['name'].'",idx:'.(int)$bran['id'].'},';
+                                        echo '{label:"' . $bran['name'] . '",idx:' . (int)$bran['id'] . '},';
                                     } ?>
                                 ];
                                 $("#brand").autocomplete({
                                     source: brand,
-                                    select: function (e, i) {
+                                    select: function(e, i) {
                                         $("#brandid").val(i.item.idx); // save selected id to hidden input
                                     },
                                     minLength: 2
@@ -149,16 +181,16 @@
                     </div>
 
                     <div id="image-container-create" class="uk-margin">
-                        <label class="uk-form-label" for="photocreate"><?=lang('Global.photo')?></label>
+                        <label class="uk-form-label" for="photocreate"><?= lang('Global.photo') ?></label>
                         <div id="image-container" class="uk-form-controls">
                             <input id="photocreate" name="photo" value="" hidden />
                             <input id="photocreatethumb" name="thumbnail" value="" hidden />
                             <div class="js-upload-create uk-placeholder uk-text-center">
                                 <span uk-icon="icon: cloud-upload"></span>
-                                <span class="uk-text-middle"><?=lang('Global.photoUploadDesc')?></span>
+                                <span class="uk-text-middle"><?= lang('Global.photoUploadDesc') ?></span>
                                 <div uk-form-custom>
                                     <input type="file">
-                                    <span class="uk-link uk-preserve-color"><?=lang('Global.selectOne')?></span>
+                                    <span class="uk-link uk-preserve-color"><?= lang('Global.selectOne') ?></span>
                                 </div>
                             </div>
                             <progress id="js-progressbar-create" class="uk-progress" value="0" max="100" hidden></progress>
@@ -174,23 +206,23 @@
                             method: 'POST',
                             type: 'json',
 
-                            beforeSend: function () {
+                            beforeSend: function() {
                                 console.log('beforeSend', arguments);
                             },
-                            beforeAll: function () {
+                            beforeAll: function() {
                                 console.log('beforeAll', arguments);
                             },
-                            load: function () {
+                            load: function() {
                                 console.log('load', arguments);
                             },
-                            error: function () {
+                            error: function() {
                                 console.log('error', arguments);
                                 var error = arguments[0].xhr.response.message.uploads;
                                 alert(error);
                             },
-                            complete: function () {
+                            complete: function() {
                                 console.log('complete', arguments);
-                                
+
                                 var filename = arguments[0].response;
 
                                 if (document.getElementById('display-container-create')) {
@@ -198,7 +230,7 @@
                                 };
 
                                 document.getElementById('photocreate').value = filename;
-                                document.getElementById('photocreatethumb').value = 'thumb-'+filename;
+                                document.getElementById('photocreatethumb').value = 'thumb-' + filename;
 
                                 var imgContainer = document.getElementById('image-container-create');
 
@@ -207,7 +239,7 @@
                                 displayContainer.setAttribute('class', 'uk-inline');
 
                                 var displayImg = document.createElement('img');
-                                displayImg.setAttribute('src', 'img/product/thumb-'+filename);
+                                displayImg.setAttribute('src', 'img/product/thumb-' + filename);
                                 displayImg.setAttribute('width', '150');
                                 displayImg.setAttribute('height', '150');
 
@@ -225,7 +257,7 @@
                                 imgContainer.appendChild(displayContainer);
                             },
 
-                            loadStart: function (e) {
+                            loadStart: function(e) {
                                 console.log('loadStart', arguments);
 
                                 bar.removeAttribute('hidden');
@@ -233,43 +265,45 @@
                                 bar.value = e.loaded;
                             },
 
-                            progress: function (e) {
+                            progress: function(e) {
                                 console.log('progress', arguments);
 
                                 bar.max = e.total;
                                 bar.value = e.loaded;
                             },
 
-                            loadEnd: function (e) {
+                            loadEnd: function(e) {
                                 console.log('loadEnd', arguments);
 
                                 bar.max = e.total;
                                 bar.value = e.loaded;
                             },
 
-                            completeAll: function () {
-                                console.log('completeAll', arguments);                                   
+                            completeAll: function() {
+                                console.log('completeAll', arguments);
 
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     bar.setAttribute('hidden', 'hidden');
                                 }, 1000);
 
-                                alert('<?=lang('Global.uploadComplete')?>');
+                                alert('<?= lang('Global.uploadComplete') ?>');
                             }
                         });
 
-                        function removeImgCreate() {                                
-                            $.ajax ({
+                        function removeImgCreate() {
+                            $.ajax({
                                 type: 'post',
                                 url: 'upload/removeproductcreate',
-                                data: {'photo': document.getElementById('photocreate').value},
+                                data: {
+                                    'photo': document.getElementById('photocreate').value
+                                },
                                 dataType: 'json',
 
                                 error: function() {
                                     console.log('error', arguments);
                                 },
 
-                                success:function() {
+                                success: function() {
                                     console.log('success', arguments);
 
                                     var pesan = arguments[0].message;
@@ -285,84 +319,85 @@
                     </script>
 
                     <div id="createVariant" class="uk-margin-bottom">
-                        <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
+                        <h4 class="tm-h4 uk-margin-remove"><?= lang('Global.variant') ?></h4>
                         <div class="uk-text-right"><a onclick="createNewVariant()">+ Add More Variant</a></div>
                         <div id="create0" class="uk-margin uk-child-width-1-3" uk-grid>
-                            <div id="createVarName0"><input type="text" class="uk-input" id="varName[0]" name="varName[0]" placeholder="<?=lang('Global.name')?>" /></div>
-                            <div id="createVarBase0"><input type="number" class="uk-input" id="varBase[0]" name="varBase[0]" placeholder="<?=lang('Global.basePrice')?>" required/></div>
-                            <div id="createVarCap0"><input type="number" class="uk-input" id="varCap[0]" name="varCap[0]" placeholder="<?=lang('Global.capitalPrice')?>" required/></div>
-                            <div id="createSugCap0"><input type="number" class="uk-input" id="varSug[0]" name="varSug[0]" placeholder="<?=lang('Global.suggestPrice')?>" required/></div>
-                            <div id="createVarMargin0"><input type="number" class="uk-input" id="varMargin[0]" name="varMargin[0]" placeholder="<?=lang('Global.margin')?>" required/></div>
+                            <div id="createVarName0"><input type="text" class="uk-input" id="varName[0]" name="varName[0]" placeholder="<?= lang('Global.name') ?>" /></div>
+                            <div id="createVarBase0"><input type="number" class="uk-input" id="varBase[0]" name="varBase[0]" placeholder="<?= lang('Global.basePrice') ?>" required /></div>
+                            <div id="createVarCap0"><input type="number" class="uk-input" id="varCap[0]" name="varCap[0]" placeholder="<?= lang('Global.capitalPrice') ?>" required /></div>
+                            <div id="createSugCap0"><input type="number" class="uk-input" id="varSug[0]" name="varSug[0]" placeholder="<?= lang('Global.suggestPrice') ?>" required /></div>
+                            <div id="createVarMargin0"><input type="number" class="uk-input" id="varMargin[0]" name="varMargin[0]" placeholder="<?= lang('Global.margin') ?>" required /></div>
                         </div>
                     </div>
                     <script type="text/javascript">
                         var createCount = 0;
+
                         function createNewVariant() {
                             createCount++;
 
                             const createVariant = document.getElementById("createVariant");
 
                             const newCreateVariant = document.createElement('div');
-                            newCreateVariant.setAttribute('id','create'+createCount);
-                            newCreateVariant.setAttribute('class','uk-margin uk-child-width-1-3');
-                            newCreateVariant.setAttribute('uk-grid','');
+                            newCreateVariant.setAttribute('id', 'create' + createCount);
+                            newCreateVariant.setAttribute('class', 'uk-margin uk-child-width-1-3');
+                            newCreateVariant.setAttribute('uk-grid', '');
 
                             const createVarName = document.createElement('div');
-                            createVarName.setAttribute('id','createVarName'+createCount);
+                            createVarName.setAttribute('id', 'createVarName' + createCount);
 
                             const createVarNameInput = document.createElement('input');
-                            createVarNameInput.setAttribute('type','text');
-                            createVarNameInput.setAttribute('class','uk-input');
-                            createVarNameInput.setAttribute('placeholder','<?=lang('Global.name')?>');
-                            createVarNameInput.setAttribute('id','varName['+createCount+']');
-                            createVarNameInput.setAttribute('name','varName['+createCount+']');
+                            createVarNameInput.setAttribute('type', 'text');
+                            createVarNameInput.setAttribute('class', 'uk-input');
+                            createVarNameInput.setAttribute('placeholder', '<?= lang('Global.name') ?>');
+                            createVarNameInput.setAttribute('id', 'varName[' + createCount + ']');
+                            createVarNameInput.setAttribute('name', 'varName[' + createCount + ']');
 
                             const createVarBase = document.createElement('div');
-                            createVarBase.setAttribute('id','createVarBase'+createCount);
+                            createVarBase.setAttribute('id', 'createVarBase' + createCount);
 
                             const createVarBaseInput = document.createElement('input');
-                            createVarBaseInput.setAttribute('type','number');
-                            createVarBaseInput.setAttribute('class','uk-input');
-                            createVarBaseInput.setAttribute('placeholder','<?=lang('Global.basePrice')?>');
-                            createVarBaseInput.setAttribute('id','varBase['+createCount+']');
-                            createVarBaseInput.setAttribute('name','varBase['+createCount+']');
+                            createVarBaseInput.setAttribute('type', 'number');
+                            createVarBaseInput.setAttribute('class', 'uk-input');
+                            createVarBaseInput.setAttribute('placeholder', '<?= lang('Global.basePrice') ?>');
+                            createVarBaseInput.setAttribute('id', 'varBase[' + createCount + ']');
+                            createVarBaseInput.setAttribute('name', 'varBase[' + createCount + ']');
 
                             const createVarCap = document.createElement('div');
-                            createVarCap.setAttribute('id','createVarCap'+createCount);
+                            createVarCap.setAttribute('id', 'createVarCap' + createCount);
 
                             const createVarCapInput = document.createElement('input');
-                            createVarCapInput.setAttribute('type','number');
-                            createVarCapInput.setAttribute('class','uk-input');
-                            createVarCapInput.setAttribute('placeholder','<?=lang('Global.capitalPrice')?>');
-                            createVarCapInput.setAttribute('id','varCap['+createCount+']');
-                            createVarCapInput.setAttribute('name','varCap['+createCount+']');
+                            createVarCapInput.setAttribute('type', 'number');
+                            createVarCapInput.setAttribute('class', 'uk-input');
+                            createVarCapInput.setAttribute('placeholder', '<?= lang('Global.capitalPrice') ?>');
+                            createVarCapInput.setAttribute('id', 'varCap[' + createCount + ']');
+                            createVarCapInput.setAttribute('name', 'varCap[' + createCount + ']');
 
                             const createSugCap = document.createElement('div');
-                            createSugCap.setAttribute('id','createSugCap'+createCount);
+                            createSugCap.setAttribute('id', 'createSugCap' + createCount);
 
                             const createSugCapInput = document.createElement('input');
-                            createSugCapInput.setAttribute('type','number');
-                            createSugCapInput.setAttribute('class','uk-input');
-                            createSugCapInput.setAttribute('placeholder','<?=lang('Global.suggestPrice')?>');
-                            createSugCapInput.setAttribute('id','varSug['+createCount+']');
-                            createSugCapInput.setAttribute('name','varSug['+createCount+']');
+                            createSugCapInput.setAttribute('type', 'number');
+                            createSugCapInput.setAttribute('class', 'uk-input');
+                            createSugCapInput.setAttribute('placeholder', '<?= lang('Global.suggestPrice') ?>');
+                            createSugCapInput.setAttribute('id', 'varSug[' + createCount + ']');
+                            createSugCapInput.setAttribute('name', 'varSug[' + createCount + ']');
 
                             const createVarMargin = document.createElement('div');
-                            createVarMargin.setAttribute('id','createVarMargin'+createCount);
+                            createVarMargin.setAttribute('id', 'createVarMargin' + createCount);
 
                             const createVarMarginInput = document.createElement('input');
-                            createVarMarginInput.setAttribute('type','number');
-                            createVarMarginInput.setAttribute('class','uk-input');
-                            createVarMarginInput.setAttribute('placeholder','<?=lang('Global.margin')?>');
-                            createVarMarginInput.setAttribute('id','varMargin['+createCount+']');
-                            createVarMarginInput.setAttribute('name','varMargin['+createCount+']');
+                            createVarMarginInput.setAttribute('type', 'number');
+                            createVarMarginInput.setAttribute('class', 'uk-input');
+                            createVarMarginInput.setAttribute('placeholder', '<?= lang('Global.margin') ?>');
+                            createVarMarginInput.setAttribute('id', 'varMargin[' + createCount + ']');
+                            createVarMarginInput.setAttribute('name', 'varMargin[' + createCount + ']');
 
                             const createRemove = document.createElement('div');
-                            createRemove.setAttribute('id', 'remove'+createCount);
+                            createRemove.setAttribute('id', 'remove' + createCount);
                             createRemove.setAttribute('class', 'uk-text-center uk-text-bold uk-text-danger uk-flex uk-flex-middle');
 
                             const createRemoveButton = document.createElement('a');
-                            createRemoveButton.setAttribute('onclick', 'createRemove('+createCount+')');
+                            createRemoveButton.setAttribute('onclick', 'createRemove(' + createCount + ')');
                             createRemoveButton.setAttribute('class', 'uk-link-reset');
                             createRemoveButton.innerHTML = 'X';
 
@@ -382,7 +417,7 @@
                         };
 
                         function createRemove(i) {
-                            const createRemoveElement = document.getElementById('create'+i);
+                            const createRemoveElement = document.getElementById('create' + i);
                             createRemoveElement.remove();
                         };
                     </script>
@@ -390,7 +425,7 @@
                     <hr>
 
                     <div class="uk-margin">
-                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                        <button type="submit" class="uk-button uk-button-primary"><?= lang('Global.save') ?></button>
                     </div>
                 </form>
             </div>
@@ -406,7 +441,7 @@
             <div class="uk-modal-header">
                 <div class="uk-child-width-1-2" uk-grid>
                     <div>
-                        <h5 class="uk-modal-title" id="tambahcat"><?=lang('Global.addCategory')?></h5>
+                        <h5 class="uk-modal-title" id="tambahcat"><?= lang('Global.addCategory') ?></h5>
                     </div>
                     <div class="uk-text-right">
                         <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
@@ -415,15 +450,15 @@
             </div>
             <div class="uk-modal-body">
                 <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
-                    <thead class="uk-h5"><?=lang('Global.categoryList')?>
+                    <thead class="uk-h5"><?= lang('Global.categoryList') ?>
                         <tr>
                             <th class="uk-text-center">No</th>
-                            <th class="uk-text-center"><?=lang('Global.name')?></th>
-                            <th class="uk-text-center"><?=lang('Global.action')?></th>
+                            <th class="uk-text-center"><?= lang('Global.name') ?></th>
+                            <th class="uk-text-center"><?= lang('Global.action') ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1 ; ?>
+                        <?php $i = 1; ?>
                         <?php foreach ($category as $cate) : ?>
                             <tr>
                                 <td class="uk-text-center"><?= $i++; ?></td>
@@ -436,14 +471,14 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                
+
                 <!-- Modal Edit Category -->
                 <?php foreach ($category as $cate) : ?>
                     <div uk-modal class="uk-flex-top" id="editcat<?= $cate['id'] ?>">
                         <div class="uk-modal-dialog uk-margin-auto-vertical">
                             <div class="uk-modal-content">
                                 <div class="uk-modal-header">
-                                    <h5 class="uk-modal-title" id="editcat"><?=lang('Global.updateData')?></h5>
+                                    <h5 class="uk-modal-title" id="editcat"><?= lang('Global.updateData') ?></h5>
                                 </div>
                                 <div class="uk-modal-body">
                                     <form class="uk-form-stacked" role="form" action="product/editcat<?= $cate['id'] ?>" method="post">
@@ -451,16 +486,16 @@
                                         <input type="hidden" name="id" value="<?= $cate['id']; ?>">
 
                                         <div class="uk-margin-bottom">
-                                            <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                                            <label class="uk-form-label" for="name"><?= lang('Global.name') ?></label>
                                             <div class="uk-form-controls">
-                                                <input type="text" class="uk-input" id="name" name="name" value="<?= $cate['name']; ?>"autofocus />
+                                                <input type="text" class="uk-input" id="name" name="name" value="<?= $cate['name']; ?>" autofocus />
                                             </div>
                                         </div>
 
                                         <hr>
 
                                         <div class="uk-margin">
-                                            <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                                            <button type="submit" class="uk-button uk-button-primary"><?= lang('Global.save') ?></button>
                                         </div>
                                     </form>
                                 </div>
@@ -469,21 +504,21 @@
                     </div>
                 <?php endforeach; ?>
                 <!-- End Of Modal Edit Category -->
-              
+
                 <form class="uk-form-stacked" role="form" action="product/createcat" method="post">
                     <?= csrf_field() ?>
 
                     <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                        <label class="uk-form-label" for="name"><?= lang('Global.name') ?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?= lang('Global.name') ?>" autofocus required />
                         </div>
                     </div>
 
                     <hr>
 
                     <div class="uk-margin">
-                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                        <button type="submit" class="uk-button uk-button-primary"><?= lang('Global.save') ?></button>
                     </div>
                 </form>
             </div>
@@ -499,7 +534,7 @@
             <div class="uk-modal-header">
                 <div class="uk-child-width-1-2" uk-grid>
                     <div>
-                        <h5 class="uk-modal-title" id="tambahbrand"><?=lang('Global.addBrand')?></h5>
+                        <h5 class="uk-modal-title" id="tambahbrand"><?= lang('Global.addBrand') ?></h5>
                     </div>
                     <div class="uk-text-right">
                         <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
@@ -508,15 +543,15 @@
             </div>
             <div class="uk-modal-body">
                 <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
-                    <thead class="uk-h5"><?=lang('Global.brandList')?>
+                    <thead class="uk-h5"><?= lang('Global.brandList') ?>
                         <tr>
                             <th class="uk-text-center">No</th>
-                            <th class="uk-text-center"><?=lang('Global.name')?></th>
-                            <th class="uk-text-center"><?=lang('Global.action')?></th>
+                            <th class="uk-text-center"><?= lang('Global.name') ?></th>
+                            <th class="uk-text-center"><?= lang('Global.action') ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1 ; ?>
+                        <?php $i = 1; ?>
                         <?php foreach ($brand as $bran) : ?>
                             <tr>
                                 <td class="uk-text-center"><?= $i++; ?></td>
@@ -529,14 +564,14 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                
+
                 <!-- Modal Edit Category -->
                 <?php foreach ($brand as $bran) : ?>
                     <div uk-modal class="uk-flex-top" id="editbrand<?= $bran['id'] ?>">
                         <div class="uk-modal-dialog uk-margin-auto-vertical">
                             <div class="uk-modal-content">
                                 <div class="uk-modal-header">
-                                    <h5 class="uk-modal-title" id="editbrand"><?=lang('Global.updateData')?></h5>
+                                    <h5 class="uk-modal-title" id="editbrand"><?= lang('Global.updateData') ?></h5>
                                 </div>
                                 <div class="uk-modal-body">
                                     <form class="uk-form-stacked" role="form" action="product/editbrand<?= $bran['id'] ?>" method="post">
@@ -544,16 +579,16 @@
                                         <input type="hidden" name="id" value="<?= $bran['id']; ?>">
 
                                         <div class="uk-margin-bottom">
-                                            <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                                            <label class="uk-form-label" for="name"><?= lang('Global.name') ?></label>
                                             <div class="uk-form-controls">
-                                                <input type="text" class="uk-input" id="name" name="name" value="<?= $bran['name']; ?>"autofocus />
+                                                <input type="text" class="uk-input" id="name" name="name" value="<?= $bran['name']; ?>" autofocus />
                                             </div>
                                         </div>
 
                                         <hr>
 
                                         <div class="uk-margin">
-                                            <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                                            <button type="submit" class="uk-button uk-button-primary"><?= lang('Global.save') ?></button>
                                         </div>
                                     </form>
                                 </div>
@@ -562,21 +597,21 @@
                     </div>
                 <?php endforeach; ?>
                 <!-- End Of Modal Edit Category -->
-                
+
                 <form class="uk-form-stacked" role="form" action="product/createbrand" method="post">
                     <?= csrf_field() ?>
 
                     <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                        <label class="uk-form-label" for="name"><?= lang('Global.name') ?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?= lang('Global.name') ?>" autofocus required />
                         </div>
                     </div>
 
                     <hr>
 
                     <div class="uk-margin">
-                        <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                        <button type="submit" class="uk-button uk-button-primary"><?= lang('Global.save') ?></button>
                     </div>
                 </form>
             </div>
@@ -599,7 +634,7 @@
                 </div>
                 <div class="uk-margin-small-top">
                     <select class="uk-select" id="filter" name="category" style="border-radius: 5px; border-style: solid;">
-                        <option value="" selected disabled><?=lang('Global.selectcat')?></option>
+                        <option value="" selected disabled><?= lang('Global.selectcat') ?></option>
                         <?php foreach ($category as $cate) { ?>
                             <option value="<?= $cate['id'] ?>" <?= ((!empty($input['category'])) && ($input['category'] === $cate['id'])) ? 'selected' : '' ?>><?= $cate['name'] ?></option>
                         <?php } ?>
@@ -632,14 +667,14 @@
         <!-- Capital Price -->
         <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
-            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalcap,2,',','.') ?></div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalcap, 2, ',', '.') ?></div>
         </div>
         <!-- Capital Price End -->
 
         <!-- Base Price -->
         <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.basePrice') ?> :</div>
-            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalbase,2,',','.') ?></div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalbase, 2, ',', '.') ?></div>
         </div>
         <!-- Base Price End -->
     </div>
@@ -647,14 +682,14 @@
         <thead>
             <tr>
                 <th class="uk-text-center"><?= lang('Global.detail') ?></th>
-                <th class="uk-text-center"><?=lang('Global.favorite')?></th>
-                <th><?=lang('Global.name')?></th>
-                <th><?=lang('Global.category')?></th>
-                <th><?=lang('Global.price')?></th>
-                <th><?=lang('Global.stock')?></th>
-                <th><?=lang('Global.brand')?></th>
+                <th class="uk-text-center"><?= lang('Global.favorite') ?></th>
+                <th><?= lang('Global.name') ?></th>
+                <th><?= lang('Global.category') ?></th>
+                <th><?= lang('Global.price') ?></th>
+                <th><?= lang('Global.stock') ?></th>
+                <th><?= lang('Global.brand') ?></th>
                 <?php if (in_groups('owner')) : ?>
-                  <th class="uk-text-center"><?=lang('Global.action')?></th>
+                    <th class="uk-text-center"><?= lang('Global.action') ?></th>
                 <?php endif ?>
             </tr>
         </thead>
@@ -671,7 +706,7 @@
                             } else {
                                 $checked = 'checked';
                             } ?>
-                            <input class="uk-checkbox" type="checkbox" name="favorite" id="favorite-<?=$product['id']?>" <?=$checked?>>
+                            <input class="uk-checkbox" type="checkbox" name="favorite" id="favorite-<?= $product['id'] ?>" <?= $checked ?>>
                         </form>
                     </td>
                     <td><?= $product['name']; ?></td>
@@ -690,11 +725,11 @@
                             $countvar = 0;
                         }
                         if ($countvar > 1) {
-                            echo $countvar.' '.lang('Global.variant');
+                            echo $countvar . ' ' . lang('Global.variant');
                         } elseif ($countvar === 1) {
                             foreach ($variants as $variant) {
                                 if ($variant['productid'] === $product['id']) {
-                                    echo "Rp ".number_format(($variant['hargamodal'] + $variant['hargajual']),2,',','.');
+                                    echo "Rp " . number_format(($variant['hargamodal'] + $variant['hargajual']), 2, ',', '.');
                                 }
                             }
                         } else {
@@ -717,7 +752,7 @@
                                     }
                                 }
                             }
-                        }                        
+                        }
                         echo $toqty;
                         ?>
                     </td>
@@ -738,7 +773,7 @@
 
                             <!-- Button Delete -->
                             <div>
-                                <a class="uk-icon-button-delete" uk-icon="trash" href="product/delete/<?= $product['id'] ?>" onclick="return confirm('<?=lang('Global.deleteConfirm')?>')"></a>
+                                <a class="uk-icon-button-delete" uk-icon="trash" href="product/delete/<?= $product['id'] ?>" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')"></a>
                             </div>
                             <!-- End Of Button Delete -->
                         </td>
@@ -758,22 +793,26 @@
     <?php foreach ($products as $product) { ?>
         $(document).ready(function() {
             //set initial state.
-            $('#favorite-<?=$product['id']?>').change(function() {
-                var checked<?=$product['id']?> = document.getElementById('favorite-<?=$product['id']?>').checked;
-                if (checked<?=$product['id']?> == true) {
-                    var data = { 'favorite' : '1', };
+            $('#favorite-<?= $product['id'] ?>').change(function() {
+                var checked<?= $product['id'] ?> = document.getElementById('favorite-<?= $product['id'] ?>').checked;
+                if (checked<?= $product['id'] ?> == true) {
+                    var data = {
+                        'favorite': '1',
+                    };
                 } else {
-                    var data = { 'favorite' : '0', };
+                    var data = {
+                        'favorite': '0',
+                    };
                 }
                 $.ajax({
-                    url:"product/favorite/<?=$product['id']?>",
-                    method:"POST",
+                    url: "product/favorite/<?= $product['id'] ?>",
+                    method: "POST",
                     data: data,
                     dataType: "json",
-                    error:function() {
+                    error: function() {
                         console.log('error', arguments);
                     },
-                    success:function() {
+                    success: function() {
                         console.log('success', arguments);
                     },
                 })
@@ -791,7 +830,7 @@
                 <div class="uk-modal-header">
                     <div class="uk-child-width-1-2" uk-grid>
                         <div>
-                            <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
+                            <h5 class="uk-modal-title" id="editdata"><?= lang('Global.updateData') ?></h5>
                         </div>
                         <div class="uk-text-right">
                             <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
@@ -805,46 +844,46 @@
                         <input type="hidden" name="id" value="<?= $product['id']; ?>">
 
                         <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                            <label class="uk-form-label" for="name"><?= lang('Global.name') ?></label>
                             <div class="uk-form-controls">
                                 <input type="text" class="uk-input" id="name" name="name" value="<?= $product['name']; ?>" />
                             </div>
                         </div>
-                        
+
                         <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="name"><?=lang('Global.description')?></label>
+                            <label class="uk-form-label" for="name"><?= lang('Global.description') ?></label>
                             <div class="uk-form-controls">
                                 <input type="text" class="uk-input" id="description" name="description" value="<?= $product['description']; ?>" />
                             </div>
                         </div>
 
                         <div class="uk-margin-bottom">
-                            <label class="uk-form-label"><?=lang('Global.category')?></label>
+                            <label class="uk-form-label"><?= lang('Global.category') ?></label>
                             <div class="uk-margin-small">
                                 <div class="uk-width-1-1">
                                     <?php foreach ($category as $cat) { ?>
                                         <?php if ($cat['id'] === $product['catid']) { ?>
-                                            <input class="uk-input" name="category<?=$product['id']?>" id="category<?=$product['id']?>" value="<?= $cat['name']; ?>" required />
-                                            <input id="catid<?=$product['id']?>" name="catid<?=$product['id']?>" value="<?= $cat['id']; ?>" hidden/>
+                                            <input class="uk-input" name="category<?= $product['id'] ?>" id="category<?= $product['id'] ?>" value="<?= $cat['name']; ?>" required />
+                                            <input id="catid<?= $product['id'] ?>" name="catid<?= $product['id'] ?>" value="<?= $cat['id']; ?>" hidden />
                                         <?php } ?>
                                     <?php } ?>
                                 </div>
                             </div>
                             <div class="uk-h6 uk-margin-remove">
-                                <?=lang('Global.morecate')?><a uk-toggle="target: #tambahcat"><?=lang('Global.addCategory')?></a>
+                                <?= lang('Global.morecate') ?><a uk-toggle="target: #tambahcat"><?= lang('Global.addCategory') ?></a>
                             </div>
 
                             <script type="text/javascript">
                                 $(function() {
                                     var category = [
-                                      <?php foreach ($category as $cat) {
-                                          echo '{label:"'.$cat['name'].'",idx:'.(int)$cat['id'].'},';
-                                      } ?>
+                                        <?php foreach ($category as $cat) {
+                                            echo '{label:"' . $cat['name'] . '",idx:' . (int)$cat['id'] . '},';
+                                        } ?>
                                     ];
-                                    $("#category<?=$product['id']?>").autocomplete({
+                                    $("#category<?= $product['id'] ?>").autocomplete({
                                         source: category,
-                                        select: function (e, i) {
-                                            $("#catid<?=$product['id']?>").val(i.item.idx); // save selected id to hidden input
+                                        select: function(e, i) {
+                                            $("#catid<?= $product['id'] ?>").val(i.item.idx); // save selected id to hidden input
                                         },
                                         minLength: 2
                                     });
@@ -853,32 +892,32 @@
                         </div>
 
                         <div class="uk-margin-bottom">
-                            <label class="uk-form-label"><?=lang('Global.brand')?></label>
+                            <label class="uk-form-label"><?= lang('Global.brand') ?></label>
                             <div class="uk-margin-small">
                                 <div class="uk-width-1-1">
                                     <?php foreach ($brand as $bran) { ?>
                                         <?php if ($bran['id'] === $product['brandid']) { ?>
-                                            <input class="uk-input" name="brand<?=$product['id']?>" id="brand<?=$product['id']?>" value="<?= $bran['name']; ?>" required/>
-                                            <input id="brandid<?=$product['id']?>" name="brandid<?=$product['id']?>" value="<?= $bran['id']; ?>" hidden/>
+                                            <input class="uk-input" name="brand<?= $product['id'] ?>" id="brand<?= $product['id'] ?>" value="<?= $bran['name']; ?>" required />
+                                            <input id="brandid<?= $product['id'] ?>" name="brandid<?= $product['id'] ?>" value="<?= $bran['id']; ?>" hidden />
                                         <?php } ?>
                                     <?php } ?>
                                 </div>
                             </div>
                             <div class="uk-h6 uk-margin-remove">
-                                <?=lang('Global.morebrand')?><a uk-toggle="target: #tambahbrand"><?=lang('Global.addBrand')?></a>
+                                <?= lang('Global.morebrand') ?><a uk-toggle="target: #tambahbrand"><?= lang('Global.addBrand') ?></a>
                             </div>
 
                             <script type="text/javascript">
                                 $(function() {
                                     var brand = [
-                                      <?php foreach ($brand as $bran) {
-                                          echo '{label:"'.$bran['name'].'",idx:'.(int)$bran['id'].'},';
-                                      } ?>
+                                        <?php foreach ($brand as $bran) {
+                                            echo '{label:"' . $bran['name'] . '",idx:' . (int)$bran['id'] . '},';
+                                        } ?>
                                     ];
-                                    $("#brand<?=$product['id']?>").autocomplete({
+                                    $("#brand<?= $product['id'] ?>").autocomplete({
                                         source: brand,
-                                        select: function (e, i) {
-                                            $("#brandid<?=$product['id']?>").val(i.item.idx); // save selected id to hidden input
+                                        select: function(e, i) {
+                                            $("#brandid<?= $product['id'] ?>").val(i.item.idx); // save selected id to hidden input
                                         },
                                         minLength: 2
                                     });
@@ -886,73 +925,73 @@
                             </script>
                         </div>
 
-                        <div id="image-container-edit-<?=$product['id']?>" class="uk-margin">
-                            <label class="uk-form-label" for="photocreate"><?=lang('Global.photo')?></label>
-                            <div id="image-container-<?=$product['id']?>" class="uk-form-controls">
-                                <input id="photoedit<?=$product['id']?>" value="<?= $product['photo']; ?>" hidden />
-                                <div class="js-upload-edit-<?=$product['id']?> uk-placeholder uk-text-center">
+                        <div id="image-container-edit-<?= $product['id'] ?>" class="uk-margin">
+                            <label class="uk-form-label" for="photocreate"><?= lang('Global.photo') ?></label>
+                            <div id="image-container-<?= $product['id'] ?>" class="uk-form-controls">
+                                <input id="photoedit<?= $product['id'] ?>" value="<?= $product['photo']; ?>" hidden />
+                                <div class="js-upload-edit-<?= $product['id'] ?> uk-placeholder uk-text-center">
                                     <span uk-icon="icon: cloud-upload"></span>
-                                    <span class="uk-text-middle"><?=lang('Global.photoUploadDesc')?></span>
+                                    <span class="uk-text-middle"><?= lang('Global.photoUploadDesc') ?></span>
                                     <div uk-form-custom>
                                         <input type="file">
-                                        <span class="uk-link uk-preserve-color"><?=lang('Global.selectOne')?></span>
+                                        <span class="uk-link uk-preserve-color"><?= lang('Global.selectOne') ?></span>
                                     </div>
                                 </div>
-                                <progress id="js-progressbar-edit-<?=$product['id']?>" class="uk-progress" value="0" max="100" hidden></progress>
+                                <progress id="js-progressbar-edit-<?= $product['id'] ?>" class="uk-progress" value="0" max="100" hidden></progress>
                                 <?php if (!empty($product['thumbnail'])) { ?>
-                                    <div id="display-container-edit-<?=$product['id']?>" class="uk-inline">
-                                        <img src="img/product/<?=$product['thumbnail']?>" width="150" height="150" />
+                                    <div id="display-container-edit-<?= $product['id'] ?>" class="uk-inline">
+                                        <img src="img/product/<?= $product['thumbnail'] ?>" width="150" height="150" />
                                         <div class="uk-position-small uk-position-top-right">
-                                            <a class="tm-img-remove uk-border-circle" uk-icon="close" onclick="removeImgEdit<?=$product['id']?>()"></a>
+                                            <a class="tm-img-remove uk-border-circle" uk-icon="close" onclick="removeImgEdit<?= $product['id'] ?>()"></a>
                                         </div>
                                     </div>
                                 <?php } ?>
                             </div>
                         </div>
-                        
-                        <script type="text/javascript">
-                            var bar = document.getElementById('js-progressbar-edit-<?=$product['id']?>');
 
-                            UIkit.upload('.js-upload-edit-<?=$product['id']?>', {
-                                url: 'upload/productedit/<?=$product['id']?>',
+                        <script type="text/javascript">
+                            var bar = document.getElementById('js-progressbar-edit-<?= $product['id'] ?>');
+
+                            UIkit.upload('.js-upload-edit-<?= $product['id'] ?>', {
+                                url: 'upload/productedit/<?= $product['id'] ?>',
                                 multiple: false,
                                 name: 'uploads',
                                 method: 'POST',
                                 type: 'json',
 
-                                beforeSend: function () {
+                                beforeSend: function() {
                                     console.log('beforeSend', arguments);
                                 },
-                                beforeAll: function () {
+                                beforeAll: function() {
                                     console.log('beforeAll', arguments);
                                 },
-                                load: function () {
+                                load: function() {
                                     console.log('load', arguments);
                                 },
-                                error: function () {
+                                error: function() {
                                     console.log('error', arguments);
                                     var error = arguments[0].xhr.response.message.uploads;
                                     alert(error);
                                 },
-                                complete: function () {
+                                complete: function() {
                                     console.log('complete', arguments);
-                                    
+
                                     var filename = arguments[0].response;
 
-                                    if (document.getElementById('display-container-edit-<?=$product['id']?>')) {
-                                        document.getElementById('display-container-edit-<?=$product['id']?>').remove();
+                                    if (document.getElementById('display-container-edit-<?= $product['id'] ?>')) {
+                                        document.getElementById('display-container-edit-<?= $product['id'] ?>').remove();
                                     };
 
-                                    document.getElementById('photoedit<?=$product['id']?>').value = filename;
+                                    document.getElementById('photoedit<?= $product['id'] ?>').value = filename;
 
-                                    var imgContainer = document.getElementById('image-container-edit-<?=$product['id']?>');
+                                    var imgContainer = document.getElementById('image-container-edit-<?= $product['id'] ?>');
 
                                     var displayContainer = document.createElement('div');
-                                    displayContainer.setAttribute('id', 'display-container-edit-<?=$product['id']?>');
+                                    displayContainer.setAttribute('id', 'display-container-edit-<?= $product['id'] ?>');
                                     displayContainer.setAttribute('class', 'uk-inline');
 
                                     var displayImg = document.createElement('img');
-                                    displayImg.setAttribute('src', 'img/product/thumb-'+filename);
+                                    displayImg.setAttribute('src', 'img/product/thumb-' + filename);
                                     displayImg.setAttribute('width', '150');
                                     displayImg.setAttribute('height', '150');
 
@@ -961,7 +1000,7 @@
 
                                     var closeButton = document.createElement('a');
                                     closeButton.setAttribute('class', 'tm-img-remove uk-border-circle');
-                                    closeButton.setAttribute('onClick', 'removeImgEdit<?=$product['id']?>()');
+                                    closeButton.setAttribute('onClick', 'removeImgEdit<?= $product['id'] ?>()');
                                     closeButton.setAttribute('uk-icon', 'close');
 
                                     closeContainer.appendChild(closeButton);
@@ -970,7 +1009,7 @@
                                     imgContainer.appendChild(displayContainer);
                                 },
 
-                                loadStart: function (e) {
+                                loadStart: function(e) {
                                     console.log('loadStart', arguments);
 
                                     bar.removeAttribute('hidden');
@@ -978,49 +1017,51 @@
                                     bar.value = e.loaded;
                                 },
 
-                                progress: function (e) {
+                                progress: function(e) {
                                     console.log('progress', arguments);
 
                                     bar.max = e.total;
                                     bar.value = e.loaded;
                                 },
 
-                                loadEnd: function (e) {
+                                loadEnd: function(e) {
                                     console.log('loadEnd', arguments);
 
                                     bar.max = e.total;
                                     bar.value = e.loaded;
                                 },
 
-                                completeAll: function () {
-                                    console.log('completeAll', arguments);                                   
+                                completeAll: function() {
+                                    console.log('completeAll', arguments);
 
-                                    setTimeout(function () {
+                                    setTimeout(function() {
                                         bar.setAttribute('hidden', 'hidden');
                                     }, 1000);
 
-                                    alert('<?=lang('Global.uploadComplete')?>');
+                                    alert('<?= lang('Global.uploadComplete') ?>');
                                 }
                             });
 
-                            function removeImgEdit<?=$product['id']?>() {                                
-                                $.ajax ({
+                            function removeImgEdit<?= $product['id'] ?>() {
+                                $.ajax({
                                     type: 'post',
-                                    url: 'upload/removeproductedit/<?=$product['id']?>',
-                                    data: {'photo': document.getElementById('photoedit<?=$product['id']?>').value},
+                                    url: 'upload/removeproductedit/<?= $product['id'] ?>',
+                                    data: {
+                                        'photo': document.getElementById('photoedit<?= $product['id'] ?>').value
+                                    },
                                     dataType: 'json',
 
                                     error: function() {
                                         console.log('error', arguments);
                                     },
 
-                                    success:function() {
+                                    success: function() {
                                         console.log('success', arguments);
 
                                         var pesan = arguments[0].message;
 
-                                        document.getElementById('display-container-edit-<?=$product['id']?>').remove();
-                                        document.getElementById('photoedit<?=$product['id']?>').value = '';
+                                        document.getElementById('display-container-edit-<?= $product['id'] ?>').remove();
+                                        document.getElementById('photoedit<?= $product['id'] ?>').value = '';
 
                                         alert(pesan);
                                     }
@@ -1029,16 +1070,16 @@
                         </script>
 
                         <div class="uk-margin-bottom">
-                            <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
+                            <h4 class="tm-h4 uk-margin-remove"><?= lang('Global.variant') ?></h4>
                             <div class="uk-h6 uk-margin-remove">
-                                <?=lang('Global.editVar')?><a href="/product/indexvar/<?= $product['id']; ?>"><?=lang('Global.manageVar')?></a>
+                                <?= lang('Global.editVar') ?><a href="/product/indexvar/<?= $product['id']; ?>"><?= lang('Global.manageVar') ?></a>
                             </div>
                         </div>
 
                         <hr>
 
                         <div class="uk-margin">
-                            <button type="submit" class="uk-button uk-button-primary"><?=lang('Global.save')?></button>
+                            <button type="submit" class="uk-button uk-button-primary"><?= lang('Global.save') ?></button>
                         </div>
 
                     </form>
@@ -1051,12 +1092,12 @@
 
 <!-- Products Detail -->
 <?php foreach ($products as $product) { ?>
-    <div id="product-<?=$product['id']?>" class="uk-flex-top" uk-modal>
+    <div id="product-<?= $product['id'] ?>" class="uk-flex-top" uk-modal>
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-header">
                 <div class="uk-child-width-1-2" uk-grid>
                     <div>
-                        <h5 class="uk-modal-title"><?=$product['name']?></h5>
+                        <h5 class="uk-modal-title"><?= $product['name'] ?></h5>
                     </div>
                     <div class="uk-text-right">
                         <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
@@ -1067,15 +1108,15 @@
                 <div class="uk-child-width-1-2@m uk-flex-middle" uk-grid>
                     <div>
                         <?php if (!empty($product['thumbnail'])) { ?>
-                            <img class="uk-width-1-1" src="/img/product/<?=$product['thumbnail']?>" />
+                            <img class="uk-width-1-1" src="/img/product/<?= $product['thumbnail'] ?>" />
                         <?php } else { ?>
                             <svg x="0px" y="0px" viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
                                 <g>
                                     <defs>
-                                        <rect id="SVGID_1_" y="0" width="300" height="300"/>
+                                        <rect id="SVGID_1_" y="0" width="300" height="300" />
                                     </defs>
                                     <clipPath id="SVGID_00000065759931020451687440000009539297437584060839_">
-                                        <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+                                        <use xlink:href="#SVGID_1_" style="overflow:visible;" />
                                     </clipPath>
                                     <g style="clip-path:url(#SVGID_00000065759931020451687440000009539297437584060839_);">
                                         <path class="dummyproduct" d="M10.43,99.92c-10.73-27.36,4.25-69.85,30.19-85.78C51.01,7.77,77-5.17,108.81,30.24
@@ -1085,7 +1126,7 @@
                                           c2.16,0.28,10.31,0.86,17.02-5.79c6.56-6.54,13.06-21.9,6.78-58.08C50.43,89.07,75.8,68.22,87.2,62.18
                                           c15.23-8.09,33.99-5.98,45.6,5.15c3.3,3.14,3.38,8.34,0.23,11.6c-3.13,3.26-8.35,3.37-11.59,0.23c-5.55-5.31-16.45-7.86-26.56-2.5
                                           c-8.25,4.37-26.43,20.18-17.46,72.17c6.01,34.86,2.08,59.32-11.64,72.76c-13.81,13.43-31.7,10.1-32.45,9.95l-0.67-0.13l-0.63-0.24
-                                          c-7.34-2.73-12.76-7.95-15.68-15.08c-4.14-10.12-2.41-22.24,1.16-29.72c15.27-32.43,8.34-49.15-2.2-74.47L10.43,99.92z"/>
+                                          c-7.34-2.73-12.76-7.95-15.68-15.08c-4.14-10.12-2.41-22.24,1.16-29.72c15.27-32.43,8.34-49.15-2.2-74.47L10.43,99.92z" />
                                         <g>
                                             <path class="dummyproduct" d="M289.03,204.6L222.63,89.6c0,0-8.25-9.16-7.65-8.69l-10.29-6.98l-72.37-38.31
                                               c-7.64-4.21-17.21-3.87-25.53,0.91c-6.82,3.93-11.33,10.31-12.87,17.21c14.44-4.1,30.01-1.11,40.99,8.29
@@ -1100,7 +1141,7 @@
                                               C202.67,237.11,192.12,234.18,182.01,224.96z M220.06,237.4l-50.01-87.43l5.74-3.28l50,87.43L220.06,237.4z M226.2,226.44
                                               c-0.29,0.25-0.55,0.46-0.85,0.69l-4.53-7.92c0.51-0.43,0.96-0.9,1.4-1.35c2.16-1.94,3.64-4,4.5-6.25
                                               c2.1-4.48,2.31-9.32,0.06-13.25c-3.65-6.39-12.44-8.43-21.03-5.49l-4.84-8.41c14.3-3.2,27.1-0.45,32.68,9.28
-                                              C239,203.19,235.61,215.91,226.2,226.44z"/>
+                                              C239,203.19,235.61,215.91,226.2,226.44z" />
                                         </g>
                                     </g>
                                 </g>
@@ -1129,21 +1170,21 @@
                             $stockClass = 'uk-sext-success';
                         }
                         ?>
-                        <div class="uk-h3 tm-h3"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> <span class="<?=$stockClass?>"><?=$toqty?></span></div>
-                        <h6 class="uk-h4 tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h6>
+                        <div class="uk-h3 tm-h3"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> <span class="<?= $stockClass ?>"><?= $toqty ?></span></div>
+                        <h6 class="uk-h4 tm-h4 uk-margin-remove"><?= lang('Global.variant') ?></h6>
                         <table class="uk-table uk-table-justify uk-table-middle" style="background-color: #fff;">
                             <thead>
                                 <tr>
                                     <th class="uk-width-medium"></th>
-                                    <th class="uk-text-center uk-width-small" style="color: #000;"><?=lang('Global.stock')?></th>
-                                    <th class="uk-width-large" style="color: #000;"><?=lang('Global.price')?></th>
+                                    <th class="uk-text-center uk-width-small" style="color: #000;"><?= lang('Global.stock') ?></th>
+                                    <th class="uk-width-large" style="color: #000;"><?= lang('Global.price') ?></th>
                                 </tr>
                             </thead>
                             <tbody style="color: #000;">
                                 <?php foreach ($variants as $variant) { ?>
                                     <?php if ($variant['productid'] === $product['id']) { ?>
                                         <tr>
-                                            <td class="uk-text-bold"><?=$variant['name']?></td>
+                                            <td class="uk-text-bold"><?= $variant['name'] ?></td>
                                             <td class="uk-text-center">
                                                 <?php
                                                 $varstock = 0;
@@ -1156,7 +1197,7 @@
                                                 ?>
                                             </td>
                                             <td>
-                                                <?= "Rp ".number_format(((Int)$variant['hargamodal'] + (Int)$variant['hargajual']),2,',','.'); ?>
+                                                <?= "Rp " . number_format(((int)$variant['hargamodal'] + (int)$variant['hargajual']), 2, ',', '.'); ?>
                                             </td>
                                         </tr>
                                     <?php } ?>
