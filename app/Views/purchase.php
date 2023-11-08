@@ -568,7 +568,7 @@ foreach ($purchases as $purchase) { ?>
                         </div>
                     </div>
                 </div>
-                <div class="uk-modal-body" uk-overflow-auto>
+                <div class="uk-modal-body">
                     <div class="uk-form-horizontal">
                         <div class="uk-margin">
                             <div class="tm-h2 uk-h4"><?=lang('Global.purchaseInfo')?></div>
