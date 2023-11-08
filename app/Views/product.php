@@ -414,7 +414,7 @@
                 </div>
             </div>
             <div class="uk-modal-body">
-                <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
+                <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
                     <thead class="uk-h5"><?=lang('Global.categoryList')?>
                         <tr>
                             <th class="uk-text-center">No</th>
@@ -507,7 +507,7 @@
                 </div>
             </div>
             <div class="uk-modal-body">
-                <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
+                <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
                     <thead class="uk-h5"><?=lang('Global.brandList')?>
                         <tr>
                             <th class="uk-text-center">No</th>
@@ -646,7 +646,7 @@
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light display" style="width:100%">
         <thead>
             <tr>
-                <th class="uk-text-center"></th>
+                <th class="uk-text-center"><?= lang('Global.detail') ?></th>
                 <th class="uk-text-center"><?=lang('Global.favorite')?></th>
                 <th><?=lang('Global.name')?></th>
                 <th><?=lang('Global.category')?></th>
@@ -661,7 +661,7 @@
         <tbody>
             <?php foreach ($products as $product) : ?>
                 <tr class="">
-                    <td class="uk-flex uk-flex-center">
+                    <td class="uk-text-center">
                         <a class="uk-icon-link uk-icon" uk-toggle="target: #product-<?= $product['id']; ?>" uk-icon="search"></a>
                     </td>
                     <td class="uk-text-center">

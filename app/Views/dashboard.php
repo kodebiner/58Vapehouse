@@ -326,7 +326,7 @@
                             <h5 class="tm-h2" style="color: #000;"><?= lang('Global.bestsellprod') ?></h5>
                         </div>
                         <div class="uk-margin-small-top">
-                            <table class="uk-table uk-table-divider" style="backgorund-color: #fff;">
+                            <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                 <tbody>
                                     <?php $i = 1 ; ?>
                                     <?php foreach ($top3prod as $top3pro) { ?>
@@ -372,7 +372,7 @@
                             <h5 class="tm-h2" style="color: #000;"><?= lang('Global.poppaymethod') ?></h5>
                         </div>
                         <div class="uk-margin-small-top">
-                            <table class="uk-table uk-table-divider" style="backgorund-color: #fff;">
+                            <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                 <tbody>
                                     <?php $i = 1 ; ?>
                                     <?php if(!empty($top3paymet)){
@@ -474,7 +474,7 @@
                             </div>
                         </div>
                         <div class="uk-margin-small-top">
-                            <table class="uk-table uk-table-divider" style="backgorund-color: #fff;">
+                            <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                 <tbody>
                                     <?php foreach ($stocks as $stock) { 
                                         $today      = $stock['restock'];
