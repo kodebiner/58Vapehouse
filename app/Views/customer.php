@@ -53,7 +53,14 @@
     <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
             <div class="uk-modal-header">
-                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addCustomer')?></h5>
+                <div class="uk-child-width-1-2" uk-grid>
+                    <div>
+                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addCustomer')?></h5>
+                    </div>
+                    <div class="uk-text-right">
+                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                    </div>
+                </div>
             </div>
             <div class="uk-modal-body">
                 <form class="uk-form-stacked" role="form" action="/customer/create" method="post">
@@ -162,7 +169,14 @@
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
                 <div class="uk-modal-header">
-                    <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
+                    <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
+                        </div>
+                        <div class="uk-text-right">
+                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="uk-modal-body">

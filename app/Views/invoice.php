@@ -87,9 +87,15 @@
                         <div class="uk-flex-top" id="phonenumber" uk-modal>
 
                             <div class="uk-modal-dialog uk-margin-auto-vertical">
-                                <button class="uk-modal-close-default" type="button" uk-close></button>
                                 <div class="uk-modal-header">
-                                    <h2 class="uk-modal-title"><?=lang('Global.phonenumber')?></h2>
+                                    <div class="uk-child-width-1-2" uk-grid>
+                                        <div>
+                                            <h2 class="uk-modal-title"><?=lang('Global.phonenumber')?></h2>
+                                        </div>
+                                        <div class="uk-text-right">
+                                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="uk-modal-body">

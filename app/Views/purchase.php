@@ -34,7 +34,14 @@
     <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
             <div class="uk-modal-header">
-                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addPurchase')?></h5>
+                <div class="uk-child-width-1-2" uk-grid>
+                    <div>
+                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addPurchase')?></h5>
+                    </div>
+                    <div class="uk-text-right">
+                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                    </div>
+                </div>
             </div>
             <div class="uk-modal-body">
                 <form class="uk-form-stacked" role="form" action="stock/createpur" method="post">
@@ -400,7 +407,14 @@
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
                 <div class="uk-modal-header">
-                    <h5 class="uk-modal-title" id="savedata" ><?=lang('Global.confirmation')?></h5>
+                    <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <h5 class="uk-modal-title" id="savedata" ><?=lang('Global.confirmation')?></h5>
+                        </div>
+                        <div class="uk-text-right">
+                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                        </div>
+                    </div>
                 </div>
                 <div class="uk-modal-body">
                     <form class="uk-form-stacked" role="form" action="stock/confirm/<?= $purchase['id'] ?>" method="post">
@@ -545,7 +559,14 @@ foreach ($purchases as $purchase) { ?>
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
                 <div class="uk-modal-header">
-                    <h5 class="uk-modal-title" id="detail<?= $purchase['id'] ?>" ><?=lang('Global.detail')?></h5>
+                    <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <h5 class="uk-modal-title" id="detail<?= $purchase['id'] ?>" ><?=lang('Global.detail')?></h5>
+                        </div>
+                        <div class="uk-text-right">
+                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                        </div>
+                    </div>
                 </div>
                 <div class="uk-modal-body">
                     <div class="uk-form-horizontal">
@@ -599,7 +620,7 @@ foreach ($purchases as $purchase) { ?>
                                     <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
-                                    <?php if ($purchase['status'] === "1") { ?>
+                                    <?php if ($purchase['status'] != "2") { ?>
                                         <th class="uk-text-emphasis"><?=lang('Global.oldprice')?></th>
                                         <th class="uk-text-emphasis"><?=lang('Global.adjprice')?></th>
                                         <th class="uk-text-emphasis"><?=lang('Global.diffprice')?></th>
@@ -625,7 +646,7 @@ foreach ($purchases as $purchase) { ?>
                                                         <?php }
                                                     }
 
-                                                    if ($purchase['status'] === "1") {
+                                                    if ($purchase['status'] != "2") {
                                                         foreach ($oldstocks as $oldstock) {
                                                             if ($oldstock['variantid'] === $variant['id']) {
                                                                 $oldprice   = $oldstock['hargadasar'];
@@ -654,14 +675,25 @@ foreach ($purchases as $purchase) { ?>
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <?php
+                                    $arrayqty   = array();
+                                    $arrayprice = array();
+                                    foreach ($purchasedetails as $purdets) {
+                                        if ($purdets['purchaseid'] === $purchase['id']) {
+                                            $arrayqty[]     = $purdets['qty'];
+                                            $arrayprice[]   = (Int)$purdets['qty'] * (Int)$purdets['price'];
+                                        }
+                                    } ?>
                                     <td><?= lang('Global.totalPurchase'); ?></td>
                                     <td></td>
-                                    <td><?= $totalpcs; ?> Pcs</td>
+                                    <td><?= array_sum($arrayqty); ?> Pcs</td>
                                     <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><?= "Rp ".number_format($totalbuy,0,',','.'); ?></td>
+                                    <?php if ($purchase['status'] != "2") { ?>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    <?php } ?>
+                                    <td><?= "Rp ".number_format(array_sum($arrayprice),0,',','.'); ?></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -679,7 +711,14 @@ foreach ($purchases as $purchase) { ?>
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
                 <div class="uk-modal-header">
-                    <h5 class="uk-modal-title" id="editdata<?= $purchase['id'] ?>"><?=lang('Global.updateData')?></h5>
+                    <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <h5 class="uk-modal-title" id="editdata<?= $purchase['id'] ?>"><?=lang('Global.updateData')?></h5>
+                        </div>
+                        <div class="uk-text-right">
+                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="uk-modal-body">

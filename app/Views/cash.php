@@ -76,7 +76,14 @@
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
                 <div class="uk-modal-header">
-                    <h3 class="tm-h2 uk-text-center"><?=lang('Global.close')?></h3>
+                    <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <h3 class="tm-h2 uk-text-center"><?=lang('Global.close')?></h3>
+                        </div>
+                        <div class="uk-text-right">
+                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                        </div>
+                    </div>
                 </div>
                 <div class="uk-modal-body">
                     <div class="uk-margin">
@@ -204,7 +211,14 @@
     <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
             <div class="uk-modal-header">
-                <h3 class="tm-h2 uk-text-center"><?=lang('Global.initialcash')?></h3>
+                <div class="uk-child-width-1-2" uk-grid>
+                    <div>
+                        <h3 class="tm-h2 uk-text-center"><?=lang('Global.initialcash')?></h3>
+                    </div>
+                    <div class="uk-text-right">
+                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                    </div>
+                </div>
             </div>
             <div class="uk-modal-body">
                 <form class="uk-form-stacked" role="form" action="dayrep/open" method="post">
@@ -231,7 +245,14 @@
     <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
             <div class="uk-modal-header">
-                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addCash')?></h5>
+                <div class="uk-child-width-1-2" uk-grid>
+                    <div>
+                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addCash')?></h5>
+                    </div>
+                    <div class="uk-text-right">
+                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                    </div>
+                </div>
             </div>
             <div class="uk-modal-body">
                 <form class="uk-form-stacked" role="form" action="cashinout/create" method="post">
@@ -315,9 +336,15 @@
 <!-- Modal Withdraw -->
 <div class="uk-flex-top" id="withdraw" uk-modal>
     <div class="uk-modal-dialog uk-margin-auto-vertical">
-        <button class="uk-modal-close-default" type="button" uk-close></button>
         <div class="uk-modal-header">
-            <h2 class="uk-modal-title"><?= lang('Global.withdraw') ?></h2>
+            <div class="uk-child-width-1-2" uk-grid>
+                <div>
+                    <h2 class="uk-modal-title"><?= lang('Global.withdraw') ?></h2>
+                </div>
+                <div class="uk-text-right">
+                    <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                </div>
+            </div>
         </div>
         <div class="uk-modal-body">
             <form class="uk-form-horizontal uk-margin-large" action="cashinout/withdraw" method="post">

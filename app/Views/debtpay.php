@@ -14,7 +14,7 @@
             <h3 class="tm-h3"><?=lang('Global.debtInstallmentsList')?></h3>
         </div>
 
-        <!-- Button Trigger Modal export -->
+        <!-- Date Range -->
         <div class="uk-width-1-2@m uk-text-right@m">
             <form id="short" action="debt/debtpay" method="get">
                 <div class="uk-inline">
@@ -33,7 +33,7 @@
                 });
             </script>
         </div>
-        <!-- End Of Button Trigger Modal export-->
+        <!-- End Of Date Range-->
     </div>
 </div>
 <!-- End Of Page Heading -->

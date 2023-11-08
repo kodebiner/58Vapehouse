@@ -129,11 +129,14 @@
             <div class="uk-modal-content">
                 <div class="uk-modal-header uk-margin">
                     <div uk-grid>
-                        <div class="uk-width-3-4@m">
+                        <div class="uk-width-1-2@m">
                             <h5 class="uk-modal-title" ><?=lang('Global.detailTrx')?></h5>
                         </div>
                         <div class="uk-width-1-4@m">
                             <a class="uk-button uk-button-primary uk-preserve-color" href="pay/copyprint/<?=$transaction['id']?>"><?=lang('Global.print')?></a>
+                        </div>
+                        <div class="uk-width-1-4@m uk-text-right">
+                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
                         </div>
                     </div>
                 </div>

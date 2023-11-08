@@ -107,9 +107,15 @@
                     <!-- Modal Top Up Point -->
                     <div class="uk-flex-top" id="modal-sections" uk-modal>
                         <div class="uk-modal-dialog uk-margin-auto-vertical">
-                            <button class="uk-modal-close-default" type="button" uk-close></button>
                             <div class="uk-modal-header">
-                                <h2 class="uk-modal-title"><?=lang('Global.topup')?></h2>
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <h2 class="uk-modal-title"><?=lang('Global.topup')?></h2>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="uk-modal-body">
                                 <form class="uk-form-horizontal uk-margin-large" action="pay/topup" method="post">
@@ -230,7 +236,14 @@
                         <div class="uk-modal-dialog uk-margin-auto-vertical">
                             <div class="uk-modal-content">
                                 <div class="uk-modal-header">
-                                    <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.bookingList')?></h5>
+                                    <div class="uk-child-width-1-2" uk-grid>
+                                        <div>
+                                            <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.bookingList')?></h5>
+                                        </div>
+                                        <div class="uk-text-right">
+                                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="uk-modal-body">
                                     <?php foreach ($bookings as $book) { ?>
@@ -264,7 +277,14 @@
                                             <div class="uk-modal-dialog uk-margin-auto-vertical">
                                                 <div class="uk-modal-content">
                                                     <div class="uk-modal-header">
-                                                        <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.bookdetList')?></h5>
+                                                        <div class="uk-child-width-1-2" uk-grid>
+                                                            <div>
+                                                                <h5 class="uk-modal-title" id="bookinglist" ><?=lang('Global.bookdetList')?></h5>
+                                                            </div>
+                                                            <div class="uk-text-right">
+                                                                <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="uk-modal-body">
                                                         <?php
@@ -913,7 +933,14 @@
             <div class="uk-modal-dialog uk-margin-auto-vertical">
                 <div class="uk-modal-content">
                     <div class="uk-modal-header">
-                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.detailOrder');?></h5>
+                        <div class="uk-child-width-1-2" uk-grid>
+                            <div>
+                                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.detailOrder');?></h5>
+                            </div>
+                            <div class="uk-text-right">
+                                <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                            </div>
+                        </div>
                     </div>
                     <form class="uk-form-stacked" name="order" action="pay/create" id="order" role="form" method="post">
                         <?= csrf_field() ?>
@@ -1606,7 +1633,14 @@
                                         <div class="uk-modal-dialog uk-margin-auto-vertical">
                                             <div class="uk-modal-container">
                                                 <div class="uk-modal-header">
-                                                    <div id="modalVarProduct" class="uk-modal-title tm-h2 uk-text-center">NAME</div>
+                                                    <div class="uk-child-width-1-2" uk-grid>
+                                                        <div>
+                                                            <div id="modalVarProduct" class="uk-modal-title tm-h2 uk-text-center">NAME</div>
+                                                        </div>
+                                                        <div class="uk-text-right">
+                                                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="uk-modal-body">
                                                     <div class="uk-child-width-1-1" uk-grid>

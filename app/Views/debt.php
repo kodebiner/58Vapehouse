@@ -20,7 +20,7 @@
             <h3 class="tm-h3"><?=lang('Global.debt')?></h3>
         </div>
 
-        <!-- Button Trigger Modal export -->
+        <!-- Date Range -->
         <div class="uk-width-1-2@m uk-text-right@m">
             <form id="short" action="debt" method="get">
                 <div class="uk-inline">
@@ -39,7 +39,7 @@
                 });
             </script>
         </div>
-        <!-- End Of Button Trigger Modal export-->
+        <!-- End Of Date Range-->
 
     </div>
 </div>
@@ -103,6 +103,9 @@
             <div class="uk-modal-content">
                 <div class="uk-modal-header" style="background-color: #e3e3e3;">
                     <div class="uk-child-width-1-1" uk-grid>
+                        <div class="uk-text-right">
+                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                        </div>
                         <div class="uk-text-center">
                             <h3 class="tm-h2"><?=lang('Global.paybill')?></h5>
                         </div>

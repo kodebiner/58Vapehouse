@@ -65,7 +65,14 @@
     <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
             <div class="uk-modal-header">
-                <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addProduct')?></h5>
+                <div class="uk-child-width-1-2" uk-grid>
+                    <div>
+                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addProduct')?></h5>
+                    </div>
+                    <div class="uk-text-right">
+                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                    </div>
+                </div>
             </div>
             <div class="uk-modal-body">
                 <form class="uk-form-stacked" role="form" action="/product/create" method="post">
@@ -280,13 +287,6 @@
                     <div id="createVariant" class="uk-margin-bottom">
                         <h4 class="tm-h4 uk-margin-remove"><?=lang('Global.variant')?></h4>
                         <div class="uk-text-right"><a onclick="createNewVariant()">+ Add More Variant</a></div>
-                        <!-- <div class="uk-margin uk-margin-remove-top uk-child-width-1-3" uk-grid>
-                            <div class="uk-text-bold"><?=lang('Global.name')?></div>
-                            <div class="uk-text-bold"><?=lang('Global.basePrice')?></div>
-                            <div class="uk-text-bold"><?=lang('Global.capitalPrice')?></div>
-                            <div class="uk-text-bold"><?=lang('Global.suggestPrice')?></div>
-                            <div class="uk-text-bold"><?=lang('Global.margin')?></div>
-                        </div> -->
                         <div id="create0" class="uk-margin uk-child-width-1-3" uk-grid>
                             <div id="createVarName0"><input type="text" class="uk-input" id="varName[0]" name="varName[0]" placeholder="<?=lang('Global.name')?>" /></div>
                             <div id="createVarBase0"><input type="number" class="uk-input" id="varBase[0]" name="varBase[0]" placeholder="<?=lang('Global.basePrice')?>" required/></div>
@@ -404,7 +404,14 @@
     <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
             <div class="uk-modal-header">
-                <h5 class="uk-modal-title" id="tambahcat"><?=lang('Global.addCategory')?></h5>
+                <div class="uk-child-width-1-2" uk-grid>
+                    <div>
+                        <h5 class="uk-modal-title" id="tambahcat"><?=lang('Global.addCategory')?></h5>
+                    </div>
+                    <div class="uk-text-right">
+                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                    </div>
+                </div>
             </div>
             <div class="uk-modal-body">
                 <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
@@ -490,7 +497,14 @@
     <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
             <div class="uk-modal-header">
-                <h5 class="uk-modal-title" id="tambahbrand"><?=lang('Global.addBrand')?></h5>
+                <div class="uk-child-width-1-2" uk-grid>
+                    <div>
+                        <h5 class="uk-modal-title" id="tambahbrand"><?=lang('Global.addBrand')?></h5>
+                    </div>
+                    <div class="uk-text-right">
+                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                    </div>
+                </div>
             </div>
             <div class="uk-modal-body">
                 <table class="uk-table uk-table-striped uk-table-hover uk-table-responsive uk-table-justify uk-table-middle uk-table-divider">
@@ -574,13 +588,6 @@
 <!-- Table Of Content -->
 <div class="uk-overflow-auto">
     <!-- Search Engine -->
-    <!-- <div class="">
-        <form class="uk-search uk-search-default" method="GET" action="product" style="background-color: #fff; border-radius: 7px;">
-            <span uk-search-icon style="color: #000;"></span>
-            <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
-        </form>
-    </div> -->
-            
     <div class="uk-margin-medium-bottom">
         <form action="product" method="GET">
             <div class="uk-child-width-1-1 uk-child-width-1-3@m uk-flex-middle" uk-grid>
@@ -782,7 +789,14 @@
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
                 <div class="uk-modal-header">
-                    <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
+                    <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <h5 class="uk-modal-title" id="editdata"><?=lang('Global.updateData')?></h5>
+                        </div>
+                        <div class="uk-text-right">
+                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="uk-modal-body">
@@ -1040,7 +1054,14 @@
     <div id="product-<?=$product['id']?>" class="uk-flex-top" uk-modal>
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-header">
-                <h5 class="uk-modal-title"><?=$product['name']?></h5>
+                <div class="uk-child-width-1-2" uk-grid>
+                    <div>
+                        <h5 class="uk-modal-title"><?=$product['name']?></h5>
+                    </div>
+                    <div class="uk-text-right">
+                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                    </div>
+                </div>
             </div>
             <div class="uk-modal-body">
                 <div class="uk-child-width-1-2@m uk-flex-middle" uk-grid>
