@@ -35,7 +35,7 @@ $routes->set404Override();
 $routes->get('/', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
 // $routes->get('home/index', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
 $routes->get('trial', 'Home::trial');
-$routes->get('', 'Home::ownership');
+$routes->get('ownership', 'Home::ownership');
 
 // Myth/Auth Routes
 $routes->group('/', static function ($routes) {
