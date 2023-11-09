@@ -227,6 +227,8 @@ class Stock extends BaseController
         $db         = \Config\Database::connect();
         $pager      = \Config\Services::pager();
 
+        dd('lorem ipsum');
+
         // Calling Model
         $SupplierModel              = new SupplierModel();
         $ProductModel               = new ProductModel();
