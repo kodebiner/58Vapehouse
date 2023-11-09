@@ -129,10 +129,10 @@ nb-configuration.xml
 
 /.php-cs-fixer.php
 
-# public/img/*
+public/img/*
 public/img/profile/*
 public/img/product/*
-# public/img/promo/*
-# public/img/tfproof/*
-# public/img/presence/*
+public/img/promo/*
+public/img/tfproof/*
+public/img/presence/*
 public/img/logo.*
