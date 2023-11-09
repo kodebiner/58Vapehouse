@@ -613,8 +613,8 @@ foreach ($purchases as $purchase) { ?>
 
                     <div class="uk-divider-icon"></div>
                     
-                    <!-- <div class="uk-overflow-auto"> -->
-                        <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-table-small">
+                    <div class="uk-overflow-auto">
+                        <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
                             <thead>
                                 <tr>
                                     <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
@@ -697,7 +697,7 @@ foreach ($purchases as $purchase) { ?>
                                 </tr>
                             </tfoot>
                         </table>
-                    <!-- </div> -->
+                    </div>
                 </div>
             </div>
         </div>
