@@ -228,18 +228,20 @@ class Stock extends BaseController
         $pager      = \Config\Services::pager();
 
         // Calling Model
-        $SupplierModel              = new SupplierModel;
-        $ProductModel               = new ProductModel;
-        $VariantModel               = new VariantModel;
-        $OutletModel                = new OutletModel;
-        $UserModel                  = new UserModel;
-        $PurchaseModel              = new PurchaseModel;
-        $PurchasedetailModel        = new PurchasedetailModel;
-        $OldStockModel              = new OldStockModel;
-        $StockModel                 = new StockModel;
+        $SupplierModel              = new SupplierModel();
+        $ProductModel               = new ProductModel();
+        $VariantModel               = new VariantModel();
+        $OutletModel                = new OutletModel();
+        $UserModel                  = new UserModel();
+        $PurchaseModel              = new PurchaseModel();
+        $PurchasedetailModel        = new PurchasedetailModel();
+        $OldStockModel              = new OldStockModel();
+        $StockModel                 = new StockModel();
 
         // Find Data
         $data                       = $this->data;
+
+        dd($data);
 
         if ($this->data['outletPick'] === null) {
             $purchases              = $PurchaseModel->orderBy('id', 'DESC')->paginate(20, 'purchase');
