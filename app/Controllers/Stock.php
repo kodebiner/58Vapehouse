@@ -32,7 +32,6 @@ class Stock extends BaseController
     public function index()
     {
         $db         = \Config\Database::connect();
-        $pager      = \Config\Services::pager();
 
         // Calling Model
         $StockModel     = new StockModel;
@@ -103,8 +102,6 @@ class Stock extends BaseController
     // Stock Cycle
     public function stockcycle()
     {
-        $pager      = \Config\Services::pager();
-
         // Calling Model
         $StockModel     = new StockModel;
         $VariantModel   = new VariantModel;
@@ -223,9 +220,6 @@ class Stock extends BaseController
 
     public function indexpurchase()
     {
-        $db         = \Config\Database::connect();
-        $pager      = \Config\Services::pager();
-
         // Calling Model
         $SupplierModel              = new SupplierModel();
         $ProductModel               = new ProductModel();
@@ -295,7 +289,7 @@ class Stock extends BaseController
         $data['oldstocks']          = $oldstocks;
         $data['pager']              = $PurchaseModel->pager;
 
-        return view ('Views/purchase', $data);
+        return view ('Views/stock', $data);
     }
 
     public function product()
