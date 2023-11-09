@@ -220,76 +220,87 @@ class Stock extends BaseController
 
     public function indexpurchase()
     {
+        // // Calling Model
+        // $SupplierModel              = new SupplierModel();
+        // $ProductModel               = new ProductModel();
+        // $VariantModel               = new VariantModel();
+        // $OutletModel                = new OutletModel();
+        // $UserModel                  = new UserModel();
+        // $PurchaseModel              = new PurchaseModel();
+        // $PurchasedetailModel        = new PurchasedetailModel();
+        // $OldStockModel              = new OldStockModel();
+        // $StockModel                 = new StockModel();
+
+        // // Find Data
+        // $data                       = $this->data;
+
+        // if ($this->data['outletPick'] === null) {
+        //     $purchases              = $PurchaseModel->orderBy('id', 'DESC')->paginate(20, 'purchase');
+        // } else {
+        //     $purchases              = $PurchaseModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->paginate(20, 'purchase');
+        // }
+
+        // $suppliers                  = $SupplierModel->findAll();
+        // $outlets                    = $OutletModel->findAll();
+        // $users                      = $UserModel->findAll();
+        // $productlist                = $ProductModel->findAll();
+
+        // if (!empty($purchases)) {
+        //     $purchaseid = array();
+        //     foreach ($purchases as $purchase) {
+        //         $purchaseid[]   = $purchase['id'];
+        //     }
+        //     $purchasedetails    = $PurchasedetailModel->whereIn('purchaseid', $purchaseid)->find();
+
+        //     $varid  = array();
+        //     foreach ($purchasedetails as $purdet) {
+        //         $varid[]    = $purdet['variantid'];
+        //     }
+        //     $variants       = $VariantModel->find($varid);
+
+        //     $stocks         = $StockModel->whereIn('variantid', $varid)->find();
+        //     $oldstocks      = $OldStockModel->whereIn('variantid', $varid)->find();
+
+        //     $prodid = array();
+        //     foreach ($variants as $var) {
+        //         $prodid[]   = $var['productid'];
+        //     }
+        //     $products       = $ProductModel->find($prodid);
+        // } else {
+        //     $purchasedetails    = array();
+        //     $variants           = array();
+        //     $products           = array();
+        //     $oldstocks          = array();
+        //     $stocks             = array();
+        // }
+
+        // // Parsing data to view
+        // $data['title']              = lang('Global.purchase');
+        // $data['description']        = lang('Global.purchaseListDesc');
+        // $data['purchases']          = $purchases;
+        // $data['purchasedetails']    = $purchasedetails;
+        // $data['suppliers']          = $suppliers;
+        // $data['products']           = $products;
+        // $data['productlist']        = $productlist;
+        // $data['variants']           = $variants;
+        // $data['outlets']            = $outlets;
+        // $data['users']              = $users;
+        // $data['stocks']             = $stocks;
+        // $data['oldstocks']          = $oldstocks;
+        // $data['pager']              = $PurchaseModel->pager;
         // Calling Model
-        $SupplierModel              = new SupplierModel();
-        $ProductModel               = new ProductModel();
-        $VariantModel               = new VariantModel();
-        $OutletModel                = new OutletModel();
-        $UserModel                  = new UserModel();
-        $PurchaseModel              = new PurchaseModel();
-        $PurchasedetailModel        = new PurchasedetailModel();
-        $OldStockModel              = new OldStockModel();
-        $StockModel                 = new StockModel();
+        $SupplierModel = new SupplierModel;
 
         // Find Data
-        $data                       = $this->data;
-
-        if ($this->data['outletPick'] === null) {
-            $purchases              = $PurchaseModel->orderBy('id', 'DESC')->paginate(20, 'purchase');
-        } else {
-            $purchases              = $PurchaseModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->paginate(20, 'purchase');
-        }
-
-        $suppliers                  = $SupplierModel->findAll();
-        $outlets                    = $OutletModel->findAll();
-        $users                      = $UserModel->findAll();
-        $productlist                = $ProductModel->findAll();
-
-        if (!empty($purchases)) {
-            $purchaseid = array();
-            foreach ($purchases as $purchase) {
-                $purchaseid[]   = $purchase['id'];
-            }
-            $purchasedetails    = $PurchasedetailModel->whereIn('purchaseid', $purchaseid)->find();
-
-            $varid  = array();
-            foreach ($purchasedetails as $purdet) {
-                $varid[]    = $purdet['variantid'];
-            }
-            $variants       = $VariantModel->find($varid);
-
-            $stocks         = $StockModel->whereIn('variantid', $varid)->find();
-            $oldstocks      = $OldStockModel->whereIn('variantid', $varid)->find();
-
-            $prodid = array();
-            foreach ($variants as $var) {
-                $prodid[]   = $var['productid'];
-            }
-            $products       = $ProductModel->find($prodid);
-        } else {
-            $purchasedetails    = array();
-            $variants           = array();
-            $products           = array();
-            $oldstocks          = array();
-            $stocks             = array();
-        }
+        $data           = $this->data;
+        $suppliers      = $SupplierModel->orderBy('id', 'DESC')->findAll();
 
         // Parsing data to view
-        $data['title']              = lang('Global.purchase');
-        $data['description']        = lang('Global.purchaseListDesc');
-        $data['purchases']          = $purchases;
-        $data['purchasedetails']    = $purchasedetails;
-        $data['suppliers']          = $suppliers;
-        $data['products']           = $products;
-        $data['productlist']        = $productlist;
-        $data['variants']           = $variants;
-        $data['outlets']            = $outlets;
-        $data['users']              = $users;
-        $data['stocks']             = $stocks;
-        $data['oldstocks']          = $oldstocks;
-        $data['pager']              = $PurchaseModel->pager;
+        $data['title']          = lang('Global.supplier');
+        $data['description']    = lang('Global.supplierListDesc');
+        $data['suppliers']      = $suppliers;
 
-        return view ('Views/stock', $data);
+        return view ('Views/supplier', $data);
     }
 
     public function product()
