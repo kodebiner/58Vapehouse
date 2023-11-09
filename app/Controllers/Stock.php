@@ -296,6 +296,8 @@ class Stock extends BaseController
         $data['oldstocks']          = $oldstocks;
         $data['pager']              = $PurchaseModel->pager;
 
+        dd($purchases);
+
         return view ('Views/purchase', $data);
     }
 
