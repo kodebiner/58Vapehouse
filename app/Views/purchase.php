@@ -735,10 +735,10 @@ foreach ($purchases as $purchase) { ?>
                                     <?php } ?>
                                 <?php } ?>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Autocomplete Supplier Edit Purchase -->
-                        <script type="text/javascript">
+                        <!-- <script type="text/javascript">
                             $(function() {
                                 var suppList = [
                                     <?php foreach ($suppliers as $supplier) {
@@ -752,10 +752,10 @@ foreach ($purchases as $purchase) { ?>
                                     }
                                 });
                             });
-                        </script>
+                        </script> -->
                         <!-- Autocomplete Supplier Edit Purchase End -->
 
-                        <div class="uk-margin-bottom">
+                        <!-- <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
                             <div class="uk-form-controls">
                                 <input type="text" class="uk-input" id="prodname<?= $purchase['id'] ?>" name="prodname" placeholder="<?=lang('Global.product')?>">
@@ -777,10 +777,10 @@ foreach ($purchases as $purchase) { ?>
                             <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
                                 <div class=""><?= lang('Global.total') ?></div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Autocomplete Product Edit Purchase -->
-                        <script type="text/javascript">
+                        <!-- <script type="text/javascript">
                             $(function() {
                                 var eproductList = [
                                     <?php foreach ($productlist as $product) {
@@ -936,10 +936,10 @@ foreach ($purchases as $purchase) { ?>
                                     }
                                 }
                             };
-                        </script>
+                        </script> -->
                         <!-- Autocomplete Product Edit Purchase End -->
 
-                        <?php
+                        <!-- <?php
                         $tot[$purchase['id']] = array();
                         foreach ($purchasedetails as $purdet) { ?>
                             <?php if ($purchase['id'] === $purdet['purchaseid']) { ?>
