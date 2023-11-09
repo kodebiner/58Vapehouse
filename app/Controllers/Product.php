@@ -119,7 +119,7 @@ class Product extends BaseController
         }
         
         $percentage = array_sum(array_column($stockchart, 'qty'));
-        // dd($percentage);
+        
         $presentase = array();
         foreach ($stockchart as $srkchrt) {
             $presentase[] = [
@@ -162,6 +162,7 @@ class Product extends BaseController
         $data['totalbase']      = array_sum($totalbase);
         $data['stockchart']     = $stockchart;
         $data['presentase']     = $presentase;
+        $data['catlist']        = json_encode($presentase);
         if (!empty($input)) {
             $data['input']     = $input;
         }

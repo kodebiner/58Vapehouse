@@ -450,8 +450,6 @@ class Home extends BaseController
             'modal'     => $marginmodalsum,
             'dasar'     => $margindasarsum,
         ];  
-
-
     
         $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
         $keuntungandasar = array_sum(array_column($transactions, 'dasar'));

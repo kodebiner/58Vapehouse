@@ -7,6 +7,7 @@
 <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
 <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script type="text/javascript">
     google.charts.load('current', {
         'packages': ['corechart']
@@ -58,39 +59,84 @@
 
 <?= view('Views/Auth/_message_block') ?>
 
-<div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
+<!-- <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
     <h3 class="uk-card-title"><?= lang('Global.productreport') ?></h3>
     <div id="piechart"></div>
-</div>
+</div> -->
 
-<div class="uk-card uk-card-default uk-card-body uk-width-1-1@m">
-    <h3 class="uk-card-title"><?= lang('Global.productreport') ?></h3>
-    <div class="uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
+<div class="uk-card uk-card-default uk-card-body uk-width-1-1@m uk-margin">
+    <h3 class="uk-card-title uk-text-center">- <?= lang('Global.productreport') ?> -</h3>
+    <hr class="uk-divider-icon">
+    <div class="uk-child-width-1-3@m uk-grid-small uk-grid-match uk-text-center" uk-grid>
         <div>
-            <p>category</p>
+            <p class="tm-h3"><?= lang('Global.category') ?></p>
         </div>
         <div>
-            <p>harga modal</p>
+            <p class="tm-h3"><?= lang('Global.capitalPrice') ?></p>
         </div>
         <div>
-            <p>presentase</p>
+            <p class="tm-h3">Presentase</p>
         </div>
     </div>
+    
+    <div id="list" class="uk-child-width-1-3@m uk-grid-small uk-grid-match uk-text-center" uk-grid></div>
+    <ul class="uk-pagination">
+        <li><a id="previous"><span class="uk-margin-small-right" uk-pagination-previous></span> Previous</a></li>
+        <li class="uk-margin-auto-left"><a id="next"> Next <span class="uk-margin-small-left" uk-pagination-next></span></a></li>
+    </ul>
 
-    <?php foreach ($presentase as $kategori){ ?>
-    <div class="uk-child-width-1-3@m uk-grid-small uk-grid-match" uk-grid>
-        <div>
-            <p><?=$kategori['name']?></p>
-        </div>
-        <div>
-            <p>Rp.<?= number_format($kategori['qty'],0,',','.') ?> </p>
-        </div>
-        <div>
-            <p><?=$kategori['persen']?> %</p>
-        </div>
-    </div>
-    <?php } ?>
 </div>
+<!-- Script List -->
+<script>
+    var catlist = <?= $catlist ?>;
+
+    var pageSize = 5;
+    var currentPage = 1;
+    var pagedResults = [];
+    var totalResults = catlist.length;
+
+    $(function() {
+        function updateList() {
+
+            var end = (currentPage * pageSize);
+            var start = (end - pageSize);
+            pagedResults = catlist.slice(start, end);
+
+            $('#list').empty();
+
+            if (currentPage <= 1) {
+                $('#previous').prop("disabled", true);
+            } else {
+                $('#previous').prop("disabled", false);
+            }
+
+            if ((currentPage * pageSize) >= totalResults) {
+                $('#next').prop("disabled", true);
+            } else {
+                $('#next').prop("disabled", false);
+            }
+
+            $.each(pagedResults, function(index, obj) {
+                var input = obj.qty;
+                var rp = parseInt(input).toLocaleString();
+                $('#list').append("<div> <p class='tm-h5'>" + obj.name + " </p> </div> <div> <p class='tm-h5'>Rp." + rp + " </p></div> <div> <p class='tm-h5'>(" + obj.persen + "%)</p> </div>");
+            });
+        }
+
+        updateList();
+        $('#next').click(function() {
+
+            if ((currentPage * pageSize) <= totalResults) currentPage++;
+            updateList();
+        });
+        $('#previous').click(function() {
+
+            if (currentPage > 1) currentPage--;
+            updateList();
+        });
+    });
+</script>
+<!-- End Script List -->
 
 <!-- Modal Add -->
 <div uk-modal class="uk-flex-top" id="tambahdata">
