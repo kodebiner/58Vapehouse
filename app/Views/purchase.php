@@ -704,4 +704,303 @@ foreach ($purchases as $purchase) { ?>
     </div>
 <?php } ?>
 <!-- Modal Detail End -->
+
+<!-- Modal Edit -->
+<?php foreach ($purchases as $purchase) { ?>
+    <div uk-modal class="uk-flex-top" id="editdata<?= $purchase['id'] ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-content">
+                <div class="uk-modal-header">
+                    <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <h5 class="uk-modal-title" id="editdata<?= $purchase['id'] ?>"><?=lang('Global.updateData')?></h5>
+                        </div>
+                        <div class="uk-text-right">
+                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-modal-body">
+                    <form class="uk-form-stacked" role="form" action="stock/updatepur/<?= $purchase['id'] ?>" method="post">
+                        <?= csrf_field() ?>
+
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="supplier"><?=lang('Global.supplier')?></label>
+                            <div class="uk-form-controls">
+                                <?php foreach ($suppliers as $supplier) { ?>
+                                    <?php if ($supplier['id'] === $purchase['supplierid']) { ?>
+                                        <input class="uk-input" id="suppliername<?= $purchase['id'] ?>" name="suppliername<?= $purchase['id'] ?>" value="<?= $supplier['name'] ?>" required>
+                                        <input id="supplierid<?= $purchase['id'] ?>" name="supplierid<?= $purchase['id'] ?>" value="<?= $supplier['id'] ?>" hidden>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
+                        </div>
+
+                        <!-- Autocomplete Supplier Edit Purchase -->
+                        <script type="text/javascript">
+                            $(function() {
+                                var suppList = [
+                                    <?php foreach ($suppliers as $supplier) {
+                                        echo '{label:"'.$supplier['name'].'",idx:'.$supplier['id'].'},';
+                                    }?>
+                                ];
+                                $("#suppliername<?= $purchase['id'] ?>").autocomplete({
+                                    source: suppList,
+                                    select: function(e, i) {
+                                        $("#supplierid<?= $purchase['id'] ?>").val(i.item.idx);
+                                    }
+                                });
+                            });
+                        </script>
+                        <!-- Autocomplete Supplier Edit Purchase End -->
+
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
+                            <div class="uk-form-controls">
+                                <input type="text" class="uk-input" id="prodname<?= $purchase['id'] ?>" name="prodname" placeholder="<?=lang('Global.product')?>">
+                            </div>
+                        </div>
+
+                        <div id="tabvar<?= $purchase['id'] ?>"></div>
+
+                        <div class="uk-margin-small" uk-grid>
+                            <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class=""><?= lang('Global.variant') ?></div>
+                            </div>
+                            <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class=""><?= lang('Global.quantity') ?></div>
+                            </div>
+                            <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class=""><?= lang('Global.pcsPrice') ?></div>
+                            </div>
+                            <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class=""><?= lang('Global.total') ?></div>
+                            </div>
+                        </div>
+
+                        <!-- Autocomplete Product Edit Purchase -->
+                        <script type="text/javascript">
+                            $(function() {
+                                var eproductList = [
+                                    <?php foreach ($productlist as $product) {
+                                        echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
+                                    }?>
+                                ];
+                                $("#prodname<?= $purchase['id'] ?>").autocomplete({
+                                    source: eproductList,
+                                    select: function(e, i) {
+                                        var data = { 'id' : i.item.idx };
+                                        $.ajax({
+                                            url:"stock/product",
+                                            method:"POST",
+                                            data: data,
+                                            dataType: "json",
+                                            error:function() {
+                                                console.log('error', arguments);
+                                            },
+                                            success:function() {
+                                                console.log('success', arguments);
+                                                document.getElementById('tabvar<?= $purchase['id'] ?>').removeAttribute('hidden');
+                                                var elements = document.getElementById('variantliste');
+                                                if (elements){
+                                                    elements.remove();
+                                                }
+                                                var products = document.getElementById('tabvar<?= $purchase['id'] ?>');
+                                                
+                                                var productgrid = document.createElement('div');
+                                                productgrid.setAttribute('id', 'variantliste');
+                                                productgrid.setAttribute('class', 'uk-padding uk-padding-remove-vertical');
+                                                productgrid.setAttribute('uk-grid', '');
+
+                                                variantarray = arguments[0];
+
+                                                for (x in variantarray) {
+                                                    //alert(variantarray[k]['name']);
+                                                    var varcontainer = document.createElement('div');
+                                                    varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2 uk-margin-small');
+                                                                                    
+                                                    var varname = document.createElement('div');
+                                                    varname.setAttribute('class','');
+                                                    varname.innerHTML = variantarray[x]['name'];
+
+                                                    var cartcontainer = document.createElement('div');
+                                                    cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2 uk-margin-small');
+
+                                                    var cart = document.createElement('a');
+                                                    cart.setAttribute('class', 'uk-icon-button');
+                                                    cart.setAttribute('uk-icon', 'cart');
+                                                    cart.setAttribute('onclick', 'createVare<?=$purchase['id']?>('+variantarray[x]['id']+')');
+
+                                                    varcontainer.appendChild(varname);
+                                                    cartcontainer.appendChild(cart);
+                                                    productgrid.appendChild(varcontainer);
+                                                    productgrid.appendChild(cartcontainer);
+                                                };
+                                                
+                                                products.appendChild(productgrid);
+                                            },
+                                        })
+                                    },
+                                    minLength: 2
+                                });
+                            });
+                            function createVare<?=$purchase['id']?>(id) {
+                                for (x in variantarray) {
+                                    if (variantarray[x]['id'] == id) {
+                                        document.getElementById('variantliste').remove();
+                                        var eelemexist = document.getElementById('eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
+                                        document.getElementById('tabvar<?= $purchase['id'] ?>').setAttribute('hidden', '');
+                                        var count = 1;
+                                        if ( $( "#eproduct<?=$purchase['id']?>"+variantarray[x]['id'] ).length ) {
+                                            alert('<?=lang('Global.readyAdd');?>');
+                                        } else {
+                                            let minval = count;
+                                            var eprods = document.getElementById('tableprod<?= $purchase['id'] ?>');
+                                                                        
+                                            var epgrid = document.createElement('div');
+                                            epgrid.setAttribute('id', 'eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
+                                            epgrid.setAttribute('class', 'uk-margin-small');
+                                            epgrid.setAttribute('uk-grid', '');
+
+                                            var evcontainer = document.createElement('div');
+                                            evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                                            
+                                            var evname = document.createElement('div');
+                                            evname.setAttribute('id','var'+variantarray[x]['id']);
+                                            evname.setAttribute('class','');
+                                            evname.innerHTML = variantarray[x]['name'];
+
+                                            var etcontainer = document.createElement('div');
+                                            etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                                            var etot = document.createElement('input');
+                                            etot.setAttribute('type', 'number');
+                                            etot.setAttribute('id', "addtotalpcs["+variantarray[x]['id']+"]");
+                                            etot.setAttribute('name', "addtotalpcs["+variantarray[x]['id']+"]");
+                                            etot.setAttribute('class', 'uk-input');
+                                            etot.setAttribute('value', '1');
+                                            etot.setAttribute('required', '');
+
+                                            var epieces = document.createElement('div');
+                                            epieces.setAttribute('class', 'uk-margin-small-left');
+                                            epieces.innerHTML = 'Pcs';
+
+                                            var epricecontainer = document.createElement('div');
+                                            epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                                            var eprice = document.createElement('input');
+                                            eprice.setAttribute('type', 'number');
+                                            eprice.setAttribute('id', "addbprice["+variantarray[x]['id']+"]");
+                                            eprice.setAttribute('name', "addbprice["+variantarray[x]['id']+"]");
+                                            eprice.setAttribute('class', 'uk-input');
+                                            eprice.setAttribute('value', variantarray[x]['price']);
+                                            eprice.setAttribute('required', '');
+
+                                            var esubtotcontainer = document.createElement('div');
+                                            esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+
+                                            var esubtotal = document.createElement('div');
+                                            esubtotal.setAttribute('id', "esubtotal"+variantarray[x]['id']+"");
+                                            esubtotal.setAttribute('class', 'subvariant');
+
+                                            etotalprice();
+                                            etot.addEventListener('change', etotalprice);
+                                            eprice.addEventListener('change', etotalprice);
+
+                                            function etotalprice() {
+                                                var varprice = eprice.value;
+                                                var varqty = etot.value;
+                                                var subprice = varprice * varqty;
+                                                esubtotal.setAttribute('value', subprice);
+                                                esubtotal.innerHTML = subprice;
+                                            }
+
+                                            evcontainer.appendChild(evname);
+                                            etcontainer.appendChild(etot);
+                                            etcontainer.appendChild(epieces);
+                                            epricecontainer.appendChild(eprice);
+                                            esubtotcontainer.appendChild(esubtotal);
+                                            epgrid.appendChild(evcontainer);
+                                            epgrid.appendChild(etcontainer);
+                                            epgrid.appendChild(epricecontainer);
+                                            epgrid.appendChild(esubtotcontainer);
+                                            eprods.appendChild(epgrid);
+
+                                            etot.addEventListener("change", function removeproduct() {
+                                                if (etot.value == '0') {
+                                                    epgrid.remove();
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            };
+                        </script>
+                        <!-- Autocomplete Product Edit Purchase End -->
+
+                        <?php
+                        $tot[$purchase['id']] = array();
+                        foreach ($purchasedetails as $purdet) { ?>
+                            <?php if ($purchase['id'] === $purdet['purchaseid']) { ?>
+                                <?php foreach ($variants as $variant) { ?>
+                                    <?php foreach ($products as $product) { ?>
+                                        <?php if (($variant['id'] === $purdet['variantid']) && ($variant['productid'] === $product['id'])) { ?>
+                                            <div id="eproduct<?=$purchase['id'].$variant['id']?>" class="uk-margin-small" uk-grid>
+                                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                                    <div class=""><?= $product['name'].' - '.$variant['name'] ?></div>
+                                                </div>
+                                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                                    <input class="uk-input" type="number" id="totalpcs[<?=$purdet['id']?>]" name="totalpcs[<?=$purdet['id']?>]" value="<?= $purdet['qty'] ?>" required />
+                                                    <div class="uk-margin-small-left">Pcs</div>
+                                                </div>
+                                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                                    <input class="uk-input" type="number" id="bprice[<?=$purdet['id']?>]" name="bprice[<?=$purdet['id']?>]" value="<?= $purdet['price'] ?>" required />
+                                                </div>
+                                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center subvariant<?= $purchase['id'] ?>" id="subtotal<?= $purdet['id'] ?>">
+                                                    <?= $purdet['price'] * $purdet['qty'] ?>
+                                                </div>
+                                            </div>
+
+                                            <script type="text/javascript">
+
+                                                var total<?= $purdet['id'] ?> = document.getElementById('totalpcs[<?=$purdet['id']?>]');
+                                                var price<?= $purdet['id'] ?> = document.getElementById('bprice[<?=$purdet['id']?>]');
+
+                                                total<?= $purdet['id'] ?>.addEventListener('change', totalprice<?= $purdet['id'] ?>);
+                                                price<?= $purdet['id'] ?>.addEventListener('change', totalprice<?= $purdet['id'] ?>);
+
+                                                function totalprice<?= $purdet['id'] ?>() {
+                                                    var subtotal = document.getElementById('subtotal<?= $purdet['id'] ?>');
+                                                    var varprice = price<?= $purdet['id'] ?>.value;
+                                                    var varqty = total<?= $purdet['id'] ?>.value;
+                                                    var subprice = varprice * varqty;
+                                                    subtotal.setAttribute('value', subprice);
+                                                    subtotal.innerHTML = subprice;
+                                                }
+                                            </script>
+                                        <?php } ?>
+                                    <?php } ?>
+                                <?php } ?>
+                            <?php } ?>
+                        <?php
+                        $tot[$purchase['id']][] = (Int)$purdet['qty'] * (Int)$purdet['price'];
+                        }
+                        $subtot[$purchase['id']] = array_sum($tot[$purchase['id']]);
+                        ?>
+                        
+                        <div id="tableprod<?= $purchase['id'] ?>"></div>
+
+                        <div class="uk-modal-footer">
+                            <div class="uk-margin uk-flex uk-flex-center">
+                                <button type="submit" class="uk-button uk-button-primary uk-button-large uk-text-center" style="border-radius: 8px; width: 540px;"><?=lang('Global.save')?></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<!-- Modal Edit End -->
 <?= $this->endSection() ?>
