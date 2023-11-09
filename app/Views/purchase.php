@@ -29,6 +29,278 @@
 
 <?= view('Views/Auth/_message_block') ?>
 
+<!-- Modal Add -->
+<div uk-modal class="uk-flex-top" id="tambahdata">
+    <div class="uk-modal-dialog uk-margin-auto-vertical">
+        <div class="uk-modal-content">
+            <div class="uk-modal-header">
+                <div class="uk-child-width-1-2" uk-grid>
+                    <div>
+                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addPurchase')?></h5>
+                    </div>
+                    <div class="uk-text-right">
+                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-modal-body">
+                <form class="uk-form-stacked" role="form" action="stock/createpur" method="post">
+                    <?= csrf_field() ?>
+
+                    <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="supplier"><?=lang('Global.supplier')?></label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input" id="suppliername" name="suppliername" placeholder="<?=lang('Global.supplier')?>">
+                            <input id="supplierid" name="supplierid" hidden required>
+                        </div>
+                    </div>
+
+                    <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input" id="productname" name="productname" placeholder="<?=lang('Global.product')?>">
+                        </div>
+                    </div>
+
+                    <div id="tablevariant"></div>
+
+                    <div class="uk-margin-small" uk-grid>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.variant') ?></div>
+                        </div>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.quantity') ?></div>
+                        </div>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.pcsPrice') ?></div>
+                        </div>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.total') ?></div>
+                        </div>
+                    </div>
+
+                    <div id="tableproduct"></div>
+
+                    <div class="uk-modal-footer">
+                        <div class="uk-margin">
+                            <div class="uk-width-1-1 uk-text-center">
+                                <div class="uk-flex-top tm-h3"><?=lang('Global.total')?></div>
+                            </div>
+                            <div class="uk-width-1-1 uk-text-center">
+                                <div class="tm-h2 uk-text-bold" id="finalprice" value="0">Rp 0,-</div>
+                            </div>
+                        </div>
+                        <div class="uk-margin uk-flex uk-flex-center">
+                            <button type="submit" class="uk-button uk-button-primary uk-button-large uk-text-center" style="border-radius: 8px; width: 540px;"><?=lang('Global.save')?></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Add End -->
+
+<!-- Script Modal Add -->
+<script type="text/javascript">
+    // Autocomplete Supplier
+    $(function() {
+        var supplierList = [
+            <?php foreach ($suppliers as $supplier) {
+                echo '{label:"'.$supplier['name'].'",idx:'.$supplier['id'].'},';
+            }?>
+        ];
+        $("#suppliername").autocomplete({
+            source: supplierList,
+            select: function(e, i) {
+                $("#supplierid").val(i.item.idx);
+            }
+        });
+    });
+
+    // Autocomplete Product
+    $(function() {
+        var productList = [
+            <?php foreach ($productlist as $product) {
+                echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
+            } ?>
+        ];
+        $("#productname").autocomplete({
+            source: productList,
+            select: function(e, i) {
+                var data = { 'id' : i.item.idx };
+                $.ajax({
+                    url:"stock/product",
+                    method:"POST",
+                    data: data,
+                    dataType: "json",
+                    error:function() {
+                        console.log('error', arguments);
+                    },
+                    success:function() {
+                        console.log('success', arguments);
+                        document.getElementById('tablevariant').removeAttribute('hidden');
+                        var elements = document.getElementById('variantlist');
+                        if (elements){
+                            elements.remove();
+                        }
+                        var products = document.getElementById('tablevariant');
+                        
+                        var productgrid = document.createElement('div');
+                        productgrid.setAttribute('id', 'variantlist');
+                        productgrid.setAttribute('class', 'uk-padding uk-padding-remove-vertical');
+                        productgrid.setAttribute('uk-grid', '');
+
+                        variantarray = arguments[0];
+
+                        for (k in variantarray) {
+                            //alert(variantarray[k]['name']);
+                            var varcontainer = document.createElement('div');
+                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2 uk-margin-small');
+                                                            
+                            var varname = document.createElement('div');
+                            varname.setAttribute('class','');
+                            varname.innerHTML = variantarray[k]['name'];
+
+                            var cartcontainer = document.createElement('div');
+                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2 uk-margin-small');
+
+                            var cart = document.createElement('a');
+                            cart.setAttribute('class', 'uk-icon-button');
+                            cart.setAttribute('uk-icon', 'cart');
+                            cart.setAttribute('onclick', 'createVar('+variantarray[k]['id']+')');
+
+                            varcontainer.appendChild(varname);
+                            cartcontainer.appendChild(cart);
+                            productgrid.appendChild(varcontainer);
+                            productgrid.appendChild(cartcontainer);
+                        };
+                        
+                        products.appendChild(productgrid);
+                    },
+                })
+            },
+            minLength: 2
+        });
+    });
+    function createVar(id) {
+        for (k in variantarray) {
+            if (variantarray[k]['id'] == id) {
+                document.getElementById('variantlist').remove();
+                var elemexist = document.getElementById('product'+variantarray[k]['id']);
+                document.getElementById('tablevariant').setAttribute('hidden', '');
+                var count = 1;
+                if ( $( "#product"+variantarray[k]['id'] ).length ) {
+                    alert('<?=lang('Global.readyAdd');?>');
+                } else {
+                    let minval = count;
+                    var prods = document.getElementById('tableproduct');
+                                                
+                    var pgrid = document.createElement('div');
+                    pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
+                    pgrid.setAttribute('class', 'uk-margin-small');
+                    pgrid.setAttribute('uk-grid', '');
+
+                    var vcontainer = document.createElement('div');
+                    vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                    
+                    var vname = document.createElement('div');
+                    vname.setAttribute('id','var'+variantarray[k]['id']);
+                    vname.setAttribute('class','');
+                    vname.innerHTML = variantarray[k]['name'];
+
+                    var tcontainer = document.createElement('div');
+                    tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                    var tot = document.createElement('input');
+                    tot.setAttribute('type', 'number');
+                    tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
+                    tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
+                    tot.setAttribute('class', 'uk-input');
+                    tot.setAttribute('value', '1');
+                    tot.setAttribute('required', '');
+
+                    var pieces = document.createElement('div');
+                    pieces.setAttribute('class', 'uk-margin-small-left');
+                    pieces.innerHTML = 'Pcs';
+
+                    var pricecontainer = document.createElement('div');
+                    pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+
+                    var price = document.createElement('input');
+                    price.setAttribute('type', 'number');
+                    price.setAttribute('id', "bprice["+variantarray[k]['id']+"]");
+                    price.setAttribute('name', "bprice["+variantarray[k]['id']+"]");
+                    price.setAttribute('class', 'uk-input');
+                    price.setAttribute('value', variantarray[k]['price']);
+                    price.setAttribute('required', '');
+
+                    var subtotcontainer = document.createElement('div');
+                    subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+
+                    var subtotal = document.createElement('div');
+                    subtotal.setAttribute('id', "subtotal"+variantarray[k]['id']+"");
+                    subtotal.setAttribute('class', 'subvariant');
+
+                    totalprice();
+                    tot.addEventListener('change', totalprice);
+                    price.addEventListener('change', totalprice);
+
+                    function totalprice() {
+                        var varprice = price.value;
+                        var varqty = tot.value;
+                        var subprice = varprice * varqty;
+                        subtotal.setAttribute('value', subprice);
+                        subtotal.innerHTML = subprice;
+                    }
+
+                    vcontainer.appendChild(vname);
+                    tcontainer.appendChild(tot);
+                    tcontainer.appendChild(pieces);
+                    pricecontainer.appendChild(price);
+                    subtotcontainer.appendChild(subtotal);
+                    pgrid.appendChild(vcontainer);
+                    pgrid.appendChild(tcontainer);
+                    pgrid.appendChild(pricecontainer);
+                    pgrid.appendChild(subtotcontainer);
+                    prods.appendChild(pgrid);
+
+                    tot.addEventListener("change", function removeproduct() {
+                        if (tot.value == '0') {
+                            pgrid.remove();
+                        }
+                    });
+                }
+            }
+        }
+    };
+
+    var totalcount = document.getElementById('tableproduct');
+    let totalpurchase = new MutationObserver(mutationRecords => {
+        var prices = document.querySelectorAll(".subvariant");
+        var subarr = [];
+
+        for (i = 0; i < prices.length; i++) {
+            price = Number(prices[i].innerText);
+            subarr.push(price);
+        }
+
+        if (subarr.length === 0) {
+            document.getElementById('finalprice').innerHTML = 0;
+        } else {
+            var subtotalvar = subarr.reduce(function(a, b){ return a + b; });
+            document.getElementById('finalprice').innerHTML = 'Rp. ' + subtotalvar + ',-';
+        }
+    });
+                            
+    totalpurchase.observe(totalcount, {
+        childList: true, // observe direct children
+        subtree: true, // and lower descendants too
+        characterDataOldValue: true // pass old data to callback
+    });
+</script>
+<!-- Script Modal Add End -->
+
 <!-- Table Of Content -->
 <div class="uk-margin">
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
