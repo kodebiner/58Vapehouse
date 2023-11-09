@@ -221,7 +221,6 @@ class Stock extends BaseController
         return redirect()->back()->with('error', lang('Global.deleted'));
     }
 
-    // Purchase Stock
     public function indexpurchase()
     {
         $db         = \Config\Database::connect();
