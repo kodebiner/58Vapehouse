@@ -47,37 +47,37 @@
 
     <!-- Shortcut List -->
     <div class="uk-container uk-container-large">
-        <div class="uk-child-width-1-2 uk-child-width-1-4@l uk-flex-center uk-flex-middle uk-text-center" uk-grid>
+        <div class="uk-child-width-1-2 uk-child-width-1-4@l uk-flex-center uk-flex-middle uk-text-center" uk-grid uk-height-match="target: > div > a > .uk-card-body">
             <div>
-                <a href="<?= base_url('presence') ?>">
-                    <button class="uk-button uk-button-secondary uk-button-large" style="border-radius: 15px;">
-                        <img src="img/layout/presensi.svg" uk-svg>
-                        <div class="uk-h6 tm-h6" style="color: #fff;"><?=lang('Global.presence');?></div>
-                    </button>
+                <a class="uk-link-reset" href="<?= base_url('presence') ?>">
+                    <div class="uk-card uk-card-default uk-card-small uk-card-body">
+                        <img src="img/layout/presensi.svg" uk-svg style="color: #1e87f0;">
+                        <div class="uk-h6 tm-h6"><?=lang('Global.presence');?></div>
+                    </div>
                 </a>
             </div>
             <div>
-                <a href="<?= base_url('sop/todolist') ?>">
-                    <button class="uk-button uk-button-secondary uk-button-large" style="border-radius: 15px;">
-                        <img src="img/layout/sop.svg" uk-svg>
-                        <div class="uk-h6 tm-h6" style="color: #fff;"><?=lang('Global.sop');?></div>
-                    </button>
+                <a class="uk-link-reset" href="<?= base_url('sop/todolist') ?>">
+                    <div class="uk-card uk-card-default uk-card-small uk-card-body">
+                        <img src="img/layout/sop.svg" uk-svg style="color: #1e87f0;">
+                        <div class="uk-h6 tm-h6"><?=lang('Global.sop');?></div>
+                    </div>
                 </a>
             </div>
             <div>
-                <a href="<?= base_url('cashinout') ?>">
-                    <button class="uk-button uk-button-secondary uk-button-large" style="border-radius: 15px;">
-                        <img src="img/layout/cash.svg" uk-svg>
-                        <div class="uk-h6 tm-h6" style="color: #fff;"><?=lang('Global.cashinout');?></div>
-                    </button>
+                <a class="uk-link-reset" href="<?= base_url('cashinout') ?>">
+                    <div class="uk-card uk-card-default uk-card-small uk-card-body">
+                        <img src="img/layout/cash.svg" uk-svg style="color: #1e87f0;">
+                        <div class="uk-h6 tm-h6"><?=lang('Global.cashinout');?></div>
+                    </div>
                 </a>
             </div>
             <div>
-                <a href="<?= base_url('customer') ?>">
-                    <button class="uk-button uk-button-secondary uk-button-large" style="border-radius: 15px;">
-                        <img src="img/layout/pelanggan.svg" uk-svg>
-                        <div class="uk-h6 tm-h6" style="color: #fff;"><?=lang('Global.customer');?></div>
-                    </button>
+                <a class="uk-link-reset" href="<?= base_url('customer') ?>">
+                    <div class="uk-card uk-card-default uk-card-small uk-card-body">
+                        <img src="img/layout/pelanggan.svg" uk-svg style="color: #1e87f0;">
+                        <div class="uk-h6 tm-h6"><?=lang('Global.customer');?></div>
+                    </div>
                 </a>
             </div>
         </div>
@@ -179,9 +179,9 @@
                                 <div>
                                     <h5 class="tm-h2" style="color: #000;"><?= lang('Global.salesdetails') ?></h5>
                                 </div>
-                                <div class="uk-padding-remove uk-inline">
+                                <div class="uk-padding-remove uk-inline uk-text-right">
                                     <button uk-icon="question"></button>
-                                    <div class="uk-dropbar uk-dropbar-top uk-background-secondary uk-light uk-text-center" uk-drop="stretch: false; target: !#descsales;" style="border-radius: 10px;"><?= lang('Global.descsalestotal') ?></div>
+                                    <div class="uk-background-secondary uk-light uk-text-center" uk-drop="pos: top-right; stretch: false; target: !#descsales;" style="border-radius: 10px;"><?= lang('Global.descsalestotal') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -241,13 +241,13 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <div class="uk-child-width-1-4" uk-grid id="descdebt">
+                            <div class="uk-child-width-1-2" uk-grid id="descdebt">
                                 <div>
                                     <h5 class="tm-h2" style="color: #000;"><?= lang('Global.debt') ?></h5>
                                 </div>
-                                <div class="uk-padding-remove uk-inline">
+                                <div class="uk-padding-remove uk-inline uk-text-right">
                                     <button uk-icon="question"></button>
-                                    <div class="uk-dropbar uk-dropbar-top uk-background-secondary uk-light uk-text-center" uk-drop="stretch: false; target: !#descdebt;" style="border-radius: 10px;"><?= lang('Global.descdebt') ?></div>
+                                    <div class="uk-background-secondary uk-light uk-text-center" uk-drop="pos: top-right; stretch: false; target: !#descdebt;" style="border-radius: 10px;"><?= lang('Global.descdebt') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -322,9 +322,9 @@
                                 <div>
                                     <h5 class="tm-h2" style="color: #000;"><?= lang('Global.cashflow') ?></h5>
                                 </div>
-                                <div class="uk-padding-remove uk-inline">
+                                <div class="uk-padding-remove uk-inline uk-text-right">
                                     <button uk-icon="question"></button>
-                                    <div class="uk-dropbar uk-dropbar-top uk-background-secondary uk-light uk-text-center" uk-drop="stretch: false; target: !#desccashflow;" style="border-radius: 10px;"><?= lang('Global.desccashflow') ?></div>
+                                    <div class="uk-background-secondary uk-light uk-text-center" uk-drop="pos: top-right; stretch: false; target: !#desccashflow;" style="border-radius: 10px;"><?= lang('Global.desccashflow') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -506,9 +506,9 @@
                                 <div>
                                     <h5 class="tm-h2" style="color: #000;"><?= lang('Global.stockCycle') ?></h5>
                                 </div>
-                                <div class="uk-padding-remove uk-inline">
+                                <div class="uk-padding-remove uk-inline uk-text-right">
                                     <button uk-icon="question"></button>
-                                    <div class="uk-dropbar uk-dropbar-top uk-background-secondary uk-light uk-text-center" uk-drop="stretch: false; target: !#descstockcycle;" style="border-radius: 10px;"><?= lang('Global.descstockcycle') ?></div>
+                                    <div class="uk-background-secondary uk-light uk-text-center" uk-drop="pos: top-right; stretch: false; target: !#descstockcycle;" style="border-radius: 10px;"><?= lang('Global.descstockcycle') ?></div>
                                 </div>
                             </div>
                         </div>

@@ -272,7 +272,7 @@ return [
     'wallet'            => 'Wallet',
     'supplier'          => 'Supplier',
     'purchase'          => 'Purchase',
-    'sop'               => 'Oprational Standar',
+    'sop'               => 'Operational Standards',
     'shift1'            => 'Shift 1',
     'shift2'            => 'Shift 2',
     'debtInstallments'  => 'Debt Installments',
