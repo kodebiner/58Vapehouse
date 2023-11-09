@@ -241,6 +241,8 @@ class Stock extends BaseController
         // Find Data
         $data                       = $this->data;
 
+        dd($data);
+
         if ($this->data['outletPick'] === null) {
             $purchases              = $PurchaseModel->orderBy('id', 'DESC')->paginate(20, 'purchase');
         } else {
@@ -295,8 +297,6 @@ class Stock extends BaseController
         $data['stocks']             = $stocks;
         $data['oldstocks']          = $oldstocks;
         $data['pager']              = $PurchaseModel->pager;
-
-        dd($purchases);
 
         return view ('Views/purchase', $data);
     }
