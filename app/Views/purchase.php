@@ -614,7 +614,7 @@ foreach ($purchases as $purchase) { ?>
                     <div class="uk-divider-icon"></div>
                     
                     <!-- <div class="uk-overflow-auto"> -->
-                        <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-table-small">
+                        <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-table-small" style="background-color: #fff; color: #000;">
                             <thead>
                                 <tr>
                                     <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
