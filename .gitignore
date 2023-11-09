@@ -131,7 +131,7 @@ nb-configuration.xml
 
 public/img/*
 public/img/profile/*
-# public/img/product/*
+public/img/product/*
 # public/img/promo/*
 # public/img/tfproof/*
 # public/img/presence/*
