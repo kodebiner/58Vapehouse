@@ -706,7 +706,7 @@ foreach ($purchases as $purchase) { ?>
 <!-- Modal Detail End -->
 
 <!-- Modal Edit -->
-<?php foreach ($purchases as $purchase) { ?>
+<!-- <?php foreach ($purchases as $purchase) { ?>
     <div uk-modal class="uk-flex-top" id="editdata<?= $purchase['id'] ?>">
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
@@ -1001,6 +1001,6 @@ foreach ($purchases as $purchase) { ?>
             </div>
         </div>
     </div>
-<?php } ?>
+<?php } ?> -->
 <!-- Modal Edit End -->
 <?= $this->endSection() ?>
