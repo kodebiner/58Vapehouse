@@ -45,6 +45,45 @@
     </div>
     <!-- End Of Page Heading -->
 
+    <!-- Shortcut List -->
+    <div class="uk-container uk-container-large">
+        <div class="uk-child-width-1-2 uk-child-width-1-4@l uk-flex-center uk-flex-middle uk-text-center" uk-grid>
+            <div>
+                <a href="<?= base_url('presence') ?>">
+                    <button class="uk-button uk-button-secondary uk-button-large" style="border-radius: 15px;">
+                        <img src="img/layout/presensi.svg" uk-svg>
+                        <div class="uk-h6 tm-h6" style="color: #fff;"><?=lang('Global.presence');?></div>
+                    </button>
+                </a>
+            </div>
+            <div>
+                <a href="<?= base_url('sop/todolist') ?>">
+                    <button class="uk-button uk-button-secondary uk-button-large" style="border-radius: 15px;">
+                        <img src="img/layout/sop.svg" uk-svg>
+                        <div class="uk-h6 tm-h6" style="color: #fff;"><?=lang('Global.sop');?></div>
+                    </button>
+                </a>
+            </div>
+            <div>
+                <a href="<?= base_url('cashinout') ?>">
+                    <button class="uk-button uk-button-secondary uk-button-large" style="border-radius: 15px;">
+                        <img src="img/layout/cash.svg" uk-svg>
+                        <div class="uk-h6 tm-h6" style="color: #fff;"><?=lang('Global.cashinout');?></div>
+                    </button>
+                </a>
+            </div>
+            <div>
+                <a href="<?= base_url('customer') ?>">
+                    <button class="uk-button uk-button-secondary uk-button-large" style="border-radius: 15px;">
+                        <img src="img/layout/pelanggan.svg" uk-svg>
+                        <div class="uk-h6 tm-h6" style="color: #fff;"><?=lang('Global.customer');?></div>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Shortcut List End -->
+
     <!-- Transaction Section -->
     <div class="uk-position-small">
         <a href="transaction" class="uk-button uk-button-primary uk-button-large uk-width-1-1 uk-light" style="border-radius: 10px;"><span class="uk-h3 tm-h3"><?=lang('Global.transaction')?></span></a>

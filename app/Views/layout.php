@@ -303,13 +303,13 @@
                                 <a class="uk-h4 tm-h4" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
                             </li>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='transaction')?'uk-active':''?>">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('transaction') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.transaction');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('transaction') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
                             </li>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
                                 <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                             </li>
                             <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
-                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
+                                <a class="uk-h4 tm-h4" href=""><img src="img/layout/debt.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
                                     <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                         <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
@@ -320,12 +320,12 @@
                                 </ul>
                             </li>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.topup');?></a>
-                            </li>
-                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
-                                <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.sop');?></a>
+                                <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg><?=lang('Global.topup');?></a>
                             </li>
                             <?php if(in_groups('owner')) : ?>
+                                <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
+                                    <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/sop.svg" uk-svg><?=lang('Global.sop');?></a>
+                                </li>
                                 <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
                                     <a class="uk-h4 tm-h4" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
                                     <ul class="uk-nav-sub">
@@ -460,13 +460,13 @@
                         <a class="uk-h4 tm-h4" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
                     </li>
                     <li class="tm-main-navbar <?=($uri->getSegment(1)==='transaction')?'uk-active':''?>">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('transaction') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.transaction');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('transaction') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
                     </li>
                     <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
                         <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                     </li>
                     <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
-                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
+                        <a class="uk-h4 tm-h4" href=""><img src="img/layout/debt.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
                         <ul class="uk-nav-sub">
                             <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                 <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
@@ -477,12 +477,12 @@
                         </ul>
                     </li>
                     <li class="tm-main-navbar <?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.topup');?></a>
-                    </li>
-                    <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
-                        <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.sop');?></a>
+                        <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg><?=lang('Global.topup');?></a>
                     </li>
                     <?php if(in_groups('owner')) : ?>
+                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
+                            <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/sop.svg" uk-svg><?=lang('Global.sop');?></a>
+                        </li>
                         <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
                             <a class="uk-h4 tm-h4" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">
