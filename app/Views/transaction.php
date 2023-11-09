@@ -36,6 +36,25 @@
         
         <style type="text/css">
             .dummyproduct{fill:#666666;}
+
+            .ui-autocomplete {
+                max-height: 500px;
+                overflow-y: auto;
+                /* prevent horizontal scrollbar */
+                overflow-x: hidden;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            .ui-autocomplete::-webkit-scrollbar {
+                display: none;
+            }
+            /* IE 6 doesn't support max-height
+            * we use height instead, but this forces the menu to always be this tall
+            */
+            * html .ui-autocomplete {
+                height: 500px;
+            }
         </style>
 
         <script>
@@ -818,13 +837,13 @@
                             <a class="uk-h4 tm-h4" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
                         </li>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='transaction')?'uk-active':''?>">
-                            <a class="uk-h4 tm-h4" href="<?= base_url('transaction') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.transaction');?></a>
+                            <a class="uk-h4 tm-h4" href="<?= base_url('transaction') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
                         </li>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
                             <a class="uk-h4 tm-h4" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                         </li>
                         <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
-                            <a class="uk-h4 tm-h4" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
+                            <a class="uk-h4 tm-h4" href=""><img src="img/layout/debt.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">
                                 <li class="uk-h5 tm-h5 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                     <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
@@ -835,10 +854,10 @@
                             </ul>
                         </li>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
-                            <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.topup');?></a>
+                            <a class="uk-h4 tm-h4" href="<?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg><?=lang('Global.topup');?></a>
                         </li>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
-                            <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/payment.svg" uk-svg><?=lang('Global.sop');?></a>
+                            <a class="uk-h4 tm-h4" href="<?= base_url('sop') ?>"><img src="img/layout/sop.svg" uk-svg><?=lang('Global.sop');?></a>
                         </li>
                         <?php if(in_groups('owner')) : ?>
                             <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
@@ -1230,16 +1249,79 @@
                 <div class="uk-container uk-container-expand uk-padding-remove-horizontal">
                     <div class="uk-panel uk-panel-scrollable" style="background-color: #363636;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
                         <?php if ($outletPick === null) { ?>
-                            <div class="uk-margin uk-flex uk-flex-center">
-                                <div class="uk-width-1-6@m uk-card uk-card-default uk-card-small uk-card-body">
-                                    <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.chooseoutlet')?></div>
+                            <div class="uk-margin uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
+                                <!-- Alert Outlet -->
+                                <div class="uk-margin-small">
+                                    <div class="uk-width-1-6@m uk-card uk-card-default uk-card-small uk-card-body uk-container uk-container-expand">
+                                        <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.chooseoutlet')?></div>
+                                    </div>
                                 </div>
+                                <!-- Alert Outlet End -->
+
+                                <!-- OutletPick -->
+                                <div class="uk-margin-remove">
+                                    <div class="uk-width-1-6@m uk-container uk-container-expand">
+                                        <div class="uk-navbar-item uk-flex uk-flex-middle uk-inline">
+                                            <?php
+                                                if ($outletPick === null)  {
+                                                    $viewOutlet = lang('Global.allOutlets');
+                                                } else {
+                                                    foreach ($outlets as $outlet) {
+                                                        if ($outletPick === $outlet['id']) {
+                                                            $viewOutlet = $outlet['name'];
+                                                        }
+                                                    }
+                                                }
+                                            ?>
+                                            <a class="tm-h4 tm-outlet" type="button"><img src="img/layout/union.svg" style="position: relative; top: -2px; margin-right: 5px;" /> <span class="tm-outlet-picker-selector"><?=$viewOutlet?></span> <span uk-icon="triangle-down"></span></a>
+                                            <div class="uk-width-large tm-outlet-dropdown" uk-dropdown="mode: click;">
+                                                <ul class="uk-list">
+                                                <?php
+                                                    $accesscount = count($baseoutlets);
+                                                    $outletcount = count($outlets);
+                                                    if ($accesscount === $outletcount) {
+                                                        if ($outletPick === null) {
+                                                            echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.lang('Global.allOutlets').'</li>';
+                                                        } else {
+                                                            echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/0" class="uk-link-reset">'.lang('Global.allOutlets').'</a></li>';
+                                                        }
+                                                    }
+                                                    foreach ($outlets as $outlet) {
+                                                        foreach ($baseoutlets as $access) {
+                                                            if ($access['outletid'] === $outlet['id']) {
+                                                                if ($outletPick === $outlet['id']) {
+                                                                    echo '<li class="uk-h4 tm-h4"><span uk-icon="triangle-right"></span> '.$outlet['name'].'</li>';
+                                                                } else {
+                                                                    echo '<li class="uk-h4 tm-h4"><a href="outlet/pick/'.$outlet['id'].'" class="uk-link-reset">'.$outlet['name'].'</a></li>';
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                ?>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- OutletPick End -->
                             </div>
                         <?php } else if (empty($dailyreport)) { ?>
-                            <div class="uk-margin uk-flex uk-flex-center">
-                                <div class="uk-width-1-6@m uk-card uk-card-default uk-card-small uk-card-body">
-                                    <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.storeNotOpen')?></div>
+                            <div class="uk-margin uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
+                                <!-- Alert Open Store -->
+                                <div class="uk-margin-small uk-flex uk-flex-center">
+                                    <div class="uk-width-1-6@m uk-card uk-card-default uk-card-small uk-card-body">
+                                        <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.storeNotOpen')?></div>
+                                    </div>
                                 </div>
+                                <!-- Alert Open Store End -->
+
+                                <!-- Button To Manage Cash -->
+                                <div class="uk-margin-remove uk-flex uk-flex-center">
+                                    <a class="uk-width-1-6@m uk-button uk-button-primary" href="<?= base_url('cashinout') ?>" style="border-radius: 10px;">
+                                        <div class="tm-h1 uk-text-center tm-text-large" style="color: #fff !important;"><?=lang('Global.open')?></div>
+                                    </a>
+                                </div>
+                                <!-- Button To Manage Cash End -->
                             </div>
                         <?php } else { ?>
                             <div class="uk-margin uk-flex uk-flex-center">
@@ -1602,7 +1684,7 @@
                                         <script type="text/javascript">
                                             $(function() {
                                                 var prodsList = [
-                                                    {label: 'Show All', idx: '0'},
+                                                    {label: 'All Product', idx: '0'},
                                                     <?php
                                                         foreach ($products as $product) {
                                                             echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
@@ -1610,6 +1692,7 @@
                                                     ?>
                                                 ];
                                                 $("#prods").autocomplete({
+                                                    maxShowItems: 30,
                                                     source: prodsList,
                                                     select: function(e, i) {
                                                         if (i.item.idx != '0') {
@@ -1633,11 +1716,11 @@
                                         <div class="uk-modal-dialog uk-margin-auto-vertical">
                                             <div class="uk-modal-container">
                                                 <div class="uk-modal-header">
-                                                    <div class="uk-child-width-1-2" uk-grid>
-                                                        <div>
+                                                    <div uk-grid>
+                                                        <div class="uk-width-5-6">
                                                             <div id="modalVarProduct" class="uk-modal-title tm-h2 uk-text-center">NAME</div>
                                                         </div>
-                                                        <div class="uk-text-right">
+                                                        <div class="uk-width-1-6 uk-text-right">
                                                             <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
                                                         </div>
                                                     </div>
@@ -1670,57 +1753,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                    <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-body">
                                         <?php foreach ($products as $product) {
-                                            $productName    = $product['name'];
-                                            $productPhoto   = $product['thumbnail']; ?>
+                                            $productName    = $product['name']; ?>
 
                                             <div id="CreateOrder<?= $product['id'] ?>">
                                                 <div class="uk-card uk-card-hover uk-card-default" onclick="showVariant(<?= $product['id'] ?>)">
-                                                    <div class="uk-card-header uk-flex uk-flex-center uk-flex-middle">
+                                                    <div class="uk-card-body uk-flex uk-flex-center uk-flex-middle">
                                                         <div class="tm-h1 uk-text-center uk-text-bolder"><?= $productName ?></div>
-                                                    </div>
-                                                    <div class="uk-card-body">
-                                                        <?php if (!empty($productPhoto)) { ?>
-                                                            <img class="uk-width-1-1" src="img/product/<?= $productPhoto ?>" />
-                                                        <?php } else { ?>
-                                                            <svg x="0px" y="0px" viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
-                                                                <g>
-                                                                    <defs>
-                                                                        <rect id="SVGID_1_" y="0" width="300" height="300"/>
-                                                                    </defs>
-                                                                    <clipPath id="SVGID_00000065759931020451687440000009539297437584060839_">
-                                                                        <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
-                                                                    </clipPath>
-                                                                    <g style="clip-path:url(#SVGID_00000065759931020451687440000009539297437584060839_);">
-                                                                        <path class="dummyproduct" d="M10.43,99.92c-10.73-27.36,4.25-69.85,30.19-85.78C51.01,7.77,77-5.17,108.81,30.24
-                                                                            c-2.16,0.65-4.26,1.55-6.29,2.7c-3.02,1.75-5.49,4.04-7.57,6.58C83.12,26.95,67.17,17.08,49.17,28.13
-                                                                            C34,37.46,23.24,60.45,23.28,79.62c-0.03,5.15,0.77,10.05,2.42,14.32l4.75,11.66c6.41,15.42,12.34,29.6,12.34,46.6
-                                                                            c-0.03,11.87-2.89,25.14-10.44,41.17c-1.05,2.23-1.96,5.97-1.96,9.8c0,2.31,0.29,4.66,1.16,6.73c1.13,2.73,3.09,4.44,5.9,5.59
-                                                                            c2.16,0.28,10.31,0.86,17.02-5.79c6.56-6.54,13.06-21.9,6.78-58.08C50.43,89.07,75.8,68.22,87.2,62.18
-                                                                            c15.23-8.09,33.99-5.98,45.6,5.15c3.3,3.14,3.38,8.34,0.23,11.6c-3.13,3.26-8.35,3.37-11.59,0.23c-5.55-5.31-16.45-7.86-26.56-2.5
-                                                                            c-8.25,4.37-26.43,20.18-17.46,72.17c6.01,34.86,2.08,59.32-11.64,72.76c-13.81,13.43-31.7,10.1-32.45,9.95l-0.67-0.13l-0.63-0.24
-                                                                            c-7.34-2.73-12.76-7.95-15.68-15.08c-4.14-10.12-2.41-22.24,1.16-29.72c15.27-32.43,8.34-49.15-2.2-74.47L10.43,99.92z"/>
-                                                                        <g>
-                                                                            <path class="dummyproduct" d="M289.03,204.6L222.63,89.6c0,0-8.25-9.16-7.65-8.69l-10.29-6.98l-72.37-38.31
-                                                                                c-7.64-4.21-17.21-3.87-25.53,0.91c-6.82,3.93-11.33,10.31-12.87,17.21c14.44-4.1,30.01-1.11,40.99,8.29
-                                                                                c7.23,0.26,14.23,3.89,18.08,10.64c6.07,10.47,2.46,23.86-7.98,29.88c-10.47,6.04-23.89,2.46-29.92-8.01
-                                                                                c-2.57-4.48-3.27-9.48-2.52-14.24c-8.67-4.82-20.11,2.86-20.51,5.7c-0.51,3.49-1.94,54.29-1.94,54.29s0.98,10.4,1.08,11.45
-                                                                                c0.21,0.64,3.82,11.58,3.82,11.58l66.4,114.96c4.06,7.05,10.6,12.07,18.43,14.18c7.8,2.1,15.98,1.03,22.98-3.03l75.14-43.35
-                                                                                C292.39,237.71,297.39,219.1,289.03,204.6z M210.47,157.72l-6.24,6.9c-3.34-3.82-7.36-5.93-11.95-6.25
-                                                                                c-2.17-0.16-4.25,0-6.22,0.36l-4.6-8.04C191.65,146.98,201.33,149.28,210.47,157.72z M166.64,189.62c-0.76-0.98-1.46-2-2.1-3.11
-                                                                                c-0.8-1.4-1.42-2.78-1.96-4.18c-2.24-7.52-0.14-16.05,5.35-23.07c0.61-0.7,1.29-1.38,1.99-1.97l4.57,7.98
-                                                                                c-0.08,0.13-0.17,0.27-0.25,0.38c-4.51,5.03-5.96,11.66-3.05,16.74c2.99,5.22,9.6,7.28,16.39,5.77l4.98,8.7
-                                                                                C182.41,199.07,172.43,196.42,166.64,189.62z M182.01,224.96l6.55-6.26c6.45,6.06,13.24,8.32,20.42,6.89l4.7,8.22
-                                                                                C202.67,237.11,192.12,234.18,182.01,224.96z M220.06,237.4l-50.01-87.43l5.74-3.28l50,87.43L220.06,237.4z M226.2,226.44
-                                                                                c-0.29,0.25-0.55,0.46-0.85,0.69l-4.53-7.92c0.51-0.43,0.96-0.9,1.4-1.35c2.16-1.94,3.64-4,4.5-6.25
-                                                                                c2.1-4.48,2.31-9.32,0.06-13.25c-3.65-6.39-12.44-8.43-21.03-5.49l-4.84-8.41c14.3-3.2,27.1-0.45,32.68,9.28
-                                                                                C239,203.19,235.61,215.91,226.2,226.44z"/>
-                                                                        </g>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                        <?php } ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1740,7 +1780,7 @@
                                         <script type="text/javascript">
                                             $(function() {
                                                 var bundsList = [
-                                                    {label: 'Show All', idx: '0'},
+                                                    {label: 'All Bundle', idx: '0'},
                                                     <?php
                                                         foreach ($bundles as $bundle) {
                                                             echo '{label:"'.$bundle['name'].'",idx:'.$bundle['id'].'},';

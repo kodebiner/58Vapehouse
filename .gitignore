@@ -129,6 +129,9 @@ nb-configuration.xml
 
 /.php-cs-fixer.php
 
-public/img/profile/*
-public/img/product/*
-public/img/logo.*
+# public/img/profile/*
+# public/img/product/*
+# public/img/promo/*
+# public/img/tfproof/*
+# public/img/presence/*
+# public/img/logo.*
