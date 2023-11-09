@@ -189,7 +189,7 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->get('deletesup/(:num)', 'Stock::deletesup/$1', ['filter' => 'role:owner']);
 
     // Purchase
-    $routes->get('purchase', 'Home::phpinfo', ['filter' => 'role:owner']);
+    $routes->get('purchase', 'Stock::indexpurchase', ['filter' => 'role:owner']);
     $routes->post('product', 'Stock::product', ['filter' => 'role:owner']);
     $routes->post('createpur', 'Stock::createpur', ['filter' => 'role:owner']);
     $routes->post('confirm/(:num)', 'Stock::confirmpur/$1', ['filter' => 'role:owner']);
