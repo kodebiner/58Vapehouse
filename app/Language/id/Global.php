@@ -246,6 +246,7 @@ return [
     'cashhistory'       => 'Riwayat Kas',
     'export'            => 'Export',
     'selectcat'         => 'Pilih Kategori',
+    'percentage'        => 'Persentase',
 
     // Menu
     'dashboard'         => 'Dasbor',

@@ -246,6 +246,7 @@ return [
     'cashhistory'       => 'Cash History',
     'export'            => 'Export',
     'selectcat'         => 'Select Category',
+    'percentage'        => 'Percentage',
     
     // Menu
     'dashboard'         => 'Dashboard',

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200;300;400;500;600;700&family=Oswald:wght@200;300;400;500;600;700&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 
 html {
     font-family: ProximaNova, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -11895,4 +11895,67 @@ li.tm-main-navbar>a>svg {
     font-style: italic;
     letter-spacing: 2px;
     color: #000
+}
+
+.fn-h1,
+.fn-h2,
+.fn-h3,
+.fn-h4,
+.fn-h5,
+.fn-h6 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    line-height: 1.1;
+    color: inherit;
+}
+
+.fn-h1 {
+    font-size: 16px
+}
+
+.fn-h2 {
+    font-size: 14px
+}
+
+.fn-h3 {
+    font-size: 12px
+}
+
+.fn-h4 {
+    font-size: 10px
+}
+
+.fn-h5 {
+    font-size: 8px
+}
+
+.fn-h6 {
+    font-size: 8px
+}
+
+@media (min-width:800px) {
+    .fn-h1,
+    h1 {
+        font-size: 24px
+    }
+    .fn-h2,
+    h2 {
+        font-size: 22px
+    }
+    .fn-h3,
+    h3 {
+        font-size: 20px
+    }
+    .fn-h4,
+    h4 {
+        font-size: 18px;
+    }
+    .fn-h5,
+    h5 {
+        font-size: 16px;
+    }
+    .fn-h6,
+    h6 {
+        font-size: 14px;
+    }
 }

@@ -67,30 +67,33 @@
 <div class="uk-card uk-card-default uk-card-body uk-width-1-1@m uk-margin">
     <h3 class="uk-card-title uk-text-center">- <?= lang('Global.productreport') ?> -</h3>
     <hr class="uk-divider-icon">
-    <div class="uk-child-width-1-3@m uk-grid-small uk-grid-match uk-text-center" uk-grid>
+    <div class="uk-child-width-1-4@m uk-grid-small uk-grid-match uk-text-center" uk-grid>
         <div>
-            <p class="tm-h3"><?= lang('Global.category') ?></p>
+            <p class="tm-h6"><?= lang('Global.category') ?></p>
         </div>
         <div>
-            <p class="tm-h3"><?= lang('Global.capitalPrice') ?></p>
+            <p class="tm-h6"><?= lang('Global.basePrice') ?></p>
         </div>
         <div>
-            <p class="tm-h3">Presentase</p>
+            <p class="tm-h6"><?= lang('Global.capitalPrice') ?></p>
+        </div>
+        <div>
+            <p class="tm-h6"><?= lang('Global.percentage') ?></p>
         </div>
     </div>
     
-    <div id="list" class="uk-child-width-1-3@m uk-grid-small uk-grid-match uk-text-center" uk-grid></div>
-    <ul class="uk-pagination">
+    <div id="list" class="uk-child-width-1-4@m uk-grid-small uk-grid-match uk-text-center" uk-grid></div>
+    <!-- <ul class="uk-pagination">
         <li><a id="previous"><span class="uk-margin-small-right" uk-pagination-previous></span> Previous</a></li>
         <li class="uk-margin-auto-left"><a id="next"> Next <span class="uk-margin-small-left" uk-pagination-next></span></a></li>
-    </ul>
+    </ul> -->
 
 </div>
 <!-- Script List -->
 <script>
     var catlist = <?= $catlist ?>;
 
-    var pageSize = 5;
+    var pageSize = <?= $countcat ?>;
     var currentPage = 1;
     var pagedResults = [];
     var totalResults = catlist.length;
@@ -119,7 +122,9 @@
             $.each(pagedResults, function(index, obj) {
                 var input = obj.qty;
                 var rp = parseInt(input).toLocaleString();
-                $('#list').append("<div> <p class='tm-h5'>" + obj.name + " </p> </div> <div> <p class='tm-h5'>Rp." + rp + " </p></div> <div> <p class='tm-h5'>(" + obj.persen + "%)</p> </div>");
+                var binput = obj.bqty;
+                var brp = parseInt(binput).toLocaleString();
+                $('#list').append("<div> <p class='uk-h6'>" + obj.name + " </p> </div> <div> <p class='uk-h6'>Rp." + brp + " </p></div> <div> <p class='uk-h6'>Rp." + rp + " </p></div>  <div> <p class='uk-h6'>(" + obj.persen + "%)</p> </div>");
             });
         }
 
@@ -710,19 +715,19 @@
         </div>
         <!-- Stock End -->
 
-        <!-- Capital Price -->
-        <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
-            <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
-            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalcap, 2, ',', '.') ?></div>
-        </div>
-        <!-- Capital Price End -->
-
         <!-- Base Price -->
         <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.basePrice') ?> :</div>
             <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalbase, 2, ',', '.') ?></div>
         </div>
         <!-- Base Price End -->
+
+        <!-- Capital Price -->
+        <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
+            <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalcap, 2, ',', '.') ?></div>
+        </div>
+        <!-- Capital Price End -->
     </div>
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light display" style="width:100%">
         <thead>

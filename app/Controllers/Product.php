@@ -99,7 +99,7 @@ class Product extends BaseController
         $stockchart = array();
         foreach ($categories as $cat) {
             $stockbuilder       = $db->table('stock');
-            $stockchartbuilder  = $stockbuilder->select('stock.qty as qty, variant.hargamodal as price');
+            $stockchartbuilder  = $stockbuilder->select('stock.qty as qty, variant.hargamodal as price, variant.hargadasar as bprice');
             $stockchartbuilder  = $stockbuilder->join('variant', 'stock.variantid = variant.id', 'left');
             $stockchartbuilder  = $stockbuilder->join('product', 'variant.productid = product.id', 'left');
             $stockchartbuilder  = $stockbuilder->where('product.catid', $cat['id']);
@@ -109,22 +109,26 @@ class Product extends BaseController
             $stockchartbuilder = $stockbuilder->get();
             $stockqty = $stockchartbuilder->getResult();
             $stkqty = array();
+            $stkbp  = array();
             foreach ($stockqty as $qty) {
-                $stkqty[] = (Int)$qty->qty * (Int)$qty->price;
+                $stkqty[]   = (int)$qty->qty * (int)$qty->price;
+                $stkbp[]    = (int)$qty->qty * (int)$qty->bprice;
             }
             $stockchart[] = [
                 'name'  => $cat['name'],
-                'qty'   => array_sum($stkqty)
+                'qty'   => array_sum($stkqty),
+                'bqty'  => array_sum($stkbp)
             ];
         }
-        
+
         $percentage = array_sum(array_column($stockchart, 'qty'));
-        
+
         $presentase = array();
         foreach ($stockchart as $srkchrt) {
             $presentase[] = [
                 'name'      => $srkchrt['name'],
                 'qty'       => $srkchrt['qty'],
+                'bqty'      => $srkchrt['bqty'],
                 'persen'    => ceil($srkchrt['qty'] / $percentage * 100),
             ];
         }
@@ -143,7 +147,7 @@ class Product extends BaseController
                 $stock = array();
             }
             $stockcount = array_sum(array_column($StockModel->where('outletid', $this->data['outletPick'])->find(), 'qty'));
-        }       
+        }
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -163,6 +167,7 @@ class Product extends BaseController
         $data['stockchart']     = $stockchart;
         $data['presentase']     = $presentase;
         $data['catlist']        = json_encode($presentase);
+        $data['countcat']       = count($presentase);
         if (!empty($input)) {
             $data['input']     = $input;
         }
@@ -174,7 +179,7 @@ class Product extends BaseController
     {
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=Products.xls");
-        
+
         $ProductModel   = new ProductModel();
         $VariantModel   = new VariantModel();
         $CategoryModel  = new CategoryModel();
@@ -193,10 +198,10 @@ class Product extends BaseController
         echo '<tbody>';
         foreach ($products as $product) {
             echo '<tr>';
-            echo '<td>'.$product['name'].'</td>';
+            echo '<td>' . $product['name'] . '</td>';
             foreach ($categories as $category) {
                 if ($category['id'] === $product['catid']) {
-                    echo '<td>'.$category['name'].'</td>';
+                    echo '<td>' . $category['name'] . '</td>';
                 }
             }
             echo '</tr>';
@@ -217,7 +222,7 @@ class Product extends BaseController
         // search all data
         $input = $this->request->getPost();
         $outlets = $OutletModel->findAll();
-        
+
         // rules
         $rule = [
             'name'          => 'required|max_length[255]|is_unique[product.name]',
@@ -225,12 +230,12 @@ class Product extends BaseController
             'category'      => 'required',
             'brand'         => 'required',
         ];
-        
+
         // Validation
-        if (! $this->validate($rule)) {
+        if (!$this->validate($rule)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
-        
+
         // get data
         $data = [
             'name'          => $input['name'],
@@ -248,26 +253,34 @@ class Product extends BaseController
 
         // Get inserted Product ID
         $productId = $ProductModel->getInsertID();
-        
+
         // insert variant
         foreach ($input['varBase'] as $baseKey => $baseValue) {
             $variant['productid'] = $productId;
             $variant['hargadasar'] = $baseValue;
 
             foreach ($input['varName'] as $nameKey => $nameValue) {
-                if($nameKey === $baseKey) { $variant['name'] = $nameValue; }
+                if ($nameKey === $baseKey) {
+                    $variant['name'] = $nameValue;
+                }
             }
 
             foreach ($input['varCap'] as $capKey => $capValue) {
-                if($capKey === $baseKey) { $variant['hargamodal'] = $capValue; }
+                if ($capKey === $baseKey) {
+                    $variant['hargamodal'] = $capValue;
+                }
             }
 
             foreach ($input['varSug'] as $SugKey => $SugValue) {
-                if($SugKey === $baseKey) { $variant['hargarekomendasi'] = $SugValue; }
+                if ($SugKey === $baseKey) {
+                    $variant['hargarekomendasi'] = $SugValue;
+                }
             }
 
             foreach ($input['varMargin'] as $marginKey => $marginValue) {
-                if($marginKey === $baseKey) { $variant['hargajual'] = $marginValue; }
+                if ($marginKey === $baseKey) {
+                    $variant['hargajual'] = $marginValue;
+                }
             }
 
             $VariantModel->insert($variant);
@@ -343,14 +356,14 @@ class Product extends BaseController
         $OldStockModel   = new OldStockModel();
 
         // search all data
-        $products    = $ProductModel->where('id',$id)->first();
+        $products    = $ProductModel->where('id', $id)->first();
         $outlets     = $OutletModel->findAll();
         $input       = $this->request->getPost();
 
         //populating data
         $data = $this->data;
         $data['products'] = $products;
-        
+
         // rules
         $rule = [
             'name'                  => 'required|max_length[255]',
@@ -359,15 +372,15 @@ class Product extends BaseController
             'hargarekomendasi'      => 'required',
             'margin'                => 'required',
         ];
-        
+
         // Validation
-        if (! $this->validate($rule)) {
+        if (!$this->validate($rule)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
-        
+
         // get data
         $data = [
-            'productid'             => $id, 
+            'productid'             => $id,
             'name'                  => $input['name'],
             'hargadasar'            => $input['hargadasar'],
             'hargamodal'            => $input['hargamodal'],
@@ -377,7 +390,7 @@ class Product extends BaseController
 
         // insert data product
         $VariantModel->insert($data);
-        
+
         $variantid = $VariantModel->getInsertID();
 
         foreach ($outlets as $outlet) {
@@ -387,7 +400,7 @@ class Product extends BaseController
                 'qty'       => '0',
 
             ];
-            $StockModel->insert($stocks);                
+            $StockModel->insert($stocks);
         }
 
         $oldstock = [
@@ -397,7 +410,7 @@ class Product extends BaseController
             'hargadasar'            => '0'
         ];
         $OldStockModel->insert($oldstock);
-        
+
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
@@ -411,7 +424,7 @@ class Product extends BaseController
 
         // inisialize
         $input = $this->request->getPost();
-        
+
         // search id
         $data['products'] = $ProductModel->where('id', $id)->first();
 
@@ -424,7 +437,7 @@ class Product extends BaseController
         ];
 
         // Validation
-        if (! $this->validate($rule)) {
+        if (!$this->validate($rule)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
@@ -433,26 +446,27 @@ class Product extends BaseController
             'id'            => $id,
             'name'          => $input['name'],
             'description'   => $input['description'],
-            'brandid'       => $input['brandid'.$id],
-            'catid'         => $input['catid'.$id],
+            'brandid'       => $input['brandid' . $id],
+            'catid'         => $input['catid' . $id],
         ];
 
         // insert data product
         $ProductModel->save($data);
-        
+
         // redirect back
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
-    public function editvar($id){
+    public function editvar($id)
+    {
 
         // calling model
         $OldStockModel  = new OldStockModel();
         $VariantModel   = new VariantModel();
 
         // initialize
-        $oldstocks                  = $OldStockModel->where('variantid',$id)->first();
-        
+        $oldstocks                  = $OldStockModel->where('variantid', $id)->first();
+
         $input                      = $this->request->getPost();
 
         //update variant
@@ -539,7 +553,7 @@ class Product extends BaseController
             foreach ($stocks as $stock) {
                 $StockModel->delete($stock['id']);
             }
-            
+
             // Populating & Removing Old Stocks Data
             $oldstocks = $OldStockModel->where('variantid', $varian['id'])->find();
             foreach ($oldstocks as $oldstock) {
@@ -554,7 +568,7 @@ class Product extends BaseController
                 foreach ($bundles as $bundle) {
                     $BundleModel->delete($bundle['id']);
                 }
-                
+
                 // Removing Bundle Detail
                 $BundledetailModel->delete($bundets['id']);
             }
@@ -574,7 +588,7 @@ class Product extends BaseController
         // Calling Models
         $CategoryModel = new CategoryModel();
         $input = $this->request->getPost();
-        
+
         // create categoroy
         $data = [
             'name' => $input['name'],
@@ -583,7 +597,7 @@ class Product extends BaseController
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
-    public function editcat($id) 
+    public function editcat($id)
     {
         // parsing data
         $CategoryModel = new CategoryModel();
@@ -593,19 +607,19 @@ class Product extends BaseController
         $input = $this->request->getPost();
 
         // get data
-        $data = [ 
+        $data = [
             'id' => $id,
             'name' => $input['name'],
         ];
-        
+
         // update data
         $CategoryModel->save($data);
 
         // return
-        return redirect()->to('product'); 
+        return redirect()->to('product');
     }
 
-    public function deletecat ($id)
+    public function deletecat($id)
     {
         // parsing data
         $CategoryModel = new CategoryModel();
@@ -623,7 +637,7 @@ class Product extends BaseController
         // Calling Models
         $BrandModel = new BrandModel();
         $input = $this->request->getPost();
-        
+
         // create brand
         $data = [
             'name' => $input['name'],
@@ -642,16 +656,16 @@ class Product extends BaseController
         $input = $this->request->getPost();
 
         // get data
-        $data = [ 
+        $data = [
             'id' => $id,
             'name' => $input['name'],
         ];
-        
+
         // update data
         $BrandModel->save($data);
 
         // return
-        return redirect()->to('product'); 
+        return redirect()->to('product');
     }
 
     public function deletebrand($id)
@@ -679,7 +693,7 @@ class Product extends BaseController
             'id'        => $id,
             'favorite'  => $input,
         ];
-        
+
         $ProductModel->save($data);
         die(json_encode(array($input)));
     }
