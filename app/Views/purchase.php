@@ -738,21 +738,7 @@ foreach ($purchases as $purchase) { ?>
                         </div>
 
                         <!-- Autocomplete Supplier Edit Purchase -->
-                        <script type="text/javascript">
-                            $(function() {
-                                var suppList = [
-                                    <?php foreach ($suppliers as $supplier) {
-                                        echo '{label:"'.$supplier['name'].'",idx:'.$supplier['id'].'},';
-                                    }?>
-                                ];
-                                $("#suppliername<?= $purchase['id'] ?>").autocomplete({
-                                    source: suppList,
-                                    select: function(e, i) {
-                                        $("#supplierid<?= $purchase['id'] ?>").val(i.item.idx);
-                                    }
-                                });
-                            });
-                        </script>
+                        
                         <!-- Autocomplete Supplier Edit Purchase End -->
 
                         <div class="uk-margin-bottom">
@@ -806,23 +792,7 @@ foreach ($purchases as $purchase) { ?>
                                                 </div>
                                             </div>
 
-                                            <script type="text/javascript">
-
-                                                var total<?= $purdet['id'] ?> = document.getElementById('totalpcs[<?=$purdet['id']?>]');
-                                                var price<?= $purdet['id'] ?> = document.getElementById('bprice[<?=$purdet['id']?>]');
-
-                                                total<?= $purdet['id'] ?>.addEventListener('change', totalprice<?= $purdet['id'] ?>);
-                                                price<?= $purdet['id'] ?>.addEventListener('change', totalprice<?= $purdet['id'] ?>);
-
-                                                function totalprice<?= $purdet['id'] ?>() {
-                                                    var subtotal = document.getElementById('subtotal<?= $purdet['id'] ?>');
-                                                    var varprice = price<?= $purdet['id'] ?>.value;
-                                                    var varqty = total<?= $purdet['id'] ?>.value;
-                                                    var subprice = varprice * varqty;
-                                                    subtotal.setAttribute('value', subprice);
-                                                    subtotal.innerHTML = subprice;
-                                                }
-                                            </script>
+                                            
                                         <?php } ?>
                                     <?php } ?>
                                 <?php } ?>
