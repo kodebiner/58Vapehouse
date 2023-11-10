@@ -948,7 +948,7 @@
         <!-- Left Sidebar Section end -->
 
         <!-- Modal Detail Transaction -->
-        <div uk-modal class="uk-flex-top" id="tambahdata" >
+        <div uk-modal class="uk-flex-top uk-modal-container" id="tambahdata" >
             <div class="uk-modal-dialog uk-margin-auto-vertical">
                 <div class="uk-modal-content">
                     <div class="uk-modal-header">
@@ -1560,7 +1560,7 @@
 
                                                             const productname = document.createElement('div');
                                                             productname.setAttribute('id', 'name'+variant);
-                                                            productname.setAttribute('class', 'tm-h2');
+                                                            productname.setAttribute('class', 'tm-h5');
                                                             productname.innerHTML = variantarray[x]['name'];
 
                                                             const pricecontainer = document.createElement('div');
@@ -1568,7 +1568,7 @@
                                                             
                                                             const productprice = document.createElement('div');
                                                             productprice.setAttribute('id', 'price'+variant);
-                                                            productprice.setAttribute('class', 'tm-h2');
+                                                            productprice.setAttribute('class', 'tm-h5');
                                                             productprice.setAttribute('name', 'price[]');
                                                             productprice.setAttribute('value', showprice());
                                                             productprice.innerHTML = showprice();
@@ -1760,7 +1760,7 @@
                                             <div id="CreateOrder<?= $product['id'] ?>">
                                                 <div class="uk-card uk-card-hover uk-card-default" onclick="showVariant(<?= $product['id'] ?>)">
                                                     <div class="uk-card-body uk-flex uk-flex-center uk-flex-middle">
-                                                        <div class="tm-h1 uk-text-center uk-text-bolder"><?= $productName ?></div>
+                                                        <div class="tm-h4 uk-text-center uk-text-bolder"><?= $productName ?></div>
                                                     </div>
                                                 </div>
                                             </div>

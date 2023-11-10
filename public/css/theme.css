@@ -11564,16 +11564,55 @@ body {
     color: #222
 }
 
-.tm-h4 {
+.tm-h1 {
+    font-size: 16px
+}
+
+.tm-h2 {
     font-size: 14px
 }
 
-.tm-h5 {
+.tm-h3 {
     font-size: 12px
 }
 
+.tm-h4 {
+    font-size: 10px
+}
+
+.tm-h5 {
+    font-size: 8px
+}
+
 .tm-h6 {
-    font-size: 11px
+    font-size: 6px
+}
+
+@media (min-width:800px) {
+    .tm-h1,
+    h1 {
+        font-size: 24px
+    }
+    .tm-h2,
+    h2 {
+        font-size: 22px
+    }
+    .tm-h3,
+    h3 {
+        font-size: 20px
+    }
+    .tm-h4,
+    h4 {
+        font-size: 18px;
+    }
+    .tm-h5,
+    h5 {
+        font-size: 16px;
+    }
+    .tm-h6,
+    h6 {
+        font-size: 10px;
+    }
 }
 
 .tm-text-large {
