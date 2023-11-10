@@ -494,7 +494,7 @@ class Pay extends BaseController
             $member         = $MemberModel->find($input['customerid']);
             $trx            = $member['trx'] + 1 ;
             $memberPoint    = $member['poin'];
-            $poinPlus       = (Int)$pointres + (Int)$poinresult;
+            $poinPlus       = (Int)$memberPoint + (Int)$poinresult;
             $pointvalue = [
                 'id'    => $member['id'],
                 'poin'  => $poinPlus,
@@ -578,7 +578,7 @@ class Pay extends BaseController
             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
             $data['mempoin']        = $member['poin'];
             $data['poinused']       = $input['poin'];
-            $data['poinearn']       = $poin;
+            $data['poinearn']       = $poinresult;
         }else{
             $data['cust']           = "0";
             $data['mempoin']        = "0";
