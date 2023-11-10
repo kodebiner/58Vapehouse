@@ -809,16 +809,16 @@ foreach ($purchases as $purchase) { ?>
                                                 productgrid.setAttribute('class', 'uk-padding uk-padding-remove-vertical');
                                                 productgrid.setAttribute('uk-grid', '');
 
-                                                evariantarray = arguments[0];
+                                                variantarray<?=$purchase['id']?> = arguments[0];
 
-                                                for (x in evariantarray) {
-                                                    //alert(evariantarray[k]['name']);
+                                                for (x in variantarray<?=$purchase['id']?>) {
+                                                    //alert(variantarray<?=$purchase['id']?>[k]['name']);
                                                     var varcontainer = document.createElement('div');
                                                     varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2 uk-margin-small');
                                                                                     
                                                     var varname = document.createElement('div');
                                                     varname.setAttribute('class','');
-                                                    varname.innerHTML = evariantarray[x]['name'];
+                                                    varname.innerHTML = variantarray<?=$purchase['id']?>[x]['name'];
 
                                                     var cartcontainer = document.createElement('div');
                                                     cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2 uk-margin-small');
@@ -826,7 +826,7 @@ foreach ($purchases as $purchase) { ?>
                                                     var cart = document.createElement('a');
                                                     cart.setAttribute('class', 'uk-icon-button');
                                                     cart.setAttribute('uk-icon', 'cart');
-                                                    cart.setAttribute('onclick', 'createVare<?=$purchase['id']?>('+evariantarray[x]['id']+')');
+                                                    cart.setAttribute('onclick', 'createVare<?=$purchase['id']?>('+variantarray<?=$purchase['id']?>[x]['id']+')');
 
                                                     varcontainer.appendChild(varname);
                                                     cartcontainer.appendChild(cart);
@@ -842,20 +842,20 @@ foreach ($purchases as $purchase) { ?>
                                 });
                             });
                             function createVare<?=$purchase['id']?>(id) {
-                                for (x in evariantarray) {
-                                    if (evariantarray[x]['id'] == id) {
+                                for (x in variantarray<?=$purchase['id']?>) {
+                                    if (variantarray<?=$purchase['id']?>[x]['id'] == id) {
                                         document.getElementById('variantliste').remove();
-                                        var eelemexist = document.getElementById('eproduct<?=$purchase['id']?>'+evariantarray[x]['id']);
+                                        var eelemexist = document.getElementById('eproduct<?=$purchase['id']?>'+variantarray<?=$purchase['id']?>[x]['id']);
                                         document.getElementById('tabvar<?= $purchase['id'] ?>').setAttribute('hidden', '');
                                         var count = 1;
-                                        if ( $( "#eproduct<?=$purchase['id']?>"+evariantarray[x]['id'] ).length ) {
+                                        if ( $( "#eproduct<?=$purchase['id']?>"+variantarray<?=$purchase['id']?>[x]['id'] ).length ) {
                                             alert('<?=lang('Global.readyAdd');?>');
                                         } else {
                                             let minval = count;
                                             var eprods = document.getElementById('tableprod<?= $purchase['id'] ?>');
                                                                         
                                             var epgrid = document.createElement('div');
-                                            epgrid.setAttribute('id', 'eproduct<?=$purchase['id']?>'+evariantarray[x]['id']);
+                                            epgrid.setAttribute('id', 'eproduct<?=$purchase['id']?>'+variantarray<?=$purchase['id']?>[x]['id']);
                                             epgrid.setAttribute('class', 'uk-margin-small');
                                             epgrid.setAttribute('uk-grid', '');
 
@@ -863,17 +863,17 @@ foreach ($purchases as $purchase) { ?>
                                             evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
                                                                             
                                             var evname = document.createElement('div');
-                                            evname.setAttribute('id','var'+evariantarray[x]['id']);
+                                            evname.setAttribute('id','var'+variantarray<?=$purchase['id']?>[x]['id']);
                                             evname.setAttribute('class','');
-                                            evname.innerHTML = evariantarray[x]['name'];
+                                            evname.innerHTML = variantarray<?=$purchase['id']?>[x]['name'];
 
                                             var etcontainer = document.createElement('div');
                                             etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
 
                                             var etot = document.createElement('input');
                                             etot.setAttribute('type', 'number');
-                                            etot.setAttribute('id', "addtotalpcs["+evariantarray[x]['id']+"]");
-                                            etot.setAttribute('name', "addtotalpcs["+evariantarray[x]['id']+"]");
+                                            etot.setAttribute('id', "addtotalpcs["+variantarray<?=$purchase['id']?>[x]['id']+"]");
+                                            etot.setAttribute('name', "addtotalpcs["+variantarray<?=$purchase['id']?>[x]['id']+"]");
                                             etot.setAttribute('class', 'uk-input');
                                             etot.setAttribute('value', '1');
                                             etot.setAttribute('required', '');
@@ -887,17 +887,17 @@ foreach ($purchases as $purchase) { ?>
 
                                             var eprice = document.createElement('input');
                                             eprice.setAttribute('type', 'number');
-                                            eprice.setAttribute('id', "addbprice["+evariantarray[x]['id']+"]");
-                                            eprice.setAttribute('name', "addbprice["+evariantarray[x]['id']+"]");
+                                            eprice.setAttribute('id', "addbprice["+variantarray<?=$purchase['id']?>[x]['id']+"]");
+                                            eprice.setAttribute('name', "addbprice["+variantarray<?=$purchase['id']?>[x]['id']+"]");
                                             eprice.setAttribute('class', 'uk-input');
-                                            eprice.setAttribute('value', evariantarray[x]['price']);
+                                            eprice.setAttribute('value', variantarray<?=$purchase['id']?>[x]['price']);
                                             eprice.setAttribute('required', '');
 
                                             var esubtotcontainer = document.createElement('div');
                                             esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
 
                                             var esubtotal = document.createElement('div');
-                                            esubtotal.setAttribute('id', "esubtotal"+evariantarray[x]['id']+"");
+                                            esubtotal.setAttribute('id', "esubtotal"+variantarray<?=$purchase['id']?>[x]['id']+"");
                                             esubtotal.setAttribute('class', 'subvariant');
 
                                             etotalprice();
