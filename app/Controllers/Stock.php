@@ -300,18 +300,22 @@ class Stock extends BaseController
         $ProductModel   = new ProductModel();
 
         // initialize
-        $input      = $this->request->getPost('id');
+        $input      = $this->request->getPost();
 
-        $product    = $ProductModel->find($input);
+        $product    = $ProductModel->find($input['id']);
 
-        $variants   = $VariantModel->where('productid', $input)->find();
+        $variants   = $VariantModel->where('productid', $input['id'])->find();
 
         $variantid = array();
         foreach ($variants as $var) {
             $variantid[]    = $var['id'];
         }
-
-        $stocks     = $StockModel->whereIn('variantid', $variantid)->where('outletid', $this->data['outletPick'])->find();
+        
+        if (isset($input['outletid'])) {
+            $stocks     = $StockModel->whereIn('variantid', $variantid)->where('outletid', $input['outletid'])->find();
+        } else {
+            $stocks     = $StockModel->whereIn('variantid', $variantid)->where('outletid', $this->data['outletPick'])->find();
+        }
 
         $return = array();
         foreach ($stocks as $stock) {
