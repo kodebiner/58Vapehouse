@@ -848,97 +848,97 @@ foreach ($purchases as $purchase) { ?>
                                     minLength: 2
                                 });
                             });
-                            function createVare<?=$purchase['id']?>(id) {
-                                for (x in variantarray) {
-                                    if (variantarray[x]['id'] == id) {
-                                        document.getElementById('variantliste').remove();
-                                        var eelemexist = document.getElementById('eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
-                                        document.getElementById('tabvar<?= $purchase['id'] ?>').setAttribute('hidden', '');
-                                        var count = 1;
-                                        if ( $( "#eproduct<?=$purchase['id']?>"+variantarray[x]['id'] ).length ) {
-                                            alert('<?=lang('Global.readyAdd');?>');
-                                        } else {
-                                            let minval = count;
-                                            var eprods = document.getElementById('tableprod<?= $purchase['id'] ?>');
+                            // function createVare<?=$purchase['id']?>(id) {
+                            //     for (x in variantarray) {
+                            //         if (variantarray[x]['id'] == id) {
+                            //             document.getElementById('variantliste').remove();
+                            //             var eelemexist = document.getElementById('eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
+                            //             document.getElementById('tabvar<?= $purchase['id'] ?>').setAttribute('hidden', '');
+                            //             var count = 1;
+                            //             if ( $( "#eproduct<?=$purchase['id']?>"+variantarray[x]['id'] ).length ) {
+                            //                 alert('<?=lang('Global.readyAdd');?>');
+                            //             } else {
+                            //                 let minval = count;
+                            //                 var eprods = document.getElementById('tableprod<?= $purchase['id'] ?>');
                                                                         
-                                            var epgrid = document.createElement('div');
-                                            epgrid.setAttribute('id', 'eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
-                                            epgrid.setAttribute('class', 'uk-margin-small');
-                                            epgrid.setAttribute('uk-grid', '');
+                            //                 var epgrid = document.createElement('div');
+                            //                 epgrid.setAttribute('id', 'eproduct<?=$purchase['id']?>'+variantarray[x]['id']);
+                            //                 epgrid.setAttribute('class', 'uk-margin-small');
+                            //                 epgrid.setAttribute('uk-grid', '');
 
-                                            var evcontainer = document.createElement('div');
-                                            evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                            //                 var evcontainer = document.createElement('div');
+                            //                 evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
                                                                             
-                                            var evname = document.createElement('div');
-                                            evname.setAttribute('id','var'+variantarray[x]['id']);
-                                            evname.setAttribute('class','');
-                                            evname.innerHTML = variantarray[x]['name'];
+                            //                 var evname = document.createElement('div');
+                            //                 evname.setAttribute('id','var'+variantarray[x]['id']);
+                            //                 evname.setAttribute('class','');
+                            //                 evname.innerHTML = variantarray[x]['name'];
 
-                                            var etcontainer = document.createElement('div');
-                                            etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                            //                 var etcontainer = document.createElement('div');
+                            //                 etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
 
-                                            var etot = document.createElement('input');
-                                            etot.setAttribute('type', 'number');
-                                            etot.setAttribute('id', "addtotalpcs["+variantarray[x]['id']+"]");
-                                            etot.setAttribute('name', "addtotalpcs["+variantarray[x]['id']+"]");
-                                            etot.setAttribute('class', 'uk-input');
-                                            etot.setAttribute('value', '1');
-                                            etot.setAttribute('required', '');
+                            //                 var etot = document.createElement('input');
+                            //                 etot.setAttribute('type', 'number');
+                            //                 etot.setAttribute('id', "addtotalpcs["+variantarray[x]['id']+"]");
+                            //                 etot.setAttribute('name', "addtotalpcs["+variantarray[x]['id']+"]");
+                            //                 etot.setAttribute('class', 'uk-input');
+                            //                 etot.setAttribute('value', '1');
+                            //                 etot.setAttribute('required', '');
 
-                                            var epieces = document.createElement('div');
-                                            epieces.setAttribute('class', 'uk-margin-small-left');
-                                            epieces.innerHTML = 'Pcs';
+                            //                 var epieces = document.createElement('div');
+                            //                 epieces.setAttribute('class', 'uk-margin-small-left');
+                            //                 epieces.innerHTML = 'Pcs';
 
-                                            var epricecontainer = document.createElement('div');
-                                            epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                            //                 var epricecontainer = document.createElement('div');
+                            //                 epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
 
-                                            var eprice = document.createElement('input');
-                                            eprice.setAttribute('type', 'number');
-                                            eprice.setAttribute('id', "addbprice["+variantarray[x]['id']+"]");
-                                            eprice.setAttribute('name', "addbprice["+variantarray[x]['id']+"]");
-                                            eprice.setAttribute('class', 'uk-input');
-                                            eprice.setAttribute('value', variantarray[x]['price']);
-                                            eprice.setAttribute('required', '');
+                            //                 var eprice = document.createElement('input');
+                            //                 eprice.setAttribute('type', 'number');
+                            //                 eprice.setAttribute('id', "addbprice["+variantarray[x]['id']+"]");
+                            //                 eprice.setAttribute('name', "addbprice["+variantarray[x]['id']+"]");
+                            //                 eprice.setAttribute('class', 'uk-input');
+                            //                 eprice.setAttribute('value', variantarray[x]['price']);
+                            //                 eprice.setAttribute('required', '');
 
-                                            var esubtotcontainer = document.createElement('div');
-                                            esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+                            //                 var esubtotcontainer = document.createElement('div');
+                            //                 esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
 
-                                            var esubtotal = document.createElement('div');
-                                            esubtotal.setAttribute('id', "esubtotal"+variantarray[x]['id']+"");
-                                            esubtotal.setAttribute('class', 'subvariant');
+                            //                 var esubtotal = document.createElement('div');
+                            //                 esubtotal.setAttribute('id', "esubtotal"+variantarray[x]['id']+"");
+                            //                 esubtotal.setAttribute('class', 'subvariant');
 
-                                            etotalprice();
-                                            etot.addEventListener('change', etotalprice);
-                                            eprice.addEventListener('change', etotalprice);
+                            //                 etotalprice();
+                            //                 etot.addEventListener('change', etotalprice);
+                            //                 eprice.addEventListener('change', etotalprice);
 
-                                            function etotalprice() {
-                                                var varprice = eprice.value;
-                                                var varqty = etot.value;
-                                                var subprice = varprice * varqty;
-                                                esubtotal.setAttribute('value', subprice);
-                                                esubtotal.innerHTML = subprice;
-                                            }
+                            //                 function etotalprice() {
+                            //                     var varprice = eprice.value;
+                            //                     var varqty = etot.value;
+                            //                     var subprice = varprice * varqty;
+                            //                     esubtotal.setAttribute('value', subprice);
+                            //                     esubtotal.innerHTML = subprice;
+                            //                 }
 
-                                            evcontainer.appendChild(evname);
-                                            etcontainer.appendChild(etot);
-                                            etcontainer.appendChild(epieces);
-                                            epricecontainer.appendChild(eprice);
-                                            esubtotcontainer.appendChild(esubtotal);
-                                            epgrid.appendChild(evcontainer);
-                                            epgrid.appendChild(etcontainer);
-                                            epgrid.appendChild(epricecontainer);
-                                            epgrid.appendChild(esubtotcontainer);
-                                            eprods.appendChild(epgrid);
+                            //                 evcontainer.appendChild(evname);
+                            //                 etcontainer.appendChild(etot);
+                            //                 etcontainer.appendChild(epieces);
+                            //                 epricecontainer.appendChild(eprice);
+                            //                 esubtotcontainer.appendChild(esubtotal);
+                            //                 epgrid.appendChild(evcontainer);
+                            //                 epgrid.appendChild(etcontainer);
+                            //                 epgrid.appendChild(epricecontainer);
+                            //                 epgrid.appendChild(esubtotcontainer);
+                            //                 eprods.appendChild(epgrid);
 
-                                            etot.addEventListener("change", function removeproduct() {
-                                                if (etot.value == '0') {
-                                                    epgrid.remove();
-                                                }
-                                            });
-                                        }
-                                    }
-                                }
-                            };
+                            //                 etot.addEventListener("change", function removeproduct() {
+                            //                     if (etot.value == '0') {
+                            //                         epgrid.remove();
+                            //                     }
+                            //                 });
+                            //             }
+                            //         }
+                            //     }
+                            // };
                         </script>
                         <!-- Autocomplete Product Edit Purchase End -->
 
