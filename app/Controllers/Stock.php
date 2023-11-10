@@ -235,9 +235,9 @@ class Stock extends BaseController
         $data                       = $this->data;
 
         if ($this->data['outletPick'] === null) {
-            $purchases              = $PurchaseModel->orderBy('id', 'DESC')->paginate(20, 'purchase');
+            $purchases              = $PurchaseModel->orderBy('id', 'DESC')->paginate(10, 'purchase');
         } else {
-            $purchases              = $PurchaseModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->paginate(20, 'purchase');
+            $purchases              = $PurchaseModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->paginate(10, 'purchase');
         }
 
         $suppliers                  = $SupplierModel->findAll();
