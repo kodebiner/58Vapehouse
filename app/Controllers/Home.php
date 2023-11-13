@@ -196,7 +196,11 @@ class Home extends BaseController
         $busies = array_count_values($hour);
         arsort($busies);
         $busyhours = array_slice(array_keys($busies), 0, 1, true);
-        $busy = $busyhours[0].':00';
+        if(!empty($busyhours)){
+            $busy = $busyhours[0].':00';
+        }else{
+            $busy = "00:00";
+        }
 
         // Discount
         $discvar    = array();
