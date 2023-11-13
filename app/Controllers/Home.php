@@ -191,60 +191,12 @@ class Home extends BaseController
         // Bussy Hours
         $hour = [];
         foreach ($sales as $sale){
-        // $datesale = date_create($sale['date']);
-        // $saledate = $datesale->format('Y-m-d-H');
-        // $hoursale = $datesale->format('H');
-        //     $hour [] = [
-        //         'value'     => $sale['value'],
-        //         'datesale'  => $saledate,
-        //         'hours'     => $hoursale,
-        //         'qty'       => '1',
-        //     ];
             $hour[] = date('H', strtotime($sale['date']));
         }
         $busies = array_count_values($hour);
         arsort($busies);
         $busyhours = array_slice(array_keys($busies), 0, 1, true);
-        $busy = $busyhours[0];
-        
-        // $s = [];
-        // foreach ($hour as $key){
-        //    $s[] = $key['hours'];
-        // }
-
-        // // time transaction by value
-        // $hoursdata = [];
-        // foreach ($hour as $sels) {
-        //     if (!isset($hoursdata[$sels['hours']])) {
-        //         $hoursdata[$sels['hours']] = $sels;
-        //     } else {
-        //         $hoursdata[$sels['hours']]['qty'] += $sels['qty'];
-        //     }
-        // }
-        // $hoursdata = array_values($hoursdata);
-        // array_multisort(array_column($hoursdata, 'qty'), SORT_DESC, $hoursdata);
-        // $time = [];
-        // foreach ($hoursdata as $data){
-        //     $datesal        = strtotime($data['datesale']);
-        //     $datesalling    = date('H:i',$datesal);
-        //     $time [] = [
-        //         'value' => $data['value'],
-        //         'hours' => $datesalling,
-        //         'x'     => $data['hours'],
-        //         'sum'   => $data['qty'],
-        //     ]; 
-        // }
-        
-        // // dd($time);
-        // $timehours = array_slice($time, 0, 1);
-        // $timeH = 0;
-        // foreach ($timehours as $t){
-        //     if (isset($t)){
-        //         $timeH = $t['hours'];
-        //     }else{
-        //         $timeH = "0";
-        //     }
-        // }
+        $busy = $busyhours[0].':00';
 
         // Discount
         $discvar    = array();

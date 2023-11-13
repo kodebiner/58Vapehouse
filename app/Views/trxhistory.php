@@ -180,7 +180,7 @@
 
                         <div class="uk-padding-small">
                             <div uk-grid>
-                                <div class="uk-width-1-2">Invoice: <?=(strtotime("now")) ?></div>
+                                <div class="uk-width-1-2">Invoice: <?=(strtotime($transaction['date'])) ?></div>
                                 <div class="uk-width-1-2 uk-text-right"><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></div>
                             </div>
                             <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
