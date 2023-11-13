@@ -172,6 +172,7 @@ class export extends BaseController
         $transactionhist   = $exported->join('payment', 'trxpayment.paymentid = payment.id', 'left');
         $transactionhist   = $exported->join('product', 'variant.productid = product.id', 'left');
         $transactionhist   = $exported->where('transaction.outletid', $this->data['outletPick']);
+        $transactionhist   = $exported->orderBy('transaction.date', 'DESC');
         $transactionhist   = $exported->get();
         $transactionhist   = $transactionhist->getResultArray();
         ?>
