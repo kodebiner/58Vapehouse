@@ -14,6 +14,7 @@ use App\Models\StockModel;
 use App\Models\OldStockModel;
 use App\Models\OutletModel;
 use App\Models\GroupUserModel;
+use App\Models\PromoModel;
 use Myth\Auth\Models\GroupModel;
 
 class Product extends BaseController
@@ -622,8 +623,18 @@ class Product extends BaseController
     public function deletecat($id)
     {
         // parsing data
-        $CategoryModel = new CategoryModel();
-        $data['category'] = $CategoryModel->where('id', $id)->first();
+        $CategoryModel  = new CategoryModel();
+        $ProductModel   = new ProductModel();
+
+        $procat         = $ProductModel->where('catid', $id)->find();
+        foreach ($procat as $catpro) {
+            $procatid    = [
+                'id'  =>  $catpro['id'],
+                'catid' => "0",
+            ];
+            $ProductModel->save($procatid);
+        }
+        $data['category']   = $CategoryModel->where('id', $id)->first();
 
         // delete data
         $CategoryModel->delete($id);
@@ -672,6 +683,19 @@ class Product extends BaseController
     {
         // parsing data
         $BrandModel = new BrandModel();
+        $ProductModel = new ProductModel();
+        $CategoryModel = new CategoryModel();
+
+        $probrand = $ProductModel->where('brandid', $id)->find();
+        foreach ($probrand as $brandpro) {
+            $brandid    = [
+                'id'  =>  $brandpro['id'],
+                'catid' => "0",
+            ];
+            $ProductModel->save($brandid);
+        }
+
+        $data['category']   = $CategoryModel->where('id', $id)->first();
         $data['brand'] = $BrandModel->where('id', $id)->first();
 
         // delete data

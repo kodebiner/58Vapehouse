@@ -200,11 +200,20 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="email"><?=lang('Auth.email')?></label>
                             <div class="uk-form-controls">
-                            <input type="text" class="uk-input" id="email" name="email"  value="<?= $customer['email']; ?>" />
+                                <input type="text" class="uk-input" id="email" name="email"  value="<?= $customer['email']; ?>" />
+                            </div>
+                        </div>
+
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="poin"><?=lang('Global.point')?></label>
+                            <div class="uk-form-controls">
+                                <div class="uk-inline uk-width-1-1">
+                                    <input class="uk-input" min="1" id="poin" name="poin" type="number" value="<?= $customer['poin']; ?>" aria-label="Not clickable icon">
+                                </div>
                             </div>
                         </div>
 

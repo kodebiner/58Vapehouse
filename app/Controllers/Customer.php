@@ -131,6 +131,7 @@ class Customer extends BaseController
             'name'      => $input['name'],
             'phone'     => $input['phone'],
             'email'     => $input['email'],
+            'poin'      => $input['poin'],
         ];
 
         // Validasi
@@ -138,6 +139,7 @@ class Customer extends BaseController
             'name'      => "max_length[255]',",
             'phone'     => "max_length[255]',",
             'email'     => "max_length[255]',",
+            'poin'     => "max_length[255]',",
         ])) {
 
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
