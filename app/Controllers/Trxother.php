@@ -119,12 +119,8 @@ class Trxother extends BaseController
             // Get Transaction Cash
             $pettycash          = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
             $cashpayment        = $PaymentModel->where('cashid', $pettycash['id'])->first();
-
-            if (!empty($trxdate)) {
-                $cashtrx            = $TransactionModel->whereIn('date', $trxdate)->where('date >', $dailyreport['dateopen'])->find();
-            } else {
-                $cashtrx            = array();
-            }
+            $cashtrx            = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
+            $noncashtrx         = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
 
             $trxcashid          = array();
             foreach ($cashtrx as $cashtr) {
@@ -157,12 +153,6 @@ class Trxother extends BaseController
             $noncashpaymentid   = array();
             foreach ($noncashpayments as $noncashpayment) {
                 $noncashpaymentid[]     = $noncashpayment['id'];
-            }
-
-            if (!empty($trxdate)) {
-                $noncashtrx                 = $TransactionModel->whereIn('date', $trxdate)->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
-            } else {
-                $noncashtrx                 = array();
             }
 
             $trxnoncashid               = array();

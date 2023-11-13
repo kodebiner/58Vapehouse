@@ -134,4 +134,26 @@ class Sop extends BaseController
         // Return
         return view ('Views/dosop', $data);
     }
+
+    public function updatetodo()
+    {
+        // Calling Model   
+        $sopModel       = new SopModel;
+        $SopDetailModel = new SopDetailModel;
+        $userModel      = new UserModel;
+
+        // initialize
+        $input          = $this->request->getPost();
+
+        foreach ($input['status'] as $key => $value) {
+            $sopdata = [
+                'id'        => $key,
+                'userid'    => $this->data['uid'],
+                'status'    => '1'
+            ];
+            $SopDetailModel->save($sopdata);
+        }
+
+        return redirect()->back()->with('message', lang('Global.saved'));
+    }
 }

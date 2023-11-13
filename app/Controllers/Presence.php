@@ -19,6 +19,7 @@ class Presence extends BaseController
         $presence               = $PresenceModel->findAll();
         $users                  = $UserModel->findAll();
         $sops                   = $SopModel->findAll();
+        $todays                 = date('Y-m-d') .' 00:00:01';
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -27,6 +28,7 @@ class Presence extends BaseController
         $data['presences']      = $presence;
         $data['users']          = $users;
         $data['sops']           = $sops;
+        $data['todays']         = $todays;
 
         return view('Views/presence', $data);
     }
@@ -40,8 +42,6 @@ class Presence extends BaseController
         $UserModel          = new PresenceModel();
 
         // Populating Data
-        $presence    = $PresenceModel->findAll();
-        $users       = $UserModel->findAll();
 
         // initialize
         $input = $this->request->getPost();
@@ -61,22 +61,21 @@ class Presence extends BaseController
         $file = $folderPath . $fileName;
         file_put_contents($file, $image_base64);
     
-
         // get user id
         $auth = service('authentication');
         $userId = $auth->id();
 
         $data = [
-            'userid'      => $userId,
-            'datetime'    => date("Y-m-d H:i:s"),
-            'photo'       => $fileName,
-            'geoloc'      => $location,
-            'status'      => $status,
+            'userid'        => $userId,
+            'datetime'      => date("Y-m-d H:i:s"),
+            'photo'         => $fileName,
+            'geoloc'        => $location,
+            'status'        => $status,
         ];
         
         if (! $this->validate([
-            'geoloc'   => 'required',
-            'status'      => 'required|max_length[255]',
+            'geoloc'        => 'required',
+            'status'        => 'required|max_length[255]',
         ])) {
                 
            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());

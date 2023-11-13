@@ -167,7 +167,7 @@ $routes->group('export', ['filter'=>'login'], function($routes){
 $routes->group('customer', ['filter'=>'login'], function($routes){
     $routes->get('', 'Customer::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Customer::create', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->post('update/(:num)', 'CUstomer::update/$1', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('update/(:num)', 'Customer::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Customer::delete/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
@@ -286,6 +286,7 @@ $routes->group('sop', ['filter'=>'login'], function($routes){
     $routes->post('update/(:num)', 'Sop::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Sop::delete/$1',['filter' => 'role:owner,supervisor,operator']);
     $routes->get('todolist', 'Sop::todolist',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->post('updatetodo', 'Sop::updatetodo',['filter'=> 'role:owner,supervisor,operator']);
 });
 
 // Stock Movement

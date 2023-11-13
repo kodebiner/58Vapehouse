@@ -503,6 +503,9 @@ class Pay extends BaseController
             $MemberModel->save($pointvalue);
         }
 
+        // Daily Report
+        
+
         // Print Function
         $db                 = \Config\Database::connect();
         $bundles            = $BundleModel->findAll();

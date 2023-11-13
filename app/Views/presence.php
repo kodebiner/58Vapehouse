@@ -121,6 +121,7 @@
     }
 
     function klik(){
+        <?php if ($presence['datetime'] >= $todays) ?>
         $(".status").val("1");
     }
 

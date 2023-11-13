@@ -557,12 +557,12 @@ class Stock extends BaseController
         // Find Data
         $data           = $this->data;
 
+        $outlets        = $OutletModel->findAll();
         if ($this->data['outletPick'] === null) {
             $inventory      = $InventoryModel->orderBy('id', 'DESC')->findAll();
         } else {
             $inventory      = $InventoryModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->find();
         }
-        $outlets        = $OutletModel->findAll();
 
         // Parsing data to view
         $data['title']          = lang('Global.inventoryList');
