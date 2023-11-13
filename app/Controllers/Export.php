@@ -228,7 +228,7 @@ class export extends BaseController
         echo '</thead>';
         echo '<tbody>';
 
-        $trxdata = array();
+        // $trxdata = array();
         foreach ($transactionhist as $trxhist) {
 
             if ((!empty($trxhist['discval'])) && ($trxhist['disctype'] === '0')) {

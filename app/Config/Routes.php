@@ -33,7 +33,7 @@ $routes->set404Override();
 // route since we don't have to scan directories.
 
 $routes->get('/', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
-// $routes->get('home/index', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
+$routes->get('home/index', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
 $routes->get('trial', 'Home::trial');
 $routes->get('ownership', 'Home::ownership');
 
