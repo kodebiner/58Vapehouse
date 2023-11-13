@@ -14,11 +14,13 @@
             <h3 class="tm-h3"><?=lang('Global.inventoryList')?></h3>
         </div>
 
-        <!-- Button Trigger Modal Add -->
-        <div class="uk-width-1-2@m uk-text-right@m">
-            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addInventory')?></button>
-        </div>
-        <!-- End Of Button Trigger Modal Add -->
+        <?php if ($this->data['outletPick'] != null) { ?>
+            <!-- Button Trigger Modal Add -->
+            <div class="uk-width-1-2@m uk-text-right@m">
+                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addInventory')?></button>
+            </div>
+            <!-- End Of Button Trigger Modal Add -->
+        <?php } ?>
     </div>
 </div>
 <!-- End Of Page Heading -->
@@ -47,12 +49,12 @@
                         <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select" name="outlet" required>
-                                <option><?=lang('Global.outlet')?></option>
+                                <option disabled><?=lang('Global.outlet')?></option>
                                 <?php foreach ($outlets as $outlet) {
                                     if ($outlet['id'] === $outletPick) {
-                                        $checked = 'disabled';
+                                        $checked = 'selected';
                                     } else {
-                                        $checked = '';
+                                        $checked = 'disabled';
                                     } ?>
                                     <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
                                 <?php } ?>
