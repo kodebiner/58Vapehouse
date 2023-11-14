@@ -1050,7 +1050,7 @@ class Pay extends BaseController
         if (!empty($transactions['memberid'])) {
             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
             $data['mempoin']        = $member['poin'];
-            $data['poinearn']       = $poin;
+            $data['poinearn']       = $poinresult;
         } else {
             $data['cust']           = "0";
             $data['mempoin']        = "0";
@@ -1468,7 +1468,7 @@ class Pay extends BaseController
         if (!empty($transactions['memberid'])) {
             $data['cust']           = $MemberModel->where('id',$transactions['memberid'])->first();
             $data['mempoin']        = $members['poin'];
-            $data['poinearn']       = $poin;
+            $data['poinearn']       = $poinresult;
         } else {
             $data['cust']           = "0";
             $data['mempoin']        = "0";

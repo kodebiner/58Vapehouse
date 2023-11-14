@@ -84,18 +84,7 @@
                         }
                     } ?>
 
-                    <td class="">
-                        <?php
-                        $prices = array();
-                        foreach ($trxdetails as $trxdet) {
-                            if ($trxdet['transactionid'] === $transaction['id']) {
-                                $total = $trxdet['qty'] * $trxdet['value'];
-                                $prices[] = $total;
-                            } ?>
-                        <?php }
-                        $sum = array_sum($prices);
-                        echo "Rp " . number_format($sum, 2, ',', '.'); ?>
-                    </td>
+                    <td class=""><?= "Rp " . number_format($transaction['value'],2,',','.'); ?></td>
 
                     <td class="uk-text-center uk-column-1-2">
                         <?php if (!empty($transaction['amountpaid'])) {
@@ -205,9 +194,9 @@
                                 // Variant
                                 if ($trxdet['variantid'] !== "0") {
                                     foreach ($products as $product) {
-                                        if (($trxdet['variantid'] === $product['id']) && ($trxdet['transactionid'] === $transaction['id'])) {
-                                            $variantval      = $trxdet['value'];
-                            ?>
+                                        if (($trxdet['variantid'] === $product['id']) && ($trxdet['transactionid'] === $transaction['id']) ) {
+                                            $variantval      = (Int)$trxdet['value'] + (Int)$trxdet['discvar'];
+                                            ?>
                                             <div class="uk-margin-small">
                                                 <div class="uk-h5 uk-text-bolder uk-margin-remove"><?= $product['name'] ?></div>
                                                 <div uk-grid>
@@ -215,7 +204,7 @@
                                                         <div>x<?= $trxdet['qty'] ?> @<?= $variantval ?></div>
                                                     </div>
                                                     <div class="uk-width-1-2 uk-text-right">
-                                                        <div><?= $variantval * $trxdet['qty'] - $trxdet['discvar'] ?></div>
+                                                        <div><?= (Int)$variantval * (Int)$trxdet['qty'] - (Int)$trxdet['discvar'] ?></div>
                                                     </div>
                                                 </div>
                                                 <?php if (!empty($trxdet['discvar'])) { ?>
@@ -251,7 +240,7 @@
                                                         <div>x<?= $trxdet['qty'] ?> @<?= $variantval ?></div>
                                                     </div>
                                                     <div class="uk-width-1-2 uk-text-right">
-                                                        <div><?= $variantval * $trxdet['qty'] ?></div>
+                                                        <div><?= (Int)$variantval * (Int)$trxdet['qty']?></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -273,7 +262,7 @@
                                         $subtotal = array();
                                         foreach ($trxdetails as $trxdet) {
                                             if ($transaction['id'] === $trxdet['transactionid']) {
-                                                $total = $trxdet['qty'] * $trxdet['value'] - $trxdet['discvar'];
+                                                $total = ((Int)$trxdet['qty'] * (Int)$trxdet['value']);
                                                 $subtotal[] = $total; ?>
                                         <?php }
                                         }
@@ -281,6 +270,7 @@
                                         <div><?= $sum; ?></div>
                                     </div>
                                 </div>
+
                                 <div class="uk-margin-remove-top" uk-grid>
                                     <?php if (!empty($transaction['discvalue'])) { ?>
                                         <div class="uk-width-1-2">
@@ -291,6 +281,7 @@
                                         </div>
                                     <?php } ?>
                                 </div>
+
                                 <div class="uk-margin-remove-top" uk-grid>
                                     <?php if (($transaction['memberid'] !== "0") && ($gconfig['memberdisc'] !== "0")) { ?>
                                         <div class="uk-width-1-2">
@@ -301,6 +292,7 @@
                                         </div>
                                     <?php } ?>
                                 </div>
+
                                 <div class="uk-margin-remove-top" uk-grid>
                                     <?php if (($transaction['memberid'] !== "0") && ($transaction['pointused'] !== "0")) { ?>
                                         <div class="uk-width-1-2">
@@ -340,7 +332,7 @@
                                             <div><?= lang('Global.change') ?></div>
                                         </div>
                                         <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
-                                            <div><?= $transaction['amountpaid'] - $transaction['value'] ?></div>
+                                            <div><?= (Int)$transaction['amountpaid'] - (Int)$transaction['value'] ?></div>
                                         </div>
                                     <?php } ?>
                                 </div>
@@ -348,8 +340,27 @@
                                 <hr style="border-top: 3px double #8c8b8b">
 
                                 <div class="uk-margin-remove-top" uk-grid>
+                                    <?php if ($transaction['memberid'] !== "0") {
+                                        foreach ($customers as $customer) {
+                                            if ($customer['id'] === $transaction['memberid']) { ?>
+                                                <div class="uk-width-1-2">
+                                                    <div><?= lang('Global.customer') ?></div>
+                                                </div>
+                                                <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
+                                                    <div><?= $customer['name'] ?></div>
+                                                </div>
+                                            <?php }
+                                        }
+                                    } ?> 
+                                </div>
+                                
+                                <div class="uk-margin-remove-top" uk-grid>
                                     <?php if (($transaction['memberid'] !== "0")) {
-                                        $pointearn = (floor($transaction['value'] / $gconfig['poinorder'])) * $gconfig['poinvalue']; ?>
+                                        if ($gconfig['poinorder'] != "0") {
+                                            $pointearn = (floor((Int)$transaction['value'] / (Int)$gconfig['poinorder'])) * (Int)$gconfig['poinvalue'];
+                                        } else {
+                                            $pointearn = (Int)$transaction['value'] * (Int)$gconfig['poinvalue'];
+                                        } ?>
                                         <div class="uk-width-1-2">
                                             <div><?= lang('Global.pointearn') ?></div>
                                         </div>

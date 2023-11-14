@@ -178,7 +178,7 @@
                                     if (($trxdet['variantid'] === $variant['id']) && ($product['id'] === $variant['productid']) && ($trxdet['transactionid'] === $transactions['id']) ) {
                                         $variantName     = $variant['name'];
                                         $productName     = $product['name']; 
-                                        $variantval      = $trxdet['value'] + $trxdet['discvar'];
+                                        $variantval      = (Int)$trxdet['value'] + (Int)$trxdet['discvar'];
                                         ?>
                                         <div class="uk-margin-small uk-text-xsmall">
                                             <div class="uk-text-bold">
