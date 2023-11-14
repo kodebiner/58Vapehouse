@@ -442,7 +442,7 @@ class Home extends BaseController
         $data['title']          = lang('Global.dashboard');
         $data['description']    = lang('Global.dashdesc');
         $data['sales']          = $summary;
-        $data['profit']         = $profitnet;
+        $data['profit']         = $keuntunganmodal;
         $data['products']       = $products;
         $data['variants']       = $variants;
         $data['bundles']        = $bundles;

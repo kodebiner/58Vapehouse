@@ -81,7 +81,7 @@
             <p class="tm-h6 uk-text-center"><?= lang('Global.percentage') ?></p>
         </div>
     </div>
-    
+
     <div id="list" class="uk-child-width-1-4@m uk-grid-small uk-grid-match" uk-grid></div>
     <!-- <ul class="uk-pagination">
         <li><a id="previous"><span class="uk-margin-small-right" uk-pagination-previous></span> Previous</a></li>
@@ -912,11 +912,16 @@
                             <label class="uk-form-label"><?= lang('Global.category') ?></label>
                             <div class="uk-margin-small">
                                 <div class="uk-width-1-1">
-                                    <?php foreach ($category as $cat) { ?>
-                                        <?php if ($cat['id'] === $product['catid']) { ?>
-                                            <input class="uk-input" name="category<?= $product['id'] ?>" id="category<?= $product['id'] ?>" value="<?= $cat['name']; ?>" required />
-                                            <input id="catid<?= $product['id'] ?>" name="catid<?= $product['id'] ?>" value="<?= $cat['id']; ?>" hidden />
-                                        <?php } ?>
+                                    <?php if ($product['catid'] != "0") {
+                                        foreach ($category as $cat) { 
+                                            if (($cat['id'] === $product['catid'])) { ?>
+                                                <input class="uk-input" name="category<?= $product['id'] ?>" id="category<?= $product['id'] ?>" value="<?= $cat['name']; ?>" required />
+                                                <input id="catid<?= $product['id'] ?>" name="catid<?= $product['id'] ?>" value="<?= $cat['id']; ?>" hidden />
+                                            <?php }
+                                        }
+                                    } else { ?>
+                                        <input class="uk-input" id="category<?= $product['id'] ?>" name="category<?= $product['id'] ?>" placeholder="<?= lang('Global.category') ?>" required>
+                                        <input id="catid<?= $product['id'] ?>" name="catid<?= $product['id'] ?>" hidden />
                                     <?php } ?>
                                 </div>
                             </div>
@@ -946,11 +951,16 @@
                             <label class="uk-form-label"><?= lang('Global.brand') ?></label>
                             <div class="uk-margin-small">
                                 <div class="uk-width-1-1">
-                                    <?php foreach ($brand as $bran) { ?>
-                                        <?php if ($bran['id'] === $product['brandid']) { ?>
-                                            <input class="uk-input" name="brand<?= $product['id'] ?>" id="brand<?= $product['id'] ?>" value="<?= $bran['name']; ?>" required />
-                                            <input id="brandid<?= $product['id'] ?>" name="brandid<?= $product['id'] ?>" value="<?= $bran['id']; ?>" hidden />
-                                        <?php } ?>
+                                    <?php if ($product['brandid'] != "0") {
+                                        foreach ($brand as $bran) { ?>
+                                            <?php if ($bran['id'] === $product['brandid']) { ?>
+                                                <input class="uk-input" name="brand<?= $product['id'] ?>" id="brand<?= $product['id'] ?>" value="<?= $bran['name']; ?>" required />
+                                                <input id="brandid<?= $product['id'] ?>" name="brandid<?= $product['id'] ?>" value="<?= $bran['id']; ?>" hidden />
+                                            <?php }
+                                        }
+                                    } else { ?>
+                                        <input class="uk-input" id="brand<?= $product['id'] ?>" name="brand<?= $product['id'] ?>" placeholder="<?= lang('Global.brand') ?>" required>
+                                        <input id="brandid<?= $product['id'] ?>" name="brandid<?= $product['id'] ?>" hidden />
                                     <?php } ?>
                                 </div>
                             </div>

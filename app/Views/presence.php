@@ -28,7 +28,7 @@
 
 <!-- Content -->
 <div class="uk-container uk-margin">
-    <form class="uk-form-stacked" method="POST" action="presence/create">
+    <form class="uk-form-stacked" id="presence" method="POST" action="presence/create">
         <div class="uk-child-width-1-2@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-body">
             <div>
                 <div class="uk-card uk-card-default uk-card-small">
@@ -61,11 +61,11 @@
             </div>
         </div>
         <div class="uk-child-width-auto uk-flex-center uk-flex uk-flex-center uk-margin-large-top" id="gridBtn" uk-grid hidden>
-            <div>
-                <button class="uk-button uk-button-success uk-button-large" Onclick="klik()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkin')?></button>
+            <div id="checkin">
+                <button  class="uk-button uk-button-success uk-button-large" id="checkin" Onclick="klik()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkin')?></button>
             </div>
             <div>
-                <button class="uk-button uk-button-danger uk-button-large"  Onclick="klik2()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkout')?></button>
+                <button class="uk-button uk-button-danger uk-button-large" id="checkout"  Onclick="klik2()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkout')?></button>
             </div>
         </div>
     </form>
@@ -120,13 +120,26 @@
         
     }
 
+    $("#presence").submit(function(){
+        alert('halo');
+        $("#gridBtn").atrr("hidden",false);
+        document.getElementById("gridBtn").removeAttribute("hidden"); 
+        $("#checkin").atrr("disabled",true);
+        alert('Anda Telah Melakukan Presensi');
+        $("#checkout").atrr("disabled",false);
+    });
+    
     function klik(){
-        <?php if ($presence['datetime'] >= $todays) ?>
         $(".status").val("1");
     }
 
     function klik2(){
         $(".status").val("0");
+        $("form").submit(function(){
+            alert('Terima Kasih Sudah Bekerja Dengan Semangat, Sampai jumpa lagi');
+            $("#checkout").atrr("disabled",true);
+            $("#checkin").atrr("disabled",false);
+        });
     }
 </script>
 <!-- Camera Script End -->

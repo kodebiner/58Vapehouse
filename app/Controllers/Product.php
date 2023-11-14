@@ -689,8 +689,8 @@ class Product extends BaseController
         $probrand = $ProductModel->where('brandid', $id)->find();
         foreach ($probrand as $brandpro) {
             $brandid    = [
-                'id'  =>  $brandpro['id'],
-                'catid' => "0",
+                'id'        =>  $brandpro['id'],
+                'brandid'   => "0",
             ];
             $ProductModel->save($brandid);
         }
