@@ -17,6 +17,10 @@ body {
     margin: 0
 }
 
+#refund:hover {
+    background-color: red;
+}
+
 .uk-link,
 a {
     color: #1e87f0;

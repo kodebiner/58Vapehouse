@@ -219,6 +219,7 @@ $routes->group('transaction', ['filter'=>'login'], function($routes){
     $routes->post('create', 'Transaction::create',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('pay', 'Transaction::pay',['filter'=> 'role:owner,supervisor,operator']);
     $routes->post('restorestock', 'Transaction::restorestock',['filter'=> 'role:owner,supervisor,operator']);
+    $routes->get('refund/(:num)', 'Transaction::refund/$1');
 });
 
 // Transaction History
@@ -228,6 +229,7 @@ $routes->group('trxhistory', ['filter'=>'login'], function($routes){
     $routes->get('debt', 'Debt::indexdebt', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('debtpay', 'Debt::indexdebtins', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('topup', 'Debt::indextopup', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->get('refund/(:num)', 'Debt::refund/$1');
 });
 
 // Debt

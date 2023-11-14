@@ -69,7 +69,7 @@ class Transaction extends BaseController
         $bundleVariants         = $bundleBuilder->get();
 
         // Find Data for Daily Report
-        $today                  = date('Y-m-d') .' 00:00:01';
+        $today                  = date('Y-m-d') . ' 00:00:01';
         $dailyreport            = $DailyReportModel->where('dateopen >', $today)->where('outletid', $this->data['outletPick'])->first();
 
 
@@ -98,7 +98,7 @@ class Transaction extends BaseController
         return view('Views/transaction', $data);
     }
 
-    public function create() 
+    public function create()
     {
         // Calling Models
         $BundleModel            = new BundleModel();
@@ -124,9 +124,9 @@ class Transaction extends BaseController
         $input = $this->request->getPost();
 
         // date time stamp
-        $date=date_create();
-        $tanggal = date_format($date,'Y-m-d H:i:s');
-        
+        $date = date_create();
+        $tanggal = date_format($date, 'Y-m-d H:i:s');
+
         // Image Capture
         $img            = $input['image'];
         $folderPath     = "img";
@@ -138,8 +138,8 @@ class Transaction extends BaseController
         $file           = $folderPath . $fileName;
         file_put_contents($file, $image_base64);
 
-        
-        if (!empty($input['payment'])){
+
+        if (!empty($input['payment'])) {
             // This Single Payment Control
             // validation form
             // Insert Data
@@ -155,21 +155,21 @@ class Transaction extends BaseController
                 'photo'     => $fileName,
             ];
             // save data transaction
-            
+
             $TransactionModel->save($data);
-            
+
             // tranasaction id
             $trxId = $TransactionModel->getInsertID();
-            
+
             // save variants item
             if (!empty($input["qty"])) {
                 $variant = $input["qty"];
-                foreach ($variant as $vId => $val){
+                foreach ($variant as $vId => $val) {
                     $varId = $vId;
-                    $qty  = $val;  
+                    $qty  = $val;
                 }
-                $value = $VariantModel->where('id',$vId)->first();
-                $price = $value['hargamodal']+$value['hargajual'];
+                $value = $VariantModel->where('id', $vId)->first();
+                $price = $value['hargamodal'] + $value['hargajual'];
                 $varPrice = $price * $qty;
                 $data = [
                     'transactionid' => $trxId,
@@ -179,28 +179,27 @@ class Transaction extends BaseController
                     'value'         => $varPrice,
                 ];
                 $TrxdetailModel->save($data);
-                
+
                 // Minus Stock
-                $stok= $StockModel->where('variantid', $varId)->where('outletid',$this->data['outletPick'])->first();
+                $stok = $StockModel->where('variantid', $varId)->where('outletid', $this->data['outletPick'])->first();
                 $newStock = $stok['qty'] - $qty;
                 $data = [
                     'id' => $stok['id'],
                     'qty' => $newStock,
                 ];
                 $StockModel->save($data);
-                
-            }else {
+            } else {
                 $varPrice = "0";
             }
-            
+
             // save bundle item
-            if (!empty($input['bqty'])){
+            if (!empty($input['bqty'])) {
                 $bundles = $input['bqty'];
-                foreach ($bundles as $y => $value){
+                foreach ($bundles as $y => $value) {
                     $bundId = $y;
                     $qty    = $value;
                 }
-                $value = $BundleModel->where('id',$bundId)->first();
+                $value = $BundleModel->where('id', $bundId)->first();
                 $price = $value['price'];
                 $bunPrice = $price * $qty;
                 $data = [
@@ -213,13 +212,13 @@ class Transaction extends BaseController
                 $TrxdetailModel->save($data);
 
                 // minus stock
-                $bundet = $BundledetModel->where('bundleid',$y)->find();
-                foreach ($bundet as $bun => $val){
+                $bundet = $BundledetModel->where('bundleid', $y)->find();
+                foreach ($bundet as $bun => $val) {
                     $bunid = $val['bundleid'];
                     $varid = $val['variantid'];
-                    foreach ($stocks as $stock){
-                        $stock = $StockModel->where('variantid', $varid)->where('outletid',$this->data['outletPick'])->first();
-                        $newStock = $stock['qty']-$qty;
+                    foreach ($stocks as $stock) {
+                        $stock = $StockModel->where('variantid', $varid)->where('outletid', $this->data['outletPick'])->first();
+                        $newStock = $stock['qty'] - $qty;
                         $stok = [
                             'id' => $stock['id'],
                             'qty' => $newStock,
@@ -227,36 +226,36 @@ class Transaction extends BaseController
                         $StockModel->save($stok);
                     }
                 }
-            }else{
+            } else {
                 $bunPrice = "0";
             }
 
             //Discount Price
-            if (!empty($input['discvalue'])){
-                if ($input['disctype'] === "0"){
+            if (!empty($input['discvalue'])) {
+                if ($input['disctype'] === "0") {
                     $discPrice = $input['discvalue'];
-                } else{ 
+                } else {
                     $sumPrice   = $varPrice + $bunPrice;
-                    $discPrice   = ($sumPrice * $input['discvalue'])/100;
+                    $discPrice   = ($sumPrice * $input['discvalue']) / 100;
                 }
-            } else{
+            } else {
                 $discPrice = "0";
             }
-            
+
             //Discount Point Member
-            if (!empty($input['customerid'])){
+            if (!empty($input['customerid'])) {
                 $discPoint   = $input['poin'];
-                $member      = $MemberModel->where('id',$input['customerid'])->first();
+                $member      = $MemberModel->where('id', $input['customerid'])->first();
                 $memberPoint = $member['poin'];
                 // Used Poin 
-                if (!empty($input['poin'])){
+                if (!empty($input['poin'])) {
                     $point       = $memberPoint - $discPoint;
-                } else{
+                } else {
                     // Not Apply Point
                     $point  = $memberPoint;
                 }
-            } 
-   
+            }
+
             //Minus Member Point
             $data = [
                 'id' => $member['id'],
@@ -267,10 +266,10 @@ class Transaction extends BaseController
             // $member Disc
             $memberdisc = $Gconfig['memberdisc'];
             // subtotal
-            $subtotal = $varPrice + $bunPrice; 
+            $subtotal = $varPrice + $bunPrice;
             // ppn
-            $ppn = ($subtotal*$Gconfig['ppn'])/100;
-            
+            $ppn = ($subtotal * $Gconfig['ppn']) / 100;
+
             //Insert Trx Payment 
             $total = $subtotal - $discPrice - $discPoint + $ppn - $memberdisc;
             $data = [
@@ -279,31 +278,31 @@ class Transaction extends BaseController
                 'value'         => $total,
             ];
             $TrxpaymentModel->save($data);
-            
+
             // Insert Cash
-            $cashPlus   = $CashModel->where('id',$input['payment'])->first();
+            $cashPlus   = $CashModel->where('id', $input['payment'])->first();
             $cashUpdate = $varPrice + $bunPrice + $cashPlus['qty'];
             $data = [
                 'id'    => $cashPlus['id'],
                 'qty'   => $cashUpdate,
             ];
             $CashModel->save($data);
-            
+
             // Gconfig setup
             $minimTrx    = $Gconfig['poinorder'];
             $poinval     = $Gconfig['memberdisc'];
-            
-            if ($total >= $minimTrx){
+
+            if ($total >= $minimTrx) {
                 $value  = $total / $minimTrx;
                 $result = floor($value);
                 $poin   = $result * $poinval;
-            }else{
+            } else {
                 $poin = "0";
             }
-            
+
             //Update Point Member
-            if (!empty($input['memberid'])){
-                $trx = $member['trx'] + 1 ;
+            if (!empty($input['memberid'])) {
+                $trx = $member['trx'] + 1;
                 $poinPlus = $memberPoint + $poin;
                 $data = [
                     'id'    => $member['id'],
@@ -314,46 +313,45 @@ class Transaction extends BaseController
             }
 
             //Update debt
-            if(!empty($input['duedate'])) {
+            if (!empty($input['duedate'])) {
                 $data = [
                     'memberid'      => $input['customerid'],
                     'transationid'  => $trxId,
                     'deadline'      => $input['duedate'],
                 ];
             }
-            
-        }else{  
+        } else {
 
             // Variants Value
             if (!empty($input["qty"])) {
                 $variant = $input["qty"];
-                foreach ($variant as $vId => $val){
+                foreach ($variant as $vId => $val) {
                     $varId = $vId;
                     $qty  = $val;
                 }
-                $value = $VariantModel->where('id',$vId)->first();
-                $price = $value['hargamodal']+$value['hargajual'];
+                $value = $VariantModel->where('id', $vId)->first();
+                $price = $value['hargamodal'] + $value['hargajual'];
                 $varPrice = $price * $qty;
-            }else{
+            } else {
                 $varPrice = "0";
             }
 
             // Bundle Value
-            if (!empty($input['bqty'])){
+            if (!empty($input['bqty'])) {
                 $bundles = $input['bqty'];
-                foreach ($bundles as $y => $value){
+                foreach ($bundles as $y => $value) {
                     $bundId = $y;
                     $qty    = $value;
                 }
-                $value = $BundleModel->where('id',$bundId)->first();
+                $value = $BundleModel->where('id', $bundId)->first();
                 $price = $value['price'];
                 $bunPrice = $price * $qty;
-            }else{
+            } else {
                 $bunPrice = "0";
             }
-            
+
             $totalValue = $varPrice + $bunPrice;
-            
+
             // Insert Data
             $data = [
                 'outletid'  => $this->data['outletPick'],
@@ -363,23 +361,23 @@ class Transaction extends BaseController
                 'value'     => $totalValue,
                 'disctype'  => $input['disctype'],
                 'discvalue' => $input['discvalue'],
-                'date'      => $tanggal,  
+                'date'      => $tanggal,
             ];
             // save data transaction
             $TransactionModel->save($data);
-            
+
             // transaction id
             $trxId = $TransactionModel->getInsertID();
-            
+
             // variants item
             if (!empty($input["qty"])) {
                 $variant = $input["qty"];
-                foreach ($variant as $vId => $val){
+                foreach ($variant as $vId => $val) {
                     $varId = $vId;
                     $qty  = $val;
                 }
-                $value = $VariantModel->where('id',$vId)->first();
-                $price = $value['hargamodal']+$value['hargajual'];
+                $value = $VariantModel->where('id', $vId)->first();
+                $price = $value['hargamodal'] + $value['hargajual'];
                 $fprice = $price * $qty;
                 // save transaction detail
                 $data = [
@@ -391,9 +389,9 @@ class Transaction extends BaseController
                     'value'         => $fprice,
                 ];
                 $TrxdetailModel->save($data);
-                
+
                 // Minus Stock
-                $stok= $StockModel->where('variantid', $varId)->where('outletid',$this->data['outletPick'])->first();
+                $stok = $StockModel->where('variantid', $varId)->where('outletid', $this->data['outletPick'])->first();
                 $newStock = $stok['qty'] - $qty;
                 $data = [
                     'id' => $stok['id'],
@@ -401,15 +399,15 @@ class Transaction extends BaseController
                 ];
                 $StockModel->save($data);
             }
-            
+
             // bundle item
-            if (!empty($input['bqty'])){
+            if (!empty($input['bqty'])) {
                 $bundles = $input['bqty'];
-                foreach ($bundles as $y => $value){
+                foreach ($bundles as $y => $value) {
                     $bundId = $y;
                     $qty    = $value;
                 }
-                $value = $BundleModel->where('id',$bundId)->first();
+                $value = $BundleModel->where('id', $bundId)->first();
                 $price = $value['price'];
                 $fprice = $price * $qty;
                 // save transaction detail
@@ -421,51 +419,51 @@ class Transaction extends BaseController
                     'value'         => $fprice,
                 ];
                 $TrxdetailModel->save($data);
-                
+
                 // minus stock
-                $bundet = $BundledetModel->where('bundleid',$y)->find();
-                foreach ($bundet as $bun => $val){
+                $bundet = $BundledetModel->where('bundleid', $y)->find();
+                foreach ($bundet as $bun => $val) {
                     $bunid = $val['bundleid'];
                     $varid = $val['variantid'];
-                    foreach ($stocks as $stock){
-                        $stock = $StockModel->where('variantid', $varid)->where('outletid',$this->data['outletPick'])->first();
-                            $newStock = $stock['qty']-$qty;
-                            $stok = [
-                                'id' => $stock['id'],
-                                'qty' => $newStock,
-                            ];
-                            $StockModel->save($stok);
+                    foreach ($stocks as $stock) {
+                        $stock = $StockModel->where('variantid', $varid)->where('outletid', $this->data['outletPick'])->first();
+                        $newStock = $stock['qty'] - $qty;
+                        $stok = [
+                            'id' => $stock['id'],
+                            'qty' => $newStock,
+                        ];
+                        $StockModel->save($stok);
                     }
                 }
             }
 
             //Discount Price
-            if (!empty($input['discvalue'])){
-                if ($input['disctype'] === "0"){
+            if (!empty($input['discvalue'])) {
+                if ($input['disctype'] === "0") {
                     $discPrice = $input['discvalue'];
-                } else{
+                } else {
                     //Discount Percent 
                     $sumPrice   = $varPrice + $bunPrice;
-                    $discPrice   = ($sumPrice * $input['discvalue'])/100;
+                    $discPrice   = ($sumPrice * $input['discvalue']) / 100;
                 }
-            } else{
+            } else {
                 $discPrice = "0";
             }
 
             //Discount Point Member
-            if (!empty($input['customerid'])){
+            if (!empty($input['customerid'])) {
                 $discPoint   = $input['poin'];
-                $member      = $MemberModel->where('id',$input['customerid'])->first();
+                $member      = $MemberModel->where('id', $input['customerid'])->first();
                 $memberPoint = $member['poin'];
                 // Used Poin 
                 if (!empty($input['poin'])) {
                     $point       = $memberPoint - $discPoint;
                 } else {
-                // Not Apply Point
+                    // Not Apply Point
                     $point  = $memberPoint;
                 }
-            } 
-   
+            }
+
             //Minus Member Point
             $data = [
                 'id' => $member['id'],
@@ -490,7 +488,7 @@ class Transaction extends BaseController
             $TrxpaymentModel->save($data);
 
             // Insert First Cash 
-            $cashPlus   = $CashModel->where('id',$input['firstpayment'])->first();
+            $cashPlus   = $CashModel->where('id', $input['firstpayment'])->first();
             $cashUpdate = $input['firstpay'] + $cashPlus['qty'];
             $data = [
                 'id'    => $cashPlus['id'],
@@ -499,19 +497,19 @@ class Transaction extends BaseController
             $CashModel->save($data);
 
             // Insert Second Cash 
-            $cashPlus   = $CashModel->where('id',$input['secondpayment'])->first();
+            $cashPlus   = $CashModel->where('id', $input['secondpayment'])->first();
             $cashUpdate = $input['secpay'] + $cashPlus['qty'];
             $data = [
                 'id'    => $cashPlus['id'],
                 'qty'   => $cashUpdate,
             ];
             $CashModel->save($data);
-        } 
+        }
         return redirect()->back()->with('massage', lang('global.saved'));
-        
     }
 
-    public function pay() {
+    public function pay()
+    {
         // Calling Models
         $TransactionModel   = new TransactionModel();
         $TrxdetailModel     = new TrxdetailModel();
@@ -562,7 +560,7 @@ class Transaction extends BaseController
             if ($this->data['gconfig']['memberdisctype'] === '0') {
                 $memberdisc = $this->data['gconfig']['memberdisc'];
             } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                $memberdisc = ($this->data['gconfig']['memberdisc']/100) * $subtotal;
+                $memberdisc = ($this->data['gconfig']['memberdisc'] / 100) * $subtotal;
             }
         } else {
             $memberid = '';
@@ -572,7 +570,7 @@ class Transaction extends BaseController
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
             $discount = $input['discvalue'];
         } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
-            $discount = ($input['discvalue']/100) * $subtotal;
+            $discount = ($input['discvalue'] / 100) * $subtotal;
         } else {
             $discount = '0';
         }
@@ -662,43 +660,43 @@ class Transaction extends BaseController
         // $member Disc
         $memberdisc = $Gconfig['memberdisc'];
         // subtotal
-        $subtotal = $varPrice + $bunPrice; 
+        $subtotal = $varPrice + $bunPrice;
         // ppn
-        $ppn = ($subtotal*$Gconfig['ppn'])/100;
-        
+        $ppn = ($subtotal * $Gconfig['ppn']) / 100;
+
         //Insert Trx Payment 
-        $total = $subtotal - $discPrice - $discPoint - $memberdisc + $ppn ;
+        $total = $subtotal - $discPrice - $discPoint - $memberdisc + $ppn;
         $data = [
             'paymentid'     => $input['payment'],
             'transactionid' => $trxId,
             'value'         => $total,
         ];
         $TrxpaymentModel->save($data);
-        
+
         // Insert Cash
-        $cashPlus   = $CashModel->where('id',$input['payment'])->first();
+        $cashPlus   = $CashModel->where('id', $input['payment'])->first();
         $cashUpdate = $varPrice + $bunPrice + $cashPlus['qty'];
         $data = [
             'id'    => $cashPlus['id'],
             'qty'   => $cashUpdate,
         ];
         $CashModel->save($data);
-        
+
         // Gconfig setup
         $minimTrx    = $Gconfig['poinorder'];
         $poinval     = $Gconfig['memberdisc'];
-        
-        if ($total >= $minimTrx){
+
+        if ($total >= $minimTrx) {
             $value  = $total / $minimTrx;
             $result = floor($value);
             $poin   = $result * $poinval;
-        }else{
+        } else {
             $poin = "0";
         }
-        
+
         //Update Point Member
-        if (!empty($input['memberid'])){
-            $trx = $member['trx'] + 1 ;
+        if (!empty($input['memberid'])) {
+            $trx = $member['trx'] + 1;
             $poinPlus = $memberPoint + $poin;
             $data = [
                 'id'    => $member['id'],
@@ -709,17 +707,17 @@ class Transaction extends BaseController
         }
 
         //Update debt
-        if(!empty($input['duedate'])) {
+        if (!empty($input['duedate'])) {
             $data = [
                 'memberid'      => $input['customerid'],
                 'transationid'  => $trxId,
                 'deadline'      => $input['duedate'],
             ];
         }
-
     }
 
-    public function restorestock() {
+    public function restorestock()
+    {
         // Calling Model
         $StockModel = new StockModel();
         $BookingModel = new BookingModel();
@@ -740,7 +738,6 @@ class Transaction extends BaseController
                         ];
                         $StockModel->save($varstock);
                     }
-                    
                 }
             }
             if (isset($input['databund'])) {
@@ -766,4 +763,5 @@ class Transaction extends BaseController
         // Return message
         die(json_encode('success'));
     }
+
 }

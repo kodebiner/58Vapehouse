@@ -99,45 +99,15 @@ class export extends BaseController
 
     public function transaction()
     {
-
-        $db         = \Config\Database::connect();
+        // Conecting To Database
+        $db = \Config\Database::connect();
 
         // Calling Model
-        $ProductModel       = new ProductModel;
-        $BundleModel        = new BundleModel;
-        $BundledetailModel  = new BundledetailModel;
-        $BrandModel         = new BrandModel;
-        $CashModel          = new CashModel;
-        $DebtModel          = new Debtmodel;
-        $VariantModel       = new VariantModel;
-        $CategoryModel      = new CategoryModel;
-        $StockModel         = new StockModel;
-        $VariantModel       = new VariantModel;
         $OutletModel        = new OutletModel;
-        $MemberModel        = new MemberModel;
-        $UserModel          = new UserModel;
-        $PaymentModel       = new PaymentModel;
         $TransactionModel   = new TransactionModel;
-        $TrxdetailModel     = new TrxdetailModel;
-        $TrxpaymentModel    = new TrxpaymentModel;
 
 
         // Populating Data
-        $bundles                = $BundleModel->findAll();
-        $bundets                = $BundledetailModel->findAll();
-        $cash                   = $CashModel->findAll();
-        $brands                 = $BrandModel->findAll();
-        $products               = $ProductModel->findAll();
-        $category               = $CategoryModel->findAll();
-        $variants               = $VariantModel->findAll();
-        $outlets                = $OutletModel->findAll();
-        $trxdetails             = $TrxdetailModel->findAll();
-        $trxpayments            = $TrxpaymentModel->findAll();
-        $payments               = $PaymentModel->findAll();
-        $debts                  = $DebtModel->findAll();
-        $users                  = $UserModel->findAll();
-        $members                = $MemberModel->findAll();
-
         $input = $this->request->getVar('daterange');
 
         if (!empty($input)) {
@@ -148,7 +118,6 @@ class export extends BaseController
             $startdate = date('Y-m-1');
             $enddate = date('Y-m-t');
         }
-
 
         // Populating Data
         if ($this->data['outletPick'] === null) {
@@ -229,7 +198,6 @@ class export extends BaseController
         echo '</thead>';
         echo '<tbody>';
 
-        // $trxdata = array();
         foreach ($transactionhist as $trxhist) {
 
             if ((!empty($trxhist['discval'])) && ($trxhist['disctype'] === '0')) {
@@ -284,28 +252,7 @@ class export extends BaseController
             echo '<td>' . $trxhist['total'] . '</td>';
             echo '<td>' . $trxhist['payment'] . '</td>';
             echo '</tr>';
-
-            // $trxdata[] = [
-            //     'kode'          => date(strtotime($trxhist['date'])),
-            //     'tanggal'       => date('l, d M Y', strtotime($trxhist['date'])),
-            //     'jam'           => date('H:i:s', strtotime($trxhist['date'])),
-            //     'kasir'         => $trxhist['kasir'],
-            //     'pembeli'       => $trxhist['member'],
-            //     'produk'        => $trxhist['product'],
-            //     'quantity'      => $trxhist['qty'],
-            //     'hargapro'      => $trxhist['trxdetval'] + $trxhist['discvar'],
-            //     'subtotal'      => ($trxhist['trxdetval'] + $trxhist['discvar']) * $trxhist['qty'],
-            //     // 'subtotal'      => $trxhist['total'] + $discount + $trxhist['discvar'] + $trxhist['redempoin'],
-            //     'diskonpro'     => $trxhist['discval'],
-            //     'typedisc'      => $disctype,
-            //     'redempoin'     => $trxhist['redempoin'],
-            //     'total'         => $trxhist['total'],
-            //     'payment'       => $trxhist['payment'],
-
-            // ];
         }
-
-        // dd($trxdata);
 
         echo '</tbody>';
         echo '</table>';
