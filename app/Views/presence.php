@@ -60,14 +60,18 @@
                 </div>
             </div>
         </div>
-        <div class="uk-child-width-auto uk-flex-center uk-flex uk-flex-center uk-margin-large-top" id="gridBtn" uk-grid hidden>
-            <div id="checkin">
-                <button  class="uk-button uk-button-success uk-button-large" id="checkin" Onclick="klik()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkin')?></button>
+            <div class="uk-child-width-auto uk-flex-center uk-flex uk-flex-center uk-margin-large-top" id="gridBtn" uk-grid hidden>
+                <?php if (empty($checkin)) { ?>
+                    <div>
+                        <button  class="uk-button uk-button-success uk-button-large" id="checkin" Onclick="klik()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkin')?></button>
+                    </div>
+                <?php } ?>
+                <?php if (empty($checkout)) { ?>
+                    <div>
+                        <button class="uk-button uk-button-danger uk-button-large" id="checkout" Onclick="klik2()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkout')?></button>
+                    </div>
+                <?php } ?>
             </div>
-            <div>
-                <button class="uk-button uk-button-danger uk-button-large" id="checkout"  Onclick="klik2()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkout')?></button>
-            </div>
-        </div>
     </form>
 </div>
 <!-- End Content -->
@@ -119,15 +123,6 @@
         }
         
     }
-
-    $("#presence").submit(function(){
-        alert('halo');
-        $("#gridBtn").atrr("hidden",false);
-        document.getElementById("gridBtn").removeAttribute("hidden"); 
-        $("#checkin").atrr("disabled",true);
-        alert('Anda Telah Melakukan Presensi');
-        $("#checkout").atrr("disabled",false);
-    });
     
     function klik(){
         $(".status").val("1");
@@ -135,11 +130,6 @@
 
     function klik2(){
         $(".status").val("0");
-        $("form").submit(function(){
-            alert('Terima Kasih Sudah Bekerja Dengan Semangat, Sampai jumpa lagi');
-            $("#checkout").atrr("disabled",true);
-            $("#checkin").atrr("disabled",false);
-        });
     }
 </script>
 <!-- Camera Script End -->

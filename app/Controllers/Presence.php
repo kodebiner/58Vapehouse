@@ -16,16 +16,18 @@ class Presence extends BaseController
         $SopModel               = new SopModel();
 
         // Populating Data
-        $presence               = $PresenceModel->findAll();
+        $todays                 = date('Y-m-d') .' 00:00:01';
+        $checkin                = $PresenceModel->where('userid', $this->data['uid'])->where('datetime >=', $todays)->where('status', '1')->find();
+        $checkout               = $PresenceModel->where('userid', $this->data['uid'])->where('datetime >=', $todays)->where('status', '0')->find();
         $users                  = $UserModel->findAll();
         $sops                   = $SopModel->findAll();
-        $todays                 = date('Y-m-d') .' 00:00:01';
-
+        
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.presence');
         $data['description']    = lang('Global.presenceListDesc');
-        $data['presences']      = $presence;
+        $data['checkin']        = $checkin;
+        $data['checkout']       = $checkout;
         $data['users']          = $users;
         $data['sops']           = $sops;
         $data['todays']         = $todays;
