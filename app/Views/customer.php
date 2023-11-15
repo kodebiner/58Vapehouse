@@ -212,7 +212,7 @@
                             <label class="uk-form-label" for="poin"><?=lang('Global.point')?></label>
                             <div class="uk-form-controls">
                                 <div class="uk-inline uk-width-1-1">
-                                    <input class="uk-input" min="1" id="poin" name="poin" type="number" value="<?= $customer['poin']; ?>" aria-label="Not clickable icon">
+                                    <input class="uk-input" id="poin" name="poin" type="number" value="<?= $customer['poin']; ?>" aria-label="Not clickable icon">
                                 </div>
                             </div>
                         </div>
