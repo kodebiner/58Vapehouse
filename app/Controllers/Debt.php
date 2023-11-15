@@ -7,6 +7,7 @@ use App\Models\BundleModel;
 use App\Models\BookingModel;
 use App\Models\BookingdetailModel;
 use App\Models\CashModel;
+use App\Models\CashmovementModel;
 use App\Models\GconfigModel;
 use App\Models\OutletModel;
 use App\Models\UserModel;
@@ -459,14 +460,16 @@ class Debt extends BaseController
     {
         // Conneting To Database
         $db = \Config\Database::connect();
+        $gconfig = new GconfigModel();
 
         // Getting Data Transaction
+        $Gconf = $gconfig->first();
         $exported   = $db->table('transaction');
 
         $transactionhist   = $exported->select('transaction.id as id, variant.id as varid, member.id as memberid, users.id as userid, payment.id as paymentid,
         outlet.id as outletid, bundle.id as bundleid,trxdetail.qty as qty, transaction.value as total, bundle.price as bprice, variant.hargadasar as vprice,
         transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval,
-        transaction.pointused as redempoin, member.name as member, product.name as product, variant.name as variant,  
+        transaction.pointused as redempoin, trxpayment.value as payval, member.name as member, product.name as product, variant.name as variant,  
         variant.hargamodal as modal, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, payment.name as payment,
         outlet.name as outlet,outlet.address as address, bundle.name as bundle, users.username as kasir');
 
@@ -483,25 +486,6 @@ class Debt extends BaseController
         $transactionhist   = $exported->where('transaction.id', $id);
         $transactionhist   = $exported->get();
         $transactionhist   = $transactionhist->getResultArray();
-
-        $bundleBuilder          = $db->table('bundledetail');
-        $bundleVariants         = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as varid, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
-        $bundleVariants         = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
-        $bundleVariants         = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
-        $bundleVariants         = $bundleBuilder->orderBy('stock.qty', 'ASC');
-        $bundleVariants         = $bundleBuilder->get();
-        $bundleVariants         = $bundleVariants->getResultArray();
-
-        $exported   = $db->table('stock');
-        $stockexp   = $exported->select('stock.qty as qty, variant.hargamodal as hargamodal, variant.hargadasar as hargadasar, variant.hargajual as hargajual, variant.hargarekomendasi as hargarekomendasi, variant.name as varname, product.name as prodname, category.name as catname, brand.name as brandname');
-        $stockexp   = $exported->join('variant', 'stock.variantid = variant.id', 'left');
-        $stockexp   = $exported->join('product', 'variant.productid = product.id', 'left');
-        $stockexp   = $exported->join('category', 'product.catid = category.id', 'left');
-        $stockexp   = $exported->join('brand', 'product.brandid = brand.id', 'left');
-        $stockexp   = $exported->where('stock.outletid', $this->data['outletPick']);
-        $stockexp   = $exported->orderBy('product.name', 'ASC');
-        $stockexp   = $exported->get();
-        $productval = $stockexp->getResultArray();
 
         $trxdata = array();
         foreach ($transactionhist as $trxhist) {
@@ -538,30 +522,9 @@ class Debt extends BaseController
             } else {
                 $discvar = "0";
             }
-
-            $trxdata[] = [
-                'kode'          => date(strtotime($trxhist['date'])),
-                'tanggal'       => date('l, d M Y', strtotime($trxhist['date'])),
-                'jam'           => date('H:i:s', strtotime($trxhist['date'])),
-                'kasir'         => $trxhist['kasir'],
-                'pembeli'       => $trxhist['member'],
-                'produk'        => $trxhist['product'],
-                'quantity'      => $trxhist['qty'],
-                'hargapro'      => $trxhist['trxdetval'] + $trxhist['discvar'],
-                'subtotal'      => ($trxhist['trxdetval'] + $trxhist['discvar']) * $trxhist['qty'],
-                // 'subtotal'      => $trxhist['total'] + $discount + $trxhist['discvar'] + $trxhist['redempoin'],
-                'diskonpro'     => $trxhist['discval'],
-                'typedisc'      => $disctype,
-                'redempoin'     => $trxhist['redempoin'],
-                'total'         => $trxhist['total'],
-                'payment'       => $trxhist['payment'],
-
-            ];
         }
 
-        // dd($bundleVariants);
-
-        /*========================== REFUND DATA ===========================*/
+        /*======================================= REFUND DATA =============================================================================*/
 
         // Calling Models
         $BundleModel            = new BundleModel();
@@ -577,301 +540,148 @@ class Debt extends BaseController
         $TransactionModel       = new TransactionModel();
         $TrxdetailModel         = new TrxdetailModel();
         $TrxpaymentModel        = new TrxpaymentModel();
+        $DebtModel              = new DebtModel();
         $BookingModel           = new BookingModel();
         $BookingdetailModel     = new BookingdetailModel();
         $DailyReportModel       = new DailyReportModel();
 
         // Populating Data
         $bundles                = $BundleModel->findAll();
-        $bundets                = $BundledetModel->findAll();
-        $Cash                   = $CashModel->findAll();
-        $outlets                = $OutletModel->findAll();
-        $users                  = $UserModel->findAll();
-        $customers              = $MemberModel->findAll();
-        $payments               = $PaymentModel->findAll();
-        $products               = $ProductModel->orderBy('name', 'ASC')->findAll();
-        $variants               = $VariantModel->findAll();
-        $stocks                 = $StockModel->findAll();
-        $transactions           = $TransactionModel->findAll();
-        $trxdetails             = $TrxdetailModel->findAll();
-        $trxpayments            = $TrxpaymentModel->findAll();
-        $bookings               = $BookingModel->where('status', '0')->orderBy('created_at', 'DESC')->findAll();
-        $bookingdetails         = $BookingdetailModel->findAll();
 
-        // initialize
-        $input = $this->request->getPost();
-
-        // date time stamp
-        $date = date_create();
-        $tanggal = date_format($date, 'Y-m-d H:i:s');
+        // Initialize 
+        $date = date('Y-m-d H:i:s');
 
         $variant = [];
+        $bundles = [];
+        $paymentid = [];
+        $point = "";
         foreach ($transactionhist as $trxhist) {
-            if (!empty($trxhist['paymentid'])) {
 
-                // save variants item
-                if (!empty($trxhist["varid"]) && $trxhist["varid"] != null) {
-
-                    $varId = $trxhist["varid"];
-                    $qty  = $trxhist["qty"];
-                    $varPrice = ($trxhist["vprice"] + $trxhist['jual']) * $trxhist["qty"];
-
-                    // Minus Stock
-                    $stok = $StockModel->where('variantid', $varId)->where('outletid', $this->data['outletPick'])->first();
-                    $newStock = $stok['qty'] + $qty;
-                    $data = [
-                        'id' => $stok['id'],
-                        'qty' => $newStock,
-                    ];
-                    dd($data);
-                    $StockModel->save($data);
-                } else {
-                    $varPrice = "0";
-                }
-
-                // save bundle item
-                if (!empty($trxhist['bundleid']) && $trxhist["bundleid"] != null) {
-
-                    $bundles = $trxhist['qty'];
-                    $bundId = $trxhist["bundleid"];
-                    $qty    = $trxhist["qty"];
-                    $bunPrice =  $trxhist["bprice"];
-
-                    // minus stock
-                    $bundet = $BundledetModel->where('bundleid', $bundId)->find();
-                    foreach ($bundet as $bun => $val) {
-                        $bunid = $val['bundleid'];
-                        $varid = $val['variantid'];
-                        foreach ($stocks as $stock) {
-                            $stock = $StockModel->where('variantid', $varid)->where('outletid', $this->data['outletPick'])->first();
-                            $newStock = $stock['qty'] + $qty;
-                            $stok = [
-                                'id' => $stock['id'],
-                                'qty' => $newStock,
-                            ];
-                            $StockModel->save($stok);
-                        }
-                    }
-                } else {
-                    $bunPrice = "0";
-                }
-
-
-                //Redem Point Member
-                if (!empty($trxhist['memberid'])) {
-                    $discPoint   = $trxhist['redempoin'];
-                    $member      = $MemberModel->where('id', $trxhist['memberid'])->first();
-                    $memberPoint = $member['poin'];
-                    // Used Poin 
-                    if (!empty($trxhist['redempoin'])) {
-                        $point       = $memberPoint + $discPoint;
-                    } else {
-                        // Not Apply Point
-                        $point  = $memberPoint;
-                    }
-                }
-
-                //Plus Member Point
-                $data = [
-                    'id' => $member['id'],
-                    'poin' => $point,
-                ];
-                $MemberModel->save($data);
-
-                // Refund Cash
-                $cashPlus   = $CashModel->where('id', $trxhist['paymentid'])->first();
-                $cashUpdate = $varPrice + $bunPrice + $cashPlus['qty'];
-                $data = [
-                    'id'    => $cashPlus['id'],
-                    'qty'   => $cashUpdate,
-                ];
-                $CashModel->save($data);
-            } else {
-
-                // Variants Value
-                if (!empty($trxhist["qty"])) {
-                    $variant = $trxhist["qty"];
-                    foreach ($variant as $vId => $val) {
-                        $varId = $vId;
-                        $qty  = $val;
-                    }
-                    $value = $VariantModel->where('id', $vId)->first();
-                    $price = $value['hargamodal'] + $value['hargajual'];
-                    $varPrice = $price * $qty;
-                } else {
-                    $varPrice = "0";
-                }
-
-                // Bundle Value
-                if (!empty($trxhist['bqty'])) {
-                    $bundles = $trxhist['bqty'];
-                    foreach ($bundles as $y => $value) {
-                        $bundId = $y;
-                        $qty    = $value;
-                    }
-                    $value = $BundleModel->where('id', $bundId)->first();
-                    $price = $value['price'];
-                    $bunPrice = $price * $qty;
-                } else {
-                    $bunPrice = "0";
-                }
-
-                $totalValue = $varPrice + $bunPrice;
-
-                // Insert Data
-                $data = [
-                    'outletid'  => $this->data['outletPick'],
-                    'userid'    => $this->data['uid'],
-                    'memberid'  => $trxhist['customerid'],
-                    'paymentid' => "0",
-                    'value'     => $totalValue,
-                    'disctype'  => $trxhist['disctype'],
-                    'discvalue' => $trxhist['discvalue'],
-                    'date'      => $tanggal,
-                ];
-                // save data transaction
-                $TransactionModel->save($data);
-
-                // transaction id
-                $trxId = $TransactionModel->getInsertID();
-
-                // variants item
-                if (!empty($trxhist["qty"])) {
-                    $variant = $trxhist["qty"];
-                    foreach ($variant as $vId => $val) {
-                        $varId = $vId;
-                        $qty  = $val;
-                    }
-                    $value = $VariantModel->where('id', $vId)->first();
-                    $price = $value['hargamodal'] + $value['hargajual'];
-                    $fprice = $price * $qty;
-                    // save transaction detail
-                    $data = [
-                        'transactionid' => $trxId,
-                        'variantid'     => $varId,
-                        'bundleid'      => "0",
-                        'qty'           => $qty,
-                        // 'description'   => $trxhist['description'],
-                        'value'         => $fprice,
-                    ];
-                    $TrxdetailModel->save($data);
-
-                    // Minus Stock
-                    $stok = $StockModel->where('variantid', $varId)->where('outletid', $this->data['outletPick'])->first();
-                    $newStock = $stok['qty'] - $qty;
-                    $data = [
-                        'id' => $stok['id'],
-                        'qty' => $newStock,
-                    ];
-                    $StockModel->save($data);
-                }
-
-                // bundle item
-                if (!empty($trxhist['bqty'])) {
-                    $bundles = $trxhist['bqty'];
-                    foreach ($bundles as $y => $value) {
-                        $bundId = $y;
-                        $qty    = $value;
-                    }
-                    $value = $BundleModel->where('id', $bundId)->first();
-                    $price = $value['price'];
-                    $fprice = $price * $qty;
-                    // save transaction detail
-                    $data = [
-                        'transactionid' => $trxId,
-                        'variantid'     => "0",
-                        'bundleid'      => $y,
-                        'qty'           => $qty,
-                        'value'         => $fprice,
-                    ];
-                    $TrxdetailModel->save($data);
-
-                    // minus stock
-                    $bundet = $BundledetModel->where('bundleid', $y)->find();
-                    foreach ($bundet as $bun => $val) {
-                        $bunid = $val['bundleid'];
-                        $varid = $val['variantid'];
-                        foreach ($stocks as $stock) {
-                            $stock = $StockModel->where('variantid', $varid)->where('outletid', $this->data['outletPick'])->first();
-                            $newStock = $stock['qty'] - $qty;
-                            $stok = [
-                                'id' => $stock['id'],
-                                'qty' => $newStock,
-                            ];
-                            $StockModel->save($stok);
-                        }
-                    }
-                }
-
-                //Discount Price
-                if (!empty($trxhist['discvalue'])) {
-                    if ($trxhist['disctype'] === "0") {
-                        $discPrice = $trxhist['discvalue'];
-                    } else {
-                        //Discount Percent 
-                        $sumPrice   = $varPrice + $bunPrice;
-                        $discPrice   = ($sumPrice * $trxhist['discvalue']) / 100;
-                    }
-                } else {
-                    $discPrice = "0";
-                }
-
-                //Discount Point Member
-                if (!empty($trxhist['customerid'])) {
-                    $discPoint   = $trxhist['poin'];
-                    $member      = $MemberModel->where('id', $trxhist['customerid'])->first();
-                    $memberPoint = $member['poin'];
-                    // Used Poin 
-                    if (!empty($trxhist['poin'])) {
-                        $point       = $memberPoint - $discPoint;
-                    } else {
-                        // Not Apply Point
-                        $point  = $memberPoint;
-                    }
-                }
-
-                //Minus Member Point
-                $data = [
-                    'id' => $member['id'],
-                    'poin' => $point,
-                ];
-                $MemberModel->save($data);
-
-                //Insert First Trx Payment 
-                $data = [
-                    'paymentid'     => $trxhist['firstpayment'],
-                    'transactionid' => $trxId,
-                    'value'         => $trxhist['firstpay']
-                ];
-                $TrxpaymentModel->save($data);
-
-                //Insert Second Trx Payment 
-                $data = [
-                    'paymentid'     => $trxhist['secondpayment'],
-                    'transactionid' => $trxId,
-                    'value'         => $trxhist['secpay']
-                ];
-                $TrxpaymentModel->save($data);
-
-                // Insert First Cash 
-                $cashPlus   = $CashModel->where('id', $trxhist['firstpayment'])->first();
-                $cashUpdate = $trxhist['firstpay'] + $cashPlus['qty'];
-                $data = [
-                    'id'    => $cashPlus['id'],
-                    'qty'   => $cashUpdate,
-                ];
-                $CashModel->save($data);
-
-                // Insert Second Cash 
-                $cashPlus   = $CashModel->where('id', $trxhist['secondpayment'])->first();
-                $cashUpdate = $trxhist['secpay'] + $cashPlus['qty'];
-                $data = [
-                    'id'    => $cashPlus['id'],
-                    'qty'   => $cashUpdate,
-                ];
-                $CashModel->save($data);
+            // Variant
+            if (!empty($trxhist['varid']) && !empty($trxhist['qty'])) {
+                $variant[$trxhist['varid']] = $trxhist['qty'];
             }
-            return redirect()->back()->with('massage', lang('global.saved'));
+
+            // Bundle
+            if (!empty($trxhist['bundleid']) && !empty($trxhist['qty'])) {
+                $bundles[$trxhist['bundleid']] = $trxhist['qty'];
+            }
+
+            // Id Payment
+            $paymentid[$trxhist['paymentid']] = $trxhist['payval'];
+            $total = $trxhist['total'];
+
+            // Point
+            $memberid = $trxhist['memberid'];
+            $point = $trxhist['redempoin'];
         }
+
+        // dd($paymentid);
+
+        // Refund Variant
+        if (!empty($variant)) {
+            foreach ($variant as $varid => $varqty) {
+                $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
+                $saleVarStock = [
+                    'id'        => $stock['id'],
+                    'sale'      => $date,
+                    'qty'       => (int)$stock['qty'] + (int)$varqty
+                ];
+                $StockModel->save($saleVarStock);
+            }
+        }
+
+        // Refund Bundle
+        if (!empty($bundles)) {
+            foreach ($bundles as $bunid => $bunqty) {
+                $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
+                foreach ($bundledetail as $BundleDetail) {
+                    if (!empty($BundleDetail['variantid'])) {
+                        $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
+                        $saleBunStock = [
+                            'id'        => $bunstock['id'],
+                            'sale'      => $date,
+                            'qty'       => (int)$bunstock['qty'] + (int)$bunqty,
+                        ];
+                        $StockModel->save($saleBunStock);
+                    }
+                }
+            }
+        }
+
+        // Poin Setup
+        $minimumtrx = $Gconf['poinorder'];
+        $poinvalue  = $Gconf['poinvalue'];
+
+        $poinresult = "";
+        if ($total >= $minimumtrx) {
+            if ($minimumtrx != "0") {
+                $value      = (int)$total / (int)$minimumtrx;
+            } else {
+                $value      = 0;
+            }
+            $result         = floor($value);
+            $poinresult     = (int)$result * (int)$poinvalue;
+        } else {
+            $poinresult = 0;
+        }
+
+        // Refund Member Poin
+        $pointres = '';
+        if (!empty($memberid)) {
+            $cust       = $MemberModel->find($memberid);
+            if (!empty($point)) {
+                $pointres   = ((int)$cust['poin'] + (int)$point) - $poinresult;
+            }
+            $point = [
+                'id'    => $cust['id'],
+                'poin'  => $pointres,
+            ];
+            $MemberModel->save($point);
+        }
+
+        // Refund Payment
+        $debtval = "";
+        if (!empty($paymentid)) {
+            foreach ($paymentid as $payid => $payval) {
+                if (!empty($payid)) {
+                    $pay = $PaymentModel->find($payid);
+                    $cash = $CashModel->where('id', $pay['cashid'])->find();
+                    foreach ($cash as $cas) {
+                        $paymentdata = [
+                            'id'    => $cas['id'],
+                            'qty'   => $cas['qty'] - $payval,
+                        ];
+                        $CashModel->save($paymentdata);
+                    }
+                } else {
+                    $debtval = $payval;
+                    $debt = $DebtModel->where('memberid', $memberid)->first();
+                    $debtdata = [
+                        'id'    => $debt['id'],
+                        'value' => $debt['value'] - $debtval,
+                    ];
+                    $DebtModel->save($debtdata);
+                }
+            }
+        }
+
+        // Delete Transaction Payment
+        $trxpay = $TrxpaymentModel->where('transactionid', $id)->find();
+        foreach ($trxpay as $pay) {
+            $TrxpaymentModel->delete($pay);
+        }
+
+        // Delete Tansaction Detail
+        $trxdet = $TrxdetailModel->where('transactionid', $id)->find();
+        foreach ($trxdet as $detail) {
+            $TrxdetailModel->delete($detail);
+        }
+
+        // Delete Transaction
+        $trx = $TransactionModel->find($id);
+        $TransactionModel->delete($trx);
+
+        return redirect()->back()->with('massage', lang('global.deleted'));
     }
 }

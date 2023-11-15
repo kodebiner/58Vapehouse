@@ -39,6 +39,8 @@
     </div>
 </div>
 
+<?= view('Views/Auth/_message_block') ?>
+
 <!-- Table Of Content -->
 <div class="uk-overflow-auto">
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" style="width:100%">
