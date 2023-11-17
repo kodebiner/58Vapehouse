@@ -4087,7 +4087,7 @@ ul.uk-nav-sub {
 }
 
 .uk-nav-default>li.uk-active>a {
-    color: #222
+    color: rgb(151, 151, 151)
 }
 
 .uk-nav-default .uk-nav-subtitle {
@@ -11755,7 +11755,7 @@ body {
     border: 1px solid #f0506e !important;
 }
 
-li.tm-main-navbar>a>svg {
+li.tm-main-navbar>a>img {
     position: relative;
     top: -2px;
     margin-right: 5px;

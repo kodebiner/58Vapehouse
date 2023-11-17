@@ -318,6 +318,12 @@ $routes->group('walletmove', ['filter'=>'login'], function($routes){
     $routes->post('create', 'CashMove::create', ['filter' => 'role:owner']);
 });
 
+// Cash Expenses
+$routes->group('cashexp', ['filter'=>'login'], function($routes){
+    $routes->get('', 'CashExp::index', ['filter' => 'role:owner']);
+    $routes->post('create', 'CashExp::create', ['filter' => 'role:owner']);
+});
+
 // Payment
 $routes->group('payment', ['filter'=>'login'], function($routes){
     $routes->get('', 'Payment::index', ['filter' => 'role:owner']);

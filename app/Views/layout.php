@@ -386,7 +386,7 @@
                                 <a class="tm-h3" href="<?= base_url('cashinout') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashinout');?></a>
                             </li>
                             <?php if (in_groups('owner')) : ?>
-                                <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='walletman')?'uk-active':''?><?=($uri->getSegment(1)==='walletmove')?'uk-active':''?><?=($uri->getSegment(1)==='payment')?'uk-active':''?>">
+                                <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='walletman')?'uk-active':''?><?=($uri->getSegment(1)==='walletmove')?'uk-active':''?><?=($uri->getSegment(1)==='cashexp')?'uk-active':''?><?=($uri->getSegment(1)==='payment')?'uk-active':''?>">
                                     <a class="tm-h3" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
                                     <ul class="uk-nav-sub">
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='walletman')?'uk-active':''?>">
@@ -394,6 +394,9 @@
                                         </li>
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='walletmove')?'uk-active':''?>">
                                             <a href="<?= base_url('walletmove') ?>"><?=lang('Global.walletMovement');?></a>
+                                        </li>
+                                        <li class="tm-h4 <?=($uri->getSegment(1)==='cashexp')?'uk-active':''?>">
+                                            <a href="<?= base_url('cashexp') ?>"><?=lang('Global.cashExpenses');?></a>
                                         </li>
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='payment')?'uk-active':''?>">
                                             <a href="<?= base_url('payment') ?>"><?=lang('Global.payment');?></a>
@@ -543,7 +546,7 @@
                         <a class="tm-h3" href="<?= base_url('cashinout') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashinout');?></a>
                     </li>
                     <?php if (in_groups('owner')) : ?>
-                        <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='walletman')?'uk-active':''?><?=($uri->getSegment(1)==='walletmove')?'uk-active':''?><?=($uri->getSegment(1)==='payment')?'uk-active':''?>">
+                        <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='walletman')?'uk-active':''?><?=($uri->getSegment(1)==='walletmove')?'uk-active':''?><?=($uri->getSegment(1)==='cashexp')?'uk-active':''?><?=($uri->getSegment(1)==='payment')?'uk-active':''?>">
                             <a class="tm-h3" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='walletman')?'uk-active':''?>">
@@ -551,6 +554,9 @@
                                 </li>
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='walletmove')?'uk-active':''?>">
                                     <a href="<?= base_url('walletmove') ?>"><?=lang('Global.walletMovement');?></a>
+                                </li>
+                                <li class="tm-h4 <?=($uri->getSegment(1)==='cashexp')?'uk-active':''?>">
+                                    <a href="<?= base_url('cashexp') ?>"><?=lang('Global.cashExpenses');?></a>
                                 </li>
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='payment')?'uk-active':''?>">
                                     <a href="<?= base_url('payment') ?>"><?=lang('Global.payment');?></a>
@@ -596,14 +602,14 @@
                 <?php
                 if ($ismobile === true) {
                     $footerPadding = '';
-                    // $footerContainer = '';
+                    $footerContainer = '';
                 } else {
                     $footerPadding = 'uk-padding-xlarge-left';
-                    // $footerContainer = 'uk-container uk-container-expand';
+                    $footerContainer = 'uk-container uk-container-expand';
                 }
                 ?>
                 <div class="<?=$footerPadding?>">
-                    <div class="uk-container uk-container-expand">
+                    <div class="<?=$footerContainer?>">
                         <?php
                         function auto_copyright($year = 'auto'){
                             if(intval($year) == 'auto'){ $year = date('Y'); }
