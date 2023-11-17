@@ -6601,7 +6601,7 @@ iframe[uk-cover] {
 }
 
 .uk-panel-scrollable {
-    height: 170px;
+    height: 50px;
     padding: 10px;
     overflow: auto;
     resize: both

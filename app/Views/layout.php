@@ -581,7 +581,7 @@
             } else {
                 $mainPadding = 'uk-padding-xlarge-left';
                 $mainContainer = 'uk-container uk-container-expand uk-padding-remove-right';
-                $mainCard = 'tm-main-card tm-main-panel ';
+                $mainCard = 'tm-main-card ';
             }
             ?>
             <div class="<?=$mainPadding?>">
