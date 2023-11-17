@@ -23,6 +23,7 @@
             <script>
                 $(function() {
                     $('input[name="daterange"]').daterangepicker({
+                        maxDate: new Date(),
                         opens: 'right'
                     }, function(start, end, label) {
                         document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
@@ -134,43 +135,43 @@
                 </div>
                 <div calss="uk-modal-body">
                     <div class="uk-margin">
-                        <div class="uk-flex uk-flex-center">
-                            <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
-                                <img src="/img/<?= $gconfig['logo']; ?>" alt="<?= $gconfig['bizname']; ?>" style="height: 90px;">
-                            <?php } else { ?>
-                                <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 90px;">
-                            <?php } ?>
-                        </div>
-                        <div class="uk-flex uk-flex-center">
-                            <?php foreach ($outlets as $outlet) {
-                                if ($outlet['id'] === $transaction['outletid']) { ?>
-                                    <div class="fpoutlet uk-h3 uk-margin-remove"><?= $outlet['name'] ?></div>
-                            <?php }
-                            } ?>
-                        </div>
-                        <div class="uk-flex uk-flex-center">
-                            <?php foreach ($outlets as $outlet) {
-                                if ($outlet['id'] === $transaction['outletid']) { ?>
-                                    <div class="fpaddress uk-h4 uk-margin-remove"><?= $outlet['address'] ?></div>
-                            <?php }
-                            } ?>
-                        </div>
-                        <div class="uk-flex uk-flex-center">
-                            <?php foreach ($outlets as $outlet) {
-                                if ($outlet['id'] === $transaction['outletid']) { ?>
-                                    <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="instagram"></span> : <?= $outlet['instagram'] ?></div>
-                            <?php }
-                            } ?>
-                        </div>
-                        <div class="uk-flex uk-flex-center">
-                            <?php foreach ($outlets as $outlet) {
-                                if ($outlet['id'] === $transaction['outletid']) { ?>
-                                    <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="whatsapp"></span> : <?= $outlet['phone'] ?></div>
-                            <?php }
-                            } ?>
-                        </div>
-
                         <div class="uk-padding-small">
+                            <div class="uk-flex uk-flex-center">
+                                <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
+                                    <img src="/img/<?= $gconfig['logo']; ?>" alt="<?= $gconfig['bizname']; ?>" style="height: 90px;">
+                                <?php } else { ?>
+                                    <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 90px;">
+                                <?php } ?>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                <?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $transaction['outletid']) { ?>
+                                        <div class="fpoutlet uk-h3 uk-margin-remove uk-text-justify"><?= $outlet['name'] ?></div>
+                                <?php }
+                                } ?>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                <?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $transaction['outletid']) { ?>
+                                        <div class="fpaddress uk-h4 uk-margin-remove"><?= $outlet['address'] ?></div>
+                                <?php }
+                                } ?>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                <?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $transaction['outletid']) { ?>
+                                        <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="instagram"></span> : <?= $outlet['instagram'] ?></div>
+                                <?php }
+                                } ?>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                <?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $transaction['outletid']) { ?>
+                                        <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="whatsapp"></span> : <?= $outlet['phone'] ?></div>
+                                <?php }
+                                } ?>
+                            </div>
+
                             <div uk-grid>
                                 <div class="uk-width-1-2">Invoice: <?= (strtotime($transaction['date'])) ?></div>
                                 <div class="uk-width-1-2 uk-text-right"><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></div>

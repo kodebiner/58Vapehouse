@@ -1305,12 +1305,12 @@
                                 </div>
                                 <!-- OutletPick End -->
                             </div>
-                        <?php } else if (empty($dailyreport)) { ?>
+                        <?php } elseif (empty($dailyreport)) { ?>
                             <div class="uk-margin uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
                                 <!-- Alert Open Store -->
                                 <div class="uk-margin-small uk-flex uk-flex-center">
                                     <div class="uk-width-1-6@m uk-card uk-card-default uk-card-small uk-card-body">
-                                        <div class="tm-h1 uk-text-center tm-text-large"><?=lang('Global.storeNotOpen')?></div>
+                                        <div class="tm-h1 uk-text-center"><?=lang('Global.storeNotOpen')?></div>
                                     </div>
                                 </div>
                                 <!-- Alert Open Store End -->
@@ -1318,15 +1318,15 @@
                                 <!-- Button To Manage Cash -->
                                 <div class="uk-margin-remove uk-flex uk-flex-center">
                                     <a class="uk-width-1-6@m uk-button uk-button-primary" href="<?= base_url('cashinout') ?>" style="border-radius: 10px;">
-                                        <div class="tm-h1 uk-text-center tm-text-large" style="color: #fff !important;"><?=lang('Global.open')?></div>
+                                        <div class="tm-h6 uk-text-center" style="color: #fff !important;"><?=lang('Global.open')?></div>
                                     </a>
                                 </div>
                                 <!-- Button To Manage Cash End -->
                             </div>
                         <?php } else { ?>
                             <div class="uk-margin uk-flex uk-flex-center">
-                                <div class="uk-width-1-5@m uk-card uk-card-default uk-card-small uk-card-body">
-                                    <div class="tm-h1 uk-text-center tm-text-large">
+                                <div class="uk-width-1-1@m uk-card uk-card-default uk-card-small uk-card-body uk-padding-remove uk-margin-remove-top">
+                                    <div class="tm-h4 uk-text-center">
                                         <?php
                                             foreach ($outlets as $baseoutlet) {
                                                 if ($baseoutlet['id'] === $outletPick) {
@@ -1988,20 +1988,22 @@
 
         <!-- Footer Section -->
         <footer class="tm-footer" style="background-color:#000;">
-            <ul class="uk-flex-around tm-trx-tab" uk-tab uk-switcher="connect: .switcher-class; active: 1;">
-                <li>
-                    <a uk-switcher-item="0">
-                        <div width="30" height="30" uk-icon="file-text"></div>
-                        <div class="uk-h4 uk-margin-small"><?=lang('Global.catalog');?></div>
-                    </a>
-                </li>
-                <li>
-                    <a uk-switcher-item="0">
-                        <div width="30" height="30" uk-icon="file-edit"></div>
-                        <div class="uk-h4 uk-margin-small"><?=lang('Global.bundle');?></div>
-                    </a>
-                </li>
-            </ul>
+            <div class="uk-container-expand">
+                <ul class="uk-flex-around tm-trx-tab" uk-tab uk-switcher="connect: .switcher-class; active: 1;">
+                    <li>
+                        <a uk-switcher-item="0">
+                            <div width="30" height="30" uk-icon="file-text"></div>
+                            <div class="uk-h4 uk-margin-small"><?=lang('Global.catalog');?></div>
+                        </a>
+                    </li>
+                    <li>
+                        <a uk-switcher-item="0">
+                            <div width="30" height="30" uk-icon="file-edit"></div>
+                            <div class="uk-h4 uk-margin-small"><?=lang('Global.bundle');?></div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </footer>
         <!-- Footer Section end -->
 

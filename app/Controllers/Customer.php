@@ -101,8 +101,8 @@ class Customer extends BaseController
         ];
         
         if (! $this->validate([
-            'name'      => "required|max_length[255]',",
-            'phone'     => 'required',
+            'name'      => "required|max_length[255]|is_unique[member.name]",
+            'phone'     => 'required|is_unique[member.phone]',
             'email'     => 'max_length[255]',
         ])) {
                 
@@ -136,10 +136,10 @@ class Customer extends BaseController
 
         // Validasi
         if (! $this->validate([
-            'name'      => "max_length[255]',",
-            'phone'     => "max_length[255]',",
-            'email'     => "max_length[255]',",
-            'poin'     => "max_length[255]',",
+            'name'      => "max_length[255]|is_unique[member.name]",
+            'phone'     => "max_length[255]|is_unique[member.phone]",
+            'email'     => "max_length[255]",
+            'poin'      => "max_length[255]",
         ])) {
 
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());

@@ -62,7 +62,8 @@
         <script>
             $(function() {
                 $('input[name="daterange"]').daterangepicker({
-                    opens: 'right'
+                    opens: 'right',
+                    maxDate: new Date(),
                 }, function(start, end, label) {
                     document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
                     document.getElementById('short').submit();

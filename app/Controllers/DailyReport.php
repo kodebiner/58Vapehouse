@@ -107,7 +107,7 @@ class DailyReport extends BaseController
                 $products               = $ProductModel->find($productid);
     
                 // Get Cash Transaction
-                $pettycash              = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
+                $pettycash              = $CashModel->where('name', 'Petty Cash '.$this->data['outletPick'])->first();
                 $cashpayment            = $PaymentModel->where('outletid', $this->data['outletPick'])->where('name', 'Cash')->first();
                 $cashtrx                = $TransactionModel->where('paymentid', $cashpayment['id'])->find();
     

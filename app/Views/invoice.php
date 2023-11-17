@@ -149,7 +149,7 @@
                     <div class="uk-flex uk-flex-center">
                         <?php foreach ($outlets as $outlet) {
                             if ($outlet['id'] === $transactions['outletid']) { ?>
-                                <div class="fpoutlet uk-margin-remove" style="font-size:12px;" ><?= $outlet['name'] ?></div>
+                                <div class="fpoutlet uk-margin-remove uk-text-justify" style="font-size:12px;" ><?= $outlet['name'] ?></div>
                             <?php }
                         } ?>
                     </div>

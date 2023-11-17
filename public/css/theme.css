@@ -233,6 +233,22 @@ h6 {
     h2 {
         font-size: 30px
     }
+    .uk-h3,
+    h3 {
+        font-size: 26px
+    }
+    .uk-h4,
+    h4 {
+        font-size: 20px
+    }
+    .uk-h5,
+    h5 {
+        font-size: 14px
+    }
+    .uk-h6,
+    h6 {
+        font-size: 8px
+    }
 }
 
 ol,
@@ -4019,7 +4035,7 @@ select.uk-form-width-xsmall {
 }
 
 .uk-nav>li>a {
-    padding: 5px 0
+    padding: 10px 0
 }
 
 ul.uk-nav-sub {
@@ -4031,7 +4047,7 @@ ul.uk-nav-sub {
 }
 
 .uk-nav-sub a {
-    padding: 2px 0
+    padding: 7px 0
 }
 
 .uk-nav-parent-icon {
@@ -7594,9 +7610,9 @@ video) {
     padding-left: 200px;
 }
 
-@media (min-width:1500px) {
+@media (min-width:1400px) {
     .uk-padding-xlarge-left {
-        padding: 300px
+        padding-left: 300px;
     }
 }
 
@@ -11423,7 +11439,7 @@ body {
     bottom: 0;
     box-sizing: border-box;
     width: 240px !important;
-    padding: 40px 40px 60px 40px;
+    padding: 10px 40px 60px 40px;
     overflow-y: scroll;
 }
 
@@ -11461,7 +11477,7 @@ body {
 @media (min-width:1400px) {
     .tm-sidebar-left {
         width: 350px !important;
-        padding: 45px 45px 60px 45px
+        padding: 10px 45px 60px 45px
     }
     .tm-sidebar-right {
         left: calc(100% + 60px)
