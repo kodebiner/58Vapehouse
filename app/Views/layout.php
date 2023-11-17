@@ -596,14 +596,14 @@
                 <?php
                 if ($ismobile === true) {
                     $footerPadding = '';
-                    $footerContainer = '';
+                    // $footerContainer = '';
                 } else {
                     $footerPadding = 'uk-padding-xlarge-left';
-                    $footerContainer = 'uk-container uk-container-expand';
+                    // $footerContainer = 'uk-container uk-container-expand';
                 }
                 ?>
                 <div class="<?=$footerPadding?>">
-                    <div class="<?=$footerContainer?>">
+                    <div class="uk-container uk-container-expand">
                         <?php
                         function auto_copyright($year = 'auto'){
                             if(intval($year) == 'auto'){ $year = date('Y'); }

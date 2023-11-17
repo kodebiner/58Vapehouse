@@ -1999,7 +1999,7 @@
 
         <!-- Footer Section -->
         <footer class="tm-footer" style="background-color:#000;">
-            <div class="uk-container-expand">
+            <div class="uk-container uk-container-expand">
                 <ul class="uk-flex-around tm-trx-tab" uk-tab uk-switcher="connect: .switcher-class; active: 1;">
                     <li>
                         <a uk-switcher-item="0">
