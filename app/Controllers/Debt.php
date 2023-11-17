@@ -555,6 +555,7 @@ class Debt extends BaseController
         $bundles = [];
         $paymentid = [];
         $point = "";
+        
         foreach ($transactionhist as $trxhist) {
 
             // Variant
@@ -575,8 +576,6 @@ class Debt extends BaseController
             $memberid = $trxhist['memberid'];
             $point = $trxhist['redempoin'];
         }
-
-        // dd($paymentid);
 
         // Refund Variant
         if (!empty($variant)) {
