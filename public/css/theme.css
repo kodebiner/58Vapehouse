@@ -7591,7 +7591,13 @@ video) {
 }
 
 .uk-padding-xlarge-left {
-    padding-left: 300px;
+    padding-left: 200px;
+}
+
+@media (min-width:1500px) {
+    .uk-padding-xlarge-left {
+        padding: 300px
+    }
 }
 
 .uk-padding-remove {
@@ -11592,7 +11598,7 @@ body {
     font-size: 6px
 }
 
-@media (min-width:800px) {
+@media (min-width:1500px) {
     .tm-h1,
     h1 {
         font-size: 24px

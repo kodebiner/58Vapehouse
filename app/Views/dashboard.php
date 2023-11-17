@@ -52,7 +52,7 @@
                 <a class="uk-link-reset" href="<?= base_url('presence') ?>">
                     <div class="uk-card uk-card-default uk-card-small uk-card-body">
                         <img src="img/layout/presensi.svg" uk-svg style="color: #1e87f0;">
-                        <div class="uk-h6 tm-h6"><?=lang('Global.presence');?></div>
+                        <div class="tm-h4"><?=lang('Global.presence');?></div>
                     </div>
                 </a>
             </div>
@@ -60,7 +60,7 @@
                 <a class="uk-link-reset" href="<?= base_url('sop/todolist') ?>">
                     <div class="uk-card uk-card-default uk-card-small uk-card-body">
                         <img src="img/layout/sop.svg" uk-svg style="color: #1e87f0;">
-                        <div class="uk-h6 tm-h6"><?=lang('Global.sop');?></div>
+                        <div class="tm-h4"><?=lang('Global.sop');?></div>
                     </div>
                 </a>
             </div>
@@ -68,7 +68,7 @@
                 <a class="uk-link-reset" href="<?= base_url('cashinout') ?>">
                     <div class="uk-card uk-card-default uk-card-small uk-card-body">
                         <img src="img/layout/cash.svg" uk-svg style="color: #1e87f0;">
-                        <div class="uk-h6 tm-h6"><?=lang('Global.cashinout');?></div>
+                        <div class="tm-h4"><?=lang('Global.cashinout');?></div>
                     </div>
                 </a>
             </div>
@@ -76,7 +76,7 @@
                 <a class="uk-link-reset" href="<?= base_url('customer') ?>">
                     <div class="uk-card uk-card-default uk-card-small uk-card-body">
                         <img src="img/layout/pelanggan.svg" uk-svg style="color: #1e87f0;">
-                        <div class="uk-h6 tm-h6"><?=lang('Global.customer');?></div>
+                        <div class="tm-h4"><?=lang('Global.customer');?></div>
                     </div>
                 </a>
             </div>
@@ -99,10 +99,10 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <h5 class="tm-h2" style="color: #000;"><?= lang('Global.salestotal') ?></h5>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.salestotal') ?></div>
                         </div>
                         <div class="uk-margin-small-top">
-                            <h3 class="tm-h2" style="color: #000;">Rp <?= number_format($sales,0,',','.') ?></h3>
+                            <div class="tm-h2" style="color: #000;">Rp <?= number_format($sales,0,',','.') ?></div>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
                             <a class="uk-link-reset" href="<?= base_url('report/penjualan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
@@ -117,10 +117,10 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <h5 class="tm-h2" style="color: #000;"><?= lang('Global.profittotal') ?></h5>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.profittotal') ?></div>
                         </div>
                         <div class="uk-margin-small-top">
-                            <h3 class="tm-h2" style="color: #000;">Rp <?= number_format($profit,0,',','.') ?></h3>
+                            <div class="tm-h2" style="color: #000;">Rp <?= number_format($profit,0,',','.') ?></div>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
                             <a class="uk-link-reset" href="<?= base_url('report/keuntungan') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
@@ -135,10 +135,10 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <h5 class="tm-h2" style="color: #000;"><?= lang('Global.totaltransaction') ?></h5>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.totaltransaction') ?></div>
                         </div>
                         <div class="uk-margin-small-top">
-                            <h3 class="tm-h2" style="color: #000;"><?=$trxamount?></h3>
+                            <div class="tm-h2" style="color: #000;"><?=$trxamount?></div>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
                             <a class="uk-link-reset" href="<?= base_url('trxhistory') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
@@ -153,10 +153,10 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <h5 class="tm-h2" style="color: #000;"><?= lang('Global.productsales') ?></h5>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.productsales') ?></div>
                         </div>
                         <div class="uk-margin-small-top">
-                            <h3 class="tm-h2" style="color: #000;"><?= $qtytrxsum ?></h3>
+                            <div class="tm-h2" style="color: #000;"><?= $qtytrxsum ?></div>
                         </div>
                         <div class="uk-text-right uk-margin-small-top">
                             <a class="uk-link-reset" href="<?= base_url('report/product') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
@@ -177,7 +177,7 @@
                         <div>
                             <div class="uk-child-width-1-2" uk-grid id="descsales">
                                 <div>
-                                    <h5 class="tm-h2" style="color: #000;"><?= lang('Global.salesdetails') ?></h5>
+                                    <div class="tm-h3" style="color: #000;"><?= lang('Global.salesdetails') ?></div>
                                 </div>
                                 <div class="uk-padding-remove uk-inline uk-text-right">
                                     <button uk-icon="question"></button>
@@ -243,7 +243,7 @@
                         <div>
                             <div class="uk-child-width-1-2" uk-grid id="descdebt">
                                 <div>
-                                    <h5 class="tm-h2" style="color: #000;"><?= lang('Global.debt') ?></h5>
+                                    <div class="tm-h3" style="color: #000;"><?= lang('Global.debt') ?></div>
                                 </div>
                                 <div class="uk-padding-remove uk-inline uk-text-right">
                                     <button uk-icon="question"></button>
@@ -257,7 +257,7 @@
                                     <div><?= lang('Global.totaldebt') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">
+                                    <div class="tm-h2">
                                         <?php
                                             $debt[] = array();
                                             foreach ($trxdebtval as $trxdebtva) {
@@ -279,7 +279,7 @@
                                     <div><?= lang('Global.totaldp') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">
+                                    <div class="tm-h2">
                                         <?php
                                             $debtdp[] = array();
                                             foreach ($trxdebtval as $trxdebtva) {
@@ -301,7 +301,7 @@
                                     <div><?= lang('Global.totalcustomer') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2"><?= $totalcustdebt ?></div>
+                                    <div class="tm-h2"><?= $totalcustdebt ?></div>
                                 </div>
                             </div>
                         </div>
@@ -320,7 +320,7 @@
                         <div>
                             <div class="uk-child-width-1-2" uk-grid id="desccashflow">
                                 <div>
-                                    <h5 class="tm-h2" style="color: #000;"><?= lang('Global.cashflow') ?></h5>
+                                    <div class="tm-h3" style="color: #000;"><?= lang('Global.cashflow') ?></div>
                                 </div>
                                 <div class="uk-padding-remove uk-inline uk-text-right">
                                     <button uk-icon="question"></button>
@@ -334,7 +334,7 @@
                                     <div><?= lang('Global.totalcashin') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashinsum,0,',','.') ?></div>
+                                    <div class="tm-h2">Rp <?= number_format($cashinsum,0,',','.') ?></div>
                                 </div>
                             </div>
 
@@ -345,7 +345,7 @@
                                     <div><?= lang('Global.totalcashout') ?></div>
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
-                                    <div class="uk-h3 tm-h2">Rp <?= number_format($cashoutsum,0,',','.') ?></div>
+                                    <div class="tm-h2">Rp <?= number_format($cashoutsum,0,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -362,7 +362,7 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <h5 class="tm-h2" style="color: #000;"><?= lang('Global.bestsellprod') ?></h5>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.bestsellprod') ?></div>
                         </div>
                         <div class="uk-margin-small-top">
                             <table class="uk-table uk-table-divider" style="background-color: #fff;">
@@ -408,7 +408,7 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <h5 class="tm-h2" style="color: #000;"><?= lang('Global.poppaymethod') ?></h5>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.poppaymethod') ?></div>
                         </div>
                         <div class="uk-margin-small-top">
                             <table class="uk-table uk-table-divider" style="background-color: #fff;">
@@ -447,7 +447,7 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <h5 class="tm-h2" style="color: #000;"><?= lang('Global.outlook') ?></h5>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.outlook') ?></div>
                         </div>
                         <div class="uk-margin-small-top">
                             <div class="uk-child-width-1-2" uk-grid>
@@ -504,7 +504,7 @@
                         <div>
                             <div class="uk-child-width-1-2" uk-grid id="descstockcycle">
                                 <div>
-                                    <h5 class="tm-h2" style="color: #000;"><?= lang('Global.stockCycle') ?></h5>
+                                    <div class="tm-h3" style="color: #000;"><?= lang('Global.stockCycle') ?></div>
                                 </div>
                                 <div class="uk-padding-remove uk-inline uk-text-right">
                                     <button uk-icon="question"></button>
