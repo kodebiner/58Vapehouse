@@ -227,25 +227,12 @@
 
                                     <!-- Script Webcam Top Up Proof -->
                                     <script type="text/javascript">
-                                       
-                                    //    var i = 0;
-                                    //    var cameras = new Array(); //create empty array to later insert available devices
-                                    //     navigator.mediaDevices.enumerateDevices().then(function(devices) {
-                                    //         devices.forEach(function(device) {
-                                    //             if(device.kind=== "videoinput"){ //filter video devices only
-                                    //                 cameras[i]= device.deviceId; // save the camera id's in the camera array
-                                    //                 i++;
-                                    //             }
-                                    //         });
-                                    //     });
 
                                         Webcam.set({
                                             width: 490,
                                             height: 390,
                                             image_format: 'jpeg',
                                             jpeg_quality: 90,
-                                            // sourceId: cameras[i],
-                                            // audio: true, video: { facingMode: { exact: "environment" } },
                                             video: { facingMode: "environment" },
                                             constraints: {
                                             facingMode: 'environment'
@@ -1244,7 +1231,11 @@
                                 width: 490,
                                 height: 390,
                                 image_format: 'jpeg',
-                                jpeg_quality: 90
+                                jpeg_quality: 90,
+                                video: { facingMode: "environment" },
+                                constraints: {
+                                facingMode: 'environment'
+                                }
                             });
                         
                             Webcam.attach( '#my_camera' );

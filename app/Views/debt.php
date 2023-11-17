@@ -1,23 +1,23 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('extraScript') ?>
-    <link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
-    <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-    <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
-    <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
-    <script src="js/jquery.validate.min.js"></script>
-    <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
-    <script type="text/javascript" src="js/moment.min.js"></script>
-    <script type="text/javascript" src="js/daterangepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
+<link rel="stylesheet" href="css/code.jquery.com_ui_1.13.2_themes_base_jquery-ui.css">
+<script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+<script src="js/code.jquery.com_jquery-3.6.0.js"></script>
+<script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
+<script src="js/jquery.validate.min.js"></script>
+<script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
+<script type="text/javascript" src="js/moment.min.js"></script>
+<script type="text/javascript" src="js/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 
 
- <!-- Page Heading -->
- <div class="tm-card-header uk-light">
+<!-- Page Heading -->
+<div class="tm-card-header uk-light">
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-2@m">
-            <h3 class="tm-h3"><?=lang('Global.debt')?></h3>
+            <h3 class="tm-h3"><?= lang('Global.debt') ?></h3>
         </div>
 
         <!-- Date Range -->
@@ -25,7 +25,7 @@
             <form id="short" action="debt" method="get">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?= date('m/d/Y', $startdate) ?> - <?= date('m/d/Y', $enddate) ?>" />
                 </div>
             </form>
             <script>
@@ -73,20 +73,20 @@
                             <?php foreach ($outlets as $outlet) {
                                 if ($outlet['id'] === $trx['outletid']) { ?>
                                     <td class=""><?= $outlet['name'] ?></td>
-                                <?php }
+                            <?php }
                             } ?>
-                        <?php }
+                    <?php }
                     } ?>
-                    
+
                     <?php foreach ($customers as $cust) {
-                        if ($cust['id'] === $debt['memberid']) {?>
-                            <td class=""><?= $cust['name'].' / '.$cust['phone'] ?></td>
-                        <?php }
+                        if ($cust['id'] === $debt['memberid']) { ?>
+                            <td class=""><?= $cust['name'] . ' / ' . $cust['phone'] ?></td>
+                    <?php }
                     } ?>
 
                     <td class=""><?= date('l, d M Y', strtotime($debt['deadline'])); ?></td>
 
-                    <td class="">Rp <?= number_format($debt['value'],2,',','.') ?></td>
+                    <td class="">Rp <?= number_format($debt['value'], 2, ',', '.') ?></td>
                 </tr>
             <?php } ?>
         </tbody>
@@ -108,10 +108,10 @@
                             <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
                         </div>
                         <div class="uk-text-center">
-                            <h3 class="tm-h2"><?=lang('Global.paybill')?></h5>
+                            <h3 class="tm-h2"><?= lang('Global.paybill') ?></h5>
                         </div>
                         <div class="uk-margin-remove-top uk-text-center">
-                            <h5 class="uk-modal-title" style="color: #000;">Rp <?= number_format($debt['value'],2,',','.') ?></h5>
+                            <h5 class="uk-modal-title" style="color: #000;">Rp <?= number_format($debt['value'], 2, ',', '.') ?></h5>
                         </div>
                     </div>
                 </div>
@@ -120,17 +120,17 @@
                         <div class="uk-text-right">
                             <?php foreach ($transactions as $transaction) {
                                 if ($transaction['id'] === $debt['transactionid']) { ?>
-                                    <a class="uk-icon-button" uk-icon="print" href="pay/copyprint/<?=$transaction['id']?>"></a>
-                                <?php }
+                                    <a class="uk-icon-button" uk-icon="print" href="pay/copyprint/<?= $transaction['id'] ?>"></a>
+                            <?php }
                             } ?>
                         </div>
 
                         <div class="uk-margin uk-margin-remove-top">
-                            <label class="uk-form-label"><?=lang('Global.customer')?></label>
-                            <div class="uk-form-controls">: 
+                            <label class="uk-form-label"><?= lang('Global.customer') ?></label>
+                            <div class="uk-form-controls">:
                                 <?php foreach ($customers as $cust) {
                                     if ($debt['memberid'] === $cust['id']) {
-                                        echo $cust['name'].' / '.$cust['phone'];
+                                        echo $cust['name'] . ' / ' . $cust['phone'];
                                     }
                                 } ?>
                             </div>
@@ -140,7 +140,7 @@
                             <?= csrf_field() ?>
 
                             <div class="uk-margin-bottom">
-                                <label class="uk-form-label" for="value"><?=lang('Global.amountpaid')?></label>
+                                <label class="uk-form-label" for="value"><?= lang('Global.amountpaid') ?></label>
                                 <div class="uk-form-controls">
                                     <input type="number" class="uk-input" min="0" max="<?= $debt['value'] ?>" id="value" name="value" placeholder="0" required />
                                 </div>
@@ -148,19 +148,19 @@
 
                             <?php if ($debt['value'] !== "0") { ?>
                                 <div class="uk-margin">
-                                    <label class="uk-form-label"><?=lang('Global.duedate')?></label>
+                                    <label class="uk-form-label"><?= lang('Global.duedate') ?></label>
                                     <div class="uk-form-controls">
                                         <div class="uk-inline">
                                             <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: calendar"></span>
                                             <input class="uk-input uk-form-width-medium" id="duedate<?= $debt['id'] ?>" name="duedate<?= $debt['id'] ?>" />
                                             <script type="text/javascript">
-                                                $( function() {
-                                                    $( "#duedate<?= $debt['id'] ?>" ).datepicker({
+                                                $(function() {
+                                                    $("#duedate<?= $debt['id'] ?>").datepicker({
                                                         dateFormat: "yy-mm-dd",
                                                         minDate: "<?= $debt['deadline'] ?>",
                                                         maxDate: "+1m +1w"
                                                     });
-                                                } );
+                                                });
                                             </script>
                                         </div>
                                     </div>
@@ -181,7 +181,7 @@
 
                             <div class="uk-margin">
                                 <div class="uk-width-5-6">
-                                    <button type="submit" class="uk-button uk-button-primary" style="border-radius: 8px; width: 540px;"><?=lang('Global.pay')?></button>
+                                    <button type="submit" class="uk-button uk-button-primary" style="border-radius: 8px; width: 540px;"><?= lang('Global.pay') ?></button>
                                 </div>
                             </div>
                         </form>
@@ -190,7 +190,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal Pay Proof -->
     <div uk-modal class="uk-flex-top" id="payproof-<?= $debt['id'] ?>">
         <div class="uk-modal-dialog uk-margin-auto-vertical">
@@ -201,7 +201,7 @@
                             <a uk-icon="arrow-left" uk-toggle="#pay-<?= $debt['id'] ?>" width="35" height="35"></a>
                         </div>
                         <div>
-                            <h5 class="uk-modal-title" ><?=lang('Global.payproof')?></h5>
+                            <h5 class="uk-modal-title"><?= lang('Global.payproof') ?></h5>
                         </div>
                     </div>
                 </div>
@@ -220,20 +220,27 @@
 
                     <!-- Script Webcam Pay Proof -->
                     <script type="text/javascript">
+                        
                         Webcam.set({
                             width: 490,
                             height: 390,
                             image_format: 'jpeg',
-                            jpeg_quality: 90
+                            jpeg_quality: 90,
+                            video: {
+                                facingMode: "environment"
+                            },
+                            constraints: {
+                                facingMode: 'environment'
+                            }
                         });
-                    
-                        Webcam.attach( '#pay_camera<?= $debt['id'] ?>' );
+
+                        Webcam.attach('#pay_camera<?= $debt['id'] ?>');
 
                         function pay_snapshot<?= $debt['id'] ?>() {
-                            Webcam.snap( function(data_uri) {
+                            Webcam.snap(function(data_uri) {
                                 $(".image-tag").val(data_uri);
-                                document.getElementById('pay_results<?= $debt['id'] ?>').innerHTML = '<img src="'+data_uri+'"/>';
-                            } );
+                                document.getElementById('pay_results<?= $debt['id'] ?>').innerHTML = '<img src="' + data_uri + '"/>';
+                            });
                         }
                     </script>
                     <!-- Script Webcam Pay Proof End -->
