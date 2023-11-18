@@ -92,10 +92,10 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <div class="tm-h3" style="color: #000;"><?= lang('Global.sales').' '. date('M Y', strtotime($month)); ?></div>
+                            <div class="tm-h5" style="color: #000;"><?= lang('Global.sales').' '. date('M Y', strtotime($month)); ?></div>
                         </div>
                         <div class="uk-margin-small-top">
-                            <div class="tm-h2" style="color: #000;">Rp <?= number_format($sales,0,',','.') ?></div>
+                            <div class="tm-h4" style="color: #000;">Rp <?= number_format($sales,0,',','.') ?></div>
                         </div>
                     </div>
                 </div>
@@ -104,10 +104,10 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <div class="tm-h3" style="color: #000;"><?= lang('Global.todaysales') ?></div>
+                            <div class="tm-h5" style="color: #000;"><?= lang('Global.todaysales') ?></div>
                         </div>
                         <div class="uk-margin-small-top">
-                            <div class="tm-h2" style="color: #000;">Rp <?= number_format($profit,0,',','.') ?></div>
+                            <div class="tm-h4" style="color: #000;">Rp <?= number_format($sumtrxtoday,0,',','.') ?></div>
                         </div>
                     </div>
                 </div>
@@ -116,10 +116,10 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <div class="tm-h3" style="color: #000;"><?= lang('Global.walletbalance') ?></div>
+                            <div class="tm-h5" style="color: #000;"><?= lang('Global.walletbalance') ?></div>
                         </div>
                         <div class="uk-margin-small-top">
-                            <div class="tm-h2" style="color: #000;">Rp <?= number_format($profit,0,',','.') ?></div>
+                            <div class="tm-h4" style="color: #000;">Rp <?= number_format($profit,0,',','.') ?></div>
                         </div>
                     </div>
                 </div>
@@ -128,10 +128,10 @@
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
-                            <div class="tm-h3" style="color: #000;"><?= lang('Global.todayexpenses') ?></div>
+                            <div class="tm-h5" style="color: #000;"><?= lang('Global.todayexpenses') ?></div>
                         </div>
                         <div class="uk-margin-small-top">
-                            <div class="tm-h2" style="color: #000;">Rp <?= number_format($todayexps,0,',','.') ?></div>
+                            <div class="tm-h4" style="color: #000;">Rp <?= number_format($todayexps,0,',','.') ?></div>
                         </div>
                     </div>
                 </div>

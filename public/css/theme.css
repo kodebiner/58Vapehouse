@@ -11789,6 +11789,52 @@ li.tm-main-navbar>a>img {
     padding-bottom: 10px;
 }
 
+.tm-footer {
+    height : calc(100dvh - 600px);
+}
+
+@media (min-width:380px) {
+    .tm-footer {
+        height : calc(100dvh - 770px);
+    }
+}
+
+@media (min-width:600px) {
+    .tm-footer {
+        height : calc(100dvh - 940px);
+    }
+}
+
+@media (min-width:800px) {
+    .tm-footer {
+        height : calc(100dvh - 1100px);
+    }
+}
+
+@media (min-width:1000px) {
+    .tm-footer {
+        height : calc(100dvh - 1290px);
+    }
+}
+
+@media (min-width:1200px) {
+    .tm-footer {
+        height : calc(100dvh - 830px);
+    }
+}
+
+@media (min-width:1400px) {
+    .tm-footer {
+        height : calc(100dvh - 1000px);
+    }
+}
+
+@media (min-width:2000px) {
+    .tm-footer {
+        height : calc(100dvh - 1500px);
+    }
+}
+
 .uk-footer-container:not(.uk-navbar-transparent) {
     background: #f8f8f8
 }
