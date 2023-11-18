@@ -65,29 +65,35 @@ class Home extends BaseController
         $bundets        = $BundledetailModel->findAll();
         $members        = $MemberModel->findAll();
         $purchasedet    = $PurchasedetModel->findAll();
-       
-       
 
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
-        }
-        
         // Populating Data
+        if (!empty($input)) {
+            $daterange  = explode(' - ', $input);
+            $startdate  = $daterange[0];
+            $enddate    = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1');
+            $enddate    = date('Y-m-t');
+        }
+
+        $today          = date('Y-m-d');
+        $tomorrow       = date('Y-m-d', strtotime('+1 day'));
+        $month          = date('Y-m-t');
+        
         if ($this->data['outletPick'] === null) {
             $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $trxtoday       = $TransactionModel->where('date >=', $today)->where('date <=', $tomorrow)->find();
+            $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today)->where('date <=', $tomorrow)->find();
             $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->findAll();
             $payments       = $PaymentModel->findAll();
             array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
         } else {
             $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
-            $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $trxtoday       = $TransactionModel->where('date >=', $today)->where('date <=', $tomorrow)->where('outletid',$this->data['outletPick'])->find();
+            $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today)->where('date <=', $tomorrow)->where('outletid',$this->data['outletPick'])->find();
             $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
             $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid',$this->data['outletPick'])->find();
             $payments       = $PaymentModel->whereIn('outletid',array('0', $this->data['outletPick']))->find();
@@ -438,6 +444,18 @@ class Home extends BaseController
         $cashinsum = array_sum($cashin);
         $cashoutsum = array_sum($cashout);
 
+        // Today's Expenses
+        $todayexp = array();
+        foreach ($todayexpenses as $todexp) {
+            if ($todexp['type'] === "1") {
+                $todayexp[] = $todexp['qty'];
+            }
+        }
+        $todayexps  = array_sum($todayexp);
+
+        // Today's Sales
+
+
         $data                   = $this->data;
         $data['title']          = lang('Global.dashboard');
         $data['description']    = lang('Global.dashdesc');
@@ -467,6 +485,8 @@ class Home extends BaseController
         $data['averagedays']    = $resultaveragedays;
         $data['bussyday']       = $day;
         $data['bussytime']      = $busy;
+        $data['todayexps']      = $todayexps;
+        $data['month']          = $month;
         $data['payments']       = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
        
         

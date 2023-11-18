@@ -85,6 +85,61 @@
     </div>
     <!-- Shortcut List End -->
 
+    <!-- Report Short List -->
+    <div class="uk-container uk-container-large uk-margin-top">
+        <div class="uk-child-width-1-2 uk-child-width-1-4@l uk-flex-center uk-flex-middle" uk-grid uk-height-match="target: > div > .uk-card">
+            <div>
+                <div class="uk-card uk-card-default uk-card-body">
+                    <div class="uk-child-width-1-1" uk-grid>
+                        <div>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.sales').' '. date('M Y', strtotime($month)); ?></div>
+                        </div>
+                        <div class="uk-margin-small-top">
+                            <div class="tm-h2" style="color: #000;">Rp <?= number_format($sales,0,',','.') ?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="uk-card uk-card-default uk-card-body">
+                    <div class="uk-child-width-1-1" uk-grid>
+                        <div>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.todaysales') ?></div>
+                        </div>
+                        <div class="uk-margin-small-top">
+                            <div class="tm-h2" style="color: #000;">Rp <?= number_format($profit,0,',','.') ?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="uk-card uk-card-default uk-card-body">
+                    <div class="uk-child-width-1-1" uk-grid>
+                        <div>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.walletbalance') ?></div>
+                        </div>
+                        <div class="uk-margin-small-top">
+                            <div class="tm-h2" style="color: #000;">Rp <?= number_format($profit,0,',','.') ?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="uk-card uk-card-default uk-card-body">
+                    <div class="uk-child-width-1-1" uk-grid>
+                        <div>
+                            <div class="tm-h3" style="color: #000;"><?= lang('Global.todayexpenses') ?></div>
+                        </div>
+                        <div class="uk-margin-small-top">
+                            <div class="tm-h2" style="color: #000;">Rp <?= number_format($todayexps,0,',','.') ?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Report Short List End -->
+
     <!-- Transaction Section -->
     <div class="uk-position-small">
         <a href="transaction" class="uk-button uk-button-primary uk-button-large uk-width-1-1 uk-light" style="border-radius: 10px;"><span class="uk-h3 tm-h3"><?=lang('Global.transaction')?></span></a>
