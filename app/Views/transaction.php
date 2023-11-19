@@ -1275,12 +1275,14 @@
                 <?php
                 if ($ismobile === true) {
                     $mainContainer = '';
+                    $mainCard = '';
                 } else {
                     $mainContainer = 'uk-container uk-container-expand uk-padding-remove-horizontal';
+                    $mainCard = 'tm-main-card ';
                 }
                 ?>
                 <div class="<?=$mainContainer?>">
-                    <div class="uk-panel uk-panel-trx-scrollable" style="background-color: #363636;">
+                    <div class="<?=$mainCard?>uk-panel uk-panel-trx-scrollable" style="background-color: #363636;">
                         <?php if ($outletPick === null) { ?>
                             <div class="uk-margin uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
                                 <!-- Alert Outlet -->
