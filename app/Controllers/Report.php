@@ -67,7 +67,7 @@ class Report extends BaseController
                         $discounttrx[]          = $trx['discvalue'];
                     }
                     if ($trx['disctype'] !== "0"){
-                        $discounttrxpersen[]    = ($trxdetail['value'] * $trxdetail['qty']) - ($trx['value'] + $trxdetail['discvar']);
+                        $discounttrxpersen[]    = ((Int)$trxdetail['value'] * (Int)$trxdetail['qty']) - ((Int)$trx['value'] + (Int)$trxdetail['discvar']);
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
                     $discountpoin[]             = $trx['pointused'];
@@ -98,7 +98,7 @@ class Report extends BaseController
         $trxdis = array_sum(array_column($discounts, 'trxdisc'));
         $dispoint = array_sum(array_column($discounts, 'poindisc'));
 
-        $grossales = $summary + $trxvar +  $trxdis +  $dispoint ;
+        $grossales = (Int)$summary + (Int)$trxvar + (Int)$trxdis + (Int)$dispoint ;
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -155,8 +155,8 @@ class Report extends BaseController
                             $discounttrx[]          = $trx['discvalue'];
                         }
                         if ($trx['disctype'] !== "0"){
-                            $sub =  ($trxdetail['value']* $trxdetail['qty']);
-                            $discounttrxpersen[]    =  ($trx['discvalue'] / 100) * $sub;
+                            $sub =  ((Int)$trxdetail['value'] * (Int)$trxdetail['qty']);
+                            $discounttrxpersen[]    =  ((Int)$trx['discvalue'] / 100) * (Int)$sub;
                         }
                         $discountvariant[]          = $trxdetail['discvar'];
                         $discountpoin[]             = $trx['pointused'];
@@ -171,7 +171,7 @@ class Report extends BaseController
         }
 
         
-        $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
+        $transactiondisc = (Int)(array_sum($discounttrx)) + (Int)(array_sum($discounttrxpersen));
         $variantdisc     = array_sum($discountvariant);
         $poindisc        = array_sum($discountpoin);
         
@@ -237,8 +237,8 @@ class Report extends BaseController
             foreach ($transaction as $trx){
                 foreach ($trxdetails as $trxdetail){
                     if($trx['id'] === $trxdetail['transactionid']){
-                        $marginmodal = $trxdetail['marginmodal'] * $trxdetail['qty'];
-                        $margindasar = $trxdetail['margindasar'] * $trxdetail['qty'];
+                        $marginmodal = (Int)$trxdetail['marginmodal'] * (Int)$trxdetail['qty'];
+                        $margindasar = (Int)$trxdetail['margindasar'] * (Int)$trxdetail['qty'];
                         $marginmodals[] = $marginmodal;
                         $margindasars[] = $margindasar;
                     }
@@ -316,8 +316,8 @@ class Report extends BaseController
                         $discounttrx[]          = $trx['discvalue'];
                     }
                     if ($trx['disctype'] !== "0"){
-                        $sub =  ($trxdetail['value']* $trxdetail['qty']);
-                        $discounttrxpersen[]    =  $sub * ($trx['discvalue'] / 100) ;
+                        $sub =  ((Int)$trxdetail['value'] * (Int)$trxdetail['qty']);
+                        $discounttrxpersen[]    =  (Int)$sub * ((Int)$trx['discvalue'] / 100) ;
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
                     $discountpoin[]             = $trx['pointused'];
@@ -325,7 +325,7 @@ class Report extends BaseController
                 }
             }
 
-            $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
+            $transactiondisc = (Int)(array_sum($discounttrx)) + (Int)(array_sum($discounttrxpersen));
             $variantdisc     = array_sum($discountvariant);
             $poindisc        = array_sum($discountpoin);
 
@@ -518,7 +518,7 @@ class Report extends BaseController
                     if ($transaction['disctype'] !== "0"){
 
                         $sub = ($trxdetail['value']) * $trxdetail['qty'];
-                        $discounttrxpersen[]    = $sub * ($transaction['discvalue']/100);
+                        $discounttrxpersen[]    = (Int)$sub * ((Int)$transaction['discvalue']/100);
 
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
@@ -538,8 +538,8 @@ class Report extends BaseController
                                                     'trxid'         => $transaction['id'],
                                                     'product'       => $product['name'],
                                                     'category'      => $cat['name'],
-                                                    'value'         => $trxdetail['value'] * $trxdetail['qty'],
-                                                    'gross'         => $trxdetail['value'] + $trxdetail['discvar'] * $trxdetail['qty'],
+                                                    'value'         => (Int)$trxdetail['value'] * (Int)$trxdetail['qty'],
+                                                    'gross'         => ((Int)$trxdetail['value'] + (Int)$trxdetail['discvar']) * (Int)$trxdetail['qty'],
                                                     'qty'           => $trxdetail['qty'],
                                                 ];
                                             }
@@ -552,7 +552,7 @@ class Report extends BaseController
                 }
             }
 
-            $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
+            $transactiondisc = (Int)(array_sum($discounttrx)) + (Int)(array_sum($discounttrxpersen));
             $variantdisc     = array_sum($discountvariant);
             $poindisc        = array_sum($discountpoin);
             
@@ -579,8 +579,6 @@ class Report extends BaseController
         }
         $produk = array_values($produk);
 
-
-        
         // disc calculation
         $trxdisc    = array_sum(array_column($diskon,'trxdisc'));
         $poindisc   = array_sum(array_column($diskon,'poindisc'));
@@ -589,7 +587,7 @@ class Report extends BaseController
 
         // if want to get net sales with trx disc and without bundle value
         if(!empty($proval)){
-            $netsales = $proval - ($trxdisc + $poindisc);
+            $netsales = (Int)$proval - ((Int)$trxdisc + (Int)$poindisc);
         }else{
             $netsales = "0";
         }
@@ -1014,7 +1012,7 @@ class Report extends BaseController
                             'name'  => $bundle['name'],
                             'qty'   => $trxdetail['qty'],
                             'price' => $bundle['price'],
-                            'value' => $trxdetail['qty'] * $bundle['price'],
+                            'value' => (Int)$trxdetail['qty'] * (Int)$bundle['price'],
                         ]; 
                     }
                 }
@@ -1136,7 +1134,7 @@ class Report extends BaseController
                     if ($transaction['disctype'] !== "0"){
 
                         $sub = ($trxdetail['value']) * $trxdetail['qty'];
-                        $discounttrxpersen[]    = $sub * ($transaction['discvalue']/100);
+                        $discounttrxpersen[]    = (Int)$sub * ((Int)$transaction['discvalue']/100);
 
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
@@ -1156,7 +1154,7 @@ class Report extends BaseController
                                                     'trxid'         => $transaction['id'],
                                                     'product'       => $product['name'],
                                                     'category'      => $cat['name'],
-                                                    'value'         => $trxdetail['value'] + $trxdetail['discvar'] * $trxdetail['qty'],
+                                                    'value'         => ((Int)$trxdetail['value'] + (Int)$trxdetail['discvar']) * (Int)$trxdetail['qty'],
                                                     'qty'           => $trxdetail['qty'],
                                                 ];
                                             }
