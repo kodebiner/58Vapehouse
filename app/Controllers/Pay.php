@@ -1321,7 +1321,7 @@ class Pay extends BaseController
         $date                   = date_create();
         $tanggal                = date_format($date,'Y-m-d H:i:s');
         $member                 = $MemberModel->where('id',$input['customerid'])->first();
-        $cash                   = $CashModel->where('outletid', $this->data['outletPick'])->first();
+        $cash                   = $CashModel->where('id', $payments['cashid'])->first();
 
         // Image Capture
         $img                    = $input['image'];
@@ -1345,7 +1345,7 @@ class Pay extends BaseController
             'qty'               => $input['value'],
             'photo'             => $fileName,
         ];
-        // $TrxotherModel->save($cashin);
+        $TrxotherModel->save($cashin);
         
         // plus member poin
         $poin                   = (Int)$member['poin'] + (Int)$input['value'];
@@ -1353,14 +1353,14 @@ class Pay extends BaseController
             'id'                => $input['customerid'],
             'poin'              => $poin,
         ];
-        // $MemberModel->save($data);
+        $MemberModel->save($data);
         
         $cas = (int)$input['value'] + (int)$cash['qty'];
         $wallet = [
             'id'                => $payments['cashid'],
             'qty'               => $cas,
         ];
-        // $CashModel->save($wallet);
+        $CashModel->save($wallet);
 
         // Find Data for Daily Report
         $today                  = date('Y-m-d') .' 00:00:01';
@@ -1370,10 +1370,8 @@ class Pay extends BaseController
                 'id'            => $dayrep['id'],
                 'totalcashin'   => (int)$dayrep['totalcashin'] + (int)$input['value'],
             ];
-            // $DailyReportModel->save($tcashin);
+            $DailyReportModel->save($tcashin);
         }
-
-        dd($wallet);
 
         // return
         return redirect()->back()->with('message', lang('Global.saved'));

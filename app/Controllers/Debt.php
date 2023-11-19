@@ -151,11 +151,13 @@ class Debt extends BaseController
         // Calling Models
         $OutletModel            = new OutletModel;
         $MemberModel            = new MemberModel;
+        $PaymentModel           = new PaymentModel;
         $TransactionModel       = new TransactionModel;
         $DebtModel              = new DebtModel;
 
         // Populating Data
         $outlets                = $OutletModel->findAll();
+        $payments               = $PaymentModel->findAll();
 
         $input = $this->request->getGet('daterange');
 
@@ -202,6 +204,7 @@ class Debt extends BaseController
         $data['outlets']        = $outlets;
         $data['customers']      = $customers;
         $data['debts']          = $debts;
+        $data['payments']       = $payments;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
         $data['pager']          = $DebtModel->pager;
@@ -217,24 +220,23 @@ class Debt extends BaseController
         // Calling Models
         $DebtModel              = new DebtModel;
         $CashModel              = new CashModel;
-        $TransactionModel       = new TransactionModel;
         $TrxotherModel          = new TrxotherModel;
         $PaymentModel           = new PaymentModel;
         $MemberModel            = new MemberModel;
         $DailyReportModel       = new DailyReportModel;
 
+        // Initialize
+        $input = $this->request->getPost();
+
         // Populating Data
         $debts                  = $DebtModel->find($id);
-        $cash                   = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
-        $payments               = $PaymentModel->like('name', 'Cash')->where('cashid', $cash['id'])->where('outletid', $this->data['outletPick'])->first();
+        $payments               = $PaymentModel->where('id', $input['payment'])->first();
         $customers              = $MemberModel->where('id', $debts['memberid'])->first();
+        $cash                   = $CashModel->where('id', $payments['cashid'])->first();
 
         // Date Time Stamp
         $date                   = date_create();
         $tanggal                = date_format($date, 'Y-m-d H:i:s');
-
-        // Initialize
-        $input = $this->request->getPost();
 
         if ($debts['value'] - $input['value'] != "0") {
             $data = [
@@ -249,7 +251,6 @@ class Debt extends BaseController
                 'deadline'      => NULL,
             ];
         }
-
         // Save Data Debt
         $DebtModel->save($data);
 
@@ -268,7 +269,7 @@ class Debt extends BaseController
         $cashin = [
             'userid'        => $this->data['uid'],
             'outletid'      => $this->data['outletPick'],
-            'cashid'        => $cash['id'],
+            'cashid'        => $payments['cashid'],
             'description'   => "Debt - " . $customers['name'] . '/' . $customers['phone'],
             'type'          => "0",
             'date'          => $tanggal,
@@ -279,8 +280,8 @@ class Debt extends BaseController
 
         // Input Value to cash
         $wallet = [
-            'id'    => $cash['id'],
-            'qty'   => $input['value'] + $cash['qty'],
+            'id'    => $payments['cashid'],
+            'qty'   => (Int)$cash['qty'] + (Int)$input['value'],
         ];
         $CashModel->save($wallet);
 
@@ -290,7 +291,7 @@ class Debt extends BaseController
         foreach ($dailyreports as $dayrep) {
             $tcashin = [
                 'id'            => $dayrep['id'],
-                'totalcashin'   => $dayrep['totalcashin'] + $input['value'],
+                'totalcashin'   => (Int)$dayrep['totalcashin'] + (Int)$input['value'],
             ];
             $DailyReportModel->save($tcashin);
         }
@@ -395,66 +396,6 @@ class Debt extends BaseController
 
         return view('Views/debtpay', $data);
     }
-
-    public function create()
-    {
-        // Calling Models
-        $CashModel      = new CashModel;
-        $CashmoveModel  = new CashmovementModel;
-
-        // Populating data
-        $Cash        =  $CashModel->findAll();
-
-        // initialize
-        $input          = $this->request->getPost();
-
-        // save data
-        $data = [
-            'description'       => $input['description'],
-            'origin'            => $input['origin'],
-            'destination'       => $input['destination'],
-            'qty'               => $input['qty'],
-            'date'              => date("Y-m-d H:i:s"),
-
-        ];
-
-        // validation
-        if (!$this->validate([
-            'description'       =>  "required|max_length[255]',",
-            'qty'               =>  "required"
-        ])) {
-
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
-        // Inserting Cash Movement
-        $CashmoveModel->insert($data);
-
-        // insert minus qty origin
-        $cashmin    = $CashModel->where('id', $input['origin'])->first();
-        $cashqty    = $cashmin['qty'] - $input['qty'];
-
-        $quantity = [
-            'id'    => $cashmin['id'],
-            'qty'   => $cashqty,
-        ];
-
-        $CashModel->save($quantity);
-
-        // insert plus qty origin
-        $cashplus    = $CashModel->where('id', $input['destination'])->first();
-        $cashqty    = $cashplus['qty'] + $input['qty'];
-
-        $quant = [
-            'id'    => $cashplus['id'],
-            'qty'   => $cashqty,
-        ];
-
-        $CashModel->save($quant);
-
-        return redirect()->back()->with('message', lang('Global.saved'));
-    }
-
 
     public function refund($id)
     {

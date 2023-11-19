@@ -139,6 +139,25 @@
                         <form role="form" action="debt/pay/<?= $debt['id'] ?>" method="post">
                             <?= csrf_field() ?>
 
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.payment')?></label>
+                                <div class="uk-form-controls">
+                                    <div class="uk-inline uk-width-1-1">
+                                        <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
+                                        <select class="uk-select uk-input" id="payment" name="payment" required >
+                                            <option value="" selected disabled hidden><?=lang('global.payment')?></option>
+                                            <?php
+                                            foreach ($payments as $pay) {
+                                                if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
+                                                    echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="value"><?= lang('Global.amountpaid') ?></label>
                                 <div class="uk-form-controls">
