@@ -173,6 +173,25 @@
                                         <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.payment')?></label>
                                         <div class="uk-form-controls">
                                             <div class="uk-inline uk-width-1-1">
+                                                <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
+                                                <select class="uk-select uk-input" id="payment" name="payment" required >
+                                                    <option value="" selected disabled hidden><?=lang('global.payment')?></option>
+                                                    <?php
+                                                    foreach ($payments as $pay) {
+                                                        if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
+                                                            echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="uk-margin">
+                                        <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.value')?></label>
+                                        <div class="uk-form-controls">
+                                            <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon" uk-icon="icon: database"></span>
                                                 <input class="uk-input" min="0" name="value" type="number" placeholder="Point" aria-label="Not clickable icon">
                                             </div>
@@ -213,16 +232,12 @@
                                     </div>
                                 </div>
                                 <div class="uk-modal-body">
-                                    <div class="uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
-                                        <div class="uk-margin-left">
-                                            <div id="topup_camera"></div>
-                                        </div>
-                                        <div class="uk-text-center">
+                                    <div class="uk-flex-center uk-child-width-1-1" uk-grid>
+                                        <div id="topup_camera"></div>
+                                        <div class="uk-text-center uk-margin-small-top">
                                             <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="topup_snapshot()">
                                         </div>
-                                        <div class="uk-text-center">
-                                            <div id="topup_results"></div>
-                                        </div>
+                                        <div class="uk-text-center" id="topup_results"></div>
                                     </div>
 
                                     <!-- Script Webcam Top Up Proof -->
@@ -233,9 +248,11 @@
                                             height: 390,
                                             image_format: 'jpeg',
                                             jpeg_quality: 90,
-                                            video: { facingMode: "environment" },
+                                            video: {
+                                                facingMode: "environment"
+                                            },
                                             constraints: {
-                                            facingMode: 'environment'
+                                                facingMode: 'environment'
                                             }
                                         });
                                     
@@ -1213,16 +1230,12 @@
                         </div>
                     </div>
                     <div class="uk-modal-body">
-                        <div class="uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
-                            <div class="uk-margin-left">
-                                <div id="my_camera"></div>
-                            </div>
+                        <div class="uk-flex-center uk-child-width-1-1" uk-grid>
+                            <div id="my_camera"></div>
                             <div class="uk-text-center">
                                 <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="take_snapshot()">
                             </div>
-                            <div class="uk-text-center">
-                                <div id="results"></div>
-                            </div>
+                            <div class="uk-text-center" id="results"></div>
                         </div>
 
                         <!-- Script Webcam Trx Proof -->
@@ -1232,9 +1245,11 @@
                                 height: 390,
                                 image_format: 'jpeg',
                                 jpeg_quality: 90,
-                                video: { facingMode: "environment" },
+                                video: {
+                                    facingMode: "environment"
+                                },
                                 constraints: {
-                                facingMode: 'environment'
+                                    facingMode: 'environment'
                                 }
                             });
                         
@@ -1257,17 +1272,15 @@
         <!-- Main Section -->
         <main role="main">
             <div class="tm-main">
-            <?php
-            if ($ismobile === true) {
-                $mainContainer = '';
-                $mainCard = 'uk-panel uk-panel-scrollable';
-            } else {
-                $mainContainer = 'uk-container uk-container-expand uk-padding-remove-horizontal';
-                $mainCard = 'uk-panel uk-panel-scrollable';
-            }
-            ?>
+                <?php
+                if ($ismobile === true) {
+                    $mainContainer = '';
+                } else {
+                    $mainContainer = 'uk-container uk-container-expand uk-padding-remove-horizontal';
+                }
+                ?>
                 <div class="<?=$mainContainer?>">
-                    <div class="<?=$mainCard?>" style="background-color: #363636;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
+                    <div class="uk-panel uk-panel-trx-scrollable" style="background-color: #363636;">
                         <?php if ($outletPick === null) { ?>
                             <div class="uk-margin uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
                                 <!-- Alert Outlet -->
@@ -1344,6 +1357,7 @@
                                 <!-- Button To Manage Cash End -->
                             </div>
                         <?php } else { ?>
+                            <?= view('Views/Auth/_message_block') ?>
                             <div class="uk-margin uk-flex uk-flex-center">
                                 <div class="uk-width-1-1@m uk-card uk-card-default uk-card-small uk-card-body uk-padding-remove uk-margin-remove-top">
                                     <div class="tm-h4 uk-text-center">
@@ -1357,7 +1371,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <?= view('Views/Auth/_message_block') ?>
 
                             <ul id="pageload" class="uk-switcher switcher-class" hidden>
 
@@ -1540,11 +1553,11 @@
                                                             
                                                             const productgrid = document.createElement('div');
                                                             productgrid.setAttribute('id', 'product'+variant);
-                                                            productgrid.setAttribute('class', 'uk-margin-small');
+                                                            productgrid.setAttribute('class', 'uk-margin-small uk-flex-middle');
                                                             productgrid.setAttribute('uk-grid', '');
 
                                                             const addcontainer = document.createElement('div');
-                                                            addcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
+                                                            addcontainer.setAttribute('class', 'uk-width-1-6');
                                                             
                                                             const productqtyinputadd = document.createElement('div');
                                                             productqtyinputadd.setAttribute('id','addqty'+variant);
@@ -1553,7 +1566,7 @@
                                                             productqtyinputadd.innerHTML = '+';
 
                                                             const delcontainer = document.createElement('div');
-                                                            delcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
+                                                            delcontainer.setAttribute('class', 'uk-width-1-6');
                                                             
                                                             const productqtyinputdel = document.createElement('div');
                                                             productqtyinputdel.setAttribute('id','delqty'+variant);
@@ -1562,7 +1575,7 @@
                                                             productqtyinputdel.innerHTML = '-';
 
                                                             const quantitycontainer = document.createElement('div');
-                                                            quantitycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle uk-width-1-6');
+                                                            quantitycontainer.setAttribute('class', 'tm-h2 uk-width-1-6@m uk-width-1-3');
 
                                                             const productqty = document.createElement('div');                                               
 
@@ -1570,13 +1583,13 @@
                                                             inputqty.setAttribute('type', 'number');
                                                             inputqty.setAttribute('id', "qty["+variant+"]");
                                                             inputqty.setAttribute('name', "qty["+variant+"]");
-                                                            inputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
+                                                            inputqty.setAttribute('class', 'uk-input uk-form-width-small');
                                                             inputqty.setAttribute('min', minstock);
                                                             inputqty.setAttribute('max', variantarray[x]['qty']);
                                                             inputqty.setAttribute('value', '1');
 
                                                             const namecontainer = document.createElement('div');
-                                                            namecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
+                                                            namecontainer.setAttribute('class', 'uk-width-1-3@m uk-width-1-2');
 
                                                             const productname = document.createElement('div');
                                                             productname.setAttribute('id', 'name'+variant);
@@ -1584,7 +1597,7 @@
                                                             productname.innerHTML = variantarray[x]['name'];
 
                                                             const pricecontainer = document.createElement('div');
-                                                            pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
+                                                            pricecontainer.setAttribute('class', 'uk-width-1-6@m uk-width-1-2');
                                                             
                                                             const productprice = document.createElement('div');
                                                             productprice.setAttribute('id', 'price'+variant);
@@ -1594,10 +1607,10 @@
                                                             productprice.innerHTML = showprice();
 
                                                             const varpricecontainer = document.createElement('div');
-                                                            varpricecontainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
+                                                            varpricecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
 
                                                             const varbardiv = document.createElement('div');
-                                                            varbardiv.setAttribute('class','uk-margin uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
+                                                            varbardiv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
 
                                                             const varbarlab = document.createElement('label');
                                                             varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
@@ -1616,10 +1629,10 @@
                                                             varbargain.setAttribute('type', 'number');
 
                                                             const varvaluecontainer = document.createElement('div');
-                                                            varvaluecontainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
+                                                            varvaluecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
 
                                                             const varpricediv = document.createElement('div');
-                                                            varpricediv.setAttribute('class','uk-margin uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
+                                                            varpricediv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
 
                                                             const varpricelab = document.createElement('label');
                                                             varpricelab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4' );
@@ -1696,6 +1709,7 @@
                                             }
                                         };
                                     </script>
+                                    
                                     <div class="uk-margin uk-text-center">
                                         <div class="uk-search uk-search-default uk-width-1-5@l uk-width-1-1">
                                             <span class="uk-form-icon" uk-icon="icon: search"></span>

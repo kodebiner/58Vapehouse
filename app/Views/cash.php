@@ -295,19 +295,15 @@
                             <input type="text" class="uk-input <?php if (session('errors.quantity')) : ?>tm-form-invalid<?php endif ?>" id="quantity" name="quantity" placeholder="<?= lang('Global.quantity') ?>" autofocus required />
                         </div>
                     </div>
-
+                    
                     <div class="uk-margin-bottom">
-                        <div class="uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
-                            <div class="uk-margin-left">
-                                <div id="my_camera"></div>
-                            </div>
-                            <div class="uk-text-center">
+                        <div class="uk-flex-center uk-child-width-1-1" uk-grid>
+                            <div id="my_camera"></div>
+                            <div class="uk-text-center uk-margin-small-top">
                                 <input class="image-tag" type="hidden" name="image">
                                 <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="take_snapshot()" required>
                             </div>
-                            <div class="uk-text-center">
-                                <div id="results"></div>
-                            </div>
+                            <div class="uk-text-center" id="results"></div>
                         </div>
                     </div>
 
@@ -385,17 +381,13 @@
                 </div>
 
                 <div class="uk-margin-bottom">
-                    <div class="uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
-                        <div class="uk-margin-left">
-                            <div id="withdraw_camera"></div>
-                        </div>
-                        <div class="uk-text-center">
+                    <div class="uk-flex-center uk-child-width-1-1" uk-grid>
+                        <div id="withdraw_camera"></div>
+                        <div class="uk-text-center uk-margin-small-top">
                             <input class="image-tag" type="hidden" name="image">
                             <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="withdraw_snapshot()" required>
                         </div>
-                        <div class="uk-text-center">
-                            <div id="withdraw_results"></div>
-                        </div>
+                        <div class="uk-text-center" id="withdraw_results"></div>
                     </div>
                 </div>
 

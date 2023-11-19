@@ -206,16 +206,12 @@
                     </div>
                 </div>
                 <div class="uk-modal-body">
-                    <div class="uk-flex uk-flex-center uk-child-width-1-1" uk-grid>
-                        <div class="uk-margin-left">
-                            <div id="pay_camera<?= $debt['id'] ?>"></div>
-                        </div>
-                        <div class="uk-text-center">
+                    <div class="uk-flex-center uk-child-width-1-1" uk-grid>
+                        <div id="pay_camera<?= $debt['id'] ?>"></div>
+                        <div class="uk-text-center uk-margin-small-top">
                             <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="pay_snapshot<?= $debt['id'] ?>()">
                         </div>
-                        <div class="uk-text-center">
-                            <div id="pay_results<?= $debt['id'] ?>"></div>
-                        </div>
+                        <div class="uk-text-center" id="pay_results<?= $debt['id'] ?>"></div>
                     </div>
 
                     <!-- Script Webcam Pay Proof -->

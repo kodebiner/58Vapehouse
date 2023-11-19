@@ -136,8 +136,8 @@ class Customer extends BaseController
 
         // Validasi
         if (! $this->validate([
-            'name'      => "max_length[255]|is_unique[member.name]",
-            'phone'     => "max_length[255]|is_unique[member.phone]",
+            'name'      => "max_length[255]",
+            'phone'     => "max_length[255]",
             'email'     => "max_length[255]",
             'poin'      => "max_length[255]",
         ])) {

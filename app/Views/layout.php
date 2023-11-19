@@ -592,7 +592,7 @@
             ?>
             <div class="<?=$mainPadding?>">
                 <div class="<?=$mainContainer?>">
-                    <div class="<?=$mainCard?>uk-panel uk-panel-scrollable" style="background-color: #363636;" uk-height-viewport="offset-top: .uk-navbar-container; offset-bottom: .tm-footer;">
+                    <div class="<?=$mainCard?>uk-panel uk-panel-scrollable" style="background-color: #363636;">
                         <?= $this->renderSection('main') ?>
                     </div>
                 </div>

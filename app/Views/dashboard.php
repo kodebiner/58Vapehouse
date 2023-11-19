@@ -87,7 +87,7 @@
 
     <!-- Report Short List -->
     <div class="uk-container uk-container-large uk-margin-top">
-        <div class="uk-child-width-1-2 uk-child-width-1-4@l uk-flex-center uk-flex-middle" uk-grid uk-height-match="target: > div > .uk-card">
+        <div class="uk-child-width-1-2 uk-flex-center uk-flex-middle" uk-grid uk-height-match="target: > div > .uk-card">
             <div>
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
@@ -108,18 +108,6 @@
                         </div>
                         <div class="uk-margin-small-top">
                             <div class="tm-h4" style="color: #000;">Rp <?= number_format($sumtrxtoday,0,',','.') ?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="uk-card uk-card-default uk-card-body">
-                    <div class="uk-child-width-1-1" uk-grid>
-                        <div>
-                            <div class="tm-h5" style="color: #000;"><?= lang('Global.walletbalance') ?></div>
-                        </div>
-                        <div class="uk-margin-small-top">
-                            <div class="tm-h4" style="color: #000;">Rp <?= number_format($profit,0,',','.') ?></div>
                         </div>
                     </div>
                 </div>
