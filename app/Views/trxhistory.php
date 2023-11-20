@@ -87,7 +87,7 @@
                         }
                     } ?>
 
-                    <td class=""><?= "Rp " . number_format($transaction['value'],2,',','.'); ?></td>
+                    <td class=""><?= "Rp " . number_format($transaction['value'], 2, ',', '.'); ?></td>
 
                     <td class="uk-text-center uk-column-1-2">
                         <?php if (!empty($transaction['amountpaid'])) {
@@ -103,7 +103,7 @@
                                 }
                             }
                         } ?>
-                        <div class="uk-text-success" id="refund" style="border-style: solid; border-color: red;"><a href="trxhistory/refund/<?= $transaction['id'] ?>" class="uk-link-heading">Refund</a></div>
+                        <div class="uk-text-success" id="refund" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')" style="border-style: solid; border-color: red;"><a href="trxhistory/refund/<?= $transaction['id'] ?>" class="uk-link-heading">Refund</a></div>
                     </td>
                 </tr>
             <?php } ?>
@@ -197,9 +197,9 @@
                                 // Variant
                                 if ($trxdet['variantid'] !== "0") {
                                     foreach ($products as $product) {
-                                        if (($trxdet['variantid'] === $product['id']) && ($trxdet['transactionid'] === $transaction['id']) ) {
-                                            $variantval      = (Int)$trxdet['value'] + (Int)$trxdet['discvar'];
-                                            ?>
+                                        if (($trxdet['variantid'] === $product['id']) && ($trxdet['transactionid'] === $transaction['id'])) {
+                                            $variantval      = (int)$trxdet['value'] + (int)$trxdet['discvar'];
+                            ?>
                                             <div class="uk-margin-small">
                                                 <div class="uk-h5 uk-text-bolder uk-margin-remove"><?= $product['name'] ?></div>
                                                 <div uk-grid>
@@ -207,7 +207,7 @@
                                                         <div>x<?= $trxdet['qty'] ?> @<?= $variantval ?></div>
                                                     </div>
                                                     <div class="uk-width-1-2 uk-text-right">
-                                                        <div><?= (Int)$variantval * (Int)$trxdet['qty'] - (Int)$trxdet['discvar'] ?></div>
+                                                        <div><?= (int)$variantval * (int)$trxdet['qty'] - (int)$trxdet['discvar'] ?></div>
                                                     </div>
                                                 </div>
                                                 <?php if (!empty($trxdet['discvar'])) { ?>
@@ -243,7 +243,7 @@
                                                         <div>x<?= $trxdet['qty'] ?> @<?= $variantval ?></div>
                                                     </div>
                                                     <div class="uk-width-1-2 uk-text-right">
-                                                        <div><?= (Int)$variantval * (Int)$trxdet['qty']?></div>
+                                                        <div><?= (int)$variantval * (int)$trxdet['qty'] ?></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -265,7 +265,7 @@
                                         $subtotal = array();
                                         foreach ($trxdetails as $trxdet) {
                                             if ($transaction['id'] === $trxdet['transactionid']) {
-                                                $total = ((Int)$trxdet['qty'] * (Int)$trxdet['value']);
+                                                $total = ((int)$trxdet['qty'] * (int)$trxdet['value']);
                                                 $subtotal[] = $total; ?>
                                         <?php }
                                         }
@@ -335,7 +335,7 @@
                                             <div><?= lang('Global.change') ?></div>
                                         </div>
                                         <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
-                                            <div><?= (Int)$transaction['amountpaid'] - (Int)$transaction['value'] ?></div>
+                                            <div><?= (int)$transaction['amountpaid'] - (int)$transaction['value'] ?></div>
                                         </div>
                                     <?php } ?>
                                 </div>
@@ -352,17 +352,17 @@
                                                 <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
                                                     <div><?= $customer['name'] ?></div>
                                                 </div>
-                                            <?php }
+                                    <?php }
                                         }
-                                    } ?> 
+                                    } ?>
                                 </div>
-                                
+
                                 <div class="uk-margin-remove-top" uk-grid>
                                     <?php if (($transaction['memberid'] !== "0")) {
                                         if ($gconfig['poinorder'] != "0") {
-                                            $pointearn = (floor((Int)$transaction['value'] / (Int)$gconfig['poinorder'])) * (Int)$gconfig['poinvalue'];
+                                            $pointearn = (floor((int)$transaction['value'] / (int)$gconfig['poinorder'])) * (int)$gconfig['poinvalue'];
                                         } else {
-                                            $pointearn = (Int)$transaction['value'] * (Int)$gconfig['poinvalue'];
+                                            $pointearn = (int)$transaction['value'] * (int)$gconfig['poinvalue'];
                                         } ?>
                                         <div class="uk-width-1-2">
                                             <div><?= lang('Global.pointearn') ?></div>

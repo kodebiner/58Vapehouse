@@ -134,9 +134,9 @@
                     <td><?= $customer['name']; ?></td>
                     <td><?= $customer['email']; ?></td>
                     <td class="uk-text-center">+62<?= $customer['phone']; ?></td>
+                    <td class="uk-text-center"><?= $customer['trx']; ?></td>
                     <?php foreach ($member as $mem) {
                         if ($mem['id'] === $customer['id']) { ?>
-                            <td class="uk-text-center"><?= $mem['trx']; ?></td>
                             <td class="uk-text-center"><?= $mem['debt']; ?></td>
                     <?php }
                     } ?>

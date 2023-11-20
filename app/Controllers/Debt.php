@@ -281,7 +281,7 @@ class Debt extends BaseController
         // Input Value to cash
         $wallet = [
             'id'    => $payments['cashid'],
-            'qty'   => (Int)$cash['qty'] + (Int)$input['value'],
+            'qty'   => (int)$cash['qty'] + (int)$input['value'],
         ];
         $CashModel->save($wallet);
 
@@ -291,7 +291,7 @@ class Debt extends BaseController
         foreach ($dailyreports as $dayrep) {
             $tcashin = [
                 'id'            => $dayrep['id'],
-                'totalcashin'   => (Int)$dayrep['totalcashin'] + (Int)$input['value'],
+                'totalcashin'   => (int)$dayrep['totalcashin'] + (int)$input['value'],
             ];
             $DailyReportModel->save($tcashin);
         }
@@ -410,7 +410,7 @@ class Debt extends BaseController
         $transactionhist   = $exported->select('transaction.id as id, variant.id as varid, member.id as memberid, users.id as userid, payment.id as paymentid,
         outlet.id as outletid, bundle.id as bundleid,trxdetail.qty as qty, transaction.value as total, bundle.price as bprice, variant.hargadasar as vprice,
         transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval,
-        transaction.pointused as redempoin, trxpayment.value as payval, member.name as member, product.name as product, variant.name as variant,  
+        transaction.pointused as redempoin, trxpayment.value as payval, member.name as member, member.trx as trx, product.name as product, variant.name as variant,  
         variant.hargamodal as modal, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, payment.name as payment,
         outlet.name as outlet,outlet.address as address, bundle.name as bundle, users.username as kasir');
 
@@ -496,7 +496,7 @@ class Debt extends BaseController
         $bundles = [];
         $paymentid = [];
         $point = "";
-        
+
         foreach ($transactionhist as $trxhist) {
 
             // Variant
@@ -516,6 +516,7 @@ class Debt extends BaseController
             // Point
             $memberid = $trxhist['memberid'];
             $point = $trxhist['redempoin'];
+            $trx = $trxhist['trx'];
         }
 
         // Refund Variant
@@ -570,14 +571,22 @@ class Debt extends BaseController
         $pointres = '';
         if (!empty($memberid)) {
             $cust       = $MemberModel->find($memberid);
-            if (!empty($point)) {
+            if (!empty($point) && $point != "0") {
                 $pointres   = ((int)$cust['poin'] + (int)$point) - $poinresult;
+                $point = [
+                    'id'    => $cust['id'],
+                    'poin'  => $pointres,
+                    'trx'   => (int)$cust['trx'] - 1,
+                ];
+                $MemberModel->save($point);
+            } else {
+                $point = [
+                    'id'    => $cust['id'],
+                    'poin'  => (int)$cust['poin'] - $poinresult,
+                    'trx'   => (int)$cust['trx'] - 1,
+                ];
+                $MemberModel->save($point);
             }
-            $point = [
-                'id'    => $cust['id'],
-                'poin'  => $pointres,
-            ];
-            $MemberModel->save($point);
         }
 
         // Refund Payment
