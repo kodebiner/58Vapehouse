@@ -37,7 +37,7 @@
                     </td>
                     <td class="uk-text-left uk-text-center">
                         <div uk-lightbox>
-                            <a class="uk-inline" href="img/profile<?= $presence['photo'] ?>">
+                            <a class="uk-inline" href="img/presence/<?= $presence['photo'] ?>">
                                 <img class="uk-preserve-width uk-border-circle" id="img<?php echo $presence['id'];?>" src="img/presence/<?php echo $presence['photo'];?>" width="40" height="40" alt="<?= $presence['photo'] ?>">
                             </a>
                         </div>
