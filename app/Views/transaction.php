@@ -1162,7 +1162,7 @@
                             <div class="uk-margin" id="amount">
                                 <h4 class="uk-margin-remove"><?=lang('Global.amountpaid')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <input type="number" class="uk-input" id="value" name="value" min="0" value="0" placeholder="<?=lang('Global.amountpaid')?>" />
+                                    <input type="number" class="uk-input" id="value" name="value" min="0" placeholder="<?=lang('Global.amountpaid')?>" />
                                 </div>
                             </div>
 
