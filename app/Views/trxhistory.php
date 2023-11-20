@@ -77,13 +77,15 @@
                     <?php }
                     } ?>
 
-                    <?php if ($transaction['paymentid'] === "0") { ?>
+                    <?php if (($transaction['paymentid'] === "0") && ($transaction['amountpaid'] != "0")) { ?>
                         <td class=""><?= lang('Global.splitbill') ?></td>
-                        <?php } else {
+                    <?php } elseif (($transaction['paymentid'] === "0") && ($transaction['amountpaid'] === "0")) { ?>
+                        <td class=""><?= lang('Global.debt') ?></td>
+                    <?php } else {
                         foreach ($payments as $payment) {
                             if ($payment['id'] === $transaction['paymentid']) { ?>
                                 <td class=""><?= $payment['name'] ?></td>
-                    <?php }
+                            <?php }
                         }
                     } ?>
 

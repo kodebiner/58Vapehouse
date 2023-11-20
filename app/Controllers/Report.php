@@ -514,7 +514,6 @@ class Report extends BaseController
         $transval = [];
         $margin = [];
         foreach ($protrans as $proval) {
-
             $prods[] = [
                 'id'            => $proval['id'],
                 'trxid'         => $proval['trxid'],
@@ -523,34 +522,36 @@ class Report extends BaseController
                 'value'         => (int)$proval['total'],
                 'marginmo'      => $proval['marginmodal'],
                 'qty'           => $proval['qty'],
-                'gross'         => (int)$proval['marginmodal'] * (int)$proval['qty'],
+                'gross'         => (int)$proval['trxdetval'] * (int)$proval['qty'],
             ];
 
             $margin[] = [
                 'id'        => $proval['trxid'],
                 'proid'     => $proval['id'],
-                'margin'    => $proval['marginmodal'] * $proval['qty'],
+                'margin'    => ($proval['trxdetval'] + $proval['discvar']) * $proval['qty'],
             ];
 
             $transval[] = [
                 'id'    => $proval['trxid'],
                 'proid' => $proval['id'],
-                'value' => $proval['total'],
+                'value' => $proval['trxdetval'],
             ];
         }
 
-        // total transaction
+        $totalgross = array_sum(array_column($margin, 'margin'));
+
+        // total discvar transaction value
         $margintotal = [];
         foreach ($margin as $marginval) {
-            if (!isset($margintotal[$marginval['id'] . $marginval['margin']])) {
-                $margintotal[$marginval['id'] . $marginval['margin']] = $marginval;
+            if (!isset($margintotal[$marginval['proid'] . $marginval['margin']])) {
+                $margintotal[$marginval['proid'] . $marginval['margin']] = $marginval;
             } else {
-                $margintotal[$marginval['id'] . $marginval['margin']]['margin'] += $marginval['margin'];
+                $margintotal[$marginval['proid'] . $marginval['margin']]['margin'] += $marginval['margin'];
             }
         }
         $margintotal = array_values($margintotal);
 
-        // total transaction value
+        // total discont transaction value
         $totaltrx = [];
         foreach ($transval as $trans) {
             if (!isset($totaltrx[$trans['id'] . $trans['value']])) {
@@ -564,15 +565,11 @@ class Report extends BaseController
         // Gross Value
         $grossval = [];
         foreach ($margintotal as $margin) {
-            foreach ($totaltrx as $total) {
-                if ($margin['id'] === $total['id']) {
-                    $grossval[] = [
-                        'id' => $total['id'],
-                        'proid' => $total['proid'],
-                        'value' => $total['value'] - $margin['margin'],
-                    ];
-                }
-            }
+            $grossval[] = [
+                'id' => $margin['id'],
+                'proid' => $margin['proid'],
+                'value' => $margin['margin'],
+            ];
         }
 
         // Gross Result
@@ -597,6 +594,7 @@ class Report extends BaseController
             }
         }
         $produks = array_values($produks);
+        // dd($produks);
 
         // if want to get net sales with trx disc and without bundle value
         // if (!empty($produks)) {
@@ -606,7 +604,7 @@ class Report extends BaseController
         // }
 
         // groos total
-        $grossval = array_sum(array_column($gross,'value'));
+        $grossval = array_sum(array_column($gross, 'value'));
 
         // Total Stock
         $stoktotal = array_sum(array_column($produks, 'qty'));
@@ -747,7 +745,7 @@ class Report extends BaseController
         $data['products']       = $produks;
         $data['totalstock']     = $stoktotal;
         $data['salestotal']     = $salestotal;
-        $data['grosstotal']     = $grossval;
+        $data['grosstotal']     = $totalgross;
         $data['netsales']       = $salestotal;
         $data['gross']          = $gross;
         $data['startdate']      = strtotime($startdate);

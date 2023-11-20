@@ -621,6 +621,12 @@ class Debt extends BaseController
             $TrxpaymentModel->delete($pay);
         }
 
+        // Delete Transaction Payment
+        $debt = $DebtModel->where('transactionid', $id)->find();
+        foreach ($debt as $deb) {
+            $DebtModel->delete($deb);
+        }
+
         // Delete Tansaction Detail
         $trxdet = $TrxdetailModel->where('transactionid', $id)->find();
         foreach ($trxdet as $detail) {
