@@ -29,7 +29,8 @@ use Myth\Auth\Models\GroupModel;
 
 class Report extends BaseController
 {
-    public function test(){
+    public function test()
+    {
         // Calling Models
         $TransactionModel       = new TransactionModel;
         $TrxdetailModel         = new TrxdetailModel;
@@ -39,7 +40,7 @@ class Report extends BaseController
         $Gconfig                = $GconfigModel->first();
 
         $input = $this->request->getGet('daterange');
-            
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -48,30 +49,29 @@ class Report extends BaseController
             $startdate = date('Y-m-1');
             $enddate = date('Y-m-t');
         }
- 
+
         $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
 
         $summary = array_sum(array_column($transaction, 'value'));
         $discounts = array();
         $transactionarr = array();
-        
+
         $transactions = array();
-        foreach ($transaction as $trx){
+        foreach ($transaction as $trx) {
             $discounttrx = array();
             $discounttrxpersen = array();
             $discountvariant = array();
             $discountpoin = array();
-            foreach ($trxdetails as $trxdetail){
-                if($trx['id'] === $trxdetail['transactionid']){
-                    if ($trx['disctype'] === "0"){
+            foreach ($trxdetails as $trxdetail) {
+                if ($trx['id'] === $trxdetail['transactionid']) {
+                    if ($trx['disctype'] === "0") {
                         $discounttrx[]          = $trx['discvalue'];
                     }
-                    if ($trx['disctype'] !== "0"){
-                        $discounttrxpersen[]    = ((Int)$trxdetail['value'] * (Int)$trxdetail['qty']) - ((Int)$trx['value'] + (Int)$trxdetail['discvar']);
+                    if ($trx['disctype'] !== "0") {
+                        $discounttrxpersen[]    = ((int)$trxdetail['value'] * (int)$trxdetail['qty']) - ((int)$trx['value'] + (int)$trxdetail['discvar']);
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
                     $discountpoin[]             = $trx['pointused'];
-                    
                 }
             }
 
@@ -83,22 +83,22 @@ class Report extends BaseController
                 'trxdisc'       => $transactiondisc,
                 'variantdis'    => $variantdisc,
                 'poindisc'      => $poindisc,
-            ];  
+            ];
 
             $date = date_create($trx['date']);
             $transactions[] = [
-                'date'      =>  date_format($date,"d/m/Y"),
+                'date'      =>  date_format($date, "d/m/Y"),
                 'value'     => $trx['value'],
-            ];  
+            ];
         }
 
 
-        $transactionarr [] = $transactions;
+        $transactionarr[] = $transactions;
         $trxvar = array_sum(array_column($discounts, 'variantdis'));
         $trxdis = array_sum(array_column($discounts, 'trxdisc'));
         $dispoint = array_sum(array_column($discounts, 'poindisc'));
 
-        $grossales = (Int)$summary + (Int)$trxvar + (Int)$trxdis + (Int)$dispoint ;
+        $grossales = (int)$summary + (int)$trxvar + (int)$trxdis + (int)$dispoint;
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -110,7 +110,6 @@ class Report extends BaseController
         $data['transactionarr'] = $transactionarr;
         $data['result']         = $summary;
         $data['gross']          = $grossales;
-
     }
 
     public function penjualan()
@@ -121,7 +120,7 @@ class Report extends BaseController
         $VariantModel           = new VariantModel;
 
         $input = $this->request->getGet('daterange');
-        
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = strtotime($daterange[0]);
@@ -130,7 +129,7 @@ class Report extends BaseController
             $startdate = strtotime(date('Y-m-1'));
             $enddate = strtotime(date('Y-m-t'));
         }
-        
+
         $transactions = array();
         $transactionarr = array();
         $discount = array();
@@ -139,53 +138,52 @@ class Report extends BaseController
         $discountvariant = array();
         $discountpoin = array();
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-            if($this->data['outletPick'] === null ){
+            if ($this->data['outletPick'] === null) {
                 $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
-            }else{
-                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid',$this->data['outletPick'])->find();
+            } else {
+                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
             }
             $trxdetails  = $TrxdetailModel->findAll();
             $summary = array_sum(array_column($transaction, 'value'));
             $variants    = $VariantModel->findAll();
-   
-            foreach ($transaction as $trx){
-                foreach ($trxdetails as $trxdetail){
-                    if($trx['id'] == $trxdetail['transactionid']){
-                        if ($trx['disctype'] === "0"){
+
+            foreach ($transaction as $trx) {
+                foreach ($trxdetails as $trxdetail) {
+                    if ($trx['id'] == $trxdetail['transactionid']) {
+                        if ($trx['disctype'] === "0") {
                             $discounttrx[]          = $trx['discvalue'];
                         }
-                        if ($trx['disctype'] !== "0"){
-                            $sub =  ((Int)$trxdetail['value'] * (Int)$trxdetail['qty']);
-                            $discounttrxpersen[]    =  ((Int)$trx['discvalue'] / 100) * (Int)$sub;
+                        if ($trx['disctype'] !== "0") {
+                            $sub =  ((int)$trxdetail['value'] * (int)$trxdetail['qty']);
+                            $discounttrxpersen[]    =  ((int)$trx['discvalue'] / 100) * (int)$sub;
                         }
                         $discountvariant[]          = $trxdetail['discvar'];
                         $discountpoin[]             = $trx['pointused'];
                     }
-                    
                 }
-            }    
+            }
             $transactions[] = [
                 'date'      => date('d/m/y', $date),
                 'value'     => $summary,
-            ];  
+            ];
         }
 
-        
-        $transactiondisc = (Int)(array_sum($discounttrx)) + (Int)(array_sum($discounttrxpersen));
+
+        $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($discounttrxpersen));
         $variantdisc     = array_sum($discountvariant);
         $poindisc        = array_sum($discountpoin);
-        
-        $dicount [] = [
+
+        $dicount[] = [
             'trxdisc'       => $transactiondisc,
             'variantdis'    => $variantdisc,
             'poindisc'      => $poindisc,
         ];
 
-        $transactionarr [] = $transactions;
-        
+        $transactionarr[] = $transactions;
+
         $salesresult = array_sum(array_column($transactions, 'value'));
-      
-        $grossales = $salesresult + $variantdisc +  $transactiondisc +  $poindisc ;
+
+        $grossales = $salesresult + $variantdisc +  $transactiondisc +  $poindisc;
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -201,7 +199,8 @@ class Report extends BaseController
         return view('Views/report/penjualan', $data);
     }
 
-    public function keuntungan(){
+    public function keuntungan()
+    {
 
         // Calling Models
         $TransactionModel       = new TransactionModel;
@@ -209,7 +208,7 @@ class Report extends BaseController
         $VariantModel           = new VariantModel;
 
         $input = $this->request->getGet('daterange');
-        
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = strtotime($daterange[0]);
@@ -218,33 +217,32 @@ class Report extends BaseController
             $startdate = strtotime(date('Y-m-1'));
             $enddate = strtotime(date('Y-m-t'));
         }
-        
+
         $transactions = array();
         $transactionarr = array();
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-            if($this->data['outletPick'] === null ){
+            if ($this->data['outletPick'] === null) {
                 $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
-            }else{
-                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid',$this->data['outletPick'])->find();
+            } else {
+                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
             }
             $trxdetails  = $TrxdetailModel->findAll();
             $variants    = $VariantModel->findAll();
-    
+
             $summary = array_sum(array_column($transaction, 'value'));
             $marginmodals = array();
             $margindasars = array();
 
-            foreach ($transaction as $trx){
-                foreach ($trxdetails as $trxdetail){
-                    if($trx['id'] === $trxdetail['transactionid']){
-                        $marginmodal = (Int)$trxdetail['marginmodal'] * (Int)$trxdetail['qty'];
-                        $margindasar = (Int)$trxdetail['margindasar'] * (Int)$trxdetail['qty'];
+            foreach ($transaction as $trx) {
+                foreach ($trxdetails as $trxdetail) {
+                    if ($trx['id'] === $trxdetail['transactionid']) {
+                        $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
+                        $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
                         $marginmodals[] = $marginmodal;
                         $margindasars[] = $margindasar;
                     }
                 }
-                
-            }    
+            }
 
             $marginmodalsum = array_sum($marginmodals);
             $margindasarsum = array_sum($margindasars);
@@ -254,15 +252,15 @@ class Report extends BaseController
                 'value'     => $summary,
                 'modal'     => $marginmodalsum,
                 'dasar'     => $margindasarsum,
-            ];  
+            ];
         }
 
-        $transactionarr [] = $transactions;
-        
+        $transactionarr[] = $transactions;
+
         $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
         $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
         $trxvalue        = array_sum(array_column($transactions, 'value'));
-        
+
         // Parsing Data to View
         $data                       = $this->data;
         $data['title']              = lang('Global.profitreport');
@@ -274,11 +272,12 @@ class Report extends BaseController
         $data['penjualanModal']     = $trxvalue;
         $data['startdate']          = $startdate;
         $data['enddate']            = $enddate;
-        
+
         return view('Views/report/keuntungan', $data);
     }
-    
-    public function diskon(){
+
+    public function diskon()
+    {
 
         // Calling Models
         $TransactionModel       = new TransactionModel;
@@ -289,7 +288,7 @@ class Report extends BaseController
         $Gconfig                = $GconfigModel->first();
 
         $input = $this->request->getGet('daterange');
-            
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -303,29 +302,28 @@ class Report extends BaseController
         if ($this->data['outletPick'] === null) {
             $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
         } else {
-            $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
         }
-        foreach ($transaction as $trx){
+        foreach ($transaction as $trx) {
             $discounttrx = array();
             $discounttrxpersen = array();
             $discountvariant = array();
             $discountpoin = array();
-            foreach ($trxdetails as $trxdetail){
-                if($trx['id'] === $trxdetail['transactionid']){
-                    if ($trx['disctype'] === "0"){
+            foreach ($trxdetails as $trxdetail) {
+                if ($trx['id'] === $trxdetail['transactionid']) {
+                    if ($trx['disctype'] === "0") {
                         $discounttrx[]          = $trx['discvalue'];
                     }
-                    if ($trx['disctype'] !== "0"){
-                        $sub =  ((Int)$trxdetail['value'] * (Int)$trxdetail['qty']);
-                        $discounttrxpersen[]    =  (Int)$sub * ((Int)$trx['discvalue'] / 100) ;
+                    if ($trx['disctype'] !== "0") {
+                        $sub =  ((int)$trxdetail['value'] * (int)$trxdetail['qty']);
+                        $discounttrxpersen[]    =  (int)$sub * ((int)$trx['discvalue'] / 100);
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
                     $discountpoin[]             = $trx['pointused'];
-                    
                 }
             }
 
-            $transactiondisc = (Int)(array_sum($discounttrx)) + (Int)(array_sum($discounttrxpersen));
+            $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($discounttrxpersen));
             $variantdisc     = array_sum($discountvariant);
             $poindisc        = array_sum($discountpoin);
 
@@ -334,9 +332,9 @@ class Report extends BaseController
                 'trxdisc'       => $transactiondisc,
                 'variantdis'    => $variantdisc,
                 'poindisc'      => $poindisc,
-            ];  
-        }    
-            
+            ];
+        }
+
         $trxvar = array_sum(array_column($transactions, 'variantdis'));
         $trxdis = array_sum(array_column($transactions, 'trxdisc'));
         $dispoint = array_sum(array_column($transactions, 'poindisc'));
@@ -357,8 +355,9 @@ class Report extends BaseController
         return view('Views/report/diskon', $data);
     }
 
-    public function payment(){
-        
+    public function payment()
+    {
+
         $db                     = \Config\Database::connect();
         $PaymentModel           = new PaymentModel;
         $TrxpaymentModel        = new TrxpaymentModel;
@@ -366,7 +365,7 @@ class Report extends BaseController
 
         if ($this->data['outletPick'] != null) {
             $input = $this->request->getGet('daterange');
-            
+
             if (!empty($input)) {
                 $daterange = explode(' - ', $input);
                 $startdate = $daterange[0];
@@ -383,7 +382,7 @@ class Report extends BaseController
             $this->auth     = service('authentication');
             $pager          = \Config\Services::pager();
 
-            
+
             $inputsearch    = $this->request->getGet('search');
 
             if (!empty($inputsearch)) {
@@ -411,8 +410,8 @@ class Report extends BaseController
                 ];
             }
 
-           $payresult = array_sum(array_column($pay,'pvalue'));
-        
+            $payresult = array_sum(array_column($pay, 'pvalue'));
+
             // Parsing Data to View
             $data                   = $this->data;
             $data['title']          = lang('Global.paymentreport');
@@ -429,7 +428,8 @@ class Report extends BaseController
         }
     }
 
-    public function product(){
+    public function product()
+    {
 
         // Calling models
         $db                 = \Config\Database::connect();
@@ -467,7 +467,7 @@ class Report extends BaseController
 
         // Populating Data
         $input = $this->request->getGet('daterange');
-            
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -476,142 +476,280 @@ class Report extends BaseController
             $startdate = date('Y-m-1');
             $enddate = date('Y-m-t');
         }
-        
+
+        // Calling Services & Libraries
+        $db         = \Config\Database::connect();
+
+        // Calling Models
+        $OutletModel = new OutletModel();
+
         // Populating Data
         if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            return redirect()->back()->with('error', lang('Global.chooseoutlet'));
         } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $outlet     = $OutletModel->find($this->data['outletPick']);
+            $outletname = $outlet['name'];
+
+            $trxpro   = $db->table('transaction');
+            $trxpro->where('date >=', $startdate)->where('date <=', $enddate);
+            $protrans   = $trxpro->select('product.id as id, transaction.id as trxid, transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total, member.name as member, product.name as product, category.name as category, variant.name as variant, trxdetail.qty as qty, variant.hargamodal as modal, variant.id as varid, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, trxdetail.marginmodal as marginmodal, payment.name as payment, outlet.name as outlet, outlet.address as address, bundle.name as bundle');
+            $protrans   = $trxpro->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
+            $protrans   = $trxpro->join('users', 'transaction.userid = users.id', 'left');
+            $protrans   = $trxpro->join('outlet', 'transaction.outletid = outlet.id', 'left');
+            $protrans   = $trxpro->join('member', 'transaction.memberid = member.id', 'left');
+            $protrans   = $trxpro->join('trxpayment', 'trxdetail.transactionid = trxpayment.transactionid', 'left');
+            $protrans   = $trxpro->join('bundle', 'trxdetail.bundleid = bundle.id', 'left');
+            $protrans   = $trxpro->join('variant', 'trxdetail.variantid = variant.id', 'left');
+            $protrans   = $trxpro->join('payment', 'trxpayment.paymentid = payment.id', 'left');
+            $protrans   = $trxpro->join('product', 'variant.productid = product.id', 'left');
+            $protrans   = $trxpro->join('category', 'product.catid = category.id', 'left');
+            $protrans   = $trxpro->where('trxdetail.variantid !=', 0);
+            $protrans   = $trxpro->where('transaction.outletid', $this->data['outletPick']);
+            $protrans   = $trxpro->orderBy('transaction.date', 'DESC');
+            $protrans   = $trxpro->get();
+            $protrans   = $protrans->getResultArray();
         }
 
-        $productval     = [];
-        $variantvalue   = [];
-        $variantval     = [];
-        $trxvar         = [];
-        $diskon         = [];
-        $productqty     = [];
-        $trxval         = [];
-        $bundleval      = [];
+        $prods = [];
+        $transval = [];
+        $margin = [];
+        foreach ($protrans as $proval) {
 
-        foreach ($transactions as $transaction){
-            $discounttrx = array();
-            $discounttrxpersen = array();
-            $discountvariant = array();
-            $discountpoin = array();
-            foreach ($trxdetails as $trxdetail){
-                foreach($bundles as $bundle){
-                    if($transaction['id'] === $trxdetail['transactionid'] && $bundle['id'] === $trxdetail['bundleid']){
-                        $bundleval []   = [
-                            'id'    => $bundle['id'],
-                            'name'  => $bundle['name'],
-                            'value' => $trxdetail['value'],
-                        ];
-                    }
-                }
-                if($transaction['id'] === $trxdetail['transactionid']){
+            $prods[] = [
+                'id'            => $proval['id'],
+                'trxid'         => $proval['trxid'],
+                'product'       => $proval['product'],
+                'category'      => $proval['category'],
+                'value'         => (int)$proval['total'],
+                'marginmo'      => $proval['marginmodal'],
+                'qty'           => $proval['qty'],
+                'gross'         => (int)$proval['marginmodal'] * (int)$proval['qty'],
+            ];
 
-                    if ($transaction['disctype'] === "0"){
+            $margin[] = [
+                'id'        => $proval['trxid'],
+                'proid'     => $proval['id'],
+                'margin'    => $proval['marginmodal'] * $proval['qty'],
+            ];
 
-                        $discounttrx[]          = $transaction['discvalue'];
-
-                    }
-                    if ($transaction['disctype'] !== "0"){
-
-                        $sub = ($trxdetail['value']) * $trxdetail['qty'];
-                        $discounttrxpersen[]    = (Int)$sub * ((Int)$transaction['discvalue']/100);
-
-                    }
-                    $discountvariant[]          = $trxdetail['discvar'];
-
-                    $discountpoin[]             = $transaction['pointused'];
-
-                    foreach ($products as $product) {
-                        foreach ($variants as $variant){
-                            if(($variant['id'] === $trxdetail['variantid']) && ($variant['productid'] === $product['id'])){
-                                foreach ($products as $product){
-                                    if($variant['productid'] === $product['id']){
-                                        $productval [] = $product['name'];
-                                        foreach ($category as $cat){
-                                            if($product['catid'] === $cat['id']){
-                                                $variantvalue[] = [
-                                                    'id'            => $product['id'],
-                                                    'trxid'         => $transaction['id'],
-                                                    'product'       => $product['name'],
-                                                    'category'      => $cat['name'],
-                                                    'value'         => (Int)$trxdetail['value'] * (Int)$trxdetail['qty'],
-                                                    'gross'         => ((Int)$trxdetail['value'] + (Int)$trxdetail['discvar']) * (Int)$trxdetail['qty'],
-                                                    'qty'           => $trxdetail['qty'],
-                                                ];
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $transactiondisc = (Int)(array_sum($discounttrx)) + (Int)(array_sum($discounttrxpersen));
-            $variantdisc     = array_sum($discountvariant);
-            $poindisc        = array_sum($discountpoin);
-            
-            $diskon[] = [
-                'id'            => $transaction['id'],
-                'trxdisc'       => $transactiondisc,
-                'value'         => $transaction['value'],
-                'variantdis'    => $variantdisc,
-                'poindisc'      => $poindisc,
-            ];  
+            $transval[] = [
+                'id'    => $proval['trxid'],
+                'proid' => $proval['id'],
+                'value' => $proval['total'],
+            ];
         }
 
-        $bundletotal = array_sum(array_column($bundleval,'value'));
-
-        $produk = [];
-        foreach ($variantvalue as $vars) {
-            if (!isset($produk[$vars['id'].$vars['product']])) {
-                $produk[$vars['id'].$vars['product']] = $vars;
+        // total transaction
+        $margintotal = [];
+        foreach ($margin as $marginval) {
+            if (!isset($margintotal[$marginval['id'] . $marginval['margin']])) {
+                $margintotal[$marginval['id'] . $marginval['margin']] = $marginval;
             } else {
-                $produk[$vars['id'].$vars['product']]['value'] += $vars['value'];
-                $produk[$vars['id'].$vars['product']]['qty'] += $vars['qty'];
-                $produk[$vars['id'].$vars['product']]['gross'] += $vars['gross'];
+                $margintotal[$marginval['id'] . $marginval['margin']]['margin'] += $marginval['margin'];
             }
         }
-        $produk = array_values($produk);
+        $margintotal = array_values($margintotal);
 
-        // disc calculation
-        $trxdisc    = array_sum(array_column($diskon,'trxdisc'));
-        $poindisc   = array_sum(array_column($diskon,'poindisc'));
-        $vardisc    = array_sum(array_column($diskon,'variantdis'));
-        $proval     = array_sum(array_column($produk,'value'));
+        // total transaction value
+        $totaltrx = [];
+        foreach ($transval as $trans) {
+            if (!isset($totaltrx[$trans['id'] . $trans['value']])) {
+                $totaltrx[$trans['id'] . $trans['value']] = $trans;
+            } else {
+                $totaltrx[$trans['id'] . $trans['value']]['value'] = $trans['value'];
+            }
+        }
+        $totaltrx = array_values($totaltrx);
+
+        // Gross Value
+        $grossval = [];
+        foreach ($margintotal as $margin) {
+            foreach ($totaltrx as $total) {
+                if ($margin['id'] === $total['id']) {
+                    $grossval[] = [
+                        'id' => $total['id'],
+                        'proid' => $total['proid'],
+                        'value' => $total['value'] - $margin['margin'],
+                    ];
+                }
+            }
+        }
+
+        // Gross Result
+        $gross = [];
+        foreach ($grossval as $vars) {
+            if (!isset($gross[$vars['proid'] . $vars['value']])) {
+                $gross[$vars['proid']] = $vars;
+            } else {
+                $gross[$vars['proid']]['value'] += $vars['value'];
+            }
+        }
+        $gross = array_values($gross);
+
+        // Produk Value
+        $produks = [];
+        foreach ($prods as $vars) {
+            if (!isset($produks[$vars['id'] . $vars['product']])) {
+                $produks[$vars['id'] . $vars['product']] = $vars;
+            } else {
+                $produks[$vars['id'] . $vars['product']]['value'] += $vars['value'];
+                $produks[$vars['id'] . $vars['product']]['qty'] += $vars['qty'];
+            }
+        }
+        $produks = array_values($produks);
 
         // if want to get net sales with trx disc and without bundle value
-        if(!empty($proval)){
-            $netsales = (Int)$proval - ((Int)$trxdisc + (Int)$poindisc);
-        }else{
-            $netsales = "0";
-        }
+        // if (!empty($produks)) {
+        //     $netsales = array_sum(array_column($produks, 'value'));
+        // } else {
+        //     $netsales = "0";
+        // }
+
+        // groos total
+        $grossval = array_sum(array_column($gross,'value'));
 
         // Total Stock
-        $stoktotal = array_sum(array_column($produk,'qty'));
+        $stoktotal = array_sum(array_column($produks, 'qty'));
 
         // Total Sales Without trx disc, bundle & poin disc
-        $salestotal = array_sum(array_column($produk,'value'));
+        $salestotal = array_sum(array_column($produks, 'value'));
 
-        // Total Gross
-        $grosstotal = array_sum(array_column($produk,'gross'));
+        // dd($produks);
+
+        // Populating Data
+        // if ($this->data['outletPick'] === null) {
+        //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        // } else {
+        //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+        // }
+
+        // $productval     = [];
+        // $variantvalue   = [];
+        // $variantval     = [];
+        // $trxvar         = [];
+        // $diskon         = [];
+        // $productqty     = [];
+        // $trxval         = [];
+        // $bundleval      = [];
+
+        // foreach ($transactions as $transaction) {
+        //     $discounttrx = array();
+        //     $discounttrxpersen = array();
+        //     $discountvariant = array();
+        //     $discountpoin = array();
+        //     foreach ($trxdetails as $trxdetail) {
+        //         foreach ($bundles as $bundle) {
+        //             if ($transaction['id'] === $trxdetail['transactionid'] && $bundle['id'] === $trxdetail['bundleid']) {
+        //                 $bundleval[]   = [
+        //                     'id'    => $bundle['id'],
+        //                     'name'  => $bundle['name'],
+        //                     'value' => $trxdetail['value'],
+        //                 ];
+        //             }
+        //         }
+        //         if ($transaction['id'] === $trxdetail['transactionid']) {
+
+        //             if ($transaction['disctype'] === "0") {
+
+        //                 $discounttrx[]          = $transaction['discvalue'];
+        //             }
+        //             if ($transaction['disctype'] !== "0") {
+
+        //                 $sub = ($trxdetail['value']) * $trxdetail['qty'];
+        //                 $discounttrxpersen[]    = (int)$sub * ((int)$transaction['discvalue'] / 100);
+        //             }
+        //             $discountvariant[]          = $trxdetail['discvar'];
+
+        //             $discountpoin[]             = $transaction['pointused'];
+
+        //             foreach ($products as $product) {
+        //                 foreach ($variants as $variant) {
+        //                     if (($variant['id'] === $trxdetail['variantid']) && ($variant['productid'] === $product['id'])) {
+        //                         foreach ($products as $product) {
+        //                             if ($variant['productid'] === $product['id']) {
+        //                                 $productval[] = $product['name'];
+        //                                 foreach ($category as $cat) {
+        //                                     if ($product['catid'] === $cat['id']) {
+        //                                         $variantvalue[] = [
+        //                                             'id'            => $product['id'],
+        //                                             'trxid'         => $transaction['id'],
+        //                                             'product'       => $product['name'],
+        //                                             'category'      => $cat['name'],
+        //                                             'value'         => (int)$trxdetail['value'] * (int)$trxdetail['qty'],
+        //                                             'gross'         => ((int)$trxdetail['value'] + (int)$trxdetail['discvar']) * (int)$trxdetail['qty'],
+        //                                             'qty'           => $trxdetail['qty'],
+        //                                         ];
+        //                                     }
+        //                                 }
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($discounttrxpersen));
+        //     $variantdisc     = array_sum($discountvariant);
+        //     $poindisc        = array_sum($discountpoin);
+
+        //     $diskon[] = [
+        //         'id'            => $transaction['id'],
+        //         'trxdisc'       => $transactiondisc,
+        //         'value'         => $transaction['value'],
+        //         'variantdis'    => $variantdisc,
+        //         'poindisc'      => $poindisc,
+        //     ];
+        // }
+
+        // $bundletotal = array_sum(array_column($bundleval, 'value'));
+
+        // $produk = [];
+        // foreach ($variantvalue as $vars) {
+        //     if (!isset($produk[$vars['id'] . $vars['product']])) {
+        //         $produk[$vars['id'] . $vars['product']] = $vars;
+        //     } else {
+        //         $produk[$vars['id'] . $vars['product']]['value'] += $vars['value'];
+        //         $produk[$vars['id'] . $vars['product']]['qty'] += $vars['qty'];
+        //         $produk[$vars['id'] . $vars['product']]['gross'] += $vars['gross'];
+        //     }
+        // }
+        // $produk = array_values($produk);
+
+        // // disc calculation
+        // $trxdisc    = array_sum(array_column($diskon, 'trxdisc'));
+        // $poindisc   = array_sum(array_column($diskon, 'poindisc'));
+        // $vardisc    = array_sum(array_column($diskon, 'variantdis'));
+        // $proval     = array_sum(array_column($produk, 'value'));
+
+        // // if want to get net sales with trx disc and without bundle value
+        // if (!empty($proval)) {
+        //     $netsales = (int)$proval - ((int)$trxdisc + (int)$poindisc);
+        // } else {
+        //     $netsales = "0";
+        // }
+
+        // // Total Stock
+        // $stoktotal = array_sum(array_column($produk, 'qty'));
+
+        // // Total Sales Without trx disc, bundle & poin disc
+        // $salestotal = array_sum(array_column($produk, 'value'));
+
+        // // Total Gross
+        // $grosstotal = array_sum(array_column($produk, 'gross'));
+
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.productreport');
         $data['description']    = lang('Global.productListDesc');
-        $data['transactions']   = $transactions;
-        $data['products']       = $produk;
+        $data['transactions']   = $protrans;
+        $data['products']       = $produks;
         $data['totalstock']     = $stoktotal;
         $data['salestotal']     = $salestotal;
-        $data['grosstotal']     = $grosstotal;
-        $data['netsales']       = $netsales;
-        $data['bundletotal']    = $bundletotal;
+        $data['grosstotal']     = $grossval;
+        $data['netsales']       = $salestotal;
+        $data['gross']          = $gross;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
         $data['pager']          = $ProductModel->pager;
@@ -658,14 +796,14 @@ class Report extends BaseController
         }
 
         $absen = array();
-        foreach ($presences as $presence ){
-            foreach ($users as $user){
-                if ($presence['userid'] === $user->id){
-                    foreach ($usergroups as $ugroups){
-                        if($ugroups['user_id'] === $user->id){
-                            foreach ($groups as $group){
-                                if ($ugroups['group_id'] === $group->id){
-                                    $absen [] = [
+        foreach ($presences as $presence) {
+            foreach ($users as $user) {
+                if ($presence['userid'] === $user->id) {
+                    foreach ($usergroups as $ugroups) {
+                        if ($ugroups['user_id'] === $user->id) {
+                            foreach ($groups as $group) {
+                                if ($ugroups['group_id'] === $group->id) {
+                                    $absen[] = [
                                         'id'        => $user->id,
                                         'name'      => $user->username,
                                         'date'      => $presence['datetime'],
@@ -680,36 +818,35 @@ class Report extends BaseController
             }
         }
 
-        // Sum Total Product Sold
+        // Sum Total Presence
         $admin = [];
         $presen = '';
         foreach ($absen as $abs) {
             $present = array();
-            foreach ($absen as $abs){
-                if ($abs['status'] === '1'){
+            foreach ($absen as $abs) {
+                if ($abs['status'] === '1') {
                     $present[] = $abs['status'];
                 }
             }
             $presen = count($present);
-            if (!isset($admin[$abs['id'].$abs['name']])) {
-                $admin[$abs['id'].$abs['name']] = $abs;
+            if (!isset($admin[$abs['id'] . $abs['name']])) {
+                $admin[$abs['id'] . $abs['name']] = $abs;
             } else {
-                $admin[$abs['id'].$abs['name']]['status'] += $abs['status'];
+                $admin[$abs['id'] . $abs['name']]['status'] += $abs['status'];
             }
         }
         $admin = array_values($admin);
 
-
         // parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.presencereport');
-        $data['description']    = lang('Global.presenceListDesc'); 
+        $data['description']    = lang('Global.presenceListDesc');
         $data['presences']      = $admin;
         $data['present']        = $presen;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
 
-        return view('Views/report/presence',$data);
+        return view('Views/report/presence', $data);
     }
 
     public function presencedetail($id)
@@ -719,28 +856,29 @@ class Report extends BaseController
         $pager              = \Config\Services::pager();
 
         $datas = explode('-', $id);
-       
+
         $iduser = $datas[0];
         $starts = $datas[1];
         $ends   = $datas[2];
 
         if (!empty($iduser)) {
-            $presences  = $PresenceModel->where('datetime >=', $starts)->where('datetime <=', $ends)->where('userid',$iduser)->orderBy('id', 'DESC')->paginate(20, 'reportpresecendet');
+            $presences  = $PresenceModel->where('datetime >=', $starts)->where('datetime <=', $ends)->where('userid', $iduser)->orderBy('id', 'DESC')->paginate(20, 'reportpresecendet');
         } else {
             $presences  = $PresenceModel->where('datetime >=', $starts)->where('datetime <=', $ends)->orderBy('id', 'DESC')->paginate(20, 'reportpresencedet');
         }
-  
+
         // parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.presence');
-        $data['description']    = lang('Global.presencedetailListDesc'); 
+        $data['description']    = lang('Global.presencedetailListDesc');
         $data['presences']      = $presences;
         $data['pager']          = $PresenceModel->pager;
 
-        return view('Views/report/presencedetail',$data);
+        return view('Views/report/presencedetail', $data);
     }
 
-    public function employe(){
+    public function employe()
+    {
 
         // Calling Model
         $db                 = \Config\Database::connect();
@@ -756,7 +894,7 @@ class Report extends BaseController
         $groups         = $GroupModel->findAll();
 
         $input = $this->request->getGet('daterange');
-            
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -772,21 +910,21 @@ class Report extends BaseController
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
         }
-        
+
         $useradm = [];
-        foreach ($transactions as $transaction){
-            foreach ($admin as $adm){
-                if ($transaction['userid'] === $adm->id){
-                    foreach($usergroups as $userg){
-                        if ($adm->id === $userg['user_id']){
-                            foreach($groups as $group){
-                                if($userg['group_id'] === $group->id){
-                                    $useradm [] = [
+        foreach ($transactions as $transaction) {
+            foreach ($admin as $adm) {
+                if ($transaction['userid'] === $adm->id) {
+                    foreach ($usergroups as $userg) {
+                        if ($adm->id === $userg['user_id']) {
+                            foreach ($groups as $group) {
+                                if ($userg['group_id'] === $group->id) {
+                                    $useradm[] = [
                                         'id'    => $adm->id,
                                         'value' => $transaction['value'],
                                         'name'  => $adm->username,
@@ -802,10 +940,10 @@ class Report extends BaseController
 
         $produk = [];
         foreach ($useradm as $vars) {
-            if (!isset($produk[$vars['id'].$vars['role']])) {
-                $produk[$vars['id'].$vars['name'].$vars['role']] = $vars;
+            if (!isset($produk[$vars['id'] . $vars['role']])) {
+                $produk[$vars['id'] . $vars['name'] . $vars['role']] = $vars;
             } else {
-                $produk[$vars['id'].$vars['name'].$vars['role']]['value'] += $vars['value'];
+                $produk[$vars['id'] . $vars['name'] . $vars['role']]['value'] += $vars['value'];
             }
         }
         $produk = array_values($produk);
@@ -813,16 +951,17 @@ class Report extends BaseController
         // parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.employereport');
-        $data['description']    = lang('Global.employeListDesc'); 
+        $data['description']    = lang('Global.employeListDesc');
         $data['employetrx']     = $produk;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
 
-        return view('Views/report/employe',$data);
+        return view('Views/report/employe', $data);
     }
 
-    public function customer(){
-        
+    public function customer()
+    {
+
         // Calling Models
         $db                 = \Config\Database::connect();
         $TransactionModel   = new TransactionModel;
@@ -846,7 +985,7 @@ class Report extends BaseController
 
         if ($this->data['outletPick'] != null) {
             $input = $this->request->getGet('daterange');
-            
+
             if (!empty($input)) {
                 $daterange = explode(' - ', $input);
                 $startdate = $daterange[0];
@@ -862,13 +1001,13 @@ class Report extends BaseController
                 $addres = "All Outlets";
                 $outletname = "58vapehouse";
             } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
                 $outlets = $OutletModel->find($this->data['outletPick']);
                 $addres = $outlets['address'];
                 $outletname = $outlets['name'];
             }
 
-            
+
             $customer = array();
             foreach ($members as $member) {
                 $totaltrx = array();
@@ -885,8 +1024,8 @@ class Report extends BaseController
                         $trxval[]   = $trx['value'];
                     }
                 }
-                
-                $customer[] =[
+
+                $customer[] = [
                     'id'    => $member['id'],
                     'name'  => $member['name'],
                     'debt'  => array_sum($debtval),
@@ -895,7 +1034,7 @@ class Report extends BaseController
                     'phone' => $member['phone'],
                 ];
             }
-        
+
             // Parsing Data to View
             $data                       = $this->data;
             $data['title']              = lang('Global.customer');
@@ -910,7 +1049,8 @@ class Report extends BaseController
         }
     }
 
-    public function customerdetail($id){
+    public function customerdetail($id)
+    {
 
         // Calling Models
         $BundleModel            = new BundleModel;
@@ -939,10 +1079,10 @@ class Report extends BaseController
         $products               = $ProductModel->findAll();
         $variants               = $VariantModel->findAll();
         $stocks                 = $StockModel->findAll();
-        $transactions           = $TransactionModel->orderBy('date', 'DESC')->where('memberid',$id)->find();
+        $transactions           = $TransactionModel->orderBy('date', 'DESC')->where('memberid', $id)->find();
         $trxdetails             = $TrxdetailModel->findAll();
         $trxpayments            = $TrxpaymentModel->findAll();
-        $debts                  = $DebtModel->where('memberid',$id)->find();
+        $debts                  = $DebtModel->where('memberid', $id)->find();
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -962,11 +1102,12 @@ class Report extends BaseController
         $data['trxdetails']     = $trxdetails;
         $data['trxpayments']    = $trxpayments;
         $data['debts']          = $debts;
-        
-        return view('Views/report/customerdetail',$data);
+
+        return view('Views/report/customerdetail', $data);
     }
 
-    public function bundle(){
+    public function bundle()
+    {
 
         // Calling models
         $db                 = \Config\Database::connect();
@@ -990,7 +1131,7 @@ class Report extends BaseController
 
         // initialize
         $input = $this->request->getGet('daterange');
-            
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -999,35 +1140,35 @@ class Report extends BaseController
             $startdate = date('Y-m-1');
             $enddate = date('Y-m-t');
         }
-       
+
         $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
 
         $bund = [];
-        foreach($transactions as $transaction){
-            foreach ($trxdetails as $trxdetail){
-                foreach ($bundles as $bundle){
-                    if($trxdetail['transactionid'] === $transaction['id'] && $trxdetail['bundleid'] !=="0" && $bundle['id'] === $trxdetail['bundleid']){
+        foreach ($transactions as $transaction) {
+            foreach ($trxdetails as $trxdetail) {
+                foreach ($bundles as $bundle) {
+                    if ($trxdetail['transactionid'] === $transaction['id'] && $trxdetail['bundleid'] !== "0" && $bundle['id'] === $trxdetail['bundleid']) {
                         $bund[] = [
                             'id'    => $trxdetail['bundleid'],
                             'name'  => $bundle['name'],
                             'qty'   => $trxdetail['qty'],
                             'price' => $bundle['price'],
-                            'value' => (Int)$trxdetail['qty'] * (Int)$bundle['price'],
-                        ]; 
+                            'value' => (int)$trxdetail['qty'] * (int)$bundle['price'],
+                        ];
                     }
                 }
             }
         }
-        
+
         // Sum Total Bundle Sold
         $paket = [];
         foreach ($bund as $bundval) {
-    
-            if (!isset($paket[$bundval['id'].$bundval['name']])) {
-                $paket[$bundval['id'].$bundval['name']] = $bundval;
+
+            if (!isset($paket[$bundval['id'] . $bundval['name']])) {
+                $paket[$bundval['id'] . $bundval['name']] = $bundval;
             } else {
-                $paket[$bundval['id'].$bundval['name']]['value'] += $bundval['value'];
-                $paket[$bundval['id'].$bundval['name']]['qty'] += $bundval['qty'];
+                $paket[$bundval['id'] . $bundval['name']]['value'] += $bundval['value'];
+                $paket[$bundval['id'] . $bundval['name']]['qty'] += $bundval['qty'];
             }
         }
 
@@ -1044,7 +1185,8 @@ class Report extends BaseController
         return view('Views/report/bundle', $data);
     }
 
-    public function category(){
+    public function category()
+    {
 
         // Calling models
         $TransactionModel   = new TransactionModel();
@@ -1053,7 +1195,7 @@ class Report extends BaseController
         $CategoryModel      = new CategoryModel();
         $VariantModel       = new VariantModel();
         $StockModel         = new StockModel();
-        $BrandModel         = new BrandModel(); 
+        $BrandModel         = new BrandModel();
         $BundleModel        = new BundleModel();
 
         // Populating Data
@@ -1083,7 +1225,7 @@ class Report extends BaseController
 
         // Daterange Filter System
         $input = $this->request->getGet('daterange');
-        
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -1092,12 +1234,12 @@ class Report extends BaseController
             $startdate = date('Y-m-1');
             $enddate = date('Y-m-t');
         }
-        
+
         // Filter Data Outlet & daterange 
-         if ($this->data['outletPick'] === null) {
+        if ($this->data['outletPick'] === null) {
             $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
         } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
         }
 
         $productval     = [];
@@ -1109,52 +1251,50 @@ class Report extends BaseController
         $trxval         = [];
         $bundleval      = [];
 
-        foreach ($transactions as $transaction){
+        foreach ($transactions as $transaction) {
             $discounttrx = array();
             $discounttrxpersen = array();
             $discountvariant = array();
             $discountpoin = array();
-            foreach ($trxdetails as $trxdetail){
-                foreach($bundles as $bundle){
-                    if($transaction['id'] === $trxdetail['transactionid'] && $bundle['id'] === $trxdetail['bundleid']){
-                        $bundleval []   = [
+            foreach ($trxdetails as $trxdetail) {
+                foreach ($bundles as $bundle) {
+                    if ($transaction['id'] === $trxdetail['transactionid'] && $bundle['id'] === $trxdetail['bundleid']) {
+                        $bundleval[]   = [
                             'id'    => $bundle['id'],
                             'name'  => $bundle['name'],
                             'value' => $trxdetail['value'],
                         ];
                     }
                 }
-                if($transaction['id'] === $trxdetail['transactionid']){
+                if ($transaction['id'] === $trxdetail['transactionid']) {
 
-                    if ($transaction['disctype'] === "0"){
+                    if ($transaction['disctype'] === "0") {
 
                         $discounttrx[]          = $transaction['discvalue'];
-
                     }
-                    if ($transaction['disctype'] !== "0"){
+                    if ($transaction['disctype'] !== "0") {
 
                         $sub = ($trxdetail['value']) * $trxdetail['qty'];
-                        $discounttrxpersen[]    = (Int)$sub * ((Int)$transaction['discvalue']/100);
-
+                        $discounttrxpersen[]    = (int)$sub * ((int)$transaction['discvalue'] / 100);
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
 
                     $discountpoin[]             = $transaction['pointused'];
 
                     foreach ($products as $product) {
-                        foreach ($variants as $variant){
-                            if(($variant['id'] === $trxdetail['variantid']) && ($variant['productid'] === $product['id'])){
-                                foreach ($products as $product){
-                                    if($variant['productid'] === $product['id']){
-                                        $productval [] = $product['name'];
-                                        foreach ($category as $cat){
-                                            if($product['catid'] === $cat['id']){
+                        foreach ($variants as $variant) {
+                            if (($variant['id'] === $trxdetail['variantid']) && ($variant['productid'] === $product['id'])) {
+                                foreach ($products as $product) {
+                                    if ($variant['productid'] === $product['id']) {
+                                        $productval[] = $product['name'];
+                                        foreach ($category as $cat) {
+                                            if ($product['catid'] === $cat['id']) {
                                                 $variantvalue[] = [
                                                     'id'            => $product['catid'],
                                                     'trxid'         => $transaction['id'],
                                                     'product'       => $product['name'],
                                                     'category'      => $cat['name'],
-                                                    'value'         => ((Int)$trxdetail['value'] + (Int)$trxdetail['discvar']) * (Int)$trxdetail['qty'],
+                                                    'value'         => ((int)$trxdetail['value'] + (int)$trxdetail['discvar']) * (int)$trxdetail['qty'],
                                                     'qty'           => $trxdetail['qty'],
                                                 ];
                                             }
@@ -1170,38 +1310,38 @@ class Report extends BaseController
             $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
             $variantdisc     = array_sum($discountvariant);
             $poindisc        = array_sum($discountpoin);
-            
+
             $diskon[] = [
                 'id'            => $transaction['id'],
                 'trxdisc'       => $transactiondisc,
                 'value'         => $transaction['value'],
                 'variantdis'    => $variantdisc,
                 'poindisc'      => $poindisc,
-            ];  
+            ];
         }
 
-        $bundletotal = array_sum(array_column($bundleval,'value'));
+        $bundletotal = array_sum(array_column($bundleval, 'value'));
 
         $produk = [];
         foreach ($variantvalue as $vars) {
-            if (!isset($produk[$vars['id'].$vars['category']])) {
-                $produk[$vars['id'].$vars['category']] = $vars;
+            if (!isset($produk[$vars['id'] . $vars['category']])) {
+                $produk[$vars['id'] . $vars['category']] = $vars;
             } else {
-                $produk[$vars['id'].$vars['category']]['value'] += $vars['value'];
-                $produk[$vars['id'].$vars['category']]['qty'] += $vars['qty'];
+                $produk[$vars['id'] . $vars['category']]['value'] += $vars['value'];
+                $produk[$vars['id'] . $vars['category']]['qty'] += $vars['qty'];
             }
         }
         $produk = array_values($produk);
 
 
         // Total Stock
-        $stoktotal = array_sum(array_column($produk,'qty'));
+        $stoktotal = array_sum(array_column($produk, 'qty'));
 
         // Total Sales
-        $salestotal = array_sum(array_column($produk,'value'));
+        $salestotal = array_sum(array_column($produk, 'value'));
 
         // Total Gross
-        $grosstotal = array_sum(array_column($produk,'value'));
+        $grosstotal = array_sum(array_column($produk, 'value'));
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -1216,16 +1356,17 @@ class Report extends BaseController
         return view('Views/report/category', $data);
     }
 
-    public function stockcategory(){
+    public function stockcategory()
+    {
 
         // Calling Data
         $ProductModel   = new ProductModel();
         $BrandModel     = new BrandModel();
         $VariantModel   = new VariantModel();
         $CategoryModel  = new CategoryModel();
-        $StockModel     = New StockModel();
-        $VariantModel   = New VariantModel();
-        $OutletModel    = New OutletModel();
+        $StockModel     = new StockModel();
+        $VariantModel   = new VariantModel();
+        $OutletModel    = new OutletModel();
 
         $variants   = $VariantModel->findAll();
         $brands     = $BrandModel->findAll();
@@ -1236,26 +1377,26 @@ class Report extends BaseController
 
         if ($this->data['outletPick'] === null) {
             $stocks      = $StockModel->findAll();
-            foreach ($outlets as $outlet){
-                if($outlet['id'] === $this->data['outletPick']){
+            foreach ($outlets as $outlet) {
+                if ($outlet['id'] === $this->data['outletPick']) {
                     $outletname = $outlet['name'];
                 }
             }
         } else {
             $stocks      = $StockModel->where('outletid', $this->data['outletPick'])->find();
-            foreach ($outlets as $outlet){
+            foreach ($outlets as $outlet) {
                 $outletname = $outlet['name'];
             }
         }
 
         $productval = [];
-        foreach ($stocks as $stock){
-            foreach ($variants as $variant){
-                    foreach ($products as $product){
-                        foreach ($brands as $brand){
-                            foreach ($category as $cat){
-                                if($product['catid'] === $cat['id'] && $product['brandid'] === $brand['id'] && $variant['productid'] == $product['id'] && $stock['variantid'] === $variant['id']){
-                                $productval [] = [
+        foreach ($stocks as $stock) {
+            foreach ($variants as $variant) {
+                foreach ($products as $product) {
+                    foreach ($brands as $brand) {
+                        foreach ($category as $cat) {
+                            if ($product['catid'] === $cat['id'] && $product['brandid'] === $brand['id'] && $variant['productid'] == $product['id'] && $stock['variantid'] === $variant['id']) {
+                                $productval[] = [
                                     'id'                => $product['catid'],
                                     'prodname'          => $product['name'],
                                     'catname'           => $cat['name'],
@@ -1266,7 +1407,7 @@ class Report extends BaseController
                                     'hargajual'         => $variant['hargajual'],
                                     'hargarekomendasi'  => $variant['hargarekomendasi'],
                                     'stock'             => $stock['qty'],
-                                    'whole'             => $variant['hargamodal'] * $stock['qty'],                                
+                                    'whole'             => $variant['hargamodal'] * $stock['qty'],
                                 ];
                             }
                         }
@@ -1274,20 +1415,20 @@ class Report extends BaseController
                 }
             }
         }
-       
+
         $produk = [];
         foreach ($productval as $vars) {
-            if (!isset($produk[$vars['id'].$vars['prodname']])) {
-                $produk[$vars['id'].$vars['prodname']] = $vars;
+            if (!isset($produk[$vars['id'] . $vars['prodname']])) {
+                $produk[$vars['id'] . $vars['prodname']] = $vars;
             } else {
-                $produk[$vars['id'].$vars['prodname']]['stock'] += $vars['stock'];
-                $produk[$vars['id'].$vars['prodname']]['whole'] += $vars['whole'];
+                $produk[$vars['id'] . $vars['prodname']]['stock'] += $vars['stock'];
+                $produk[$vars['id'] . $vars['prodname']]['whole'] += $vars['whole'];
             }
         }
         $produk = array_values($produk);
 
-        $stock = array_sum(array_column($produk,'stock'));
-        $whole = array_sum(array_column($produk,'whole'));
+        $stock = array_sum(array_column($produk, 'stock'));
+        $whole = array_sum(array_column($produk, 'whole'));
 
         // Parsing Data to View
         $data                   = $this->data;

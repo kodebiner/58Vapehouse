@@ -122,7 +122,15 @@
                             <td style="color:white;"><?=$product['product']?></td>
                             <td style="color:white;"><?=$product['category']?></td>
                             <td style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
-                            <td style="color:white;"><?php echo "Rp. ".number_format($product['gross'],0,',','.');" ";?></td>
+                            <?php
+                            foreach ($gross as $grosval) { 
+                                if ($grosval['proid'] === $product['id']) {
+                            ?>
+                                <td style="color:white;"><?php echo "Rp. ".number_format($grosval['value'],0,',','.');" ";?></td>
+                            <?php 
+                                } 
+                            }
+                            ?>
                             <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
                         </tr>
                     <?php } ?>
