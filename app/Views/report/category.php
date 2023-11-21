@@ -16,12 +16,14 @@
         data.addColumn('string', 'category');
         data.addColumn('number', 'qty');
         data.addColumn('number', 'value');
+        data.addColumn('number', 'net');
         data.addRows([
-            <?php foreach ($products as $product){
-                $category       = $product['category'];
+            <?php foreach ($catedata as $product){
+                $category       = $product['cate'];
                 $sold           = $product['qty'];
                 $sales          = $product['value'];
-                echo "['$category',$sold,$sales],";
+                $net            = $product['netval'];
+                echo "['$category',$sold,$sales,$net],";
             }?>
         ]);
 
@@ -83,13 +85,23 @@
 
     <div uk-grid class="uk-flex-middle uk-margin-bottom">
         <!-- Search Filter -->
-        <div class="uk-width-1-2@m">
+        <div class="uk-width-1-4@m">
             <form class="uk-search uk-search-default" method="GET" action="report/category" style="background-color: #fff; border-radius: 7px;">
                 <span uk-search-icon style="color: #000;"></span>
                 <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
             </form>
         </div>
         <!-- End Search Filter -->
+        <div class="uk-width-1-4@m uk-text-left@m">
+            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"> <?=lang('Global.total')?> <?=lang('Global.sales')?> : <?php echo "Rp. ".number_format($net,0,',','.');" ";?></p> 
+        </div>
+        <div class="uk-width-1-4@m uk-text-left@m">
+            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($gross,0,',','.');" ";?></p>
+        </div>
+        <div class="uk-width-1-4@m uk-text-left@m">
+            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"> <?=lang('Global.total')?><?=lang('Global.soldItem')?> : <?php echo $qty;?></p>
+        </div>
+            
     </div>
 
     <div class="uk-overflow-auto">
@@ -97,18 +109,18 @@
             <thead>
                 <tr>
                     <th><?=lang('Global.category')?></th>
-                    <th class="uk-text-center"><?=lang('Global.category')?></th>
+                    <th class="uk-text-center"><?=lang('Global.sales')?></th>
                     <th class="uk-text-center"><?=lang('Global.gross')?></th>
-                    <th class="uk-text-center"><?=lang('Global.transaction')?></th>
+                    <th class="uk-text-center"><?=lang('Global.soldItem')?></th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($products as $product ){ ?>
+                <?php foreach ($catedata as $cat ){ ?>
                     <tr>
-                        <td style="color:white;"><?=$product['category']?></td>
-                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
-                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
-                        <td style="color:white;" class="uk-text-center"><?=$product['qty']?></td>
+                        <td style="color:white;"><?=$cat['cate']?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($cat['netval'],0,',','.');" ";?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($cat['value'],0,',','.');" ";?></td>
+                        <td style="color:white;" class="uk-text-center"><?=$cat['qty']?></td>
                     </tr>
                 <?php } ?>
             </tbody>

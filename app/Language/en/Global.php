@@ -203,6 +203,8 @@ return [
     'adjprice'          => 'Adjustment Price',
     'oldprice'          => 'Previous Price',
     'diffprice'         => 'Difference Price',
+    'soldItem'          => 'Sold Item',
+
    
     // Button
     'edit'              => 'Edit',

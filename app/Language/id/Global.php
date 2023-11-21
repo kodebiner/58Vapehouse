@@ -203,6 +203,7 @@ return [
     'adjprice'          => 'Harga Penyesuaian',
     'oldprice'          => 'Harga Sebelumnya',
     'diffprice'         => 'Selisih Harga',
+    'soldItem'          => 'Item Terjual',
 
     // Button
     'edit'              => 'Ubah',

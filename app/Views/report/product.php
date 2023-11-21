@@ -99,7 +99,7 @@
                 <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($grosstotal,0,',','.');" ";?></p>
             </div>
             <div class="uk-width-1-4@m uk-text-left@m">
-                <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.transaction')?> : <?php echo $totalstock;?></p>
+                <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.soldItem')?> : <?php echo $totalstock;?></p>
             </div>
         </div>
 
@@ -113,7 +113,7 @@
                         <th><?=lang('Global.category')?></th>
                         <th><?=lang('Global.sales')?></th>
                         <th><?=lang('Global.gross')?></th>
-                        <th class="uk-text-center"><?=lang('Global.transaction')?></th>
+                        <th class="uk-text-center"><?=lang('Global.soldItem')?></th>
                     </tr>
                 </thead>
                 <tbody>
