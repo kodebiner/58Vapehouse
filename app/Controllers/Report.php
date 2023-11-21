@@ -1127,8 +1127,6 @@ class Report extends BaseController
         $kategori = array_values($kategori);
 
         // total net sales (Total Penjualan Bersih)
-        $totalnetsales = array_sum(array_column($kategori, 'total'));
-
         // Gross Sales Code (Penjualan Kotor)
         $trxgross = [];
         foreach ($protrans as $catetrx) {
@@ -1153,6 +1151,9 @@ class Report extends BaseController
             }
         }
         $catedata = array_values($catedata);
+
+
+        $totalnetsales = array_sum(array_column($catedata, 'netval'));
 
         // total gross sales category
         $totalcatgross =  array_sum(array_column($trxgross, 'value'));
@@ -1273,9 +1274,8 @@ class Report extends BaseController
         $data                   = $this->data;
         $data['title']          = lang('Global.categoryreport');
         $data['description']    = lang('Global.categoryListDesc');
-        // $data['products']       = $produk;
         $data['catedata']       = $catedata;
-        $data['net']            = $totalnetsales;
+        $data['netsales']       = $totalnetsales;
         $data['gross']          = $totalcatgross;
         $data['qty']            = $totalsalesitem;
         $data['startdate']      = strtotime($startdate);
