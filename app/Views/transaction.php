@@ -973,7 +973,7 @@
 
         <!-- Modal Detail Transaction -->
         <div uk-modal class="uk-flex-top uk-modal-container" id="tambahdata" >
-            <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-dialog" uk-overflow-auto>
                 <div class="uk-modal-content">
                     <div class="uk-modal-header">
                         <div class="uk-child-width-1-2" uk-grid>
