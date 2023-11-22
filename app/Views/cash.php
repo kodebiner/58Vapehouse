@@ -292,7 +292,7 @@
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="quantity"><?= lang('Global.quantity') ?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.quantity')) : ?>tm-form-invalid<?php endif ?>" id="quantity" name="quantity" placeholder="<?= lang('Global.quantity') ?>" autofocus required />
+                            <input type="number" class="uk-input <?php if (session('errors.quantity')) : ?>tm-form-invalid<?php endif ?>" id="quantity" name="quantity" placeholder="<?= lang('Global.quantity') ?>" autofocus required />
                         </div>
                     </div>
                     

@@ -222,50 +222,54 @@
                 if ( $( "#product"+variantarray[k]['id'] ).length ) {
                     alert('<?=lang('Global.readyAdd');?>');
                 } else {
-                    let minval = count;
-                    var prods = document.getElementById('tableproduct');
-                                                
-                    var pgrid = document.createElement('div');
-                    pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
-                    pgrid.setAttribute('class', 'uk-margin-small');
-                    pgrid.setAttribute('uk-grid', '');
-
-                    var vcontainer = document.createElement('div');
-                    vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2');
+                    if (variantarray[k]['qty'] == '0') {
+                        alert("<?=lang('Global.alertstock')?>");
+                    } else {
+                        let minval = count;
+                        var prods = document.getElementById('tableproduct');
                                                     
-                    var vname = document.createElement('div');
-                    vname.setAttribute('id','var'+variantarray[k]['id']);
-                    vname.setAttribute('class','');
-                    vname.innerHTML = variantarray[k]['name'];
+                        var pgrid = document.createElement('div');
+                        pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
+                        pgrid.setAttribute('class', 'uk-margin-small');
+                        pgrid.setAttribute('uk-grid', '');
 
-                    var tcontainer = document.createElement('div');
-                    tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2');
+                        var vcontainer = document.createElement('div');
+                        vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2');
+                                                        
+                        var vname = document.createElement('div');
+                        vname.setAttribute('id','var'+variantarray[k]['id']);
+                        vname.setAttribute('class','');
+                        vname.innerHTML = variantarray[k]['name'];
 
-                    var tot = document.createElement('input');
-                    tot.setAttribute('type', 'number');
-                    tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
-                    tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
-                    tot.setAttribute('class', 'uk-input');
-                    tot.setAttribute('value', '1');
-                    tot.setAttribute('min', minval);
-                    tot.setAttribute('required', '');
+                        var tcontainer = document.createElement('div');
+                        tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2');
 
-                    var pieces = document.createElement('div');
-                    pieces.setAttribute('class', 'uk-margin-small-left');
-                    pieces.innerHTML = 'Pcs';
+                        var tot = document.createElement('input');
+                        tot.setAttribute('type', 'number');
+                        tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
+                        tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
+                        tot.setAttribute('class', 'uk-input');
+                        tot.setAttribute('value', '1');
+                        tot.setAttribute('min', minval);
+                        tot.setAttribute('required', '');
 
-                    vcontainer.appendChild(vname);
-                    tcontainer.appendChild(tot);
-                    tcontainer.appendChild(pieces);
-                    pgrid.appendChild(vcontainer);
-                    pgrid.appendChild(tcontainer);
-                    prods.appendChild(pgrid);
+                        var pieces = document.createElement('div');
+                        pieces.setAttribute('class', 'uk-margin-small-left');
+                        pieces.innerHTML = 'Pcs';
 
-                    tot.addEventListener("change", function removeproduct() {
-                        if (tot.value == '0') {
-                            pgrid.remove();
-                        }
-                    });
+                        vcontainer.appendChild(vname);
+                        tcontainer.appendChild(tot);
+                        tcontainer.appendChild(pieces);
+                        pgrid.appendChild(vcontainer);
+                        pgrid.appendChild(tcontainer);
+                        prods.appendChild(pgrid);
+
+                        tot.addEventListener("change", function removeproduct() {
+                            if (tot.value == '0') {
+                                pgrid.remove();
+                            }
+                        });
+                    }
                 }
             }
         }
