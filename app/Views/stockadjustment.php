@@ -222,9 +222,9 @@
                 if ( $( "#product"+variantarray[k]['id'] ).length ) {
                     alert('<?=lang('Global.readyAdd');?>');
                 } else {
-                    if (variantarray[k]['qty'] == '0') {
-                        alert("<?=lang('Global.alertstock')?>");
-                    } else {
+                    // if (variantarray[k]['qty'] == '0') {
+                    //     alert("<?//=lang('Global.alertstock')?>");
+                    // } else {
                         let minval = count;
                         var prods = document.getElementById('tableproduct');
                                                     
@@ -269,7 +269,7 @@
                                 pgrid.remove();
                             }
                         });
-                    }
+                    // }
                 }
             }
         }
