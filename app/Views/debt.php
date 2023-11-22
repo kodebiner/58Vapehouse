@@ -51,7 +51,7 @@
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
-                <th class="uk-text-center"></th>
+                <th class="uk-text-center"><?= lang('Global.detail') ?></th>
                 <th class=""><?= lang('Global.date') ?></th>
                 <th class=""><?= lang('Global.outlet') ?></th>
                 <th class=""><?= lang('Global.customer') ?></th>
@@ -62,7 +62,7 @@
         <tbody>
             <?php foreach ($debts as $debt) { ?>
                 <tr>
-                    <td class="uk-flex uk-flex-center">
+                    <td class="uk-flex-middle uk-text-center">
                         <a class="uk-icon-link uk-icon" uk-icon="credit-card" uk-toggle="target:#pay-<?= $debt['id'] ?>"></a>
                     </td>
 

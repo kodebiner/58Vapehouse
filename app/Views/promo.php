@@ -221,7 +221,7 @@
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
         <thead>
             <tr>
-                <th class="uk-text-center"></th>
+                <th class="uk-text-center"><?= lang('Global.detail') ?></th>
                 <th class=""><?=lang('Global.name')?></th>
                 <th class=""><?=lang('Global.description')?></th>
                 <th class=""><?=lang('Global.status')?></th>
@@ -231,7 +231,7 @@
         <tbody>
             <?php foreach ($promos as $promo) { ?>
                 <tr>
-                    <td class="uk-text-center">
+                    <td class="uk-flex-middle uk-text-center">
                         <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail-<?= $promo['id'] ?>"></a>
                     </td>
                     <td><?= $promo['name']; ?></td>

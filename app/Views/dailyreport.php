@@ -48,7 +48,7 @@
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
-                <th class="uk-text-center"></th>
+                <th class="uk-text-center"><?= lang('Global.detail') ?></th>
                 <th class=""><?= lang('Global.outlet') ?></th>
                 <th class=""><?= lang('Global.dateopen') ?></th>
                 <th class=""><?= lang('Global.dateclose') ?></th>
@@ -61,7 +61,7 @@
         <tbody>
             <?php foreach ($dailyreports as $dayrep) { ?>
                 <tr>
-                    <td class="uk-flex uk-flex-center">
+                    <td class="uk-flex-middle uk-text-center">
                         <a class="uk-icon-link uk-icon" uk-icon="eye" uk-toggle="target:#detail-<?= $dayrep['id'] ?>"></a>
                     </td>
 
@@ -117,7 +117,7 @@
                                 <div class="uk-text-muted">
                                     <?php foreach ($users as $user) {
                                         if ($user->id === $dayrep['useridopen']) {
-                                            echo $fullname;
+                                            echo $user->firstname.' '.$user->lastname;
                                         }
                                     } ?>
                                 </div>
@@ -137,7 +137,7 @@
                                 <div class="uk-text-muted">
                                     <?php foreach ($users as $user) {
                                         if ($user->id === $dayrep['useridclose']) {
-                                            echo $fullname;
+                                            echo $user->firstname.' '.$user->lastname;
                                         }
                                     } ?>
                                 </div>
@@ -697,7 +697,7 @@
                             <div>
                                 <?php foreach ($users as $user) {
                                     if ($user->id === $dayrep['useridclose']) {
-                                        echo $fullname;
+                                        echo $user->firstname.' '.$user->lastname;
                                     }
                                 } ?>
                             </div>
@@ -759,7 +759,7 @@
                                     <div>
                                         <?php foreach ($users as $user) {
                                             if ($user->id === $trxot['userid']) {
-                                                echo $fullname;
+                                                echo $user->firstname.' '.$user->lastname;
                                             }
                                         } ?>
                                     </div>
@@ -820,7 +820,7 @@
                             <div>
                                 <?php foreach ($users as $user) {
                                     if ($user->id === $dayrep['useridopen']) {
-                                        echo $fullname;
+                                        echo $user->firstname.' '.$user->lastname;
                                     }
                                 } ?>
                             </div>

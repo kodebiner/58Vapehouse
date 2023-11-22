@@ -47,7 +47,7 @@
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" style="width:100%">
         <thead>
             <tr>
-                <th class="uk-text-center"></th>
+                <th class="uk-text-center"><?= lang('Global.detail') ?></th>
                 <th class=""><?= lang('Global.date') ?></th>
                 <th class=""><?= lang('Global.outlet') ?></th>
                 <th class=""><?= lang('Global.employee') ?></th>
@@ -59,7 +59,7 @@
         <tbody>
             <?php foreach ($transactions as $transaction) { ?>
                 <tr>
-                    <td class="uk-flex uk-flex-center">
+                    <td class="uk-flex-middle uk-text-center">
                         <a class="uk-icon-link uk-icon" uk-toggle="target:#detail-<?= $transaction['id'] ?>" uk-icon="search"></a>
                     </td>
 
