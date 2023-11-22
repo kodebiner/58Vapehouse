@@ -19,10 +19,10 @@
         data.addColumn('number', 'value');
         data.addRows([
             <?php foreach ($products as $product){
-                $produk     = $product['product'];
+                $produk     = $product['pro'];
                 $sold       = $product['qty'];
-                $category   = $product['category'];
-                $value      = $product['value'];
+                $category   = $product['cate'];
+                $value      = $product['netval'];
                 echo "[ '$produk',$sold,'$category',$value],";
             }?>
         ]);
@@ -119,18 +119,10 @@
                 <tbody>
                     <?php foreach ($products as $product ){ ?>
                         <tr>
-                            <td style="color:white;"><?=$product['product']?></td>
-                            <td style="color:white;"><?=$product['category']?></td>
+                            <td style="color:white;"><?=$product['pro']?></td>
+                            <td style="color:white;"><?=$product['cate']?></td>
+                            <td style="color:white;"><?php echo "Rp. ".number_format($product['netval'],0,',','.');" ";?></td>
                             <td style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
-                            <?php
-                            foreach ($gross as $grosval) { 
-                                if ($grosval['proid'] === $product['id']) {
-                            ?>
-                                <td style="color:white;"><?php echo "Rp. ".number_format($grosval['value'],0,',','.');" ";?></td>
-                            <?php 
-                                } 
-                            }
-                            ?>
                             <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
                         </tr>
                     <?php } ?>

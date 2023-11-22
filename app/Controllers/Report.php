@@ -477,7 +477,7 @@ class Report extends BaseController
 
             $trxpro   = $db->table('transaction');
             $trxpro->where('date >=', $startdate)->where('date <=', $enddate);
-            $protrans   = $trxpro->select('product.id as id, transaction.id as trxid, transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total, product.name as product, category.name as category, variant.name as variant, trxdetail.qty as qty, variant.hargamodal as modal, variant.id as varid, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, trxdetail.marginmodal as marginmodal, outlet.name as outlet, outlet.address as address, bundle.name as bundle');
+            $protrans   = $trxpro->select('product.id as id, trxdetail.id as trxdetid, transaction.id as trxid, transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total, product.name as product, category.name as category, variant.name as variant, trxdetail.qty as qty, variant.hargamodal as modal, variant.id as varid, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, trxdetail.marginmodal as marginmodal, outlet.name as outlet, outlet.address as address, bundle.name as bundle');
             $protrans   = $trxpro->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
             $protrans   = $trxpro->join('users', 'transaction.userid = users.id', 'left');
             $protrans   = $trxpro->join('outlet', 'transaction.outletid = outlet.id', 'left');
@@ -495,112 +495,202 @@ class Report extends BaseController
             $protrans   = $protrans->getResultArray();
         }
 
-        $prods = [];
-        $transval = [];
-        $margin = [];
-        foreach ($protrans as $proval) {
-            $prods[] = [
-                'id'            => $proval['id'],
-                'trxid'         => $proval['trxid'],
-                'product'       => $proval['product'],
-                'category'      => $proval['category'],
-                'value'         => (int)$proval['total'],
-                'marginmo'      => $proval['marginmodal'],
-                'qty'           => $proval['qty'],
-                'gross'         => (int)$proval['trxdetval'] * (int)$proval['qty'],
-            ];
-
-            $margin[] = [
-                'id'        => $proval['trxid'],
-                'proid'     => $proval['id'],
-                'margin'    => ($proval['trxdetval'] + $proval['discvar']) * $proval['qty'],
-            ];
-
-            $transval[] = [
-                'id'    => $proval['trxid'],
-                'proid' => $proval['id'],
-                'value' => $proval['trxdetval'],
-            ];
-        }
-
-        $totalgross = array_sum(array_column($margin, 'margin'));
-
-        // total discvar transaction value
-        $margintotal = [];
-        foreach ($margin as $marginval) {
-            if (!isset($margintotal[$marginval['proid'] . $marginval['margin']])) {
-                $margintotal[$marginval['proid'] . $marginval['margin']] = $marginval;
-            } else {
-                $margintotal[$marginval['proid'] . $marginval['margin']]['margin'] += $marginval['margin'];
-            }
-        }
-        $margintotal = array_values($margintotal);
-
-        // total discont transaction value
-        $totaltrx = [];
-        foreach ($transval as $trans) {
-            if (!isset($totaltrx[$trans['id'] . $trans['value']])) {
-                $totaltrx[$trans['id'] . $trans['value']] = $trans;
-            } else {
-                $totaltrx[$trans['id'] . $trans['value']]['value'] = $trans['value'];
-            }
-        }
-        $totaltrx = array_values($totaltrx);
-
-        // Gross Value
-        $grossval = [];
-        foreach ($margintotal as $margin) {
-            $grossval[] = [
-                'id' => $margin['id'],
-                'proid' => $margin['proid'],
-                'value' => $margin['margin'],
-            ];
-        }
-
-        // Gross Result
-        $gross = [];
-        foreach ($grossval as $vars) {
-            if (!isset($gross[$vars['proid'] . $vars['value']])) {
-                $gross[$vars['proid']] = $vars;
-            } else {
-                $gross[$vars['proid']]['value'] += $vars['value'];
-            }
-        }
-        $gross = array_values($gross);
-
-        // Produk Value
+        // Net Sales Code (Penjualan Bersih)
         $produks = [];
-        foreach ($prods as $vars) {
-            if (!isset($produks[$vars['id'] . $vars['product']])) {
-                $produks[$vars['id'] . $vars['product']] = $vars;
-            } else {
-                $produks[$vars['id'] . $vars['product']]['value'] += $vars['value'];
-                $produks[$vars['id'] . $vars['product']]['qty'] += $vars['qty'];
+        foreach ($protrans as $catetrans) {
+            if (!isset($produks[$catetrans['trxdetid']])) {
+                $produks[$catetrans['trxdetid']] = $catetrans;
             }
         }
         $produks = array_values($produks);
 
-        // groos total
-        $grossval = array_sum(array_column($gross, 'value'));
+        // dd($produks);
 
-        // Total Stock
-        $stoktotal = array_sum(array_column($produks, 'qty'));
+        $categories = [];
+        foreach ($produks as $catetrans) {
+            if (!isset($categories[$catetrans['id'] . $catetrans['product']])) {
+                $categories[$catetrans['id'] . $catetrans['product']] = $catetrans;
+            } else {
+                $categories[$catetrans['id'] . $catetrans['product']]['qty'] += $catetrans['qty'];
+            }
+        }
+        $categories = array_values($categories);
 
-        // Total Sales Without trx disc, bundle & poin disc
-        $salestotal = array_sum(array_column($produks, 'value'));
+        // dd($categories);
 
+        // total net sales (Total Penjualan Bersih)
+        $trxgross = [];
+        foreach ($protrans as $catetrx) {
+            foreach ($categories as $kate) {
+                if ($kate['id'] === $catetrx['id']) {
+                    $trxgross[] = [
+                        'id'        => $catetrx['id'],
+                        'pro'       => $catetrx['product'],
+                        'cate'      => $catetrx['category'],
+                        'netval'    => $catetrx['trxdetval'],
+                        'value'     => ($catetrx['trxdetval'] + $catetrx['discvar']),
+                    ];
+                }
+            }
+        }
+
+
+        // data category
+        $catedata = [];
+        foreach ($trxgross as $vars) {
+            if (!isset($catedata[$vars['id'] . $vars['pro']])) {
+                $catedata[$vars['id'] . $vars['pro']] = $vars;
+            } else {
+                $catedata[$vars['id'] . $vars['pro']]['value'] = $vars['value'];
+                $catedata[$vars['id'] . $vars['pro']]['netval'] = $vars['netval'];
+            }
+        }
+        $catedata = array_values($catedata);
+
+        // catching data
+        $alldata = [];
+        foreach ($catedata as $cate) {
+            foreach ($categories as $kate) {
+                if ($kate['id'] === $cate['id']) {
+                    $alldata[] = [
+                        'id'        => $cate['id'],
+                        'pro'       => $cate['pro'],
+                        'cate'      => $cate['cate'],
+                        'netval'    => $cate['netval'],
+                        'value'     => $cate['value'],
+                        'qty'       => $kate['qty'],
+                    ];
+                }
+            }
+        }
+
+        // end result data
+        $result = [];
+        foreach ($alldata as $datacate) {
+            $result[] = [
+                'id'        => $datacate['id'],
+                'pro'       => $datacate['pro'],
+                'cate'      => $datacate['cate'],
+                'netval'    => $datacate['netval'] * $datacate['qty'],
+                'value'     => $datacate['value'] * $datacate['qty'],
+                'qty'       => $datacate['qty'],
+            ];
+        }
+
+        // total net sales
+        $totalnetsales = array_sum(array_column($result, 'netval'));
+
+        // total gross sales category
+        $totalcatgross =  array_sum(array_column($result, 'value'));
+        
+        // total cat sales item
+        $totalsalesitem = array_sum(array_column($result, 'qty'));
+
+        // $prods = [];
+        // $transval = [];
+        // $margin = [];
+        // foreach ($protrans as $proval) {
+        //     $prods[] = [
+        //         'id'            => $proval['id'],
+        //         'trxid'         => $proval['trxid'],
+        //         'product'       => $proval['product'],
+        //         'category'      => $proval['category'],
+        //         'value'         => (int)$proval['total'],
+        //         'marginmo'      => $proval['marginmodal'],
+        //         'qty'           => $proval['qty'],
+        //         'gross'         => (int)$proval['trxdetval'] * (int)$proval['qty'],
+        //     ];
+
+        //     $margin[] = [
+        //         'id'        => $proval['trxid'],
+        //         'proid'     => $proval['id'],
+        //         'margin'    => ($proval['trxdetval'] + $proval['discvar']) * $proval['qty'],
+        //     ];
+
+        //     $transval[] = [
+        //         'id'    => $proval['trxid'],
+        //         'proid' => $proval['id'],
+        //         'value' => $proval['trxdetval'],
+        //     ];
+        // }
+
+        // $totalgross = array_sum(array_column($margin, 'margin'));
+
+        // // total discvar transaction value
+        // $margintotal = [];
+        // foreach ($margin as $marginval) {
+        //     if (!isset($margintotal[$marginval['proid'] . $marginval['margin']])) {
+        //         $margintotal[$marginval['proid'] . $marginval['margin']] = $marginval;
+        //     } else {
+        //         $margintotal[$marginval['proid'] . $marginval['margin']]['margin'] += $marginval['margin'];
+        //     }
+        // }
+        // $margintotal = array_values($margintotal);
+
+        // // total discont transaction value
+        // $totaltrx = [];
+        // foreach ($transval as $trans) {
+        //     if (!isset($totaltrx[$trans['id'] . $trans['value']])) {
+        //         $totaltrx[$trans['id'] . $trans['value']] = $trans;
+        //     } else {
+        //         $totaltrx[$trans['id'] . $trans['value']]['value'] = $trans['value'];
+        //     }
+        // }
+        // $totaltrx = array_values($totaltrx);
+
+        // // Gross Value
+        // $grossval = [];
+        // foreach ($margintotal as $margin) {
+        //     $grossval[] = [
+        //         'id' => $margin['id'],
+        //         'proid' => $margin['proid'],
+        //         'value' => $margin['margin'],
+        //     ];
+        // }
+
+        // // Gross Result
+        // $gross = [];
+        // foreach ($grossval as $vars) {
+        //     if (!isset($gross[$vars['proid'] . $vars['value']])) {
+        //         $gross[$vars['proid']] = $vars;
+        //     } else {
+        //         $gross[$vars['proid']]['value'] += $vars['value'];
+        //     }
+        // }
+        // $gross = array_values($gross);
+
+        // // Produk Value
+        // $produks = [];
+        // foreach ($prods as $vars) {
+        //     if (!isset($produks[$vars['id'] . $vars['product']])) {
+        //         $produks[$vars['id'] . $vars['product']] = $vars;
+        //     } else {
+        //         $produks[$vars['id'] . $vars['product']]['value'] += $vars['value'];
+        //         $produks[$vars['id'] . $vars['product']]['qty'] += $vars['qty'];
+        //     }
+        // }
+        // $produks = array_values($produks);
+
+        // // groos total
+        // $grossval = array_sum(array_column($gross, 'value'));
+
+        // // Total Stock
+        // $stoktotal = array_sum(array_column($produks, 'qty'));
+
+        // // Total Sales Without trx disc, bundle & poin disc
+        // $salestotal = array_sum(array_column($produks, 'value'));
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.productreport');
         $data['description']    = lang('Global.productListDesc');
         $data['transactions']   = $protrans;
-        $data['products']       = $produks;
-        $data['totalstock']     = $stoktotal;
-        $data['salestotal']     = $salestotal;
-        $data['grosstotal']     = $totalgross;
-        $data['netsales']       = $salestotal;
-        $data['gross']          = $gross;
+        $data['products']       = $result;
+        $data['totalstock']     = $totalsalesitem;
+        $data['salestotal']     = $totalnetsales;
+        $data['grosstotal']     = $totalcatgross;
+        $data['netsales']       = $totalnetsales;
+        $data['gross']          = $totalcatgross;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
         $data['pager']          = $ProductModel->pager;
