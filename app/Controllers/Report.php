@@ -1038,27 +1038,9 @@ class Report extends BaseController
 
     public function category()
     {
-
         // Calling models
         $CategoryModel      = new CategoryModel();
         $OutletModel        = new OutletModel();
-
-        // $TransactionModel   = new TransactionModel();
-        // $TrxdetailModel     = new TrxdetailModel();
-        // $ProductModel       = new ProductModel();
-        // $VariantModel       = new VariantModel();
-        // $StockModel         = new StockModel();
-        // $BrandModel         = new BrandModel();
-        // $BundleModel        = new BundleModel();
-
-        // Populating Data
-        // $trxdetails = $TrxdetailModel->findAll();
-        // $products   = $ProductModel->findAll();
-        // $category   = $CategoryModel->findAll();
-        // $variants   = $VariantModel->findAll();
-        // $brands     = $BrandModel->findAll();
-        // $bundles    = $BundleModel->findAll();
-
         $db                 = \Config\Database::connect();
 
         // Search Category
@@ -1070,7 +1052,7 @@ class Report extends BaseController
         $pager          = \Config\Services::pager();
 
         // Search Filter
-        $inputsearch    = $this->request->getGet('search');
+        $input          = $this->request->getGet();
         if (!empty($inputsearch)) {
             $category   = $CategoryModel->like('name', $inputsearch)->orderBy('id', 'DESC')->paginate(20, 'reportcategory');
         } else {
@@ -1079,10 +1061,8 @@ class Report extends BaseController
 
 
         // Daterange Filter System
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
+        if (!empty($input['daterange'])) {
+            $daterange = explode(' - ', $input['daterange']);
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
@@ -1113,6 +1093,9 @@ class Report extends BaseController
             $protrans   = $trxpro->where('trxdetail.variantid !=', 0);
             $protrans   = $trxpro->where('transaction.outletid', $this->data['outletPick']);
             $protrans   = $trxpro->orderBy('transaction.date', 'DESC');
+            if (!empty($input['search'])) {
+                $protrans   = $trxpro->like('category.name', $input['search']);
+            }
             $protrans   = $trxpro->get();
             $protrans   = $protrans->getResultArray();
         }

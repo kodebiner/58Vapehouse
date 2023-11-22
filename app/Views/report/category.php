@@ -109,7 +109,7 @@
             <thead>
                 <tr>
                     <th><?=lang('Global.category')?></th>
-                    <th class="uk-text-center"><?=lang('Global.sales')?></th>
+                    <th class="uk-text-center"><?=lang('Global.net')?></th>
                     <th class="uk-text-center"><?=lang('Global.gross')?></th>
                     <th class="uk-text-center"><?=lang('Global.soldItem')?></th>
                 </tr>
