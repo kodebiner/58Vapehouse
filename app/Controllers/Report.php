@@ -1059,7 +1059,6 @@ class Report extends BaseController
             $category   = $CategoryModel->orderBy('id', 'DESC')->paginate(20, 'reportcategory');
         }
 
-
         // Daterange Filter System
         if (!empty($input['daterange'])) {
             $daterange = explode(' - ', $input['daterange']);
@@ -1103,45 +1102,85 @@ class Report extends BaseController
         // Net Sales Code (Penjualan Bersih)
         $kategori = [];
         foreach ($protrans as $catetrans) {
-            if (!isset($kategori[$catetrans['trxid']])) {
-                $kategori[$catetrans['trxid']] = $catetrans;
+            if (!isset($kategori[$catetrans['trxdetid']])) {
+                $kategori[$catetrans['trxdetid']] = $catetrans;
             }
         }
         $kategori = array_values($kategori);
 
+        $categories = [];
+        foreach ($kategori as $catetrans) {
+            if (!isset($categories[$catetrans['catid'] . $catetrans['category']])) {
+                $categories[$catetrans['catid'] . $catetrans['category']] = $catetrans;
+            } else {
+                $categories[$catetrans['catid'] . $catetrans['category']]['qty'] += $catetrans['qty'];
+            }
+        }
+        $categories = array_values($categories);
+
         // total net sales (Total Penjualan Bersih)
-        // Gross Sales Code (Penjualan Kotor)
         $trxgross = [];
         foreach ($protrans as $catetrx) {
-            $trxgross[] = [
-                'catid'     => $catetrx['catid'],
-                'cate'      => $catetrx['category'],
-                'netval'    => $catetrx['trxdetval'] * $catetrx['qty'],
-                'value'     => ($catetrx['trxdetval'] + $catetrx['discvar']) * $catetrx['qty'],
-                'qty'       => $catetrx['qty'],
-            ];
+            foreach ($categories as $kate) {
+                if ($kate['catid'] === $catetrx['catid']) {
+                    $trxgross[] = [
+                        'catid'     => $catetrx['catid'],
+                        'cate'      => $catetrx['category'],
+                        'netval'    => $catetrx['trxdetval'],
+                        'value'     => ($catetrx['trxdetval'] + $catetrx['discvar']),
+                    ];
+                }
+            }
         }
 
-        // data all category
+        // data category
         $catedata = [];
         foreach ($trxgross as $vars) {
             if (!isset($catedata[$vars['catid'] . $vars['cate']])) {
                 $catedata[$vars['catid'] . $vars['cate']] = $vars;
             } else {
-                $catedata[$vars['catid'] . $vars['cate']]['value'] += $vars['value'];
-                $catedata[$vars['catid'] . $vars['cate']]['qty'] += $vars['qty'];
-                $catedata[$vars['catid'] . $vars['cate']]['netval'] += $vars['netval'];
+                $catedata[$vars['catid'] . $vars['cate']]['value'] = $vars['value'];
+                $catedata[$vars['catid'] . $vars['cate']]['netval'] = $vars['netval'];
             }
         }
         $catedata = array_values($catedata);
 
+        // catching data
+        $alldata = [];
+        foreach ($catedata as $cate) {
+            foreach ($categories as $kate) {
+                if ($kate['catid'] === $cate['catid']) {
+                    $alldata[] = [
+                        'catid'     => $cate['catid'],
+                        'cate'      => $cate['cate'],
+                        'netval'    => $cate['netval'],
+                        'value'     => $cate['value'],
+                        'qty'       => $kate['qty'],
+                    ];
+                }
+            }
+        }
 
-        $totalnetsales = array_sum(array_column($catedata, 'netval'));
+        // end result data
+        $result = [];
+        foreach ($alldata as $datacate) {
+            $result[] = [
+                'catid'     => $datacate['catid'],
+                'cate'      => $datacate['cate'],
+                'netval'    => $datacate['netval'] * $datacate['qty'],
+                'value'     => $datacate['value'] * $datacate['qty'],
+                'qty'       => $datacate['qty'],
+            ];
+        }
+
+        // total net sales
+        $totalnetsales = array_sum(array_column($result, 'netval'));
 
         // total gross sales category
-        $totalcatgross =  array_sum(array_column($trxgross, 'value'));
+        $totalcatgross =  array_sum(array_column($result, 'value'));
+        
         // total cat sales item
-        $totalsalesitem = array_sum(array_column($trxgross, 'qty'));
+        $totalsalesitem = array_sum(array_column($result, 'qty'));
 
         // ================================ Old Code ============================== //
         // // Filter Data Outlet & daterange 
@@ -1257,7 +1296,7 @@ class Report extends BaseController
         $data                   = $this->data;
         $data['title']          = lang('Global.categoryreport');
         $data['description']    = lang('Global.categoryListDesc');
-        $data['catedata']       = $catedata;
+        $data['catedata']       = $result;
         $data['netsales']       = $totalnetsales;
         $data['gross']          = $totalcatgross;
         $data['qty']            = $totalsalesitem;
