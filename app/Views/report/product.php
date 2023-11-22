@@ -111,7 +111,7 @@
                     <tr>
                         <th><?=lang('Global.product')?></th>
                         <th><?=lang('Global.category')?></th>
-                        <th><?=lang('Global.sales')?></th>
+                        <th><?=lang('Global.net')?></th>
                         <th><?=lang('Global.gross')?></th>
                         <th class="uk-text-center"><?=lang('Global.soldItem')?></th>
                     </tr>
@@ -129,7 +129,7 @@
                 </tbody>
             </table>
             <div class="uk-light">
-                <?= $pager->links('reportproduct', 'front_full') ?>
+                <?= $pager ?>
             </div>
         </div>
 

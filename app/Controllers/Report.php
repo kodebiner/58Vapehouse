@@ -443,7 +443,6 @@ class Report extends BaseController
         $pager          = \Config\Services::pager();
 
         // Search Filter
-        $inputsearch    = $this->request->getGet('search');
         if (!empty($inputsearch)) {
             $products   = $ProductModel->like('name', $inputsearch)->orderBy('id', 'DESC')->paginate(20, 'product');
         } else {
@@ -451,9 +450,8 @@ class Report extends BaseController
         }
 
         // Populating Data
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
+        $inputsearch    = $this->request->getGet();
+        if (!empty($input['daterange'])) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
             $enddate = $daterange[1];
@@ -475,6 +473,11 @@ class Report extends BaseController
             $outlet     = $OutletModel->find($this->data['outletPick']);
             $outletname = $outlet['name'];
 
+            $page    = (int) ($this->request->getGet('page') ?? 1);
+            $perPage = 30;
+            $offset = ($page-1) * $perPage;
+            $total   = count($products);
+
             $trxpro   = $db->table('transaction');
             $trxpro->where('date >=', $startdate)->where('date <=', $enddate);
             $protrans   = $trxpro->select('product.id as id, trxdetail.id as trxdetid, transaction.id as trxid, transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total, product.name as product, category.name as category, variant.name as variant, trxdetail.qty as qty, variant.hargamodal as modal, variant.id as varid, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, trxdetail.marginmodal as marginmodal, outlet.name as outlet, outlet.address as address, bundle.name as bundle');
@@ -490,9 +493,14 @@ class Report extends BaseController
             $protrans   = $trxpro->join('category', 'product.catid = category.id', 'left');
             $protrans   = $trxpro->where('trxdetail.variantid !=', 0);
             $protrans   = $trxpro->where('transaction.outletid', $this->data['outletPick']);
+            if (!empty($input['search'])) {
+                $protrans   = $trxpro->like('product.name', $input['search']);
+            }
             $protrans   = $trxpro->orderBy('transaction.date', 'DESC');
-            $protrans   = $trxpro->get();
+            $protrans   = $trxpro->get($perPage, $offset);
             $protrans   = $protrans->getResultArray();
+
+            $pager_links = $pager->makeLinks($page, $perPage, $total, 'front_full');
         }
 
         // Net Sales Code (Penjualan Bersih)
@@ -693,7 +701,7 @@ class Report extends BaseController
         $data['gross']          = $totalcatgross;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
-        $data['pager']          = $ProductModel->pager;
+        $data['pager']          = $pager_links;
 
         return view('Views/report/product', $data);
     }
