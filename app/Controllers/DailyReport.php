@@ -55,9 +55,10 @@ class DailyReport extends BaseController
             }
 
             $today                  = date('Y-m-d') .' 00:00:01';
-            $dailyreports           = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
             if (!empty($input)) {
                 $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->where('dateopen >=', $startdate)->where('dateopen <=', $enddate)->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
+            } else {
+                $dailyreports           = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
             }
 
             $lastreport             = end($dailyreports);
@@ -65,8 +66,8 @@ class DailyReport extends BaseController
 
             $cashs                  = $CashModel->findAll();
             $payments               = $PaymentModel->findAll();
-            $transactions           = $TransactionModel->where('date <=', $firstreport['dateopen'])->where('date >=', $lastreport['dateclose'])->where('outletid', $this->data['outletPick'])->find();
-            $trxothers              = $TrxotherModel->where('date <=', $firstreport['dateopen'])->where('date >=', $lastreport['dateclose'])->where('outletid', $this->data['outletPick'])->find();
+            $transactions           = $TransactionModel->where('date <=', $firstreport['dateclose'])->where('date >=', $lastreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
+            $trxothers              = $TrxotherModel->where('date <=', $firstreport['dateclose'])->where('date >=', $lastreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
 
             $trxid = array();
             $memberid = array();

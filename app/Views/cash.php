@@ -149,11 +149,13 @@
                             <?= csrf_field() ?>
 
                             <div class="uk-form-controls uk-margin">
+                                <label class="uk-h6 uk-margin-small-left uk-text-muted"><?= lang('Global.cashreceived') ?></label>
                                 <input type="number" class="uk-input cash" style="border-radius: 5px;" id="actualcash" name="actualcash" value="<?= $expectedcash ?>" placeholder="<?= lang('Global.cashreceived') ?>" required />
                                 <label class="uk-h6 uk-margin-small-left uk-text-muted"><?= lang('Global.includeinitcash') ?></label>
                             </div>
 
                             <div class="uk-form-controls uk-margin">
+                                <label class="uk-h6 uk-margin-small-left uk-text-muted"><?= lang('Global.noncashreceived') ?></label>
                                 <input type="number" class="uk-input noncash" style="border-radius: 5px;" id="actualnoncash" name="actualnoncash" value="<?= $noncashtrxvalue ?>" placeholder="<?= lang('Global.noncashreceived') ?>" required />
                             </div>
 

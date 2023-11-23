@@ -93,13 +93,13 @@
         </div>
         <!-- End Search Filter -->
         <div class="uk-width-1-4@m uk-text-left@m">
-            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"> <?=lang('Global.total')?> <?=lang('Global.sales')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p> 
+            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.net')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p> 
         </div>
         <div class="uk-width-1-4@m uk-text-left@m">
-            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($gross,0,',','.');" ";?></p>
+            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($gross,0,',','.');" ";?></p>
         </div>
         <div class="uk-width-1-4@m uk-text-left@m">
-            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"> <?=lang('Global.total')?> <?=lang('Global.soldItem')?> : <?php echo $qty;?></p>
+            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.soldItem')?> : <?php echo $qty;?></p>
         </div>
             
     </div>

@@ -425,6 +425,9 @@ class Stock extends BaseController
                 'qty'           => $value,
                 'price'         => $input['bprice'][$varid],
             ];
+            if ($datadetail['qty'] === "0") {
+                $PurchasedetailModel->delete($varid);
+            }
 
             // Save Data Purchase Detail
             $PurchasedetailModel->save($datadetail);

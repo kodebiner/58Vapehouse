@@ -145,6 +145,9 @@ Class StockAdjustment extends BaseController{
         // Stock Adjusment 
         foreach ($input['totalpcs'] as $varid => $value) {
             $Stocks = $StockModel->where('variantid', $varid)->where('outletid',$input['outlet'])->first();
+            if (($Stocks['qty'] === "0") && ($input['type'] === "1")) {
+                return redirect()->back()->with('error', lang('Global.alertstock'));
+            }
             $adj = [
                 'variantid' => $varid,
                 'outletid'  => $input['outlet'],
@@ -157,7 +160,6 @@ Class StockAdjustment extends BaseController{
             $StockAdjModel->insert($adj);
             
             // Update Stock
-            $Stocks = $StockModel->where('variantid', $varid)->where('outletid',$input['outlet'])->first();
             $totalstock = $Stocks['qty'];
 
             if ((int)$input['type'] === 0) {
