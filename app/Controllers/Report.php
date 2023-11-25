@@ -542,7 +542,6 @@ class Report extends BaseController
             }
         }
 
-
         // data category
         $catedata = [];
         foreach ($trxgross as $vars) {
@@ -584,6 +583,7 @@ class Report extends BaseController
                 'qty'       => $datacate['qty'],
             ];
         }
+        // dd($result);
 
         // total net sales
         $totalnetsales = array_sum(array_column($result, 'netval'));
