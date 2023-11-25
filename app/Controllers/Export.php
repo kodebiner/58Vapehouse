@@ -1091,7 +1091,6 @@ class export extends BaseController
 
     public function profit()
     {
-
         // Calling Models
         $TransactionModel       = new TransactionModel;
         $TrxdetailModel         = new TrxdetailModel;
@@ -1111,7 +1110,11 @@ class export extends BaseController
         $transactions = array();
         $transactionarr = array();
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+            if ($this->data['outletPick'] === null) {
+                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+            } else {
+                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+            }
             $trxdetails  = $TrxdetailModel->findAll();
             $variants    = $VariantModel->findAll();
 
@@ -1122,8 +1125,8 @@ class export extends BaseController
             foreach ($transaction as $trx) {
                 foreach ($trxdetails as $trxdetail) {
                     if ($trx['id'] === $trxdetail['transactionid']) {
-                        $marginmodal = $trxdetail['marginmodal'];
-                        $margindasar = $trxdetail['margindasar'];
+                        $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
+                        $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
                         $marginmodals[] = $marginmodal;
                         $margindasars[] = $margindasar;
                     }
@@ -1147,6 +1150,8 @@ class export extends BaseController
         $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
         $trxvalue        = array_sum(array_column($transactions, 'value'));
 
+       
+
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=profit.xls");
 
@@ -1154,14 +1159,14 @@ class export extends BaseController
         echo '<table>';
         echo '<thead>';
         echo '<tr>';
-        echo '<th>Keuntungan Dasar</th>';
         echo '<th>Keuntungan Modal</th>';
+        echo '<th>Keuntungan Dasar</th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
         echo '<tr>';
-        echo '<td>' . $keuntungandasar . '</td>';
         echo '<td>' . $keuntunganmodal . '</td>';
+        echo '<td>' . $keuntungandasar . '</td>';
         echo '</tr>';
         echo '</tbody>';
         echo '</table>';
