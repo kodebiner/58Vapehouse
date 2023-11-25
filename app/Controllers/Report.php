@@ -512,8 +512,6 @@ class Report extends BaseController
         }
         $produks = array_values($produks);
 
-        // dd($produks);
-
         $categories = [];
         foreach ($produks as $catetrans) {
             if (!isset($categories[$catetrans['id'] . $catetrans['product']])) {
@@ -524,11 +522,9 @@ class Report extends BaseController
         }
         $categories = array_values($categories);
 
-        // dd($categories);
-
         // total net sales (Total Penjualan Bersih)
         $trxgross = [];
-        foreach ($protrans as $catetrx) {
+        foreach ($produks as $catetrx) {
             foreach ($categories as $kate) {
                 if ($kate['id'] === $catetrx['id']) {
                     $trxgross[] = [
@@ -536,11 +532,15 @@ class Report extends BaseController
                         'pro'       => $catetrx['product'],
                         'cate'      => $catetrx['category'],
                         'netval'    => $catetrx['trxdetval'],
-                        'value'     => ($catetrx['trxdetval'] + $catetrx['discvar']),
+                        'value'     => $catetrx['trxdetval'],
+                        'discvar'   => $catetrx['discvar'],
+                        'qty'       => $catetrx['qty'],
                     ];
                 }
             }
         }
+
+        // dd($trxgross);
 
         // data category
         $catedata = [];
@@ -550,9 +550,23 @@ class Report extends BaseController
             } else {
                 $catedata[$vars['id'] . $vars['pro']]['value'] = $vars['value'];
                 $catedata[$vars['id'] . $vars['pro']]['netval'] = $vars['netval'];
+                $catedata[$vars['id'] . $vars['pro']]['discvar'] += $vars['discvar'];
+                $catedata[$vars['id'] . $vars['pro']]['qty'] += $vars['qty'];
             }
         }
         $catedata = array_values($catedata);
+
+        // Product Result
+        foreach ($catedata as $cate){
+            $proresults[] = [
+                'id' => $cate['id'],
+                'pro' => $cate['pro'],
+                'cate' => $cate['cate'],
+                'netval' => ($cate['netval'] * $cate['qty']) - $cate['discvar'],
+                'value' => $cate['netval'] * $cate['qty'],
+                'qty' => $cate['qty'],
+            ]; 
+        }
 
         // catching data
         $alldata = [];
@@ -579,20 +593,20 @@ class Report extends BaseController
                 'pro'       => $datacate['pro'],
                 'cate'      => $datacate['cate'],
                 'netval'    => $datacate['netval'] * $datacate['qty'],
-                'value'     => $datacate['value'] * $datacate['qty'],
+                'value'     => ($datacate['value'] * $datacate['qty']),
                 'qty'       => $datacate['qty'],
             ];
         }
         // dd($result);
 
         // total net sales
-        $totalnetsales = array_sum(array_column($result, 'netval'));
+        $totalnetsales = array_sum(array_column($proresults, 'netval'));
 
         // total gross sales category
-        $totalcatgross =  array_sum(array_column($result, 'value'));
+        $totalcatgross =  array_sum(array_column($proresults, 'value'));
         
         // total cat sales item
-        $totalsalesitem = array_sum(array_column($result, 'qty'));
+        $totalsalesitem = array_sum(array_column($proresults, 'qty'));
 
         // $prods = [];
         // $transval = [];
@@ -693,7 +707,7 @@ class Report extends BaseController
         $data['title']          = lang('Global.productreport');
         $data['description']    = lang('Global.productListDesc');
         $data['transactions']   = $protrans;
-        $data['products']       = $result;
+        $data['products']       = $proresults;
         $data['totalstock']     = $totalsalesitem;
         $data['salestotal']     = $totalnetsales;
         $data['grosstotal']     = $totalcatgross;
