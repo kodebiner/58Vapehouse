@@ -402,10 +402,6 @@ class export extends BaseController
             $day2 = date_create($date2);
             $interval = date_diff($day1, $day2)->format("%a");
 
-            //sales
-            $salesresult = array_sum(array_column($transactions, 'value'));
-            $grossales = $salesresult + $alldisc;
-
             // Profit Calculation
             $modalprice     = array_sum(array_column($omsetcalculation, 'modalprice'));
             $basicprice     = array_sum(array_column($omsetcalculation, 'basicprice'));
@@ -640,35 +636,35 @@ class export extends BaseController
         echo '<tr >';
         echo '<th style="text-align: left;">Penjualan</th>';
         echo '<td style="text-align: right;">' . $totalsales . '</td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th style="text-align: left;">Diskon</th>';
-        echo '<td style="text-align: right;">' . $alldisc . '</td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th style="text-align: left;">Total Omset</th>';
-        echo '<td style="text-align: right;">' . $omsetbaru . '</td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th style="text-align: left;">Harga Modal</th>';
-        echo '<td style="text-align: right;">' . $modalprice . '</td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th style="text-align: left;">Harga Dasar</th>';
-        echo '<td style="text-align: right;">' . $basicprice . '</td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th style="text-align: left;">Kas Masuk</th>';
-        echo '<td style="text-align: right;">' . $casin . '</td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th style="text-align: left;">Kas Keluar</th>';
-        echo '<td style="text-align: right;">' . $casout . '</td>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th style="text-align: left;">Keuntungan</th>';
-        echo '<td style="text-align: right; font-family: arial, sans-serif; font-weight: bold;">' . $profitvalue . '</td>';
-        echo '</tr>';
+        // echo '</tr>';
+        // echo '<tr>';
+        // echo '<th style="text-align: left;">Diskon</th>';
+        // echo '<td style="text-align: right;">' . $alldisc . '</td>';
+        // echo '</tr>';
+        // echo '<tr>';
+        // echo '<th style="text-align: left;">Total Omset</th>';
+        // echo '<td style="text-align: right;">' . $omsetbaru . '</td>';
+        // echo '</tr>';
+        // echo '<tr>';
+        // echo '<th style="text-align: left;">Harga Modal</th>';
+        // echo '<td style="text-align: right;">' . $modalprice . '</td>';
+        // echo '</tr>';
+        // echo '<tr>';
+        // echo '<th style="text-align: left;">Harga Dasar</th>';
+        // echo '<td style="text-align: right;">' . $basicprice . '</td>';
+        // echo '</tr>';
+        // echo '<tr>';
+        // echo '<th style="text-align: left;">Kas Masuk</th>';
+        // echo '<td style="text-align: right;">' . $casin . '</td>';
+        // echo '</tr>';
+        // echo '<tr>';
+        // echo '<th style="text-align: left;">Kas Keluar</th>';
+        // echo '<td style="text-align: right;">' . $casout . '</td>';
+        // echo '</tr>';
+        // echo '<tr>';
+        // echo '<th style="text-align: left;">Keuntungan</th>';
+        // echo '<td style="text-align: right; font-family: arial, sans-serif; font-weight: bold;">' . $profitvalue . '</td>';
+        // echo '</tr>';
         echo '</table>';
     }
 
