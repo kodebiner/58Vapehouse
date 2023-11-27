@@ -179,10 +179,14 @@ class Debt extends BaseController
 
         $trxid      = array();
         $memberid   = array();
+        $debtlist   = array();
         foreach ($debts as $debt) {
             $trxid[]    = $debt['transactionid'];
             $memberid[] = $debt['memberid'];
+            $debtlist[] = $debt['value'];
         }
+
+        $totaldebt  = array_sum($debtlist);
 
         if (!empty($trxid)) {
             $transactions           = $TransactionModel->find($trxid);
@@ -205,6 +209,7 @@ class Debt extends BaseController
         $data['customers']      = $customers;
         $data['debts']          = $debts;
         $data['payments']       = $payments;
+        $data['totaldebt']      = $totaldebt;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
         $data['pager']          = $DebtModel->pager;

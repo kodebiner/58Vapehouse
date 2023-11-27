@@ -48,6 +48,14 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
+    <!-- Total Debt List -->
+    <div class="uk-container uk-container-large uk-light">
+        <div class="uk-form-horizontal">
+            <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.debt') ?> :</div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $totaldebt ?></div>
+        </div>
+    </div>
+    <!-- Total Debt List End -->
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
