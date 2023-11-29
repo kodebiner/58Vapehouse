@@ -51,8 +51,7 @@
     <!-- Total Debt List -->
     <div class="uk-container uk-container-large uk-light">
         <div class="uk-form-horizontal">
-            <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.debt') ?> :</div>
-            <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $totaldebt ?></div>
+            <div class="uk-form-label"><?= lang('Global.total') ?> <?= lang('Global.debt') ?> : Rp <?= number_format($totaldebt, 2, ',', '.') ?></div>
         </div>
     </div>
     <!-- Total Debt List End -->
@@ -148,12 +147,12 @@
                             <?= csrf_field() ?>
 
                             <div class="uk-margin">
-                                <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.payment')?></label>
+                                <label class="uk-form-label" for="form-horizontal-text"><?=lang('Global.payment')?></label>
                                 <div class="uk-form-controls">
                                     <div class="uk-inline uk-width-1-1">
                                         <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
                                         <select class="uk-select uk-input" id="payment" name="payment" required >
-                                            <option value="" selected disabled hidden><?=lang('global.payment')?></option>
+                                            <option value="" selected disabled hidden><?=lang('Global.payment')?></option>
                                             <?php
                                             foreach ($payments as $pay) {
                                                 if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
