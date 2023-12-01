@@ -179,15 +179,19 @@
                                 <div class="uk-width-1-2 uk-text-right"><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></div>
                             </div>
                             <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
-                                <div>Cashier: <?= $fullname ?></div>
+                                <?php foreach ($users as $user) {
+                                    if ($user->id === $transaction['userid']) { ?>
+                                        <div>Cashier: <?= $user->name ?></div>
+                                    <?php }
+                                } ?>
                                 <div class="uk-text-right">
                                     <?php if ($transaction['paymentid'] === "0") { ?>
                                         <?= lang('Global.splitbill') ?>
-                                        <?php } else {
+                                    <?php } else {
                                         foreach ($payments as $payment) {
                                             if ($payment['id'] === $transaction['paymentid']) { ?>
                                                 <?= $payment['name'] ?>
-                                    <?php }
+                                            <?php }
                                         }
                                     } ?>
                                 </div>
@@ -249,7 +253,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                            <?php }
+                                        <?php }
                                     }
                                 }
                                 // Bundle End

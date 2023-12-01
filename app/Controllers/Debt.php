@@ -172,9 +172,9 @@ class Debt extends BaseController
 
         // Populating Data
         if (!empty($input)) {
-            $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(20, 'debt');
+            $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(30, 'debt');
         } else {
-            $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->paginate(20, 'debt');
+            $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->paginate(30, 'debt');
         }
 
         $trxid      = array();
