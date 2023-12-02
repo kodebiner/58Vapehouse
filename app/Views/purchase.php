@@ -460,7 +460,8 @@
                                                             <td id="adjprice<?=$purchase['id']?><?=$variant['id']?>">
                                                                 <?php foreach ($stocks as $stock) {
                                                                     foreach ($oldstocks as $oldstock) {
-                                                                        if (($stock['variantid'] === $variant['id']) && ($oldstock['variantid'] === $variant['id'])) { ?>
+                                                                        if (($stock['variantid'] === $variant['id']) && ($oldstock['variantid'] === $variant['id'])) {
+                                                                            dd($purdet['qty']); ?>
                                                                             <?= floor((($oldstock['hargadasar'] * $stock['qty']) + ($purdet['price'] * $purdet['qty'])) / ($stock['qty'] + $purdet['qty'])); ?>
 
                                                                             <script type="text/javascript">
