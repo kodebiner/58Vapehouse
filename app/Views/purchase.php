@@ -461,7 +461,7 @@
                                                                 <?php foreach ($stocks as $stock) {
                                                                     foreach ($oldstocks as $oldstock) {
                                                                         if (($stock['variantid'] === $variant['id']) && ($oldstock['variantid'] === $variant['id'])) { ?>
-                                                                            <?= floor((($oldstock['hargadasar'] * $stock['qty']) + ($purdet['price'] * $purdet['qty'])) / ($stock['qty'] + $purdet['qty'])); ?>
+                                                                            <?//= floor((($oldstock['hargadasar'] * $stock['qty']) + ($purdet['price'] * $purdet['qty'])) / ($stock['qty'] + $purdet['qty'])); ?>
 
                                                                             <script type="text/javascript">
                                                                                 var cqty<?=$purchase['id']?><?=$variant['id']?>         = document.getElementById('ctotalpcs[<?=$purchase['id']?>][<?=$variant['id']?>]');
