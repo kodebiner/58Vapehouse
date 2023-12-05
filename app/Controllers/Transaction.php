@@ -52,7 +52,7 @@ class Transaction extends BaseController
         $users                  = $UserModel->findAll();
         $customers              = $MemberModel->findAll();
         $payments               = $PaymentModel->findAll();
-        $products               = $ProductModel->orderBy('name', 'ASC')->findAll();
+        $products               = $ProductModel->orderBy('name', 'ASC')->where('status', '1')->find();
         $variants               = $VariantModel->findAll();
         $stocks                 = $StockModel->findAll();
         $transactions           = $TransactionModel->findAll();

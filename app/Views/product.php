@@ -1126,6 +1126,28 @@
                             </div>
                         </div>
 
+                        <input type="hidden" name="status" id="statusval" value="<?= $product['status'] ?>">
+                        <label class="uk-form-label" for="status"><?= lang('Global.status') ?></label>
+                        <label class="switch">
+                            <?php if ($product['status'] != "0") { ?>
+                                <input id="status<?= $product['id'] ?>" type="checkbox" checked>
+                            <?php } else { ?>
+                                <input id="status<?= $product['id'] ?>" type="checkbox">
+                            <?php } ?>
+                            <span class="slider round"></span>
+                        </label>
+                        <script>
+                            $(document).ready(function() {
+                                $("input[id='status<?= $product['id'] ?>']").change(function() {
+                                    if ($(this).is(':checked')) {
+                                        $("input[id='statusval']").val("1");
+                                    } else {
+                                        $("input[id='statusval']").val("0");
+                                    }
+                                });
+                            });
+                        </script>
+
                         <hr>
 
                         <div class="uk-margin">

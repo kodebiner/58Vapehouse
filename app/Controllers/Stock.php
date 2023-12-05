@@ -243,7 +243,7 @@ class Stock extends BaseController
         $suppliers                  = $SupplierModel->findAll();
         $outlets                    = $OutletModel->findAll();
         $users                      = $UserModel->findAll();
-        $productlist                = $ProductModel->findAll();
+        $productlist                = $ProductModel->where('status', '1')->find();
 
         if (!empty($purchases)) {
             $purchaseid = array();

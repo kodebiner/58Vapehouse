@@ -443,13 +443,25 @@ class Product extends BaseController
         }
 
         // get data
-        $data = [
-            'id'            => $id,
-            'name'          => $input['name'],
-            'description'   => $input['description'],
-            'brandid'       => $input['brandid' . $id],
-            'catid'         => $input['catid' . $id],
-        ];
+        if (!empty($input['status'])) {
+            $data = [
+                'id'            => $id,
+                'name'          => $input['name'],
+                'description'   => $input['description'],
+                'brandid'       => $input['brandid' . $id],
+                'catid'         => $input['catid' . $id],
+                'status'        => $input['status'],
+            ];
+        } else {
+            $data = [
+                'id'            => $id,
+                'name'          => $input['name'],
+                'description'   => $input['description'],
+                'brandid'       => $input['brandid' . $id],
+                'catid'         => $input['catid' . $id],
+                'status'        => 0,
+            ];
+        }
 
         // insert data product
         $ProductModel->save($data);
