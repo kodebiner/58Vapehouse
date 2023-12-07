@@ -241,6 +241,7 @@ class Home extends BaseController
             }
             $trxsid[] = $trxs['id'];
            
+            // dd($payments);
             foreach ($trxpayments as $trxpay) {
                 if ($trxs['id'] == $trxpay['transactionid']){
                     foreach($payments as $pay){
@@ -249,31 +250,34 @@ class Home extends BaseController
                                 'id'    => $pay['id'],
                                 'name'  => $pay['name'],
                                 'qty'   => "1",
+                                'value' =>  $trxpay['value'],
                             ];
                         }else{
                             $bestpay [] = [
                                 'id'    => $pay['id'],
                                 'name'  => $pay['name'],
                                 'qty'   => "0",
+                                'value' => "0",
                             ];
                         }
                     }
                 }
             }
         }
-        
+        // dd($bestpay);
         $bestpayment = [];
         foreach ($bestpay as $best) {
             if (!isset($bestpayment[$best['id']])) {
                 $bestpayment[$best['id']] = $best;
             } else {
                 $bestpayment[$best['id']]['qty'] += $best['qty'];
+                $bestpayment[$best['id']]['value'] += $best['value'];
             }
         }
         $bestpayment = array_values($bestpayment);
-        array_multisort(array_column($bestpayment, 'qty'), SORT_DESC, $bestpayment);
+        array_multisort(array_column($bestpayment, 'value'), SORT_DESC, $bestpayment);
         $bestpay3       = array_slice($bestpayment, 0, 3);
-
+        
         $bestseller = [];
         foreach ($bestssell as $best) {
             if (!isset($bestseller[$best['variantid']])) {

@@ -463,7 +463,7 @@
                                             <tr>
                                                 <td><?= $i++; ?></td>
                                                 <td><?= $top3pay['name'] ?></td>
-                                                <td class="uk-text-right"><?= $top3pay['qty'] ?></td>
+                                                <td class="uk-text-right">Rp <?= number_format($top3pay['value'],0,',','.') ?></td>
                                             </tr>
                                         <?php } 
                                     } else {
