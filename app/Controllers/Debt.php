@@ -314,10 +314,10 @@ class Debt extends BaseController
         $TrxotherModel          = new TrxotherModel;
 
         // Populating Data
-        $input = $this->request->getGet('daterange');
+        $input = $this->request->getGet();
 
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
+        if (!empty($input['daterange'])) {
+            $daterange = explode(' - ', $input['daterange']);
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
@@ -327,14 +327,22 @@ class Debt extends BaseController
 
         if ($this->data['outletPick'] === null) {
             $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
-            if (!empty($input)) {
-                $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
+            if (!empty($input['daterange'])) {
+                if ($startdate === $enddate) {
+                    $trxothers      = $TrxotherModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
+                } else {
+                    $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
+                }
             }
         } else {
             $trxothers      = $TrxotherModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
 
-            if (!empty($input)) {
-                $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Top Up')->where('outletid', $this->data['outletPick'])->paginate(20, 'topup');
+            if (!empty($input['daterange'])) {
+                if ($startdate === $enddate) {
+                    $trxothers      = $TrxotherModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->orderBy('id', 'DESC')->like('description', 'Top Up')->where('outletid', $this->data['outletPick'])->paginate(20, 'topup');
+                } else {
+                    $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Top Up')->where('outletid', $this->data['outletPick'])->paginate(20, 'topup');
+                }
             }
         }
 
