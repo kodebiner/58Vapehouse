@@ -12,7 +12,7 @@ class CashMove extends BaseController
     public function index()
     {
         $pager      = \Config\Services::pager();
-        
+
         // Calling Models
         $CashModel              = new CashModel;
         $CashmoveModel          = new CashmovementModel;
@@ -20,7 +20,7 @@ class CashMove extends BaseController
 
         // Populating Data
         $input  = $this->request->getGet('daterange');
-        
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -34,7 +34,11 @@ class CashMove extends BaseController
         $cashman                = $CashModel->findAll();
 
         if (!empty($input)) {
-            $cashmoves              = $CashmoveModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashmove');
+            if ($startdate === $enddate) {
+                $cashmoves              = $CashmoveModel->orderBy('id', 'DESC')->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->paginate(20, 'cashmove');
+            } else {
+                $cashmoves              = $CashmoveModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashmove');
+            }
         } else {
             $cashmoves              = $CashmoveModel->orderBy('id', 'DESC')->paginate(20, 'cashmove');
         }
@@ -62,10 +66,10 @@ class CashMove extends BaseController
 
         // Populating data
         $Cash        =  $CashModel->findAll();
-        
+
         // initialize
         $input          = $this->request->getPost();
-        
+
         // save data
         $data = [
             'description'       => $input['description'],
@@ -73,44 +77,43 @@ class CashMove extends BaseController
             'destination'       => $input['destination'],
             'qty'               => $input['qty'],
             'date'              => date("Y-m-d H:i:s"),
-            
+
         ];
-        
+
         // validation
-        if (! $this->validate([
+        if (!$this->validate([
             'description'       =>  "required|max_length[255]',",
             'qty'               =>  "required"
-            ])) {
-                
-                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-            }
-            
-            // Inserting Cash Movement
-            $CashmoveModel->insert($data);
-            
-            // insert minus qty origin
-            $cashmin    = $CashModel->where('id',$input['origin'])->first();
-            $cashqty    = $cashmin['qty']-$input['qty'];
-            
-            $quantity = [
-                'id'    =>$cashmin['id'],
-                'qty'   =>$cashqty,
-            ];
-            
-            $CashModel->save($quantity);
-            
-            // insert plus qty origin
-            $cashplus    = $CashModel->where('id',$input['destination'])->first();
-            $cashqty    = $cashplus['qty']+$input['qty'];
-            
-            $quant = [
-                'id'    =>$cashplus['id'],
-                'qty'   =>$cashqty,
-            ];
+        ])) {
 
-            $CashModel->save($quant);
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Inserting Cash Movement
+        $CashmoveModel->insert($data);
+
+        // insert minus qty origin
+        $cashmin    = $CashModel->where('id', $input['origin'])->first();
+        $cashqty    = $cashmin['qty'] - $input['qty'];
+
+        $quantity = [
+            'id'    => $cashmin['id'],
+            'qty'   => $cashqty,
+        ];
+
+        $CashModel->save($quantity);
+
+        // insert plus qty origin
+        $cashplus    = $CashModel->where('id', $input['destination'])->first();
+        $cashqty    = $cashplus['qty'] + $input['qty'];
+
+        $quant = [
+            'id'    => $cashplus['id'],
+            'qty'   => $cashqty,
+        ];
+
+        $CashModel->save($quant);
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }
-
 }

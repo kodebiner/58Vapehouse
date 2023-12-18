@@ -77,6 +77,9 @@
             <?php } ?>
         </tbody>
     </table>
+    <div>
+        <?= $pager->links('member', 'front_full') ?>
+    </div>
 </div>
 
 <?= view('Views/Auth/_message_block') ?>

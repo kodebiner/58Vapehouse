@@ -61,9 +61,10 @@ class Trxother extends BaseController
         $users              = $UserModel->findAll();
         $outlets            = $OutletModel->findAll();
         $cash               = $CashModel->findAll();
+        $payments           = $PaymentModel->notLike('name', 'Cash')->where('outletid',$this->data['outletPick'])->find();
 
         $input  = $this->request->getGet('daterange');
-        
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -72,13 +73,13 @@ class Trxother extends BaseController
             $startdate = date('Y-m-1');
             $enddate = date('Y-m-t');
         }
-        
+
         if ($this->data['outletPick'] === null) {
             $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->paginate(20, 'cashinout');
 
             if (!empty($input)) {
                 if ($startdate === $enddate) {
-                    $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->paginate(20, 'cashinout');
+                    $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'cashinout');
                 } else {
                     $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
                 }
@@ -88,7 +89,7 @@ class Trxother extends BaseController
 
             if (!empty($input)) {
                 if ($startdate === $enddate) {
-                    $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->paginate(20, 'cashinout');
+                    $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'cashinout');
                 } else {
                     $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
                 }
@@ -96,9 +97,9 @@ class Trxother extends BaseController
         }
 
         // Find Data for Daily Report
-        $today                  = date('Y-m-d') .' 00:00:01';
+        $today                  = date('Y-m-d') . ' 00:00:01';
         $dailyreport            = $DailyReportModel->where('dateopen >', $today)->where('outletid', $this->data['outletPick'])->first();
-        
+
         // Parsing data to view
         $data                       = $this->data;
         $data['title']              = lang('Global.cashinout');
@@ -109,6 +110,7 @@ class Trxother extends BaseController
         $data['outlets']            = $outlets;
         $data['dailyreport']        = $dailyreport;
         $data['today']              = $today;
+        $data['payments']           = $payments;
         $data['pager']              = $TrxotherModel->pager;
         $data['startdate']          = strtotime($startdate);
         $data['enddate']            = strtotime($enddate);
@@ -125,7 +127,7 @@ class Trxother extends BaseController
 
             $outlet             = $OutletModel->find($this->data['outletPick']);
             // Get Transaction Cash
-            $pettycash          = $CashModel->where('name', 'Petty Cash '.$outlet['name'])->first();
+            $pettycash          = $CashModel->where('name', 'Petty Cash ' . $outlet['name'])->first();
             $cashpayment        = $PaymentModel->where('cashid', $pettycash['id'])->first();
             $cashtrx            = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
             $noncashtrx         = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
@@ -157,7 +159,7 @@ class Trxother extends BaseController
             } else {
                 $noncashpayments    = array();
             }
-            
+
             $noncashpaymentid   = array();
             foreach ($noncashpayments as $noncashpayment) {
                 $noncashpaymentid[]     = $noncashpayment['id'];
@@ -186,7 +188,7 @@ class Trxother extends BaseController
             $data['totalsystemrec']     = $totalsystemrec;
         }
 
-        return view ('Views/cash', $data);
+        return view('Views/cash', $data);
     }
 
     public function create()
@@ -196,17 +198,17 @@ class Trxother extends BaseController
         $UserModel          = new UserModel;
         $CashModel          = new CashModel;
         $DailyReportModel   = new DailyReportModel;
-        
+
         // initialize
         $input              = $this->request->getPost();
         $cash               = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
 
         // Get Date
         $date               = date_create();
-        $tanggal            = date_format($date,'Y-m-d H:i:s');
+        $tanggal            = date_format($date, 'Y-m-d H:i:s');
 
         // Image Capture
-        if (!empty($input['image'])){
+        if (!empty($input['image'])) {
             $img                = $input['image'];
             $folderPath         = "img/tfproof/";
             $image_parts        = explode(";base64,", $img);
@@ -235,10 +237,10 @@ class Trxother extends BaseController
         $TrxotherModel->save($data);
 
         // Plus & Minus Cash Wallet
-        if ( $input['cash'] === "0" ){
+        if ($input['cash'] === "0") {
             $cas = $input['quantity'] + $cash['qty'];
         } else {
-            $cas =  $cash['qty'] - $input['quantity'] ;
+            $cas =  $cash['qty'] - $input['quantity'];
         }
 
         $wallet = [
@@ -248,7 +250,7 @@ class Trxother extends BaseController
         $CashModel->save($wallet);
 
         // Find Data for Daily Report
-        $today              = date('Y-m-d') .' 00:00:01';
+        $today              = date('Y-m-d') . ' 00:00:01';
         $dailyreports       = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
         foreach ($dailyreports as $dayrep) {
             if ($input['cash'] === "0") {
@@ -276,15 +278,19 @@ class Trxother extends BaseController
         $TrxotherModel  = new TrxotherModel;
         $UserModel      = new UserModel;
         $CashModel      = new CashModel;
+        $PaymentModel   = new PaymentModel;
         $DailyReportModel   = new DailyReportModel;
-        
+
         // initialize
         $input          = $this->request->getPost();
         $cash           = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
 
+        $payment        = $PaymentModel->where('id', $input['payment'])->first();
+        $idcashplus     = $CashModel->where('id', $payment['cashid'])->first();
+
         // Get Date
         $date           = date_create();
-        $tanggal        = date_format($date,'Y-m-d H:i:s');
+        $tanggal        = date_format($date, 'Y-m-d H:i:s');
 
         // Image Capture
         $img            = $input['image'];
@@ -302,7 +308,7 @@ class Trxother extends BaseController
             'userid'        => $this->data['uid'],
             'outletid'      => $this->data['outletPick'],
             'cashid'        => $cash['id'],
-            'description'   => lang('Global.withdraw')." - ".$input['name'],
+            'description'   => lang('Global.withdraw') . " - " . $input['name'],
             'type'          => "1",
             'date'          => $tanggal,
             'qty'           => $input['value'],
@@ -312,7 +318,7 @@ class Trxother extends BaseController
         $TrxotherModel->save($data);
 
         // Minus Cash Wallet
-        $cas =  $cash['qty'] - $input['value'] ;
+        $cas =  $cash['qty'] - $input['value'];
 
         $wallet = [
             'id'    => $cash['id'],
@@ -320,8 +326,15 @@ class Trxother extends BaseController
         ];
         $CashModel->save($wallet);
 
+        // Plus Cash 
+        $datacash = [
+            'id'    => $idcashplus['id'],
+            'qty'   => $input['value'] + $idcashplus['qty'],
+        ];
+        $CashModel->save($datacash);
+
         // Find Data for Daily Report
-        $today              = date('Y-m-d') .' 00:00:01';
+        $today              = date('Y-m-d') . ' 00:00:01';
         $dailyreports       = $DailyReportModel->where('dateopen >', $today)->find();
 
         foreach ($dailyreports as $dayrep) {

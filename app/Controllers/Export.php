@@ -119,17 +119,21 @@ class export extends BaseController
         }
 
         // Populating Data
-        if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            $outlet = 'All Outlets';
-        } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            $outlet = $OutletModel->find($this->data['outletPick']);
-        }
+        // if ($this->data['outletPick'] === null) {
+        //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        //     $outlet = 'All Outlets';
+        // } else {
+        //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+        //     $outlet = $OutletModel->find($this->data['outletPick']);
+        // }
 
 
         $exported   = $db->table('transaction');
-        $exported->where('date >=', $startdate)->where('date <=', $enddate);
+        if ($startdate === $enddate) {
+            $exported->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59");
+        } else {
+            $exported->where('date >=', $startdate)->where('date <=', $enddate);
+        }
         $transactionhist   = $exported->select('transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total, member.name as member, product.name as product, variant.name as variant, trxdetail.qty as qty, variant.hargamodal as modal, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, payment.name as payment, outlet.name as outlet, outlet.address as address, bundle.name as bundle, users.username as kasir');
         $transactionhist   = $exported->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
         $transactionhist   = $exported->join('users', 'transaction.userid = users.id', 'left');
@@ -286,28 +290,22 @@ class export extends BaseController
 
         $cash   = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
 
-
-        // Populating Data
-        // if ($this->data['outletPick'] === null) {
-        //     $transactions = $TransactionModel->where('date >=', strtotime($startdate))->where('date <=', strtotime($enddate))->find();
-        //     $outlet = 'All Outlets';
-        // } else {
-        //     $transactions = $TransactionModel->where('date >=',  strtotime($startdate))->where('date <=', strtotime($enddate))->where('outletid', $this->data['outletPick'])->find();
-        //     $outlet = $OutletModel->find($this->data['outletPick']);
-        // }
-
         $db = \Config\Database::connect();
 
-        $exported   = $db->table('transaction');
-        $transactionarr   = $exported->select('transaction.id as id, outlet.name as outlet, outlet.address as address, trxdetail.id as trxdetid, trxdetail.value as trxdetval, trxdetail.marginmodal as marginmodal, trxdetail.margindasar as margindasar, trxdetail.qty as qty, transaction.date as date, transaction.disctype as disctype, trxdetail.discvar as discvar, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total');
-        $transactionarr   = $exported->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
-        $transactionarr   = $exported->join('variant', 'trxdetail.variantid = variant.id', 'left');
-        $transactionarr   = $exported->join('outlet', 'transaction.outletid = outlet.id', 'left');
-        $transactionarr   = $exported->where('transaction.outletid', $this->data['outletPick']);
-        $transactionarr   = $exported->where('date >=', $startdate)->where('date <=', $enddate);
-        $transactionarr   = $exported->orderBy('transaction.date', 'DESC');
-        $transactionarr   = $exported->get();
-        $transactionarr   = $transactionarr->getResultArray();
+        $exported           = $db->table('transaction');
+        $transactionarr     = $exported->select('transaction.id as id, outlet.name as outlet, outlet.address as address, trxdetail.id as trxdetid, trxdetail.value as trxdetval, trxdetail.marginmodal as marginmodal, trxdetail.margindasar as margindasar, trxdetail.qty as qty, transaction.date as date, transaction.disctype as disctype, trxdetail.discvar as discvar, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total');
+        $transactionarr     = $exported->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
+        $transactionarr     = $exported->join('variant', 'trxdetail.variantid = variant.id', 'left');
+        $transactionarr     = $exported->join('outlet', 'transaction.outletid = outlet.id', 'left');
+        $transactionarr     = $exported->where('transaction.outletid', $this->data['outletPick']);
+        if ($startdate === $enddate) {
+            $transactionarr   = $exported->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59");
+        } else {
+            $transactionarr   = $exported->where('date >=', $startdate)->where('date <=', $enddate);
+        }
+        $transactionarr     = $exported->orderBy('transaction.date', 'DESC');
+        $transactionarr     = $exported->get();
+        $transactionarr     = $transactionarr->getResultArray();
 
         if (!empty($transactionarr)) {
             // transaction detail result
@@ -710,11 +708,19 @@ class export extends BaseController
 
         $adress = [];
         if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
             $outletname = "All Outlets";
             $adress = "58vapehouse";
         } else {
-            $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $outletname = $outlets['name'];
             $adress = $outlets['address'];
@@ -898,7 +904,11 @@ class export extends BaseController
 
             $payments = $PaymentModel->findAll();
             $trxpayments = $TrxpaymentModel->findAll();
-            $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $outletname = $outlets['name'];
             $adress = $outlets['address'];
@@ -1002,11 +1012,19 @@ class export extends BaseController
         $diskon = [];
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $transaction = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            if ($startdate === $enddate) {
+                $transaction = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -1107,9 +1125,17 @@ class export extends BaseController
         $transactionarr = array();
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
             if ($this->data['outletPick'] === null) {
-                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+                if ($startdate === $enddate) {
+                    $transaction = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                } else {
+                    $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+                }
             } else {
-                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+                if ($startdate === $enddate) {
+                    $transaction = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->where('outletid', $this->data['outletPick'])->find();
+                } else {
+                    $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+                }
             }
             $trxdetails  = $TrxdetailModel->findAll();
             $variants    = $VariantModel->findAll();
@@ -1146,7 +1172,7 @@ class export extends BaseController
         $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
         $trxvalue        = array_sum(array_column($transactions, 'value'));
 
-       
+
 
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=profit.xls");
@@ -1196,11 +1222,19 @@ class export extends BaseController
 
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->where("outletid", $this->data['outletPick'])->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -1304,11 +1338,19 @@ class export extends BaseController
 
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -1422,11 +1464,19 @@ class export extends BaseController
 
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $presences = $PresenceModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $presences = $PresenceModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $presences  = $PresenceModel->where('outletid', $this->data['outletPick'])->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -1550,11 +1600,19 @@ class export extends BaseController
 
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -1667,11 +1725,19 @@ class export extends BaseController
         // Populating Data
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];

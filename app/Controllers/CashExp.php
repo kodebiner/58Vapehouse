@@ -10,14 +10,14 @@ class CashExp extends BaseController
     public function index()
     {
         $pager      = \Config\Services::pager();
-        
+
         // Calling Models
         $CashModel              = new CashModel;
         $CashExpModel           = new CashExpModel;
 
         // Populating Data
         $input  = $this->request->getGet('daterange');
-        
+
         if (!empty($input)) {
             $daterange  = explode(' - ', $input);
             $startdate  = $daterange[0];
@@ -30,7 +30,11 @@ class CashExp extends BaseController
         $cashmans                   = $CashModel->notLike('name', 'Petty Cash')->find();
 
         if (!empty($input)) {
-            $cashexps               = $CashExpModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashexp');
+            if ($startdate === $enddate) {
+                $cashexps               = $CashExpModel->orderBy('id', 'DESC')->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->paginate(20, 'cashexp');
+            } else {
+                $cashexps               = $CashExpModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashexp');
+            }
         } else {
             $cashexps               = $CashExpModel->orderBy('id', 'DESC')->paginate(20, 'cashexp');
         }
@@ -57,10 +61,10 @@ class CashExp extends BaseController
 
         // Populating data
         $Cash           =  $CashModel->findAll();
-        
+
         // initialize
         $input          = $this->request->getPost();
-        
+
         // save data
         $data = [
             'description'       => $input['description'],
@@ -68,21 +72,20 @@ class CashExp extends BaseController
             'qty'               => $input['qty'],
             'date'              => date("Y-m-d H:i:s"),
         ];
-        
+
         // Inserting Cash Expenses
         $CashExpModel->insert($data);
-        
+
         // insert minus qty origin
-        $cashmin    = $CashModel->where('id',$input['wallet'])->first();
-        $cashqty    = (Int)$cashmin['qty'] - (Int)$input['qty'];
-        
+        $cashmin    = $CashModel->where('id', $input['wallet'])->first();
+        $cashqty    = (int)$cashmin['qty'] - (int)$input['qty'];
+
         $quantity = [
             'id'    => $cashmin['id'],
             'qty'   => $cashqty,
         ];
-        
+
         $CashModel->save($quantity);
         return redirect()->back()->with('message', lang('Global.saved'));
     }
-
 }

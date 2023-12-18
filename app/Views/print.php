@@ -140,7 +140,7 @@
                        <?php } ?>
                     </div>
                     <div class="uk-margin-remove-top" uk-grid>
-                        <div class="uk-width-2-3">Cashier: <?= $fullname ?></div>
+                        <div class="uk-width-2-3">Cashier: <?= $user ?></div>
                         <div class="uk-text-right uk-width-1-3">
                             <?php if(!empty($transactionid)){
                                 if ($transactions['paymentid'] === "0" && !empty($transactions['amountpaid'])) { ?>

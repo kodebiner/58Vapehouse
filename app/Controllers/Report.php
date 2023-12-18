@@ -50,7 +50,11 @@ class Report extends BaseController
             $enddate = date('Y-m-t');
         }
 
-        $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        if ($startdate === $enddate) {
+            $transaction = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+        } else {
+            $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        }
 
         $summary = array_sum(array_column($transaction, 'value'));
         $discounts = array();
@@ -300,8 +304,15 @@ class Report extends BaseController
 
         $transactions = array();
         if ($this->data['outletPick'] === null) {
-            $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $transaction = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            } else {
+                $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
         } else {
+            if ($startdate === $enddate) {
+                $transaction = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            }
             $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
         }
         foreach ($transaction as $trx) {
@@ -382,7 +393,6 @@ class Report extends BaseController
             $this->auth     = service('authentication');
             $pager          = \Config\Services::pager();
 
-
             $inputsearch    = $this->request->getGet('search');
 
             if (!empty($inputsearch)) {
@@ -392,7 +402,11 @@ class Report extends BaseController
             }
 
             $trxpayments = $TrxpaymentModel->findAll();
-            $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate = $enddate) {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            } else {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
             $pay = array();
             foreach ($payments as $payment) {
                 $qty = array();
@@ -437,22 +451,25 @@ class Report extends BaseController
 
         $this->db       = \Config\Database::connect();
         $validation     = \Config\Services::validation();
-        $this->builder  = $this->db->table('product');
+        $this->builder  = $this->db->table('transaction');
         $this->config   = config('Auth');
         $this->auth     = service('authentication');
         $pager          = \Config\Services::pager();
 
-        // Search Filter
-        if (!empty($inputsearch)) {
-            $products   = $ProductModel->like('name', $inputsearch)->orderBy('id', 'DESC')->paginate(20, 'product');
-        } else {
-            $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
-        }
-
         // Populating Data
-        $inputsearch    = $this->request->getGet();
+        $input    = $this->request->getGet();
+
+        // // Search Filter
+        // if (!empty($input['search'])) {
+        //     $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        // } else {
+            $products   = $ProductModel->findAll();
+            // $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+        // }
+
+        
         if (!empty($input['daterange'])) {
-            $daterange = explode(' - ', $input);
+            $daterange = explode(' - ', $input['daterange']);
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
@@ -460,8 +477,9 @@ class Report extends BaseController
             $enddate = date('Y-m-t');
         }
 
-        // Calling Services & Libraries
-        $db         = \Config\Database::connect();
+        // dd($input);
+        // // Calling Services & Libraries
+        // $db         = \Config\Database::connect();
 
         // Calling Models
         $OutletModel = new OutletModel();
@@ -475,11 +493,15 @@ class Report extends BaseController
 
             $page    = (int) ($this->request->getGet('page') ?? 1);
             $perPage = 30;
-            $offset = ($page-1) * $perPage;
+            $offset = ($page - 1) * $perPage;
             $total   = count($products);
 
             $trxpro   = $db->table('transaction');
-            $trxpro->where('date >=', $startdate)->where('date <=', $enddate);
+            if ($startdate === $enddate) {
+                $trxpro->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59');
+            } else {
+                $trxpro->where('date >=', $startdate)->where('date <=', $enddate);
+            }
             $protrans   = $trxpro->select('product.id as id, trxdetail.id as trxdetid, transaction.id as trxid, transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total, product.name as product, category.name as category, variant.name as variant, trxdetail.qty as qty, variant.hargamodal as modal, variant.id as varid, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, trxdetail.marginmodal as marginmodal, outlet.name as outlet, outlet.address as address, bundle.name as bundle');
             $protrans   = $trxpro->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
             $protrans   = $trxpro->join('users', 'transaction.userid = users.id', 'left');
@@ -499,7 +521,6 @@ class Report extends BaseController
             $protrans   = $trxpro->orderBy('transaction.date', 'DESC');
             $protrans   = $trxpro->get($perPage, $offset);
             $protrans   = $protrans->getResultArray();
-
             $pager_links = $pager->makeLinks($page, $perPage, $total, 'front_full');
         }
 
@@ -540,8 +561,6 @@ class Report extends BaseController
             }
         }
 
-        // dd($trxgross);
-
         // data category
         $catedata = [];
         foreach ($trxgross as $vars) {
@@ -557,7 +576,8 @@ class Report extends BaseController
         $catedata = array_values($catedata);
 
         // Product Result
-        foreach ($catedata as $cate){
+        $proresults = array();
+        foreach ($catedata as $cate) {
             $proresults[] = [
                 'id' => $cate['id'],
                 'pro' => $cate['pro'],
@@ -565,7 +585,7 @@ class Report extends BaseController
                 'netval' => ($cate['netval'] * $cate['qty']) - $cate['discvar'],
                 'value' => $cate['netval'] * $cate['qty'],
                 'qty' => $cate['qty'],
-            ]; 
+            ];
         }
 
         // catching data
@@ -604,7 +624,7 @@ class Report extends BaseController
 
         // total gross sales category
         $totalcatgross =  array_sum(array_column($proresults, 'value'));
-        
+
         // total cat sales item
         $totalsalesitem = array_sum(array_column($proresults, 'qty'));
 
@@ -748,11 +768,19 @@ class Report extends BaseController
 
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $presences = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
+            } else {
+                $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $presences = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
+            } else {
+                $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -782,16 +810,17 @@ class Report extends BaseController
         }
 
         // Sum Total Presence
+        $present = array();
+        foreach ($absen as $presence) {
+            if ($presence['status'] === '1') {
+                $present[] = $presence['status'];
+            }
+        }
+        $presen = count($present);
+
         $admin = [];
         $presen = '';
         foreach ($absen as $abs) {
-            $present = array();
-            foreach ($absen as $abs) {
-                if ($abs['status'] === '1') {
-                    $present[] = $abs['status'];
-                }
-            }
-            $presen = count($present);
             if (!isset($admin[$abs['id'] . $abs['name']])) {
                 $admin[$abs['id'] . $abs['name']] = $abs;
             } else {
@@ -799,6 +828,7 @@ class Report extends BaseController
             }
         }
         $admin = array_values($admin);
+
 
         // parsing data to view
         $data                   = $this->data;
@@ -825,9 +855,16 @@ class Report extends BaseController
         $ends   = $datas[2];
 
         if (!empty($iduser)) {
+            if ($starts === $ends) {
+                $presences = $PresenceModel->where('datetime >=', $starts . ' 00:00:00')->where('datetime <=', $ends . ' 23:59:59')->where('userid', $iduser)->orderby('id', 'DESC')->paginate(20, 'reportpresencedet');
+            }
             $presences  = $PresenceModel->where('datetime >=', $starts)->where('datetime <=', $ends)->where('userid', $iduser)->orderBy('id', 'DESC')->paginate(20, 'reportpresecendet');
         } else {
-            $presences  = $PresenceModel->where('datetime >=', $starts)->where('datetime <=', $ends)->orderBy('id', 'DESC')->paginate(20, 'reportpresencedet');
+            if ($starts === $ends) {
+                $presences = $PresenceModel->where('datetime >=', $starts . ' 00:00:00')->where('datetime <=', $ends . ' 23:59:59')->orderby('id', 'DESC')->paginate(20, 'reportpresencedet');
+            } else {
+                $presences  = $PresenceModel->where('datetime >=', $starts)->where('datetime <=', $ends)->orderBy('id', 'DESC')->paginate(20, 'reportpresencedet');
+            }
         }
 
         // parsing data to view
@@ -869,11 +906,19 @@ class Report extends BaseController
 
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            } else {
+                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -938,11 +983,12 @@ class Report extends BaseController
         // Search Filter
         $inputsearch    = $this->request->getGet('search');
         if (!empty($inputsearch)) {
-            $members   = $MemberModel->like('name', $inputsearch)->orderBy('id', 'DESC')->paginate(20, 'reportmember');
+            $members   = $MemberModel->like('name', $inputsearch)->orderBy('name', 'ASC')->paginate(20, 'member');
         } else {
-            $members   = $MemberModel->orderBy('id', 'DESC')->paginate(20, 'reportmember');
+            $members   = $MemberModel->orderBy('name', 'ASC')->paginate(20, 'member');
         }
 
+        // dd($members);
         // Populating Data
         $debts              = $DebtModel->findAll();
 
@@ -960,11 +1006,19 @@ class Report extends BaseController
 
             $addres = '';
             if ($this->data['outletPick'] === null) {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+                if ($startdate === $enddate) {
+                    $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+                } else {
+                    $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+                }
                 $addres = "All Outlets";
                 $outletname = "58vapehouse";
             } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+                if($startdate === $enddate){
+                    $transactions = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid',$this->data['outletPick'])->find();
+                }else{
+                    $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+                }
                 $outlets = $OutletModel->find($this->data['outletPick']);
                 $addres = $outlets['address'];
                 $outletname = $outlets['name'];
@@ -1003,6 +1057,7 @@ class Report extends BaseController
             $data['title']              = lang('Global.customer');
             $data['description']        = lang('Global.customerListDesc');
             $data['customers']          = $customer;
+            $data['pager']              = $MemberModel->pager;
             $data['startdate']          = strtotime($startdate);
             $data['enddate']            = strtotime($enddate);
 
@@ -1104,7 +1159,11 @@ class Report extends BaseController
             $enddate = date('Y-m-t');
         }
 
-        $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        if($startdate === $enddate){
+            $transactions = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
+        }else{
+            $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        }
 
         $bund = [];
         foreach ($transactions as $transaction) {
@@ -1189,7 +1248,11 @@ class Report extends BaseController
             $outletname = $outlet['name'];
 
             $trxpro   = $db->table('transaction');
-            $trxpro->where('date >=', $startdate)->where('date <=', $enddate);
+            if($startdate === $enddate){
+                $trxpro->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59');
+            }else{
+                $trxpro->where('date >=', $startdate)->where('date <=', $enddate);
+            }
             $protrans   = $trxpro->select('product.id as id, transaction.id as trxid, trxdetail.id as trxdetid, category.id as catid, transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total, product.name as product, category.name as category, variant.name as variant, trxdetail.qty as qty, variant.hargamodal as modal, variant.id as varid, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, trxdetail.marginmodal as marginmodal, outlet.name as outlet, outlet.address as address, bundle.name as bundle');
             $protrans   = $trxpro->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
             $protrans   = $trxpro->join('users', 'transaction.userid = users.id', 'left');
@@ -1290,7 +1353,7 @@ class Report extends BaseController
 
         // total gross sales category
         $totalcatgross =  array_sum(array_column($result, 'value'));
-        
+
         // total cat sales item
         $totalsalesitem = array_sum(array_column($result, 'qty'));
 

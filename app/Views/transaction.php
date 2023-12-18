@@ -175,7 +175,7 @@
                                             <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
                                                 <select class="uk-select uk-input" id="payment" name="payment" required >
-                                                    <option value="" selected disabled hidden><?=lang('global.payment')?></option>
+                                                    <option value="" selected disabled hidden><?=lang('Global.payment')?></option>
                                                     <?php
                                                     foreach ($payments as $pay) {
                                                         if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {

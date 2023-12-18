@@ -1,4 +1,6 @@
-<?php namespace App\Controllers;
+<?php
+
+namespace App\Controllers;
 
 use App\Models\BundledetailModel;
 use App\Models\BundleModel;
@@ -44,7 +46,7 @@ class DailyReport extends BaseController
 
             // Populating Data
             $input = $this->request->getGet('daterange');
-            
+
             if (!empty($input)) {
                 $daterange = explode(' - ', $input);
                 $startdate = $daterange[0];
@@ -54,9 +56,13 @@ class DailyReport extends BaseController
                 $enddate = date('Y-m-t');
             }
 
-            $today                  = date('Y-m-d') .' 00:00:01';
+            $today                  = date('Y-m-d') . ' 00:00:01';
             if (!empty($input)) {
-                $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->where('dateopen >=', $startdate)->where('dateopen <=', $enddate)->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
+                if ($startdate === $enddate) {
+                    $dailyreports       = $DailyReportModel->orderby('dateopen', 'DESC')->where('dateopen >=', $startdate . "00:00:00")->where('dateopen <=', $enddate . "23:59:59")->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
+                } else {
+                    $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->where('dateopen >=', $startdate)->where('dateopen <=', $enddate)->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
+                }
             } else {
                 $dailyreports           = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
             }
@@ -90,28 +96,28 @@ class DailyReport extends BaseController
                     $variantid[] = $trxdetail['variantid'];
                     $bundleid[] = $trxdetail['bundleid'];
                 }
-    
+
                 $bundles                = $BundleModel->find($bundleid);
                 $bundets                = $BundledetailModel->whereIn('bundleid', $bundleid)->find();
-    
+
                 foreach ($bundets as $bundet) {
                     $variantid[] = $bundet['variantid'];
                 }
-    
+
                 $variants               = $VariantModel->find($variantid);
-    
+
                 $productid = array();
                 foreach ($variants as $variant) {
                     $productid[] = $variant['productid'];
                 }
-                
+
                 $products               = $ProductModel->find($productid);
-    
+
                 // Get Cash Transaction
-                $pettycash              = $CashModel->where('name', 'Petty Cash '.$this->data['outletPick'])->first();
+                $pettycash              = $CashModel->where('name', 'Petty Cash ' . $this->data['outletPick'])->first();
                 $cashpayment            = $PaymentModel->where('outletid', $this->data['outletPick'])->where('name', 'Cash')->first();
                 $cashtrx                = $TransactionModel->where('paymentid', $cashpayment['id'])->find();
-    
+
                 // Get Non Cash Transaction
                 $noncash            = $CashModel->notLike('name', 'Petty Cash')->find();
                 $noncashid          = array();
@@ -172,7 +178,8 @@ class DailyReport extends BaseController
         }
     }
 
-    public function open() {
+    public function open()
+    {
         // Calling Models
         $OutletModel            = new OutletModel();
         $UserModel              = new UserModel();
@@ -185,10 +192,10 @@ class DailyReport extends BaseController
         // Populating Data
         $outlets                = $OutletModel->findAll();
         $users                  = $UserModel->findAll();
-        
+
         $date                   = date_create();
-        $tanggal                = date_format($date,'Y-m-d H:i:s');
-        
+        $tanggal                = date_format($date, 'Y-m-d H:i:s');
+
         $datadayrep = [
             'dateopen'      => $tanggal,
             'useridopen'    => $this->data['uid'],
@@ -203,7 +210,8 @@ class DailyReport extends BaseController
         return redirect()->back();
     }
 
-    public function close() {
+    public function close()
+    {
         // Calling Models
         $UserModel              = new UserModel();
         $DailyReportModel       = new DailyReportModel();
@@ -215,11 +223,11 @@ class DailyReport extends BaseController
         $users                  = $UserModel->findAll();
 
         // Creating Daily Report
-        $today                  = date('Y-m-d') .' 00:00:01';
+        $today                  = date('Y-m-d') . ' 00:00:01';
         $dailyreport            = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->first();
         $date                   = date_create();
-        $tanggal                = date_format($date,'Y-m-d H:i:s');
-        
+        $tanggal                = date_format($date, 'Y-m-d H:i:s');
+
         $closedayrep = [
             'id'                => $dailyreport['id'],
             'dateclose'         => $tanggal,

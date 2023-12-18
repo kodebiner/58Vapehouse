@@ -11,7 +11,7 @@ class Customer extends BaseController
     public function index()
     {
         $pager      = \Config\Services::pager();
-        
+
         // Calling Models
         $MemberModel            = new MemberModel();
         $DebtModel              = new DebtModel;
@@ -38,7 +38,11 @@ class Customer extends BaseController
             }
 
             // Transactions
-            $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->find();
+            if ($startdate === $enddate) {
+                $transactions   = $TransactionModel->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            } else {
+                $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            }
 
             // Debts
             $debts          = $DebtModel->findAll();
@@ -58,8 +62,8 @@ class Customer extends BaseController
                         $totaltrx[] = $trx['memberid'];
                     }
                 }
-                
-                $customer[] =[
+
+                $customer[] = [
                     'id'    => $member['id'],
                     'debt'  => array_sum($debtval),
                     'trx'   => count($totaltrx),
@@ -99,16 +103,16 @@ class Customer extends BaseController
             'email'     => $input['email'],
             'poin'      => '0',
         ];
-        
-        if (! $this->validate([
+
+        if (!$this->validate([
             'name'      => "required|max_length[255]|is_unique[member.name]",
             'phone'     => 'required|is_unique[member.phone]',
             'email'     => 'max_length[255]',
         ])) {
-                
-           return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
-            
+
         // Inserting Customer
         $MemberModel->insert($data);
 
@@ -119,12 +123,12 @@ class Customer extends BaseController
     {
         // Calling Models
         $customers = new MemberModel();
-        
+
         // Poulating Data
         $data['customer'] = $customers->where('id', $id)->first();
         $input = $this->request->getPost();
-        
-        
+
+
         $validation =  \Config\Services::validation();
         $data = [
             'id'        => $id,
@@ -135,7 +139,7 @@ class Customer extends BaseController
         ];
 
         // Validasi
-        if (! $this->validate([
+        if (!$this->validate([
             'name'      => "max_length[255]",
             'phone'     => "max_length[255]",
             'email'     => "max_length[255]",
@@ -150,7 +154,7 @@ class Customer extends BaseController
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }
-    
+
     public function delete($id)
     {
         $customers = new MemberModel();

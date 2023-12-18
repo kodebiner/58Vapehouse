@@ -1,6 +1,7 @@
-<?php 
+<?php
 
 namespace App\Controllers;
+
 use CodeIgniter\Controller;
 
 use App\Models\ProductModel;
@@ -9,7 +10,7 @@ use App\Models\OutletModel;
 use App\Models\StockModel;
 use App\Models\StockmovementModel;
 
-Class Stockmove extends BaseController
+class Stockmove extends BaseController
 {
     public function __construct()
     {
@@ -37,7 +38,7 @@ Class Stockmove extends BaseController
         $productlist            = $ProductModel->findAll();
 
         $input = $this->request->getGet('daterange');
-        
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -51,13 +52,21 @@ Class Stockmove extends BaseController
             $stockmoves         = $StockmovementModel->orderBy('id', 'DESC')->paginate(20, 'stockmove');
 
             if (!empty($input)) {
-                $stockmoves     = $StockmovementModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'stockmove');
+                if ($startdate === $enddate) {
+                    $stockmoves      = $StockmovementModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->paginate(20, 'stockmove');
+                } else {
+                    $stockmoves     = $StockmovementModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'stockmove');
+                }
             }
         } else {
             $stockmoves         = $StockmovementModel->orderBy('id', 'DESC')->where('origin', $this->data['outletPick'])->paginate(20, 'stockmove');
 
             if (!empty($input)) {
-                $stockmoves     = $StockmovementModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->where('origin',$this->data['outletPick'])->paginate(20, 'stockmove');
+                if ($startdate === $enddate) {
+                    $stockmoves      = $StockmovementModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->where('origin', $this->data['outletPick'])->paginate(20, 'stockmove');
+                } else {
+                    $stockmoves     = $StockmovementModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->where('origin', $this->data['outletPick'])->paginate(20, 'stockmove');
+                }
             }
         }
 
@@ -67,7 +76,7 @@ Class Stockmove extends BaseController
                 $varid[]    = $stkmv['variantid'];
             }
             $variants       = $VariantModel->find($varid);
-    
+
             $productid = array();
             foreach ($variants as $var) {
                 $productid[]    = $var['productid'];
@@ -90,7 +99,7 @@ Class Stockmove extends BaseController
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
 
-        return view ('Views/stockmove', $data);
+        return view('Views/stockmove', $data);
     }
 
     public function product()
@@ -120,14 +129,14 @@ Class Stockmove extends BaseController
                 if ($stock['variantid'] === $variant['id']) {
                     $return[] = [
                         'id'    => $variant['id'],
-                        'name'  => $product['name'].' - '.$variant['name'],
+                        'name'  => $product['name'] . ' - ' . $variant['name'],
                         'qty'   => $stock['qty'],
 
                     ];
                 }
             }
         }
-        
+
         die(json_encode($return));
     }
 
@@ -145,7 +154,7 @@ Class Stockmove extends BaseController
 
         // date time stamp
         $date       = date_create();
-        $tanggal    = date_format($date,'Y-m-d H:i:s');
+        $tanggal    = date_format($date, 'Y-m-d H:i:s');
 
         // Stock Movement
         foreach ($input['totalpcs'] as $varid => $value) {
@@ -156,12 +165,12 @@ Class Stockmove extends BaseController
                 'destination'   => $input['destination'],
                 'date'          => $tanggal,
             ];
-    
+
             // insert data Stockmove
             $StockMove->insert($data);
 
             // Minus Stock
-            $Stocks     = $Stock->where('variantid', $varid)->where('outletid',$input['origin'])->find(); 
+            $Stocks     = $Stock->where('variantid', $varid)->where('outletid', $input['origin'])->find();
             $minstock   = $value;
             foreach ($Stocks as $stock) {
                 $hasilmin = $stock['qty'] -= $minstock;
@@ -171,9 +180,9 @@ Class Stockmove extends BaseController
                 ];
             }
             $Stock->save($stok);
-    
+
             // Plus Stock
-            $Stocks = $Stock->where('variantid', $varid)->where('outletid',$input['destination'])->find();
+            $Stocks = $Stock->where('variantid', $varid)->where('outletid', $input['destination'])->find();
             $plusstock = $value;
             foreach ($Stocks as $stock) {
                 $hasilplus = $stock['qty'] += $plusstock;

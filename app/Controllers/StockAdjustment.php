@@ -1,6 +1,7 @@
-<?php 
+<?php
 
 namespace App\Controllers;
+
 use CodeIgniter\Controller;
 
 use App\Models\ProductModel;
@@ -9,7 +10,8 @@ use App\Models\OutletModel;
 use App\Models\StockModel;
 use App\Models\StockAdjustmentModel;
 
-Class StockAdjustment extends BaseController{
+class StockAdjustment extends BaseController
+{
 
     public function index()
     {
@@ -24,7 +26,7 @@ Class StockAdjustment extends BaseController{
 
         // Populating Data
         $input = $this->request->getGet('daterange');
-        
+
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -38,13 +40,21 @@ Class StockAdjustment extends BaseController{
             $stockadjust     = $StockAdjustmentModel->orderBy('id', 'DESC')->paginate(20, 'stockadjustment');
 
             if (!empty($input)) {
-                $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'stockadjustment');
+                if ($startdate === $enddate) {
+                    $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->paginate(20, 'stockadjustment');
+                } else {
+                    $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'stockadjustment');
+                }
             }
         } else {
             $stockadjust     = $StockAdjustmentModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockadjustment');
 
             if (!empty($input)) {
-                $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid',$this->data['outletPick'])->paginate(20, 'stockadjustment');
+                if ($startdate === $enddate) {
+                    $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockadjustment');
+                } else {
+                    $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->paginate(20, 'stockadjustment');
+                }
             }
         }
         $outlets        = $OutletModel->findAll();
@@ -59,7 +69,7 @@ Class StockAdjustment extends BaseController{
             }
             $variants       = $VariantModel->find($varid);
             $stocks         = $StockModel->find($stockid);
-    
+
             $prodid = array();
             foreach ($variants as $var) {
                 $prodid[]   = $var['productid'];
@@ -85,7 +95,7 @@ Class StockAdjustment extends BaseController{
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
 
-        return view ('Views/stockadjustment', $data);
+        return view('Views/stockadjustment', $data);
     }
 
     public function product()
@@ -115,14 +125,14 @@ Class StockAdjustment extends BaseController{
                 if ($stock['variantid'] === $variant['id']) {
                     $return[] = [
                         'id'    => $variant['id'],
-                        'name'  => $product['name'].' - '.$variant['name'],
+                        'name'  => $product['name'] . ' - ' . $variant['name'],
                         'qty'   => $stock['qty'],
 
                     ];
                 }
             }
         }
-        
+
         die(json_encode($return));
     }
 
@@ -134,17 +144,17 @@ Class StockAdjustment extends BaseController{
         $OutletModel            = new OutletModel;
         $StockAdjModel          = new StockAdjustmentModel();
         $StockModel             = new StockModel;
-        
+
         // initialize
         $input = $this->request->getPost();
 
         // date time stamp
         $date       = date_create();
-        $tanggal    = date_format($date,'Y-m-d H:i:s');
+        $tanggal    = date_format($date, 'Y-m-d H:i:s');
 
         // Stock Adjusment 
         foreach ($input['totalpcs'] as $varid => $value) {
-            $Stocks = $StockModel->where('variantid', $varid)->where('outletid',$input['outlet'])->first();
+            $Stocks = $StockModel->where('variantid', $varid)->where('outletid', $input['outlet'])->first();
             if (($Stocks['qty'] === "0") && ($input['type'] === "1")) {
                 return redirect()->back()->with('error', lang('Global.alertstock'));
             }
@@ -158,14 +168,14 @@ Class StockAdjustment extends BaseController{
                 'note'      => $input['note'],
             ];
             $StockAdjModel->insert($adj);
-            
+
             // Update Stock
             $totalstock = $Stocks['qty'];
 
             if ((int)$input['type'] === 0) {
                 $totalstock += $value;
             } else {
-                $totalstock -= $value; 
+                $totalstock -= $value;
             }
 
             $stok = [
@@ -175,7 +185,7 @@ Class StockAdjustment extends BaseController{
             ];
             $StockModel->save($stok);
         }
-        
+
         // return
         return redirect()->back()->with('message', lang('Global.saved'));
     }
