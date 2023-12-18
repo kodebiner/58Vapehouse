@@ -130,7 +130,7 @@ class export extends BaseController
 
         $exported   = $db->table('transaction');
         if ($startdate === $enddate) {
-            $exported->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59");
+            $exported->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59");
         } else {
             $exported->where('date >=', $startdate)->where('date <=', $enddate);
         }
@@ -299,7 +299,7 @@ class export extends BaseController
         $transactionarr     = $exported->join('outlet', 'transaction.outletid = outlet.id', 'left');
         $transactionarr     = $exported->where('transaction.outletid', $this->data['outletPick']);
         if ($startdate === $enddate) {
-            $transactionarr   = $exported->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59");
+            $transactionarr   = $exported->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59");
         } else {
             $transactionarr   = $exported->where('date >=', $startdate)->where('date <=', $enddate);
         }
@@ -462,12 +462,12 @@ class export extends BaseController
         // $omsetvalue = [];
         // for ($date = strtotime($startdate); $date <= strtotime($enddate); $date += (86400)) {
         //     if ($this->data['outletPick'] === null) {
-        //         $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+        //         $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->find();
         //         $stocks = $StockModel->findAll();
         //         $outletname[] = "All Outlets";
         //         $adress[] = "58vapehouse";
         //     } else {
-        //         $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+        //         $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
         //         $stocks = $StockModel->where('outletid', $this->data['outletPick'])->find();
         //         $outlets = $OutletModel->where('id', $this->data['outletPick'])->find();
         //     }
@@ -709,7 +709,7 @@ class export extends BaseController
         $adress = [];
         if ($this->data['outletPick'] === null) {
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             }
@@ -717,7 +717,7 @@ class export extends BaseController
             $adress = "58vapehouse";
         } else {
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
             }
@@ -905,7 +905,7 @@ class export extends BaseController
             $payments = $PaymentModel->findAll();
             $trxpayments = $TrxpaymentModel->findAll();
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
             }
@@ -1013,7 +1013,7 @@ class export extends BaseController
         $addres = '';
         if ($this->data['outletPick'] === null) {
             if ($startdate === $enddate) {
-                $transaction = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transaction = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             }
@@ -1021,7 +1021,7 @@ class export extends BaseController
             $outletname = "58vapehouse";
         } else {
             if ($startdate === $enddate) {
-                $transaction = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transaction = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
             }
@@ -1126,15 +1126,15 @@ class export extends BaseController
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
             if ($this->data['outletPick'] === null) {
                 if ($startdate === $enddate) {
-                    $transaction = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                    $transaction = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
                 } else {
-                    $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+                    $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->find();
                 }
             } else {
                 if ($startdate === $enddate) {
-                    $transaction = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->where('outletid', $this->data['outletPick'])->find();
+                    $transaction = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->where('outletid', $this->data['outletPick'])->find();
                 } else {
-                    $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+                    $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
                 }
             }
             $trxdetails  = $TrxdetailModel->findAll();
@@ -1223,7 +1223,7 @@ class export extends BaseController
         $addres = '';
         if ($this->data['outletPick'] === null) {
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             }
@@ -1231,7 +1231,7 @@ class export extends BaseController
             $outletname = "58vapehouse";
         } else {
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->where("outletid", $this->data['outletPick'])->find();
+                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->where("outletid", $this->data['outletPick'])->find();
             } else {
                 $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
             }
@@ -1339,7 +1339,7 @@ class export extends BaseController
         $addres = '';
         if ($this->data['outletPick'] === null) {
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             }
@@ -1347,7 +1347,7 @@ class export extends BaseController
             $outletname = "58vapehouse";
         } else {
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
             }
@@ -1465,7 +1465,7 @@ class export extends BaseController
         $addres = '';
         if ($this->data['outletPick'] === null) {
             if ($startdate === $enddate) {
-                $presences = $PresenceModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
             }
@@ -1473,7 +1473,7 @@ class export extends BaseController
             $outletname = "58vapehouse";
         } else {
             if ($startdate === $enddate) {
-                $presences = $PresenceModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $presences = $PresenceModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $presences  = $PresenceModel->where('outletid', $this->data['outletPick'])->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
             }
@@ -1601,7 +1601,7 @@ class export extends BaseController
         $addres = '';
         if ($this->data['outletPick'] === null) {
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             }
@@ -1609,7 +1609,7 @@ class export extends BaseController
             $outletname = "58vapehouse";
         } else {
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
             }
@@ -1726,7 +1726,7 @@ class export extends BaseController
         $addres = '';
         if ($this->data['outletPick'] === null) {
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
             }
@@ -1734,7 +1734,7 @@ class export extends BaseController
             $outletname = "58vapehouse";
         } else {
             if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . "00:00:00")->where('date <=', $enddate . "23:59:59")->find();
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
                 $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
             }

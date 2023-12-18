@@ -160,7 +160,6 @@ class Debt extends BaseController
         $payments               = $PaymentModel->findAll();
 
         $input = $this->request->getGet('daterange');
-
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -173,7 +172,7 @@ class Debt extends BaseController
         // Populating Data
         if (!empty($input)) {
             if ($startdate === $enddate) {
-                $debts       = $DebtModel->orderby('deadline', 'DESC')->where('value !=', '0')->where('deadline >=', $startdate . "00:00:00")->where('deadline <=', $enddate . "23:59:59")->paginate(20, 'dailyreport');
+                $debts       = $DebtModel->orderby('deadline', 'DESC')->where('value !=', '0')->where('deadline', $startdate . ' 00:00:00')->where('deadline <=', $enddate . ' 23:59:59')->paginate(20, 'debt');
             } else {
                 $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(30, 'debt');
             }
@@ -400,7 +399,7 @@ class Debt extends BaseController
 
             if (!empty($input)) {
                 if ($startdate === $enddate) {
-                    $trxothers      = $TrxotherModel->where('outletid',$this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
+                    $trxothers      = $TrxotherModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
                 } else {
                     $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'debtpay');
                 }
