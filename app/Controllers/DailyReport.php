@@ -69,11 +69,16 @@ class DailyReport extends BaseController
 
             $lastreport             = end($dailyreports);
             $firstreport            = $dailyreports[0];
+            if ($firstreport['dateclose'] === '0000-00-00 00:00:00') {
+                $thefirst = date('Y-m-d H:i:s');
+            } else {
+                $thefirst = $firstreport['dateclose'];
+            }
 
             $cashs                  = $CashModel->findAll();
             $payments               = $PaymentModel->findAll();
-            $transactions           = $TransactionModel->where('date <=', $firstreport['dateclose'])->where('date >=', $lastreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
-            $trxothers              = $TrxotherModel->where('date <=', $firstreport['dateclose'])->where('date >=', $lastreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
+            $transactions           = $TransactionModel->where('date <=', $thefirst)->where('date >=', $lastreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
+            $trxothers              = $TrxotherModel->where('date <=', $thefirst)->where('date >=', $lastreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
 
             $trxid = array();
             $memberid = array();

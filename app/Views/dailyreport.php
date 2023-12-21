@@ -74,7 +74,15 @@
                     </td>
 
                     <td><?= date('l, d M Y, H:i:s', strtotime($dayrep['dateopen'])); ?></td>
-                    <td><?= date('l, d M Y, H:i:s', strtotime($dayrep['dateclose'])); ?></td>
+                    <td>
+                        <?php
+                        if ($dayrep['dateclose'] != '0000-00-00 00:00:00') {
+                            echo date('l, d M Y, H:i:s', strtotime($dayrep['dateclose']));
+                        } else {
+                            echo lang('Global.storeNotClosed');
+                        }
+                        ?>
+                    </td>
                     <td>Rp <?= number_format($dayrep['totalcashin'],2,',','.');?></td>
                     <td>Rp <?= number_format($dayrep['totalcashout'],2,',','.');?></td>
                     <td>Rp <?= number_format((Int)$dayrep['cashclose'],2,',','.');?></td>

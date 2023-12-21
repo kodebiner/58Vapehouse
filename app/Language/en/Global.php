@@ -204,6 +204,7 @@ return [
     'oldprice'          => 'Previous Price',
     'diffprice'         => 'Difference Price',
     'soldItem'          => 'Sold Item',
+    'storeNotClosed'    => 'Outlet not closed yet',
 
    
     // Button

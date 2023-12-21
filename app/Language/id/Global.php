@@ -204,6 +204,7 @@ return [
     'oldprice'          => 'Harga Sebelumnya',
     'diffprice'         => 'Selisih Harga',
     'soldItem'          => 'Item Terjual',
+    'storeNotClosed'    => 'Outlet belum ditutup',
 
     // Button
     'edit'              => 'Ubah',
