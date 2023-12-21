@@ -373,7 +373,7 @@
                 </div>
 
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.payment')?></label>
+                    <label class="uk-form-label" for="form-horizontal-text"><?=lang('Global.payment')?></label>
                     <div class="uk-form-controls">
                         <div class="uk-inline uk-width-1-1">
                             <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
@@ -381,7 +381,9 @@
                                 <option value="" selected disabled hidden><?=lang('Global.payment')?></option>
                                 <?php
                                 foreach ($payments as $pay) {
+                                    if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
                                         echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
+                                    }
                                 }
                                 ?>
                             </select>

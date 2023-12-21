@@ -42,15 +42,9 @@ class Trxother extends BaseController
 
         // Calling Model
         $TransactionModel   = new TransactionModel;
-        $TrxdetailModel     = new TrxdetailModel;
         $TrxpaymentModel    = new TrxpaymentModel;
         $TrxotherModel      = new TrxotherModel;
-        $ProductModel       = new ProductModel;
-        $VariantModel       = new VariantModel;
-        $BundleModel        = new BundleModel;
-        $BundledetailModel  = new BundledetailModel;
         $PaymentModel       = new PaymentModel;
-        $DebtModel          = new DebtModel;
         $UserModel          = new UserModel;
         $CashModel          = new CashModel;
         $OutletModel        = new OutletModel;
@@ -61,7 +55,7 @@ class Trxother extends BaseController
         $users              = $UserModel->findAll();
         $outlets            = $OutletModel->findAll();
         $cash               = $CashModel->findAll();
-        $payments           = $PaymentModel->notLike('name', 'Cash')->where('outletid',$this->data['outletPick'])->find();
+        $payments           = $PaymentModel->notLike('name', 'Cash')->find();
 
         $input  = $this->request->getGet('daterange');
 
