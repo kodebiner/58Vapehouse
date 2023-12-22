@@ -70,22 +70,34 @@ class Trxother extends BaseController
 
         if ($this->data['outletPick'] === null) {
             $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->paginate(20, 'cashinout');
+            $debts      = $TrxotherModel->Like('description', 'Debt')->find();
+            $topups     = $TrxotherModel->Like('description', 'Top Up')->find();
 
             if (!empty($input)) {
                 if ($startdate === $enddate) {
                     $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'cashinout');
+                    $debts      = $TrxotherModel->Like('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+                    $topups     = $TrxotherModel->Like('description', 'Top Up')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
                 } else {
                     $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
+                    $debts      = $TrxotherModel->Like('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->find();
+                    $topups     = $TrxotherModel->Like('description', 'Top Up')->where('date >=', $startdate)->where('date <=', $enddate)->find();
                 }
             }
         } else {
             $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'cashinout');
+            $debts      = $TrxotherModel->Like('description', 'Debt')->where('outletid', $this->data['outletPick'])->find();
+            $topups     = $TrxotherModel->Like('description', 'Top Up')->where('outletid', $this->data['outletPick'])->find();
 
             if (!empty($input)) {
                 if ($startdate === $enddate) {
                     $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'cashinout');
+                    $debts      = $TrxotherModel->Like('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+                    $topups     = $TrxotherModel->Like('description', 'Top Up')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
                 } else {
                     $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
+                    $debts      = $TrxotherModel->Like('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
+                    $topups     = $TrxotherModel->Like('description', 'Top Up')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
                 }
             }
         }
@@ -94,6 +106,7 @@ class Trxother extends BaseController
         $today                  = date('Y-m-d') . ' 00:00:01';
         $dailyreport            = $DailyReportModel->where('dateopen >', $today)->where('outletid', $this->data['outletPick'])->first();
 
+        dd($debts);
         // Parsing data to view
         $data                       = $this->data;
         $data['title']              = lang('Global.cashinout');
@@ -334,7 +347,7 @@ class Trxother extends BaseController
         foreach ($dailyreports as $dayrep) {
             $tcashout = [
                 'id'            => $dayrep['id'],
-                'totalcashout'  => $dayrep['totalcashout'] + $input['value'],
+                'totalcashout'  => (Int)$dayrep['totalcashout'] + (Int)$input['value'],
             ];
             $DailyReportModel->save($tcashout);
         }
