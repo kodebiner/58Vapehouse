@@ -1318,6 +1318,7 @@ class Pay extends BaseController
         $CashModel              = new CashModel;
         $DailyReportModel       = new DailyReportModel;
         $PaymentModel           = new PaymentModel;
+        $OutletModel            = new OutletModel();
 
         // Get Data
         $cashinout              = $TrxotherModel->findAll();
@@ -1327,6 +1328,8 @@ class Pay extends BaseController
         $tanggal                = date_format($date, 'Y-m-d H:i:s');
         $member                 = $MemberModel->where('id', $input['customerid'])->first();
         $cash                   = $CashModel->where('id', $payments['cashid'])->first();
+        $outlet                 = $OutletModel->find($this->data['outletPick']);
+        $pettycash              = $CashModel->where('name', 'Petty Cash ' . $outlet['name'])->first();
 
         // Image Capture
         $img                    = $input['image'];
@@ -1370,12 +1373,14 @@ class Pay extends BaseController
         // Find Data for Daily Report
         $today                  = date('Y-m-d') . ' 00:00:01';
         $dailyreports           = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
-        foreach ($dailyreports as $dayrep) {
-            $tcashin = [
-                'id'            => $dayrep['id'],
-                'totalcashin'   => (int)$dayrep['totalcashin'] + (int)$input['value'],
-            ];
-            $DailyReportModel->save($tcashin);
+        if ($payments['cashid'] === $pettycash) {
+            foreach ($dailyreports as $dayrep) {
+                $tcashin = [
+                    'id'            => $dayrep['id'],
+                    'totalcashin'   => (int)$dayrep['totalcashin'] + (int)$input['value'],
+                ];
+                $DailyReportModel->save($tcashin);
+            }
         }
 
         // return

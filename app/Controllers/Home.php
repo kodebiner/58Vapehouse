@@ -40,30 +40,25 @@ class Home extends BaseController
         $TrxotherModel      = new TrxotherModel();
         $PaymentModel       = new PaymentModel();
         $ProductModel       = new ProductModel();
-        $CategoryModel      = new CategoryModel();
         $VariantModel       = new VariantModel();
         $StockModel         = new StockModel();
         $BundleModel        = new BundleModel();
         $BundledetailModel  = new BundledetailModel();
         $DebtModel          = new DebtModel();
         $MemberModel        = new MemberModel();
-        $StocksModel        = new StockModel();
-        $CashModel          = new CashModel();
         $PurchaseModel      = new PurchaseModel();
         $PurchasedetModel   = new PurchasedetailModel();
 
         // Populating Data
-        $input = $this->request->getGet('daterange');
+        $input          = $this->request->getGet('daterange');
         $trxdetails     = $TrxdetailModel->findAll();
         $trxpayments    = $TrxpaymentModel->findAll();
         $products       = $ProductModel->findAll();
-        $category       = $CategoryModel->findAll();
         $variants       = $VariantModel->findAll();
         $debts          = $DebtModel->findAll();
         $customers      = $MemberModel->findAll();
         $bundles        = $BundleModel->findAll();
         $bundets        = $BundledetailModel->findAll();
-        $members        = $MemberModel->findAll();
         $purchasedet    = $PurchasedetModel->findAll();
 
         // Populating Data
@@ -76,50 +71,52 @@ class Home extends BaseController
             $enddate    = date('Y-m-t');
         }
 
-
         $today          = date('Y-m-d');
         $tomorrow       = date('Y-m-d', strtotime('+1 day'));
         $month          = date('Y-m-t');
 
         if ($this->data['outletPick'] === null) {
-            if ($startdate === $enddate) {
-                $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
-                $trxtodays      = $TransactionModel->where('date >=', $today)->where('date <=', $tomorrow)->find();
-                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
-                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today)->where('date <=', $tomorrow)->find();
-                $purchase       = $PurchaseModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
-                $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->findAll();
-                $payments       = $PaymentModel->findAll();
-                array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
+            if (!empty($input)) {
+                if ($startdate === $enddate) {
+                    $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
+                    $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
+                    $purchase       = $PurchaseModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
+                } else {
+                    $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+                    $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->find();
+                    $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+                }
             } else {
-                $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-                $trxtodays      = $TransactionModel->where('date >=', $today)->where('date <=', $tomorrow)->find();
-                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->find();
-                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today)->where('date <=', $tomorrow)->find();
-                $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-                $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->findAll();
-                $payments       = $PaymentModel->findAll();
-                array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
+                $transactions   = $TransactionModel->findAll();
+                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->find();
+                $purchase       = $PurchaseModel->findAll();
             }
+
+            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today)->where('date <=', $tomorrow)->find();
+            $trxtodays      = $TransactionModel->where('date >=', $today)->where('date <=', $tomorrow)->find();
+            $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->findAll();
+            $payments       = $PaymentModel->findAll();
         } else {
-            if ($startdate === $enddate) {
-                $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $trxtodays      = $TransactionModel->where('date >=', $today)->where('date <=', $tomorrow)->where('outletid', $this->data['outletPick'])->find();
-                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today)->where('date <=', $tomorrow)->where('outletid', $this->data['outletPick'])->find();
-                $purchase       = $PurchaseModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->find();
-                $payments       = $PaymentModel->whereIn('outletid', array('0', $this->data['outletPick']))->find();
-                array_multisort(array_column($stocks, 'restock'), SORT_DESC, $stocks);
+            if (!empty($input)) {
+                if ($startdate === $enddate) {
+                    $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                    $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                    $purchase       = $PurchaseModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                } else {
+                    $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+                    $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+                    $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+                }
             } else {
-                $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-                $trxtodays      = $TransactionModel->where('date >=', $today)->where('date <=', $tomorrow)->where('outletid', $this->data['outletPick'])->find();
-                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today)->where('date <=', $tomorrow)->where('outletid', $this->data['outletPick'])->find();
-                $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-                $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->find();
-                $payments       = $PaymentModel->whereIn('outletid', array('0', $this->data['outletPick']))->find();
+                $transactions   = $TransactionModel->where('outletid', $this->data['outletPick'])->find();
+                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->find();
+                $purchase       = $PurchaseModel->where('outletid', $this->data['outletPick'])->find();
             }
+
+            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today)->where('date <=', $tomorrow)->where('outletid', $this->data['outletPick'])->find();
+            $trxtodays      = $TransactionModel->where('date >=', $today)->where('date <=', $tomorrow)->where('outletid', $this->data['outletPick'])->find();
+            $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->find();
+            $payments       = $PaymentModel->whereIn('outletid', array('0', $this->data['outletPick']))->find();
         }
 
         // Stock Cycle
@@ -142,23 +139,6 @@ class Home extends BaseController
         }
 
         $salesresult = array_sum(array_column($sales, 'value'));
-
-        $purchval = [];
-        foreach ($purchase as $purch) {
-            foreach ($purchasedet as $purdet) {
-                if ($purch['id'] === $purdet['purchaseid']) {
-                    $purchval[] = [
-                        'id'        => $purch['id'],
-                        'variant'   => $purdet['variantid'],
-                        'qty'       => $purdet['qty'],
-                        'value'     => $purdet['qty'] * $purdet['price'],
-                    ];
-                }
-            }
-        }
-
-        // net profit purchase
-        $profitnet = $salesresult - array_sum(array_column($purchval, 'value'));
 
         // Average trnasaction
         if ($salesresult !== 0) {
@@ -284,7 +264,7 @@ class Home extends BaseController
                 }
             }
         }
-        // dd($bestpay);
+        
         $bestpayment = [];
         foreach ($bestpay as $best) {
             if (!isset($bestpayment[$best['id']])) {
@@ -316,9 +296,6 @@ class Home extends BaseController
         $trxamount = count($id);
 
         // Debt Total
-        $debtpayment = array();
-        $debttrx = array();
-        $debtpaymentsid = array();
         $trxdebtval = array();
         foreach ($transactions as $trx) {
             if ($trx['paymentid'] === "0") {
@@ -345,76 +322,6 @@ class Home extends BaseController
             }
         }
         $totalcustdebt = count($customerdebt);
-
-        // // Best Selling Product
-        // if (!empty($transactions)) {
-        //     foreach ($transactions as $trxs) {
-        //         $trxvars        = $TrxdetailModel->orderBy('qty', 'DESC')->whereIn('transactionid', $trxsid)->find();
-        //     }
-        // } else {
-        //     $trxvars        = $TrxdetailModel->orderBy('qty', 'DESC')->findAll();
-        // }
-        // $top3prod       = array_slice($trxvars, 0, 3);
-
-        // // Popular Payment Method
-        // if (!empty($transactions)) {
-        //     $paymentcount = array();
-
-        //     $trxid = array();
-        //     foreach ($transactions as $transaction) {
-        //         $trxid[] = $transaction['id'];
-        //     }
-
-        //     $cashpayments = $PaymentModel->like('name', 'Cash')->find();
-        //     $cashid = array();
-        //     foreach ($cashpayments as $cashpayment) {
-        //         $cashid[] = $cashpayment['id'];
-        //     }            
-
-        //     $paymentcount[] = [
-        //         'name'      => 'Cash',
-        //         'qty'       => count($TrxpaymentModel->whereIn('transactionid', $trxid)->whereIn('paymentid', $cashid)->find())
-        //     ];
-
-        //     $noncashpayments      = $PaymentModel->notLike('name', 'Cash')->find();
-        //     foreach ($noncashpayments as $noncashpayment) {
-        //         $paymentcount[] = [
-        //             'name'      => $noncashpayment['name'],
-        //             'qty'       => count($TrxpaymentModel->whereIn('transactionid', $trxid)->where('paymentid', $noncashpayment['id'])->find())
-        //         ];
-        //     }
-
-        //     array_multisort(array_column($paymentcount, 'qty'), SORT_DESC, $paymentcount);
-        // } else {
-        //     $paymentcount = array();
-
-        //     $trxid = array();
-        //     foreach ($transactions as $transaction) {
-        //         $trxid[] = $transaction['id'];
-        //     }
-
-        //     $cashpayments = $PaymentModel->like('name', 'Cash')->find();
-        //     $cashid = array();
-        //     foreach ($cashpayments as $cashpayment) {
-        //         $cashid[] = $cashpayment['id'];
-        //     }            
-
-        //     $paymentcount[] = [
-        //         'name'      => 'Cash',
-        //         'qty'       => count($TrxpaymentModel->whereIn('paymentid', $cashid)->find())
-        //     ];
-
-        //     $noncashpayments      = $PaymentModel->notLike('name', 'Cash')->find();
-        //     foreach ($noncashpayments as $noncashpayment) {
-        //         $paymentcount[] = [
-        //             'name'      => $noncashpayment['name'],
-        //             'qty'       => count($TrxpaymentModel->where('paymentid', $noncashpayment['id'])->find())
-        //         ];
-        //     }
-
-        //     array_multisort(array_column($paymentcount, 'qty'), SORT_DESC, $paymentcount);
-        // }
-        // $top3paymet = array_slice($paymentcount, 0, 3);
 
         $qtytrx = array();
         $marginmodals = array();
@@ -443,8 +350,8 @@ class Home extends BaseController
         ];
 
         $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
-        $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
-        $trxvalue        = array_sum(array_column($transactions, 'value'));
+        // $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
+        // $trxvalue        = array_sum(array_column($transactions, 'value'));
 
         // Products Sales
         $qtytrxsum = array_sum($qtytrx);
@@ -516,7 +423,6 @@ class Home extends BaseController
         $data['month']          = $month;
         $data['sumtrxtoday']    = $sumtrxtoday;
         $data['payments']       = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
-
 
         return view('dashboard', $data);
     }
