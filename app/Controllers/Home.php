@@ -127,6 +127,27 @@ class Home extends BaseController
         // Sales Value
         $sales = array();
         $id = [];
+
+        // Discount
+        $discvar    = array();
+        $discval    = array();
+        $trxsid     = array();
+
+        // bestseller array
+        $bestssell  = array();
+        $bestpay    = array();
+        
+        // Debt Total
+        $trxdebtval = array();
+        
+        // Customer Debt
+        $custdebt = array();
+
+        // Sales Profit
+        $qtytrx = array();
+        $marginmodals = array();
+        $margindasars = array();
+
         foreach ($transactions as $transaction) {
             $sales[] = [
                 'id'        => $transaction['id'],
@@ -137,6 +158,74 @@ class Home extends BaseController
                 'discvalue' => $transaction['discvalue'],
             ];
             $id[] = $transaction['id'];
+
+            // Discount Total
+            foreach ($trxdetails as $trxdets) {
+                if ($trxdets['transactionid'] === $transaction['id']) {
+                    $subtotals = $trxdets['qty'] * $trxdets['value'];
+                    $discvar[] = $trxdets['discvar'];
+
+                    if ($transaction['disctype'] === "0") {
+                        $discval[] = $transaction['discvalue'];
+                    } else {
+                        $discval[] = (int)$subtotals * ((int)$transaction['discvalue'] / 100);
+                    }
+                    // Best seller 
+                    $bestssell[] = [
+                        'variantid' => $trxdets['variantid'],
+                        'bundleid'  => $trxdets['bundleid'],
+                        'qty'       => $trxdets['qty'],
+                    ];
+                }
+            }
+
+            // dd($payments);
+            foreach ($trxpayments as $trxpay) {
+                if ($transaction['id'] == $trxpay['transactionid']) {
+                    foreach ($payments as $pay) {
+                        if (($trxpay['paymentid'] === $pay['id']) && $trxpay['paymentid'] !== "0") {
+                            $bestpay[] = [
+                                'id'    => $pay['id'],
+                                'name'  => $pay['name'],
+                                'qty'   => "1",
+                                'value' =>  $trxpay['value'],
+                            ];
+                        } else {
+                            $bestpay[] = [
+                                'id'    => $pay['id'],
+                                'name'  => $pay['name'],
+                                'qty'   => "0",
+                                'value' => "0",
+                            ];
+                        }
+                    }
+                }
+            }
+
+            // Debt Total
+            if ($transaction['paymentid'] === "0") {
+                $trxdebtval[]   = $transaction;
+            }
+            
+            // Customer Debt
+            foreach ($customers as $customer) {
+                foreach ($debts as $debt) {
+                    if (($debt['memberid'] === $customer['id']) && ($debt['transactionid'] === $transaction['id'])) {
+                        $custdebt[] = $debt;
+                    }
+                }
+            }
+
+            // Sales Profit
+            foreach ($trxdetails as $trxdetail) {
+                if ($transaction['id'] === $trxdetail['transactionid'] && $trxdetail['variantid'] !== "0") {
+                    $marginmodal    = $trxdetail['marginmodal'] * $trxdetail['qty'];
+                    $margindasar    = $trxdetail['margindasar'] * $trxdetail['qty'];
+                    $qtytrx[]       = $trxdetail['qty'];
+                    $marginmodals[] = $marginmodal;
+                    $margindasars[] = $margindasar;
+                }
+            }
         }
 
         $salesresult = array_sum(array_column($sales, 'value'));
@@ -165,16 +254,26 @@ class Home extends BaseController
 
         // Bussy Days
         $saly = [];
+        $hour = [];
         foreach ($sales as $sale) {
             $datesale = date_create($sale['date']);
             $saledate = $datesale->format('Y-m-d');
             $hoursale = $datesale->format('H');
+            $hour[] = date('H', strtotime($sale['date']));
             $saly[] = [
                 'date'  => $saledate,
                 'value' => $sale['value'],
                 'hours' => $hoursale,
                 'trx'   => '1',
             ];
+        }
+        $busies = array_count_values($hour);
+        arsort($busies);
+        $busyhours = array_slice(array_keys($busies), 0, 1, true);
+        if (!empty($busyhours)) {
+            $busy = $busyhours[0] . ':00';
+        } else {
+            $busy = "00:00";
         }
 
         $saledet = [];
@@ -197,74 +296,74 @@ class Home extends BaseController
         }
 
         // Bussy Hours
-        $hour = [];
-        foreach ($sales as $sale) {
-            $hour[] = date('H', strtotime($sale['date']));
-        }
-        $busies = array_count_values($hour);
-        arsort($busies);
-        $busyhours = array_slice(array_keys($busies), 0, 1, true);
-        if (!empty($busyhours)) {
-            $busy = $busyhours[0] . ':00';
-        } else {
-            $busy = "00:00";
-        }
+        // $hour = [];
+        // foreach ($sales as $sale) {
+        //     $hour[] = date('H', strtotime($sale['date']));
+        // }
+        // $busies = array_count_values($hour);
+        // arsort($busies);
+        // $busyhours = array_slice(array_keys($busies), 0, 1, true);
+        // if (!empty($busyhours)) {
+        //     $busy = $busyhours[0] . ':00';
+        // } else {
+        //     $busy = "00:00";
+        // }
 
-        // Discount
-        $discvar    = array();
-        $discval    = array();
-        $trxsid     = array();
+        // // Discount
+        // $discvar    = array();
+        // $discval    = array();
+        // $trxsid     = array();
 
-        // bestseller array
-        $bestssell  = array();
-        $bestpay    = array();
+        // // bestseller array
+        // $bestssell  = array();
+        // $bestpay    = array();
 
-        foreach ($transactions as $trxs) {
+        // foreach ($transactions as $trxs) {
 
-            // Discount Total
-            foreach ($trxdetails as $trxdets) {
-                if ($trxdets['transactionid'] === $trxs['id']) {
-                    $subtotals = $trxdets['qty'] * $trxdets['value'];
-                    $discvar[] = $trxdets['discvar'];
+        //     // Discount Total
+        //     foreach ($trxdetails as $trxdets) {
+        //         if ($trxdets['transactionid'] === $trxs['id']) {
+        //             $subtotals = $trxdets['qty'] * $trxdets['value'];
+        //             $discvar[] = $trxdets['discvar'];
 
-                    if ($trxs['disctype'] === "0") {
-                        $discval[] = $trxs['discvalue'];
-                    } else {
-                        $discval[] = (int)$subtotals * ((int)$trxs['discvalue'] / 100);
-                    }
-                    // Best seller 
-                    $bestssell[] = [
-                        'variantid' => $trxdets['variantid'],
-                        'bundleid'  => $trxdets['bundleid'],
-                        'qty'       => $trxdets['qty'],
-                    ];
-                }
-            }
-            $trxsid[] = $trxs['id'];
+        //             if ($trxs['disctype'] === "0") {
+        //                 $discval[] = $trxs['discvalue'];
+        //             } else {
+        //                 $discval[] = (int)$subtotals * ((int)$trxs['discvalue'] / 100);
+        //             }
+        //             // Best seller 
+        //             $bestssell[] = [
+        //                 'variantid' => $trxdets['variantid'],
+        //                 'bundleid'  => $trxdets['bundleid'],
+        //                 'qty'       => $trxdets['qty'],
+        //             ];
+        //         }
+        //     }
+        //     $trxsid[] = $trxs['id'];
 
-            // dd($payments);
-            foreach ($trxpayments as $trxpay) {
-                if ($trxs['id'] == $trxpay['transactionid']) {
-                    foreach ($payments as $pay) {
-                        if (($trxpay['paymentid'] === $pay['id']) && $trxpay['paymentid'] !== "0") {
-                            $bestpay[] = [
-                                'id'    => $pay['id'],
-                                'name'  => $pay['name'],
-                                'qty'   => "1",
-                                'value' =>  $trxpay['value'],
-                            ];
-                        } else {
-                            $bestpay[] = [
-                                'id'    => $pay['id'],
-                                'name'  => $pay['name'],
-                                'qty'   => "0",
-                                'value' => "0",
-                            ];
-                        }
-                    }
-                }
-            }
-        }
+        //     // dd($payments);
+        //     foreach ($trxpayments as $trxpay) {
+        //         if ($trxs['id'] == $trxpay['transactionid']) {
+        //             foreach ($payments as $pay) {
+        //                 if (($trxpay['paymentid'] === $pay['id']) && $trxpay['paymentid'] !== "0") {
+        //                     $bestpay[] = [
+        //                         'id'    => $pay['id'],
+        //                         'name'  => $pay['name'],
+        //                         'qty'   => "1",
+        //                         'value' =>  $trxpay['value'],
+        //                     ];
+        //                 } else {
+        //                     $bestpay[] = [
+        //                         'id'    => $pay['id'],
+        //                         'name'  => $pay['name'],
+        //                         'qty'   => "0",
+        //                         'value' => "0",
+        //                     ];
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         
         $bestpayment = [];
         foreach ($bestpay as $best) {
@@ -297,24 +396,24 @@ class Home extends BaseController
         $trxamount = count($id);
 
         // Debt Total
-        $trxdebtval = array();
-        foreach ($transactions as $trx) {
-            if ($trx['paymentid'] === "0") {
-                $trxdebtval[]   = $trx;
-            }
-        }
+        // $trxdebtval = array();
+        // foreach ($transactions as $trx) {
+        //     if ($trx['paymentid'] === "0") {
+        //         $trxdebtval[]   = $trx;
+        //     }
+        // }
 
         // Customer Debt
-        $custdebt = array();
-        foreach ($transactions as $trx) {
-            foreach ($customers as $customer) {
-                foreach ($debts as $debt) {
-                    if (($debt['memberid'] === $customer['id']) && ($debt['transactionid'] === $trx['id'])) {
-                        $custdebt[] = $debt;
-                    }
-                }
-            }
-        }
+        // $custdebt = array();
+        // foreach ($transactions as $trx) {
+        //     foreach ($customers as $customer) {
+        //         foreach ($debts as $debt) {
+        //             if (($debt['memberid'] === $customer['id']) && ($debt['transactionid'] === $trx['id'])) {
+        //                 $custdebt[] = $debt;
+        //             }
+        //         }
+        //     }
+        // }
 
         $customerdebt = array();
         foreach ($custdebt as $cusdeb) {
@@ -324,20 +423,20 @@ class Home extends BaseController
         }
         $totalcustdebt = count($customerdebt);
 
-        $qtytrx = array();
-        $marginmodals = array();
-        $margindasars = array();
-        foreach ($transactions as $trx) {
-            foreach ($trxdetails as $trxdetail) {
-                if ($trx['id'] === $trxdetail['transactionid'] && $trxdetail['variantid'] !== "0") {
-                    $marginmodal    = $trxdetail['marginmodal'] * $trxdetail['qty'];
-                    $margindasar    = $trxdetail['margindasar'] * $trxdetail['qty'];
-                    $qtytrx[]       = $trxdetail['qty'];
-                    $marginmodals[] = $marginmodal;
-                    $margindasars[] = $margindasar;
-                }
-            }
-        }
+        // $qtytrx = array();
+        // $marginmodals = array();
+        // $margindasars = array();
+        // foreach ($transactions as $trx) {
+        //     foreach ($trxdetails as $trxdetail) {
+        //         if ($trx['id'] === $trxdetail['transactionid'] && $trxdetail['variantid'] !== "0") {
+        //             $marginmodal    = $trxdetail['marginmodal'] * $trxdetail['qty'];
+        //             $margindasar    = $trxdetail['margindasar'] * $trxdetail['qty'];
+        //             $qtytrx[]       = $trxdetail['qty'];
+        //             $marginmodals[] = $marginmodal;
+        //             $margindasars[] = $margindasar;
+        //         }
+        //     }
+        // }
 
         $marginmodalsum = array_sum($marginmodals);
         $margindasarsum = array_sum($margindasars);
