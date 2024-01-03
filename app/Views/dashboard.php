@@ -458,7 +458,7 @@
                             <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                 <tbody>
                                     <?php $i = 1 ; ?>
-                                    <?php if(!empty($top3paymet)){
+                                    <?php //if(!empty($top3paymet)){
                                         foreach ($top3paymet as $top3pay) {?>
                                             <tr>
                                                 <td><?= $i++; ?></td>
@@ -466,15 +466,15 @@
                                                 <td class="uk-text-right">Rp <?= number_format($top3pay['value'],0,',','.') ?></td>
                                             </tr>
                                         <?php } 
-                                    } else {
-                                        foreach ($payments as $pay) { ?>
-                                        <tr>
+                                    //} else {
+                                        //foreach ($payments as $pay) { ?>
+                                        <!-- <tr>
                                             <td><?= $i++; ?></td>
                                             <td><?= $pay['name'] ?></td>
                                             <td class="uk-text-right">0</td>
-                                        </tr>
-                                        <?php }
-                                    } ?>
+                                        </tr> -->
+                                        <?php// }
+                                    //} ?>
                                 </tbody>
                             </table>
                         </div>
@@ -548,7 +548,7 @@
                         <div>
                             <div class="uk-child-width-1-2" uk-grid id="descstockcycle">
                                 <div>
-                                    <div class="tm-h3" style="color: #000;"><?= lang('Global.stockCycle') ?></div>
+                                    <div class="tm-h3" style="color: #000;"><//?= lang('Global.stockCycle') ?></div>
                                 </div>
                                 <div class="uk-padding-remove uk-inline uk-text-right">
                                     <button uk-icon="question"></button>
@@ -559,7 +559,7 @@
                         <div class="uk-margin-small-top">
                             <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                 <tbody>
-                                    <?php foreach ($stocks as $stock) { 
+                                    <//?php foreach ($stocks as $stock) { 
                                         $today      = $stock['restock'];
                                         $date       = date_create($today);
                                         $now        = date_create();
@@ -581,43 +581,43 @@
                                             if ($formatday >= 0) { ?>
                                                 <tr>
                                                     <td>
-                                                        <?php foreach ($variants as $variant) {
+                                                        <//?php foreach ($variants as $variant) {
                                                             foreach ($products as $product){
                                                                 if ($variant['id'] === $stock['variantid']) {
-                                                                    if($variant['productid'] === $product['id']){
+                                                                    if ($variant['productid'] === $product['id']) {
                                                                         echo ($product['name']."-".$variant['name']);
                                                                     }
                                                                 }
                                                             }
                                                         } ?>
                                                     </td>
-                                                    <td><?= $formatday.' '.lang('Global.pastday') ?></td>
+                                                    <td><//?= $formatday.' '.lang('Global.pastday') ?></td>
                                                 </tr>
-                                            <?php }
+                                            <//?php }
                                         } elseif ($intervals = "30") {
                                             if ($formatday >= 0) { ?>
                                                 <tr>
                                                     <td>
-                                                        <?php foreach ($variants as $variant) {
-                                                            foreach ($products as $product){
+                                                        <//?php foreach ($variants as $variant) {
+                                                            foreach ($products as $product) {
                                                                 if ($variant['id'] === $stock['variantid']) {
-                                                                    if($variant['productid'] === $product['id']){
+                                                                    if ($variant['productid'] === $product['id']) {
                                                                         echo ($product['name']."-".$variant['name']);
                                                                     }
                                                                 }
                                                             }
                                                         } ?>
                                                     </td>
-                                                    <td><?= $formatday.' '.lang('Global.pastday'); ?></td>
+                                                    <td><//?= $formatday.' '.lang('Global.pastday'); ?></td>
                                                 </tr>
-                                            <?php }
-                                        } ?>
-                                    <?php } ?>
+                                            <//?php }
+                                        } 
+                                    } ?>
                                 </tbody>
                             </table>
                         </div>
                         <div class="uk-text-right uk-margin-top">
-                            <a class="uk-link-reset" href="<?= base_url('stock/stockcycle') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            <a class="uk-link-reset" href="<//?= base_url('stock/stockcycle') ?>" style="color: #f0506e !important;"><//?= lang('Global.seedetails') ?></a>
                         </div>
                     </div>
                 </div>
