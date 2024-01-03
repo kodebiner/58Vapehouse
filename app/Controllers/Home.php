@@ -422,7 +422,12 @@ class Home extends BaseController
         $data['todayexps']      = $todayexps;
         $data['month']          = $month;
         $data['sumtrxtoday']    = $sumtrxtoday;
-        $data['payments']       = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
+
+        if ($this->data['outletPick'] != null) {
+            $data['payments']       = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
+        } else {
+            $data['payments']       = $PaymentModel->findAll();
+        }
 
         return view('dashboard', $data);
     }
