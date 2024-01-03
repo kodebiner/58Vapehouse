@@ -458,7 +458,7 @@
                             <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                 <tbody>
                                     <?php $i = 1 ; ?>
-                                    <?php //if(!empty($top3paymet)){
+                                    <?//php if(!empty($top3paymet)){
                                         foreach ($top3paymet as $top3pay) {?>
                                             <tr>
                                                 <td><?= $i++; ?></td>
@@ -469,11 +469,11 @@
                                     //} else {
                                         //foreach ($payments as $pay) { ?>
                                         <!-- <tr>
-                                            <td><?= $i++; ?></td>
-                                            <td><?= $pay['name'] ?></td>
+                                            <td><?//= $i++; ?></td>
+                                            <td><?//= $pay['name'] ?></td>
                                             <td class="uk-text-right">0</td>
                                         </tr> -->
-                                        <?php// }
+                                        <?//php }
                                     //} ?>
                                 </tbody>
                             </table>
