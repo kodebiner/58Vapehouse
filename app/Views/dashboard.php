@@ -542,7 +542,7 @@
             <!-- Outlook End -->
 
             <!-- Stock Cycle -->
-            <div>
+            <!-- <div>
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
@@ -621,7 +621,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- Stock Cycle End -->
         </div>
     </div>
