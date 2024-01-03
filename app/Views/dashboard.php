@@ -458,23 +458,30 @@
                             <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                 <tbody>
                                     <?php $i = 1 ; ?>
-                                    <?//php if(!empty($top3paymet)){
-                                        foreach ($top3paymet as $top3pay) {?>
+                                    <!-- <//?php if(!empty($top3paymet)){
+                                        //foreach ($top3paymet as $top3pay) {?>
                                             <tr>
-                                                <td><?= $i++; ?></td>
-                                                <td><?= $top3pay['name'] ?></td>
-                                                <td class="uk-text-right">Rp <?= number_format($top3pay['value'],0,',','.') ?></td>
+                                                <td><//?= $i++; ?></td>
+                                                <td><//?= $top3pay['name'] ?></td>
+                                                <td class="uk-text-right">Rp <//?= number_format($top3pay['value'],0,',','.') ?></td>
                                             </tr>
-                                        <?php } 
-                                    //} else {
-                                        //foreach ($payments as $pay) { ?>
-                                        <!-- <tr>
-                                            <td><?//= $i++; ?></td>
-                                            <td><?//= $pay['name'] ?></td>
+                                        <//?php } 
+                                    } else {
+                                        foreach ($payments as $pay) { ?>
+                                        <tr>
+                                            <td><//?= $i++; ?></td>
+                                            <td><//?= $pay['name'] ?></td>
                                             <td class="uk-text-right">0</td>
-                                        </tr> -->
-                                        <?//php }
-                                    //} ?>
+                                        </tr>
+                                        <//?php }
+                                    } ?> -->
+                                    <?php foreach ($top3paymet as $top3pay) {?>
+                                        <tr>
+                                            <td><?= $i++; ?></td>
+                                            <td><?= $top3pay['name'] ?></td>
+                                            <td class="uk-text-right">Rp <?= number_format($top3pay['value'],0,',','.') ?></td>
+                                        </tr>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
