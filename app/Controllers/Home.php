@@ -60,6 +60,7 @@ class Home extends BaseController
         $bundles        = $BundleModel->findAll();
         $bundets        = $BundledetailModel->findAll();
         $purchasedet    = $PurchasedetModel->findAll();
+        $payments       = $PaymentModel->findAll();
 
         // Populating Data
         if (!empty($input)) {
@@ -426,7 +427,7 @@ class Home extends BaseController
         // if ($this->data['outletPick'] != null) {
         //     $data['payments']       = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
         // } else {
-            $data['payments']       = $PaymentModel->findAll();
+            $data['payments']       = $payments;
         // }
 
         return view('dashboard', $data);
