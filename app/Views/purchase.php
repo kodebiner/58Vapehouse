@@ -325,22 +325,13 @@
             foreach ($purchases as $purchase) { ?>
                 <tr>
                     <td class="uk-width-medium"><?= date('l, d M Y, H:i:s', strtotime($purchase['date'])); ?></td>
-                    <td class="uk-width-small">
-                        <?php foreach ($suppliers as $supplier) {
-                            if ($supplier['id'] === $purchase['supplierid']) {
-                                echo $supplier['name'];
-                            }
-                        } ?>
-                    </td>
+                    <td class="uk-width-small"><?= $purchasedata[$purchase['id']]['supplier'] ?></td>
 
                     <td class="uk-width-small">
                         <?php
                         $prices = array();
-                        foreach ($purchasedetails as $purdet) {
-                            if ($purchase['id'] === $purdet['purchaseid']) {
-                                $total = (Int)$purdet['qty'] * (Int)$purdet['price'];
-                                $prices [] = $total;
-                            }
+                        foreach ($purchasedata[$purchase['id']]['detail'] as $detail) {
+                            $prices[] = (Int)$detail['inputqty'] * (Int)$detail['inputprice'];
                         }
                         $sum = array_sum($prices);
                         echo "Rp " . number_format($sum,2,',','.');
@@ -407,7 +398,7 @@
 <!-- Modal Confirm -->
 <?php foreach ($purchases as $purchase) {
     if ($purchase['status'] === "0") { ?>
-        <div uk-modal class="uk-flex-top" id="savedata<?= $purchase['id'] ?>">
+        <div uk-modal class="uk-flex-top uk-modal-container" id="savedata<?= $purchase['id'] ?>">
             <div class="uk-modal-dialog uk-margin-auto-vertical">
                 <div class="uk-modal-content">
                     <div class="uk-modal-header">
@@ -439,66 +430,52 @@
                                 <tbody id="ctableproduct<?=$purchase['id']?>">
                                     <?php
                                     $subtotalpurchase = array();
-                                    foreach ($purchasedetails as $purdet) {
-                                        if ($purchase['id'] === $purdet['purchaseid']) {
-                                            foreach ($variants as $variant) {
-                                                foreach ($products as $product) {
-                                                    if ($variant['id'] === $purdet['variantid'] && $product['id'] === $variant['productid']) {
-                                                        $pName  = $product['name'];
-                                                        $vName  = $variant['name'];
-                                                        $subtotalpurchase[] = (Int)$purdet['qty'] * (Int)$purdet['price']; ?>
-                                                        <tr>
-                                                            <td><?= $pName; ?></td>
-                                                            <td><?= $vName; ?></td>
-                                                                
-                                                            <td>
-                                                                <input type="number" class="uk-input" id="ctotalpcs[<?=$purchase['id']?>][<?=$variant['id']?>]" name="ctotalpcs[<?=$purchase['id']?>][<?=$variant['id']?>]" value="<?= $purdet['qty']; ?>" required />
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" class="uk-input" id="cbprice[<?=$purchase['id']?>][<?=$variant['id']?>]" name="cbprice[<?=$purchase['id']?>][<?=$variant['id']?>]" value="<?= $purdet['price']; ?>" required />
-                                                            </td>
-                                                            <td id="adjprice<?=$purchase['id']?><?=$variant['id']?>">
-                                                                <?php foreach ($stocks as $stock) {
-                                                                    foreach ($oldstocks as $oldstock) {
-                                                                        if (($stock['variantid'] === $variant['id']) && ($oldstock['variantid'] === $variant['id'])) { ?>
-                                                                            <?= floor((((Int)$oldstock['hargadasar'] * (Int)$stock['qty']) + ((Int)$purdet['price'] * (Int)$purdet['qty'])) / ((Int)$purdet['qty'] + (Int)$stock['qty'])); ?>
+                                    foreach ($purchasedata[$purchase['id']]['detail'] as $detail) {
+                                        $subtotalpurchase[] = (Int)$detail['inputqty'] * (Int)$detail['inputprice']; ?>
+                                        <tr>
+                                            <td><?= $detail['productname']; ?></td>
+                                            <td><?= $detail['variantname']; ?></td>
+                                                
+                                            <td>
+                                                <input type="number" class="uk-input" id="ctotalpcs[<?=$purchase['id']?>][<?=$detail['varid']?>]" name="ctotalpcs[<?=$purchase['id']?>][<?=$detail['varid']?>]" value="<?= $detail['inputqty']; ?>" required />
+                                            </td>
+                                            <td>
+                                                <input type="number" class="uk-input" id="cbprice[<?=$purchase['id']?>][<?=$detail['varid']?>]" name="cbprice[<?=$purchase['id']?>][<?=$detail['varid']?>]" value="<?= $detail['inputprice']; ?>" required />
+                                            </td>
+                                            <td id="adjprice<?=$purchase['id']?><?=$detail['varid']?>">
+                                                <?php 
+                                                floor((((Int)$detail['hargaold'] * (Int)$detail['qty']) + ((Int)$detail['inputprice'] * (Int)$detail['inputqty'])) / ((Int)$detail['inputqty'] + (Int)$detail['qty']));
+                                                ?>
 
-                                                                            <script type="text/javascript">
-                                                                                var cqty<?=$purchase['id']?><?=$variant['id']?>         = document.getElementById('ctotalpcs[<?=$purchase['id']?>][<?=$variant['id']?>]');
-                                                                                var cprice<?=$purchase['id']?><?=$variant['id']?>       = document.getElementById('cbprice[<?=$purchase['id']?>][<?=$variant['id']?>]');
-                                                                                var adjprice<?=$purchase['id']?><?=$variant['id']?>     = document.getElementById('adjprice<?=$purchase['id']?><?=$variant['id']?>');
+                                                <script type="text/javascript">
+                                                    var cqty<?=$purchase['id']?><?=$detail['varid']?>         = document.getElementById('ctotalpcs[<?=$purchase['id']?>][<?=$detail['varid']?>]');
+                                                    var cprice<?=$purchase['id']?><?=$detail['varid']?>       = document.getElementById('cbprice[<?=$purchase['id']?>][<?=$detail['varid']?>]');
+                                                    var adjprice<?=$purchase['id']?><?=$detail['varid']?>     = document.getElementById('adjprice<?=$purchase['id']?><?=$detail['varid']?>');
 
-                                                                                cqty<?=$purchase['id']?><?=$variant['id']?>.addEventListener('change', adjustprice<?=$purchase['id']?><?=$variant['id']?>);
-                                                                                cprice<?=$purchase['id']?><?=$variant['id']?>.addEventListener('change', adjustprice<?=$purchase['id']?><?=$variant['id']?>);
+                                                    cqty<?=$purchase['id']?><?=$detail['varid']?>.addEventListener('change', adjustprice<?=$purchase['id']?><?=$detail['varid']?>);
+                                                    cprice<?=$purchase['id']?><?=$detail['varid']?>.addEventListener('change', adjustprice<?=$purchase['id']?><?=$detail['varid']?>);
 
-                                                                                function adjustprice<?=$purchase['id']?><?=$variant['id']?>() {
-                                                                                    adjprice<?=$purchase['id']?><?=$variant['id']?>.innerHTML = Math.floor((<?= (Int)$oldstock['hargadasar'] * (Int)$stock['qty'] ?> + (cqty<?=$purchase['id']?><?=$variant['id']?>.value * cprice<?=$purchase['id']?><?=$variant['id']?>.value)) / (<?= $stock['qty'] ?> + cqty<?=$purchase['id']?><?=$variant['id']?>.value));
-                                                                                }
-                                                                            </script>
-                                                                        <?php }
-                                                                    }
-                                                                } ?>
-                                                            </td>
-                                                            <td id="csubtotal<?=$purchase['id']?><?=$variant['id']?>" class="uk-width-small csubvariant<?=$purchase['id']?>"><?= (Int)$purdet['price'] * (Int)$purdet['qty']; ?></td>
-                                                        </tr>
+                                                    function adjustprice<?=$purchase['id']?><?=$detail['varid']?>() {
+                                                        adjprice<?=$purchase['id']?><?=$detail['varid']?>.innerHTML = Math.floor((<?= (Int)$detail['hargaold'] * (Int)$detail['qty'] ?> + (cqty<?=$purchase['id']?><?=$detail['varid']?>.value * cprice<?=$purchase['id']?><?=$detail['varid']?>.value)) / (<?= $detail['qty'] ?> + cqty<?=$purchase['id']?><?=$detail['varid']?>.value));
+                                                    }
+                                                </script>
+                                            </td>
+                                            <td id="csubtotal<?=$purchase['id']?><?=$detail['varid']?>" class="uk-width-small csubvariant<?=$purchase['id']?>"><?= (Int)$detail['inputprice'] * (Int)$detail['inputqty']; ?></td>
+                                        </tr>
 
-                                                        <script type="text/javascript">
-                                                            var cqty<?=$purchase['id']?><?=$variant['id']?>         = document.getElementById('ctotalpcs[<?=$purchase['id']?>][<?=$variant['id']?>]');
-                                                            var cprice<?=$purchase['id']?><?=$variant['id']?>       = document.getElementById('cbprice[<?=$purchase['id']?>][<?=$variant['id']?>]');
-                                                            var csubtotal<?=$purchase['id']?><?=$variant['id']?>    = document.getElementById('csubtotal<?=$purchase['id']?><?=$variant['id']?>');
-                                                            
-                                                            cqty<?=$purchase['id']?><?=$variant['id']?>.addEventListener('change', ctotalprice<?=$purchase['id']?><?=$variant['id']?>);
-                                                            cprice<?=$purchase['id']?><?=$variant['id']?>.addEventListener('change', ctotalprice<?=$purchase['id']?><?=$variant['id']?>);
+                                        <script type="text/javascript">
+                                            var cqty<?=$purchase['id']?><?=$detail['varid']?>         = document.getElementById('ctotalpcs[<?=$purchase['id']?>][<?=$detail['varid']?>]');
+                                            var cprice<?=$purchase['id']?><?=$detail['varid']?>       = document.getElementById('cbprice[<?=$purchase['id']?>][<?=$detail['varid']?>]');
+                                            var csubtotal<?=$purchase['id']?><?=$detail['varid']?>    = document.getElementById('csubtotal<?=$purchase['id']?><?=$detail['varid']?>');
+                                            
+                                            cqty<?=$purchase['id']?><?=$detail['varid']?>.addEventListener('change', ctotalprice<?=$purchase['id']?><?=$detail['varid']?>);
+                                            cprice<?=$purchase['id']?><?=$detail['varid']?>.addEventListener('change', ctotalprice<?=$purchase['id']?><?=$detail['varid']?>);
 
-                                                            function ctotalprice<?=$purchase['id']?><?=$variant['id']?>() {
-                                                                csubtotal<?=$purchase['id']?><?=$variant['id']?>.innerHTML = cqty<?=$purchase['id']?><?=$variant['id']?>.value * cprice<?=$purchase['id']?><?=$variant['id']?>.value;
-                                                            }
-                                                        </script>
-                                                    <?php }
-                                                }
+                                            function ctotalprice<?=$purchase['id']?><?=$detail['varid']?>() {
+                                                csubtotal<?=$purchase['id']?><?=$detail['varid']?>.innerHTML = cqty<?=$purchase['id']?><?=$detail['varid']?>.value * cprice<?=$purchase['id']?><?=$detail['varid']?>.value;
                                             }
-                                        }
-                                    } ?>
+                                        </script>
+                                    <?php } ?>
                                 </tbody>
                             </table>
 
@@ -599,20 +576,12 @@ foreach ($purchases as $purchase) { ?>
 
                         <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.outlet')?></label>
-                            <?php foreach ($outlets as $outlet) { ?>
-                                <?php if ($outlet['id'] === $purchase['outletid']) { ?>
-                                    <div class="uk-form-controls"><?= $outlet['name'] ?></div>
-                                <?php } ?>
-                            <?php } ?>
+                            <div class="uk-form-controls"><?= $purchasedata[$purchase['id']]['outlet'] ?></div>
                         </div>
 
                         <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.employee')?></label>
-                            <?php foreach ($users as $user) { ?>
-                                <?php if ($user->id === $purchase['userid']) { ?>
-                                    <div class="uk-form-controls"><?= $user->name ?></div>
-                                <?php } ?>
-                            <?php } ?>
+                            <div class="uk-form-controls"><?= $purchasedata[$purchase['id']]['user'] ?></div>
                         </div>
                     </div>
 
@@ -635,70 +604,43 @@ foreach ($purchases as $purchase) { ?>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($purchasedetails as $purdet) { ?>
-                                    <?php if ($purchase['id'] === $purdet['purchaseid']) { ?>
-                                        <tr>
-                                            <?php foreach ($variants as $variant) {
-                                                if ($variant['id'] === $purdet['variantid']) {
-                                                    foreach ($products as $product) {
-                                                        if ($product['id'] === $variant['productid']) {
-                                                            $pName  = $product['name'];
-                                                            $vName  = $variant['name']; ?>
-
-                                                            <td><?= $pName; ?></td>
-                                                            <td><?= $vName; ?></td>
-                                                            <td><?= $purdet['qty']; ?> Pcs</td>
-                                                        <?php }
-                                                    }
-
-                                                    if ($purchase['status'] != "0") {
-                                                        foreach ($oldstocks as $oldstock) {
-                                                            if ($oldstock['variantid'] === $variant['id']) {
-                                                                $oldprice   = $oldstock['hargadasar'];
-                                                                $newprice   = $variant['hargadasar'];
-                                                                $diffprice  = (Int)$newprice - (Int)$oldprice; ?>
-                                                                <td>
-                                                                    <?= $oldprice ?>
-                                                                </td>
-                                                                <td>
-                                                                    <?= $newprice ?>
-                                                                </td>
-                                                                <td>
-                                                                    <?= $diffprice ?>
-                                                                </td>
-                                                            <?php }
-                                                        }
-                                                    }
-                                                }
-                                            } ?>
-                                                
-                                            <td><?= $purdet['price']; ?></td>
-                                            <td><?= (Int)$purdet['price'] * (Int)$purdet['qty']; ?></td>
-                                        </tr>
-                                    <?php } ?>
+                                <?php foreach ($purchasedata[$purchase['id']]['detail'] as $detail) { ?>
+                                    <tr>
+                                        <td><?= $detail['productname']; ?></td>
+                                        <td><?= $detail['variantname']; ?></td>
+                                        <td><?= $detail['inputqty']; ?> Pcs</td>
+                                        <?php if ($purchase['status'] != "0") {
+                                            $oldprice   = $detail['hargaold'];
+                                            $newprice   = $detail['hargadasar'];
+                                            $diffprice  = (Int)$newprice - (Int)$oldprice; ?>
+                                            <td>
+                                                <?= $oldprice ?>
+                                            </td>
+                                            <td>
+                                                <?= $newprice ?>
+                                            </td>
+                                            <td>
+                                                <?= $diffprice ?>
+                                            </td>
+                                        <?php } ?>
+                                            
+                                        <td><?= $detail['inputprice']; ?></td>
+                                        <td><?= (Int)$detail['inputprice'] * (Int)$detail['inputqty']; ?></td>
+                                    </tr>
                                 <?php } ?>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <?php
-                                    $arrayqty   = array();
-                                    $arrayprice = array();
-                                    foreach ($purchasedetails as $purdets) {
-                                        if ($purdets['purchaseid'] === $purchase['id']) {
-                                            $arrayqty[]     = $purdets['qty'];
-                                            $arrayprice[]   = (Int)$purdets['qty'] * (Int)$purdets['price'];
-                                        }
-                                    } ?>
                                     <td><?= lang('Global.totalPurchase'); ?></td>
                                     <td></td>
-                                    <td><?= array_sum($arrayqty); ?> Pcs</td>
+                                    <td><?= $totalqty; ?> Pcs</td>
                                     <td></td>
                                     <?php if ($purchase['status'] != "0") { ?>
                                         <td></td>
                                         <td></td>
                                         <td></td>
                                     <?php } ?>
-                                    <td><?= "Rp ".number_format(array_sum($arrayprice),0,',','.'); ?></td>
+                                    <td><?= "Rp ".number_format($totalprice,0,',','.'); ?></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -713,7 +655,7 @@ foreach ($purchases as $purchase) { ?>
 <!-- Modal Edit -->
 <?php foreach ($purchases as $purchase) {
     if ($purchase['status'] === "0") { ?>
-        <div uk-modal class="uk-flex-top" id="editdata<?= $purchase['id'] ?>">
+        <div uk-modal class="uk-flex-top uk-modal-container" id="editdata<?= $purchase['id'] ?>">
             <div class="uk-modal-dialog uk-margin-auto-vertical">
                 <div class="uk-modal-content">
                     <div class="uk-modal-header">
@@ -734,12 +676,8 @@ foreach ($purchases as $purchase) { ?>
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="supplier"><?=lang('Global.supplier')?></label>
                                 <div class="uk-form-controls">
-                                    <?php foreach ($suppliers as $supplier) { ?>
-                                        <?php if ($supplier['id'] === $purchase['supplierid']) { ?>
-                                            <input class="uk-input" id="suppliername<?= $purchase['id'] ?>" name="suppliername<?= $purchase['id'] ?>" value="<?= $supplier['name'] ?>" required>
-                                            <input id="supplierid<?= $purchase['id'] ?>" name="supplierid<?= $purchase['id'] ?>" value="<?= $supplier['id'] ?>" hidden>
-                                        <?php } ?>
-                                    <?php } ?>
+                                    <input class="uk-input" id="suppliername<?= $purchase['id'] ?>" name="suppliername<?= $purchase['id'] ?>" value="<?= $purchasedata[$purchase['id']]['supplier'] ?>" required>
+                                    <input id="supplierid<?= $purchase['id'] ?>" name="supplierid<?= $purchase['id'] ?>" value="<?= $purchasedata[$purchase['id']]['supplier'] ?>" hidden>
                                 </div>
                             </div>
 
@@ -940,50 +878,42 @@ foreach ($purchases as $purchase) { ?>
 
                             <?php
                             $tot[$purchase['id']] = array();
-                            foreach ($purchasedetails as $purdet) { ?>
-                                <?php if ($purchase['id'] === $purdet['purchaseid']) { ?>
-                                    <?php foreach ($variants as $variant) { ?>
-                                        <?php foreach ($products as $product) { ?>
-                                            <?php if (($variant['id'] === $purdet['variantid']) && ($variant['productid'] === $product['id'])) { ?>
-                                                <div id="eproduct<?=$purchase['id'].$variant['id']?>" class="uk-margin-small" uk-grid>
-                                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                                                        <div class=""><?= $product['name'].' - '.$variant['name'] ?></div>
-                                                    </div>
-                                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                                                        <input class="uk-input" type="number" id="totalpcs[<?=$purdet['id']?>]" name="totalpcs[<?=$purdet['id']?>]" value="<?= $purdet['qty'] ?>" required />
-                                                        <div class="uk-margin-small-left">Pcs</div>
-                                                    </div>
-                                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                                                        <input class="uk-input" type="number" id="bprice[<?=$purdet['id']?>]" name="bprice[<?=$purdet['id']?>]" value="<?= $purdet['price'] ?>" required />
-                                                    </div>
-                                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center subvariant<?= $purchase['id'] ?>" id="subtotal<?= $purdet['id'] ?>">
-                                                        <?= $purdet['price'] * $purdet['qty'] ?>
-                                                    </div>
-                                                </div>
+                            foreach ($purchasedata[$purchase['id']]['detail'] as $detailid => $detail) { ?>
+                                <div id="eproduct<?=$purchase['id'].$detail['varid']?>" class="uk-margin-small" uk-grid>
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                        <div class=""><?= $detail['name'] ?></div>
+                                    </div>
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                        <input class="uk-input" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" required />
+                                        <div class="uk-margin-small-left">Pcs</div>
+                                    </div>
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                        <input class="uk-input" type="number" id="bprice[<?=$detailid?>]" name="bprice[<?=$detailid?>]" value="<?= $detail['inputprice'] ?>" required />
+                                    </div>
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center subvariant<?= $purchase['id'] ?>" id="subtotal<?= $detailid ?>">
+                                        <?= (Int)$detail['inputprice'] * (Int)$detail['inputqty'] ?>
+                                    </div>
+                                </div>
 
-                                                <script type="text/javascript">
+                                <script type="text/javascript">
 
-                                                    var total<?= $purdet['id'] ?> = document.getElementById('totalpcs[<?=$purdet['id']?>]');
-                                                    var price<?= $purdet['id'] ?> = document.getElementById('bprice[<?=$purdet['id']?>]');
+                                    var total<?= $detailid ?> = document.getElementById('totalpcs[<?=$detailid?>]');
+                                    var price<?= $detailid ?> = document.getElementById('bprice[<?=$detailid?>]');
 
-                                                    total<?= $purdet['id'] ?>.addEventListener('change', totalprice<?= $purdet['id'] ?>);
-                                                    price<?= $purdet['id'] ?>.addEventListener('change', totalprice<?= $purdet['id'] ?>);
+                                    total<?= $detailid ?>.addEventListener('change', totalprice<?= $detailid ?>);
+                                    price<?= $detailid ?>.addEventListener('change', totalprice<?= $detailid ?>);
 
-                                                    function totalprice<?= $purdet['id'] ?>() {
-                                                        var subtotal = document.getElementById('subtotal<?= $purdet['id'] ?>');
-                                                        var varprice = price<?= $purdet['id'] ?>.value;
-                                                        var varqty = total<?= $purdet['id'] ?>.value;
-                                                        var subprice = varprice * varqty;
-                                                        subtotal.setAttribute('value', subprice);
-                                                        subtotal.innerHTML = subprice;
-                                                    }
-                                                </script>
-                                            <?php } ?>
-                                        <?php } ?>
-                                    <?php } ?>
-                                <?php } ?>
+                                    function totalprice<?= $detailid ?>() {
+                                        var subtotal = document.getElementById('subtotal<?= $detailid ?>');
+                                        var varprice = price<?= $detailid ?>.value;
+                                        var varqty = total<?= $detailid ?>.value;
+                                        var subprice = varprice * varqty;
+                                        subtotal.setAttribute('value', subprice);
+                                        subtotal.innerHTML = subprice;
+                                    }
+                                </script>
                             <?php
-                            $tot[$purchase['id']][] = $purdet['qty'] * $purdet['price'];
+                                $tot[$purchase['id']][] = (Int)$detail['inputqty'] * (Int)$detail['inputprice'];
                             }
                             $subtot[$purchase['id']] = array_sum($tot[$purchase['id']]);
                             ?>
