@@ -282,6 +282,18 @@
 
             <!-- Detail Debt -->
             <div>
+                <?php
+                    $debt[] = array();
+                    $debtdp[] = array();
+                    foreach ($trxdebtval as $trxdebtva) {
+                        if ($trxdebtva['value'] - $trxdebtva['amountpaid'] >= "0") {
+                            $debt[] = $trxdebtva['value'] - $trxdebtva['amountpaid'];
+                            $debtdp[] = $trxdebtva['amountpaid'];
+                        }
+                    }
+                    $debtsum = array_sum($debt);
+                    $debtdpsum = array_sum($debtdp);
+                ?>
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
@@ -302,15 +314,6 @@
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
                                     <div class="tm-h2">
-                                        <?php
-                                            $debt[] = array();
-                                            foreach ($trxdebtval as $trxdebtva) {
-                                                if ($trxdebtva['value'] - $trxdebtva['amountpaid'] >= "0") {
-                                                    $debt[] = $trxdebtva['value'] - $trxdebtva['amountpaid'];
-                                                }
-                                            }
-                                            $debtsum = array_sum($debt);
-                                        ?>
                                         Rp <?= number_format($debtsum,0,',','.') ?>
                                     </div>
                                 </div>
@@ -324,15 +327,6 @@
                                 </div>
                                 <div class="uk-margin-remove-top uk-text-bolder" style="color: #000;">
                                     <div class="tm-h2">
-                                        <?php
-                                            $debtdp[] = array();
-                                            foreach ($trxdebtval as $trxdebtva) {
-                                                if ($trxdebtva['value'] - $trxdebtva['amountpaid'] >= "0") {
-                                                    $debtdp[] =$trxdebtva['amountpaid'];
-                                                }
-                                            }
-                                            $debtdpsum = array_sum($debtdp);
-                                        ?>
                                         Rp <?= number_format($debtdpsum,0,',','.') ?>
                                     </div>
                                 </div>
@@ -440,7 +434,7 @@
                             </table>
                         </div>
                         <div class="uk-text-right uk-margin-top">
-                            <a class="uk-link-reset" href="<?= base_url('report/product') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                            <a class="uk-link-reset" href="<//?= base_url('report/product') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
                         </div>
                     </div>
                 </div>
@@ -458,30 +452,23 @@
                             <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                 <tbody>
                                     <?php $i = 1 ; ?>
-                                    <!-- <//?php if(!empty($top3paymet)){
-                                        //foreach ($top3paymet as $top3pay) {?>
+                                    <?php if(!empty($top3paymet)){
+                                        foreach ($top3paymet as $top3pay) {?>
                                             <tr>
-                                                <td><//?= $i++; ?></td>
-                                                <td><//?= $top3pay['name'] ?></td>
-                                                <td class="uk-text-right">Rp <//?= number_format($top3pay['value'],0,',','.') ?></td>
+                                                <td><?= $i++; ?></td>
+                                                <td><?= $top3pay['name'] ?></td>
+                                                <td class="uk-text-right">Rp <?= number_format($top3pay['value'],0,',','.') ?></td>
                                             </tr>
-                                        <//?php } 
+                                        <?php } 
                                     } else {
                                         foreach ($payments as $pay) { ?>
                                         <tr>
-                                            <td><//?= $i++; ?></td>
-                                            <td><//?= $pay['name'] ?></td>
+                                            <td><?= $i++; ?></td>
+                                            <td><?= $pay['name'] ?></td>
                                             <td class="uk-text-right">0</td>
                                         </tr>
-                                        <//?php }
-                                    } ?> -->
-                                    <?php foreach ($top3paymet as $top3pay) {?>
-                                        <tr>
-                                            <td><?= $i++; ?></td>
-                                            <td><?= $top3pay['name'] ?></td>
-                                            <td class="uk-text-right">Rp <?= number_format($top3pay['value'],0,',','.') ?></td>
-                                        </tr>
-                                    <?php } ?>
+                                        <?php }
+                                    } ?>
                                 </tbody>
                             </table>
                         </div>
@@ -549,13 +536,13 @@
             <!-- Outlook End -->
 
             <!-- Stock Cycle -->
-            <!-- <div>
+            <div>
                 <div class="uk-card uk-card-default uk-card-body">
                     <div class="uk-child-width-1-1" uk-grid>
                         <div>
                             <div class="uk-child-width-1-2" uk-grid id="descstockcycle">
                                 <div>
-                                    <div class="tm-h3" style="color: #000;"><//?= lang('Global.stockCycle') ?></div>
+                                    <div class="tm-h3" style="color: #000;"><?= lang('Global.stockCycle') ?></div>
                                 </div>
                                 <div class="uk-padding-remove uk-inline uk-text-right">
                                     <button uk-icon="question"></button>
@@ -566,7 +553,7 @@
                         <div class="uk-margin-small-top">
                             <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                 <tbody>
-                                    <//?php foreach ($stocks as $stock) { 
+                                    <?php foreach ($stocks as $stock) { 
                                         $today      = $stock['restock'];
                                         $date       = date_create($today);
                                         $now        = date_create();
@@ -588,7 +575,7 @@
                                             if ($formatday >= 0) { ?>
                                                 <tr>
                                                     <td>
-                                                        <//?php foreach ($variants as $variant) {
+                                                        <?php foreach ($variants as $variant) {
                                                             foreach ($products as $product){
                                                                 if ($variant['id'] === $stock['variantid']) {
                                                                     if ($variant['productid'] === $product['id']) {
@@ -598,14 +585,14 @@
                                                             }
                                                         } ?>
                                                     </td>
-                                                    <td><//?= $formatday.' '.lang('Global.pastday') ?></td>
+                                                    <td><?= $formatday.' '.lang('Global.pastday') ?></td>
                                                 </tr>
-                                            <//?php }
+                                            <?php }
                                         } elseif ($intervals = "30") {
                                             if ($formatday >= 0) { ?>
                                                 <tr>
                                                     <td>
-                                                        <//?php foreach ($variants as $variant) {
+                                                        <?php foreach ($variants as $variant) {
                                                             foreach ($products as $product) {
                                                                 if ($variant['id'] === $stock['variantid']) {
                                                                     if ($variant['productid'] === $product['id']) {
@@ -615,20 +602,20 @@
                                                             }
                                                         } ?>
                                                     </td>
-                                                    <td><//?= $formatday.' '.lang('Global.pastday'); ?></td>
+                                                    <td><?= $formatday.' '.lang('Global.pastday'); ?></td>
                                                 </tr>
-                                            <//?php }
+                                            <?php }
                                         } 
                                     } ?>
                                 </tbody>
                             </table>
                         </div>
                         <div class="uk-text-right uk-margin-top">
-                            <a class="uk-link-reset" href="<//?= base_url('stock/stockcycle') ?>" style="color: #f0506e !important;"><//?= lang('Global.seedetails') ?></a>
+                            <a class="uk-link-reset" href="<?= base_url('stock/stockcycle') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
             <!-- Stock Cycle End -->
         </div>
     </div>
