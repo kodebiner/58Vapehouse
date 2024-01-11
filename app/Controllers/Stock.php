@@ -277,56 +277,60 @@ class Stock extends BaseController
                 $purchasedata[$purchase['id']]['date']      = $purchase['date'];
                 $purchasedata[$purchase['id']]['status']    = $purchase['status'];
 
-                foreach ($purchasedetails as $purdet) {
-                    $purchasevariants           = $VariantModel->find($purdet['variantid']);
-
-                    if (!empty($purchasevariants)) {
-                        $hargadasar             = $purchasevariants['hargadasar'];
-                        $purchaseproducts       = $ProductModel->find($purchasevariants['productid']);
-                        $purchaseoldstocks      = $OldStockModel->where('variantid', $purchasevariants['id'])->first();
-                        $purchasestocks         = $StockModel->where('variantid', $purchasevariants['id'])->where('outletid', $purchase['outletid'])->first();
-
-                        $varid      = $purchasevariants['id'];
-                        $variants   = $purchasevariants['name'];
-
-                        if (!empty($purchaseproducts)) {
-                            $product = $purchaseproducts['name'];
+                if (!empty($purchasedetails)) {
+                    foreach ($purchasedetails as $purdet) {
+                        $purchasevariants           = $VariantModel->find($purdet['variantid']);
+    
+                        if (!empty($purchasevariants)) {
+                            $hargadasar             = $purchasevariants['hargadasar'];
+                            $purchaseproducts       = $ProductModel->find($purchasevariants['productid']);
+                            $purchaseoldstocks      = $OldStockModel->where('variantid', $purchasevariants['id'])->first();
+                            $purchasestocks         = $StockModel->where('variantid', $purchasevariants['id'])->where('outletid', $purchase['outletid'])->first();
+    
+                            $varid      = $purchasevariants['id'];
+                            $variants   = $purchasevariants['name'];
+    
+                            if (!empty($purchaseproducts)) {
+                                $product = $purchaseproducts['name'];
+                            } else {
+                                $product = '';
+                            }
+    
+                            if (!empty($purchaseoldstocks)) {
+                                $hargaold = $purchaseoldstocks['hargadasar'];
+                            } else {
+                                $hargaold = '';
+                            }
+    
+                            if (!empty($purchasestocks)) {
+                                $qty = $purchasestocks['qty'];
+                            } else {
+                                $qty = '';
+                            }
                         } else {
-                            $product = '';
+                            $varid      = '';
+                            $variants   = '';
+                            $product    = '';
+                            $hargadasar = '';
+                            $hargaold   = '';
+                            $qty        = '';
                         }
-
-                        if (!empty($purchaseoldstocks)) {
-                            $hargaold = $purchaseoldstocks['hargadasar'];
-                        } else {
-                            $hargaold = '';
-                        }
-
-                        if (!empty($purchasestocks)) {
-                            $qty = $purchasestocks['qty'];
-                        } else {
-                            $qty = '';
-                        }
-                    } else {
-                        $varid      = '';
-                        $variants   = '';
-                        $product    = '';
-                        $hargadasar = '';
-                        $hargaold   = '';
-                        $qty        = '';
+    
+                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['name']         = $product.' - '.$variants;
+                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['productname']  = $product;
+                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['variantname']  = $variants;
+                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['varid']        = $varid;
+                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['hargadasar']   = $hargadasar;
+                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['hargaold']     = $hargaold;
+                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['qty']          = $qty;
+                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['inputqty']     = $purdet['qty'];
+                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['inputprice']   = $purdet['price'];
+    
+                        $arrayqty[]     = $purdet['qty'];
+                        $arrayprice[]   = (Int)$purdet['qty'] * (Int)$purdet['price'];
                     }
-
-                    $purchasedata[$purchase['id']]['detail'][$purdet['id']]['name']         = $product.' - '.$variants;
-                    $purchasedata[$purchase['id']]['detail'][$purdet['id']]['productname']  = $product;
-                    $purchasedata[$purchase['id']]['detail'][$purdet['id']]['variantname']  = $variants;
-                    $purchasedata[$purchase['id']]['detail'][$purdet['id']]['varid']        = $varid;
-                    $purchasedata[$purchase['id']]['detail'][$purdet['id']]['hargadasar']   = $hargadasar;
-                    $purchasedata[$purchase['id']]['detail'][$purdet['id']]['hargaold']     = $hargaold;
-                    $purchasedata[$purchase['id']]['detail'][$purdet['id']]['qty']          = $qty;
-                    $purchasedata[$purchase['id']]['detail'][$purdet['id']]['inputqty']     = $purdet['qty'];
-                    $purchasedata[$purchase['id']]['detail'][$purdet['id']]['inputprice']   = $purdet['price'];
-
-                    $arrayqty[]     = $purdet['qty'];
-                    $arrayprice[]   = (Int)$purdet['qty'] * (Int)$purdet['price'];
+                } else {
+                    $purchasedata[$purchase['id']]['detail']   = array();
                 }
             }
         } else {
