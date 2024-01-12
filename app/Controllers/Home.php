@@ -73,7 +73,6 @@ class Home extends BaseController
         }
 
         $today          = date('Y-m-d');
-        $tomorrow       = date('Y-m-d', strtotime('+1 day'));
         $month          = date('Y-m-t');
 
         if ($this->data['outletPick'] === null) {
@@ -81,20 +80,17 @@ class Home extends BaseController
                 if ($startdate === $enddate) {
                     $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
                     $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
-                    $purchase       = $PurchaseModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
                 } else {
                     $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
                     $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->find();
-                    $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
                 }
             } else {
                 $transactions   = $TransactionModel->findAll();
                 $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->find();
-                $purchase       = $PurchaseModel->findAll();
             }
 
-            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today)->where('date <=', $tomorrow)->find();
-            $trxtodays      = $TransactionModel->where('date >=', $today)->where('date <=', $tomorrow)->find();
+            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
+            $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
             $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->findAll();
             $payments       = $PaymentModel->findAll();
         } else {
@@ -102,20 +98,17 @@ class Home extends BaseController
                 if ($startdate === $enddate) {
                     $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
                     $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                    $purchase       = $PurchaseModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
                 } else {
                     $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
                     $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-                    $purchase       = $PurchaseModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
                 }
             } else {
                 $transactions   = $TransactionModel->where('outletid', $this->data['outletPick'])->find();
                 $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->find();
-                $purchase       = $PurchaseModel->where('outletid', $this->data['outletPick'])->find();
             }
 
-            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today)->where('date <=', $tomorrow)->where('outletid', $this->data['outletPick'])->find();
-            $trxtodays      = $TransactionModel->where('date >=', $today)->where('date <=', $tomorrow)->where('outletid', $this->data['outletPick'])->find();
+            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->find();
             $payments       = $PaymentModel->whereIn('outletid', array('0', $this->data['outletPick']))->find();
         }
