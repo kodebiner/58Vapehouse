@@ -58,7 +58,7 @@
             <tr>
                 <td style="color:white;"><?=$employe['name']?></td>
                 <td class="uk-text-center" style="color:white;"><?=$employe['role']?></td>
-                <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($employe['value'],2,',','.');" ";?></td>
+                <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($employe['value'],0,',','.');" ";?></td>
             </tr>
         <?php } ?>
     </tbody>

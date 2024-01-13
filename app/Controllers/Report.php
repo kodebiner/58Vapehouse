@@ -946,12 +946,16 @@ class Report extends BaseController
             }
         }
 
+        $val = array_sum(array_column($useradm,'value'));
+        // dd($val);
+        // dd($useradm);
+
         $produk = [];
-        foreach ($useradm as $vars) {
-            if (!isset($produk[$vars['id'] . $vars['role']])) {
-                $produk[$vars['id'] . $vars['name'] . $vars['role']] = $vars;
+        foreach ($useradm as $username) {
+            if (!isset($produk[$username['id']])) {
+                $produk[$username['id']] = $username;
             } else {
-                $produk[$vars['id'] . $vars['name'] . $vars['role']]['value'] += $vars['value'];
+                $produk[$username['id']]['value'] += $username['value'];
             }
         }
         $produk = array_values($produk);
