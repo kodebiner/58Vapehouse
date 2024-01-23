@@ -144,84 +144,146 @@ class Home extends BaseController
                 'discvalue' => $transaction['discvalue'],
             ];
             $id[] = $transaction['id'];
-        }
 
-        // Finding Data
-        $trxdetails     = $TrxdetailModel->whereIn('transactionid', $id)->find();
-        $trxpayments    = $TrxpaymentModel->whereIn('transactionid', $id)->find();
-        $debts          = $DebtModel->whereIn('transactionid', $id)->find();
+            // Finding Data
+            $debtsdata          = $DebtModel->where('transactionid', $transaction['id'])->find();
+            $trxdetailsdata     = $TrxdetailModel->where('transactionid', $transaction['id'])->find();
+            $trxpaymentsdata    = $TrxpaymentModel->where('transactionid', $transaction['id'])->find();
 
-        // Trxdetail Array
-        foreach ($trxdetails as $trxdet) {
-            // Discount Total
-            $subtotals = (Int)$trxdet['qty'] * (Int)$trxdet['value'];
-            $discvar[] = $trxdet['discvar'];
+            // Debt Total $ Total Debt Customer & Down Payment
+            foreach ($debtsdata as $debt) {
+                $transactiondata[$transaction['id']]['debt'][$debt['id']]['value']      = $debt['value'];
+                $transactiondata[$transaction['id']]['debt'][$debt['id']]['customer']   = $MemberModel->find($debt['memberid']);
 
-            if ($transaction['disctype'] === "0") {
-                $discval[] = $transaction['discvalue'];
-            } else {
-                $discval[] = (int)$subtotals * ((int)$transaction['discvalue'] / 100);
+                if ($transaction['amountpaid'] != 0) {
+                    $transactiondata[$transaction['id']]['debt'][$debt['id']]['dp']     = $transaction['amountpaid'];
+                }
             }
 
-            // Best seller 
-            $bestssell[] = [
-                'variantid' => $trxdet['variantid'],
-                'bundleid'  => $trxdet['bundleid'],
-                'qty'       => $trxdet['qty'],
+            // Trxdetail Array
+            foreach ($trxdetailsdata as $trxdet) {
+                // Transaction Margin Modal
+                $transactiondata[$transaction['id']]['detail'][$trxdet['id']]['marginmodal']    = (Int)$trxdet['marginmodal'] * (Int)$trxdet['qty'];
+
+                // Transaction Margin Dasar
+                $transactiondata[$transaction['id']]['detail'][$trxdet['id']]['margindasar']    = (Int)$trxdet['margindasar'] * (Int)$trxdet['qty'];
+
+                // Transaction Qty
+                $transactiondata[$transaction['id']]['detail'][$trxdet['id']]['qty']            = (Int)$trxdet['qty'];
+    
+                // Transaction Discount Variant
+                $discvar[]      = $trxdet['discvar'];
+
+                // Transaction Discount
+                $subtotals      = (Int)$trxdet['qty'] * (Int)$trxdet['value'];
+                if ($transaction['disctype'] === "0") {
+                    $discval[]  = $transaction['discvalue'];
+                } else {
+                    $discval[]  = (int)$subtotals * ((int)$transaction['discvalue'] / 100);
+                }
+    
+                // Best seller 
+                $bestssell[] = [
+                    'variantid' => $trxdet['variantid'],
+                    'bundleid'  => $trxdet['bundleid'],
+                    'qty'       => $trxdet['qty'],
+                ];
+
+                // Data Variant
+                $variantsdata       = $VariantModel->find($trxdet['variantid']);
+
+                if (!empty($variantsdata)) {
+                    $varid          = $variantsdata['id'];
+                    $varname        = $variantsdata['name'];
+                    $productsdata   = $ProductModel->find($variantsdata['productid']);
+
+                    if (!empty($productsdata)) {
+                        $prodname   = $productsdata['name'];
+                    } else {
+                        $prodname   = '';
+                    }
+                } else {
+                    $varname        = '';
+                }
+
+                // Data Bundle
+                $bundlesdata    = $BundleModel->find($trxdet['bundleid']);
+
+                if (!empty($bundlesdata)) {
+                    $bundleid       = $bundlesdata['id'];
+                    $bundlename     = $bundlesdata['name'];
+                } else {
+                    $bundleid       = '';
+                    $bundlename     = '';
+                }
+
+                // Best Selling Product
+                if ($trxdet['variantid'] != 0) {
+                    $bestid     = $varid;
+                    $name       = $prodname.' - '.$varname;
+                } else {
+                    $bestid     = $bundleid;
+                    $name       = $bundlename;
+                }
+
+                // LAST UPDATE HERE
+                $transactiondata[$transaction['id']]['product']    = [
+                    'id'        => $bestid,
+                    'name'      => $name,
+                    'qty'       => $trxdet['qty'],
+                ];
+
+                $bestseller = [];
+                foreach ($bestssell as $best) {
+                    if (!isset($bestseller[$best['variantid']])) {
+                        $bestseller[$best['variantid']] = $best;
+                    } else {
+                        $bestseller[$best['variantid']]['qty'] += $best['qty'];
+                    }
+                }
+                $bestseller = array_values($bestseller);
+                array_multisort(array_column($bestseller, 'qty'), SORT_DESC, $bestseller);
+                $best3      = array_slice($bestseller, 0, 3);
+            }
+    
+            $discvarsum = array_sum($discvar);
+            $discvalsum = array_sum($discval);
+            $transactiondata[$transaction['id']]['totaldisc']   = (Int)$discvalsum + (Int)$discvarsum;
+            $trxamount  = count($id);
+    
+            $marginmodalsum = array_sum($marginmodals);
+            $margindasarsum = array_sum($margindasars);
+            $summary        = array_sum(array_column($sales, 'value'));
+    
+            $transactions[] = [
+                'value'     => $summary,
+                'modal'     => $marginmodalsum,
+                'dasar'     => $margindasarsum,
             ];
-
-            // Sales Profit
-            $marginmodal    = (Int)$trxdet['marginmodal'] * (Int)$trxdet['qty'];
-            $margindasar    = (Int)$trxdet['margindasar'] * (Int)$trxdet['qty'];
-            $qtytrx[]       = (Int)$trxdet['qty'];
-            $marginmodals[] = $marginmodal;
-            $margindasars[] = $margindasar;
-        }
-
-        foreach ($trxpayments as $trxpay) {
-            foreach ($payments as $pay) {
-                if (($trxpay['paymentid'] === $pay['id']) && $trxpay['paymentid'] !== "0") {
-                    $bestpay[] = [
-                        'id'    => $pay['id'],
-                        'name'  => $pay['name'],
-                        'qty'   => "1",
-                        'value' =>  $trxpay['value'],
-                    ];
+    
+            $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
+    
+            // Products Sales
+            $qtytrxsum      = array_sum($qtytrx);
+    
+            // Sales Details
+            $pointusedsum   = array_sum(array_column($sales, 'pointused'));
+            $gross          = $summary + $pointusedsum + $transactiondata[$transaction['id']]['totaldisc'];
+    
+            foreach ($trxpaymentsdata as $trxpay) {
+                foreach ($payments as $pay) {
+                    if (($trxpay['paymentid'] === $pay['id']) && $trxpay['paymentid'] !== "0") {
+                        $bestpay[] = [
+                            'id'    => $pay['id'],
+                            'name'  => $pay['name'],
+                            'qty'   => "1",
+                            'value' =>  $trxpay['value'],
+                        ];
+                    }
                 }
             }
         }
-
-        // Debt Total $ Total Debt Customer & Down Payment
-        $memberid = array();
-        foreach ($debts as $debt) {
-            $trxdebtval[]   = $debt['value'];
-            $memberid[]     = $debt['memberid'];
-        }
-        $customers      = $MemberModel->find($memberid);
-
-        $discvarsum = array_sum($discvar);
-        $discvalsum = array_sum($discval);
-        $totaldisc  = $discvalsum + $discvarsum;
-        $trxamount  = count($id);
-
-        $marginmodalsum = array_sum($marginmodals);
-        $margindasarsum = array_sum($margindasars);
-        $summary        = array_sum(array_column($sales, 'value'));
-
-        $transactions[] = [
-            'value'     => $summary,
-            'modal'     => $marginmodalsum,
-            'dasar'     => $margindasarsum,
-        ];
-
-        $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
-
-        // Products Sales
-        $qtytrxsum      = array_sum($qtytrx);
-
-        // Sales Details
-        $pointusedsum   = array_sum(array_column($sales, 'pointused'));
-        $gross          = $summary + $pointusedsum + $totaldisc;
+        dd($transactiondata);
 
         // Cashin Cash Out
         $cashin     = [];
@@ -333,25 +395,6 @@ class Home extends BaseController
         array_multisort(array_column($bestpayment, 'value'), SORT_DESC, $bestpayment);
         $bestpay3       = array_slice($bestpayment, 0, 3);
 
-        $bestseller = [];
-        foreach ($bestssell as $best) {
-            if (!isset($bestseller[$best['variantid']])) {
-                $bestseller[$best['variantid']] = $best;
-            } else {
-                $bestseller[$best['variantid']]['qty'] += $best['qty'];
-            }
-        }
-        $bestseller = array_values($bestseller);
-        array_multisort(array_column($bestseller, 'qty'), SORT_DESC, $bestseller);
-        $best3      = array_slice($bestseller, 0, 3);
-
-        $customerdebt = array();
-        foreach ($custdebt as $cusdeb) {
-            if (!isset($customerdebt[$cusdeb['memberid']])) {
-                $customerdebt[$cusdeb['memberid']] = $cusdeb;
-            }
-        }
-
         $data                   = $this->data;
         $data['title']          = lang('Global.dashboard');
         $data['description']    = lang('Global.dashdesc');
@@ -364,20 +407,16 @@ class Home extends BaseController
         $data['trxamount']      = $trxamount;
         $data['qtytrxsum']      = $qtytrxsum;
         $data['pointusedsum']   = $pointusedsum;
-        $data['totaldisc']      = $totaldisc;
         $data['gross']          = $gross;
         $data['cashinsum']      = $cashinsum;
         $data['cashoutsum']     = $cashoutsum;
         $data['top3prod']       = $best3;
         $data['top3paymet']     = $bestpay3;
-        $data['customers']      = $customers;
         $data['stocks']         = $stok;
         $data['average']        = (int)$saleaverage;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
         $data['trxdebtval']     = array_sum($trxdebtval);
-        $data['debts']          = $debts;
-        $data['totalcustdebt']  = count($customers);
         $data['averagedays']    = $resultaveragedays;
         $data['bussyday']       = $day;
         $data['bussytime']      = $busy;
