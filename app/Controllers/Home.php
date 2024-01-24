@@ -152,29 +152,29 @@ class Home extends BaseController
 
             // Debt Total $ Total Debt Customer & Down Payment
             foreach ($debtsdata as $debt) {
-                $transactiondata[$transaction['id']]['debt'][$debt['id']]['value']      = $debt['value'];
-                $transactiondata[$transaction['id']]['debt'][$debt['id']]['customer']   = $MemberModel->find($debt['memberid']);
+                $transactiondata['trx'][$transaction['id']]['debt'][$debt['id']]['value']      = $debt['value'];
+                $transactiondata['trx'][$transaction['id']]['debt'][$debt['id']]['customer']   = $MemberModel->find($debt['memberid']);
 
                 if ($transaction['amountpaid'] != 0) {
-                    $transactiondata[$transaction['id']]['debt'][$debt['id']]['dp']     = $transaction['amountpaid'];
+                    $transactiondata['trx'][$transaction['id']]['debt'][$debt['id']]['dp']     = $transaction['amountpaid'];
                 }
             }
 
             // Trxdetail Array
             foreach ($trxdetailsdata as $trxdet) {
                 // Transaction Margin Modal
-                $transactiondata[$transaction['id']]['detail'][$trxdet['id']]['marginmodal']    = (Int)$trxdet['marginmodal'] * (Int)$trxdet['qty'];
+                $transactiondata['trx'][$transaction['id']]['detail'][$trxdet['id']]['marginmodal']    = (Int)$trxdet['marginmodal'] * (Int)$trxdet['qty'];
 
                 // Transaction Margin Dasar
-                $transactiondata[$transaction['id']]['detail'][$trxdet['id']]['margindasar']    = (Int)$trxdet['margindasar'] * (Int)$trxdet['qty'];
+                $transactiondata['trx'][$transaction['id']]['detail'][$trxdet['id']]['margindasar']    = (Int)$trxdet['margindasar'] * (Int)$trxdet['qty'];
 
                 // Transaction Qty
-                $transactiondata[$transaction['id']]['detail'][$trxdet['id']]['qty']            = (Int)$trxdet['qty'];
+                $transactiondata['trx'][$transaction['id']]['detail'][$trxdet['id']]['qty']            = (Int)$trxdet['qty'];
     
                 // Transaction Discount Variant
                 $discvar[]      = $trxdet['discvar'];
 
-                // Transaction Discount
+                // Subtotal
                 $subtotals      = (Int)$trxdet['qty'] * (Int)$trxdet['value'];
                 if ($transaction['disctype'] === "0") {
                     $discval[]  = $transaction['discvalue'];
@@ -226,33 +226,46 @@ class Home extends BaseController
                     $name       = $bundlename;
                 }
 
-                // LAST UPDATE HERE
-                $transactiondata[$transaction['id']]['product']    = [
+                // Product Data For Best Selling
+                $dataproduct[]    = [
                     'id'        => $bestid,
                     'name'      => $name,
                     'qty'       => $trxdet['qty'],
                 ];
-
-                $bestseller = [];
-                foreach ($bestssell as $best) {
-                    if (!isset($bestseller[$best['variantid']])) {
-                        $bestseller[$best['variantid']] = $best;
-                    } else {
-                        $bestseller[$best['variantid']]['qty'] += $best['qty'];
-                    }
-                }
-                $bestseller = array_values($bestseller);
-                array_multisort(array_column($bestseller, 'qty'), SORT_DESC, $bestseller);
-                $best3      = array_slice($bestseller, 0, 3);
             }
+
+            // Top 3 Product Sell
+            $bestseller = [];
+            foreach ($dataproduct as $product) {
+                if (!isset($bestseller[$product['id']])) {
+                    $bestseller[$product['id']] = $product;
+                } else {
+                    $bestseller[$product['id']]['qty'] += $product['qty'];
+                }
+            }
+            $bestseller = array_values($bestseller);
+            array_multisort(array_column($bestseller, 'qty'), SORT_DESC, $bestseller);
+            $transactiondata['bestsell'] = array_slice($bestseller, 0, 3);
     
+            // Transaction Discount Variant
             $discvarsum = array_sum($discvar);
+
+            // Transaction Discount Trx
             $discvalsum = array_sum($discval);
-            $transactiondata[$transaction['id']]['totaldisc']   = (Int)$discvalsum + (Int)$discvarsum;
-            $trxamount  = count($id);
+
+            // Total Discount
+            $transactiondata['totaldisc']   = (Int)$discvalsum + (Int)$discvarsum;
+
+            // Total Transaction
+            $transactiondata['totaltrx']    = count($id);
     
+            // Total Margin Modal
             $marginmodalsum = array_sum($marginmodals);
+
+            // Total Margin Dasar
             $margindasarsum = array_sum($margindasars);
+
+            // Total Sales
             $summary        = array_sum(array_column($sales, 'value'));
     
             $transactions[] = [
@@ -268,7 +281,7 @@ class Home extends BaseController
     
             // Sales Details
             $pointusedsum   = array_sum(array_column($sales, 'pointused'));
-            $gross          = $summary + $pointusedsum + $transactiondata[$transaction['id']]['totaldisc'];
+            $transactiondata['gross']   = $summary + $pointusedsum + $transactiondata['totaldisc'];
     
             foreach ($trxpaymentsdata as $trxpay) {
                 foreach ($payments as $pay) {
