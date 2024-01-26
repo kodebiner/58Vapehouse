@@ -79,28 +79,30 @@ class Home extends BaseController
             if ($startdate === $enddate) {
                 $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
                 $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
+                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
+                $trxtodays      = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
             } else {
                 $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
                 $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->find();
+                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
+                $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
             }
 
-            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
-            $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
             $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->findAll();
-            $payments       = $PaymentModel->findAll();
         } else {
             if ($startdate === $enddate) {
                 $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
                 $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                $trxtodays      = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             } else {
                 $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
                 $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             }
 
-            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-            $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->find();
-            $payments       = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
         }
 
         // Stock Cycle
@@ -109,32 +111,21 @@ class Home extends BaseController
 
         // Sales Value
         $sales = array();
-        $id = [];
-
-        // Discount
-        $discvar    = array();
-        $discval    = array();
-        $trxsid     = array();
-
-        // bestseller array
-        $bestssell  = array();
-        $bestpay    = array();
-        
-        // Debt Total
-        $trxdebtval = array();
-        
-        // Customer Debt
-        $custdebt = array();
-
-        // Sales Profit
-        $qtytrx = array();
-        $marginmodals = array();
-        $margindasars = array();
 
         // Transaction Data
         $transactiondata    = array();
+        $discount           = array();
+        $debtvalue          = array();
+        $downpayment        = array();
+        $totalmember        = array();
+        $trxvalue           = array();
+        $pointused          = array();
+        $marginmodal        = array();
+        $bestproduct        = array();
+        $productsale        = array();
+        $bestpayment        = array();
+
         foreach ($transactions as $transaction) {
-            // Transaction Data Array
             $sales[] = [
                 'id'        => $transaction['id'],
                 'date'      => $transaction['date'],
@@ -143,51 +134,50 @@ class Home extends BaseController
                 'disctype'  => $transaction['disctype'],
                 'discvalue' => $transaction['discvalue'],
             ];
-            $id[] = $transaction['id'];
+
+            // Transaction Value Array
+            $trxvalue[]         = $transaction['value'];
+
+            // Transaction Point Used Array
+            $pointused[]        = $transaction['pointused'];
+
+            // Discount Transaction
+            if (!empty($transaction['discvalue'])) {
+                if ($transaction['disctype'] == "0") {
+                    $discount[]  = $transaction['discvalue'];
+                } else {
+                    $discount[]  = (int)$transaction['value'] * ((int)$transaction['discvalue'] / 100);
+                }
+            }
 
             // Finding Data
             $debtsdata          = $DebtModel->where('transactionid', $transaction['id'])->find();
             $trxdetailsdata     = $TrxdetailModel->where('transactionid', $transaction['id'])->find();
-            $trxpaymentsdata    = $TrxpaymentModel->where('transactionid', $transaction['id'])->find();
+            $trxpaymentsdata    = $TrxpaymentModel->where('transactionid', $transaction['id'])->where('paymentid !=', '0')->find();
 
             // Debt Total $ Total Debt Customer & Down Payment
             foreach ($debtsdata as $debt) {
-                $transactiondata['trx'][$transaction['id']]['debt'][$debt['id']]['value']      = $debt['value'];
-                $transactiondata['trx'][$transaction['id']]['debt'][$debt['id']]['customer']   = $MemberModel->find($debt['memberid']);
+                // Debt Value
+                $debtvalue[]        = $debt['value'];
 
+                // Down Payment
                 if ($transaction['amountpaid'] != 0) {
-                    $transactiondata['trx'][$transaction['id']]['debt'][$debt['id']]['dp']     = $transaction['amountpaid'];
+                    $downpayment[]  = $transaction['amountpaid'];
                 }
+
+                // Debt Member
+                $totalmember[]      = $MemberModel->find($debt['memberid']);
             }
 
             // Trxdetail Array
             foreach ($trxdetailsdata as $trxdet) {
-                // Transaction Margin Modal
-                $transactiondata['trx'][$transaction['id']]['detail'][$trxdet['id']]['marginmodal']    = (Int)$trxdet['marginmodal'] * (Int)$trxdet['qty'];
-
-                // Transaction Margin Dasar
-                $transactiondata['trx'][$transaction['id']]['detail'][$trxdet['id']]['margindasar']    = (Int)$trxdet['margindasar'] * (Int)$trxdet['qty'];
-
-                // Transaction Qty
-                $transactiondata['trx'][$transaction['id']]['detail'][$trxdet['id']]['qty']            = (Int)$trxdet['qty'];
+                // Transaction Detail Margin Modal
+                $marginmodal[]      = (Int)$trxdet['marginmodal'] * (Int)$trxdet['qty'];
     
-                // Transaction Discount Variant
-                $discvar[]      = $trxdet['discvar'];
-
-                // Subtotal
-                $subtotals      = (Int)$trxdet['qty'] * (Int)$trxdet['value'];
-                if ($transaction['disctype'] === "0") {
-                    $discval[]  = $transaction['discvalue'];
-                } else {
-                    $discval[]  = (int)$subtotals * ((int)$transaction['discvalue'] / 100);
+                // Transaction Detail Discount Variant
+                if ($trxdet['discvar'] != 0) {
+                    $discount[]     = $trxdet['discvar'];
                 }
-    
-                // Best seller 
-                $bestssell[] = [
-                    'variantid' => $trxdet['variantid'],
-                    'bundleid'  => $trxdet['bundleid'],
-                    'qty'       => $trxdet['qty'],
-                ];
 
                 // Data Variant
                 $variantsdata       = $VariantModel->find($trxdet['variantid']);
@@ -227,75 +217,80 @@ class Home extends BaseController
                 }
 
                 // Product Data For Best Selling
-                $dataproduct[]    = [
+                $bestproduct[]    = [
                     'id'        => $bestid,
                     'name'      => $name,
                     'qty'       => $trxdet['qty'],
                 ];
             }
-
-            // Top 3 Product Sell
-            $bestseller = [];
-            foreach ($dataproduct as $product) {
-                if (!isset($bestseller[$product['id']])) {
-                    $bestseller[$product['id']] = $product;
-                } else {
-                    $bestseller[$product['id']]['qty'] += $product['qty'];
-                }
-            }
-            $bestseller = array_values($bestseller);
-            array_multisort(array_column($bestseller, 'qty'), SORT_DESC, $bestseller);
-            $transactiondata['bestsell'] = array_slice($bestseller, 0, 3);
-    
-            // Transaction Discount Variant
-            $discvarsum = array_sum($discvar);
-
-            // Transaction Discount Trx
-            $discvalsum = array_sum($discval);
-
-            // Total Discount
-            $transactiondata['totaldisc']   = (Int)$discvalsum + (Int)$discvarsum;
-
-            // Total Transaction
-            $transactiondata['totaltrx']    = count($id);
-    
-            // Total Margin Modal
-            $marginmodalsum = array_sum($marginmodals);
-
-            // Total Margin Dasar
-            $margindasarsum = array_sum($margindasars);
-
-            // Total Sales
-            $summary        = array_sum(array_column($sales, 'value'));
-    
-            $transactions[] = [
-                'value'     => $summary,
-                'modal'     => $marginmodalsum,
-                'dasar'     => $margindasarsum,
-            ];
-    
-            $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
     
             // Products Sales
-            $qtytrxsum      = array_sum($qtytrx);
-    
-            // Sales Details
-            $pointusedsum   = array_sum(array_column($sales, 'pointused'));
-            $transactiondata['gross']   = $summary + $pointusedsum + $transactiondata['totaldisc'];
+            $productsale[]      = $trxdet['qty'];
     
             foreach ($trxpaymentsdata as $trxpay) {
-                foreach ($payments as $pay) {
-                    if (($trxpay['paymentid'] === $pay['id']) && $trxpay['paymentid'] !== "0") {
-                        $bestpay[] = [
-                            'id'    => $pay['id'],
-                            'name'  => $pay['name'],
-                            'qty'   => "1",
-                            'value' =>  $trxpay['value'],
-                        ];
-                    }
-                }
+                $payments           = $PaymentModel->find($trxpay['paymentid']);
+                $bestpayment[] = [
+                    'id'    => $payments['id'],
+                    'name'  => $payments['name'],
+                    'value' => $trxpay['value'],
+                ];
             }
         }
+
+        // Total Transaction
+        $transactiondata['totaltrx']        = count($transactions);
+
+        // Total Transaction Value
+        $transactiondata['totaltrxvalue']   = array_sum($trxvalue);
+
+        // Total Point Used
+        $transactiondata['totalpointused']  = array_sum($pointused);
+
+        // Total Discount
+        $transactiondata['totaldiscount']   = array_sum($discount);
+
+        // Total Gross
+        $transactiondata['gross']           = (Int)$transactiondata['totaltrxvalue'] + (Int)$transactiondata['totalpointused'] + (Int)$transactiondata['totaldiscount'];
+
+        // Total Profit
+        $transactiondata['profit']          = array_sum($marginmodal);
+
+        // Total Debt Value
+        $transactiondata['debtvalue']       = array_sum($debtvalue);
+
+        // Total Down Payment
+        $transactiondata['dp']              = array_sum($downpayment);
+
+        // Total Member Debt
+        $transactiondata['debtmember']      = count($totalmember);
+
+        // Total Product Sale
+        $transactiondata['productsale']     = array_sum($productsale);
+
+        // Top 3 Product Sell
+        $bestseller = [];
+        foreach ($bestproduct as $product) {
+            if (!isset($bestseller[$product['id']])) {
+                $bestseller[$product['id']] = $product;
+            } else {
+                $bestseller[$product['id']]['qty'] += $product['qty'];
+            }
+        }
+        array_multisort(array_column($bestseller, 'qty'), SORT_DESC, $bestseller);
+        $transactiondata['bestsell'] = array_slice($bestseller, 0, 3);
+
+        // Top 3 Payment Method
+        $bestpay = [];
+        foreach ($bestpayment as $paymet) {
+            if (!isset($bestpay[$paymet['id']])) {
+                $bestpay[$paymet['id']] = $paymet;
+            } else {
+                $bestpay[$paymet['id']]['value'] += $paymet['value'];
+            }
+        }
+        array_multisort(array_column($bestpay, 'value'), SORT_DESC, $bestpay);
+        $transactiondata['bestpayment'] = array_slice($bestpay, 0, 3);
+        
         dd($transactiondata);
 
         // Cashin Cash Out
@@ -309,9 +304,10 @@ class Home extends BaseController
             }
         }
 
-        $cashinsum = array_sum($cashin);
-        $cashoutsum = array_sum($cashout);
+        $transactiondata['cashin']  = array_sum($cashin);
+        $transactiondata['cashout'] = array_sum($cashout);
 
+        // LAST UPDATE HERE
         // Today's Expenses
         $todayexp = array();
         foreach ($todayexpenses as $todexp) {
@@ -319,7 +315,7 @@ class Home extends BaseController
                 $todayexp[] = $todexp['qty'];
             }
         }
-        $todayexps  = array_sum($todayexp);
+        $transactiondata['todayexp']  = array_sum($todayexp);
 
         // Today's Sales
         $trxtoday = array();
@@ -394,19 +390,6 @@ class Home extends BaseController
             $datesale   = date_create($days['date']);
             $day        = $datesale->format('l');
         }
-        
-        $bestpayment = [];
-        foreach ($bestpay as $best) {
-            if (!isset($bestpayment[$best['id']])) {
-                $bestpayment[$best['id']] = $best;
-            } else {
-                $bestpayment[$best['id']]['qty'] += $best['qty'];
-                $bestpayment[$best['id']]['value'] += $best['value'];
-            }
-        }
-        $bestpayment = array_values($bestpayment);
-        array_multisort(array_column($bestpayment, 'value'), SORT_DESC, $bestpayment);
-        $bestpay3       = array_slice($bestpayment, 0, 3);
 
         $data                   = $this->data;
         $data['title']          = lang('Global.dashboard');
