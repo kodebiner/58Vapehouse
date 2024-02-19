@@ -633,14 +633,14 @@ foreach ($purchases as $purchase) { ?>
                                 <tr>
                                     <td><?= lang('Global.totalPurchase'); ?></td>
                                     <td></td>
-                                    <td><?= $totalqty; ?> Pcs</td>
+                                    <td><?= $purchasedata[$purchase['id']]['totalqty'] ?> Pcs</td>
                                     <td></td>
                                     <?php if ($purchase['status'] != "0") { ?>
                                         <td></td>
                                         <td></td>
                                         <td></td>
                                     <?php } ?>
-                                    <td><?= "Rp ".number_format($totalprice,0,',','.'); ?></td>
+                                    <td><?= "Rp ".number_format($purchasedata[$purchase['id']]['totalprice'],0,',','.'); ?></td>
                                 </tr>
                             </tfoot>
                         </table>

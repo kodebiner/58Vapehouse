@@ -245,8 +245,6 @@ class Stock extends BaseController
 
         if (!empty($purchases)) {
             $purchasedata   = array();
-            $arrayqty       = array();
-            $arrayprice     = array();
             foreach ($purchases as $purchase) {
                 $purchasesupplier   = $SupplierModel->find($purchase['supplierid']);
                 $purchasedetails    = $PurchasedetailModel->where('purchaseid', $purchase['id'])->find();
@@ -277,6 +275,8 @@ class Stock extends BaseController
                 $purchasedata[$purchase['id']]['date']      = $purchase['date'];
                 $purchasedata[$purchase['id']]['status']    = $purchase['status'];
 
+                $arrayqty       = array();
+                $arrayprice     = array();
                 if (!empty($purchasedetails)) {
                     foreach ($purchasedetails as $purdet) {
                         $purchasevariants           = $VariantModel->find($purdet['variantid']);
@@ -332,6 +332,9 @@ class Stock extends BaseController
                 } else {
                     $purchasedata[$purchase['id']]['detail']   = array();
                 }
+                    
+                $purchasedata[$purchase['id']]['totalqty']      = array_sum($arrayqty);
+                $purchasedata[$purchase['id']]['totalprice']    = array_sum($arrayprice);
             }
         } else {
             $purchasedata   = array();
@@ -344,8 +347,6 @@ class Stock extends BaseController
         $data['purchasedata']       = $purchasedata;
         $data['suppliers']          = $suppliers;
         $data['productlist']        = $productlist;
-        $data['totalqty']           = array_sum($arrayqty);
-        $data['totalprice']         = array_sum($arrayprice);
         $data['pager']              = $PurchaseModel->pager;
 
         return view ('Views/purchase', $data);
