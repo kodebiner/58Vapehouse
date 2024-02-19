@@ -72,6 +72,8 @@ class Home extends BaseController
             $enddate    = date('Y-m-t');
         }
 
+        $firstday       = date('Y-m-1');
+        $lastday        = date('Y-m-t');
         $today          = date('Y-m-d');
         $month          = date('Y-m-t');
 
@@ -79,38 +81,33 @@ class Home extends BaseController
             if ($startdate === $enddate) {
                 $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
                 $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
-                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
-                $trxtodays      = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
             } else {
                 $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
                 $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->find();
-                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
-                $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
             }
 
+            $trxmonths      = $TransactionModel->where('date >=', $firstday.' 00:00:00')->where('date <=', $lastday.' 23:59:59')->find();
+            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
+            $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
             $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->findAll();
         } else {
             if ($startdate === $enddate) {
                 $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
                 $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $trxtodays      = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             } else {
                 $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
                 $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-                $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             }
 
+            $trxmonths      = $TransactionModel->where('date >=', $firstday.' 00:00:00')->where('date <=', $lastday.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->find();
         }
 
         // Stock Cycle
         $stok           = array_slice($stocks, 0, 3);
         array_multisort(array_column($stok, 'restock'), SORT_DESC, $stok);
-
-        // Sales Value
-        $sales = array();
 
         // Transaction Data
         $transactiondata    = array();
@@ -124,19 +121,12 @@ class Home extends BaseController
         $bestproduct        = array();
         $productsale        = array();
         $bestpayment        = array();
+        $saly               = array();
+        $hour               = array();
 
         foreach ($transactions as $transaction) {
-            $sales[] = [
-                'id'        => $transaction['id'],
-                'date'      => $transaction['date'],
-                'value'     => $transaction['value'],
-                'pointused' => $transaction['pointused'],
-                'disctype'  => $transaction['disctype'],
-                'discvalue' => $transaction['discvalue'],
-            ];
-
             // Transaction Value Array
-            $trxvalue[]         = $transaction['value'];
+            $trxvalue[]         = (Int)$transaction['value'];
 
             // Transaction Point Used Array
             $pointused[]        = $transaction['pointused'];
@@ -235,6 +225,18 @@ class Home extends BaseController
                     'value' => $trxpay['value'],
                 ];
             }
+            
+            // Bussy Day
+            $datesale   = date_create($transaction['date']);
+            $saledate   = $datesale->format('Y-m-d');
+            $hoursale   = $datesale->format('H');
+            $hour[]     = date('H', strtotime($transaction['date']));
+            $saly[]     = [
+                'date'  => $saledate,
+                'value' => $transaction['value'],
+                'hours' => $hoursale,
+                'trx'   => '1',
+            ];
         }
 
         // Total Transaction
@@ -290,8 +292,6 @@ class Home extends BaseController
         }
         array_multisort(array_column($bestpay, 'value'), SORT_DESC, $bestpay);
         $transactiondata['bestpayment'] = array_slice($bestpay, 0, 3);
-        
-        dd($transactiondata);
 
         // Cashin Cash Out
         $cashin     = [];
@@ -307,7 +307,6 @@ class Home extends BaseController
         $transactiondata['cashin']  = array_sum($cashin);
         $transactiondata['cashout'] = array_sum($cashout);
 
-        // LAST UPDATE HERE
         // Today's Expenses
         $todayexp = array();
         foreach ($todayexpenses as $todexp) {
@@ -315,62 +314,58 @@ class Home extends BaseController
                 $todayexp[] = $todexp['qty'];
             }
         }
-        $transactiondata['todayexp']  = array_sum($todayexp);
+        $transactiondata['todayexp']    = array_sum($todayexp);
 
         // Today's Sales
         $trxtoday = array();
         foreach ($trxtodays as $trxtod) {
             $trxtoday[] = $trxtod['value'];
         }
-        $sumtrxtoday    = array_sum($trxtoday);
+        $transactiondata['todaytrx']    = array_sum($trxtoday);
 
-        $salesresult = array_sum(array_column($sales, 'value'));
+        // Month's Sales
+        $thismonth = [];
+        foreach ($trxmonths as $trxmonth) {
+            $thismonth[] = (int)$trxmonth['value'];
+        }
+        $transactiondata['monthtrx']    = array_sum($thismonth);
 
         // Average transaction
+        $salesresult = array_sum($trxvalue);
+
         if ($salesresult !== 0) {
-            $salestrx       = count($sales);
-            $averagedays    = $salesresult / $salestrx;
-            $sale           = sprintf("%.2f", $averagedays);
-            $doblesale      = ceil($sale);
-            $saleaverage    = sprintf("%.2f", $doblesale);
+            $salestrx                   = count($transactions);
+            $averagedays                = $salesresult / $salestrx;
+            $sale                       = sprintf("%.2f", $averagedays);
+            $doblesale                  = ceil($sale);
+            $saleaverage                = sprintf("%.2f", $doblesale);
         } else {
-            $averagedays    = "0";
-            $sale           = sprintf("%.2f", $averagedays);
-            $doblesale      = ceil($sale);
-            $saleaverage    = sprintf("%.2f", $doblesale);
+            $averagedays                = "0";
+            $sale                       = sprintf("%.2f", $averagedays);
+            $doblesale                  = ceil($sale);
+            $saleaverage                = sprintf("%.2f", $doblesale);
         }
+        $transactiondata['saleaverage'] = $saleaverage;
 
         // Average per days
-        $now                = date_create($startdate);
-        $your_date          = date_create($enddate)->modify('+1 day');
-        $datediff           = date_diff($now, $your_date);
-        $days               = $datediff->format("%a");
-        $dateaverage        = ceil($salesresult / (int)$days);
-        $resultaveragedays  = sprintf("%.2f", $dateaverage);
+        $now                            = date_create($startdate);
+        $your_date                      = date_create($enddate)->modify('+1 day');
+        $datediff                       = date_diff($now, $your_date);
+        $days                           = $datediff->format("%a");
+        $dateaverage                    = ceil($salesresult / (int)$days);
+        $resultaveragedays              = sprintf("%.2f", $dateaverage);
+        $transactiondata['averagedays'] = $resultaveragedays;
 
         // Bussy Days
-        $saly = [];
-        $hour = [];
-        foreach ($sales as $sale) {
-            $datesale   = date_create($sale['date']);
-            $saledate   = $datesale->format('Y-m-d');
-            $hoursale   = $datesale->format('H');
-            $hour[]     = date('H', strtotime($sale['date']));
-            $saly[]     = [
-                'date'  => $saledate,
-                'value' => $sale['value'],
-                'hours' => $hoursale,
-                'trx'   => '1',
-            ];
-        }
         $busies = array_count_values($hour);
         arsort($busies);
         $busyhours = array_slice(array_keys($busies), 0, 1, true);
         if (!empty($busyhours)) {
-            $busy = $busyhours[0] . ':00';
+            $bussytime = $busyhours[0] . ':00';
         } else {
-            $busy = "00:00";
+            $bussytime = "00:00";
         }
+        $transactiondata['bussytime'] = $bussytime;
 
         $saledet = [];
         foreach ($saly as $sels) {
@@ -384,41 +379,46 @@ class Home extends BaseController
         $saledet = array_values($saledet);
 
         array_multisort(array_column($saledet, 'trx'), SORT_DESC, $saledet);
-        $daysale    = array_slice($saledet, 0, 1);
-        $day        = 0;
+        $daysale        = array_slice($saledet, 0, 1);
+        $bussyday       = 0;
         foreach ($daysale as $days) {
             $datesale   = date_create($days['date']);
-            $day        = $datesale->format('l');
+            $bussyday   = $datesale->format('l');
         }
+        $transactiondata['bussyday'] = $bussyday;
 
-        $data                   = $this->data;
-        $data['title']          = lang('Global.dashboard');
-        $data['description']    = lang('Global.dashdesc');
-        $data['sales']          = $summary;
-        $data['profit']         = $keuntunganmodal;
-        $data['products']       = $products;
-        $data['variants']       = $variants;
-        $data['bundles']        = $bundles;
-        $data['bundets']        = $bundets;
-        $data['trxamount']      = $trxamount;
-        $data['qtytrxsum']      = $qtytrxsum;
-        $data['pointusedsum']   = $pointusedsum;
-        $data['gross']          = $gross;
-        $data['cashinsum']      = $cashinsum;
-        $data['cashoutsum']     = $cashoutsum;
-        $data['top3prod']       = $best3;
-        $data['top3paymet']     = $bestpay3;
-        $data['stocks']         = $stok;
-        $data['average']        = (int)$saleaverage;
-        $data['startdate']      = strtotime($startdate);
-        $data['enddate']        = strtotime($enddate);
-        $data['trxdebtval']     = array_sum($trxdebtval);
-        $data['averagedays']    = $resultaveragedays;
-        $data['bussyday']       = $day;
-        $data['bussytime']      = $busy;
-        $data['todayexps']      = $todayexps;
-        $data['month']          = $month;
-        $data['sumtrxtoday']    = $sumtrxtoday;
+        // dd($transactiondata);
+
+        // Parsing Data To View
+        $data                       = $this->data;
+        $data['title']              = lang('Global.dashboard');
+        $data['description']        = lang('Global.dashdesc');
+        $data['transactiondata']    = $transactiondata;
+        // $data['sales']           = $summary;
+        // $data['profit']          = $keuntunganmodal;
+        $data['products']           = $products;
+        $data['variants']           = $variants;
+        $data['bundles']            = $bundles;
+        $data['bundets']            = $bundets;
+        // $data['trxamount']       = $trxamount;
+        // $data['qtytrxsum']       = $qtytrxsum;
+        // $data['pointusedsum']    = $pointusedsum;
+        // $data['gross']           = $gross;
+        // $data['cashinsum']       = $cashinsum;
+        // $data['cashoutsum']      = $cashoutsum;
+        // $data['top3prod']        = $best3;
+        // $data['top3paymet']      = $bestpay3;
+        $data['stocks']             = $stok;
+        // $data['average']         = (int)$saleaverage;
+        $data['startdate']          = strtotime($startdate);
+        $data['enddate']            = strtotime($enddate);
+        // $data['trxdebtval']      = array_sum($trxdebtval);
+        // $data['averagedays']     = $resultaveragedays;
+        // $data['bussyday']        = $day;
+        // $data['bussytime']       = $busy;
+        // $data['todayexps']       = $todayexps;
+        $data['month']              = $month;
+        // $data['sumtrxtoday']     = $sumtrxtoday;
 
         // if ($this->data['outletPick'] != null) {
         //     $data['payments']       = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
