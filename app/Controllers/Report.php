@@ -429,7 +429,8 @@ class Report extends BaseController
                     'id' => $trx['id'],
                     'payid' => $trx['payid'],
                     'name'  => $payname,
-                    'value' => $trx['trxvalue'],
+                    // 'value' => $trx['trxvalue'],
+                    'value' => $trx['trxpayval'],
                     'qty'   => '1',
                 ];
             }
