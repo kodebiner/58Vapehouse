@@ -17,9 +17,9 @@
         data.addColumn('number', 'value');
         data.addRows([
             <?php foreach ($payments as $pay){
-                $value = $pay['pvalue'];
+                $value = $pay['value'];
                 $name = $pay['name'];
-                $qty = $pay['pqty'];
+                $qty = $pay['qty'];
                 echo "['$name', $value,$qty],";
             }?>
         ]);
@@ -108,15 +108,15 @@
                 <?php foreach ($payments as $pay ){ ?>
                     <tr>
                         <td style="color:white;"><?=$pay['name']?></td>
-                        <td class="" style="color:white;"><?= $pay['pqty']?></td>
-                        <td class="" style="color:white;"><?php echo "Rp. ".number_format($pay['pvalue'],0,',','.');" ";?></td>
+                        <td class="" style="color:white;"><?= $pay['qty']?></td>
+                        <td class="" style="color:white;"><?php echo "Rp. ".number_format($pay['value'],0,',','.');" ";?></td>
                     </tr>
                 <?php } ?>
             </tbody>
         </table>
-        <div class="uk-light">
-            <?= $pager->links('reportpayment', 'front_full') ?>
-        </div>
+        <!-- <div class="uk-light">
+            </?= $pager->links('reportpayment', 'front_full') ?>
+        </div> -->
     </div>
 
 
