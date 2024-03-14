@@ -339,6 +339,7 @@ class Stock extends BaseController
         } else {
             $purchasedata   = array();
         }
+        dd($purchasedata);
 
         // Parsing data to view
         $data['title']              = lang('Global.purchase');
