@@ -353,11 +353,11 @@ class export extends BaseController
 
                         // discount
                         if ($transaction['disctype'] === "0") {
-                            $discounttrx[]          = $transaction['discval'];
+                            $discounttrx[]          = (int)$transaction['discval'];
                         }
                         if ($transaction['disctype'] !== "0") {
                             $sub =  ($transaction['trxdetval'] * $transaction['qty']);
-                            $discounttrxpersen[]    =  ($transaction['discval'] / 100) * $sub;
+                            $discounttrxpersen[]    =  ((int)$transaction['discval'] / 100) * $sub;
                         }
                         $discountvariant[]          = $transaction['discvar'];
                         $discountpoin[]             = $transaction['redempoin'];
@@ -423,177 +423,6 @@ class export extends BaseController
             $omsetbaru      = 0;
             $profitvalue    = 0;
         }
-
-        // dd($transactionhist);
-        // foreach ($transactionhist as $trxhist) {
-        //     if ((!empty($trxhist['discval'])) && ($trxhist['disctype'] === '0')) {
-        //         $discount = $trxhist['discval'];
-        //         $disctype = "0";
-        //     } elseif ((!empty($trxhist['discval'])) && ($trxhist['disctype'] === '1')) {
-        //         $discount = ($trxhist['trxdetval'] * $trxhist['discval'] / 100);
-        //     } else {
-        //         $discount = 0;
-        //     }
-
-        //     if ($trxhist['disctype'] === '1') {
-        //         $disctype = "%";
-        //     } else {
-        //         $disctype = "Rp";
-        //     }
-
-        //     if (!empty($trxhist['discvar'])) {
-        //         $discvar = $trxhist['discvar'];
-        //     } else {
-        //         $discvar = "0";
-        //     }
-        // }
-
-        // $transactions = array();
-        // $transactionarr = array();
-        // $discount = array();
-        // $discounttrx = array();
-        // $discounttrxpersen = array();
-        // $discountvariant = array();
-        // $discountpoin = array();
-        // $varvalues = [];
-        // $outletname = [];
-        // $adress = [];
-        // $bundval = [];
-        // $omsetvalue = [];
-        // for ($date = strtotime($startdate); $date <= strtotime($enddate); $date += (86400)) {
-        //     if ($this->data['outletPick'] === null) {
-        //         $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->find();
-        //         $stocks = $StockModel->findAll();
-        //         $outletname[] = "All Outlets";
-        //         $adress[] = "58vapehouse";
-        //     } else {
-        //         $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
-        //         $stocks = $StockModel->where('outletid', $this->data['outletPick'])->find();
-        //         $outlets = $OutletModel->where('id', $this->data['outletPick'])->find();
-        //     }
-
-        //     $trxdetails  = $TrxdetailModel->findAll();
-        //     $summary     = array_sum(array_column($transaction, 'value'));
-        //     $variants    = $VariantModel->findAll();
-        //     $bundles     = $BundleModel->findAll();
-
-        //     $marginmodals = array();
-        //     $margindasars = array();
-
-        //     foreach ($transaction as $trx) {
-        //         foreach ($trxdetails as $trxdetail) {
-        //             if ($trx['id'] == $trxdetail['transactionid']) {
-
-        //                 $omsetvalue[] = ($trxdetail['value'] + $trxdetail['discvar']) * $trxdetail['qty'];
-        //                 // margin
-        //                 $marginmodal = $trxdetail['marginmodal'];
-        //                 $margindasar = $trxdetail['margindasar'];
-        //                 $marginmodals[] = $marginmodal;
-        //                 $margindasars[] = $margindasar;
-
-        //                 // discount
-        //                 if ($trx['disctype'] === "0") {
-        //                     $discounttrx[]          = $trx['discvalue'];
-        //                 }
-        //                 if ($trx['disctype'] !== "0") {
-        //                     $sub =  ($trxdetail['value'] * $trxdetail['qty']);
-        //                     $discounttrxpersen[]    =  ($trx['discvalue'] / 100) * $sub;
-        //                 }
-        //                 $discountvariant[]          = $trxdetail['discvar'];
-        //                 $discountpoin[]             = $trx['pointused'];
-
-        //                 foreach ($bundles as $bundle) {
-        //                     if ($trxdetail['bundleid'] === $bundle['id']) {
-        //                         $bundval[] = [
-        //                             'id' => $bundle['id'],
-        //                             'name' => $bundle['name'],
-        //                             'price' => $trxdetail['value'],
-        //                         ];
-        //                     }
-        //                 }
-
-        //                 foreach ($variants as $variant) {
-        //                     if ($variant['id'] === $trxdetail['variantid']) {
-        //                         foreach ($stocks as $stock) {
-        //                             if ($variant['id'] === $stock['variantid']) {
-        //                                 $varvalues[] = [
-        //                                     'name'          => $variant['name'],
-        //                                     'hargamodal'    => $variant['hargamodal'],
-        //                                     'hargadasar'    => $variant['hargadasar'],
-        //                                     'hargajual'     => $variant['hargajual'],
-        //                                     'qty'           => $stock['qty'],
-        //                                     'trxqty'        => $trxdetail['qty'],
-        //                                     'omset'         => ($trxdetail['value'] * $trxdetail['qty']) - $trxdetail['discvar'],
-        //                                     'modalprice'    => (($trxdetail['value'] * $trxdetail['qty']) - ($trxdetail['discvar'])) - $trxdetail['marginmodal'] * $trxdetail['qty'],
-        //                                     'basicprice'    => (($trxdetail['value'] * $trxdetail['qty']) - ($trxdetail['discvar'])) - $trxdetail['margindasar'] * $trxdetail['qty'],
-        //                                 ];
-        //                             }
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     $marginmodalsum = array_sum($marginmodals);
-        //     $margindasarsum = array_sum($margindasars);
-
-        //     $transactions[] = [
-        //         'date'      => date('d/m/y', $date),
-        //         'value'     => $summary,
-        //         'modal'     => $marginmodalsum,
-        //         'dasar'     => $margindasarsum,
-        //     ];
-        // }
-
-        // $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
-        // $variantdisc     = array_sum($discountvariant);
-        // $poindisc        = array_sum($discountpoin);
-
-        // $discount[] = [
-        //     'trxdisc'       => $transactiondisc,
-        //     'variantdis'    => $variantdisc,
-        //     'poindisc'      => $poindisc,
-        // ];
-
-        // $totaltrxdisc = array_sum(array_column($discount, 'trxdisc'));
-        // $totalvardisc = array_sum(array_column($discount, 'variantdis'));
-        // $totalpoindisc = array_sum(array_column($discount, 'poindisc'));
-
-        // // bundle total price
-        // $bundleprice = array_sum(array_column($bundval, 'price'));
-
-        // // Total Discount
-        // $alldisc = (int)$totaltrxdisc + (int)$totalvardisc + (int)$totalpoindisc;
-        // $transactionarr[] = $transactions;
-
-        // $date1 = date('Y-m-d', strtotime($startdate));
-        // $date2 = date('Y-m-d', strtotime($startdate));
-        // $day1 = date_create($date1);
-        // $day2 = date_create($date2);
-        // $interval = date_diff($day1, $day2)->format("%a");
-
-        // //sales
-        // $salesresult = array_sum(array_column($transactions, 'value'));
-        // // $grossales = $salesresult + $alldisc;
-
-        // // Profit Calculation
-        // $modalprice     = array_sum(array_column($varvalues, 'modalprice'));
-        // $basicprice     = array_sum(array_column($varvalues, 'basicprice'));
-        // $omsetbaru      = array_sum(array_column($varvalues, 'omset'));
-        // $profitvalue    = $omsetbaru - $modalprice;
-
-        // $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
-        // $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
-        // $trxvalue        = array_sum(array_column($transactions, 'value'));
-
-        // Outlet Setup
-        // if ($this->data['outletPick'] !== null) {
-        //     foreach ($outlets as $outlet) {
-        //         $outletname[] = $outlet['name'];
-        //         $adress[] = $outlet['address'];
-        //     }
-        // }
 
         // Set Cash In Cash Out
         $cashin  = [];
@@ -759,7 +588,7 @@ class export extends BaseController
                     if ($transaction['disctype'] !== "0") {
 
                         $sub = ($trxdetail['value']) * $trxdetail['qty'];
-                        $discounttrxpersen[]    = $sub * ($transaction['discvalue'] / 100);
+                        $discounttrxpersen[]    = (int)$sub * ((int)$transaction['discvalue'] / 100);
                     }
                     $discountvariant[]          = $trxdetail['discvar'];
 
@@ -1262,12 +1091,14 @@ class export extends BaseController
             }
         }
 
+        $val = array_sum(array_column($useradm, 'value'));
+
         $produk = [];
-        foreach ($useradm as $vars) {
-            if (!isset($produk[$vars['id'] . $vars['role']])) {
-                $produk[$vars['id'] . $vars['name'] . $vars['role']] = $vars;
+        foreach ($useradm as $username) {
+            if (!isset($produk[$username['id']])) {
+                $produk[$username['id']] = $username;
             } else {
-                $produk[$vars['id'] . $vars['name'] . $vars['role']]['value'] += $vars['value'];
+                $produk[$username['id']]['value'] += $username['value'];
             }
         }
         $produk = array_values($produk);
