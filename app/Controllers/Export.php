@@ -149,6 +149,9 @@ class export extends BaseController
         $transactionhist   = $exported->get();
         $transactionhist   = $transactionhist->getResultArray();
 
+        $otname = $transactionhist['0']['outlet'];
+        $otaddress = $transactionhist['0']['address'];
+
 ?>
         <style>
             .cntr {
@@ -172,10 +175,10 @@ class export extends BaseController
         echo '<table>';
         echo '<thead>';
         echo '<tr>';
-        echo '<th colspan="16" class="cntr">' . $outlet['name'] . '</th>';
+        echo '<th colspan="16" class="cntr">' . $otname . '</th>';
         echo '</tr>';
         echo '<tr>';
-        echo '<th colspan="16" class="cntr">' . $outlet['address'] . '</th>';
+        echo '<th colspan="16" class="cntr">' . $otaddress . '</th>';
         echo '</tr>';
         echo '<tr>';
         echo '<th colspan="16" class="cntr">Ringkasan Transaksi ' . $startdate . ' - ' . $enddate . '</th>';
@@ -1304,9 +1307,9 @@ class export extends BaseController
             $outletname = "58vapehouse";
         } else {
             if ($startdate === $enddate) {
-                $presences = $PresenceModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+                $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
             } else {
-                $presences  = $PresenceModel->where('outletid', $this->data['outletPick'])->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+                $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
             }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
