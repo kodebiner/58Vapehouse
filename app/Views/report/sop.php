@@ -44,6 +44,7 @@
             <tr>
                 <th>Tanggal</th>
                 <th>SOP</th>
+                <th>Shift</th>
                 <th>Pegawai</th>
                 <th>Status</th>
             </tr>
@@ -55,6 +56,13 @@
                     <?php foreach ($sops as $sop) {
                         if ($sop['id'] === $sopdet['sopid']) { ?>
                             <td><?= $sop['name'] ?></td>
+                            <td>
+                                <?php if ($sop['shift'] === "0") { ?>
+                                    1
+                                <?php } else { ?>
+                                    2
+                                <?php } ?>
+                            </td>
                         <?php }
                     } ?>
                     <td>
