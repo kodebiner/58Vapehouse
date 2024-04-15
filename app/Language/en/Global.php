@@ -296,6 +296,7 @@ return [
     'employereport'     => 'Employe Report',
     'customerreport'    => 'Customer Report',
     'bundlereport'      => 'Bundle Report',
+    'sopreport'         => 'SOP Report',
     'stockproduct'      => 'Product Stock',
     'promo'             => 'Promo',
     'store'             => 'Store',

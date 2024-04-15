@@ -295,6 +295,7 @@ return [
     'employereport'     => 'Laporan Karyawan',
     'customerreport'    => 'Laporan Pelanggan',
     'bundlereport'      => 'Laporan Bundle',
+    'sopreport'         => 'Laporan SOP',
     'stockproduct'      => 'Stok Produk',
     'promo'             => 'Promo',
     'store'             => 'Toko',

@@ -25,6 +25,8 @@ use App\Models\PurchaseModel;
 use App\Models\PurchasedetailModel;
 use App\Models\PresenceModel;
 use App\Models\GroupUserModel;
+use App\Models\SopModel;
+use App\Models\SopDetailModel;
 use Myth\Auth\Models\GroupModel;
 
 class Report extends BaseController
@@ -1611,5 +1613,50 @@ class Report extends BaseController
         $data['whole']          = $whole;
 
         return view('Views/report/stockcategory', $data);
+    }
+
+    public function sop()
+    {
+        // Calling Data
+        $SopModel           = new SopModel();
+        $SopDetailModel     = new SopDetailModel();
+        $UserModel          = new UserModel();
+        
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input['daterange'])) {
+            $daterange = explode(' - ', $input['daterange']);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate = date('Y-m-1');
+            $enddate = date('Y-m-t');
+        }
+
+        if (!empty($input['daterange'])) {
+            if ($startdate === $enddate) {
+                $sopdetails       = $SopDetailModel->orderby('updated_at', 'DESC')->where('updated_at >=', $startdate . "00:00:00")->where('updated_at <=', $enddate . "23:59:59")->paginate(20, 'sop');
+            } else {
+                $sopdetails       = $SopDetailModel->orderBy('updated_at', 'DESC')->where('updated_at >=', $startdate)->where('updated_at <=', $enddate)->paginate(20, 'sop');
+            }
+        } else {
+            $sopdetails           = $SopDetailModel->orderBy('updated_at', 'DESC')->paginate(20, 'sop');
+        }
+
+        $sops               = $SopModel->findAll();
+        $users              = $UserModel->findAll();
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = "Laporan SOP";
+        $data['description']    = "Laporan SOP yang telah dilakukan";
+        $data['sops']           = $sops;
+        $data['sopdetails']     = $sopdetails;
+        $data['users']          = $users;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
+        $data['pager']          = $SopDetailModel->pager;
+
+        return view('Views/report/sop', $data);
     }
 }

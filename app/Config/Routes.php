@@ -277,6 +277,7 @@ $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('customer', 'Report::customer', ['filter' => 'role:owner']);
     $routes->get('customerdetail/(:num)', 'Report::customerdetail/$1', ['filter' => 'role:owner']);
     $routes->get('category', 'Report::category', ['filter' => 'role:owner']);
+    $routes->get('sop', 'Report::sop', ['filter' => 'role:owner']);
     // $routes->get('stockcategory', 'Report::stockcategory', ['filter' => 'role:owner']);
 
 });
