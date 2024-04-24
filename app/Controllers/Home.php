@@ -184,6 +184,9 @@ class Home extends BaseController
                     }
                 } else {
                     $varname        = '';
+                    $varid          = '';
+                    $productsdata   = '';
+                    $prodname       = '';
                 }
 
                 // Data Bundle
