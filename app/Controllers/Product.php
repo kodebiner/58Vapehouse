@@ -19,7 +19,7 @@ use Myth\Auth\Models\GroupModel;
 
 class Product extends BaseController
 {
-
+    protected $data;
     protected $db, $builder;
     protected $auth;
     protected $config;

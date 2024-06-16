@@ -31,6 +31,10 @@ use App\Models\PresenceModel;
 
 class export extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
 
     public function prod()
 
@@ -114,8 +118,8 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         // Populating Data
@@ -129,11 +133,11 @@ class export extends BaseController
 
 
         $exported   = $db->table('transaction');
-        if ($startdate === $enddate) {
+        // if ($startdate === $enddate) {
             $exported->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59");
-        } else {
-            $exported->where('date >=', $startdate)->where('date <=', $enddate);
-        }
+        // } else {
+        //     $exported->where('date >=', $startdate)->where('date <=', $enddate);
+        // }
         $transactionhist   = $exported->select('transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total, member.name as member, product.name as product, variant.name as variant, trxdetail.qty as qty, variant.hargamodal as modal, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, payment.name as payment, outlet.name as outlet, outlet.address as address, bundle.name as bundle, users.username as kasir');
         $transactionhist   = $exported->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
         $transactionhist   = $exported->join('users', 'transaction.userid = users.id', 'left');
@@ -287,8 +291,8 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         $cash   = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
@@ -301,25 +305,46 @@ class export extends BaseController
         $transactionarr     = $exported->join('variant', 'trxdetail.variantid = variant.id', 'left');
         $transactionarr     = $exported->join('outlet', 'transaction.outletid = outlet.id', 'left');
         $transactionarr     = $exported->where('transaction.outletid', $this->data['outletPick']);
-        if ($startdate === $enddate) {
+        // if ($startdate === $enddate) {
             $transactionarr   = $exported->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59");
-        } else {
-            $transactionarr   = $exported->where('date >=', $startdate)->where('date <=', $enddate);
-        }
+        // } else {
+        //     $transactionarr   = $exported->where('date >=', $startdate)->where('date <=', $enddate);
+        // }
         $transactionarr     = $exported->orderBy('transaction.date', 'DESC');
         $transactionarr     = $exported->get();
         $transactionarr     = $transactionarr->getResultArray();
 
         if (!empty($transactionarr)) {
             // transaction detail result
-            $trxvalue = [];
+            $trxvalue       = [];
+            $trxdiscount    = [];
+            $trxredpoin     = [];
+            $hargamodal     = [];
+            $hargadasar     = [];
             foreach ($transactionarr as $transaction) {
                 $trxvalue[] = [
                     'id'    => $transaction['id'],
                     'value' => $transaction['total'],
                 ];
+                if (!empty($transaction['discvalue'])) {
+                    if ($transaction['disctype'] == "0") {
+                        $trxdiscount[]  = $transaction['discvalue'];
+                    } else {
+                        $trxdiscount[]  = (int)$transaction['value'] * ((int)$transaction['discvalue'] / 100);
+                    }
+                }
+                if ($transaction['discvar'] != 0) {
+                    $trxdiscount[]     = $transaction['discvar'];
+                }
+                $trxredpoin[]   = $transaction['redempoin'];
+                $hargamodal[]   = (int)$transaction['qty'] * (int)$transaction['marginmodal'];
+                $hargadasar[]   = (int)$transaction['qty'] * (int)$transaction['margindasar'];
             }
-
+            $totaldiscount  = array_sum($trxdiscount);
+            $totalredpoin   = array_sum($trxredpoin);
+            $totalmodal     = array_sum($hargamodal);
+            $totaldasar     = array_sum($hargadasar);
+            
             $trxval = [];
             foreach ($trxvalue as $transactionval) {
                 if (!isset($trxval[$transactionval['id']])) {
@@ -395,7 +420,8 @@ class export extends BaseController
             $totalpoindisc = array_sum(array_column($discount, 'poindisc'));
 
             // total discount
-            $alldisc = (int)$totaltrxdisc + (int)$totalvardisc + (int)$totalpoindisc;
+            // $alldisc = (int)$totaltrxdisc + (int)$totalvardisc + (int)$totalpoindisc;
+            $alldisc    = $totaldiscount;
 
             $date1 = date('Y-m-d', strtotime($startdate));
             $date2 = date('Y-m-d', strtotime($startdate));
@@ -404,9 +430,12 @@ class export extends BaseController
             $interval = date_diff($day1, $day2)->format("%a");
 
             // Profit Calculation
-            $modalprice     = array_sum(array_column($omsetcalculation, 'modalprice'));
-            $basicprice     = array_sum(array_column($omsetcalculation, 'basicprice'));
-            $omsetbaru      = array_sum(array_column($omsetcalculation, 'omset'));
+            // $modalprice     = array_sum(array_column($omsetcalculation, 'modalprice'));
+            // $omsetbaru      = array_sum(array_column($omsetcalculation, 'omset'));
+            // $basicprice     = array_sum(array_column($omsetcalculation, 'basicprice'));
+            $modalprice     = $totalmodal;
+            $basicprice     = $totaldasar;
+            $omsetbaru      = (int)$totalsales + (int)$totaldiscount + (int)$totalredpoin;
             $profitvalue    = $omsetbaru - $modalprice;
         } else {
 
@@ -530,8 +559,8 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
 
@@ -540,19 +569,19 @@ class export extends BaseController
 
         $adress = [];
         if ($this->data['outletPick'] === null) {
-            if ($startdate === $enddate) {
+            // if ($startdate === $enddate) {
                 $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            }
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            // }
             $outletname = "All Outlets";
             $adress = "58vapehouse";
         } else {
-            if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            }
+            // if ($startdate === $enddate) {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            // } else {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $outletname = $outlets['name'];
             $adress = $outlets['address'];
@@ -712,7 +741,6 @@ class export extends BaseController
 
     public function payment()
     {
-
         $db                     = \Config\Database::connect();
         $PaymentModel           = new PaymentModel;
         $TrxpaymentModel        = new TrxpaymentModel;
@@ -727,42 +755,97 @@ class export extends BaseController
                 $startdate = $daterange[0];
                 $enddate = $daterange[1];
             } else {
-                $startdate = date('Y-m-1');
-                $enddate = date('Y-m-t');
+                $startdate  = date('Y-m-1' . ' 00:00:00');
+                $enddate    = date('Y-m-t' . ' 23:59:59');
             }
 
-            $day1 = date_create($startdate);
-            $day2 = date_create($enddate);
+            // $day1 = date_create($startdate);
+            // $day2 = date_create($enddate);
 
-            $payments = $PaymentModel->findAll();
-            $trxpayments = $TrxpaymentModel->findAll();
-            if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // $payments = $PaymentModel->findAll();
+            // $trxpayments = $TrxpaymentModel->findAll();
+            // // if ($startdate === $enddate) {
+            //     $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            // // } else {
+            // //     $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->find();
+            // // }
+            // $outlets = $OutletModel->find($this->data['outletPick']);
+            // $outletname = $outlets['name'];
+            // $adress = $outlets['address'];
+            // $pay = array();
+            // foreach ($payments as $payment) {
+            //     $qty = array();
+            //     foreach ($trxpayments as $trxpayment) {
+            //         foreach ($transactions as $transaction) {
+            //             if (($trxpayment['paymentid'] === $payment['id']) && ($trxpayment['transactionid'] === $transaction['id'])) {
+            //                 $qty[] = $trxpayment['value'];
+            //             }
+            //         }
+            //     }
+            //     $pay[] = [
+            //         'pvalue'    => array_sum($qty),
+            //         'pqty'      => count($qty),
+            //         'name'      => $payment['name']
+            //     ];
+            // }
+
+            // $totalvalue = array_sum(array_column($pay, 'pvalue'));
+            // $totalqty = array_sum(array_column($pay, 'pqty'));
+
+            // Transaction Data
+            $transactiondata    = array();
+            $outlets            = $OutletModel->find($this->data['outletPick']);
+            $outletname         = $outlets['name'];
+            $adress             = $outlets['address'];
+
+            $transactions       = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+
+            if (!empty($inputsearch)) {
+                $payments   = $PaymentModel->like('name', $inputsearch)->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
             } else {
-                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->find();
+                $payments   = $PaymentModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
             }
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $outletname = $outlets['name'];
-            $adress = $outlets['address'];
-            $pay = array();
+
             foreach ($payments as $payment) {
-                $qty = array();
-                foreach ($trxpayments as $trxpayment) {
-                    foreach ($transactions as $transaction) {
-                        if (($trxpayment['paymentid'] === $payment['id']) && ($trxpayment['transactionid'] === $transaction['id'])) {
-                            $qty[] = $trxpayment['value'];
+                $transactiondata[$payment['id']]['name']    = $payment['name'];
+                $transactiondata[0]['name']                 = 'Debt';
+                $trxtotal           = array();
+                $trxvalue           = array();
+                $debttotal          = array();
+                $debtvalue          = array();
+                if (!empty($transactions)) {
+                    foreach ($transactions as $trx) {
+                        $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', $payment['id'])->find();
+                        $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
+                        if (!empty($trxpayments)) {
+                            foreach ($trxpayments as $trxpayment) {
+                                $trxtotal[] = $trxpayment['id'];
+                                $trxvalue[] = $trxpayment['value'];
+                            }
+                        }
+                        if (!empty($debtpayments)) {
+                            foreach ($debtpayments as $debtpayment) {
+                                $debttotal[] = $debtpayment['id'];
+                                $debtvalue[] = $debtpayment['value'];
+                            }
                         }
                     }
+                } else {
+                    $trxpayments    = [];
+                    $debtpayments   = [];
+                    $trxtotal[]     = [];
+                    $trxvalue[]     = [];
+                    $debttotal[]    = [];
+                    $debtvalue[]    = [];
                 }
-                $pay[] = [
-                    'pvalue'    => array_sum($qty),
-                    'pqty'      => count($qty),
-                    'name'      => $payment['name']
-                ];
+                $transactiondata[$payment['id']]['qty']         = count($trxtotal);
+                $transactiondata[$payment['id']]['value']       = array_sum($trxvalue);
+                $transactiondata[0]['qty']                      = count($debttotal);
+                $transactiondata[0]['value']                    = array_sum($debtvalue);
             }
 
-            $totalvalue = array_sum(array_column($pay, 'pvalue'));
-            $totalqty = array_sum(array_column($pay, 'pqty'));
+            $totalvalue = array_sum(array_column($transactiondata, 'value'));
+            $totalqty = array_sum(array_column($transactiondata, 'qty'));
 
             header("Content-type: application/vnd-ms-excel");
             header("Content-Disposition: attachment; filename=payment.xls");
@@ -798,11 +881,11 @@ class export extends BaseController
             echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
-            foreach ($pay as $payment) {
+            foreach ($transactiondata as $payment) {
                 echo '<tr>';
                 echo '<td>' . $payment['name'] . '</td>';
-                echo '<td>' . $payment['pqty'] . '</td>';
-                echo '<td>' . $payment['pvalue'] . '</td>';
+                echo '<td>' . $payment['qty'] . '</td>';
+                echo '<td>' . $payment['value'] . '</td>';
                 echo '</tr>';
             }
 
@@ -837,26 +920,26 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         $diskon = [];
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            if ($startdate === $enddate) {
+            // if ($startdate === $enddate) {
                 $transaction = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            }
+            // } else {
+            //     $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            // }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            if ($startdate === $enddate) {
+            // if ($startdate === $enddate) {
                 $transaction = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            }
+            // } else {
+            //     $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            // }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -949,50 +1032,97 @@ class export extends BaseController
             $startdate = strtotime($daterange[0]);
             $enddate = strtotime($daterange[1]);
         } else {
-            $startdate = strtotime(date('Y-m-1'));
-            $enddate = strtotime(date('Y-m-t'));
+            $startdate  = strtotime(date('Y-m-1' . ' 00:00:00'));
+            $enddate    = strtotime(date('Y-m-t' . ' 23:59:59'));
         }
 
         $transactions = array();
         $transactionarr = array();
+        // for ($date = $startdate; $date <= $enddate; $date += (86400)) {
+        //     if ($this->data['outletPick'] === null) {
+        //         // if ($startdate === $enddate) {
+        //             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+        //         // } else {
+        //         //     $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->find();
+        //         // }
+        //     } else {
+        //         // if ($startdate === $enddate) {
+        //             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+        //         // } else {
+        //         //     $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+        //         // }
+        //     }
+        //     $trxdetails  = $TrxdetailModel->findAll();
+        //     $variants    = $VariantModel->findAll();
+
+        //     $summary = array_sum(array_column($transaction, 'value'));
+        //     $marginmodals = array();
+        //     $margindasars = array();
+        //     // dd($transaction);
+
+        //     foreach ($transaction as $trx) {
+        //         foreach ($trxdetails as $trxdetail) {
+        //             if ($trx['id'] === $trxdetail['transactionid']) {
+        //                 $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
+        //                 $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
+        //                 $marginmodals[] = $marginmodal;
+        //                 $margindasars[] = $margindasar;
+        //             }
+        //         }
+        //     }
+
+        //     $marginmodalsum = array_sum($marginmodals);
+        //     $margindasarsum = array_sum($margindasars);
+
+        //     $transactions[] = [
+        //         'date'      => date('d/m/y', $date),
+        //         'value'     => $summary,
+        //         'modal'     => $marginmodalsum,
+        //         'dasar'     => $margindasarsum,
+        //     ];
+        // }
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
             if ($this->data['outletPick'] === null) {
-                if ($startdate === $enddate) {
-                    $transaction = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-                } else {
-                    $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->find();
-                }
+                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
             } else {
-                if ($startdate === $enddate) {
-                    $transaction = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->where('outletid', $this->data['outletPick'])->find();
-                } else {
-                    $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
-                }
+                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
             }
-            $trxdetails  = $TrxdetailModel->findAll();
-            $variants    = $VariantModel->findAll();
+            // $variants    = $VariantModel->findAll();
 
-            $summary = array_sum(array_column($transaction, 'value'));
+            // $summary = array_sum(array_column($transaction, 'value'));
             $marginmodals = array();
             $margindasars = array();
 
             foreach ($transaction as $trx) {
+                $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+                $totaltrxdet    = count($trxdetails);
+                if ($trx['discvalue'] != null) {
+                    $discount   = (int)$trx['discvalue'] / (int)$totaltrxdet;
+                } else {
+                    $discount   = 0;
+                }
+
+                if ($trx['memberdisc'] != null) {
+                    $discount   = (int)$trx['memberdisc'] / (int)$totaltrxdet;
+                } else {
+                    $discount   = 0;
+                }
+
                 foreach ($trxdetails as $trxdetail) {
-                    if ($trx['id'] === $trxdetail['transactionid']) {
-                        $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
-                        $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
-                        $marginmodals[] = $marginmodal;
-                        $margindasars[] = $margindasar;
-                    }
+                    // $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
+                    // $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
+                    $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']) - $discount;
+                    $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']) - $discount;
+                    // $marginmodals[] = $marginmodal;
+                    // $margindasars[] = $margindasar;
                 }
             }
 
             $marginmodalsum = array_sum($marginmodals);
             $margindasarsum = array_sum($margindasars);
-
             $transactions[] = [
                 'date'      => date('d/m/y', $date),
-                'value'     => $summary,
+                // 'value'     => $summary,
                 'modal'     => $marginmodalsum,
                 'dasar'     => $margindasarsum,
             ];
@@ -1038,8 +1168,8 @@ class export extends BaseController
 
         // Populating Data 
         $admin          = $UserModel->findAll();
-        $usergroups     = $UserGroupModel->findAll();
-        $groups         = $GroupModel->findAll();
+        // $usergroups     = $UserGroupModel->findAll();
+        // $groups         = $GroupModel->findAll();
 
         $input = $this->request->getGet('daterange');
 
@@ -1048,63 +1178,93 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
-        $addres = '';
-        if ($this->data['outletPick'] === null) {
-            if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            }
-            $addres = "All Outlets";
-            $outletname = "58vapehouse";
-        } else {
-            if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->where("outletid", $this->data['outletPick'])->find();
-            } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            }
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
-            $outletname = $outlets['name'];
-        }
+        // $addres = '';
+        // if ($this->data['outletPick'] === null) {
+        //     // if ($startdate === $enddate) {
+        //         $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+        //     // } else {
+        //     //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        //     // }
+        //     $addres = "All Outlets";
+        //     $outletname = "58vapehouse";
+        // } else {
+        //     // if ($startdate === $enddate) {
+        //         $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->where("outletid", $this->data['outletPick'])->find();
+        //     // } else {
+        //     //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+        //     // }
+        //     $outlets = $OutletModel->find($this->data['outletPick']);
+        //     $addres = $outlets['address'];
+        //     $outletname = $outlets['name'];
+        // }
 
-        $useradm = [];
-        foreach ($transactions as $transaction) {
-            foreach ($admin as $adm) {
-                if ($transaction['userid'] === $adm->id) {
-                    foreach ($usergroups as $userg) {
-                        if ($adm->id === $userg['user_id']) {
-                            foreach ($groups as $group) {
-                                if ($userg['group_id'] === $group->id) {
-                                    $useradm[] = [
-                                        'id'    => $adm->id,
-                                        'value' => $transaction['value'],
-                                        'name'  => $adm->username,
-                                        'role'  => $group->name,
-                                    ];
-                                }
-                            }
-                        }
-                    }
+        // $useradm = [];
+        // foreach ($transactions as $transaction) {
+        //     foreach ($admin as $adm) {
+        //         if ($transaction['userid'] === $adm->id) {
+        //             foreach ($usergroups as $userg) {
+        //                 if ($adm->id === $userg['user_id']) {
+        //                     foreach ($groups as $group) {
+        //                         if ($userg['group_id'] === $group->id) {
+        //                             $useradm[] = [
+        //                                 'id'    => $adm->id,
+        //                                 'value' => $transaction['value'],
+        //                                 'name'  => $adm->username,
+        //                                 'role'  => $group->name,
+        //                             ];
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // $val = array_sum(array_column($useradm, 'value'));
+
+        // $produk = [];
+        // foreach ($useradm as $username) {
+        //     if (!isset($produk[$username['id']])) {
+        //         $produk[$username['id']] = $username;
+        //     } else {
+        //         $produk[$username['id']]['value'] += $username['value'];
+        //     }
+        // }
+        // $produk = array_values($produk);
+
+        $admins                 = $UserModel->findAll();
+        $employeedata           = [];
+        foreach ($admins as $admin) {
+            $employeedata[$admin->id]['name']  = $admin->username;
+            $usergroups         = $UserGroupModel->where('user_id', $admin->id)->find();
+            foreach ($usergroups as $usergroup) {
+                $groups         = $GroupModel->find($usergroup['group_id']);
+                $employeedata[$admin->id]['role']  = $groups->name;
+            }
+
+            if ($this->data['outletPick'] === null) {
+                $transactions   = $TransactionModel->where('userid', $admin->id)->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+                $addres = "All Outlets";
+                $outletname = "58vapehouse";
+            } else {
+                $transactions   = $TransactionModel->where('userid', $admin->id)->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                $outlets        = $OutletModel->find($this->data['outletPick']);
+                $addres         = $outlets['address'];
+                $outletname     = $outlets['name'];
+            }
+
+            $trxvalue           = [];
+            if (!empty($transactions)) {
+                foreach ($transactions as $trx) {
+                    $trxvalue[] = $trx['value'];
                 }
             }
+            $employeedata[$admin->id]['value']  = array_sum($trxvalue);
         }
-
-        $val = array_sum(array_column($useradm, 'value'));
-
-        $produk = [];
-        foreach ($useradm as $username) {
-            if (!isset($produk[$username['id']])) {
-                $produk[$username['id']] = $username;
-            } else {
-                $produk[$username['id']]['value'] += $username['value'];
-            }
-        }
-        $produk = array_values($produk);
 
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=employe$startdate-$enddate.xls");
@@ -1134,7 +1294,7 @@ class export extends BaseController
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
-        foreach ($produk as $employe) {
+        foreach ($employeedata as $employe) {
             echo '<tr>';
             echo '<td>' . $employe['name'] . '</td>';
             echo '<td>' . $employe['role'] . '</td>';
@@ -1166,25 +1326,25 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            if ($startdate === $enddate) {
+            // if ($startdate === $enddate) {
                 $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            }
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            // }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            if ($startdate === $enddate) {
+            // if ($startdate === $enddate) {
                 $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            }
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            // }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -1292,25 +1452,26 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         $addres = '';
+        $presences = $PresenceModel->where('datetime >=', $startdate . " 00:00:00")->where('datetime <=', $enddate . " 23:59:59")->find();
         if ($this->data['outletPick'] === null) {
-            if ($startdate === $enddate) {
-                $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
-            }
+            // if ($startdate === $enddate) {
+            //     $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // } else {
+            //     $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            // }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            if ($startdate === $enddate) {
-                $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
-            }
+            // if ($startdate === $enddate) {
+            //     $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // } else {
+            //     $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            // }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -1428,25 +1589,25 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            if ($startdate === $enddate) {
+            // if ($startdate === $enddate) {
                 $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            }
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            // }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            if ($startdate === $enddate) {
+            // if ($startdate === $enddate) {
                 $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            }
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            // }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
@@ -1551,27 +1712,27 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
 
         // Populating Data
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            if ($startdate === $enddate) {
+            // if ($startdate === $enddate) {
                 $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            }
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            // }
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            if ($startdate === $enddate) {
+            // if ($startdate === $enddate) {
                 $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            } else {
-                $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            }
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            // }
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];

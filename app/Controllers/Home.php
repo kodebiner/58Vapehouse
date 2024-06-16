@@ -30,6 +30,11 @@ use Myth\Auth\Models\GroupModel;
 
 class Home extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function index()
     {
         // Calling models
@@ -68,8 +73,8 @@ class Home extends BaseController
             $startdate  = $daterange[0];
             $enddate    = $daterange[1];
         } else {
-            $startdate  = date('Y-m-1');
-            $enddate    = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         $firstday       = date('Y-m-1');
@@ -78,26 +83,26 @@ class Home extends BaseController
         $month          = date('Y-m-t');
 
         if ($this->data['outletPick'] === null) {
-            if ($startdate === $enddate) {
-                $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
-                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
-            } else {
-                $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            }
+            // if ($startdate === $enddate) {
+            //     $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
+            //     $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->find();
+            // } else {
+                $transactions   = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            // }
 
             $trxmonths      = $TransactionModel->where('date >=', $firstday.' 00:00:00')->where('date <=', $lastday.' 23:59:59')->find();
             $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
             $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
             $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->findAll();
         } else {
-            if ($startdate === $enddate) {
-                $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-            } else {
-                $transactions   = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            }
+            // if ($startdate === $enddate) {
+            //     $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            //     $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            // } else {
+                $transactions   = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            // }
 
             $trxmonths      = $TransactionModel->where('date >=', $firstday.' 00:00:00')->where('date <=', $lastday.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
@@ -160,9 +165,22 @@ class Home extends BaseController
             }
 
             // Trxdetail Array
+            $totaltrxdet    = count($trxdetailsdata);
+            if ($transaction['discvalue'] != null) {
+                $disc   = (int)$transaction['discvalue'] / (int)$totaltrxdet;
+            } else {
+                $disc   = 0;
+            }
+
+            if ($transaction['memberdisc'] != null) {
+                $disc   = (int)$transaction['memberdisc'] / (int)$totaltrxdet;
+            } else {
+                $disc   = 0;
+            }
+
             foreach ($trxdetailsdata as $trxdet) {
                 // Transaction Detail Margin Modal
-                $marginmodal[]      = (Int)$trxdet['marginmodal'] * (Int)$trxdet['qty'];
+                $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
     
                 // Transaction Detail Discount Variant
                 if ($trxdet['discvar'] != 0) {

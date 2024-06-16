@@ -15,6 +15,7 @@ use App\Models\PurchasedetailModel;
 
 class Stock extends BaseController
 {
+    protected $data;
     protected $db, $builder;
     protected $auth;
     protected $config;
@@ -257,6 +258,12 @@ class Stock extends BaseController
                     $supplier = '';
                 }
 
+                if (!empty($purchasesupplier)) {
+                    $supplierid = $purchasesupplier['id'];
+                } else {
+                    $supplierid = '';
+                }
+
                 if (!empty($purchaseoutlet)) {
                     $outlets = $purchaseoutlet['name'];
                 } else {
@@ -269,11 +276,12 @@ class Stock extends BaseController
                     $users = '';
                 }
 
-                $purchasedata[$purchase['id']]['outlet']    = $outlets;
-                $purchasedata[$purchase['id']]['supplier']  = $supplier;
-                $purchasedata[$purchase['id']]['user']      = $users;
-                $purchasedata[$purchase['id']]['date']      = $purchase['date'];
-                $purchasedata[$purchase['id']]['status']    = $purchase['status'];
+                $purchasedata[$purchase['id']]['outlet']        = $outlets;
+                $purchasedata[$purchase['id']]['supplier']      = $supplier;
+                $purchasedata[$purchase['id']]['supplierid']    = $supplierid;
+                $purchasedata[$purchase['id']]['user']          = $users;
+                $purchasedata[$purchase['id']]['date']          = $purchase['date'];
+                $purchasedata[$purchase['id']]['status']        = $purchase['status'];
 
                 $arrayqty       = array();
                 $arrayprice     = array();

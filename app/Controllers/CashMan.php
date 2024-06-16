@@ -8,6 +8,11 @@ use App\Models\UserModel;
 
 class CashMan extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function index()
     {
         // Calling Models

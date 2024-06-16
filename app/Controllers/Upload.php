@@ -9,6 +9,11 @@ use App\Models\PromoModel;
 
 class Upload extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function profile()
     {
         $image      = \Config\Services::image();

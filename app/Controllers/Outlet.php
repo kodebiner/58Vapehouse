@@ -15,6 +15,11 @@ use App\Models\GroupUserModel;
 
 class Outlet extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function index()
     {
         // Calling Models

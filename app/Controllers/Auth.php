@@ -13,6 +13,7 @@ use App\Models\UserModel;
 
 class Auth extends BaseController
 {
+    protected $data;
     /**
      * Analysis assist; remove after CodeIgniter 4.3 release.
      *

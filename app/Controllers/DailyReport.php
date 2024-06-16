@@ -22,6 +22,11 @@ use App\Models\DailyReportModel;
 
 class DailyReport extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function index()
     {
         if ($this->data['outletPick'] != null) {
@@ -52,20 +57,20 @@ class DailyReport extends BaseController
                 $startdate = $daterange[0];
                 $enddate = $daterange[1];
             } else {
-                $startdate = date('Y-m-1');
-                $enddate = date('Y-m-t');
+                $startdate  = date('Y-m-1' . ' 00:00:00');
+                $enddate    = date('Y-m-t' . ' 23:59:59');
             }
 
             $today                  = date('Y-m-d') . ' 00:00:01';
-            if (!empty($input)) {
-                if ($startdate === $enddate) {
-                    $dailyreports       = $DailyReportModel->orderby('dateopen', 'DESC')->where('dateopen >=', $startdate . "00:00:00")->where('dateopen <=', $enddate . "23:59:59")->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
-                } else {
-                    $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->where('dateopen >=', $startdate)->where('dateopen <=', $enddate)->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
-                }
-            } else {
-                $dailyreports           = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
-            }
+            // if (!empty($input)) {
+            //     if ($startdate === $enddate) {
+                    $dailyreports       = $DailyReportModel->orderby('dateopen', 'DESC')->where('dateopen >=', $startdate . " 00:00:00")->where('dateopen <=', $enddate . " 23:59:59")->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
+            //     } else {
+            //         $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->where('dateopen >=', $startdate . '00:00:00')->where('dateopen <=', $enddate . '23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
+            //     }
+            // } else {
+            //     $dailyreports           = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
+            // }
 
             $lastreport             = end($dailyreports);
             $firstreport            = $dailyreports[0];

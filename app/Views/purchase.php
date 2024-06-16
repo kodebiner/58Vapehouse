@@ -677,7 +677,7 @@ foreach ($purchases as $purchase) { ?>
                                 <label class="uk-form-label" for="supplier"><?=lang('Global.supplier')?></label>
                                 <div class="uk-form-controls">
                                     <input class="uk-input" id="suppliername<?= $purchase['id'] ?>" name="suppliername<?= $purchase['id'] ?>" value="<?= $purchasedata[$purchase['id']]['supplier'] ?>" required>
-                                    <input id="supplierid<?= $purchase['id'] ?>" name="supplierid<?= $purchase['id'] ?>" value="<?= $purchasedata[$purchase['id']]['supplier'] ?>" hidden>
+                                    <input id="supplierid<?= $purchase['id'] ?>" name="supplierid<?= $purchase['id'] ?>" value="<?= $purchasedata[$purchase['id']]['supplierid'] ?>" hidden>
                                 </div>
                             </div>
 

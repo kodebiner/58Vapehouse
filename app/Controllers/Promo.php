@@ -4,6 +4,11 @@ use App\Models\PromoModel;
 
 class Promo extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function index()
     {
         // Calling Model

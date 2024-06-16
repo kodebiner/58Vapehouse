@@ -9,6 +9,7 @@ use App\Models\SopDetailModel;
 
 class Sop extends BaseController
 {
+    protected $data;
     protected $db, $builder;
     protected $auth;
     protected $config;

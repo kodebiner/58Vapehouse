@@ -253,7 +253,7 @@ $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->post('pay', 'Pay::pay',['filter'=> 'role:owner,supervisor,operator']);
     $routes->get('copyprint/(:num)', 'Pay::copyprint/$1',['filter'=> 'role:owner,supervisor,operator']);
     $routes->get('bookprint/(:num)','Pay::bookprint/$1',['filter'=>'role:owner,supervisor,operator']);
-    $routes->post('topup', 'Pay::topup',['filter' =>'role:owner,supervisor']);
+    $routes->post('topup', 'Pay::topup',['filter' =>'role:owner,supervisor,operator']);
 });
 
 //Invoice 

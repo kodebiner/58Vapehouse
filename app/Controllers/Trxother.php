@@ -21,8 +21,8 @@ use App\Models\DebtModel;
 use App\Models\DailyReportModel;
 
 class Trxother extends BaseController
-
 {
+    protected $data;
     protected $db, $builder;
     protected $auth;
     protected $config;
@@ -64,28 +64,28 @@ class Trxother extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         if ($this->data['outletPick'] === null) {
-            $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->paginate(20, 'cashinout');
-            if (!empty($input)) {
-                if ($startdate === $enddate) {
+            // $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->paginate(20, 'cashinout');
+            // if (!empty($input)) {
+            //     if ($startdate === $enddate) {
                     $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'cashinout');
-                } else {
-                    $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
-                }
-            }
+            //     } else {
+            //         $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'cashinout');
+            //     }
+            // }
         } else {
-            $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'cashinout');
-            if (!empty($input)) {
-                if ($startdate === $enddate) {
+            // $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'cashinout');
+            // if (!empty($input)) {
+            //     if ($startdate === $enddate) {
                     $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'cashinout');
-                } else {
-                    $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashinout');
-                }
-            }
+            //     } else {
+            //         $trxothers  = $TrxotherModel->orderBy('date', 'DESC')->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'cashinout');
+            //     }
+            // }
         }
 
         // Find Data for Daily Report

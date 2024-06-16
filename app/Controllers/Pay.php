@@ -24,6 +24,11 @@ use App\Models\DailyReportModel;
 
 class Pay extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function create()
     {
         // Calling Models
@@ -129,8 +134,11 @@ class Pay extends BaseController
             $discount = $input['discvalue'];
         } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
             $discount = ((int)$input['discvalue'] / 100) * (int)$subtotal;
-        } else {
-            $discount = 0;
+        // } else {
+        //     $discount = 0;
+        // }
+        } elseif (empty($input['discvalue'])) {
+            $discount   = 0;
         }
 
         if (!empty($input['poin'])) {
@@ -156,7 +164,9 @@ class Pay extends BaseController
                 'paymentid'     => $paymentid,
                 'value'         => $value,
                 'disctype'      => $input['disctype'],
-                'discvalue'     => $input['discvalue'],
+                'memberdisc'    => $memberdisc,
+                // 'discvalue'     => $input['discvalue'],
+                'discvalue'     => $discount,
                 'date'          => $date,
                 'pointused'     => $poin,
                 'amountpaid'    => $input['value'],
@@ -172,7 +182,9 @@ class Pay extends BaseController
                 'paymentid'     => $paymentid,
                 'value'         => $value,
                 'disctype'      => $input['disctype'],
-                'discvalue'     => $input['discvalue'],
+                'memberdisc'    => $memberdisc,
+                // 'discvalue'     => $input['discvalue'],
+                'discvalue'     => $discount,
                 'date'          => $date,
                 'pointused'     => $poin,
                 'amountpaid'    => (int)$input['firstpay'] + (int)$input['secondpay'],
@@ -188,7 +200,9 @@ class Pay extends BaseController
                 'paymentid'     => $paymentid,
                 'value'         => $value,
                 'disctype'      => $input['disctype'],
-                'discvalue'     => $input['discvalue'],
+                'memberdisc'    => $memberdisc,
+                // 'discvalue'     => $input['discvalue'],
+                'discvalue'     => $discount,
                 'date'          => $date,
                 'pointused'     => $poin,
                 'amountpaid'    => "0",

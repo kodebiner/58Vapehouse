@@ -10,7 +10,7 @@ use App\Models\OutletaccessModel;
 
 class User extends BaseController
 {
-
+    protected $data;
     protected $db, $builder;
     protected $auth;
     protected $config;

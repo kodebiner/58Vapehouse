@@ -7,8 +7,11 @@ use App\Models\VariantModel;
 
 class Coba extends BaseController
 {
-
-
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function ajax() {
 
     $ProductModel = new ProductModel;

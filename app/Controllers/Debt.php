@@ -25,6 +25,11 @@ use App\Models\DailyReportModel;
 
 class Debt extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function indextrx()
     {
         $db         = \Config\Database::connect();
@@ -52,23 +57,23 @@ class Debt extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         // Populating Data
         if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->orderBy('date', 'DESC')->paginate(20, 'trxhistory');
-
-            if (!empty($input)) {
-                $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'trxhistory');
-            }
+            // if (!empty($input)) {
+                $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'trxhistory');
+            // } else {
+            //     $transactions = $TransactionModel->orderBy('date', 'DESC')->paginate(20, 'trxhistory');
+            // }
         } else {
-            $transactions = $TransactionModel->orderBy('date', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'trxhistory');
-
-            if (!empty($input)) {
-                $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->paginate(20, 'trxhistory');
-            }
+            // if (!empty($input)) {
+                $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'trxhistory');
+            // } else {
+            //     $transactions = $TransactionModel->orderBy('date', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'trxhistory');
+            // }
         }
 
         $trxid = array();
@@ -165,20 +170,20 @@ class Debt extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         // Populating Data
-        if (!empty($input)) {
-            if ($startdate === $enddate) {
+        // if (!empty($input)) {
+        //     if ($startdate === $enddate) {
                 $debts       = $DebtModel->orderby('deadline', 'DESC')->where('value !=', '0')->where('deadline', $startdate . ' 00:00:00')->where('deadline <=', $enddate . ' 23:59:59')->paginate(20, 'debt');
-            } else {
-                $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(30, 'debt');
-            }
-        } else {
-            $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->paginate(30, 'debt');
-        }
+        //     } else {
+        //         $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(30, 'debt');
+        //     }
+        // } else {
+        //     $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->paginate(30, 'debt');
+        // }
 
         $trxid      = array();
         $memberid   = array();
@@ -324,29 +329,29 @@ class Debt extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         if ($this->data['outletPick'] === null) {
-            $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
-            if (!empty($input['daterange'])) {
-                if ($startdate === $enddate) {
+            // $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
+            // if (!empty($input['daterange'])) {
+            //     if ($startdate === $enddate) {
                     $trxothers      = $TrxotherModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
-                } else {
-                    $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
-                }
-            }
+            //     } else {
+            //         $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
+            //     }
+            // }
         } else {
-            $trxothers      = $TrxotherModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
+            // $trxothers      = $TrxotherModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->like('description', 'Top Up')->paginate(20, 'topup');
 
-            if (!empty($input['daterange'])) {
-                if ($startdate === $enddate) {
+            // if (!empty($input['daterange'])) {
+            //     if ($startdate === $enddate) {
                     $trxothers      = $TrxotherModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->like('description', 'Top Up')->where('outletid', $this->data['outletPick'])->paginate(20, 'topup');
-                } else {
-                    $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Top Up')->where('outletid', $this->data['outletPick'])->paginate(20, 'topup');
-                }
-            }
+            //     } else {
+            //         $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Top Up')->where('outletid', $this->data['outletPick'])->paginate(20, 'topup');
+            //     }
+            // }
         }
 
         $outlets                = $OutletModel->findAll();
@@ -380,30 +385,30 @@ class Debt extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate = date('Y-m-1');
-            $enddate = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         if ($this->data['outletPick'] === null) {
-            $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
+            // $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
 
-            if (!empty($input)) {
-                if ($startdate === $enddate) {
+            // if (!empty($input)) {
+            //     if ($startdate === $enddate) {
                     $trxothers      = $TrxotherModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
-                } else {
-                    $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
-                }
-            }
+            //     } else {
+            //         $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
+            //     }
+            // }
         } else {
-            $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'debtpay');
+            // $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'debtpay');
 
-            if (!empty($input)) {
-                if ($startdate === $enddate) {
+            // if (!empty($input)) {
+            //     if ($startdate === $enddate) {
                     $trxothers      = $TrxotherModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
-                } else {
-                    $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'debtpay');
-                }
-            }
+            //     } else {
+            //         $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'debtpay');
+            //     }
+            // }
         }
 
         $outlets            = $OutletModel->findAll();
@@ -640,26 +645,30 @@ class Debt extends BaseController
         }
 
         // Delete Transaction Payment
-        $trxpay = $TrxpaymentModel->where('transactionid', $id)->find();
-        foreach ($trxpay as $pay) {
-            $TrxpaymentModel->delete($pay);
-        }
+        // $trxpay = $TrxpaymentModel->where('transactionid', $id)->find();
+        // foreach ($trxpay as $pay) {
+        //     $TrxpaymentModel->delete($pay);
+        // }
+        $TrxpaymentModel->where('transactionid', $id)->delete();
 
         // Delete Transaction Payment
-        $debt = $DebtModel->where('transactionid', $id)->find();
-        foreach ($debt as $deb) {
-            $DebtModel->delete($deb);
-        }
+        // $debt = $DebtModel->where('transactionid', $id)->find();
+        // foreach ($debt as $deb) {
+        //     $DebtModel->delete($deb);
+        // }
+        $DebtModel->where('transactionid', $id)->delete();
 
         // Delete Tansaction Detail
-        $trxdet = $TrxdetailModel->where('transactionid', $id)->find();
-        foreach ($trxdet as $detail) {
-            $TrxdetailModel->delete($detail);
-        }
+        // $trxdet = $TrxdetailModel->where('transactionid', $id)->find();
+        // foreach ($trxdet as $detail) {
+        //     $TrxdetailModel->delete($detail);
+        // }
+        $TrxdetailModel->where('transactionid', $id)->delete();
 
         // Delete Transaction
-        $trx = $TransactionModel->find($id);
-        $TransactionModel->delete($trx);
+        // $trx = $TransactionModel->find($id);
+        // $TransactionModel->delete($trx);
+        $TransactionModel->delete($id);
 
         return redirect()->back()->with('massage', lang('global.deleted'));
     }

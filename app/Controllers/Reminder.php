@@ -8,8 +8,8 @@ use App\Models\ProductModel;
 use App\Models\VariantModel;
 
 class Reminder extends BaseController
-
 {
+    protected $data;
     protected $db, $builder;
     protected $auth;
     protected $config;

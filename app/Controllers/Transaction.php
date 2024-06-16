@@ -22,6 +22,11 @@ use App\Models\DailyReportModel;
 
 class Transaction extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function index()
     {
         $db      = \Config\Database::connect();

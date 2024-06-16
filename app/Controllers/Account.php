@@ -7,6 +7,8 @@ use App\Models\GconfigModel;
 
 class Account extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
     protected $auth;
     protected $config;
 

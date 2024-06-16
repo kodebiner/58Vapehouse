@@ -7,6 +7,11 @@ use App\Models\CashExpModel;
 
 class CashExp extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+    
     public function index()
     {
         $pager      = \Config\Services::pager();
@@ -23,21 +28,21 @@ class CashExp extends BaseController
             $startdate  = $daterange[0];
             $enddate    = $daterange[1];
         } else {
-            $startdate  = date('Y-m-1');
-            $enddate    = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         $cashmans                   = $CashModel->notLike('name', 'Petty Cash')->find();
 
-        if (!empty($input)) {
-            if ($startdate === $enddate) {
-                $cashexps               = $CashExpModel->orderBy('id', 'DESC')->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->paginate(20, 'cashexp');
-            } else {
-                $cashexps               = $CashExpModel->orderBy('id', 'DESC')->where('date >=', $startdate)->where('date <=', $enddate)->paginate(20, 'cashexp');
-            }
-        } else {
-            $cashexps               = $CashExpModel->orderBy('id', 'DESC')->paginate(20, 'cashexp');
-        }
+        // if (!empty($input)) {
+        //     if ($startdate === $enddate) {
+                $cashexps               = $CashExpModel->orderBy('id', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'cashexp');
+        //     } else {
+        //         $cashexps               = $CashExpModel->orderBy('id', 'DESC')->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->paginate(20, 'cashexp');
+        //     }
+        // } else {
+        //     $cashexps               = $CashExpModel->orderBy('id', 'DESC')->paginate(20, 'cashexp');
+        // }
 
         // Parsing Data to View
         $data                   = $this->data;
