@@ -26,7 +26,7 @@ return [
     'brand'             => 'Brand',
     'variant'           => 'Variant',
     'debt'              => 'Debt',
-    'transaction'       => 'Transcation',
+    'transaction'       => 'Transaction',
     'point'             => 'Point',
     'catalog'           => 'Catalog',
     'favorite'          => 'Favorite',

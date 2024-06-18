@@ -19,10 +19,10 @@
         data.addColumn('number', 'value');
         data.addRows([
             <?php foreach ($products as $product){
-                $produk     = $product['pro'];
+                $produk     = $product['name'];
                 $sold       = $product['qty'];
-                $category   = $product['cate'];
-                $value      = $product['netval'];
+                $category   = $product['category'];
+                $value      = $product['netvalue'];
                 echo "[ '$produk',$sold,'$category',$value],";
             }?>
         ]);
@@ -119,18 +119,18 @@
                 <tbody>
                     <?php foreach ($products as $product ){ ?>
                         <tr>
-                            <td style="color:white;"><?=$product['pro']?></td>
-                            <td style="color:white;"><?=$product['cate']?></td>
-                            <td style="color:white;"><?php echo "Rp. ".number_format($product['netval'],0,',','.');" ";?></td>
-                            <td style="color:white;"><?php echo "Rp. ".number_format($product['value'],0,',','.');" ";?></td>
+                            <td style="color:white;"><?=$product['name']?></td>
+                            <td style="color:white;"><?=$product['category']?></td>
+                            <td style="color:white;"><?php echo "Rp. ".number_format($product['netvalue'],0,',','.');" ";?></td>
+                            <td style="color:white;"><?php echo "Rp. ".number_format($product['grossvalue'],0,',','.');" ";?></td>
                             <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
                         </tr>
                     <?php } ?>
                 </tbody>
             </table>
-            <div class="uk-light">
-                <?= $pager ?>
-            </div>
+            <!-- <div class="uk-light">
+                <?//= $pager ?>
+            </div> -->
         </div>
 
     <?= view('Views/Auth/_message_block') ?>

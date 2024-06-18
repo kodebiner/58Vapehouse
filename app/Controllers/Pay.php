@@ -236,6 +236,20 @@ class Pay extends BaseController
                     $varPrice = 0;
                 }
 
+                // // Bargain And Varprice Added
+                // if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
+                //     $varPrice  = (int)$discbargain - (int)$discvar;
+                //     // Vaprice Added And Null Bargain
+                // } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
+                //     $varPrice  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
+                //     // Bargain Added And Null Varprice
+                // } elseif ((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)) {
+                //     $varPrice  = (int)$discbargain;
+                //     // Null Bargain & Varprice
+                // } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
+                //     $varPrice = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
+                // }
+
                 $marginmodal = (int)$varPrice - (int)$variant['hargamodal'];
                 $margindasar = (int)$varPrice - (int)$variant['hargadasar'];
 

@@ -128,6 +128,7 @@ class Home extends BaseController
         $bestpayment        = array();
         $saly               = array();
         $hour               = array();
+        $disc               = array();
 
         foreach ($transactions as $transaction) {
             // Transaction Value Array
@@ -138,11 +139,11 @@ class Home extends BaseController
 
             // Discount Transaction
             if (!empty($transaction['discvalue'])) {
-                if ($transaction['disctype'] == "0") {
-                    $discount[]  = $transaction['discvalue'];
-                } else {
-                    $discount[]  = (int)$transaction['value'] * ((int)$transaction['discvalue'] / 100);
-                }
+                $discount[]  = $transaction['discvalue'];
+            }
+
+            if ($transaction['memberdisc'] != null) {
+                $discount[]   = (int)$transaction['memberdisc'];
             }
 
             // Finding Data
@@ -166,21 +167,34 @@ class Home extends BaseController
 
             // Trxdetail Array
             $totaltrxdet    = count($trxdetailsdata);
+            // if ($transaction['discvalue'] != null) {
+            //     $disc   = (int)$transaction['discvalue'] / (int)$totaltrxdet;
+            // } else {
+            //     $disc   = 0;
+            // }
+
+            // if ($transaction['memberdisc'] != null) {
+            //     $disc   = (int)$transaction['memberdisc'] / (int)$totaltrxdet;
+            // } else {
+            //     $disc   = 0;
+            // }
+
             if ($transaction['discvalue'] != null) {
-                $disc   = (int)$transaction['discvalue'] / (int)$totaltrxdet;
+                $disc[]   = (int)$transaction['discvalue'];
             } else {
-                $disc   = 0;
+                $disc[]   = 0;
             }
 
             if ($transaction['memberdisc'] != null) {
-                $disc   = (int)$transaction['memberdisc'] / (int)$totaltrxdet;
+                $disc[]   = (int)$transaction['memberdisc'];
             } else {
-                $disc   = 0;
+                $disc[]   = 0;
             }
 
             foreach ($trxdetailsdata as $trxdet) {
                 // Transaction Detail Margin Modal
-                $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
+                // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
+                $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']);
     
                 // Transaction Detail Discount Variant
                 if ($trxdet['discvar'] != 0) {
@@ -226,6 +240,9 @@ class Home extends BaseController
                     $bestid     = $bundleid;
                     $name       = $bundlename;
                 }
+    
+                // Products Sales
+                $productsale[]  = $trxdet['qty'];
 
                 // Product Data For Best Selling
                 $bestproduct[]    = [
@@ -234,9 +251,6 @@ class Home extends BaseController
                     'qty'       => $trxdet['qty'],
                 ];
             }
-    
-            // Products Sales
-            $productsale[]      = $trxdet['qty'];
     
             foreach ($trxpaymentsdata as $trxpay) {
                 $payments           = $PaymentModel->find($trxpay['paymentid']);
@@ -276,7 +290,9 @@ class Home extends BaseController
         $transactiondata['gross']           = (Int)$transactiondata['totaltrxvalue'] + (Int)$transactiondata['totalpointused'] + (Int)$transactiondata['totaldiscount'];
 
         // Total Profit
-        $transactiondata['profit']          = array_sum($marginmodal);
+        $trxdisc                            = array_sum($disc);
+        $totalmarginmodal                   = array_sum($marginmodal);
+        $transactiondata['profit']          = (Int)$totalmarginmodal - (Int)$trxdisc;
 
         // Total Debt Value
         $transactiondata['debtvalue']       = array_sum($debtvalue);
