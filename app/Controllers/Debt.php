@@ -175,15 +175,15 @@ class Debt extends BaseController
         }
 
         // Populating Data
-        if (!empty($input)) {
-            if ($startdate === $enddate) {
-                $debts       = $DebtModel->orderby('deadline', 'DESC')->where('value !=', '0')->where('deadline', $startdate . ' 00:00:00')->where('deadline <=', $enddate . ' 23:59:59')->paginate(20, 'debt');
-            } else {
-                $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->where('deadline', $startdate . ' 00:00:00')->where('deadline <=', $enddate . ' 23:59:59')->paginate(30, 'debt');
-            }
-        } else {
-            $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->paginate(30, 'debt');
-        }
+        // if (!empty($input)) {
+        //     if ($startdate === $enddate) {
+                $debts       = $DebtModel->orderby('deadline', 'DESC')->where('value !=', '0')->where('deadline', $startdate . ' 00:00:00')->where('deadline <=', $enddate . ' 00:00:00')->paginate(20, 'debt');
+        //     } else {
+        //         $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(30, 'debt');
+        //     }
+        // } else {
+        //     $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->paginate(30, 'debt');
+        // }
 
         $trxid      = array();
         $memberid   = array();
