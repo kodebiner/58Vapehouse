@@ -171,7 +171,7 @@ class Debt extends BaseController
             $enddate = $daterange[1];
         } else {
             $startdate  = date('Y-m-1' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
+            $enddate    = date('Y-m-t' . ' 00:00:00');
         }
 
         // Populating Data
