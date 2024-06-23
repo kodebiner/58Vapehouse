@@ -37,7 +37,6 @@ class export extends BaseController
     protected $config;
 
     public function prod()
-
     {
         // Calling Services & Libraries
         $db         = \Config\Database::connect();
@@ -294,249 +293,256 @@ class export extends BaseController
             $startdate  = date('Y-m-1' . ' 00:00:00');
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
+        $date1 = date('Y-m-d', strtotime($startdate));
+        $date2 = date('Y-m-d', strtotime($enddate));
 
-        $cash   = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        $discount           = array();
+        $memberdisc         = array();
+        $discounttrx        = array();
+        $discountvariant    = array();
+        $discountpoin       = array();
+        $marginmodals       = array();
+        $margindasars       = array();
 
-        $db = \Config\Database::connect();
-
-        $exported           = $db->table('transaction');
-        $transactionarr     = $exported->select('transaction.id as id, outlet.name as outlet, outlet.address as address, trxdetail.id as trxdetid, trxdetail.value as trxdetval, trxdetail.marginmodal as marginmodal, trxdetail.margindasar as margindasar, trxdetail.qty as qty, transaction.date as date, transaction.disctype as disctype, trxdetail.discvar as discvar, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total, transaction.memberdisc as memberdisc');
-        $transactionarr     = $exported->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
-        $transactionarr     = $exported->join('variant', 'trxdetail.variantid = variant.id', 'left');
-        $transactionarr     = $exported->join('outlet', 'transaction.outletid = outlet.id', 'left');
-        $transactionarr     = $exported->where('transaction.outletid', $this->data['outletPick']);
-        // if ($startdate === $enddate) {
-            $transactionarr   = $exported->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59");
-        // } else {
-        //     $transactionarr   = $exported->where('date >=', $startdate)->where('date <=', $enddate);
-        // }
-        $transactionarr     = $exported->orderBy('transaction.date', 'DESC');
-        $transactionarr     = $exported->get();
-        $transactionarr     = $transactionarr->getResultArray();
-
-        if (!empty($transactionarr)) {
-            // transaction detail result
-            $trxvalue       = [];
-            $trxdiscount    = [];
-            $trxredpoin     = [];
-            $hargamodal     = [];
-            $hargadasar     = [];
-            foreach ($transactionarr as $transaction) {
-                $trxvalue[] = [
-                    'id'    => $transaction['id'],
-                    'value' => $transaction['total'],
-                ];
-                if (!empty($transaction['discvalue'])) {
-                    // if ($transaction['disctype'] == "0") {
-                        $trxdiscount[]  = $transaction['discvalue'];
-                    // } else {
-                    //     $trxdiscount[]  = (int)$transaction['value'] * ((int)$transaction['discvalue'] / 100);
-                    // }
-                }
-                if ($transaction['discvar'] != '0') {
-                    $trxdiscount[]     = $transaction['discvar'];
-                }
-                if ($transaction['memberdisc'] != '0') {
-                    $trxdiscount[]     = $transaction['memberdisc'];
-                }
-                $trxredpoin[]   = $transaction['redempoin'];
-                $hargamodal[]   = (int)$transaction['qty'] * (int)$transaction['marginmodal'];
-                $hargadasar[]   = (int)$transaction['qty'] * (int)$transaction['margindasar'];
-            }
-            $totaldiscount  = array_sum($trxdiscount);
-            $totalredpoin   = array_sum($trxredpoin);
-            $totalmodal     = array_sum($hargamodal);
-            $totaldasar     = array_sum($hargadasar);
-            
-            $trxval = [];
-            foreach ($trxvalue as $transactionval) {
-                if (!isset($trxval[$transactionval['id']])) {
-                    $trxval[$transactionval['id']] = $transactionval;
-                }
-            }
-            $trxval = array_values($trxval);
-
-            // total penjualan
-            $totalsales = array_sum(array_column($trxval, 'value'));
-
-            $discount = array();
-            $discounttrx = array();
-            $discounttrxpersen = array();
-            $discountvariant = array();
-            $discountpoin = array();
-            $omsetcalculation = array();
-            $outletname = '';
-
-            foreach ($trxval as $trxid) {
-                foreach ($transactionarr as $transaction) {
-                    if ($trxid['id'] == $transaction['id']) {
-                        $omsetvalue[] = ($transaction['trxdetval'] + $transaction['discvar']) * $transaction['qty'];
-
-                        // outlet
-                        $outletname = $transaction['outlet'];
-                        $address = $transaction['address'];
-
-                        // margin
-                        $marginmodal = $transaction['marginmodal'];
-                        $margindasar = $transaction['margindasar'];
-                        $marginmodals[] = $marginmodal;
-                        $margindasars[] = $margindasar;
-
-                        // discount
-                        if ($transaction['disctype'] === "0") {
-                            $discounttrx[]          = (int)$transaction['discval'];
-                        }
-                        if ($transaction['disctype'] !== "0") {
-                            $sub =  ($transaction['trxdetval'] * $transaction['qty']);
-                            $discounttrxpersen[]    =  ((int)$transaction['discval'] / 100) * $sub;
-                        }
-                        $discountvariant[]          = $transaction['discvar'];
-                        $discountpoin[]             = $transaction['redempoin'];
-
-                        $omsetcalculation[] = [
-                            'omset'         => (($transaction['trxdetval'] * $transaction['qty']) - $transaction['discvar']),
-                            'modalprice'    => (($transaction['trxdetval'] * $transaction['qty']) - ($transaction['discvar'])) - $transaction['marginmodal'] * $transaction['qty'],
-                            'basicprice'    => (($transaction['trxdetval'] * $transaction['qty']) - ($transaction['discvar'])) - $transaction['margindasar'] * $transaction['qty'],
-                        ];
-                    }
-                }
-
-                // margin 
-                $marginmodalsum = array_sum($marginmodals);
-                $margindasarsum = array_sum($margindasars);
-            }
-
-            // discount sum
-            $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
-            $variantdisc     = array_sum($discountvariant);
-            $poindisc        = array_sum($discountpoin);
-
-            // Discount Setup
-            $discount[] = [
-                'trxdisc'       => $transactiondisc,
-                'variantdis'    => $variantdisc,
-                'poindisc'      => $poindisc,
-            ];
-
-            $totaltrxdisc = array_sum(array_column($discount, 'trxdisc'));
-            $totalvardisc = array_sum(array_column($discount, 'variantdis'));
-            $totalpoindisc = array_sum(array_column($discount, 'poindisc'));
-
-            // total discount
-            // $alldisc = (int)$totaltrxdisc + (int)$totalvardisc + (int)$totalpoindisc;
-            $alldisc    = $totaldiscount;
-
-            $date1 = date('Y-m-d', strtotime($startdate));
-            $date2 = date('Y-m-d', strtotime($startdate));
-            $day1 = date_create($date1);
-            $day2 = date_create($date2);
-            $interval = date_diff($day1, $day2)->format("%a");
-
-            // Profit Calculation
-            // $modalprice     = array_sum(array_column($omsetcalculation, 'modalprice'));
-            // $omsetbaru      = array_sum(array_column($omsetcalculation, 'omset'));
-            // $basicprice     = array_sum(array_column($omsetcalculation, 'basicprice'));
-            $modalprice     = $totalmodal;
-            $basicprice     = $totaldasar;
-            $omsetbaru      = (int)$totalsales + (int)$totaldiscount + (int)$totalredpoin;
-            $profitvalue    = $omsetbaru - $modalprice;
+        if ($this->data['outletPick'] === null) {
+            $transaction    = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            $address        = "All Outlets";
+            $outletname     = "58vapehouse";
         } else {
-
-            $outlet = $OutletModel->find($this->data['outletPick']);
-            $outletname = $outlet['name'];
-            $address = $outlet['address'];
-            $date1 = date('Y-m-d', strtotime($startdate));
-            $date2 = date('Y-m-d', strtotime($startdate));
-            $day1 = date_create($date1);
-            $day2 = date_create($date2);
-
-            // Profit Calculation
-            $totalsales = 0;
-            $alldisc = 0;
-            $modalprice     = 0;
-            $basicprice     = 0;
-            $omsetbaru      = 0;
-            $profitvalue    = 0;
+            $transaction    = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->where('outletid', $this->data['outletPick'])->find();
+            $trxothers      = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            $outlets        = $OutletModel->find($this->data['outletPick']);
+            $address        = $outlets['address'];
+            $outletname     = $outlets['name'];
         }
 
-        // $date1          = date('Y-m-d', strtotime($startdate));
-        // $date2          = date('Y-m-d', strtotime($enddate));
-        // $marginmodals   = array();
-        // $margindasars   = array();
-        // $discount       = array();
+        foreach ($transaction as $trx) {
+            $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+            if (!empty($trx['discvalue'])) {
+                $discounttrx[]  = $trx['discvalue'];
+            }
+            $discountpoin[]             = $trx['pointused'];
+            $memberdisc[]               = $trx['memberdisc'];
+            foreach ($trxdetails as $trxdetail) {
+                $discountvariant[]  = $trxdetail['discvar'];
+                $marginmodals[]     = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+                $margindasars[]     = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+            }
+        }
 
-        // // for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-        //     if ($this->data['outletPick'] === null) {
-        //         $transaction    = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-        //         $address        = "All Outlets";
-        //         $outletname     = "58vapehouse";
-        //     } else {
-        //         $transaction    = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-        //         $outlets        = $OutletModel->find($this->data['outletPick']);
-        //         $address        = $outlets['address'];
-        //         $outletname     = $outlets['name'];
-        //     }
-        //     $summary = array_sum(array_column($transaction, 'value'));
+        // Getting Discount Data
+        $transactiondisc    = (int)(array_sum($discounttrx)) + (int)(array_sum($memberdisc));
+        $variantdisc        = array_sum($discountvariant);
 
-        //     foreach ($transaction as $trx) {
-        //         $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-                
-        //         if (!empty($trx['discvalue'])) {
-        //             $discount[] = $trx['discvalue'];
-        //         }
-        //         $discount[]     = $trx['pointused'];
-        //         $discount[]     = $trx['memberdisc'];
+        // Total Point Used
+        $poindisc           = array_sum($discountpoin);
 
-        //         foreach ($trxdetails as $trxdetail) {
-        //             $discount[]          = $trxdetail['discvar'];
-        //             $marginmodals[]             = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
-        //             $margindasars[]             = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-        //         }
-        //     }
+        // Getting Margin  Data
+        $marginmodalsum     = array_sum($marginmodals);
+        $margindasarsum     = array_sum($margindasars);
 
-        //     // $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($memberdisc));
-        //     // $variantdisc     = array_sum($discountvariant);
-        //     // $poindisc        = array_sum($discountpoin);
-    
-        //     // $discount[] = [
-        //     //     'trxdisc'       => $transactiondisc,
-        //     //     'variantdis'    => $variantdisc,
-        //     //     'poindisc'      => $poindisc,
-        //     // ];
-    
-        //     $totaldisc      = array_sum($discount);
-        //     $marginmodalsum = array_sum($marginmodals);
-        //     $margindasarsum = array_sum($margindasars);
+        // Total Discount
+        $alldisc            = (Int)$variantdisc + (Int)$transactiondisc;
+
+        // Total Sales
+        $salesresult        = array_sum(array_column($transaction, 'value'));
+
+        // Gross Sales
+        $grossales          = $salesresult + $variantdisc + $transactiondisc + $poindisc;
+
+        // Profit Calculation
+        $profitvalue        = (Int)$marginmodalsum - (Int)$transactiondisc;
+
+        // Cashin and Cash Out
+        $cashin     = [];
+        $cashout    = [];
+        foreach ($trxothers as $trxother) {
+            if ($trxother['type'] === "0") {
+                $cashin[] = $trxother['qty'];
+            } else {
+                $cashout[] = $trxother['qty'];
+            }
+        }
+        $casin      = array_sum($cashin);
+        $casout     = array_sum($cashout);
+
+        // $cash   = $TrxotherModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+
+        // $db = \Config\Database::connect();
+
+        // $exported           = $db->table('transaction');
+        // $transactionarr     = $exported->select('transaction.id as id, outlet.name as outlet, outlet.address as address, trxdetail.id as trxdetid, trxdetail.value as trxdetval, trxdetail.marginmodal as marginmodal, trxdetail.margindasar as margindasar, trxdetail.qty as qty, transaction.date as date, transaction.disctype as disctype, trxdetail.discvar as discvar, transaction.discvalue as discval, transaction.pointused as redempoin, transaction.value as total, transaction.memberdisc as memberdisc');
+        // $transactionarr     = $exported->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
+        // $transactionarr     = $exported->join('variant', 'trxdetail.variantid = variant.id', 'left');
+        // $transactionarr     = $exported->join('outlet', 'transaction.outletid = outlet.id', 'left');
+        // $transactionarr     = $exported->where('transaction.outletid', $this->data['outletPick']);
+        // // if ($startdate === $enddate) {
+        //     $transactionarr   = $exported->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59");
+        // // } else {
+        // //     $transactionarr   = $exported->where('date >=', $startdate)->where('date <=', $enddate);
         // // }
+        // $transactionarr     = $exported->orderBy('transaction.date', 'DESC');
+        // $transactionarr     = $exported->get();
+        // $transactionarr     = $transactionarr->getResultArray();
 
-        // $transactions[] = [
-        //     // 'date'      => date('d/m/y', $date),
-        //     'value'     => $summary,
-        //     'modal'     => (Int)$marginmodalsum - (Int)$totaldisc,
-        //     'dasar'     => (Int)$margindasarsum - (Int)$totaldisc,
-        // ];
+        // if (!empty($transactionarr)) {
+        //     // transaction detail result
+        //     $trxvalue       = [];
+        //     $trxdiscount    = [];
+        //     $trxredpoin     = [];
+        //     $hargamodal     = [];
+        //     $hargadasar     = [];
+        //     foreach ($transactionarr as $transaction) {
+        //         $trxvalue[] = [
+        //             'id'    => $transaction['id'],
+        //             'value' => $transaction['total'],
+        //         ];
+        //         if (!empty($transaction['discvalue'])) {
+        //             // if ($transaction['disctype'] == "0") {
+        //                 $trxdiscount[]  = $transaction['discvalue'];
+        //             // } else {
+        //             //     $trxdiscount[]  = (int)$transaction['value'] * ((int)$transaction['discvalue'] / 100);
+        //             // }
+        //         }
+        //         if ($transaction['discvar'] != '0') {
+        //             $trxdiscount[]     = $transaction['discvar'];
+        //         }
+        //         if ($transaction['memberdisc'] != '0') {
+        //             $trxdiscount[]     = $transaction['memberdisc'];
+        //         }
+        //         $trxredpoin[]   = $transaction['redempoin'];
+        //         $hargamodal[]   = (int)$transaction['qty'] * (int)$transaction['marginmodal'];
+        //         $hargadasar[]   = (int)$transaction['qty'] * (int)$transaction['margindasar'];
+        //     }
+        //     $totaldiscount  = array_sum($trxdiscount);
+        //     $totalredpoin   = array_sum($trxredpoin);
+        //     $totalmodal     = array_sum($hargamodal);
+        //     $totaldasar     = array_sum($hargadasar);
+            
+        //     $trxval = [];
+        //     foreach ($trxvalue as $transactionval) {
+        //         if (!isset($trxval[$transactionval['id']])) {
+        //             $trxval[$transactionval['id']] = $transactionval;
+        //         }
+        //     }
+        //     $trxval = array_values($trxval);
 
-        // $transactionarr[] = $transactions;
+        //     // total penjualan
+        //     $totalsales = array_sum(array_column($trxval, 'value'));
 
-        // $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
-        // $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
+        //     $discount = array();
+        //     $discounttrx = array();
+        //     $discounttrxpersen = array();
+        //     $discountvariant = array();
+        //     $discountpoin = array();
+        //     $omsetcalculation = array();
+        //     $outletname = '';
 
-        // $salesresult = array_sum(array_column($transactions, 'value'));
+        //     foreach ($trxval as $trxid) {
+        //         foreach ($transactionarr as $transaction) {
+        //             if ($trxid['id'] == $transaction['id']) {
+        //                 $omsetvalue[] = ($transaction['trxdetval'] + $transaction['discvar']) * $transaction['qty'];
 
-        // $grossales = (Int)$salesresult + (Int)$totaldisc;
+        //                 // outlet
+        //                 $outletname = $transaction['outlet'];
+        //                 $address = $transaction['address'];
+
+        //                 // margin
+        //                 $marginmodal = $transaction['marginmodal'];
+        //                 $margindasar = $transaction['margindasar'];
+        //                 $marginmodals[] = $marginmodal;
+        //                 $margindasars[] = $margindasar;
+
+        //                 // discount
+        //                 if ($transaction['disctype'] === "0") {
+        //                     $discounttrx[]          = (int)$transaction['discval'];
+        //                 }
+        //                 if ($transaction['disctype'] !== "0") {
+        //                     $sub =  ($transaction['trxdetval'] * $transaction['qty']);
+        //                     $discounttrxpersen[]    =  ((int)$transaction['discval'] / 100) * $sub;
+        //                 }
+        //                 $discountvariant[]          = $transaction['discvar'];
+        //                 $discountpoin[]             = $transaction['redempoin'];
+
+        //                 $omsetcalculation[] = [
+        //                     'omset'         => (($transaction['trxdetval'] * $transaction['qty']) - $transaction['discvar']),
+        //                     'modalprice'    => (($transaction['trxdetval'] * $transaction['qty']) - ($transaction['discvar'])) - $transaction['marginmodal'] * $transaction['qty'],
+        //                     'basicprice'    => (($transaction['trxdetval'] * $transaction['qty']) - ($transaction['discvar'])) - $transaction['margindasar'] * $transaction['qty'],
+        //                 ];
+        //             }
+        //         }
+
+        //         // margin 
+        //         $marginmodalsum = array_sum($marginmodals);
+        //         $margindasarsum = array_sum($margindasars);
+        //     }
+
+        //     // discount sum
+        //     $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
+        //     $variantdisc     = array_sum($discountvariant);
+        //     $poindisc        = array_sum($discountpoin);
+
+        //     // Discount Setup
+        //     $discount[] = [
+        //         'trxdisc'       => $transactiondisc,
+        //         'variantdis'    => $variantdisc,
+        //         'poindisc'      => $poindisc,
+        //     ];
+
+        //     $totaltrxdisc = array_sum(array_column($discount, 'trxdisc'));
+        //     $totalvardisc = array_sum(array_column($discount, 'variantdis'));
+        //     $totalpoindisc = array_sum(array_column($discount, 'poindisc'));
+
+        //     // total discount
+        //     // $alldisc = (int)$totaltrxdisc + (int)$totalvardisc + (int)$totalpoindisc;
+        //     $alldisc    = $totaldiscount;
+
+        //     $date1 = date('Y-m-d', strtotime($startdate));
+        //     $date2 = date('Y-m-d', strtotime($startdate));
+        //     $day1 = date_create($date1);
+        //     $day2 = date_create($date2);
+        //     $interval = date_diff($day1, $day2)->format("%a");
+
+        //     // Profit Calculation
+        //     // $modalprice     = array_sum(array_column($omsetcalculation, 'modalprice'));
+        //     // $omsetbaru      = array_sum(array_column($omsetcalculation, 'omset'));
+        //     // $basicprice     = array_sum(array_column($omsetcalculation, 'basicprice'));
+        //     $modalprice     = $totalmodal;
+        //     $basicprice     = $totaldasar;
+        //     $omsetbaru      = (int)$totalsales + (int)$totaldiscount + (int)$totalredpoin;
+        //     $profitvalue    = $omsetbaru - $modalprice;
+        // } else {
+
+        //     $outlet = $OutletModel->find($this->data['outletPick']);
+        //     $outletname = $outlet['name'];
+        //     $address = $outlet['address'];
+        //     $date1 = date('Y-m-d', strtotime($startdate));
+        //     $date2 = date('Y-m-d', strtotime($startdate));
+        //     $day1 = date_create($date1);
+        //     $day2 = date_create($date2);
+
+        //     // Profit Calculation
+        //     $totalsales = 0;
+        //     $alldisc = 0;
+        //     $modalprice     = 0;
+        //     $basicprice     = 0;
+        //     $omsetbaru      = 0;
+        //     $profitvalue    = 0;
+        // }
 
         // Set Cash In Cash Out
-        $cashin  = [];
-        $cashout = [];
-        foreach ($cash as $cas) {
-            if ($cas['type'] === "0") {
-                $cashin[] = $cas['qty'];
-            } elseif ($cas['type'] !== "0") {
-                $cashout[] = $cas['qty'];
-            }
-        }
-        $casin = array_sum($cashin);
-        $casout = array_sum($cashout);
+        // $cashin  = [];
+        // $cashout = [];
+        // foreach ($cash as $cas) {
+        //     if ($cas['type'] === "0") {
+        //         $cashin[] = $cas['qty'];
+        //     } elseif ($cas['type'] !== "0") {
+        //         $cashout[] = $cas['qty'];
+        //     }
+        // }
+        // $casin = array_sum($cashin);
+        // $casout = array_sum($cashout);
 
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=sales$date1-$date2.xls");
@@ -563,7 +569,7 @@ class export extends BaseController
 
         echo '<tr >';
         echo '<th style="text-align: left;">Penjualan</th>';
-        echo '<td style="text-align: right;">' . $totalsales . '</td>';
+        echo '<td style="text-align: right;">' . $salesresult . '</td>';
         echo '</tr>';
         echo '<tr>';
         echo '<th style="text-align: left;">Diskon</th>';
@@ -571,15 +577,15 @@ class export extends BaseController
         echo '</tr>';
         echo '<tr>';
         echo '<th style="text-align: left;">Total Omset</th>';
-        echo '<td style="text-align: right;">' . $omsetbaru . '</td>';
+        echo '<td style="text-align: right;">' . $grossales . '</td>';
         echo '</tr>';
         echo '<tr>';
         echo '<th style="text-align: left;">Harga Modal</th>';
-        echo '<td style="text-align: right;">' . $modalprice . '</td>';
+        echo '<td style="text-align: right;">' . $marginmodalsum . '</td>';
         echo '</tr>';
         echo '<tr>';
         echo '<th style="text-align: left;">Harga Dasar</th>';
-        echo '<td style="text-align: right;">' . $basicprice . '</td>';
+        echo '<td style="text-align: right;">' . $margindasarsum . '</td>';
         echo '</tr>';
         echo '<tr>';
         echo '<th style="text-align: left;">Kas Masuk</th>';
@@ -598,7 +604,6 @@ class export extends BaseController
 
     public function product()
     {
-
         // Calling models
         $TransactionModel   = new TransactionModel();
         $TrxdetailModel     = new TrxdetailModel();
@@ -1107,58 +1112,12 @@ class export extends BaseController
 
         $transactions = array();
         $transactionarr = array();
-        // for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-        //     if ($this->data['outletPick'] === null) {
-        //         // if ($startdate === $enddate) {
-        //             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
-        //         // } else {
-        //         //     $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->find();
-        //         // }
-        //     } else {
-        //         // if ($startdate === $enddate) {
-        //             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
-        //         // } else {
-        //         //     $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
-        //         // }
-        //     }
-        //     $trxdetails  = $TrxdetailModel->findAll();
-        //     $variants    = $VariantModel->findAll();
-
-        //     $summary = array_sum(array_column($transaction, 'value'));
-        //     $marginmodals = array();
-        //     $margindasars = array();
-        //     // dd($transaction);
-
-        //     foreach ($transaction as $trx) {
-        //         foreach ($trxdetails as $trxdetail) {
-        //             if ($trx['id'] === $trxdetail['transactionid']) {
-        //                 $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
-        //                 $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
-        //                 $marginmodals[] = $marginmodal;
-        //                 $margindasars[] = $margindasar;
-        //             }
-        //         }
-        //     }
-
-        //     $marginmodalsum = array_sum($marginmodals);
-        //     $margindasarsum = array_sum($margindasars);
-
-        //     $transactions[] = [
-        //         'date'      => date('d/m/y', $date),
-        //         'value'     => $summary,
-        //         'modal'     => $marginmodalsum,
-        //         'dasar'     => $margindasarsum,
-        //     ];
-        // }
         for ($date = $startdate; $date <= $enddate; $date += (86400)) {
             if ($this->data['outletPick'] === null) {
                 $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
             } else {
                 $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
             }
-            // $variants    = $VariantModel->findAll();
-
-            // $summary = array_sum(array_column($transaction, 'value'));
             $marginmodals   = array();
             $margindasars   = array();
             $discount       = array();
@@ -1205,6 +1164,50 @@ class export extends BaseController
         $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
         $trxvalue        = array_sum(array_column($transactions, 'value'));
 
+        // for ($date = $startdate; $date <= $enddate; $date += (86400)) {
+        //     if ($this->data['outletPick'] === null) {
+        //         // if ($startdate === $enddate) {
+        //             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+        //         // } else {
+        //         //     $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->find();
+        //         // }
+        //     } else {
+        //         // if ($startdate === $enddate) {
+        //             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+        //         // } else {
+        //         //     $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+        //         // }
+        //     }
+        //     $trxdetails  = $TrxdetailModel->findAll();
+        //     $variants    = $VariantModel->findAll();
+
+        //     $summary = array_sum(array_column($transaction, 'value'));
+        //     $marginmodals = array();
+        //     $margindasars = array();
+        //     // dd($transaction);
+
+        //     foreach ($transaction as $trx) {
+        //         foreach ($trxdetails as $trxdetail) {
+        //             if ($trx['id'] === $trxdetail['transactionid']) {
+        //                 $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
+        //                 $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
+        //                 $marginmodals[] = $marginmodal;
+        //                 $margindasars[] = $margindasar;
+        //             }
+        //         }
+        //     }
+
+        //     $marginmodalsum = array_sum($marginmodals);
+        //     $margindasarsum = array_sum($margindasars);
+
+        //     $transactions[] = [
+        //         'date'      => date('d/m/y', $date),
+        //         'value'     => $summary,
+        //         'modal'     => $marginmodalsum,
+        //         'dasar'     => $margindasarsum,
+        //     ];
+        // }
+
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=profit.xls");
 
@@ -1249,6 +1252,36 @@ class export extends BaseController
         } else {
             $startdate  = date('Y-m-1' . ' 00:00:00');
             $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
+
+        $admins                 = $UserModel->findAll();
+        $employeedata           = [];
+        foreach ($admins as $admin) {
+            $employeedata[$admin->id]['name']  = $admin->username;
+            $usergroups         = $UserGroupModel->where('user_id', $admin->id)->find();
+            foreach ($usergroups as $usergroup) {
+                $groups         = $GroupModel->find($usergroup['group_id']);
+                $employeedata[$admin->id]['role']  = $groups->name;
+            }
+
+            if ($this->data['outletPick'] === null) {
+                $transactions   = $TransactionModel->where('userid', $admin->id)->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+                $addres = "All Outlets";
+                $outletname = "58vapehouse";
+            } else {
+                $transactions   = $TransactionModel->where('userid', $admin->id)->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                $outlets        = $OutletModel->find($this->data['outletPick']);
+                $addres         = $outlets['address'];
+                $outletname     = $outlets['name'];
+            }
+
+            $trxvalue           = [];
+            if (!empty($transactions)) {
+                foreach ($transactions as $trx) {
+                    $trxvalue[] = $trx['value'];
+                }
+            }
+            $employeedata[$admin->id]['value']  = array_sum($trxvalue);
         }
 
         // $addres = '';
@@ -1305,36 +1338,6 @@ class export extends BaseController
         // }
         // $produk = array_values($produk);
 
-        $admins                 = $UserModel->findAll();
-        $employeedata           = [];
-        foreach ($admins as $admin) {
-            $employeedata[$admin->id]['name']  = $admin->username;
-            $usergroups         = $UserGroupModel->where('user_id', $admin->id)->find();
-            foreach ($usergroups as $usergroup) {
-                $groups         = $GroupModel->find($usergroup['group_id']);
-                $employeedata[$admin->id]['role']  = $groups->name;
-            }
-
-            if ($this->data['outletPick'] === null) {
-                $transactions   = $TransactionModel->where('userid', $admin->id)->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-                $addres = "All Outlets";
-                $outletname = "58vapehouse";
-            } else {
-                $transactions   = $TransactionModel->where('userid', $admin->id)->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $outlets        = $OutletModel->find($this->data['outletPick']);
-                $addres         = $outlets['address'];
-                $outletname     = $outlets['name'];
-            }
-
-            $trxvalue           = [];
-            if (!empty($transactions)) {
-                foreach ($transactions as $trx) {
-                    $trxvalue[] = $trx['value'];
-                }
-            }
-            $employeedata[$admin->id]['value']  = array_sum($trxvalue);
-        }
-
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=employe$startdate-$enddate.xls");
 
@@ -1376,7 +1379,6 @@ class export extends BaseController
 
     public function customer()
     {
-
         // Calling Models
         $db                 = \Config\Database::connect();
         $TransactionModel   = new TransactionModel;
@@ -1490,7 +1492,6 @@ class export extends BaseController
 
     public function presence()
     {
-
         // calling model
         $PresenceModel  = new PresenceModel;
         $UserModel      = new UserModel;
