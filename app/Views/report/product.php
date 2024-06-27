@@ -18,13 +18,13 @@
         data.addColumn('string', 'category');
         data.addColumn('number', 'value');
         data.addRows([
-            <?php foreach ($products as $product){
+            <?php foreach ($products as $product) {
                 $produk     = $product['name'];
-                $sold       = $product['qty'];
                 $category   = $product['category'];
-                $value      = $product['netvalue'];
+                $sold       = array_sum($product['qty']);
+                $value      = array_sum($product['netvalue']);
                 echo "[ '$produk',$sold,'$category',$value],";
-            }?>
+            } ?>
         ]);
 
         var options = {
@@ -121,9 +121,9 @@
                         <tr>
                             <td style="color:white;"><?=$product['name']?></td>
                             <td style="color:white;"><?=$product['category']?></td>
-                            <td style="color:white;"><?php echo "Rp. ".number_format($product['netvalue'],0,',','.');" ";?></td>
-                            <td style="color:white;"><?php echo "Rp. ".number_format($product['grossvalue'],0,',','.');" ";?></td>
-                            <td class="uk-text-center" style="color:white;"><?=$product['qty']?></td>
+                            <td style="color:white;"><?php echo "Rp. ".number_format(array_sum($product['netvalue']),0,',','.');" ";?></td>
+                            <td style="color:white;"><?php echo "Rp. ".number_format(array_sum($product['grossvalue']),0,',','.');" ";?></td>
+                            <td class="uk-text-center" style="color:white;"><?= array_sum($product['qty']) ?></td>
                         </tr>
                     <?php } ?>
                 </tbody>

@@ -192,14 +192,14 @@ class Home extends BaseController
             }
 
             foreach ($trxdetailsdata as $trxdet) {
-                // Transaction Detail Margin Modal
-                // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
-                $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']);
+                // // Transaction Detail Margin Modal
+                // // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
+                // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']);
     
-                // Transaction Detail Discount Variant
-                if ($trxdet['discvar'] != 0) {
-                    $discount[]     = $trxdet['discvar'];
-                }
+                // // Transaction Detail Discount Variant
+                // if ($trxdet['discvar'] != 0) {
+                //     $discount[]     = $trxdet['discvar'];
+                // }
 
                 // Data Variant
                 $variantsdata       = $VariantModel->find($trxdet['variantid']);
@@ -211,8 +211,32 @@ class Home extends BaseController
 
                     if (!empty($productsdata)) {
                         $prodname   = $productsdata['name'];
+    
+                        // Transaction Detail Margin Modal
+                        // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
+                        $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']);
+
+                        // Products Sales
+                        $productsale[]  = $trxdet['qty'];
+    
+                        // Transaction Detail Discount Variant
+                        if ($trxdet['discvar'] != 0) {
+                            $discount[]     = $trxdet['discvar'];
+                        }
                     } else {
                         $prodname   = '';
+    
+                        // Transaction Detail Margin Modal
+                        // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
+                        $marginmodal[]      = 0;
+    
+                        // Products Sales
+                        $productsale[]  = 0;
+    
+                        // Transaction Detail Discount Variant
+                        if ($trxdet['discvar'] != 0) {
+                            $discount[]     = 0;
+                        }
                     }
                 } else {
                     $varname        = '';
@@ -227,9 +251,33 @@ class Home extends BaseController
                 if (!empty($bundlesdata)) {
                     $bundleid       = $bundlesdata['id'];
                     $bundlename     = $bundlesdata['name'];
+    
+                    // Transaction Detail Margin Modal
+                    // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
+                    $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']);
+    
+                    // Products Sales
+                    $productsale[]  = $trxdet['qty'];
+    
+                    // Transaction Detail Discount Variant
+                    if ($trxdet['discvar'] != 0) {
+                        $discount[]     = $trxdet['discvar'];
+                    }
                 } else {
                     $bundleid       = '';
                     $bundlename     = '';
+    
+                    // Transaction Detail Margin Modal
+                    // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
+                    $marginmodal[]      = 0;
+    
+                    // Products Sales
+                    $productsale[]  = 0;
+    
+                    // Transaction Detail Discount Variant
+                    if ($trxdet['discvar'] != 0) {
+                        $discount[]     = 0;
+                    }
                 }
 
                 // Best Selling Product
@@ -241,8 +289,8 @@ class Home extends BaseController
                     $name       = $bundlename;
                 }
     
-                // Products Sales
-                $productsale[]  = $trxdet['qty'];
+                // // Products Sales
+                // $productsale[]  = $trxdet['qty'];
 
                 // Product Data For Best Selling
                 $bestproduct[]    = [

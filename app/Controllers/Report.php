@@ -129,6 +129,8 @@ class Report extends BaseController
         $TransactionModel       = new TransactionModel;
         $TrxdetailModel         = new TrxdetailModel;
         $VariantModel           = new VariantModel;
+        $ProductModel           = new ProductModel;
+        $BundleModel            = new BundleModel;
 
         $input = $this->request->getGet('daterange');
 
@@ -143,10 +145,8 @@ class Report extends BaseController
 
         $transactions       = array();
         $transactionarr     = array();
-        $discount           = array();
         $memberdisc         = array();
         $discounttrx        = array();
-        $discounttrxpersen  = array();
         $discountvariant    = array();
         $discountpoin       = array();
         // for ($date = $startdate; $date <= $enddate; $date += (86400)) {
@@ -189,6 +189,7 @@ class Report extends BaseController
 
             foreach ($transaction as $trx) {
                 $trxdetails  = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+
                 if (!empty($trx['discvalue'])) {
                     // if ($trx['disctype'] == "0") {
                     //     $discounttrx[]  = $trx['discvalue'];
@@ -197,19 +198,55 @@ class Report extends BaseController
                     // }
                     $discounttrx[]  = $trx['discvalue'];
                 }
+
                 $discountpoin[]             = $trx['pointused'];
                 $memberdisc[]               = $trx['memberdisc'];
+
                 foreach ($trxdetails as $trxdetail) {
-                    // if ($trx['id'] == $trxdetail['transactionid']) {
-                    //     if ($trx['disctype'] === "0") {
-                    //         $discounttrx[]          = $trx['discvalue'];
-                    //     }
-                    //     if ($trx['disctype'] !== "0") {
-                    //         $sub =  ((int)$trxdetail['value'] * (int)$trxdetail['qty']);
-                    //         $discounttrxpersen[]    =  ((int)$trx['discvalue'] / 100) * (int)$sub;
-                    //     }
-                        $discountvariant[]          = $trxdetail['discvar'];
+                    // if ($trx['disctype'] === "0") {
+                    //     $discounttrx[]          = $trx['discvalue'];
                     // }
+                    // if ($trx['disctype'] !== "0") {
+                    //     $sub =  ((int)$trxdetail['value'] * (int)$trxdetail['qty']);
+                    //     $discounttrxpersen[]    =  ((int)$trx['discvalue'] / 100) * (int)$sub;
+                    // }
+                    // $discountvariant[]          = $trxdetail['discvar'];
+
+                    // Data Variant
+                    $variantsdata       = $VariantModel->find($trxdetail['variantid']);
+
+                    if (!empty($variantsdata)) {
+                        $productsdata   = $ProductModel->find($variantsdata['productid']);
+
+                        if (!empty($productsdata)) {
+                            // Transaction Detail Discount Variant
+                            if ($trxdetail['discvar'] != '0') {
+                                $discountvariant[]     = $trxdetail['discvar'];
+                            }
+                        } else {
+                            // Transaction Detail Discount Variant
+                            if ($trxdetail['discvar'] != '0') {
+                                $discountvariant[]     = 0;
+                            }
+                        }
+                    } else {
+                        $productsdata   = '';
+                    }
+
+                    // Data Bundle
+                    $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
+
+                    if (!empty($bundlesdata)) {
+                        // Transaction Detail Discount Variant
+                        if ($trxdetail['discvar'] != '0') {
+                            $discountvariant[]     = $trxdetail['discvar'];
+                        }
+                    } else {
+                        // Transaction Detail Discount Variant
+                        if ($trxdetail['discvar'] != '0') {
+                            $discountvariant[]     = 0;
+                        }
+                    }
                 }
             }
             $transactions[] = [
@@ -254,7 +291,9 @@ class Report extends BaseController
         // Calling Models
         $TransactionModel       = new TransactionModel;
         $TrxdetailModel         = new TrxdetailModel;
-        // $VariantModel           = new VariantModel;
+        $VariantModel           = new VariantModel;
+        $ProductModel           = new ProductModel;
+        $BundleModel            = new BundleModel;
 
         $input = $this->request->getGet('daterange');
 
@@ -284,26 +323,65 @@ class Report extends BaseController
 
             foreach ($transaction as $trx) {
                 $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-                $totaltrxdet    = count($trxdetails);
-                if ($trx['discvalue'] != null) {
+                
+                if ($trx['discvalue'] != '0') {
                     $discount[]   = (int)$trx['discvalue'];
                 } else {
                     $discount[]   = 0;
                 }
 
-                if ($trx['memberdisc'] != null) {
+                if ($trx['memberdisc'] != '0') {
                     $discount[]   = (int)$trx['memberdisc'];
                 } else {
                     $discount[]   = 0;
                 }
 
                 foreach ($trxdetails as $trxdetail) {
-                    // $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
-                    // $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
-                    $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
-                    $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                    // $marginmodals[] = $marginmodal;
-                    // $margindasars[] = $margindasar;
+                    // // Transaction Detail Margin Modal
+                    // $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+
+                    // // Transaction Detail Margin Dasar
+                    // $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+
+                    // Data Variant
+                    $variantsdata       = $VariantModel->find($trxdetail['variantid']);
+
+                    if (!empty($variantsdata)) {
+                        $productsdata   = $ProductModel->find($variantsdata['productid']);
+
+                        if (!empty($productsdata)) {
+                            // Transaction Detail Margin Modal
+                            $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+
+                            // Transaction Detail Margin Dasar
+                            $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                        } else {
+                            // Transaction Detail Margin Modal
+                            $marginmodals[] = 0;
+
+                            // Transaction Detail Margin Dasar
+                            $margindasars[] = 0;
+                        }
+                    } else {
+                        $productsdata   = '';
+                    }
+
+                    // Data Bundle
+                    $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
+
+                    if (!empty($bundlesdata)) {
+                        // Transaction Detail Margin Modal
+                        $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+
+                        // Transaction Detail Margin Dasar
+                        $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                    } else {
+                        // Transaction Detail Margin Modal
+                        $marginmodals[] = 0;
+
+                        // Transaction Detail Margin Dasar
+                        $margindasars[] = 0;
+                    }
                 }
             }
 
@@ -337,96 +415,6 @@ class Report extends BaseController
         $data['enddate']            = $enddate;
 
         return view('Views/report/keuntungan', $data);
-    }
-
-    public function diskon()
-    {
-        // Calling Models
-        $TransactionModel       = new TransactionModel;
-        $TrxdetailModel         = new TrxdetailModel;
-        $GconfigModel           = new GconfigModel;
-        // Populating Data
-        $trxdetails             = $TrxdetailModel->findAll();
-        $Gconfig                = $GconfigModel->first();
-
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
-        }
-
-        $transactions = array();
-        if ($this->data['outletPick'] === null) {
-            // if ($startdate === $enddate) {
-                $transaction = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-            // } else {
-            //     $transaction = $TransactionModel->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->find();
-            // }
-        } else {
-            // if ($startdate === $enddate) {
-                $transaction = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-            // }
-            // $transaction = $TransactionModel->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->where('outletid', $this->data['outletPick'])->find();
-        }
-        foreach ($transaction as $trx) {
-            $discounttrx = array();
-            $discounttrxpersen = array();
-            $discountmember = array();
-            $discountvariant = array();
-            $discountpoin = array();
-            foreach ($trxdetails as $trxdetail) {
-                if ($trx['id'] === $trxdetail['transactionid']) {
-                    if ($trx['disctype'] === "0") {
-                        $discounttrx[]          = $trx['discvalue'];
-                    }
-                    if ($trx['disctype'] !== "0") {
-                        // $sub =  ((int)$trxdetail['value'] * (int)$trxdetail['qty']);
-                        // $discounttrxpersen[]    =  (int)$sub * ((int)$trx['discvalue'] / 100);
-                        $discounttrxpersen[]    =  (int)$trx['discvalue'];
-                    }
-                    if ($trx['memberdisc'] != null) {
-                        $discountmember[]   = $trx['memberdisc'];
-                    }
-                    $discountvariant[]          = $trxdetail['discvar'];
-                    $discountpoin[]             = $trx['pointused'];
-                }
-            }
-
-            $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($discounttrxpersen)) + (int)(array_sum($discountmember));
-            $variantdisc     = array_sum($discountvariant);
-            $poindisc        = array_sum($discountpoin);
-
-            $transactions[] = [
-                'id'            => $trx['id'],
-                'trxdisc'       => $transactiondisc,
-                'variantdis'    => $variantdisc,
-                'poindisc'      => $poindisc,
-            ];
-        }
-
-        $trxvar = array_sum(array_column($transactions, 'variantdis'));
-        $trxdis = array_sum(array_column($transactions, 'trxdisc'));
-        $dispoint = array_sum(array_column($transactions, 'poindisc'));
-
-
-        // Parsing Data to View
-        $data                   = $this->data;
-        $data['title']          = lang('Global.discountreport');
-        $data['description']    = lang('Global.profitListDesc');
-        $data['transactions']   = $transactions;
-        $data['trxvardis']      = $trxvar;
-        $data['trxdisc']        = $trxdis;
-        $data['poindisc']       = $dispoint;
-        $data['startdate']      = strtotime($startdate);
-        $data['enddate']        = strtotime($enddate);
-
-
-        return view('Views/report/diskon', $data);
     }
 
     public function payment()
@@ -558,6 +546,7 @@ class Report extends BaseController
                 $transactiondata[0]['qty']                      = count($debttotal);
                 $transactiondata[0]['value']                    = array_sum($debtvalue);
             }
+            array_multisort(array_column($transactiondata, 'value'), SORT_DESC, $transactiondata);
 
             // Parsing Data to View
             $data                   = $this->data;
@@ -781,14 +770,18 @@ class Report extends BaseController
                 } else {
                     $disc   = 0;
                 }
-
+                
                 if (!empty($trxdetails)) {
                     foreach ($trxdetails as $trxdet) {
                         $variants       = $VariantModel->find($trxdet['variantid']);
-
+                        
                         if (!empty($variants)) {
                             $productid  = $variants['productid'];
-                            $products   = $ProductModel->find($productid);
+                            // if (!empty($input['search'])) {
+                            //     $products   = $ProductModel->where('name', $input['search'])->find($productid);
+                            // } else {
+                                $products   = $ProductModel->find($productid);
+                            // }
 
                             if (!empty($products)) {
                                 $transactiondata[$productid]['name']            = $products['name'];
@@ -798,27 +791,30 @@ class Report extends BaseController
                                     $transactiondata[$productid]['category']    = $category['name'];
                                 }
                                 
-                                $transactiondata[$productid]['grossvalue']      = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
-                                $transactiondata[$productid]['netvalue']        = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - (Int)$disc;
-                                $transactiondata[$productid]['qty']             = $trxdet['qty'];
+                                // $transactiondata[$productid]['grossvalue']      = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                // $transactiondata[$productid]['netvalue']        = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - (Int)$disc;
+                                // $transactiondata[$productid]['qty']             = $trxdet['qty'];
+                                $transactiondata[$productid]['qty'][]           = $trxdet['qty'];
+                                $transactiondata[$productid]['netvalue'][]      = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                                $transactiondata[$productid]['grossvalue'][]    = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+
+                                $grossval[]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                $netval[]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                                $productsales[] = $trxdet['qty'];
                             } else {
-                                $category   = '';
+                                $category   = [];
                             }
                         } else {
-                            $products   = '';
+                            $products   = [];
                             $productid  = '';
-                            $category   = '';
+                            $category   = [];
                         }
-
-                        $grossval[]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
-                        $netval[]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - (Int)$disc;
-                        $productsales[] = $trxdet['qty'];
                     }
                 } else {
-                    $variants   = '';
-                    $products   = '';
+                    $variants   = [];
+                    $products   = [];
                     $productid  = '';
-                    $category   = '';
+                    $category   = [];
                 }
             }
             
@@ -826,7 +822,9 @@ class Report extends BaseController
             $totalnetsales  = array_sum($netval);
             $totalcatgross  = array_sum($grossval);
         }
-
+        array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
+        
+        // dd($transactiondata);
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.productreport');
@@ -843,143 +841,6 @@ class Report extends BaseController
         // $data['pager']          = $pager_links;
 
         return view('Views/report/product', $data);
-    }
-
-    public function presence()
-    {
-        // calling model
-        $PresenceModel  = new PresenceModel;
-        $UserModel      = new UserModel;
-        $UserGroupModel = new GroupUserModel;
-        $GroupModel     = new GroupModel;
-        $OutletModel    = new OutletModel;
-
-        // populating data
-        $presences  = $PresenceModel->findAll();
-        $users      = $UserModel->findAll();
-        $usergroups = $UserGroupModel->findAll();
-        $groups     = $GroupModel->findAll();
-
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
-        }
-
-        $addres = '';
-        if ($this->data['outletPick'] === null) {
-            // if ($startdate === $enddate) {
-                $presences = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
-            // } else {
-            //     $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate)->find();
-            // }
-            $addres = "All Outlets";
-            $outletname = "58vapehouse";
-        } else {
-            // if ($startdate === $enddate) {
-                $presences = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
-            // } else {
-            //     $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
-            // }
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
-            $outletname = $outlets['name'];
-        }
-
-        $absen = array();
-        foreach ($presences as $presence) {
-            foreach ($users as $user) {
-                if ($presence['userid'] === $user->id) {
-                    foreach ($usergroups as $ugroups) {
-                        if ($ugroups['user_id'] === $user->id) {
-                            foreach ($groups as $group) {
-                                if ($ugroups['group_id'] === $group->id) {
-                                    $absen[] = [
-                                        'id'        => $user->id,
-                                        'name'      => $user->username,
-                                        'date'      => $presence['datetime'],
-                                        'status'    => $presence['status'],
-                                        'role'      => $group->name,
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Sum Total Presence
-        $present = array();
-        foreach ($absen as $presence) {
-            if ($presence['status'] === '1') {
-                $present[] = $presence['status'];
-            }
-        }
-        $presen = count($present);
-
-        $admin = [];
-        $presen = '';
-        foreach ($absen as $abs) {
-            if (!isset($admin[$abs['id'] . $abs['name']])) {
-                $admin[$abs['id'] . $abs['name']] = $abs;
-            } else {
-                $admin[$abs['id'] . $abs['name']]['status'] += $abs['status'];
-            }
-        }
-        $admin = array_values($admin);
-
-
-        // parsing data to view
-        $data                   = $this->data;
-        $data['title']          = lang('Global.presencereport');
-        $data['description']    = lang('Global.presenceListDesc');
-        $data['presences']      = $admin;
-        $data['present']        = $presen;
-        $data['startdate']      = strtotime($startdate);
-        $data['enddate']        = strtotime($enddate);
-
-        return view('Views/report/presence', $data);
-    }
-
-    public function presencedetail($id)
-    {
-        // Calling Model
-        $PresenceModel      = new PresenceModel;
-        $pager              = \Config\Services::pager();
-
-        $datas = explode('-', $id);
-
-        $iduser = $datas[0];
-        $starts = $datas[1];
-        $ends   = $datas[2];
-
-        if (!empty($iduser)) {
-            // if ($starts === $ends) {
-                $presences = $PresenceModel->where('datetime >=', $starts . ' 00:00:00')->where('datetime <=', $ends . ' 23:59:59')->where('userid', $iduser)->orderby('id', 'DESC')->paginate(20, 'reportpresencedet');
-            // }
-            // $presences  = $PresenceModel->where('datetime >=', $starts . ' 00:00:00')->where('datetime <=', $ends . ' 23:59:59')->where('userid', $iduser)->orderBy('id', 'DESC')->paginate(20, 'reportpresecendet');
-        } else {
-            // if ($starts === $ends) {
-                $presences = $PresenceModel->where('datetime >=', $starts . ' 00:00:00')->where('datetime <=', $ends . ' 23:59:59')->orderby('id', 'DESC')->paginate(20, 'reportpresencedet');
-            // } else {
-            //     $presences  = $PresenceModel->where('datetime >=', $starts . ' 00:00:00')->where('datetime <=', $ends . ' 23:59:59')->orderBy('id', 'DESC')->paginate(20, 'reportpresencedet');
-            // }
-        }
-
-        // parsing data to view
-        $data                   = $this->data;
-        $data['title']          = lang('Global.presence');
-        $data['description']    = lang('Global.presencedetailListDesc');
-        $data['presences']      = $presences;
-        $data['pager']          = $PresenceModel->pager;
-
-        return view('Views/report/presencedetail', $data);
     }
 
     public function employe()
@@ -1087,6 +948,7 @@ class Report extends BaseController
             }
             $employeedata[$admin->id]['value']  = array_sum($trxvalue);
         }
+        array_multisort(array_column($employeedata, 'value'), SORT_DESC, $employeedata);
 
         // parsing data to view
         $data                   = $this->data;
@@ -1097,163 +959,6 @@ class Report extends BaseController
         $data['enddate']        = strtotime($enddate);
 
         return view('Views/report/employe', $data);
-    }
-
-    public function customer()
-    {
-
-        // Calling Models
-        $db                 = \Config\Database::connect();
-        $TransactionModel   = new TransactionModel;
-        $MemberModel        = new MemberModel;
-        $DebtModel          = new DebtModel;
-        $OutletModel        = new OutletModel;
-
-        $this->db       = \Config\Database::connect();
-        $pager          = \Config\Services::pager();
-
-        // Search Filter
-        $inputsearch    = $this->request->getGet('search');
-        if (!empty($inputsearch)) {
-            $members   = $MemberModel->like('name', $inputsearch)->orderBy('name', 'ASC')->paginate(20, 'member');
-        } else {
-            $members   = $MemberModel->orderBy('name', 'ASC')->paginate(20, 'member');
-        }
-
-        // dd($members);
-        // Populating Data
-        $debts              = $DebtModel->findAll();
-
-        if ($this->data['outletPick'] != null) {
-            $input = $this->request->getGet('daterange');
-
-            if (!empty($input)) {
-                $daterange = explode(' - ', $input);
-                $startdate = $daterange[0];
-                $enddate = $daterange[1];
-            } else {
-                $startdate  = date('Y-m-1' . ' 00:00:00');
-                $enddate    = date('Y-m-t' . ' 23:59:59');
-            }
-
-            $addres = '';
-            if ($this->data['outletPick'] === null) {
-                // if ($startdate === $enddate) {
-                    $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-                // } else {
-                //     $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-                // }
-                $addres = "All Outlets";
-                $outletname = "58vapehouse";
-            } else {
-                // if ($startdate === $enddate) {
-                    $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                // } else {
-                //     $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                // }
-                $outlets = $OutletModel->find($this->data['outletPick']);
-                $addres = $outlets['address'];
-                $outletname = $outlets['name'];
-            }
-
-
-            $customer = array();
-            foreach ($members as $member) {
-                $totaltrx = array();
-                $trxval = array();
-                $debtval    = array();
-                foreach ($debts as $debt) {
-                    if ($member['id'] === $debt['memberid']) {
-                        $debtval[]  = $debt['value'];
-                    }
-                }
-                foreach ($transactions as $trx) {
-                    if ($member['id'] === $trx['memberid']) {
-                        $totaltrx[] = $trx['memberid'];
-                        $trxval[]   = $trx['value'];
-                    }
-                }
-
-                $customer[] = [
-                    'id'    => $member['id'],
-                    'name'  => $member['name'],
-                    'debt'  => array_sum($debtval),
-                    'trx'   => count($totaltrx),
-                    'value' => array_sum($trxval),
-                    'phone' => $member['phone'],
-                ];
-            }
-
-            // Parsing Data to View
-            $data                       = $this->data;
-            $data['title']              = lang('Global.customer');
-            $data['description']        = lang('Global.customerListDesc');
-            $data['customers']          = $customer;
-            $data['pager']              = $MemberModel->pager;
-            $data['startdate']          = strtotime($startdate);
-            $data['enddate']            = strtotime($enddate);
-
-            return view('Views/report/customer', $data);
-        } else {
-            return redirect()->to('');
-        }
-    }
-
-    public function customerdetail($id)
-    {
-
-        // Calling Models
-        $BundleModel            = new BundleModel;
-        $BundledetModel         = new BundledetailModel;
-        $CashModel              = new CashModel;
-        $OutletModel            = new OutletModel;
-        $UserModel              = new UserModel;
-        $MemberModel            = new MemberModel;
-        $PaymentModel           = new PaymentModel;
-        $ProductModel           = new ProductModel;
-        $VariantModel           = new VariantModel;
-        $StockModel             = new StockModel;
-        $TransactionModel       = new TransactionModel;
-        $TrxdetailModel         = new TrxdetailModel;
-        $TrxpaymentModel        = new TrxpaymentModel;
-        $DebtModel              = new DebtModel;
-
-        // Populating Data
-        $bundles                = $BundleModel->findAll();
-        $bundets                = $BundledetModel->findAll();
-        $cash                   = $CashModel->findAll();
-        $outlets                = $OutletModel->findAll();
-        $users                  = $UserModel->findAll();
-        $customers              = $MemberModel->findAll();
-        $payments               = $PaymentModel->findAll();
-        $products               = $ProductModel->findAll();
-        $variants               = $VariantModel->findAll();
-        $stocks                 = $StockModel->findAll();
-        $transactions           = $TransactionModel->orderBy('date', 'DESC')->where('memberid', $id)->find();
-        $trxdetails             = $TrxdetailModel->findAll();
-        $trxpayments            = $TrxpaymentModel->findAll();
-        $debts                  = $DebtModel->where('memberid', $id)->find();
-
-        // Parsing Data to View
-        $data                   = $this->data;
-        $data['title']          = lang('Global.trxHistory');
-        $data['description']    = lang('Global.trxHistoryListDesc');
-        $data['bundles']        = $bundles;
-        $data['bundets']        = $bundets;
-        $data['cash']           = $cash;
-        $data['users']          = $users;
-        $data['transactions']   = $transactions;
-        $data['outlets']        = $outlets;
-        $data['payments']       = $payments;
-        $data['customers']      = $customers;
-        $data['products']       = $products;
-        $data['variants']       = $variants;
-        $data['stocks']         = $stocks;
-        $data['trxdetails']     = $trxdetails;
-        $data['trxpayments']    = $trxpayments;
-        $data['debts']          = $debts;
-
-        return view('Views/report/customerdetail', $data);
     }
 
     public function bundle()
@@ -1731,6 +1436,433 @@ class Report extends BaseController
         $data['whole']          = $whole;
 
         return view('Views/report/stockcategory', $data);
+    }
+
+    public function diskon()
+    {
+        // Calling Models
+        $TransactionModel       = new TransactionModel;
+        $TrxdetailModel         = new TrxdetailModel;
+        $GconfigModel           = new GconfigModel;
+        $VariantModel           = new VariantModel;
+        $ProductModel           = new ProductModel;
+        $BundleModel            = new BundleModel;
+
+        // Populating Data
+        $Gconfig                = $GconfigModel->first();
+
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
+
+        $transactions = array();
+        if ($this->data['outletPick'] === null) {
+            // if ($startdate === $enddate) {
+                $transaction = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            // } else {
+            //     $transaction = $TransactionModel->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->find();
+            // }
+        } else {
+            // if ($startdate === $enddate) {
+                $transaction = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            // }
+            // $transaction = $TransactionModel->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->where('outletid', $this->data['outletPick'])->find();
+        }
+
+        $discounttrx        = array();
+        $discounttrxpersen  = array();
+        $discountmember     = array();
+        $discountvariant    = array();
+        $discountpoin       = array();
+
+        foreach ($transaction as $trx) {
+            if ($trx['discvalue'] != "0") {
+                $discounttrx[]          = $trx['discvalue'];
+                $discounttrxpersen[]    =  (int)$trx['discvalue'];
+            }
+
+            if ($trx['memberdisc'] != '0') {
+                $discountmember[]       = $trx['memberdisc'];
+            }
+            
+            if ($trx['pointused'] != '0') {
+                $discountpoin[]         = $trx['pointused'];
+            }
+            
+            $trxdetails         = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+            foreach ($trxdetails as $trxdetail) {
+                // // Discount Variant
+                // if ($trxdetail['discvar'] != '0') {
+                //     $discountvariant[]     = $trxdetail['discvar'];
+                // }
+
+                // Data Variant
+                $variantsdata       = $VariantModel->find($trxdetail['variantid']);
+
+                if (!empty($variantsdata)) {
+                    $productsdata   = $ProductModel->find($variantsdata['productid']);
+
+                    if (!empty($productsdata)) {
+                        // Transaction Detail Discount Variant
+                        if ($trxdetail['discvar'] != '0') {
+                            $discountvariant[]     = $trxdetail['discvar'];
+                        }
+                    } else {
+                        // Transaction Detail Discount Variant
+                        if ($trxdetail['discvar'] != '0') {
+                            $discountvariant[]     = 0;
+                        }
+                    }
+                } else {
+                    $productsdata   = '';
+                }
+
+                // Data Bundle
+                $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
+
+                if (!empty($bundlesdata)) {
+                    // Transaction Detail Discount Variant
+                    if ($trxdetail['discvar'] != '0') {
+                        $discountvariant[]     = $trxdetail['discvar'];
+                    }
+                } else {
+                    // Transaction Detail Discount Variant
+                    if ($trxdetail['discvar'] != '0') {
+                        $discountvariant[]     = 0;
+                    }
+                }
+            }
+
+            $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($discounttrxpersen)) + (int)(array_sum($discountmember));
+            $variantdisc     = array_sum($discountvariant);
+            $poindisc        = array_sum($discountpoin);
+
+            $transactions[] = [
+                'id'            => $trx['id'],
+                'trxdisc'       => $transactiondisc,
+                'variantdis'    => $variantdisc,
+                'poindisc'      => $poindisc,
+            ];
+        }
+
+        $trxvar = array_sum(array_column($transactions, 'variantdis'));
+        $trxdis = array_sum(array_column($transactions, 'trxdisc'));
+        $dispoint = array_sum(array_column($transactions, 'poindisc'));
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = lang('Global.discountreport');
+        $data['description']    = lang('Global.profitListDesc');
+        $data['transactions']   = $transactions;
+        $data['trxvardis']      = $trxvar;
+        $data['trxdisc']        = $trxdis;
+        $data['poindisc']       = $dispoint;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
+
+
+        return view('Views/report/diskon', $data);
+    }
+
+    public function presence()
+    {
+        // calling model
+        $PresenceModel  = new PresenceModel;
+        $UserModel      = new UserModel;
+        $UserGroupModel = new GroupUserModel;
+        $GroupModel     = new GroupModel;
+        $OutletModel    = new OutletModel;
+
+        // populating data
+        $presences  = $PresenceModel->findAll();
+        $users      = $UserModel->findAll();
+        $usergroups = $UserGroupModel->findAll();
+        $groups     = $GroupModel->findAll();
+
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
+
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            // if ($startdate === $enddate) {
+                $presences = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
+            // } else {
+            //     $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate)->find();
+            // }
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            // if ($startdate === $enddate) {
+                $presences = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
+            // } else {
+            //     $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
+            // }
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
+
+        $absen = array();
+        foreach ($presences as $presence) {
+            foreach ($users as $user) {
+                if ($presence['userid'] === $user->id) {
+                    foreach ($usergroups as $ugroups) {
+                        if ($ugroups['user_id'] === $user->id) {
+                            foreach ($groups as $group) {
+                                if ($ugroups['group_id'] === $group->id) {
+                                    $absen[] = [
+                                        'id'        => $user->id,
+                                        'name'      => $user->username,
+                                        'date'      => $presence['datetime'],
+                                        'status'    => $presence['status'],
+                                        'role'      => $group->name,
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Sum Total Presence
+        $present = array();
+        foreach ($absen as $presence) {
+            if ($presence['status'] === '1') {
+                $present[] = $presence['status'];
+            }
+        }
+        $presen = count($present);
+
+        $admin = [];
+        $presen = '';
+        foreach ($absen as $abs) {
+            if (!isset($admin[$abs['id'] . $abs['name']])) {
+                $admin[$abs['id'] . $abs['name']] = $abs;
+            } else {
+                $admin[$abs['id'] . $abs['name']]['status'] += $abs['status'];
+            }
+        }
+        $admin = array_values($admin);
+
+
+        // parsing data to view
+        $data                   = $this->data;
+        $data['title']          = lang('Global.presencereport');
+        $data['description']    = lang('Global.presenceListDesc');
+        $data['presences']      = $admin;
+        $data['present']        = $presen;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
+
+        return view('Views/report/presence', $data);
+    }
+
+    public function presencedetail($id)
+    {
+        // Calling Model
+        $PresenceModel      = new PresenceModel;
+        $pager              = \Config\Services::pager();
+
+        $datas = explode('-', $id);
+
+        $iduser = $datas[0];
+        $starts = $datas[1];
+        $ends   = $datas[2];
+
+        if (!empty($iduser)) {
+            // if ($starts === $ends) {
+                $presences = $PresenceModel->where('datetime >=', $starts . ' 00:00:00')->where('datetime <=', $ends . ' 23:59:59')->where('userid', $iduser)->orderby('id', 'DESC')->paginate(20, 'reportpresencedet');
+            // }
+            // $presences  = $PresenceModel->where('datetime >=', $starts . ' 00:00:00')->where('datetime <=', $ends . ' 23:59:59')->where('userid', $iduser)->orderBy('id', 'DESC')->paginate(20, 'reportpresecendet');
+        } else {
+            // if ($starts === $ends) {
+                $presences = $PresenceModel->where('datetime >=', $starts . ' 00:00:00')->where('datetime <=', $ends . ' 23:59:59')->orderby('id', 'DESC')->paginate(20, 'reportpresencedet');
+            // } else {
+            //     $presences  = $PresenceModel->where('datetime >=', $starts . ' 00:00:00')->where('datetime <=', $ends . ' 23:59:59')->orderBy('id', 'DESC')->paginate(20, 'reportpresencedet');
+            // }
+        }
+
+        // parsing data to view
+        $data                   = $this->data;
+        $data['title']          = lang('Global.presence');
+        $data['description']    = lang('Global.presencedetailListDesc');
+        $data['presences']      = $presences;
+        $data['pager']          = $PresenceModel->pager;
+
+        return view('Views/report/presencedetail', $data);
+    }
+
+    public function customer()
+    {
+
+        // Calling Models
+        $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel;
+        $MemberModel        = new MemberModel;
+        $DebtModel          = new DebtModel;
+        $OutletModel        = new OutletModel;
+
+        $this->db       = \Config\Database::connect();
+        $pager          = \Config\Services::pager();
+
+        // Search Filter
+        $inputsearch    = $this->request->getGet('search');
+        if (!empty($inputsearch)) {
+            $members   = $MemberModel->like('name', $inputsearch)->orderBy('name', 'ASC')->paginate(20, 'member');
+        } else {
+            $members   = $MemberModel->orderBy('name', 'ASC')->paginate(20, 'member');
+        }
+
+        // dd($members);
+        // Populating Data
+        $debts              = $DebtModel->findAll();
+
+        if ($this->data['outletPick'] != null) {
+            $input = $this->request->getGet('daterange');
+
+            if (!empty($input)) {
+                $daterange = explode(' - ', $input);
+                $startdate = $daterange[0];
+                $enddate = $daterange[1];
+            } else {
+                $startdate  = date('Y-m-1' . ' 00:00:00');
+                $enddate    = date('Y-m-t' . ' 23:59:59');
+            }
+
+            $addres = '';
+            if ($this->data['outletPick'] === null) {
+                // if ($startdate === $enddate) {
+                    $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+                // } else {
+                //     $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+                // }
+                $addres = "All Outlets";
+                $outletname = "58vapehouse";
+            } else {
+                // if ($startdate === $enddate) {
+                    $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                // } else {
+                //     $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                // }
+                $outlets = $OutletModel->find($this->data['outletPick']);
+                $addres = $outlets['address'];
+                $outletname = $outlets['name'];
+            }
+
+
+            $customer = array();
+            foreach ($members as $member) {
+                $totaltrx = array();
+                $trxval = array();
+                $debtval    = array();
+                foreach ($debts as $debt) {
+                    if ($member['id'] === $debt['memberid']) {
+                        $debtval[]  = $debt['value'];
+                    }
+                }
+                foreach ($transactions as $trx) {
+                    if ($member['id'] === $trx['memberid']) {
+                        $totaltrx[] = $trx['memberid'];
+                        $trxval[]   = $trx['value'];
+                    }
+                }
+
+                $customer[] = [
+                    'id'    => $member['id'],
+                    'name'  => $member['name'],
+                    'debt'  => array_sum($debtval),
+                    'trx'   => count($totaltrx),
+                    'value' => array_sum($trxval),
+                    'phone' => $member['phone'],
+                ];
+            }
+
+            // Parsing Data to View
+            $data                       = $this->data;
+            $data['title']              = lang('Global.customer');
+            $data['description']        = lang('Global.customerListDesc');
+            $data['customers']          = $customer;
+            $data['pager']              = $MemberModel->pager;
+            $data['startdate']          = strtotime($startdate);
+            $data['enddate']            = strtotime($enddate);
+
+            return view('Views/report/customer', $data);
+        } else {
+            return redirect()->to('');
+        }
+    }
+
+    public function customerdetail($id)
+    {
+
+        // Calling Models
+        $BundleModel            = new BundleModel;
+        $BundledetModel         = new BundledetailModel;
+        $CashModel              = new CashModel;
+        $OutletModel            = new OutletModel;
+        $UserModel              = new UserModel;
+        $MemberModel            = new MemberModel;
+        $PaymentModel           = new PaymentModel;
+        $ProductModel           = new ProductModel;
+        $VariantModel           = new VariantModel;
+        $StockModel             = new StockModel;
+        $TransactionModel       = new TransactionModel;
+        $TrxdetailModel         = new TrxdetailModel;
+        $TrxpaymentModel        = new TrxpaymentModel;
+        $DebtModel              = new DebtModel;
+
+        // Populating Data
+        $bundles                = $BundleModel->findAll();
+        $bundets                = $BundledetModel->findAll();
+        $cash                   = $CashModel->findAll();
+        $outlets                = $OutletModel->findAll();
+        $users                  = $UserModel->findAll();
+        $customers              = $MemberModel->findAll();
+        $payments               = $PaymentModel->findAll();
+        $products               = $ProductModel->findAll();
+        $variants               = $VariantModel->findAll();
+        $stocks                 = $StockModel->findAll();
+        $transactions           = $TransactionModel->orderBy('date', 'DESC')->where('memberid', $id)->find();
+        $trxdetails             = $TrxdetailModel->findAll();
+        $trxpayments            = $TrxpaymentModel->findAll();
+        $debts                  = $DebtModel->where('memberid', $id)->find();
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = lang('Global.trxHistory');
+        $data['description']    = lang('Global.trxHistoryListDesc');
+        $data['bundles']        = $bundles;
+        $data['bundets']        = $bundets;
+        $data['cash']           = $cash;
+        $data['users']          = $users;
+        $data['transactions']   = $transactions;
+        $data['outlets']        = $outlets;
+        $data['payments']       = $payments;
+        $data['customers']      = $customers;
+        $data['products']       = $products;
+        $data['variants']       = $variants;
+        $data['stocks']         = $stocks;
+        $data['trxdetails']     = $trxdetails;
+        $data['trxpayments']    = $trxpayments;
+        $data['debts']          = $debts;
+
+        return view('Views/report/customerdetail', $data);
     }
 
     public function sop()
