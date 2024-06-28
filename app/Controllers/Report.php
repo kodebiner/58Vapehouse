@@ -752,7 +752,7 @@ class Report extends BaseController
             foreach ($transactions as $trx) {
                 $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
                 $totaltrxdet    = count($trxdetails);
-
+    
                 if ($trx['discvalue'] != null) {
                     $disc   = floor((int)$trx['discvalue'] / (int)$totaltrxdet);
                 } else {
@@ -776,31 +776,31 @@ class Report extends BaseController
                         $variants       = $VariantModel->find($trxdet['variantid']);
                         
                         if (!empty($variants)) {
-                            $productid  = $variants['productid'];
+                            // $productid  = $variants['productid'];
                             // if (!empty($input['search'])) {
                             //     $products   = $ProductModel->where('name', $input['search'])->find($productid);
                             // } else {
-                                $products   = $ProductModel->find($productid);
+                                $products   = $ProductModel->find($variants['productid']);
                             // }
-
+    
                             if (!empty($products)) {
-                                $transactiondata[$productid]['name']            = $products['name'];
+                                $transactiondata[$products['id']]['name']            = $products['name'];
                                 $category   = $CategoryModel->find($products['catid']);
-
+    
                                 if (!empty($category)) {
-                                    $transactiondata[$productid]['category']    = $category['name'];
+                                    $transactiondata[$products['id']]['category']    = $category['name'];
                                 }
                                 
                                 // $transactiondata[$productid]['grossvalue']      = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
                                 // $transactiondata[$productid]['netvalue']        = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - (Int)$disc;
                                 // $transactiondata[$productid]['qty']             = $trxdet['qty'];
-                                $transactiondata[$productid]['qty'][]           = $trxdet['qty'];
-                                $transactiondata[$productid]['netvalue'][]      = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                                $transactiondata[$productid]['grossvalue'][]    = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
-
-                                $grossval[]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
-                                $netval[]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                                $productsales[] = $trxdet['qty'];
+                                $transactiondata[$products['id']]['qty'][]           = $trxdet['qty'];
+                                $transactiondata[$products['id']]['netvalue'][]      = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                                $transactiondata[$products['id']]['grossvalue'][]    = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+    
+                                // $grossval[$products['id']][]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                // $netval[$products['id']][]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                                // $productsales[$products['id']][] = $trxdet['qty'];
                             } else {
                                 $category   = [];
                             }
@@ -808,6 +808,15 @@ class Report extends BaseController
                             $products   = [];
                             $productid  = '';
                             $category   = [];
+                            $transactiondata[0]['name']           = 'Produk Terhapus';
+                            $transactiondata[0]['category']       = 'Produk Terhapus';
+                            $transactiondata[0]['qty'][]                        = $trxdet['qty'];
+                            $transactiondata[0]['netvalue'][]                   = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                            $transactiondata[0]['grossvalue'][]                 = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+    
+                            // $grossval[]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                            // $netval[]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                            // $productsales[] = $trxdet['qty'];
                         }
                     }
                 } else {
@@ -816,6 +825,12 @@ class Report extends BaseController
                     $productid  = '';
                     $category   = [];
                 }
+            }
+            
+            foreach ($transactiondata as $trxdata) {
+                $productsales[] = array_sum($trxdata['qty']);
+                $netval[] = array_sum($trxdata['netvalue']);
+                $grossval[] = array_sum($trxdata['grossvalue']);
             }
             
             $totalsalesitem = array_sum($productsales);
@@ -1476,6 +1491,8 @@ class Report extends BaseController
             // $transaction = $TransactionModel->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->where('outletid', $this->data['outletPick'])->find();
         }
 
+        $discount           = array();
+        $pointused          = array();
         $discounttrx        = array();
         $discounttrxpersen  = array();
         $discountmember     = array();
@@ -1483,87 +1500,105 @@ class Report extends BaseController
         $discountpoin       = array();
 
         foreach ($transaction as $trx) {
-            if ($trx['discvalue'] != "0") {
-                $discounttrx[]          = $trx['discvalue'];
-                $discounttrxpersen[]    =  (int)$trx['discvalue'];
+            // // if ($trx['discvalue'] != "0") {
+            // //     $discounttrx[]          = $trx['discvalue'];
+            // //     $discounttrxpersen[]    =  (int)$trx['discvalue'];
+            // // }
+            // $discounttrx[]              = $trx['discvalue'];
+
+            // if ($trx['memberdisc'] != '0') {
+            //     $discountmember[]       = $trx['memberdisc'];
+            // }
+            
+            // if ($trx['pointused'] != '0') {
+            //     $discountpoin[]         = $trx['pointused'];
+            // }
+
+            // Transaction Point Used Array
+            $pointused[]        = $trx['pointused'];
+
+            // Discount Transaction
+            if (!empty($trx['discvalue'])) {
+                $discount[]  = $trx['discvalue'];
             }
 
-            if ($trx['memberdisc'] != '0') {
-                $discountmember[]       = $trx['memberdisc'];
-            }
-            
-            if ($trx['pointused'] != '0') {
-                $discountpoin[]         = $trx['pointused'];
+            if ($trx['memberdisc'] != null) {
+                $discount[]   = $trx['memberdisc'];
             }
             
             $trxdetails         = $TrxdetailModel->where('transactionid', $trx['id'])->find();
             foreach ($trxdetails as $trxdetail) {
-                // // Discount Variant
-                // if ($trxdetail['discvar'] != '0') {
-                //     $discountvariant[]     = $trxdetail['discvar'];
+                // Discount Variant
+                if ($trxdetail['discvar'] != '0') {
+                    $discountvariant[]     = $trxdetail['discvar'];
+                }
+
+                // // Data Variant
+                // $variantsdata       = $VariantModel->find($trxdetail['variantid']);
+
+                // if (!empty($variantsdata)) {
+                //     $productsdata   = $ProductModel->find($variantsdata['productid']);
+
+                //     if (!empty($productsdata)) {
+                //         // Transaction Detail Discount Variant
+                //         if ($trxdetail['discvar'] != '0') {
+                //             $discountvariant[]     = $trxdetail['discvar'];
+                //         }
+                //     } else {
+                //         // Transaction Detail Discount Variant
+                //         if ($trxdetail['discvar'] != '0') {
+                //             $discountvariant[]     = 0;
+                //         }
+                //     }
+                // } else {
+                //     $productsdata   = '';
                 // }
 
-                // Data Variant
-                $variantsdata       = $VariantModel->find($trxdetail['variantid']);
+                // // Data Bundle
+                // $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
 
-                if (!empty($variantsdata)) {
-                    $productsdata   = $ProductModel->find($variantsdata['productid']);
-
-                    if (!empty($productsdata)) {
-                        // Transaction Detail Discount Variant
-                        if ($trxdetail['discvar'] != '0') {
-                            $discountvariant[]     = $trxdetail['discvar'];
-                        }
-                    } else {
-                        // Transaction Detail Discount Variant
-                        if ($trxdetail['discvar'] != '0') {
-                            $discountvariant[]     = 0;
-                        }
-                    }
-                } else {
-                    $productsdata   = '';
-                }
-
-                // Data Bundle
-                $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
-
-                if (!empty($bundlesdata)) {
-                    // Transaction Detail Discount Variant
-                    if ($trxdetail['discvar'] != '0') {
-                        $discountvariant[]     = $trxdetail['discvar'];
-                    }
-                } else {
-                    // Transaction Detail Discount Variant
-                    if ($trxdetail['discvar'] != '0') {
-                        $discountvariant[]     = 0;
-                    }
-                }
+                // if (!empty($bundlesdata)) {
+                //     // Transaction Detail Discount Variant
+                //     if ($trxdetail['discvar'] != '0') {
+                //         $discountvariant[]     = $trxdetail['discvar'];
+                //     }
+                // } else {
+                //     // Transaction Detail Discount Variant
+                //     if ($trxdetail['discvar'] != '0') {
+                //         $discountvariant[]     = 0;
+                //     }
+                // }
             }
 
-            $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($discounttrxpersen)) + (int)(array_sum($discountmember));
-            $variantdisc     = array_sum($discountvariant);
-            $poindisc        = array_sum($discountpoin);
+            // // $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($discounttrxpersen)) + (int)(array_sum($discountmember));
+            // $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($discountmember));
+            // $variantdisc     = array_sum($discountvariant);
+            // $poindisc        = array_sum($discountpoin);
 
-            $transactions[] = [
-                'id'            => $trx['id'],
-                'trxdisc'       => $transactiondisc,
-                'variantdis'    => $variantdisc,
-                'poindisc'      => $poindisc,
-            ];
+            // $transactions[] = [
+            //     'id'            => $trx['id'],
+            //     'trxdisc'       => $transactiondisc,
+            //     'variantdis'    => $variantdisc,
+            //     'poindisc'      => $poindisc,
+            // ];
         }
 
-        $trxvar = array_sum(array_column($transactions, 'variantdis'));
-        $trxdis = array_sum(array_column($transactions, 'trxdisc'));
-        $dispoint = array_sum(array_column($transactions, 'poindisc'));
+        $transactiondisc = array_sum($discount);
+        $variantdisc     = array_sum($discountvariant);
+        $poindisc        = array_sum($pointused);
+
+        // $trxvar = array_sum(array_column($transactions, 'variantdis'));
+        // $trxdis = array_sum(array_column($transactions, 'trxdisc'));
+        // $dispoint = array_sum(array_column($transactions, 'poindisc'));
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.discountreport');
         $data['description']    = lang('Global.profitListDesc');
         $data['transactions']   = $transactions;
-        $data['trxvardis']      = $trxvar;
-        $data['trxdisc']        = $trxdis;
-        $data['poindisc']       = $dispoint;
+        $data['trxvardis']      = $variantdisc;
+        $data['trxdisc']        = $transactiondisc;
+        $data['poindisc']       = $poindisc;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
 
