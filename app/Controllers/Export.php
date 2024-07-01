@@ -936,7 +936,7 @@ class export extends BaseController
             $totalqty = array_sum(array_column($transactiondata, 'qty'));
 
             header("Content-type: application/vnd-ms-excel");
-            header("Content-Disposition: attachment; filename=payment.xls");
+            header("Content-Disposition: attachment; filename=Laporan Pembayaran $startdate-$enddate.xls");
             echo '<style type="text/css">
             caption {
                 font-family: arial, sans-serif;
@@ -948,7 +948,7 @@ class export extends BaseController
             echo '<table>';
             echo '<thead>';
             echo '<tr>';
-            echo '<th colspan="3" style="align-text:center;">Ringkasan Pembayran</th>';
+            echo '<th colspan="3" style="align-text:center;">Ringkasan Pembayaran</th>';
             echo '</tr>';
             echo '<tr>';
             echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
@@ -1100,13 +1100,13 @@ class export extends BaseController
         // $produk = array_values($produk);
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=employe$startdate-$enddate.xls");
+        header("Content-Disposition: attachment; filename=Laporan Pegawai $startdate-$enddate.xls");
 
         // export
         echo '<table>';
         echo '<thead>';
         echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">Ringkasan Admin</th>';
+        echo '<th colspan="3" style="align-text:center;">Ringkasan Pegawai</th>';
         echo '</tr>';
         echo '<tr>';
         echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
@@ -1398,7 +1398,7 @@ class export extends BaseController
         array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=Product Report $startdate-$enddate.xls");
+        header("Content-Disposition: attachment; filename=Laporan Penjualan Per Produk $startdate-$enddate.xls");
 
         // export
         echo '<table>';
@@ -1713,13 +1713,13 @@ class export extends BaseController
         array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=Report Category$startdate-$enddate.xls");
+        header("Content-Disposition: attachment; filename=Laporan Penjualan Per Kategori $startdate-$enddate.xls");
 
         // export
         echo '<table>';
         echo '<thead>';
         echo '<tr>';
-        echo '<th colspan="4" style="align-text:center;">Ringkasan Kategori Produk Terjual</th>';
+        echo '<th colspan="4" style="align-text:center;">Ringkasan Kategori</th>';
         echo '</tr>';
         echo '<tr>';
         echo '<th colspan="4" style="align-text:center;">' . $outletname . '</th>';
@@ -2037,38 +2037,38 @@ class export extends BaseController
         array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=bundle$startdate-$enddate.xls");
+        header("Content-Disposition: attachment; filename=Laporan Penjualan Per Bundle $startdate-$enddate.xls");
 
         // export
         echo '<table>';
         echo '<thead>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">Ringkasan Paket Terjual</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;"></th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th>Nama</th>';
-        echo '<th>Jumlah</th>';
-        echo '<th>Harga Bundle</th>';
-        echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="3" style="align-text:center;">Ringkasan Bundle</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="3" style="align-text:center;"></th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th>Nama</th>';
+                echo '<th>Jumlah</th>';
+                echo '<th>Harga Bundle</th>';
+            echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
         foreach ($transactiondata as $bundle) {
             echo '<tr>';
-            echo '<td>' . $bundle['name'] . '</td>';
-            echo '<td>' . array_sum($bundle['qty']) . '</td>';
-            echo '<td>' . array_sum($bundle['value']) . '</td>';
+                echo '<td>' . $bundle['name'] . '</td>';
+                echo '<td>' . array_sum($bundle['qty']) . '</td>';
+                echo '<td>' . array_sum($bundle['value']) . '</td>';
             echo '</tr>';
         }
         echo '</tbody>';
@@ -2085,15 +2085,11 @@ class export extends BaseController
 
     public function diskon()
     {
-
         // Calling Models
         $TransactionModel       = new TransactionModel;
         $TrxdetailModel         = new TrxdetailModel;
         $GconfigModel           = new GconfigModel;
         $OutletModel            = new OutletModel;
-        // Populating Data
-        $trxdetails             = $TrxdetailModel->findAll();
-        $Gconfig                = $GconfigModel->first();
 
         $input = $this->request->getGet('daterange');
 
@@ -2106,26 +2102,23 @@ class export extends BaseController
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
-        $diskon = [];
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            // if ($startdate === $enddate) {
-                $transaction = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            // }
-            $addres = "All Outlets";
-            $outletname = "58vapehouse";
+            $transaction    = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            $addres         = "All Outlets";
+            $outletname     = "58vapehouse";
         } else {
-            // if ($startdate === $enddate) {
-                $transaction = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            // }
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
-            $outletname = $outlets['name'];
+            $transaction    = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            $outlets        = $OutletModel->find($this->data['outletPick']);
+            $addres         = $outlets['address'];
+            $outletname     = $outlets['name'];
         }
+        
+        // ======================================== Rizal Code ===================================== //
+        // // Populating Data
+        // $trxdetails             = $TrxdetailModel->findAll();
+        // $Gconfig                = $GconfigModel->first();
+        // $diskon = [];
         // foreach ($transaction as $trx) {
         //     $discounttrx = array();
         //     $discounttrxpersen = array();
@@ -2193,31 +2186,31 @@ class export extends BaseController
         $poindisc        = array_sum($pointused);
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=discount$startdate-$enddate.xls");
+        header("Content-Disposition: attachment; filename=Laporan Diskon $startdate-$enddate.xls");
 
         // export
         echo '<table>';
         echo '<thead>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">Ringkasan Pembayaran</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;"></th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th>Diskon Transaksi</th>';
-        echo '<th>Diskon Variant</th>';
-        echo '<th>Diskon Poin</th>';
-        echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="3" style="align-text:center;">Ringkasan Pembayaran</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="3" style="align-text:center;"></th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th>Diskon Transaksi</th>';
+                echo '<th>Diskon Variant</th>';
+                echo '<th>Diskon Poin</th>';
+            echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
         // foreach ($diskon as $disc) {
@@ -2227,11 +2220,11 @@ class export extends BaseController
         //     echo '<td>' . $disc['poindisc'] . '</td>';
         //     echo '</tr>';
         // }
-        echo '<tr>';
-        echo '<td >' . $transactiondisc . '</td>';
-        echo '<td >' . $variantdisc . '</td>';
-        echo '<td >' . $poindisc . '</td>';
-        echo '</tr>';
+            echo '<tr>';
+                echo '<td >' . $transactiondisc . '</td>';
+                echo '<td >' . $variantdisc . '</td>';
+                echo '<td >' . $poindisc . '</td>';
+            echo '</tr>';
         echo '</tbody>';
         echo '</table>';
     }
