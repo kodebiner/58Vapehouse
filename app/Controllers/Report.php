@@ -868,25 +868,25 @@ class Report extends BaseController
             
             foreach ($transactions as $trx) {
                 $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->where('bundleid', '0')->find();
-                $totaltrxdet    = count($trxdetails);
+                // $totaltrxdet    = count($trxdetails);
     
-                if ($trx['discvalue'] != null) {
-                    $disc   = floor((int)$trx['discvalue'] / (int)$totaltrxdet);
-                } else {
-                    $disc   = 0;
-                }
+                // if ($trx['discvalue'] != null) {
+                //     $disc   = floor((int)$trx['discvalue'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
     
-                if ($trx['memberdisc'] != null) {
-                    $disc   = floor((int)$trx['memberdisc'] / (int)$totaltrxdet);
-                } else {
-                    $disc   = 0;
-                }
+                // if ($trx['memberdisc'] != null) {
+                //     $disc   = floor((int)$trx['memberdisc'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
     
-                if ($trx['pointused'] != '0') {
-                    $disc   = floor((int)$trx['pointused'] / (int)$totaltrxdet);
-                } else {
-                    $disc   = 0;
-                }
+                // if ($trx['pointused'] != '0') {
+                //     $disc   = floor((int)$trx['pointused'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
                 
                 if (!empty($trxdetails)) {
                     foreach ($trxdetails as $trxdet) {
@@ -1013,25 +1013,25 @@ class Report extends BaseController
             
             foreach ($transactions as $trx) {
                 $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-                $totaltrxdet    = count($trxdetails);
+                // $totaltrxdet    = count($trxdetails);
     
-                if ($trx['discvalue'] != null) {
-                    $disc   = floor((int)$trx['discvalue'] / (int)$totaltrxdet);
-                } else {
-                    $disc   = 0;
-                }
+                // if ($trx['discvalue'] != null) {
+                //     $disc   = floor((int)$trx['discvalue'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
     
-                if ($trx['memberdisc'] != null) {
-                    $disc   = floor((int)$trx['memberdisc'] / (int)$totaltrxdet);
-                } else {
-                    $disc   = 0;
-                }
+                // if ($trx['memberdisc'] != null) {
+                //     $disc   = floor((int)$trx['memberdisc'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
     
-                if ($trx['pointused'] != '0') {
-                    $disc   = floor((int)$trx['pointused'] / (int)$totaltrxdet);
-                } else {
-                    $disc   = 0;
-                }
+                // if ($trx['pointused'] != '0') {
+                //     $disc   = floor((int)$trx['pointused'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
                 
                 if (!empty($trxdetails)) {
                     foreach ($trxdetails as $trxdet) {
