@@ -1348,7 +1348,7 @@ class Report extends BaseController
                         // Data Bundle
                         $bundles        = $BundleModel->find($trxdet['bundleid']);
 
-                        if(!empty($bundles)) {
+                        if (!empty($bundles)) {
                             // Data Bundle Detail
                             $bundledets     = $BundledetailModel->where('bundleid', $bundles['id'])->find();
     
@@ -1388,12 +1388,15 @@ class Report extends BaseController
                                 }
                             }
                         } else {
+                            $bundledets     = [];
                             $bundlevariants = [];
                             $bundleproduct  = [];
                             $category       = [];
                         }
                     }
                 } else {
+                    $bundles        = [];
+                    $bundledets     = [];
                     $bundlevariants = [];
                     $bundleproduct  = [];
                     $category       = [];
