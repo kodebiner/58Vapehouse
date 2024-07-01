@@ -13,16 +13,16 @@
 
     function drawChart() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'category');
+        data.addColumn('string', 'name');
         data.addColumn('number', 'qty');
-        data.addColumn('number', 'value');
-        data.addColumn('number', 'net');
+        data.addColumn('number', 'grossvalue');
+        data.addColumn('number', 'netvalue');
         data.addRows([
             <?php foreach ($catedata as $product){
-                $category       = $product['cate'];
-                $sold           = $product['qty'];
-                $sales          = $product['value'];
-                $net            = $product['netval'];
+                $category       = $product['name'];
+                $sold           = array_sum($product['qty']);
+                $sales          = array_sum($product['grossvalue']);
+                $net            = array_sum($product['netvalue']);
                 echo "['$category',$sold,$sales,$net],";
             }?>
         ]);
@@ -105,7 +105,7 @@
     </div>
 
     <div class="uk-overflow-auto">
-        <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
+        <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top">
             <thead>
                 <tr>
                     <th><?=lang('Global.category')?></th>
@@ -117,17 +117,14 @@
             <tbody>
                 <?php foreach ($catedata as $cat ){ ?>
                     <tr>
-                        <td style="color:white;"><?=$cat['cate']?></td>
-                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($cat['netval'],0,',','.');" ";?></td>
-                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($cat['value'],0,',','.');" ";?></td>
-                        <td style="color:white;" class="uk-text-center"><?=$cat['qty']?></td>
+                        <td style="color:white;"><?=$cat['name']?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format(array_sum($cat['netvalue']),0,',','.');" ";?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format(array_sum($cat['grossvalue']),0,',','.');" ";?></td>
+                        <td style="color:white;" class="uk-text-center"><?= array_sum($cat['qty']) ?></td>
                     </tr>
                 <?php } ?>
             </tbody>
         </table>
-        <div class="uk-light">
-            <?= $pager->links('reportcategory', 'front_full') ?>
-        </div>
     </div>
     <?= view('Views/Auth/_message_block') ?>
 

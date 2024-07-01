@@ -647,6 +647,497 @@ class export extends BaseController
         echo '</table>';
     }
 
+    public function profit()
+    {
+        // Calling Models
+        $TransactionModel       = new TransactionModel;
+        $TrxdetailModel         = new TrxdetailModel;
+        $VariantModel           = new VariantModel;
+        $ProductModel           = new ProductModel;
+        $BundleModel            = new BundleModel;
+
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = strtotime($daterange[0]);
+            $enddate = strtotime($daterange[1]);
+        } else {
+            $startdate  = strtotime(date('Y-m-1' . ' 00:00:00'));
+            $enddate    = strtotime(date('Y-m-t' . ' 23:59:59'));
+        }
+
+        $transactions   = array();
+        $transactionarr = array();
+        for ($date = $startdate; $date <= $enddate; $date += (86400)) {
+            if ($this->data['outletPick'] === null) {
+                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+            } else {
+                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+            }
+            // $variants    = $VariantModel->findAll();
+
+            // $summary = array_sum(array_column($transaction, 'value'));
+            $marginmodals   = array();
+            $margindasars   = array();
+            $discount       = array();
+
+            foreach ($transaction as $trx) {
+                $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+                
+                if ($trx['discvalue'] != '0') {
+                    $discount[]   = (int)$trx['discvalue'];
+                } else {
+                    $discount[]   = 0;
+                }
+
+                if ($trx['memberdisc'] != '0') {
+                    $discount[]   = (int)$trx['memberdisc'];
+                } else {
+                    $discount[]   = 0;
+                }
+
+                foreach ($trxdetails as $trxdetail) {
+                    // // Transaction Detail Margin Modal
+                    // $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+
+                    // // Transaction Detail Margin Dasar
+                    // $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+
+                    // Data Variant
+                    $variantsdata       = $VariantModel->find($trxdetail['variantid']);
+
+                    if (!empty($variantsdata)) {
+                        $productsdata   = $ProductModel->find($variantsdata['productid']);
+
+                        if (!empty($productsdata)) {
+                            // Transaction Detail Margin Modal
+                            $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+
+                            // Transaction Detail Margin Dasar
+                            $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                        } else {
+                            // Transaction Detail Margin Modal
+                            $marginmodals[] = 0;
+
+                            // Transaction Detail Margin Dasar
+                            $margindasars[] = 0;
+                        }
+                    } else {
+                        $productsdata   = '';
+                    }
+
+                    // Data Bundle
+                    $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
+
+                    if (!empty($bundlesdata)) {
+                        // Transaction Detail Margin Modal
+                        $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+
+                        // Transaction Detail Margin Dasar
+                        $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                    } else {
+                        // Transaction Detail Margin Modal
+                        $marginmodals[] = 0;
+
+                        // Transaction Detail Margin Dasar
+                        $margindasars[] = 0;
+                    }
+                }
+            }
+
+            $totaldisc      = array_sum($discount);
+            $marginmodalsum = array_sum($marginmodals);
+            $margindasarsum = array_sum($margindasars);
+            $transactions[] = [
+                'date'      => date('d/m/y', $date),
+                // 'value'     => $summary,
+                'modal'     => (Int)$marginmodalsum - (Int)$totaldisc,
+                'dasar'     => (Int)$margindasarsum - (Int)$totaldisc,
+            ];
+        }
+
+        $transactionarr[] = $transactions;
+
+        $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
+        $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
+        // $trxvalue        = array_sum(array_column($transactions, 'value'));
+
+        // for ($date = $startdate; $date <= $enddate; $date += (86400)) {
+        //     if ($this->data['outletPick'] === null) {
+        //         // if ($startdate === $enddate) {
+        //             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
+        //         // } else {
+        //         //     $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->find();
+        //         // }
+        //     } else {
+        //         // if ($startdate === $enddate) {
+        //             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+        //         // } else {
+        //         //     $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
+        //         // }
+        //     }
+        //     $trxdetails  = $TrxdetailModel->findAll();
+        //     $variants    = $VariantModel->findAll();
+
+        //     $summary = array_sum(array_column($transaction, 'value'));
+        //     $marginmodals = array();
+        //     $margindasars = array();
+        //     // dd($transaction);
+
+        //     foreach ($transaction as $trx) {
+        //         foreach ($trxdetails as $trxdetail) {
+        //             if ($trx['id'] === $trxdetail['transactionid']) {
+        //                 $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
+        //                 $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
+        //                 $marginmodals[] = $marginmodal;
+        //                 $margindasars[] = $margindasar;
+        //             }
+        //         }
+        //     }
+
+        //     $marginmodalsum = array_sum($marginmodals);
+        //     $margindasarsum = array_sum($margindasars);
+
+        //     $transactions[] = [
+        //         'date'      => date('d/m/y', $date),
+        //         'value'     => $summary,
+        //         'modal'     => $marginmodalsum,
+        //         'dasar'     => $margindasarsum,
+        //     ];
+        // }
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=profit.xls");
+
+        // export
+        echo '<table>';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Keuntungan Modal</th>';
+        echo '<th>Keuntungan Dasar</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        echo '<tr>';
+        echo '<td>' . $keuntunganmodal . '</td>';
+        echo '<td>' . $keuntungandasar . '</td>';
+        echo '</tr>';
+        echo '</tbody>';
+        echo '</table>';
+    }
+
+    public function payment()
+    {
+        $db                     = \Config\Database::connect();
+        $PaymentModel           = new PaymentModel;
+        $TrxpaymentModel        = new TrxpaymentModel;
+        $TransactionModel       = new TransactionModel;
+        $OutletModel            = new OutletModel;
+
+        if ($this->data['outletPick'] != null) {
+            $input = $this->request->getGet('daterange');
+
+            if (!empty($input)) {
+                $daterange = explode(' - ', $input);
+                $startdate = $daterange[0];
+                $enddate = $daterange[1];
+            } else {
+                $startdate  = date('Y-m-1' . ' 00:00:00');
+                $enddate    = date('Y-m-t' . ' 23:59:59');
+            }
+
+            // $day1 = date_create($startdate);
+            // $day2 = date_create($enddate);
+
+            // $payments = $PaymentModel->findAll();
+            // $trxpayments = $TrxpaymentModel->findAll();
+            // // if ($startdate === $enddate) {
+            //     $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            // // } else {
+            // //     $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->find();
+            // // }
+            // $outlets = $OutletModel->find($this->data['outletPick']);
+            // $outletname = $outlets['name'];
+            // $adress = $outlets['address'];
+            // $pay = array();
+            // foreach ($payments as $payment) {
+            //     $qty = array();
+            //     foreach ($trxpayments as $trxpayment) {
+            //         foreach ($transactions as $transaction) {
+            //             if (($trxpayment['paymentid'] === $payment['id']) && ($trxpayment['transactionid'] === $transaction['id'])) {
+            //                 $qty[] = $trxpayment['value'];
+            //             }
+            //         }
+            //     }
+            //     $pay[] = [
+            //         'pvalue'    => array_sum($qty),
+            //         'pqty'      => count($qty),
+            //         'name'      => $payment['name']
+            //     ];
+            // }
+
+            // $totalvalue = array_sum(array_column($pay, 'pvalue'));
+            // $totalqty = array_sum(array_column($pay, 'pqty'));
+
+            // Transaction Data
+            $transactiondata    = array();
+            $outlets            = $OutletModel->find($this->data['outletPick']);
+            $outletname         = $outlets['name'];
+            $adress             = $outlets['address'];
+
+            $transactions       = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+
+            if (!empty($inputsearch)) {
+                $payments   = $PaymentModel->like('name', $inputsearch)->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
+            } else {
+                $payments   = $PaymentModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
+            }
+
+            foreach ($payments as $payment) {
+                $transactiondata[$payment['id']]['name']    = $payment['name'];
+                $transactiondata[0]['name']                 = 'Debt';
+                $trxtotal           = array();
+                $trxvalue           = array();
+                $debttotal          = array();
+                $debtvalue          = array();
+                if (!empty($transactions)) {
+                    foreach ($transactions as $trx) {
+                        $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', $payment['id'])->find();
+                        $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
+                        if (!empty($trxpayments)) {
+                            foreach ($trxpayments as $trxpayment) {
+                                $trxtotal[] = $trxpayment['id'];
+                                $trxvalue[] = $trxpayment['value'];
+                            }
+                        }
+                        if (!empty($debtpayments)) {
+                            foreach ($debtpayments as $debtpayment) {
+                                $debttotal[] = $debtpayment['id'];
+                                $debtvalue[] = $debtpayment['value'];
+                            }
+                        }
+                    }
+                } else {
+                    $trxpayments    = [];
+                    $debtpayments   = [];
+                    $trxtotal[]     = [];
+                    $trxvalue[]     = [];
+                    $debttotal[]    = [];
+                    $debtvalue[]    = [];
+                }
+                $transactiondata[$payment['id']]['qty']         = count($trxtotal);
+                $transactiondata[$payment['id']]['value']       = array_sum($trxvalue);
+                $transactiondata[0]['qty']                      = count($debttotal);
+                $transactiondata[0]['value']                    = array_sum($debtvalue);
+            }
+
+            $totalvalue = array_sum(array_column($transactiondata, 'value'));
+            $totalqty = array_sum(array_column($transactiondata, 'qty'));
+
+            header("Content-type: application/vnd-ms-excel");
+            header("Content-Disposition: attachment; filename=payment.xls");
+            echo '<style type="text/css">
+            caption {
+                font-family: arial, sans-serif;
+                text-align: center
+            }
+            </style>';
+
+            // export
+            echo '<table>';
+            echo '<thead>';
+            echo '<tr>';
+            echo '<th colspan="3" style="align-text:center;">Ringkasan Pembayran</th>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<th colspan="3" style="align-text:center;">' . $adress . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<th colspan="3" style="align-text:center;"></th>';
+            echo '</tr>';
+            echo '<tr>';
+            echo '<th>Nama</th>';
+            echo '<th>Jumlah Transaksi</th>';
+            echo '<th>Nominal Transaksi</th>';
+            echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+            foreach ($transactiondata as $payment) {
+                echo '<tr>';
+                echo '<td>' . $payment['name'] . '</td>';
+                echo '<td>' . $payment['qty'] . '</td>';
+                echo '<td>' . $payment['value'] . '</td>';
+                echo '</tr>';
+            }
+
+            echo '<tr>';
+            echo '<th style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">Total</th>';
+            echo '<td style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">' . $totalqty . '</td>';
+            echo '<td style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">' . $totalvalue . '</td>';
+            echo '</tr>';
+            echo '</tbody>';
+            echo '</table>';
+        } else {
+            return redirect()->to('');
+        }
+    }
+
+    public function employe()
+    {
+
+        $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel;
+        $UserModel          = new UserModel;
+        $UserGroupModel     = new GroupUserModel;
+        $GroupModel         = new GroupModel;
+        $OutletModel        = new OutletModel;
+
+        // Populating Data 
+        $admin          = $UserModel->findAll();
+        // $usergroups     = $UserGroupModel->findAll();
+        // $groups         = $GroupModel->findAll();
+
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
+
+        $admins                 = $UserModel->findAll();
+        $employeedata           = [];
+        foreach ($admins as $admin) {
+            $employeedata[$admin->id]['name']  = $admin->username;
+            $usergroups         = $UserGroupModel->where('user_id', $admin->id)->find();
+            foreach ($usergroups as $usergroup) {
+                $groups         = $GroupModel->find($usergroup['group_id']);
+                $employeedata[$admin->id]['role']  = $groups->name;
+            }
+
+            if ($this->data['outletPick'] === null) {
+                $transactions   = $TransactionModel->where('userid', $admin->id)->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+                $addres = "All Outlets";
+                $outletname = "58vapehouse";
+            } else {
+                $transactions   = $TransactionModel->where('userid', $admin->id)->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                $outlets        = $OutletModel->find($this->data['outletPick']);
+                $addres         = $outlets['address'];
+                $outletname     = $outlets['name'];
+            }
+
+            $trxvalue           = [];
+            if (!empty($transactions)) {
+                foreach ($transactions as $trx) {
+                    $trxvalue[] = $trx['value'];
+                }
+            }
+            $employeedata[$admin->id]['value']  = array_sum($trxvalue);
+        }
+
+        // $addres = '';
+        // if ($this->data['outletPick'] === null) {
+        //     // if ($startdate === $enddate) {
+        //         $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+        //     // } else {
+        //     //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        //     // }
+        //     $addres = "All Outlets";
+        //     $outletname = "58vapehouse";
+        // } else {
+        //     // if ($startdate === $enddate) {
+        //         $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->where("outletid", $this->data['outletPick'])->find();
+        //     // } else {
+        //     //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+        //     // }
+        //     $outlets = $OutletModel->find($this->data['outletPick']);
+        //     $addres = $outlets['address'];
+        //     $outletname = $outlets['name'];
+        // }
+
+        // $useradm = [];
+        // foreach ($transactions as $transaction) {
+        //     foreach ($admin as $adm) {
+        //         if ($transaction['userid'] === $adm->id) {
+        //             foreach ($usergroups as $userg) {
+        //                 if ($adm->id === $userg['user_id']) {
+        //                     foreach ($groups as $group) {
+        //                         if ($userg['group_id'] === $group->id) {
+        //                             $useradm[] = [
+        //                                 'id'    => $adm->id,
+        //                                 'value' => $transaction['value'],
+        //                                 'name'  => $adm->username,
+        //                                 'role'  => $group->name,
+        //                             ];
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // $val = array_sum(array_column($useradm, 'value'));
+
+        // $produk = [];
+        // foreach ($useradm as $username) {
+        //     if (!isset($produk[$username['id']])) {
+        //         $produk[$username['id']] = $username;
+        //     } else {
+        //         $produk[$username['id']]['value'] += $username['value'];
+        //     }
+        // }
+        // $produk = array_values($produk);
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=employe$startdate-$enddate.xls");
+
+        // export
+        echo '<table>';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">Ringkasan Admin</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;"></th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th>Nama</th>';
+        echo '<th>Posisi</th>';
+        echo '<th>Nominal Transaksi</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        foreach ($employeedata as $employe) {
+            echo '<tr>';
+            echo '<td>' . $employe['name'] . '</td>';
+            echo '<td>' . $employe['role'] . '</td>';
+            echo '<td>' . $employe['value'] . '</td>';
+            echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+    }
+
     public function product()
     {
         // Calling models
@@ -951,982 +1442,6 @@ class export extends BaseController
                     echo '<td style="font-weight:700;">' . $totalnetsales . '</td>';
                 echo '</tr>';
             echo '</tfoot>';
-        echo '</table>';
-    }
-
-    public function payment()
-    {
-        $db                     = \Config\Database::connect();
-        $PaymentModel           = new PaymentModel;
-        $TrxpaymentModel        = new TrxpaymentModel;
-        $TransactionModel       = new TransactionModel;
-        $OutletModel            = new OutletModel;
-
-        if ($this->data['outletPick'] != null) {
-            $input = $this->request->getGet('daterange');
-
-            if (!empty($input)) {
-                $daterange = explode(' - ', $input);
-                $startdate = $daterange[0];
-                $enddate = $daterange[1];
-            } else {
-                $startdate  = date('Y-m-1' . ' 00:00:00');
-                $enddate    = date('Y-m-t' . ' 23:59:59');
-            }
-
-            // $day1 = date_create($startdate);
-            // $day2 = date_create($enddate);
-
-            // $payments = $PaymentModel->findAll();
-            // $trxpayments = $TrxpaymentModel->findAll();
-            // // if ($startdate === $enddate) {
-            //     $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-            // // } else {
-            // //     $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->find();
-            // // }
-            // $outlets = $OutletModel->find($this->data['outletPick']);
-            // $outletname = $outlets['name'];
-            // $adress = $outlets['address'];
-            // $pay = array();
-            // foreach ($payments as $payment) {
-            //     $qty = array();
-            //     foreach ($trxpayments as $trxpayment) {
-            //         foreach ($transactions as $transaction) {
-            //             if (($trxpayment['paymentid'] === $payment['id']) && ($trxpayment['transactionid'] === $transaction['id'])) {
-            //                 $qty[] = $trxpayment['value'];
-            //             }
-            //         }
-            //     }
-            //     $pay[] = [
-            //         'pvalue'    => array_sum($qty),
-            //         'pqty'      => count($qty),
-            //         'name'      => $payment['name']
-            //     ];
-            // }
-
-            // $totalvalue = array_sum(array_column($pay, 'pvalue'));
-            // $totalqty = array_sum(array_column($pay, 'pqty'));
-
-            // Transaction Data
-            $transactiondata    = array();
-            $outlets            = $OutletModel->find($this->data['outletPick']);
-            $outletname         = $outlets['name'];
-            $adress             = $outlets['address'];
-
-            $transactions       = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-
-            if (!empty($inputsearch)) {
-                $payments   = $PaymentModel->like('name', $inputsearch)->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
-            } else {
-                $payments   = $PaymentModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->find();
-            }
-
-            foreach ($payments as $payment) {
-                $transactiondata[$payment['id']]['name']    = $payment['name'];
-                $transactiondata[0]['name']                 = 'Debt';
-                $trxtotal           = array();
-                $trxvalue           = array();
-                $debttotal          = array();
-                $debtvalue          = array();
-                if (!empty($transactions)) {
-                    foreach ($transactions as $trx) {
-                        $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', $payment['id'])->find();
-                        $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
-                        if (!empty($trxpayments)) {
-                            foreach ($trxpayments as $trxpayment) {
-                                $trxtotal[] = $trxpayment['id'];
-                                $trxvalue[] = $trxpayment['value'];
-                            }
-                        }
-                        if (!empty($debtpayments)) {
-                            foreach ($debtpayments as $debtpayment) {
-                                $debttotal[] = $debtpayment['id'];
-                                $debtvalue[] = $debtpayment['value'];
-                            }
-                        }
-                    }
-                } else {
-                    $trxpayments    = [];
-                    $debtpayments   = [];
-                    $trxtotal[]     = [];
-                    $trxvalue[]     = [];
-                    $debttotal[]    = [];
-                    $debtvalue[]    = [];
-                }
-                $transactiondata[$payment['id']]['qty']         = count($trxtotal);
-                $transactiondata[$payment['id']]['value']       = array_sum($trxvalue);
-                $transactiondata[0]['qty']                      = count($debttotal);
-                $transactiondata[0]['value']                    = array_sum($debtvalue);
-            }
-
-            $totalvalue = array_sum(array_column($transactiondata, 'value'));
-            $totalqty = array_sum(array_column($transactiondata, 'qty'));
-
-            header("Content-type: application/vnd-ms-excel");
-            header("Content-Disposition: attachment; filename=payment.xls");
-            echo '<style type="text/css">
-            caption {
-                font-family: arial, sans-serif;
-                text-align: center
-            }
-            </style>';
-
-            // export
-            echo '<table>';
-            echo '<thead>';
-            echo '<tr>';
-            echo '<th colspan="3" style="align-text:center;">Ringkasan Pembayran</th>';
-            echo '</tr>';
-            echo '<tr>';
-            echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
-            echo '</tr>';
-            echo '<tr>';
-            echo '<th colspan="3" style="align-text:center;">' . $adress . '</th>';
-            echo '</tr>';
-            echo '<tr>';
-            echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
-            echo '</tr>';
-            echo '<tr>';
-            echo '<th colspan="3" style="align-text:center;"></th>';
-            echo '</tr>';
-            echo '<tr>';
-            echo '<th>Nama</th>';
-            echo '<th>Jumlah Transaksi</th>';
-            echo '<th>Nominal Transaksi</th>';
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-            foreach ($transactiondata as $payment) {
-                echo '<tr>';
-                echo '<td>' . $payment['name'] . '</td>';
-                echo '<td>' . $payment['qty'] . '</td>';
-                echo '<td>' . $payment['value'] . '</td>';
-                echo '</tr>';
-            }
-
-            echo '<tr>';
-            echo '<th style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">Total</th>';
-            echo '<td style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">' . $totalqty . '</td>';
-            echo '<td style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">' . $totalvalue . '</td>';
-            echo '</tr>';
-            echo '</tbody>';
-            echo '</table>';
-        } else {
-            return redirect()->to('');
-        }
-    }
-
-    public function diskon()
-    {
-
-        // Calling Models
-        $TransactionModel       = new TransactionModel;
-        $TrxdetailModel         = new TrxdetailModel;
-        $GconfigModel           = new GconfigModel;
-        $OutletModel            = new OutletModel;
-        // Populating Data
-        $trxdetails             = $TrxdetailModel->findAll();
-        $Gconfig                = $GconfigModel->first();
-
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
-        }
-
-        $diskon = [];
-        $addres = '';
-        if ($this->data['outletPick'] === null) {
-            // if ($startdate === $enddate) {
-                $transaction = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            // }
-            $addres = "All Outlets";
-            $outletname = "58vapehouse";
-        } else {
-            // if ($startdate === $enddate) {
-                $transaction = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            // }
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
-            $outletname = $outlets['name'];
-        }
-        // foreach ($transaction as $trx) {
-        //     $discounttrx = array();
-        //     $discounttrxpersen = array();
-        //     $discountvariant = array();
-        //     $discountpoin = array();
-        //     foreach ($trxdetails as $trxdetail) {
-        //         if ($trx['id'] === $trxdetail['transactionid']) {
-        //             if ($trx['disctype'] === "0") {
-        //                 $discounttrx[]          = $trx['discvalue'];
-        //             }
-        //             if ($trx['disctype'] !== "0") {
-        //                 $sub =  ($trxdetail['value'] * $trxdetail['qty']);
-        //                 $discounttrxpersen[]    =  $sub * ($trx['discvalue'] / 100);
-        //             }
-        //             $discountvariant[]          = $trxdetail['discvar'];
-        //             $discountpoin[]             = $trx['pointused'];
-        //         }
-        //     }
-
-        //     $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
-        //     $variantdisc     = array_sum($discountvariant);
-        //     $poindisc        = array_sum($discountpoin);
-
-        //     $diskon[] = [
-        //         'id'            => $trx['id'],
-        //         'trxdisc'       => $transactiondisc,
-        //         'variantdis'    => $variantdisc,
-        //         'poindisc'      => $poindisc,
-        //     ];
-        // }
-
-        // $trxvar = array_sum(array_column($diskon, 'variantdis'));
-        // $trxdis = array_sum(array_column($diskon, 'trxdisc'));
-        // $dispoint = array_sum(array_column($diskon, 'poindisc'));
-
-        $discount           = array();
-        $pointused          = array();
-        $discountvariant    = array();
-
-        foreach ($transaction as $trx) {
-            // Transaction Point Used Array
-            $pointused[]        = $trx['pointused'];
-
-            // Discount Transaction
-            if (!empty($trx['discvalue'])) {
-                $discount[]  = $trx['discvalue'];
-            }
-
-            // Discount Member
-            if ($trx['memberdisc'] != null) {
-                $discount[]   = $trx['memberdisc'];
-            }
-            
-            $trxdetails         = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-            foreach ($trxdetails as $trxdetail) {
-                // Discount Variant
-                if ($trxdetail['discvar'] != '0') {
-                    $discountvariant[]     = $trxdetail['discvar'];
-                }
-            }
-        }
-
-        $transactiondisc = array_sum($discount);
-        $variantdisc     = array_sum($discountvariant);
-        $poindisc        = array_sum($pointused);
-
-        header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=discount$startdate-$enddate.xls");
-
-        // export
-        echo '<table>';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">Ringkasan Pembayaran</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;"></th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th>Diskon Transaksi</th>';
-        echo '<th>Diskon Variant</th>';
-        echo '<th>Diskon Poin</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        // foreach ($diskon as $disc) {
-        //     echo '<tr>';
-        //     echo '<td >' . $disc['trxdisc'] . '</td>';
-        //     echo '<td >' . $disc['variantdis'] . '</td>';
-        //     echo '<td>' . $disc['poindisc'] . '</td>';
-        //     echo '</tr>';
-        // }
-        echo '<tr>';
-        echo '<td >' . $transactiondisc . '</td>';
-        echo '<td >' . $variantdisc . '</td>';
-        echo '<td >' . $poindisc . '</td>';
-        echo '</tr>';
-        echo '</tbody>';
-        echo '</table>';
-    }
-
-    public function profit()
-    {
-        // Calling Models
-        $TransactionModel       = new TransactionModel;
-        $TrxdetailModel         = new TrxdetailModel;
-        $VariantModel           = new VariantModel;
-
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = strtotime($daterange[0]);
-            $enddate = strtotime($daterange[1]);
-        } else {
-            $startdate  = strtotime(date('Y-m-1' . ' 00:00:00'));
-            $enddate    = strtotime(date('Y-m-t' . ' 23:59:59'));
-        }
-
-        $transactions = array();
-        $transactionarr = array();
-        for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-            if ($this->data['outletPick'] === null) {
-                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
-            } else {
-                $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
-            }
-            $marginmodals   = array();
-            $margindasars   = array();
-            $discount       = array();
-
-            foreach ($transaction as $trx) {
-                $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-                $totaltrxdet    = count($trxdetails);
-                if ($trx['discvalue'] != null) {
-                    $discount[]   = (int)$trx['discvalue'];
-                } else {
-                    $discount[]   = 0;
-                }
-
-                if ($trx['memberdisc'] != null) {
-                    $discount[]   = (int)$trx['memberdisc'];
-                } else {
-                    $discount[]   = 0;
-                }
-
-                foreach ($trxdetails as $trxdetail) {
-                    // $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
-                    // $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
-                    $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
-                    $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                    // $marginmodals[] = $marginmodal;
-                    // $margindasars[] = $margindasar;
-                }
-            }
-
-            $totaldisc      = array_sum($discount);
-            $marginmodalsum = array_sum($marginmodals);
-            $margindasarsum = array_sum($margindasars);
-            $transactions[] = [
-                'date'      => date('d/m/y', $date),
-                // 'value'     => $summary,
-                'modal'     => (Int)$marginmodalsum - (Int)$totaldisc,
-                'dasar'     => (Int)$margindasarsum - (Int)$totaldisc,
-            ];
-        }
-
-        $transactionarr[] = $transactions;
-
-        $keuntunganmodal = array_sum(array_column($transactions, 'modal'));
-        $keuntungandasar = array_sum(array_column($transactions, 'dasar'));
-        $trxvalue        = array_sum(array_column($transactions, 'value'));
-
-        // for ($date = $startdate; $date <= $enddate; $date += (86400)) {
-        //     if ($this->data['outletPick'] === null) {
-        //         // if ($startdate === $enddate) {
-        //             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
-        //         // } else {
-        //         //     $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->find();
-        //         // }
-        //     } else {
-        //         // if ($startdate === $enddate) {
-        //             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
-        //         // } else {
-        //         //     $transaction = $TransactionModel->where('date >=', date('Y-m-d  00:00:00', $date))->where('date <=', date('Y-m-d  23:59:59', $date))->where('outletid', $this->data['outletPick'])->find();
-        //         // }
-        //     }
-        //     $trxdetails  = $TrxdetailModel->findAll();
-        //     $variants    = $VariantModel->findAll();
-
-        //     $summary = array_sum(array_column($transaction, 'value'));
-        //     $marginmodals = array();
-        //     $margindasars = array();
-        //     // dd($transaction);
-
-        //     foreach ($transaction as $trx) {
-        //         foreach ($trxdetails as $trxdetail) {
-        //             if ($trx['id'] === $trxdetail['transactionid']) {
-        //                 $marginmodal = (int)$trxdetail['marginmodal'] * (int)$trxdetail['qty'];
-        //                 $margindasar = (int)$trxdetail['margindasar'] * (int)$trxdetail['qty'];
-        //                 $marginmodals[] = $marginmodal;
-        //                 $margindasars[] = $margindasar;
-        //             }
-        //         }
-        //     }
-
-        //     $marginmodalsum = array_sum($marginmodals);
-        //     $margindasarsum = array_sum($margindasars);
-
-        //     $transactions[] = [
-        //         'date'      => date('d/m/y', $date),
-        //         'value'     => $summary,
-        //         'modal'     => $marginmodalsum,
-        //         'dasar'     => $margindasarsum,
-        //     ];
-        // }
-
-        header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=profit.xls");
-
-        // export
-        echo '<table>';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th>Keuntungan Modal</th>';
-        echo '<th>Keuntungan Dasar</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        echo '<tr>';
-        echo '<td>' . $keuntunganmodal . '</td>';
-        echo '<td>' . $keuntungandasar . '</td>';
-        echo '</tr>';
-        echo '</tbody>';
-        echo '</table>';
-    }
-
-    public function employe()
-    {
-
-        $db                 = \Config\Database::connect();
-        $TransactionModel   = new TransactionModel;
-        $UserModel          = new UserModel;
-        $UserGroupModel     = new GroupUserModel;
-        $GroupModel         = new GroupModel;
-        $OutletModel        = new OutletModel;
-
-        // Populating Data 
-        $admin          = $UserModel->findAll();
-        // $usergroups     = $UserGroupModel->findAll();
-        // $groups         = $GroupModel->findAll();
-
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
-        }
-
-        $admins                 = $UserModel->findAll();
-        $employeedata           = [];
-        foreach ($admins as $admin) {
-            $employeedata[$admin->id]['name']  = $admin->username;
-            $usergroups         = $UserGroupModel->where('user_id', $admin->id)->find();
-            foreach ($usergroups as $usergroup) {
-                $groups         = $GroupModel->find($usergroup['group_id']);
-                $employeedata[$admin->id]['role']  = $groups->name;
-            }
-
-            if ($this->data['outletPick'] === null) {
-                $transactions   = $TransactionModel->where('userid', $admin->id)->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-                $addres = "All Outlets";
-                $outletname = "58vapehouse";
-            } else {
-                $transactions   = $TransactionModel->where('userid', $admin->id)->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $outlets        = $OutletModel->find($this->data['outletPick']);
-                $addres         = $outlets['address'];
-                $outletname     = $outlets['name'];
-            }
-
-            $trxvalue           = [];
-            if (!empty($transactions)) {
-                foreach ($transactions as $trx) {
-                    $trxvalue[] = $trx['value'];
-                }
-            }
-            $employeedata[$admin->id]['value']  = array_sum($trxvalue);
-        }
-
-        // $addres = '';
-        // if ($this->data['outletPick'] === null) {
-        //     // if ($startdate === $enddate) {
-        //         $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-        //     // } else {
-        //     //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-        //     // }
-        //     $addres = "All Outlets";
-        //     $outletname = "58vapehouse";
-        // } else {
-        //     // if ($startdate === $enddate) {
-        //         $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->where("outletid", $this->data['outletPick'])->find();
-        //     // } else {
-        //     //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-        //     // }
-        //     $outlets = $OutletModel->find($this->data['outletPick']);
-        //     $addres = $outlets['address'];
-        //     $outletname = $outlets['name'];
-        // }
-
-        // $useradm = [];
-        // foreach ($transactions as $transaction) {
-        //     foreach ($admin as $adm) {
-        //         if ($transaction['userid'] === $adm->id) {
-        //             foreach ($usergroups as $userg) {
-        //                 if ($adm->id === $userg['user_id']) {
-        //                     foreach ($groups as $group) {
-        //                         if ($userg['group_id'] === $group->id) {
-        //                             $useradm[] = [
-        //                                 'id'    => $adm->id,
-        //                                 'value' => $transaction['value'],
-        //                                 'name'  => $adm->username,
-        //                                 'role'  => $group->name,
-        //                             ];
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // $val = array_sum(array_column($useradm, 'value'));
-
-        // $produk = [];
-        // foreach ($useradm as $username) {
-        //     if (!isset($produk[$username['id']])) {
-        //         $produk[$username['id']] = $username;
-        //     } else {
-        //         $produk[$username['id']]['value'] += $username['value'];
-        //     }
-        // }
-        // $produk = array_values($produk);
-
-        header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=employe$startdate-$enddate.xls");
-
-        // export
-        echo '<table>';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">Ringkasan Admin</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;"></th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th>Nama</th>';
-        echo '<th>Posisi</th>';
-        echo '<th>Nominal Transaksi</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        foreach ($employeedata as $employe) {
-            echo '<tr>';
-            echo '<td>' . $employe['name'] . '</td>';
-            echo '<td>' . $employe['role'] . '</td>';
-            echo '<td>' . $employe['value'] . '</td>';
-            echo '</tr>';
-        }
-        echo '</tbody>';
-        echo '</table>';
-    }
-
-    public function customer()
-    {
-        // Calling Models
-        $db                 = \Config\Database::connect();
-        $TransactionModel   = new TransactionModel;
-        $MemberModel        = new MemberModel;
-        $DebtModel          = new DebtModel;
-        $OutletModel        = new OutletMOdel;
-
-        // Populating Data
-        $members            = $MemberModel->findAll();
-        $debts              = $DebtModel->findAll();
-
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
-        }
-
-        $addres = '';
-        if ($this->data['outletPick'] === null) {
-            // if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            // }
-            $addres = "All Outlets";
-            $outletname = "58vapehouse";
-        } else {
-            // if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            // }
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
-            $outletname = $outlets['name'];
-        }
-        $customer = array();
-        foreach ($members as $member) {
-            $totaltrx = array();
-            $trxval = array();
-            $debtval    = array();
-            foreach ($debts as $debt) {
-                if ($member['id'] === $debt['memberid']) {
-                    $debtval[]  = $debt['value'];
-                }
-            }
-            foreach ($transactions as $trx) {
-                if ($member['id'] === $trx['memberid']) {
-                    $totaltrx[] = $trx['memberid'];
-                    $trxval[]   = $trx['value'];
-                }
-            }
-
-            $customer[] = [
-                'id'    => $member['id'],
-                'name'  => $member['name'],
-                'debt'  => array_sum($debtval),
-                'trx'   => count($totaltrx),
-                'value' => array_sum($trxval),
-                'phone' => $member['phone'],
-            ];
-        }
-
-        header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=customer$startdate-$enddate.xls");
-
-        // export
-        echo '<table>';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th colspan="5" style="align-text:center;">Ringkasan Pelanggan</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="5" style="align-text:center;">' . $outletname . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="5" style="align-text:center;">' . $addres . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="5" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="5" style="align-text:center;"></th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th>Nama</th>';
-        echo '<th>Jumlah Transaksi</th>';
-        echo '<th>Nominal Transaksi</th>';
-        echo '<th>Hutang</th>';
-        echo '<th>No Telphone</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        foreach ($customer as $cust) {
-            echo '<tr>';
-            echo '<td>' . $cust['name'] . '</td>';
-            echo '<td>' . $cust['trx'] . '</td>';
-            echo '<td>' . $cust['value'] . '</td>';
-            echo '<td>' . $cust['debt'] . '</td>';
-            echo '<td>' . $cust['phone'] . '</td>';
-            echo '</tr>';
-        }
-        echo '</tbody>';
-        echo '</table>';
-    }
-
-    public function presence()
-    {
-        // calling model
-        $PresenceModel  = new PresenceModel;
-        $UserModel      = new UserModel;
-        $UserGroupModel = new GroupUserModel;
-        $GroupModel     = new GroupModel;
-
-        // populating data
-        $presences  = $PresenceModel->findAll();
-        $users      = $UserModel->findAll();
-        $usergroups = $UserGroupModel->findAll();
-        $groups     = $GroupModel->findAll();
-
-        // Calling Models
-        $db                 = \Config\Database::connect();
-        $TransactionModel   = new TransactionModel;
-        $MemberModel        = new MemberModel;
-        $DebtModel          = new DebtModel;
-        $OutletModel        = new OutletMOdel;
-
-        // Populating Data
-        $members            = $MemberModel->findAll();
-        $debts              = $DebtModel->findAll();
-
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
-        }
-
-        $addres = '';
-        $presences = $PresenceModel->where('datetime >=', $startdate . " 00:00:00")->where('datetime <=', $enddate . " 23:59:59")->find();
-        if ($this->data['outletPick'] === null) {
-            // if ($startdate === $enddate) {
-            //     $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
-            // }
-            $addres = "All Outlets";
-            $outletname = "58vapehouse";
-        } else {
-            // if ($startdate === $enddate) {
-            //     $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
-            // }
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
-            $outletname = $outlets['name'];
-        }
-
-
-        $absen = array();
-        foreach ($presences as $presence) {
-            foreach ($users as $user) {
-                if ($presence['userid'] === $user->id) {
-                    foreach ($usergroups as $ugroups) {
-                        if ($ugroups['user_id'] === $user->id) {
-                            foreach ($groups as $group) {
-                                if ($ugroups['group_id'] === $group->id) {
-                                    $absen[] = [
-                                        'id'        => $user->id,
-                                        'name'      => $user->username,
-                                        'date'      => $presence['datetime'],
-                                        'status'    => $presence['status'],
-                                        'role'      => $group->name,
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Sum Total  Presence
-        $admin = [];
-        foreach ($absen as $abs) {
-            $present = array();
-            foreach ($absen as $abs) {
-                if ($abs['status'] === '1') {
-                    $present[] = $abs['status'];
-                }
-            }
-            $presen = count($present);
-            if (!isset($admin[$abs['id'] . $abs['name']])) {
-                $admin[$abs['id'] . $abs['name']] = $abs;
-            } else {
-                $admin[$abs['id'] . $abs['name']]['status'] += $abs['status'];
-            }
-        }
-        $admin = array_values($admin);
-
-        header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=presence$startdate-$enddate.xls");
-
-        // export
-        echo '<table>';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">Ringkasan Pelanggan</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;"></th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th>Nama</th>';
-        echo '<th>Posisi</th>';
-        echo '<th>Kehadiran</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        foreach ($admin as $adm) {
-            echo '<tr>';
-            echo '<td>' . $adm['name'] . '</td>';
-            echo '<td>' . $adm['role'] . '</td>';
-            echo '<td>' . $presen . '</td>';
-            echo '</tr>';
-        }
-        echo '</tbody>';
-        echo '</table>';
-    }
-
-    public function bundle()
-    {
-        // Calling models
-        $db                 = \Config\Database::connect();
-        $TransactionModel   = new TransactionModel();
-        $TrxdetailModel     = new TrxdetailModel();
-        $ProductModel       = new ProductModel();
-        $CategoryModel      = new CategoryModel();
-        $VariantModel       = new VariantModel();
-        $StockModel         = new StockModel();
-        $BundleModel        = new BundleModel();
-        $BundledetailModel  = new BundledetailModel();
-        $OutletModel        = new OutletModel();
-
-        // Populating Data
-        $products   = $ProductModel->findAll();
-        $category   = $CategoryModel->findAll();
-        $variants   = $VariantModel->findAll();
-        $stocks     = $StockModel->findAll();
-        $bundles    = $BundleModel->findAll();
-        $bundets    = $BundledetailModel->findAll();
-        $trxdetails = $TrxdetailModel->findAll();
-
-        // initialize
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
-        }
-
-        $addres = '';
-        if ($this->data['outletPick'] === null) {
-            // if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            // }
-            $addres = "All Outlets";
-            $outletname = "58vapehouse";
-        } else {
-            // if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            // }
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
-            $outletname = $outlets['name'];
-        }
-
-        $bund = [];
-        foreach ($transactions as $transaction) {
-            foreach ($trxdetails as $trxdetail) {
-                foreach ($bundles as $bundle) {
-                    if ($trxdetail['transactionid'] === $transaction['id'] && $trxdetail['bundleid'] !== "0" && $bundle['id'] === $trxdetail['bundleid']) {
-                        $bund[] = [
-                            'id'    => $trxdetail['bundleid'],
-                            'name'  => $bundle['name'],
-                            'qty'   => $trxdetail['qty'],
-                            'price' => $bundle['price'],
-                            'value' => $trxdetail['qty'] * $bundle['price'],
-                        ];
-                    }
-                }
-            }
-        }
-
-        // Sum Total Bundle Sold
-        $paket = [];
-        foreach ($bund as $bundval) {
-
-            if (!isset($paket[$bundval['id'] . $bundval['name']])) {
-                $paket[$bundval['id'] . $bundval['name']] = $bundval;
-            } else {
-                $paket[$bundval['id'] . $bundval['name']]['value'] += $bundval['value'];
-                $paket[$bundval['id'] . $bundval['name']]['qty'] += $bundval['qty'];
-            }
-        }
-
-        $paket = array_values($paket);
-
-        header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=bundle$startdate-$enddate.xls");
-
-        // export
-        echo '<table>';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">Ringkasan Paket Terjual</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;"></th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th>Nama</th>';
-        echo '<th>Jumlah</th>';
-        echo '<th>Harga Bundle</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        foreach ($paket as $bundle) {
-            echo '<tr>';
-            echo '<td>' . $bundle['name'] . '</td>';
-            echo '<td>' . $bundle['qty'] . '</td>';
-            echo '<td>' . $bundle['price'] . '</td>';
-            echo '</tr>';
-        }
-        echo '</tbody>';
         echo '</table>';
     }
 
@@ -2246,6 +1761,535 @@ class export extends BaseController
         echo '<td style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">' . $stock . '</td>';
         echo '<td style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">' . $whole . '</td>';
         echo '</tr>';
+        echo '</tbody>';
+        echo '</table>';
+    }
+
+    public function bundle()
+    {
+        // Calling models
+        $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel();
+        $TrxdetailModel     = new TrxdetailModel();
+        $ProductModel       = new ProductModel();
+        $CategoryModel      = new CategoryModel();
+        $VariantModel       = new VariantModel();
+        $StockModel         = new StockModel();
+        $BundleModel        = new BundleModel();
+        $BundledetailModel  = new BundledetailModel();
+        $OutletModel        = new OutletModel();
+
+        // Populating Data
+        $products   = $ProductModel->findAll();
+        $category   = $CategoryModel->findAll();
+        $variants   = $VariantModel->findAll();
+        $stocks     = $StockModel->findAll();
+        $bundles    = $BundleModel->findAll();
+        $bundets    = $BundledetailModel->findAll();
+        $trxdetails = $TrxdetailModel->findAll();
+
+        // initialize
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
+
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            // if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            // }
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            // if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            // }
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
+
+        $bund = [];
+        foreach ($transactions as $transaction) {
+            foreach ($trxdetails as $trxdetail) {
+                foreach ($bundles as $bundle) {
+                    if ($trxdetail['transactionid'] === $transaction['id'] && $trxdetail['bundleid'] !== "0" && $bundle['id'] === $trxdetail['bundleid']) {
+                        $bund[] = [
+                            'id'    => $trxdetail['bundleid'],
+                            'name'  => $bundle['name'],
+                            'qty'   => $trxdetail['qty'],
+                            'price' => $bundle['price'],
+                            'value' => $trxdetail['qty'] * $bundle['price'],
+                        ];
+                    }
+                }
+            }
+        }
+
+        // Sum Total Bundle Sold
+        $paket = [];
+        foreach ($bund as $bundval) {
+
+            if (!isset($paket[$bundval['id'] . $bundval['name']])) {
+                $paket[$bundval['id'] . $bundval['name']] = $bundval;
+            } else {
+                $paket[$bundval['id'] . $bundval['name']]['value'] += $bundval['value'];
+                $paket[$bundval['id'] . $bundval['name']]['qty'] += $bundval['qty'];
+            }
+        }
+
+        $paket = array_values($paket);
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=bundle$startdate-$enddate.xls");
+
+        // export
+        echo '<table>';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">Ringkasan Paket Terjual</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;"></th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th>Nama</th>';
+        echo '<th>Jumlah</th>';
+        echo '<th>Harga Bundle</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        foreach ($paket as $bundle) {
+            echo '<tr>';
+            echo '<td>' . $bundle['name'] . '</td>';
+            echo '<td>' . $bundle['qty'] . '</td>';
+            echo '<td>' . $bundle['price'] . '</td>';
+            echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+    }
+
+    public function diskon()
+    {
+
+        // Calling Models
+        $TransactionModel       = new TransactionModel;
+        $TrxdetailModel         = new TrxdetailModel;
+        $GconfigModel           = new GconfigModel;
+        $OutletModel            = new OutletModel;
+        // Populating Data
+        $trxdetails             = $TrxdetailModel->findAll();
+        $Gconfig                = $GconfigModel->first();
+
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
+
+        $diskon = [];
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            // if ($startdate === $enddate) {
+                $transaction = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // } else {
+            //     $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            // }
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            // if ($startdate === $enddate) {
+                $transaction = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // } else {
+            //     $transaction = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            // }
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
+        // foreach ($transaction as $trx) {
+        //     $discounttrx = array();
+        //     $discounttrxpersen = array();
+        //     $discountvariant = array();
+        //     $discountpoin = array();
+        //     foreach ($trxdetails as $trxdetail) {
+        //         if ($trx['id'] === $trxdetail['transactionid']) {
+        //             if ($trx['disctype'] === "0") {
+        //                 $discounttrx[]          = $trx['discvalue'];
+        //             }
+        //             if ($trx['disctype'] !== "0") {
+        //                 $sub =  ($trxdetail['value'] * $trxdetail['qty']);
+        //                 $discounttrxpersen[]    =  $sub * ($trx['discvalue'] / 100);
+        //             }
+        //             $discountvariant[]          = $trxdetail['discvar'];
+        //             $discountpoin[]             = $trx['pointused'];
+        //         }
+        //     }
+
+        //     $transactiondisc = array_sum($discounttrx) +  array_sum($discounttrxpersen);
+        //     $variantdisc     = array_sum($discountvariant);
+        //     $poindisc        = array_sum($discountpoin);
+
+        //     $diskon[] = [
+        //         'id'            => $trx['id'],
+        //         'trxdisc'       => $transactiondisc,
+        //         'variantdis'    => $variantdisc,
+        //         'poindisc'      => $poindisc,
+        //     ];
+        // }
+
+        // $trxvar = array_sum(array_column($diskon, 'variantdis'));
+        // $trxdis = array_sum(array_column($diskon, 'trxdisc'));
+        // $dispoint = array_sum(array_column($diskon, 'poindisc'));
+
+        $discount           = array();
+        $pointused          = array();
+        $discountvariant    = array();
+
+        foreach ($transaction as $trx) {
+            // Transaction Point Used Array
+            $pointused[]        = $trx['pointused'];
+
+            // Discount Transaction
+            if (!empty($trx['discvalue'])) {
+                $discount[]  = $trx['discvalue'];
+            }
+
+            // Discount Member
+            if ($trx['memberdisc'] != null) {
+                $discount[]   = $trx['memberdisc'];
+            }
+            
+            $trxdetails         = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+            foreach ($trxdetails as $trxdetail) {
+                // Discount Variant
+                if ($trxdetail['discvar'] != '0') {
+                    $discountvariant[]     = $trxdetail['discvar'];
+                }
+            }
+        }
+
+        $transactiondisc = array_sum($discount);
+        $variantdisc     = array_sum($discountvariant);
+        $poindisc        = array_sum($pointused);
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=discount$startdate-$enddate.xls");
+
+        // export
+        echo '<table>';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">Ringkasan Pembayaran</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;"></th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th>Diskon Transaksi</th>';
+        echo '<th>Diskon Variant</th>';
+        echo '<th>Diskon Poin</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        // foreach ($diskon as $disc) {
+        //     echo '<tr>';
+        //     echo '<td >' . $disc['trxdisc'] . '</td>';
+        //     echo '<td >' . $disc['variantdis'] . '</td>';
+        //     echo '<td>' . $disc['poindisc'] . '</td>';
+        //     echo '</tr>';
+        // }
+        echo '<tr>';
+        echo '<td >' . $transactiondisc . '</td>';
+        echo '<td >' . $variantdisc . '</td>';
+        echo '<td >' . $poindisc . '</td>';
+        echo '</tr>';
+        echo '</tbody>';
+        echo '</table>';
+    }
+
+    public function presence()
+    {
+        // calling model
+        $PresenceModel  = new PresenceModel;
+        $UserModel      = new UserModel;
+        $UserGroupModel = new GroupUserModel;
+        $GroupModel     = new GroupModel;
+
+        // populating data
+        $presences  = $PresenceModel->findAll();
+        $users      = $UserModel->findAll();
+        $usergroups = $UserGroupModel->findAll();
+        $groups     = $GroupModel->findAll();
+
+        // Calling Models
+        $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel;
+        $MemberModel        = new MemberModel;
+        $DebtModel          = new DebtModel;
+        $OutletModel        = new OutletMOdel;
+
+        // Populating Data
+        $members            = $MemberModel->findAll();
+        $debts              = $DebtModel->findAll();
+
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
+
+        $addres = '';
+        $presences = $PresenceModel->where('datetime >=', $startdate . " 00:00:00")->where('datetime <=', $enddate . " 23:59:59")->find();
+        if ($this->data['outletPick'] === null) {
+            // if ($startdate === $enddate) {
+            //     $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // } else {
+            //     $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            // }
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            // if ($startdate === $enddate) {
+            //     $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // } else {
+            //     $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+            // }
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
+
+
+        $absen = array();
+        foreach ($presences as $presence) {
+            foreach ($users as $user) {
+                if ($presence['userid'] === $user->id) {
+                    foreach ($usergroups as $ugroups) {
+                        if ($ugroups['user_id'] === $user->id) {
+                            foreach ($groups as $group) {
+                                if ($ugroups['group_id'] === $group->id) {
+                                    $absen[] = [
+                                        'id'        => $user->id,
+                                        'name'      => $user->username,
+                                        'date'      => $presence['datetime'],
+                                        'status'    => $presence['status'],
+                                        'role'      => $group->name,
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Sum Total  Presence
+        $admin = [];
+        foreach ($absen as $abs) {
+            $present = array();
+            foreach ($absen as $abs) {
+                if ($abs['status'] === '1') {
+                    $present[] = $abs['status'];
+                }
+            }
+            $presen = count($present);
+            if (!isset($admin[$abs['id'] . $abs['name']])) {
+                $admin[$abs['id'] . $abs['name']] = $abs;
+            } else {
+                $admin[$abs['id'] . $abs['name']]['status'] += $abs['status'];
+            }
+        }
+        $admin = array_values($admin);
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=presence$startdate-$enddate.xls");
+
+        // export
+        echo '<table>';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">Ringkasan Pelanggan</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="3" style="align-text:center;"></th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th>Nama</th>';
+        echo '<th>Posisi</th>';
+        echo '<th>Kehadiran</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        foreach ($admin as $adm) {
+            echo '<tr>';
+            echo '<td>' . $adm['name'] . '</td>';
+            echo '<td>' . $adm['role'] . '</td>';
+            echo '<td>' . $presen . '</td>';
+            echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+    }
+
+    public function customer()
+    {
+        // Calling Models
+        $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel;
+        $MemberModel        = new MemberModel;
+        $DebtModel          = new DebtModel;
+        $OutletModel        = new OutletMOdel;
+
+        // Populating Data
+        $members            = $MemberModel->findAll();
+        $debts              = $DebtModel->findAll();
+
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
+
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            // if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+            // }
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            // if ($startdate === $enddate) {
+                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+            // } else {
+            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+            // }
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
+        $customer = array();
+        foreach ($members as $member) {
+            $totaltrx = array();
+            $trxval = array();
+            $debtval    = array();
+            foreach ($debts as $debt) {
+                if ($member['id'] === $debt['memberid']) {
+                    $debtval[]  = $debt['value'];
+                }
+            }
+            foreach ($transactions as $trx) {
+                if ($member['id'] === $trx['memberid']) {
+                    $totaltrx[] = $trx['memberid'];
+                    $trxval[]   = $trx['value'];
+                }
+            }
+
+            $customer[] = [
+                'id'    => $member['id'],
+                'name'  => $member['name'],
+                'debt'  => array_sum($debtval),
+                'trx'   => count($totaltrx),
+                'value' => array_sum($trxval),
+                'phone' => $member['phone'],
+            ];
+        }
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=customer$startdate-$enddate.xls");
+
+        // export
+        echo '<table>';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th colspan="5" style="align-text:center;">Ringkasan Pelanggan</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="5" style="align-text:center;">' . $outletname . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="5" style="align-text:center;">' . $addres . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="5" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th colspan="5" style="align-text:center;"></th>';
+        echo '</tr>';
+        echo '<tr>';
+        echo '<th>Nama</th>';
+        echo '<th>Jumlah Transaksi</th>';
+        echo '<th>Nominal Transaksi</th>';
+        echo '<th>Hutang</th>';
+        echo '<th>No Telphone</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        foreach ($customer as $cust) {
+            echo '<tr>';
+            echo '<td>' . $cust['name'] . '</td>';
+            echo '<td>' . $cust['trx'] . '</td>';
+            echo '<td>' . $cust['value'] . '</td>';
+            echo '<td>' . $cust['debt'] . '</td>';
+            echo '<td>' . $cust['phone'] . '</td>';
+            echo '</tr>';
+        }
         echo '</tbody>';
         echo '</table>';
     }
