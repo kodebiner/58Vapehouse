@@ -1309,7 +1309,7 @@ class export extends BaseController
         $grossval           = [];
         
         foreach ($transactions as $trx) {
-            $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+            $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->where('bundleid', '0')->find();
             $totaltrxdet    = count($trxdetails);
 
             if ($trx['discvalue'] != null) {
@@ -1448,15 +1448,12 @@ class export extends BaseController
     public function category()
     {
         // Calling models
+        $OutletModel        = new OutletModel();
+        $ProductModel       = new ProductModel();
         $TransactionModel   = new TransactionModel();
         $TrxdetailModel     = new TrxdetailModel();
-        $ProductModel       = new ProductModel();
-        $CategoryModel      = new CategoryModel();
         $VariantModel       = new VariantModel();
-        $StockModel         = new StockModel();
-        $BrandModel         = new BrandModel();
-        $BundleModel        = new BundleModel();
-        $OutletModel        = new OutletModel();
+        $CategoryModel      = new CategoryModel();
 
         // Populating Data
         $trxdetails = $TrxdetailModel->findAll();
