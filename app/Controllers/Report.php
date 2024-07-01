@@ -867,7 +867,7 @@ class Report extends BaseController
             $grossval           = [];
             
             foreach ($transactions as $trx) {
-                $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->where('bundleid', '0')->find();
+                $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
                 // $totaltrxdet    = count($trxdetails);
     
                 // if ($trx['discvalue'] != null) {
@@ -1000,133 +1000,6 @@ class Report extends BaseController
             $startdate  = date('Y-m-1' . ' 00:00:00');
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
-
-        if ($this->data['outletPick'] === null) {
-            return redirect()->back()->with('error', lang('Global.chooseoutlet'));
-        } else {
-            $transactions       = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-
-            $transactiondata    = [];
-            $productsales       = [];
-            $netval             = [];
-            $grossval           = [];
-            
-            foreach ($transactions as $trx) {
-                $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-                // $totaltrxdet    = count($trxdetails);
-    
-                // if ($trx['discvalue'] != null) {
-                //     $disc   = floor((int)$trx['discvalue'] / (int)$totaltrxdet);
-                // } else {
-                //     $disc   = 0;
-                // }
-    
-                // if ($trx['memberdisc'] != null) {
-                //     $disc   = floor((int)$trx['memberdisc'] / (int)$totaltrxdet);
-                // } else {
-                //     $disc   = 0;
-                // }
-    
-                // if ($trx['pointused'] != '0') {
-                //     $disc   = floor((int)$trx['pointused'] / (int)$totaltrxdet);
-                // } else {
-                //     $disc   = 0;
-                // }
-                
-                if (!empty($trxdetails)) {
-                    foreach ($trxdetails as $trxdet) {
-                        // Data Variant
-                        $variants       = $VariantModel->find($trxdet['variantid']);
-                        
-                        if (!empty($variants)) {
-                            $products   = $ProductModel->find($variants['productid']);
-    
-                            if (!empty($products)) {
-                                // Search Filter
-                                if (!empty($input['search'])) {
-                                    $category   = $CategoryModel->where('name', $input['search'])->find($products['catid']);
-                                } else {
-                                    $category   = $CategoryModel->find($products['catid']);
-                                }
-    
-                                if (!empty($category)) {
-                                    $transactiondata[$category['id']]['name']               = $category['name'];
-                                    $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
-                                    $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                                    $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
-
-                                }
-                            } else {
-                                $category   = [];
-                            }
-                        } else {
-                            $products   = [];
-                            $category   = [];
-
-                            $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
-                            $transactiondata[0]['qty'][]                            = $trxdet['qty'];
-                            $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                            $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
-                        }
-
-                        // Data Bundle
-                        $bundles        = $BundleModel->find($trxdet['bundleid']);
-
-                        // Data Bundle Detail
-                        $bundledets     = $BundledetailModel->find($bundles['id']);
-
-                        // Data Variant
-                        $bundlevariants = $VariantModel->find($bundledets['variantid']);
-                        
-                        if (!empty($bundlevariants)) {
-                            $bundleproduct   = $ProductModel->find($bundlevariants['productid']);
-    
-                            if (!empty($bundleproduct)) {
-                                // Search Filter
-                                if (!empty($input['search'])) {
-                                    $category   = $CategoryModel->where('name', $input['search'])->find($bundleproduct['catid']);
-                                } else {
-                                    $category   = $CategoryModel->find($bundleproduct['catid']);
-                                }
-    
-                                if (!empty($category)) {
-                                    $transactiondata[$category['id']]['name']               = $category['name'];
-                                    $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
-                                    $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                                    $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
-
-                                }
-                            } else {
-                                $category   = [];
-                            }
-                        } else {
-                            $bundleproduct   = [];
-                            $category   = [];
-
-                            $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
-                            $transactiondata[0]['qty'][]                            = $trxdet['qty'];
-                            $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                            $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
-                        }
-                    }
-                } else {
-                    $bundlevariants = [];
-                    $bundleproduct  = [];
-                    $category       = [];
-                }
-            }
-            
-            foreach ($transactiondata as $trxdata) {
-                $productsales[] = array_sum($trxdata['qty']);
-                $netval[]       = array_sum($trxdata['netvalue']);
-                $grossval[]     = array_sum($trxdata['grossvalue']);
-            }
-            
-            $totalsalesitem     = array_sum($productsales);
-            $totalnetsales      = array_sum($netval);
-            $totalcatgross      = array_sum($grossval);
-        }
-        array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
 
         // ================================= Rizal Code ===================================== //
         // // Search Category
@@ -1406,6 +1279,133 @@ class Report extends BaseController
         // $grosstotal = array_sum(array_column($produk, 'value'));
         // ================================ End Old Code ============================== //
 
+        if ($this->data['outletPick'] === null) {
+            return redirect()->back()->with('error', lang('Global.chooseoutlet'));
+        } else {
+            $transactions       = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+
+            $transactiondata    = [];
+            $productsales       = [];
+            $netval             = [];
+            $grossval           = [];
+            
+            foreach ($transactions as $trx) {
+                $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+                // $totaltrxdet    = count($trxdetails);
+    
+                // if ($trx['discvalue'] != null) {
+                //     $disc   = floor((int)$trx['discvalue'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
+    
+                // if ($trx['memberdisc'] != null) {
+                //     $disc   = floor((int)$trx['memberdisc'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
+    
+                // if ($trx['pointused'] != '0') {
+                //     $disc   = floor((int)$trx['pointused'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
+                
+                if (!empty($trxdetails)) {
+                    foreach ($trxdetails as $trxdet) {
+                        // Data Variant
+                        $variants       = $VariantModel->find($trxdet['variantid']);
+                        
+                        if (!empty($variants)) {
+                            $products   = $ProductModel->find($variants['productid']);
+    
+                            if (!empty($products)) {
+                                // Search Filter
+                                if (!empty($input['search'])) {
+                                    $category   = $CategoryModel->where('name', $input['search'])->find($products['catid']);
+                                } else {
+                                    $category   = $CategoryModel->find($products['catid']);
+                                }
+    
+                                if (!empty($category)) {
+                                    $transactiondata[$category['id']]['name']               = $category['name'];
+                                    $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
+                                    $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                                    $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+
+                                }
+                            } else {
+                                $category   = [];
+                            }
+                        } else {
+                            $products   = [];
+                            $category   = [];
+
+                            $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
+                            $transactiondata[0]['qty'][]                            = $trxdet['qty'];
+                            $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                            $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                        }
+
+                        // Data Bundle
+                        $bundles        = $BundleModel->find($trxdet['bundleid']);
+
+                        // Data Bundle Detail
+                        $bundledets     = $BundledetailModel->where('bundleid', $bundles['id'])->find();
+
+                        // Data Variant
+                        $bundlevariants = $VariantModel->find($bundledets['variantid']);
+                        
+                        if (!empty($bundlevariants)) {
+                            $bundleproduct   = $ProductModel->find($bundlevariants['productid']);
+    
+                            if (!empty($bundleproduct)) {
+                                // Search Filter
+                                if (!empty($input['search'])) {
+                                    $category   = $CategoryModel->where('name', $input['search'])->find($bundleproduct['catid']);
+                                } else {
+                                    $category   = $CategoryModel->find($bundleproduct['catid']);
+                                }
+    
+                                if (!empty($category)) {
+                                    $transactiondata[$category['id']]['name']               = $category['name'];
+                                    $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
+                                    $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                                    $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+
+                                }
+                            } else {
+                                $category   = [];
+                            }
+                        } else {
+                            $bundleproduct   = [];
+                            $category   = [];
+
+                            $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
+                            $transactiondata[0]['qty'][]                            = $trxdet['qty'];
+                            $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                            $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                        }
+                    }
+                } else {
+                    $bundlevariants = [];
+                    $bundleproduct  = [];
+                    $category       = [];
+                }
+            }
+            
+            foreach ($transactiondata as $trxdata) {
+                $productsales[] = array_sum($trxdata['qty']);
+                $netval[]       = array_sum($trxdata['netvalue']);
+                $grossval[]     = array_sum($trxdata['grossvalue']);
+            }
+            
+            $totalsalesitem     = array_sum($productsales);
+            $totalnetsales      = array_sum($netval);
+            $totalcatgross      = array_sum($grossval);
+        }
+        array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
+
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.categoryreport');
@@ -1508,32 +1508,18 @@ class Report extends BaseController
 
     public function bundle()
     {
-
         // Calling models
-        $db                 = \Config\Database::connect();
         $TransactionModel   = new TransactionModel();
         $TrxdetailModel     = new TrxdetailModel();
-        $ProductModel       = new ProductModel();
-        $CategoryModel      = new CategoryModel();
         $VariantModel       = new VariantModel();
-        $StockModel         = new StockModel();
         $BundleModel        = new BundleModel();
         $BundledetailModel  = new BundledetailModel();
 
-        // Populating Data
-        $products   = $ProductModel->findAll();
-        $category   = $CategoryModel->findAll();
-        $variants   = $VariantModel->findAll();
-        $stocks     = $StockModel->findAll();
-        $bundles    = $BundleModel->findAll();
-        $bundets    = $BundledetailModel->findAll();
-        $trxdetails = $TrxdetailModel->findAll();
-
         // initialize
-        $input = $this->request->getGet('daterange');
+        $input = $this->request->getGet();
 
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
+        if (!empty($input['daterange'])) {
+            $daterange = explode(' - ', $input['daterange']);
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
@@ -1541,48 +1527,125 @@ class Report extends BaseController
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
-        // if ($startdate === $enddate) {
-            $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-        // } else {
+        // ================== Rizal Code ====================== //
+        // Populating Data
+        // $db                 = \Config\Database::connect();
+        // $products   = $ProductModel->findAll();
+        // $category   = $CategoryModel->findAll();
+        // $variants   = $VariantModel->findAll();
+        // $stocks     = $StockModel->findAll();
+        // $bundles    = $BundleModel->findAll();
+        // $bundets    = $BundledetailModel->findAll();
+        // $trxdetails = $TrxdetailModel->findAll();
+
+        // // if ($startdate === $enddate) {
         //     $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+        // // } else {
+        // //     $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+        // // }
+
+        // $bund = [];
+        // foreach ($transactions as $transaction) {
+        //     foreach ($trxdetails as $trxdetail) {
+        //         foreach ($bundles as $bundle) {
+        //             if ($trxdetail['transactionid'] === $transaction['id'] && $trxdetail['bundleid'] !== "0" && $bundle['id'] === $trxdetail['bundleid']) {
+        //                 $bund[] = [
+        //                     'id'    => $trxdetail['bundleid'],
+        //                     'name'  => $bundle['name'],
+        //                     'qty'   => $trxdetail['qty'],
+        //                     'price' => $bundle['price'],
+        //                     'value' => (int)$trxdetail['qty'] * (int)$bundle['price'],
+        //                 ];
+        //             }
+        //         }
+        //     }
         // }
 
-        $bund = [];
-        foreach ($transactions as $transaction) {
-            foreach ($trxdetails as $trxdetail) {
-                foreach ($bundles as $bundle) {
-                    if ($trxdetail['transactionid'] === $transaction['id'] && $trxdetail['bundleid'] !== "0" && $bundle['id'] === $trxdetail['bundleid']) {
-                        $bund[] = [
-                            'id'    => $trxdetail['bundleid'],
-                            'name'  => $bundle['name'],
-                            'qty'   => $trxdetail['qty'],
-                            'price' => $bundle['price'],
-                            'value' => (int)$trxdetail['qty'] * (int)$bundle['price'],
-                        ];
+        // // Sum Total Bundle Sold
+        // $paket = [];
+        // foreach ($bund as $bundval) {
+
+        //     if (!isset($paket[$bundval['id'] . $bundval['name']])) {
+        //         $paket[$bundval['id'] . $bundval['name']] = $bundval;
+        //     } else {
+        //         $paket[$bundval['id'] . $bundval['name']]['value'] += $bundval['value'];
+        //         $paket[$bundval['id'] . $bundval['name']]['qty'] += $bundval['qty'];
+        //     }
+        // }
+
+        // $paket = array_values($paket);
+
+        // Populating Data
+        if ($this->data['outletPick'] === null) {
+            return redirect()->back()->with('error', lang('Global.chooseoutlet'));
+        } else {
+            $transactions       = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+
+            $transactiondata    = [];
+            
+            foreach ($transactions as $trx) {
+                $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->where('variantid', '0')->find();
+                // $totaltrxdet    = count($trxdetails);
+    
+                // if ($trx['discvalue'] != null) {
+                //     $disc   = floor((int)$trx['discvalue'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
+    
+                // if ($trx['memberdisc'] != null) {
+                //     $disc   = floor((int)$trx['memberdisc'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
+    
+                // if ($trx['pointused'] != '0') {
+                //     $disc   = floor((int)$trx['pointused'] / (int)$totaltrxdet);
+                // } else {
+                //     $disc   = 0;
+                // }
+                
+                if (!empty($trxdetails)) {
+                    foreach ($trxdetails as $trxdet) {
+                        // Data Bundle
+                        $bundles        = $BundleModel->find($trxdet['bundleid']);
+                        if (!empty($bundles)) {
+                            $transactiondata[$bundles['id']]['name']                = $bundles['name'];
+                            $transactiondata[$bundles['id']]['qty'][]               = $trxdet['qty'];
+                            $transactiondata[$bundles['id']]['value'][]             = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+
+                            // Data Bundle Detail
+                            $bundledets     = $BundledetailModel->find($bundles['id']);
+    
+                            // Data Variant
+                            if (!empty($bundledets)) {
+                                $bundlevariants = $VariantModel->find($bundledets['variantid']);
+                            } else {
+                                $bundlevariants = [];
+                            }
+                        } else {
+                            $bundledets     = [];
+                            $bundlevariants = [];
+                            
+                            $transactiondata[0]['name']                             = 'Bundle Terhapus';
+                            $transactiondata[0]['qty'][]                            = $trxdet['qty'];
+                            $transactiondata[0]['value'][]                          = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                        }
                     }
+                } else {
+                    $bundles            = [];
+                    $bundledets         = [];
+                    $bundlevariants     = [];
                 }
             }
         }
-
-        // Sum Total Bundle Sold
-        $paket = [];
-        foreach ($bund as $bundval) {
-
-            if (!isset($paket[$bundval['id'] . $bundval['name']])) {
-                $paket[$bundval['id'] . $bundval['name']] = $bundval;
-            } else {
-                $paket[$bundval['id'] . $bundval['name']]['value'] += $bundval['value'];
-                $paket[$bundval['id'] . $bundval['name']]['qty'] += $bundval['qty'];
-            }
-        }
-
-        $paket = array_values($paket);
+        array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.bundlereport');
         $data['description']    = lang('Global.bundleListDesc');
-        $data['bundles']        = $paket;
+        $data['bundles']        = $transactiondata;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
 
