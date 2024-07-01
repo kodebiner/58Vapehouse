@@ -1367,8 +1367,8 @@ class export extends BaseController
                         $products   = [];
                         $productid  = '';
                         $category   = [];
-                        $transactiondata[0]['name']           = 'Produk Terhapus';
-                        $transactiondata[0]['category']       = 'Produk Terhapus';
+                        $transactiondata[0]['name']           = 'Kategori / Produk / Variant Terhapus';
+                        $transactiondata[0]['category']       = 'Kategori / Produk / Variant Terhapus';
                         $transactiondata[0]['qty'][]                        = $trxdet['qty'];
                         $transactiondata[0]['netvalue'][]                   = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
                         $transactiondata[0]['grossvalue'][]                 = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];

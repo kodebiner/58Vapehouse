@@ -925,8 +925,8 @@ class Report extends BaseController
                             $products   = [];
                             $productid  = '';
                             $category   = [];
-                            $transactiondata[0]['name']           = 'Produk Terhapus';
-                            $transactiondata[0]['category']       = 'Produk Terhapus';
+                            $transactiondata[0]['name']           = 'Kategori / Produk / Variant Terhapus';
+                            $transactiondata[0]['category']       = 'Kategori / Produk / Variant Terhapus';
                             $transactiondata[0]['qty'][]                        = $trxdet['qty'];
                             $transactiondata[0]['netvalue'][]                   = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
                             $transactiondata[0]['grossvalue'][]                 = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
@@ -1039,9 +1039,13 @@ class Report extends BaseController
                             $products   = $ProductModel->find($variants['productid']);
     
                             if (!empty($products)) {
-                                $category   = $CategoryModel->find($products['catid']);
-    
                                 // Search Filter
+                                if (!empty($input['search'])) {
+                                    $category   = $CategoryModel->where('name', $input['search'])->find($products['catid']);
+                                } else {
+                                    $category   = $CategoryModel->find($products['catid']);
+                                }
+    
                                 if (!empty($category)) {
                                     $transactiondata[$category['id']]['name']               = $category['name'];
                                     $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
@@ -1055,8 +1059,8 @@ class Report extends BaseController
                         } else {
                             $products   = [];
                             $category   = [];
-                            
-                            $transactiondata[0]['name']                             = 'Kategori Terhapus';
+
+                            $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
                             $transactiondata[0]['qty'][]                            = $trxdet['qty'];
                             $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
                             $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
