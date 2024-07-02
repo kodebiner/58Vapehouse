@@ -177,8 +177,16 @@
                                 foreach ($products as $product) { 
                                     if (($trxdet['variantid'] === $variant['id']) && ($product['id'] === $variant['productid']) && ($trxdet['transactionid'] === $transactions['id']) ) {
                                         $variantName     = $variant['name'];
-                                        $productName     = $product['name']; 
-                                        $variantval      = (Int)$trxdet['value'] + (Int)$trxdet['discvar'];
+                                        $productName     = $product['name'];
+
+                                        if ($gconfig['globaldisc'] != "0") {
+                                            $globaldisc = (Int)$trxdet['globaldisc'];
+                                        } else {
+                                            $globaldisc = 0;
+                                        }
+
+                                        // $variantval      = (Int)$trxdet['value'] + (Int)$trxdet['discvar'];
+                                        $variantval      = (Int)$trxdet['value'] + (Int)$trxdet['discvar'] + (Int)$globaldisc;
                                         ?>
                                         <div class="uk-margin-small uk-text-xsmall">
                                             <div class="uk-text-bold">
@@ -193,6 +201,10 @@
                                                 if (!empty($trxdet['discvar'])){
                                                     echo "<div class='uk-width-1-2'>(".$trxdet['discvar'].")</div>";
                                                     echo "<div class='uk-width-1-2 uk-text-right'>-" .$trxdet['discvar']. "</div>";
+                                                }
+                                                if ($gconfig['globaldisc'] != "0") {
+                                                    echo "<div class='uk-width-1-2'>(".$globaldisc.")</div>";
+                                                    echo "<div class='uk-width-1-2 uk-text-right'>-" .$globaldisc. "</div>";
                                                 }
                                                 ?>
                                             </div>
@@ -210,8 +222,15 @@
                         foreach ($trxdetails as $trxdet) { 
                             foreach ($bundles as $bundle){
                                 if (($trxdet['transactionid'] === $transactions['id']) && ($trxdet['bundleid'] === $bundle['id']) ) {
-                                    $bundleName      = $bundle  ['name'];
-                                    $variantval      = $trxdet  ['value'];
+                                    $bundleName      = $bundle['name'];
+
+                                    if ($gconfig['globaldisc'] != "0") {
+                                        $globaldisc = (Int)$trxdet['globaldisc'];
+                                    } else {
+                                        $globaldisc = 0;
+                                    }
+
+                                    $variantval      = (Int)$trxdet['value'] + (Int)$globaldisc;
                                     ?>
                                     <div class="uk-margin-small uk-text-xsmall">
                                         <div>
@@ -219,6 +238,12 @@
                                             <div class="uk-grid-collapse" uk-grid>
                                                 <div class="uk-width-2-3"> @<?=$variantval?></div>
                                                 <div class="uk-width-1-3 uk-text-right"><?= (Int)$variantval * (Int)$trxdet['qty']?></div>
+                                                <?php
+                                                if ($gconfig['globaldisc'] != "0") {
+                                                    echo "<div class='uk-width-1-2'>(".$globaldisc.")</div>";
+                                                    echo "<div class='uk-width-1-2 uk-text-right'>-" .$globaldisc. "</div>";
+                                                }
+                                                ?>
                                             </div>
                                             <?php 
                                             foreach ($bundets as $bundet){
@@ -254,7 +279,7 @@
                                         if (($bookingdetail['variantid'] === $variant['id']) && ($variant['productid'] === $product['id'])) {
                                             $variantName    = $variant['name'];
                                             $productName    = $product['name'];
-                                            $variantval     = $bookingdetail['value'] + $bookingdetail['discvar'];
+                                            $variantval     = (Int)$bookingdetail['value'] + (Int)$bookingdetail['discvar'] + (Int)$bookingdetail['globaldisc'];
 
                                             echo '<div class="uk-margin-small uk-text-xsmall">';
                                             echo '<div>';
@@ -266,8 +291,14 @@
                                             echo '</div>';
                                             if ($bookingdetail['discvar'] !== '0') {
                                                 echo '<div class="uk-grid-collapse" uk-grid>';
-                                                echo "<div class='uk-width-2-3'>Discount</br> @" .(int)$bookingdetail['discvar']. "</div>";
-                                                echo "<div class='uk-width-1-3'></br>-" .$bookingdetail['discvar']. "</div>";
+                                                echo "<div class='uk-width-1-2'>Discount</br> @" .$bookingdetail['discvar']. "</div>";
+                                                echo "<div class='uk-width-1-2'></br>-" .$bookingdetail['discvar']. "</div>";
+                                                echo '</div>';
+                                            }
+                                            if ($bookingdetail['globaldisc'] !== '0') {
+                                                echo '<div class="uk-grid-collapse" uk-grid>';
+                                                echo "<div class='uk-width-1-2'>@" .$bookingdetail['globaldisc']. "</div>";
+                                                echo "<div class='uk-width-1-2'></br>-" .$bookingdetail['globaldisc']. "</div>";
                                                 echo '</div>';
                                             }
                                             echo '</div>';
@@ -284,6 +315,12 @@
                                         echo '<div class="uk-width-2-3"> @'.$bookingdetail['value'].'</div>';
                                         echo '<div class="uk-width-1-3">'.(Int)$bookingdetail['value'] * (Int)$bookingdetail['qty'].'</div>';
                                         echo '</div>';
+                                        if ($bookingdetail['globaldisc'] !== '0') {
+                                            echo '<div class="uk-grid-collapse" uk-grid>';
+                                            echo "<div class='uk-width-1-2'>@" .$bookingdetail['globaldisc']. "</div>";
+                                            echo "<div class='uk-width-1-2'></br>-" .$bookingdetail['globaldisc']. "</div>";
+                                            echo '</div>';
+                                        }
                                         foreach ($bundets as $bundet) {
                                             foreach ($products as $product) {
                                                 foreach ($variants as $variant) {
@@ -318,7 +355,7 @@
                             <?php if(!empty($discount)){
                                 $disc =  lang('Global.discount');
                                 echo "<div class='uk-width-1-2 uk-text-bold'>$disc</div>";
-                                echo "<div class='uk-width-1-2  uk-text-bold uk-text-right'>".$discount."</div>";
+                                echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>".$discount."</div>";
                             }?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
@@ -332,7 +369,7 @@
                         <div class="uk-grid-collapse" uk-grid>
                             <?php $tot =  lang('Global.total');?>
                             <div class="uk-width-1-2 uk-text-bold"><?=$tot?></div>
-                            <div class="uk-width-1-2  uk-text-bold uk-text-right"><?=$total?></div>
+                            <div class="uk-width-1-2 uk-text-bold uk-text-right"><?=$total?></div>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (!empty($pay)){

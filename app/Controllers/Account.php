@@ -140,6 +140,8 @@ class Account extends BaseController
             'poinorder'         => 'required|decimal',
             'memberdisctype'    => 'required',
             'memberdisc'        => 'required|decimal',
+            'globaldisctype'    => 'required',
+            'globaldisc'        => 'required|decimal',
             'ppn'               => 'required|decimal',
         ];
         if (! $this->validate($rule)) {
@@ -153,6 +155,8 @@ class Account extends BaseController
             'poinorder'         => $input['poinorder'],
             'memberdisc'        => $input['memberdisc'],
             'memberdisctype'    => $input['memberdisctype'],
+            'globaldisc'        => $input['globaldisc'],
+            'globaldisctype'    => $input['globaldisctype'],
             'bizname'           => $input['name'],
             'ppn'               => $input['ppn'],
         ];

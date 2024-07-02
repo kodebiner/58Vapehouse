@@ -77,28 +77,41 @@ class Pay extends BaseController
         $customers      = $MemberModel->findAll();
 
         // Inserting Transaction
-        $varvalues = array();
-        $bundvalues = array();
+        $varvalues      = array();
+        $bundvalues     = array();
 
         if (!empty($input['qty'])) {
             foreach ($input['qty'] as $varid => $varqty) {
-                $variant = $VariantModel->find($varid);
+                $variant        = $VariantModel->find($varid);
 
-                $discvar = (int)$input['varprice'][$varid] * (int)$varqty;
-                $discbargain = (int)$input['varbargain'][$varid] * (int)$varqty;
+                $discvar        = (int)$input['varprice'][$varid] * (int)$varqty;
+                $discbargain    = (int)$input['varbargain'][$varid] * (int)$varqty;
+
                 // Bargain And Varprice Added
                 if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
-                    $varvalues[]  = (int)$discbargain - (int)$discvar;
+                    $varval  = (int)$discbargain - (int)$discvar;
                     // Vaprice Added And Null Bargain
                 } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
-                    $varvalues[]  = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar;
+                    $varval  = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar;
                     // Bargain Added And Null Varprice
                 } elseif ((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)) {
-                    $varvalues[]  = (int)$discbargain;
+                    $varval  = (int)$discbargain;
                     // Null Bargain & Varprice
                 } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
-                    $varvalues[] = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
+                    $varval = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
                 }
+
+                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                    if ($this->data['gconfig']['globaldisctype'] === '0') {
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
+                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$varval) * (int)$varqty;
+                    }
+                } else {
+                    $globaldisc = 0;
+                }
+
+                $varvalues[]    = (Int)$varval - (Int)$globaldisc;
             }
         } else {
             $varvalues[] = '0';
@@ -107,7 +120,20 @@ class Pay extends BaseController
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bundqty) {
                 $bundle         = $BundleModel->find($bunid);
-                $bundvalues[]   = $bundqty * $bundle['price'];
+                
+                $bundleval      = (Int)$bundqty * (Int)$bundle['price'];
+
+                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                    if ($this->data['gconfig']['globaldisctype'] === '0') {
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$bundqty;
+                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleval) * (int)$bundqty;
+                    }
+                } else {
+                    $globaldisc = 0;
+                }
+
+                $bundvalues[]    = (Int)$bundleval - (Int)$globaldisc;
             }
         } else {
             $bundvalues[] = '0';
@@ -118,6 +144,7 @@ class Pay extends BaseController
 
         $subtotal = $varvalue + $bundvalue;
 
+        // ===================== Member Discount GConfig =============================== //
         if ($input['customerid'] != '0') {
             $memberid = $input['customerid'];
             if ($this->data['gconfig']['memberdisctype'] === '0') {
@@ -129,6 +156,13 @@ class Pay extends BaseController
             $memberid = '';
             $memberdisc = 0;
         }
+
+        // // Get Member ID
+        // if ($input['customerid'] != '0') {
+        //     $memberid = $input['customerid'];
+        // } else {
+        //     $memberid = '';
+        // }
 
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
             $discount = $input['discvalue'];
@@ -147,7 +181,11 @@ class Pay extends BaseController
             $poin = 0;
         }
 
+        // When Discount Member In Transaction and not dicount member per item
         $value = (int)$subtotal - (int)$memberdisc - (int)$discount - (int)$poin;
+
+        // // Discount member per item
+        // $value = (int)$subtotal - (int)$discount - (int)$poin;
 
         if (!empty($input['payment']) && empty($input['duedate'])) {
             $paymentid = $input['payment'];
@@ -220,21 +258,50 @@ class Pay extends BaseController
                 $discvar        = (int)$input['varprice'][$varid] * $varqty;
                 $discbargain    = (int)$input['varbargain'][$varid] * $varqty;
 
+                // // // Variant Price when member disc on transaction and not being discount per item
+                // // Bargain And Varprice Added
+                // if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
+                //     $varPrice  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
+                //     // Vaprice Added And Null Bargain
+                // } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
+                //     $varPrice  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
+                //     // Bargain Added And Null Varprice
+                // } elseif ((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)) {
+                //     $varPrice  = (int)$discbargain / (int)$varqty;
+                //     // Null Bargain & Varprice
+                // } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
+                //     $varPrice = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
+                // } else {
+                //     $varPrice = 0;
+                // }
+
                 // Bargain And Varprice Added
                 if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
-                    $varPrice  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
+                    $varPrices  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
                     // Vaprice Added And Null Bargain
                 } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
-                    $varPrice  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
+                    $varPrices  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
                     // Bargain Added And Null Varprice
                 } elseif ((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)) {
-                    $varPrice  = (int)$discbargain / (int)$varqty;
+                    $varPrices  = (int)$discbargain / (int)$varqty;
                     // Null Bargain & Varprice
                 } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
-                    $varPrice = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
+                    $varPrices = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
                 } else {
-                    $varPrice = 0;
+                    $varPrices = 0;
                 }
+
+                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                    if ($this->data['gconfig']['globaldisctype'] === '0') {
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
+                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$varPrices) * (int)$varqty;
+                    }
+                } else {
+                    $globaldisc = 0;
+                }
+
+                $varPrice   = (Int)$varPrices - (Int)$globaldisc;
 
                 // // Bargain And Varprice Added
                 // if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
@@ -260,6 +327,7 @@ class Pay extends BaseController
                     'qty'           => $varqty,
                     'value'         => $varPrice,
                     'discvar'       => $discvar,
+                    'globaldisc'    => $globaldisc,
                     'margindasar'   => $margindasar,
                     'marginmodal'   => $marginmodal,
                 ];
@@ -278,11 +346,29 @@ class Pay extends BaseController
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bunqty) {
                 $bundle = $BundleModel->find($bunid);
+
+                $bundleprice    = (int)$bundle['price'] * (int)$bunqty;
+
+                // When member discount applied per item
+                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                    if ($this->data['gconfig']['globaldisctype'] === '0') {
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$bunqty;
+                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleprice) * (int)$bunqty;
+                    }
+                } else {
+                    $globaldisc = 0;
+                }
+
+                $bundlefinprice = (Int)$bundleprice - (Int)$globaldisc;
+
                 $trxbun = [
                     'transactionid' => $trxId,
                     'bundleid'      => $bunid,
                     'qty'           => $bunqty,
-                    'value'         => $bundle['price']
+                    'globaldisc'    => $globaldisc,
+                    // 'value'         => $bundle['price']
+                    'value'         => $bundlefinprice
                 ];
                 $TrxdetailModel->save($trxbun);
 
@@ -704,17 +790,29 @@ class Pay extends BaseController
                 $discbargain = (int)$input['varbargain'][$varid] * (int)$varqty;
                 // Bargain And Varprice Added
                 if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
-                    $varvalues[]    = (int)$discbargain - (int)$discvar;
+                    $varval    = (int)$discbargain - (int)$discvar;
                     // Vaprice Added And Null Bargain
                 } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
-                    $varvalues[]    = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar;
+                    $varval    = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar;
                     // Bargain Added And Null Varprice
                 } elseif (!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])) {
-                    $varvalues[]    = $discbargain;
+                    $varval    = $discbargain;
                     // Null Bargain & Varprice
                 } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
-                    $varvalues[]    = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
+                    $varval    = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
                 }
+
+                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                    if ($this->data['gconfig']['globaldisctype'] === '0') {
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
+                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$varval) * (int)$varqty;
+                    }
+                } else {
+                    $globaldisc = 0;
+                }
+
+                $varvalues[]    = (Int)$varval - (Int)$globaldisc;
             }
         } else {
             $varvalues[] = '0';
@@ -723,7 +821,20 @@ class Pay extends BaseController
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bundqty) {
                 $bundle         = $BundleModel->find($bunid);
-                $bundvalues[]   = $bundqty * $bundle['price'];
+                
+                $bundleval      = (Int)$bundqty * (Int)$bundle['price'];
+
+                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                    if ($this->data['gconfig']['globaldisctype'] === '0') {
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$bundqty;
+                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleval) * (int)$bundqty;
+                    }
+                } else {
+                    $globaldisc = 0;
+                }
+
+                $bundvalues[]    = (Int)$bundleval - (Int)$globaldisc;
             }
         } else {
             $bundvalues[] = '0';
@@ -734,6 +845,7 @@ class Pay extends BaseController
 
         $subtotal = $varvalue + $bundvalue;
 
+        // ===================== Member Discount GConfig =============================== //
         if ($input['customerid'] != '0') {
             $memberid = $input['customerid'];
             if ($this->data['gconfig']['memberdisctype'] === '0') {
@@ -772,6 +884,7 @@ class Pay extends BaseController
             'outletid'      => $this->data['outletPick'],
             'userid'        => $this->data['uid'],
             'memberid'      => $memberid,
+            'memberdisc'    => $memberdisc,
             'value'         => $value,
             'disctype'      => $input['disctype'],
             'discvalue'     => $input['discvalue'],
@@ -788,17 +901,30 @@ class Pay extends BaseController
                 $discbargain = (int)$input['varbargain'][$varid] * (int)$varqty;
                 // Bargain And Varprice Added
                 if (isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid]) && $discbargain !== 0) {
-                    $varPrice  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
+                    $varPrices  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
                     // Vaprice Added And Null Bargain
                 } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
-                    $varPrice  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
+                    $varPrices  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
                     // Bargain Added And Null Varprice
                 } elseif (!isset($input['varprice'][$varid]) && isset($input['varbargain'][$varid])) {
-                    $varPrice  = (int)$discbargain / (int)$varqty;
+                    $varPrices  = (int)$discbargain / (int)$varqty;
                     // Null Bargain & Varprice
                 } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
-                    $varPrice = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
+                    $varPrices = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
                 }
+
+                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                    if ($this->data['gconfig']['globaldisctype'] === '0') {
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
+                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$varPrices) * (int)$varqty;
+                    }
+                } else {
+                    $globaldisc = 0;
+                }
+
+                $varPrice   = (Int)$varPrices - (Int)$globaldisc;
+                
                 $trxvar = [
                     'bookingid'     => $bookId,
                     'variantid'     => $varid,
@@ -821,11 +947,27 @@ class Pay extends BaseController
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bunqty) {
                 $bundle = $BundleModel->find($bunid);
+
+                $bundleprice    = (int)$bundle['price'] * (int)$bunqty;
+
+                // When member discount applied per item
+                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                    if ($this->data['gconfig']['globaldisctype'] === '0') {
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$bunqty;
+                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleprice) * (int)$bunqty;
+                    }
+                } else {
+                    $globaldisc = 0;
+                }
+
+                $bundlefinprice = (Int)$bundleprice - (Int)$globaldisc;
+
                 $trxbun = [
                     'bookingid'     => $bookId,
                     'bundleid'      => $bunid,
                     'qty'           => $bunqty,
-                    'value'         => $bundle['price']
+                    'value'         => $bundlefinprice
                 ];
                 $BookingdetailModel->save($trxbun);
 
@@ -841,6 +983,13 @@ class Pay extends BaseController
                 }
             }
         }
+
+        // PPN Value
+        $ppn = (int)$value * ((int)$Gconfig['ppn'] / 100);
+
+        //Insert Trx Payment 
+        $total = (int)$subtotal - (int)$discount - (int)$input['poin'] - (int)$memberdisc + (int)$ppn;
+
         $db                 = \Config\Database::connect();
         $bundles            = $BundleModel->findAll();
         $bundets            = $BundledetModel->findAll();
@@ -883,7 +1032,6 @@ class Pay extends BaseController
         $data['bookings']       = $booking;
         $data['bookingdetails'] = $bookingdetails;
         $data['bundleVariants'] = $bundleVariants->getResult();
-
 
         if (!empty($input['customerid'])) {
             $data['cust']           = $MemberModel->where('id', $booking['memberid'])->first();
@@ -964,7 +1112,6 @@ class Pay extends BaseController
 
     public function copyprint($id)
     {
-
         // Calling Models
         $BundleModel            = new BundleModel();
         $BundledetModel         = new BundledetailModel();
@@ -983,8 +1130,8 @@ class Pay extends BaseController
         $TransactionModel       = new TransactionModel();
         $TrxdetailModel         = new TrxdetailModel();
         $TrxpaymentModel        = new TrxpaymentModel();
-        $MemberModel            = new MemberModel();
-        $GconfigModel           = new GconfigModel();
+        // $MemberModel            = new MemberModel();
+        // $GconfigModel           = new GconfigModel();
 
         $db                 = \Config\Database::connect();
         $transactions       = $TransactionModel->find($id);
@@ -1146,7 +1293,6 @@ class Pay extends BaseController
 
     public function bookprint($id)
     {
-
         // Calling Models
         $BundleModel            = new BundleModel();
         $BundledetModel         = new BundledetailModel();
@@ -1183,6 +1329,7 @@ class Pay extends BaseController
         $member             = $MemberModel->where('id', $booking['memberid'])->first();
         $debt               = $DebtModel->where('memberid', $booking['memberid'])->first();
         $user               = $UserModel->where('id', $booking['userid'])->first();
+        $Gconfig            = $GconfigModel->first();
 
         $bundleBuilder      = $db->table('bundledetail');
         $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
