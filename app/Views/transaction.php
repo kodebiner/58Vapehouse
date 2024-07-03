@@ -1403,7 +1403,7 @@
                                                         if ($gconfig['globaldisctype'] == '0') { ?>
                                                             var globaldisc  = <?= $gconfig['globaldisc'] ?>;
                                                         <?php } else { ?>
-                                                            var globaldisc  = sellprice.value * '<?= (Int)((Int)$gconfig['globaldisc'] / 100) ?>';
+                                                            var globaldisc  = <?= (Int)((Int)$gconfig['globaldisc'] / 100) ?>;
                                                         <?php } ?>
 
                                                         var price           = count * (sellprice.value - globaldisc);
