@@ -352,15 +352,15 @@ class Pay extends BaseController
                 // When member discount applied per item
                 if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
                     if ($this->data['gconfig']['globaldisctype'] === '0') {
-                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'];
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$bunqty;
                     } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleprice);
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleprice) * (int)$bunqty;
                     }
                 } else {
                     $globaldisc = 0;
                 }
 
-                $bundlefinprice = (Int)$bundleprice - (Int)$globaldisc;
+                $bundlefinprice = (Int)$bundleprice - ((Int)$globaldisc / (int)$bunqty);
 
                 $trxbun = [
                     'transactionid' => $trxId,
