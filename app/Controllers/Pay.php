@@ -111,13 +111,14 @@ class Pay extends BaseController
                     $globaldisc = 0;
                 }
 
+                dd($varval);
+
                 $varvalues[]    = (Int)$varval - (Int)$globaldisc;
             }
         } else {
             $varvalues[] = '0';
         }
 
-        dd($varvalues);
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bundqty) {
                 $bundle         = $BundleModel->find($bunid);
