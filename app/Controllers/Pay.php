@@ -143,7 +143,6 @@ class Pay extends BaseController
         $bundvalue  = array_sum($bundvalues);
 
         $subtotal = $varvalue + $bundvalue;
-        dd($subtotal);
 
         // ===================== Member Discount GConfig =============================== //
         if ($input['customerid'] != '0') {
