@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class TrxdetailModel extends Model
 {
     protected $allowedFields = [
-        'transactionid','variantid','bundleid','qty','description','value','discvar','margindasar','marginmodal',
+        'transactionid','variantid','bundleid','qty','description','value','discvar','globaldisc','margindasar','marginmodal',
 
     ];
 
@@ -13,6 +13,4 @@ class TrxdetailModel extends Model
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType     = 'array';
-    
-
 }
