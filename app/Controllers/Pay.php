@@ -133,7 +133,7 @@ class Pay extends BaseController
                     $globaldisc = 0;
                 }
 
-                $bundvalues[]    = (Int)$bundleval - ((Int)$globaldisc / (Int)$bundqty);
+                $bundvalues[]    = (Int)$bundleval - (Int)$globaldisc;
             }
         } else {
             $bundvalues[] = '0';
@@ -143,6 +143,7 @@ class Pay extends BaseController
         $bundvalue = array_sum($bundvalues);
 
         $subtotal = $varvalue + $bundvalue;
+        dd($bundvalue);
 
         // ===================== Member Discount GConfig =============================== //
         if ($input['customerid'] != '0') {
