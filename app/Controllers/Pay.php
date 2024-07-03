@@ -1181,7 +1181,6 @@ class Pay extends BaseController
         $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $data['links']          =  urlencode($actual_link);
 
-
         $data['discount'] = "0";
         if ((!empty($transactions['discvalue'])) && ($transactions['disctype'] === '0')) {
             $data['discount'] += $transactions['discvalue'];
@@ -1356,6 +1355,31 @@ class Pay extends BaseController
         $data['bookingdetails'] = $bookingdetails;
         $data['bundleVariants'] = $bundleVariants->getResult();
 
+        $data['discount'] = "0";
+        if ((!empty($transactions['discvalue'])) && ($transactions['disctype'] === '0')) {
+            $data['discount'] += $transactions['discvalue'];
+        } elseif ((isset($transactions['discvalue'])) && ($transactions['disctype'] === '1')) {
+            foreach ($bookingdetails as $trxdetail) {
+                if ($trxdetail['transactionid'] === $transactions['id']) {
+                    $sub =  ((int)$trxdetail['value'] * (int)$trxdetail['qty']);
+                    $data['discount'] += (int)$sub * ((int)$transactions['discvalue'] / 100);
+                }
+            }
+        } else {
+            $data['discount'] += 0;
+        }
+
+        $prices = array();
+        foreach ($bookingdetails as $trxdet) {
+            if ($trxdet['transactionid'] === $id) {
+                $total      = (int)$trxdet['qty'] * (int)$trxdet['value'];
+                $prices[]   = $total;
+            }
+        }
+        $sum = array_sum($prices);
+
+        $total = (int)$sum - (int)$data['discount'] - (int)$Gconfig['memberdisc'] + (int)$Gconfig['ppn'];
+
         // Gconfig poin setup
         $minimTrx    = $Gconfig['poinorder'];
         $poinval     = $Gconfig['poinvalue'];
@@ -1371,9 +1395,9 @@ class Pay extends BaseController
         }
 
         if (!empty($bookings['memberid'])) {
-            $data['cust']           = $MemberModel->where('id', $transactions['memberid'])->first();
+            $data['cust']           = $MemberModel->where('id', $booking['memberid'])->first();
             $data['mempoin']        = (int)$member['poin'];
-            $data['poinearn']       = $poin;
+            $data['poinearn']       = 'Tidak menggunakan Poin';
         } else {
             $data['cust']           = "0";
             $data['mempoin']        = "0";
@@ -1400,7 +1424,6 @@ class Pay extends BaseController
         } else {
             $data['vardiscval']     = "0";
         }
-
 
         if ((!empty($booking['discvalue'])) && ($booking['disctype'] === '0')) {
             $data['discount']   = $booking['discvalue'];

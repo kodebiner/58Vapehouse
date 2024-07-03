@@ -176,6 +176,13 @@
                             foreach ($variants as $variant) {
                                 foreach ($products as $product) { 
                                     if (($trxdet['variantid'] === $variant['id']) && ($product['id'] === $variant['productid']) && ($trxdet['transactionid'] === $transactions['id']) ) {
+                                        if ($variant['name'] == null) {
+                                            $variantName     = 'Variant Terhapus';
+                                        }
+                                        if ($product['name'] == null) {
+                                            $productName    = 'Produk Terhapus';
+                                        }
+                                        
                                         $variantName     = $variant['name'];
                                         $productName     = $product['name'];
 
@@ -224,6 +231,10 @@
                                 if (($trxdet['transactionid'] === $transactions['id']) && ($trxdet['bundleid'] === $bundle['id']) ) {
                                     $bundleName      = $bundle['name'];
 
+                                    if ($bundle['name'] == null) {
+                                        $bundleName      = 'Bundle Terhapus';
+                                    }
+
                                     if ($gconfig['globaldisc'] != "0") {
                                         $globaldisc = (Int)$trxdet['globaldisc'];
                                     } else {
@@ -248,7 +259,13 @@
                                             <?php 
                                             foreach ($bundets as $bundet){
                                                 foreach ($products as $product) { 
-                                                    foreach ($variants as $variant){    
+                                                    foreach ($variants as $variant){
+                                                        if ($variant['name'] == null) {
+                                                            $variantName     = 'Variant Terhapus';
+                                                        }
+                                                        if ($product['name'] == null) {
+                                                            $productName    = 'Produk Terhapus';
+                                                        }
                                                         $productName     = $product ['name']; 
                                                         $variantName     = $variant ['name'];
                                                         if(($variant['id'] === $bundet['variantid'])  && ($product['id'] === $variant['productid'])&& 
@@ -277,6 +294,12 @@
                                 foreach ($variants as $variant) {
                                     foreach ($products as $product) {
                                         if (($bookingdetail['variantid'] === $variant['id']) && ($variant['productid'] === $product['id'])) {
+                                            if ($variant['name'] == null) {
+                                                $variantName     = 'Variant Terhapus';
+                                            }
+                                            if ($product['name'] == null) {
+                                                $productName    = 'Produk Terhapus';
+                                            }
                                             $variantName    = $variant['name'];
                                             $productName    = $product['name'];
                                             $variantval     = (Int)$bookingdetail['value'] + (Int)$bookingdetail['discvar'] + (Int)$bookingdetail['globaldisc'];
@@ -325,7 +348,16 @@
                                             foreach ($products as $product) {
                                                 foreach ($variants as $variant) {
                                                     if (($bundet['variantid'] === $variant['id']) && ($variant['productid'] === $product['id'])) {
-                                                        echo "# ".$product['name']."-".$variant['name']."</br>";
+                                                        if ($variant['name'] == null) {
+                                                            $variantName     = 'Variant Terhapus';
+                                                        }
+                                                        if ($product['name'] == null) {
+                                                            $productName    = 'Produk Terhapus';
+                                                        }
+
+                                                        $productName    = $product['name'];
+                                                        $variantName    = $variant['name'];
+                                                        echo "# ".$productName."-".$variantName."</br>";
                                                     } 
                                                 }
                                             }

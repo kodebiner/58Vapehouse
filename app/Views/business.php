@@ -45,7 +45,7 @@
                 </div>
                 <h4 class="tm-h4"><?=lang('Global.discount')?></h4>
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="memberdisctype"><?=lang('Global.discountType')?></label>
+                    <label class="uk-form-label" for="memberdisctype">Member <?=lang('Global.discountType')?></label>
                     <div class="uk-form-controls">
                         <div class="uk-margin-small">
                             <label><input class="uk-radio" id="memberdiscrp" name="memberdisctype" type="radio" value="0" <?php if ($gconfig['memberdisctype'] === '0') {echo 'checked';} ?> required> Rp</label>
@@ -59,6 +59,23 @@
                     <label class="uk-form-label" for="memberdisc"><?=lang('Global.memberDiscount')?></label>
                     <div class="uk-form-controls">
                         <input class="uk-input uk-form-width-small" id="memberdisc" name="memberdisc" type="number" value="<?=$gconfig['memberdisc']?>" required>
+                    </div>
+                </div>
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="globaldisctype">Promo Discount Type</label>
+                    <div class="uk-form-controls">
+                        <div class="uk-margin-small">
+                            <label><input class="uk-radio" id="globaldiscrp" name="globaldisctype" type="radio" value="0" <?php if ($gconfig['globaldisctype'] === '0') {echo 'checked';} ?> required> Rp</label>
+                        </div>
+                        <div class="uk-margin-small">
+                            <label><input class="uk-radio" id="globaldisctype" name="globaldisctype" type="radio" value="1" <?php if ($gconfig['globaldisctype'] === '1') {echo 'checked';} ?>> %</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="globaldisc">Promo Discount</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input uk-form-width-small" id="globaldisc" name="globaldisc" type="number" value="<?=$gconfig['globaldisc']?>" required>
                     </div>
                 </div>
                 <h4 class="tm-h4" hidden><?=lang('Global.tax')?></h4>
