@@ -301,7 +301,8 @@ class Pay extends BaseController
                     $globaldisc = 0;
                 }
 
-                $varPrice   = (Int)$varPrices - ((Int)$globaldisc / (Int)$varqty);
+                // $varPrice   = (Int)$varPrices - ((Int)$globaldisc / (Int)$varqty);
+                $varPrice   = (Int)$varPrices;
 
                 // // Bargain And Varprice Added
                 // if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
