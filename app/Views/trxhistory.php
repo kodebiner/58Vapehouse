@@ -213,7 +213,7 @@
                                                         <div>x<?= $trxdet['qty'] ?> @<?= $variantval ?></div>
                                                     </div>
                                                     <div class="uk-width-1-2 uk-text-right">
-                                                        <div><?= ((int)$variantval * (int)$trxdet['qty']) - (int)$trxdet['discvar'] - (int)$trxdet['globaldisc'] ?></div>
+                                                        <div><?= ((int)$variantval * (int)$trxdet['qty']) ?></div>
                                                     </div>
                                                 </div>
                                                 <?php if (!empty($trxdet['discvar'])) { ?>
