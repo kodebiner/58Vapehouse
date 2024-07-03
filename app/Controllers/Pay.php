@@ -133,7 +133,7 @@ class Pay extends BaseController
                     $globaldisc = 0;
                 }
 
-                $bundvalues[]    = (Int)$bundleval;
+                $bundvalues[]    = (Int)$bundleval - ((Int)$globaldisc / (Int)$bundqty);
             }
         } else {
             $bundvalues[] = '0';
