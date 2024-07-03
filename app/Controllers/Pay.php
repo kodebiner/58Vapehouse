@@ -111,7 +111,7 @@ class Pay extends BaseController
                     $globaldisc = 0;
                 }
 
-                dd((Int)$varval - (Int)$globaldisc);
+                dd($globaldisc);
 
                 $varvalues[]    = (Int)$varval - (Int)$globaldisc;
             }
