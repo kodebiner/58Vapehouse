@@ -117,6 +117,7 @@ class Pay extends BaseController
             $varvalues[] = '0';
         }
 
+        dd($varvalues);
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bundqty) {
                 $bundle         = $BundleModel->find($bunid);
