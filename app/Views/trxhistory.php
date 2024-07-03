@@ -204,7 +204,7 @@
                                 if ($trxdet['variantid'] !== "0") {
                                     foreach ($products as $product) {
                                         if (($trxdet['variantid'] === $product['id']) && ($trxdet['transactionid'] === $transaction['id'])) {
-                                            $variantval      = (int)$trxdet['value'] + (int)$trxdet['discvar'];
+                                            $variantval      = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
                             ?>
                                             <div class="uk-margin-small">
                                                 <div class="uk-h5 uk-text-bolder uk-margin-remove"><?= $product['name'] ?></div>
@@ -213,12 +213,27 @@
                                                         <div>x<?= $trxdet['qty'] ?> @<?= $variantval ?></div>
                                                     </div>
                                                     <div class="uk-width-1-2 uk-text-right">
-                                                        <div><?= (int)$variantval * (int)$trxdet['qty'] - (int)$trxdet['discvar'] ?></div>
+                                                        <div><?= ((int)$variantval * (int)$trxdet['qty']) - (int)$trxdet['discvar'] - (int)$trxdet['globaldisc'] ?></div>
                                                     </div>
                                                 </div>
                                                 <?php if (!empty($trxdet['discvar'])) { ?>
-                                                    <div class="uk-margin-remove-top">
-                                                        <div class="uk-width-1-2">(<?= $trxdet['discvar'] ?>)</div>
+                                                    <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                                        <div>
+                                                            <div>(<?= $trxdet['discvar'] ?>)</div>
+                                                        </div>
+                                                        <div class="uk-text-right">
+                                                            <div>- <?= $trxdet['discvar'] ?></div>
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
+                                                <?php if (!empty($trxdet['globaldisc'])) { ?>
+                                                    <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                                        <div>
+                                                            <div>(<?= $trxdet['globaldisc'] ?>)</div>
+                                                        </div>
+                                                        <div class="uk-text-right">
+                                                            <div>- <?= $trxdet['globaldisc'] ?></div>
+                                                        </div>
                                                     </div>
                                                 <?php } ?>
                                             </div>
@@ -232,7 +247,9 @@
                                     foreach ($bundles as $bundle) {
                                         if (($trxdet['transactionid'] === $transaction['id']) && ($trxdet['bundleid'] === $bundle['id'])) {
                                             $bundleName      = $bundle['name'];
-                                            $variantval      = $trxdet['value']; ?>
+                                            $variantval      = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                                            ?>
+
                                             <div class="uk-margin-small">
                                                 <div class="uk-h5 uk-text-bolder uk-margin-remove"><?= $bundleName ?></div>
                                                 <div class="uk-margin-small-left">
@@ -252,6 +269,16 @@
                                                         <div><?= (int)$variantval * (int)$trxdet['qty'] ?></div>
                                                     </div>
                                                 </div>
+                                                <?php if (!empty($trxdet['globaldisc'])) { ?>
+                                                    <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                                        <div>
+                                                            <div>(<?= $trxdet['globaldisc'] ?>)</div>
+                                                        </div>
+                                                        <div class="uk-text-right">
+                                                            <div>- <?= $trxdet['globaldisc'] ?></div>
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
                                             </div>
                                         <?php }
                                     }
