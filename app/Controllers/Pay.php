@@ -258,51 +258,50 @@ class Pay extends BaseController
                 $discvar        = (int)$input['varprice'][$varid] * $varqty;
                 $discbargain    = (int)$input['varbargain'][$varid] * $varqty;
 
-                // // Variant Price when member disc on transaction and not being discount per item
-                // Bargain And Varprice Added
-                if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
-                    $varPrice  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
-                    // Vaprice Added And Null Bargain
-                } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
-                    $varPrice  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
-                    // Bargain Added And Null Varprice
-                } elseif ((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)) {
-                    $varPrice  = (int)$discbargain / (int)$varqty;
-                    // Null Bargain & Varprice
-                } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
-                    $varPrice = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
-                } else {
-                    $varPrice = 0;
-                }
-
+                // // // Variant Price when member disc on transaction and not being discount per item
                 // // Bargain And Varprice Added
                 // if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
-                //     $varPrices  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
+                //     $varPrice  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
                 //     // Vaprice Added And Null Bargain
                 // } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
-                //     $varPrices  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
+                //     $varPrice  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
                 //     // Bargain Added And Null Varprice
                 // } elseif ((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)) {
-                //     $varPrices  = (int)$discbargain / (int)$varqty;
+                //     $varPrice  = (int)$discbargain / (int)$varqty;
                 //     // Null Bargain & Varprice
                 // } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
-                //     $varPrices = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
+                //     $varPrice = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
                 // } else {
-                //     $varPrices = 0;
+                //     $varPrice = 0;
                 // }
 
-                // if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
-                //     if ($this->data['gconfig']['globaldisctype'] === '0') {
-                //         $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
-                //     } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                //         $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$varPrices) * (int)$varqty;
-                //     }
-                // } else {
-                //     $globaldisc = 0;
-                // }
+                // Bargain And Varprice Added
+                if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
+                    $varPrices  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
+                    // Vaprice Added And Null Bargain
+                } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
+                    $varPrices  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
+                    // Bargain Added And Null Varprice
+                } elseif ((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)) {
+                    $varPrices  = (int)$discbargain / (int)$varqty;
+                    // Null Bargain & Varprice
+                } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
+                    $varPrices = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
+                } else {
+                    $varPrices = 0;
+                }
 
-                // $varPrice   = (Int)$varPrices - ((Int)$globaldisc / (Int)$varqty);
-                // $varPrice   = (Int)$varPrices;
+                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                    if ($this->data['gconfig']['globaldisctype'] === '0') {
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
+                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$varPrices) * (int)$varqty;
+                    }
+                } else {
+                    $globaldisc = 0;
+                }
+
+                $varPrice   = (Int)$varPrices - ((Int)$globaldisc / (Int)$varqty);
 
                 // // Bargain And Varprice Added
                 // if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {

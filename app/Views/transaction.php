@@ -1966,7 +1966,7 @@
                                                     </div>
                                                     <div class="uk-card-footer">
                                                         <div class="tm-h3 uk-text-center">
-                                                            <div>Rp <?= $BunPrice; ?>,-</div>
+                                                            <div>Rp <?= $bundle['price']; ?>,-</div>
                                                         </div>
                                                     </div>
                                                 </div>

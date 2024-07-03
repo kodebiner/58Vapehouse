@@ -193,7 +193,7 @@
                                         }
 
                                         // $variantval      = (Int)$trxdet['value'] + (Int)$trxdet['discvar'];
-                                        $variantval      = (Int)$trxdet['value'] + (Int)$trxdet['discvar'] + (Int)$globaldisc;
+                                        $variantval      = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$globaldisc / (Int)$trxdet['qty']);
                                         ?>
                                         <div class="uk-margin-small uk-text-xsmall">
                                             <div class="uk-text-bold">
@@ -241,7 +241,7 @@
                                         $globaldisc = 0;
                                     }
 
-                                    $variantval      = (Int)$trxdet['value'] + (Int)$globaldisc;
+                                    $variantval      = (Int)$trxdet['value'] + ((Int)$globaldisc / (Int)$trxdet['qty']);
                                     ?>
                                     <div class="uk-margin-small uk-text-xsmall">
                                         <div>
@@ -302,7 +302,7 @@
                                             }
                                             $variantName    = $variant['name'];
                                             $productName    = $product['name'];
-                                            $variantval     = (Int)$bookingdetail['value'] + (Int)$bookingdetail['discvar'] + (Int)$bookingdetail['globaldisc'];
+                                            $variantval     = (Int)$bookingdetail['value'] + ((Int)$bookingdetail['discvar'] / (Int)$bookingdetail['qty']) + ((Int)$bookingdetail['globaldisc'] / (Int)$bookingdetail['qty']);
 
                                             echo '<div class="uk-margin-small uk-text-xsmall">';
                                             echo '<div>';
@@ -335,7 +335,7 @@
                                         echo '<div>';
                                         echo 'x'.$bookingdetail['qty'].' Bundle <br>'.$bundle['name'].'<br>';
                                         echo '<div class="uk-grid-collapse" uk-grid>';
-                                        echo '<div class="uk-width-2-3"> @'.$bookingdetail['value'].'</div>';
+                                        echo '<div class="uk-width-2-3"> @'.(Int)$bookingdetail['value'] + ((Int)$bookingdetail['globaldisc'] / (Int)$bookingdetail['qty']).'</div>';
                                         echo '<div class="uk-width-1-3">'.(Int)$bookingdetail['value'] * (Int)$bookingdetail['qty'].'</div>';
                                         echo '</div>';
                                         if ($bookingdetail['globaldisc'] !== '0') {
