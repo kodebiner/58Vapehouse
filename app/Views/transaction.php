@@ -1412,7 +1412,7 @@
                                                         var bargainprice    = varbargain.value * inputqty.value;
                                                         var price           = count * sellprice.value;
                                                     <?php } ?>
-                                                    
+
                                                     // var price           = count * sellprice.value;
                                                     // var bargainprice    = varbargain.value * inputqty.value;
                                                     if (varbargain.value) {
@@ -1925,8 +1925,16 @@
                                     </div>
                                     <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                         <?php foreach ($bundles as $bundle) {
-                                            $BunName = $bundle['name']; 
-                                            $BunPrice = $bundle['price'];
+                                            $BunName = $bundle['name'];
+                                            if ($gconfig['globaldisc'] != '0') {
+                                                if ($gconfig['globaldisctype'] == '0') {
+                                                    $BunPrice  = (Int)$bundle['price'] - (Int)$gconfig['globaldisc'];
+                                                } else {
+                                                    $BunPrice  = (Int)$bundle['price'] - ((Int)$bundle['price'] * ((Int)$gconfig['globaldisc'] / 100));
+                                                }
+                                            } else {
+                                                $BunPrice = $bundle['price'];
+                                            }
                                         ?>
                                             <div id="CreateOrder<?= $bundle['id'] ?>">
                                                 <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrderBundle<?= $bundle['id'] ?>()">

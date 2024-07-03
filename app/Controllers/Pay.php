@@ -301,7 +301,7 @@ class Pay extends BaseController
                     $globaldisc = 0;
                 }
 
-                $varPrice   = (Int)$varPrices - (Int)$globaldisc;
+                $varPrice   = (Int)$varPrices - ((Int)$globaldisc / (Int)$varqty);
 
                 // // Bargain And Varprice Added
                 // if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
@@ -347,14 +347,14 @@ class Pay extends BaseController
             foreach ($input['bqty'] as $bunid => $bunqty) {
                 $bundle = $BundleModel->find($bunid);
 
-                $bundleprice    = (int)$bundle['price'] * (int)$bunqty;
+                $bundleprice    = (int)$bundle['price'];
 
                 // When member discount applied per item
                 if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
                     if ($this->data['gconfig']['globaldisctype'] === '0') {
-                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$bunqty;
+                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'];
                     } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleprice) * (int)$bunqty;
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleprice);
                     }
                 } else {
                     $globaldisc = 0;
