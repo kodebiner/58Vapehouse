@@ -127,7 +127,7 @@ class Pay extends BaseController
                     if ($this->data['gconfig']['globaldisctype'] === '0') {
                         $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$bundqty;
                     } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleval) * (int)$bundqty;
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundle['price']) * (int)$bundqty;
                     }
                 } else {
                     $globaldisc = 0;
