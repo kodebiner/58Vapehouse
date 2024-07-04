@@ -1646,14 +1646,8 @@
                                                             }
 
                                                             varprice.onchange = function() {
-                                                                var discvar = varprice.value * inputqty.value;
-
-                                                                if (discvar) {
-                                                                    if (varbargain.value) {
-                                                                        var subvalue    = (varbargain.value * inputqty.value) - discvar;
-                                                                    } else {
-                                                                        var subvalue    = (variantarray[x]['sellprice'] * inputqty.value) - discvar;
-                                                                    }
+                                                                if (varbargain.value) {
+                                                                    var subvalue    = (varbargain.value - varprice.value);
 
                                                                     <?php if ($gconfig['globaldisc'] != '0') {
                                                                         if ($gconfig['globaldisctype'] == '0') { ?>
@@ -1662,13 +1656,24 @@
                                                                             var globaldisc  = subvalue * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
                                                                         <?php } ?>
 
-                                                                        document.getElementById('price'+variant).innerHTML = subvalue - globaldisc;
+                                                                        document.getElementById('price'+variant).innerHTML = (subvalue - globaldisc) * inputqty.value;
                                                                     <?php } else { ?>
-                                                                        document.getElementById('price'+variant).innerHTML = subvalue;
+                                                                        document.getElementById('price'+variant).innerHTML = subvalue * inputqty.value;
                                                                     <?php } ?>
-
                                                                 } else {
-                                                                    document.getElementById('price'+variant).innerHTML = showprice();
+                                                                    var subvalue    = (variantarray[x]['sellprice'] - varprice.value);
+
+                                                                    <?php if ($gconfig['globaldisc'] != '0') {
+                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                        <?php } else { ?>
+                                                                            var globaldisc  = subvalue * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                        <?php } ?>
+
+                                                                        document.getElementById('price'+variant).innerHTML = (subvalue - globaldisc) * inputqty.value;
+                                                                    <?php } else { ?>
+                                                                        document.getElementById('price'+variant).innerHTML = subvalue * inputqty.value;
+                                                                    <?php } ?>
                                                                 }
                                                             }
 
