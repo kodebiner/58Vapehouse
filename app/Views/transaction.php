@@ -1800,6 +1800,17 @@
                                                                 }
                                                             }
 
+                                                            varprice.onchange = function() {
+                                                                var discvar = varprice.value;
+
+                                                                if (discvar) {
+                                                                    document.getElementById('price'+variant).innerHTML = variantarray[x]['sellprice'] - discvar;
+                                                                } else {
+                                                                    document.getElementById('price'+variant).innerHTML = showprice();
+                                                                }
+                                                            }
+
+
                                                             var sellprice = document.createElement('input');
                                                             sellprice.setAttribute('id', 'sellprice'+variant);
                                                             sellprice.setAttribute('hidden', '');
