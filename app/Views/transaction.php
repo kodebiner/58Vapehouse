@@ -1784,7 +1784,7 @@
                                                                 var discvar = varprice.value;
                                                                 var bargain = varbargain.value;
 
-                                                                if ($varprice.value) {
+                                                                if (varprice.value) {
                                                                     <?php if ($gconfig['globaldisc'] != '0') {
                                                                         if ($gconfig['globaldisctype'] == '0') { ?>
                                                                             var globaldisc  = <?= $gconfig['globaldisc'] ?>;
