@@ -1391,7 +1391,324 @@
                                 <!-- Catalog List -->
                                 <li>
                                     <script>
-                                        
+                                        function showVariant(id) {
+                                            var modal = document.getElementById('modalVar');
+                                            var data = { 'id' : id };
+                                            $.ajax({
+                                                url:"stock/product",
+                                                method:"POST",
+                                                data: data,
+                                                dataType: "json",                                                
+                                                error:function() {
+                                                    console.log('error', arguments);
+                                                },
+                                                success:function() {
+                                                    console.log('success', arguments);
+                                                    var variantList = document.getElementById('modalVarList');
+                                                    var productName = document.getElementById('modalVarProduct');
+                                                    productName.innerHTML = arguments[0][0]['product'];
+                                                    while (variantList.firstElementChild) {
+                                                        variantList.removeChild(variantList.firstElementChild);
+                                                    }
+                                                    variantarray = arguments[0];
+                                                    for (k in variantarray) {
+                                                        var variantContainer = document.createElement('div');
+                                                        variantContainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle');
+                                                        variantContainer.setAttribute('uk-grid', '');
+
+                                                        var variantName = document.createElement('div');
+                                                        variantName.setAttribute('class', 'uk-width-1-5');
+
+                                                        var variantNameText = document.createElement('div');
+                                                        variantNameText.setAttribute('class', 'uk-text-meta');
+                                                        variantNameText.innerHTML = variantarray[k]['variant'];
+
+                                                        var sellPrice = document.createElement('div');
+                                                        sellPrice.setAttribute('class', 'uk-width-1-5');
+
+                                                        var sellText = document.createElement('div');
+                                                        sellText.setAttribute('class', 'uk-text-meta');
+                                                        sellText.innerHTML = variantarray[k]['sellprice'];
+
+                                                        var msrp = document.createElement('div');
+                                                        msrp.setAttribute('class', 'uk-width-1-5');
+
+                                                        var msrpText = document.createElement('div');
+                                                        msrpText.setAttribute('class', 'uk-text-meta');
+                                                        msrpText.innerHTML = variantarray[k]['msrp'];
+
+                                                        var stock = document.createElement('div');
+                                                        stock.setAttribute('class', 'uk-width-1-5');
+
+                                                        var stockText = document.createElement('div');
+                                                        stockText.setAttribute('class', 'uk-text-meta');
+                                                        stockText.innerHTML = variantarray[k]['qty'];
+
+                                                        var buttonContainer = document.createElement('div');
+                                                        buttonContainer.setAttribute('class', 'uk-width-1-5 uk-text-center');
+
+                                                        var button = document.createElement('a');
+                                                        button.setAttribute('class', 'uk-icon-button');
+                                                        button.setAttribute('uk-icon', 'cart');
+                                                        button.setAttribute('onclick', 'createNewOrder('+variantarray[k]['id']+')');
+
+                                                        variantName.appendChild(variantNameText);
+                                                        variantContainer.appendChild(variantName);
+                                                        sellPrice.appendChild(sellText);
+                                                        variantContainer.appendChild(sellPrice);
+                                                        msrp.appendChild(msrpText);
+                                                        variantContainer.appendChild(msrp);
+                                                        stock.appendChild(stockText);
+                                                        variantContainer.appendChild(stock);
+                                                        buttonContainer.appendChild(button);
+                                                        variantContainer.appendChild(buttonContainer);
+                                                        variantList.appendChild(variantContainer);
+                                                    }
+                                                    UIkit.modal(modal).show();
+                                                },
+                                            });
+                                        };
+
+                                        function createNewOrder(variant) {
+                                            var elemexist = document.getElementById('product'+variant);
+                                            for (x in variantarray) {
+                                                if (variantarray[x]['id'] == variant) {
+                                                    var count = 1;
+                                                    var modalhide = document.getElementById('modalVar');
+                                                        UIkit.modal(modalhide).hide();
+                                                    if ( $( "#product"+variant ).length ) {
+                                                        alert('<?=lang('Global.readyAdd');?>');
+                                                    } else {
+                                                        if (variantarray[x]['qty'] == '0') {
+                                                            alert("<?=lang('Global.alertstock')?>");
+                                                        } else {
+                                                            let minstock = 1;
+                                                            let minval = count;
+
+                                                            const products = document.getElementById('products');
+                                                            
+                                                            const productgrid = document.createElement('div');
+                                                            productgrid.setAttribute('id', 'product'+variant);
+                                                            productgrid.setAttribute('class', 'uk-margin-small uk-flex-middle');
+                                                            productgrid.setAttribute('uk-grid', '');
+
+                                                            const addcontainer = document.createElement('div');
+                                                            addcontainer.setAttribute('class', 'uk-width-1-6');
+                                                            
+                                                            const productqtyinputadd = document.createElement('div');
+                                                            productqtyinputadd.setAttribute('id','addqty'+variant);
+                                                            productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
+                                                            productqtyinputadd.setAttribute('onclick','handleCount('+variant+', 1)');
+                                                            productqtyinputadd.innerHTML = '+';
+
+                                                            const delcontainer = document.createElement('div');
+                                                            delcontainer.setAttribute('class', 'uk-width-1-6');
+                                                            
+                                                            const productqtyinputdel = document.createElement('div');
+                                                            productqtyinputdel.setAttribute('id','delqty'+variant);
+                                                            productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
+                                                            productqtyinputdel.setAttribute('onclick','handleCount('+variant+', 0)');
+                                                            productqtyinputdel.innerHTML = '-';
+
+                                                            const quantitycontainer = document.createElement('div');
+                                                            quantitycontainer.setAttribute('class', 'tm-h2 uk-width-1-6@m uk-width-1-3');
+
+                                                            const productqty = document.createElement('div');                                               
+
+                                                            const inputqty = document.createElement('input');
+                                                            inputqty.setAttribute('type', 'number');
+                                                            inputqty.setAttribute('id', "qty["+variant+"]");
+                                                            inputqty.setAttribute('name', "qty["+variant+"]");
+                                                            inputqty.setAttribute('class', 'uk-input uk-form-width-small');
+                                                            inputqty.setAttribute('min', minstock);
+                                                            inputqty.setAttribute('max', variantarray[x]['qty']);
+                                                            inputqty.setAttribute('value', '1');
+
+                                                            const namecontainer = document.createElement('div');
+                                                            namecontainer.setAttribute('class', 'uk-width-1-3@m uk-width-1-2');
+
+                                                            const productname = document.createElement('div');
+                                                            productname.setAttribute('id', 'name'+variant);
+                                                            productname.setAttribute('class', 'tm-h5');
+                                                            productname.innerHTML = variantarray[x]['name'];
+
+                                                            const pricecontainer = document.createElement('div');
+                                                            pricecontainer.setAttribute('class', 'uk-width-1-6@m uk-width-1-2');
+                                                            
+                                                            const productprice = document.createElement('div');
+                                                            productprice.setAttribute('id', 'price'+variant);
+                                                            productprice.setAttribute('class', 'tm-h5');
+                                                            productprice.setAttribute('name', 'price[]');
+                                                            productprice.setAttribute('value', showprice());
+                                                            productprice.innerHTML = showprice();
+
+                                                            const varpricecontainer = document.createElement('div');
+                                                            varpricecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
+
+                                                            const varbardiv = document.createElement('div');
+                                                            varbardiv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
+
+                                                            const varbarlab = document.createElement('label');
+                                                            varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
+
+                                                            const varbartext = document.createTextNode("Variant Bargain");
+
+                                                            const varbarform = document.createElement('div');
+                                                            varbarform.setAttribute('class','uk-form-controls');
+
+                                                            const varbargain = document.createElement('input');
+                                                            varbargain.setAttribute('class', 'uk-input uk-form-width-small');
+                                                            varbargain.setAttribute('id', 'varbargain'+variant);
+                                                            varbargain.setAttribute('placeholder', '0');
+                                                            varbargain.setAttribute('name', 'varbargain['+variant+']');
+                                                            varbargain.setAttribute('min', "0");
+                                                            varbargain.setAttribute('type', 'number');
+
+                                                            const varvaluecontainer = document.createElement('div');
+                                                            varvaluecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
+
+                                                            const varpricediv = document.createElement('div');
+                                                            varpricediv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
+
+                                                            const varpricelab = document.createElement('label');
+                                                            varpricelab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4' );
+
+                                                            const varpricetext = document.createTextNode("Discount Variant");
+
+                                                            const varpriceform = document.createElement('div');
+                                                            varpriceform.setAttribute('class','uk-form-controls');
+                                                            
+                                                            const varprice = document.createElement('input');
+                                                            varprice.setAttribute('class', 'uk-input uk-form-width-small varprice');
+                                                            varprice.setAttribute('data-index', variant);
+                                                            varprice.setAttribute('id', 'varprice'+variant);
+                                                            varprice.setAttribute('placeholder', '0');
+                                                            varprice.setAttribute('name', 'varprice['+variant+']');
+                                                            varprice.setAttribute('value', '0');
+                                                            varprice.setAttribute('type', 'number');
+                                                            varprice.setAttribute('min', '0');
+
+                                                            function showprice() {
+                                                                var qty         = inputqty.value;
+                                                                <?php if ($gconfig['globaldisc'] != '0') {
+                                                                    if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                        var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                    <?php } else { ?>
+                                                                        var globaldisc  = variantarray[x]['sellprice'] * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                    <?php } ?>
+
+                                                                    var price       = qty * (variantarray[x]['sellprice'] - globaldisc);
+                                                                <?php } else { ?>
+                                                                    var price       = qty * variantarray[x]['sellprice'];
+                                                                <?php } ?>
+                                                                return price;
+                                                                productprice.innerHTML = price;
+                                                            }
+
+                                                            inputqty.onchange = function() {showprice()};
+                                                            inputqty.onchange = function() {handleChangeCount(variant)};
+
+                                                            varbargain.onchange = function() {
+                                                                var discvar = varprice.value;
+                                                                var bargain = varbargain.value;
+
+                                                                if (varprice.value) {
+                                                                    <?php if ($gconfig['globaldisc'] != '0') {
+                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                        <?php } else { ?>
+                                                                            var globaldisc  = (bargain - discvar) * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                        <?php } ?>
+
+                                                                        var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
+                                                                    <?php } else { ?>
+                                                                        var bargainprice = bargain * inputqty.value;
+                                                                    <?php } ?>
+                                                                } else {
+                                                                    <?php if ($gconfig['globaldisc'] != '0') {
+                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                        <?php } else { ?>
+                                                                            var globaldisc  = bargain * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                        <?php } ?>
+
+                                                                        var bargainprice = (bargain - globaldisc) * inputqty.value;
+                                                                    <?php } else { ?>
+                                                                        var bargainprice = bargain * inputqty.value;
+                                                                    <?php } ?>
+                                                                }
+
+                                                                if (bargainprice) {
+                                                                    document.getElementById('price'+variant).innerHTML = bargainprice;
+                                                                } else {
+                                                                    document.getElementById('price'+variant).innerHTML = showprice();
+                                                                }
+                                                            }
+
+                                                            varprice.onchange = function() {
+                                                                var discvar = varprice.value;
+
+                                                                if (discvar) {
+                                                                    if (varbargain.value) {
+                                                                        var subvalue    = varbargain.value - discvar;
+                                                                    } else {
+                                                                        var subvalue    = variantarray[x]['sellprice'] - discvar;
+                                                                    }
+
+                                                                    <?php if ($gconfig['globaldisc'] != '0') {
+                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                        <?php } else { ?>
+                                                                            var globaldisc  = subvalue * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                        <?php } ?>
+
+                                                                        document.getElementById('price'+variant).innerHTML = subvalue - globaldisc;
+                                                                    <?php } else { ?>
+                                                                        document.getElementById('price'+variant).innerHTML = subvalue;
+                                                                    <?php } ?>
+
+                                                                } else {
+                                                                    document.getElementById('price'+variant).innerHTML = showprice();
+                                                                }
+                                                            }
+
+                                                            var sellprice = document.createElement('input');
+                                                            sellprice.setAttribute('id', 'sellprice'+variant);
+                                                            sellprice.setAttribute('hidden', '');
+                                                            sellprice.value = variantarray[x]['sellprice'];
+
+                                                            addcontainer.appendChild(productqtyinputadd);
+                                                            productqty.appendChild(inputqty);
+                                                            quantitycontainer.appendChild(productqty);
+                                                            delcontainer.appendChild(productqtyinputdel);
+                                                            pricecontainer.appendChild(productprice);
+                                                            namecontainer.appendChild(productname);
+                                                            varpricecontainer.appendChild(varbardiv);
+                                                            varbardiv.appendChild(varbarlab);
+                                                            varbarlab.appendChild(varbartext);
+                                                            varbarlab.appendChild(varbarform);
+                                                            varbarform.appendChild(varbargain);
+                                                            varvaluecontainer.appendChild(varpricediv);
+                                                            varpricediv.appendChild(varpricelab);
+                                                            varpricelab.appendChild(varpricetext);
+                                                            varpricelab.appendChild(varpriceform);
+                                                            varpriceform.appendChild(varprice);                                                                                        
+                                                            productgrid.appendChild(delcontainer);
+                                                            productgrid.appendChild(quantitycontainer);
+                                                            productgrid.appendChild(addcontainer);
+                                                            productgrid.appendChild(namecontainer);
+                                                            productgrid.appendChild(pricecontainer);
+                                                            productgrid.appendChild(pricecontainer);
+                                                            productgrid.appendChild(varpricecontainer);
+                                                            productgrid.appendChild(varvaluecontainer);
+                                                            products.appendChild(sellprice);
+                                                            products.appendChild(productgrid);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        };
+
                                         function handleCount(id, type) {
                                             var inputqty = document.getElementById('qty['+id+']');
                                             var varbargain = document.getElementById('varbargain'+id);
@@ -1682,325 +1999,6 @@
                                                     } else {
                                                         productprice.innerHTML = price;
                                                         productprice.value = price;
-                                                    }
-                                                }
-                                            }
-                                        };
-
-                                        function showVariant(id) {
-                                            var modal = document.getElementById('modalVar');
-                                            var data = { 'id' : id };
-                                            $.ajax({
-                                                url:"stock/product",
-                                                method:"POST",
-                                                data: data,
-                                                dataType: "json",                                                
-                                                error:function() {
-                                                    console.log('error', arguments);
-                                                },
-                                                success:function() {
-                                                    console.log('success', arguments);
-                                                    var variantList = document.getElementById('modalVarList');
-                                                    var productName = document.getElementById('modalVarProduct');
-                                                    productName.innerHTML = arguments[0][0]['product'];
-                                                    while (variantList.firstElementChild) {
-                                                        variantList.removeChild(variantList.firstElementChild);
-                                                    }
-                                                    variantarray = arguments[0];
-                                                    for (k in variantarray) {
-                                                        var variantContainer = document.createElement('div');
-                                                        variantContainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle');
-                                                        variantContainer.setAttribute('uk-grid', '');
-
-                                                        var variantName = document.createElement('div');
-                                                        variantName.setAttribute('class', 'uk-width-1-5');
-
-                                                        var variantNameText = document.createElement('div');
-                                                        variantNameText.setAttribute('class', 'uk-text-meta');
-                                                        variantNameText.innerHTML = variantarray[k]['variant'];
-
-                                                        var sellPrice = document.createElement('div');
-                                                        sellPrice.setAttribute('class', 'uk-width-1-5');
-
-                                                        var sellText = document.createElement('div');
-                                                        sellText.setAttribute('class', 'uk-text-meta');
-                                                        sellText.innerHTML = variantarray[k]['sellprice'];
-
-                                                        var msrp = document.createElement('div');
-                                                        msrp.setAttribute('class', 'uk-width-1-5');
-
-                                                        var msrpText = document.createElement('div');
-                                                        msrpText.setAttribute('class', 'uk-text-meta');
-                                                        msrpText.innerHTML = variantarray[k]['msrp'];
-
-                                                        var stock = document.createElement('div');
-                                                        stock.setAttribute('class', 'uk-width-1-5');
-
-                                                        var stockText = document.createElement('div');
-                                                        stockText.setAttribute('class', 'uk-text-meta');
-                                                        stockText.innerHTML = variantarray[k]['qty'];
-
-                                                        var buttonContainer = document.createElement('div');
-                                                        buttonContainer.setAttribute('class', 'uk-width-1-5 uk-text-center');
-
-                                                        var button = document.createElement('a');
-                                                        button.setAttribute('class', 'uk-icon-button');
-                                                        button.setAttribute('uk-icon', 'cart');
-                                                        button.setAttribute('onclick', 'createNewOrder('+variantarray[k]['id']+')');
-
-                                                        variantName.appendChild(variantNameText);
-                                                        variantContainer.appendChild(variantName);
-                                                        sellPrice.appendChild(sellText);
-                                                        variantContainer.appendChild(sellPrice);
-                                                        msrp.appendChild(msrpText);
-                                                        variantContainer.appendChild(msrp);
-                                                        stock.appendChild(stockText);
-                                                        variantContainer.appendChild(stock);
-                                                        buttonContainer.appendChild(button);
-                                                        variantContainer.appendChild(buttonContainer);
-                                                        variantList.appendChild(variantContainer);
-                                                    }
-                                                    UIkit.modal(modal).show();
-                                                },
-                                            });
-                                        };
-
-                                        function createNewOrder(variant) {
-                                            var elemexist = document.getElementById('product'+variant);
-                                            for (x in variantarray) {
-                                                if (variantarray[x]['id'] == variant) {
-                                                    var count = 1;
-                                                    var modalhide = document.getElementById('modalVar');
-                                                        UIkit.modal(modalhide).hide();
-                                                    if ( $( "#product"+variant ).length ) {
-                                                        alert('<?=lang('Global.readyAdd');?>');
-                                                    } else {
-                                                        if (variantarray[x]['qty'] == '0') {
-                                                            alert("<?=lang('Global.alertstock')?>");
-                                                        } else {
-                                                            let minstock = 1;
-                                                            let minval = count;
-
-                                                            const products = document.getElementById('products');
-                                                            
-                                                            const productgrid = document.createElement('div');
-                                                            productgrid.setAttribute('id', 'product'+variant);
-                                                            productgrid.setAttribute('class', 'uk-margin-small uk-flex-middle');
-                                                            productgrid.setAttribute('uk-grid', '');
-
-                                                            const addcontainer = document.createElement('div');
-                                                            addcontainer.setAttribute('class', 'uk-width-1-6');
-                                                            
-                                                            const productqtyinputadd = document.createElement('div');
-                                                            productqtyinputadd.setAttribute('id','addqty'+variant);
-                                                            productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
-                                                            productqtyinputadd.setAttribute('onclick','handleCount('+variant+', 1)');
-                                                            productqtyinputadd.innerHTML = '+';
-
-                                                            const delcontainer = document.createElement('div');
-                                                            delcontainer.setAttribute('class', 'uk-width-1-6');
-                                                            
-                                                            const productqtyinputdel = document.createElement('div');
-                                                            productqtyinputdel.setAttribute('id','delqty'+variant);
-                                                            productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
-                                                            productqtyinputdel.setAttribute('onclick','handleCount('+variant+', 0)');
-                                                            productqtyinputdel.innerHTML = '-';
-
-                                                            const quantitycontainer = document.createElement('div');
-                                                            quantitycontainer.setAttribute('class', 'tm-h2 uk-width-1-6@m uk-width-1-3');
-
-                                                            const productqty = document.createElement('div');                                               
-
-                                                            const inputqty = document.createElement('input');
-                                                            inputqty.setAttribute('type', 'number');
-                                                            inputqty.setAttribute('id', "qty["+variant+"]");
-                                                            inputqty.setAttribute('name', "qty["+variant+"]");
-                                                            inputqty.setAttribute('class', 'uk-input uk-form-width-small');
-                                                            inputqty.setAttribute('min', minstock);
-                                                            inputqty.setAttribute('max', variantarray[x]['qty']);
-                                                            inputqty.setAttribute('value', '1');
-
-                                                            const namecontainer = document.createElement('div');
-                                                            namecontainer.setAttribute('class', 'uk-width-1-3@m uk-width-1-2');
-
-                                                            const productname = document.createElement('div');
-                                                            productname.setAttribute('id', 'name'+variant);
-                                                            productname.setAttribute('class', 'tm-h5');
-                                                            productname.innerHTML = variantarray[x]['name'];
-
-                                                            const pricecontainer = document.createElement('div');
-                                                            pricecontainer.setAttribute('class', 'uk-width-1-6@m uk-width-1-2');
-                                                            
-                                                            const productprice = document.createElement('div');
-                                                            productprice.setAttribute('id', 'price'+variant);
-                                                            productprice.setAttribute('class', 'tm-h5');
-                                                            productprice.setAttribute('name', 'price[]');
-                                                            productprice.setAttribute('value', showprice());
-                                                            productprice.innerHTML = showprice();
-
-                                                            const varpricecontainer = document.createElement('div');
-                                                            varpricecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
-
-                                                            const varbardiv = document.createElement('div');
-                                                            varbardiv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
-
-                                                            const varbarlab = document.createElement('label');
-                                                            varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
-
-                                                            const varbartext = document.createTextNode("Variant Bargain");
-
-                                                            const varbarform = document.createElement('div');
-                                                            varbarform.setAttribute('class','uk-form-controls');
-
-                                                            const varbargain = document.createElement('input');
-                                                            varbargain.setAttribute('class', 'uk-input uk-form-width-small');
-                                                            varbargain.setAttribute('id', 'varbargain'+variant);
-                                                            varbargain.setAttribute('placeholder', '0');
-                                                            varbargain.setAttribute('name', 'varbargain['+variant+']');
-                                                            varbargain.setAttribute('min', "0");
-                                                            varbargain.setAttribute('type', 'number');
-
-                                                            const varvaluecontainer = document.createElement('div');
-                                                            varvaluecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
-
-                                                            const varpricediv = document.createElement('div');
-                                                            varpricediv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
-
-                                                            const varpricelab = document.createElement('label');
-                                                            varpricelab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4' );
-
-                                                            const varpricetext = document.createTextNode("Discount Variant");
-
-                                                            const varpriceform = document.createElement('div');
-                                                            varpriceform.setAttribute('class','uk-form-controls');
-                                                            
-                                                            const varprice = document.createElement('input');
-                                                            varprice.setAttribute('class', 'uk-input uk-form-width-small varprice');
-                                                            varprice.setAttribute('data-index', variant);
-                                                            varprice.setAttribute('id', 'varprice'+variant);
-                                                            varprice.setAttribute('placeholder', '0');
-                                                            varprice.setAttribute('name', 'varprice['+variant+']');
-                                                            varprice.setAttribute('value', '0');
-                                                            varprice.setAttribute('type', 'number');
-                                                            varprice.setAttribute('min', '0');
-
-
-                                                            function showprice() {
-                                                                var qty         = inputqty.value;
-                                                                <?php if ($gconfig['globaldisc'] != '0') {
-                                                                    if ($gconfig['globaldisctype'] == '0') { ?>
-                                                                        var globaldisc  = <?= $gconfig['globaldisc'] ?>;
-                                                                    <?php } else { ?>
-                                                                        var globaldisc  = variantarray[x]['sellprice'] * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                                    <?php } ?>
-
-                                                                    var price       = qty * (variantarray[x]['sellprice'] - globaldisc);
-                                                                <?php } else { ?>
-                                                                    var price       = qty * variantarray[x]['sellprice'];
-                                                                <?php } ?>
-                                                                return price;
-                                                                productprice.innerHTML = price;
-                                                            }
-
-                                                            inputqty.onchange = function() {showprice()};
-                                                            inputqty.onchange = function() {handleChangeCount(variant)};
-
-                                                            varbargain.onchange = function() {
-                                                                var discvar = varprice.value;
-                                                                var bargain = varbargain.value;
-
-                                                                if (varprice.value) {
-                                                                    <?php if ($gconfig['globaldisc'] != '0') {
-                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
-                                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
-                                                                        <?php } else { ?>
-                                                                            var globaldisc  = (bargain - discvar) * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                                        <?php } ?>
-
-                                                                        var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
-                                                                    <?php } else { ?>
-                                                                        var bargainprice = bargain * inputqty.value;
-                                                                    <?php } ?>
-                                                                } else {
-                                                                    <?php if ($gconfig['globaldisc'] != '0') {
-                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
-                                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
-                                                                        <?php } else { ?>
-                                                                            var globaldisc  = bargain * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                                        <?php } ?>
-
-                                                                        var bargainprice = (bargain - globaldisc) * inputqty.value;
-                                                                    <?php } else { ?>
-                                                                        var bargainprice = bargain * inputqty.value;
-                                                                    <?php } ?>
-                                                                }
-
-                                                                if (bargainprice) {
-                                                                    document.getElementById('price'+variant).innerHTML = bargainprice;
-                                                                } else {
-                                                                    document.getElementById('price'+variant).innerHTML = showprice();
-                                                                }
-                                                            }
-
-                                                            varprice.onchange = function() {
-                                                                var discvar = varprice.value;
-
-                                                                if (discvar) {
-                                                                    if (varbargain.value) {
-                                                                        var subvalue    = varbargain.value - discvar;
-                                                                    } else {
-                                                                        var subvalue    = variantarray[x]['sellprice'] - discvar;
-                                                                    }
-
-                                                                    <?php if ($gconfig['globaldisc'] != '0') {
-                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
-                                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
-                                                                        <?php } else { ?>
-                                                                            var globaldisc  = subvalue * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                                        <?php } ?>
-
-                                                                        document.getElementById('price'+variant).innerHTML = subvalue - globaldisc;
-                                                                    <?php } else { ?>
-                                                                        document.getElementById('price'+variant).innerHTML = subvalue;
-                                                                    <?php } ?>
-
-                                                                } else {
-                                                                    document.getElementById('price'+variant).innerHTML = showprice();
-                                                                }
-                                                            }
-
-                                                            var sellprice = document.createElement('input');
-                                                            sellprice.setAttribute('id', 'sellprice'+variant);
-                                                            sellprice.setAttribute('hidden', '');
-                                                            sellprice.value = variantarray[x]['sellprice'];
-
-                                                            addcontainer.appendChild(productqtyinputadd);
-                                                            productqty.appendChild(inputqty);
-                                                            quantitycontainer.appendChild(productqty);
-                                                            delcontainer.appendChild(productqtyinputdel);
-                                                            pricecontainer.appendChild(productprice);
-                                                            namecontainer.appendChild(productname);
-                                                            varpricecontainer.appendChild(varbardiv);
-                                                            varbardiv.appendChild(varbarlab);
-                                                            varbarlab.appendChild(varbartext);
-                                                            varbarlab.appendChild(varbarform);
-                                                            varbarform.appendChild(varbargain);
-                                                            varvaluecontainer.appendChild(varpricediv);
-                                                            varpricediv.appendChild(varpricelab);
-                                                            varpricelab.appendChild(varpricetext);
-                                                            varpricelab.appendChild(varpriceform);
-                                                            varpriceform.appendChild(varprice);                                                                                        
-                                                            productgrid.appendChild(delcontainer);
-                                                            productgrid.appendChild(quantitycontainer);
-                                                            productgrid.appendChild(addcontainer);
-                                                            productgrid.appendChild(namecontainer);
-                                                            productgrid.appendChild(pricecontainer);
-                                                            productgrid.appendChild(pricecontainer);
-                                                            productgrid.appendChild(varpricecontainer);
-                                                            productgrid.appendChild(varvaluecontainer);
-                                                            products.appendChild(sellprice);
-                                                            products.appendChild(productgrid);
-                                                        }
                                                     }
                                                 }
                                             }
