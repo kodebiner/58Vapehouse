@@ -1804,7 +1804,22 @@
                                                                 var discvar = varprice.value;
 
                                                                 if (discvar) {
-                                                                    document.getElementById('price'+variant).innerHTML = variantarray[x]['sellprice'] - discvar;
+                                                                    // document.getElementById('price'+variant).innerHTML = variantarray[x]['sellprice'] - discvar;
+
+                                                                    var subvalue    = variantarray[x]['sellprice'] - discvar;
+
+                                                                    <?php if ($gconfig['globaldisc'] != '0') {
+                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                        <?php } else { ?>
+                                                                            var globaldisc  = subvalue * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                        <?php } ?>
+
+                                                                        document.getElementById('price'+variant).innerHTML = subvalue - globaldisc;
+                                                                    <?php } else { ?>
+                                                                        document.getElementById('price'+variant).innerHTML = subvalue;
+                                                                    <?php } ?>
+
                                                                 } else {
                                                                     document.getElementById('price'+variant).innerHTML = showprice();
                                                                 }
