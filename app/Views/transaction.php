@@ -1407,35 +1407,66 @@
                                                     alert('<?=lang('Global.alertstock')?>');
                                                 } else {
                                                     inputqty.value      = count;
+                                                    var discvar         = varprice.value;
                                                 
-                                                    <?php if ($gconfig['globaldisc'] != '0') {
-                                                        if ($gconfig['globaldisctype'] == '0') { ?>
-                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
-                                                        <?php } else { ?>
-                                                            var globaldisc  = sellprice.value * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                        <?php } ?>
-
-                                                        var price           = count * (sellprice.value - globaldisc);
-                                                        // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                    <?php } else { ?>
-                                                        // var bargainprice    = varbargain.value * inputqty.value;
-                                                        var price           = count * sellprice.value;
-                                                    <?php } ?>
-
-                                                    // var price           = count * sellprice.value;
-                                                    // var bargainprice    = varbargain.value * inputqty.value;
-                                                    if (varbargain.value) {
+                                                    if (varprice.value) {
                                                         <?php if ($gconfig['globaldisc'] != '0') {
                                                             if ($gconfig['globaldisctype'] == '0') { ?>
                                                                 var globaldisc  = <?= $gconfig['globaldisc'] ?>;
                                                             <?php } else { ?>
-                                                                var globaldisc  = varbargain.value * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                var globaldisc  = (sellprice.value - discvar) * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
                                                             <?php } ?>
 
-                                                            var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                            var price           = count * ((sellprice.value - discvar) - globaldisc);
+                                                            // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
                                                         <?php } else { ?>
-                                                            var bargainprice    = varbargain.value * inputqty.value;
+                                                            // var bargainprice    = varbargain.value * inputqty.value;
+                                                            var price           = count * (sellprice.value - discvar);
                                                         <?php } ?>
+                                                    } else {
+                                                        <?php if ($gconfig['globaldisc'] != '0') {
+                                                            if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                            <?php } else { ?>
+                                                                var globaldisc  = sellprice.value * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                            <?php } ?>
+
+                                                            var price           = count * (sellprice.value - globaldisc);
+                                                            // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                        <?php } else { ?>
+                                                            // var bargainprice    = varbargain.value * inputqty.value;
+                                                            var price           = count * sellprice.value;
+                                                        <?php } ?>
+                                                    }
+
+                                                    // var price           = count * sellprice.value;
+                                                    // var bargainprice    = varbargain.value * inputqty.value;
+                                                    if (varbargain.value) {
+                                                        if (varprice.value) {
+                                                            <?php if ($gconfig['globaldisc'] != '0') {
+                                                                if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                    var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                <?php } else { ?>
+                                                                    var globaldisc  = (varbargain.value - discvar) * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                <?php } ?>
+
+                                                                var bargainprice    = ((varbargain.value - discvar) - globaldisc) * inputqty.value;
+                                                            <?php } else { ?>
+                                                                var bargainprice    = (varbargain.value - discvar) * inputqty.value;
+                                                            <?php } ?>
+                                                        } else {
+                                                            <?php if ($gconfig['globaldisc'] != '0') {
+                                                                if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                    var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                <?php } else { ?>
+                                                                    var globaldisc  = varbargain.value * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                <?php } ?>
+
+                                                                var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                            <?php } else { ?>
+                                                                var bargainprice    = varbargain.value * inputqty.value;
+                                                            <?php } ?>
+                                                        }
 
                                                         document.getElementById('price'+id).innerHTML = bargainprice;
                                                     } else {
@@ -1450,43 +1481,81 @@
                                                     inputqty.remove();                                                                                                
                                                     productgrid.remove();
                                                 } else {
-                                                    inputqty.value = count;
+                                                    inputqty.value  = count;
+                                                    var discvar     = varprice.value;
                                                 
-                                                    <?php if ($gconfig['globaldisc'] != '0') {
-                                                        if ($gconfig['globaldisctype'] == '0') { ?>
-                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
-                                                        <?php } else { ?>
-                                                            var globaldisc  = sellprice.value * <?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                                        <?php } ?>
-
-                                                        var price           = count * (sellprice.value - globaldisc);
-                                                        // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                    <?php } else { ?>
-                                                        // var bargainprice    = varbargain.value * inputqty.value;
-                                                        var price           = count * sellprice.value;
-                                                    <?php } ?>
-
-                                                    // var price = count * sellprice.value;
-                                                    // var bargainprice = varbargain.value * inputqty.value;
-                                                    if(varbargain.value) {
+                                                    if (varprice.value) {
                                                         <?php if ($gconfig['globaldisc'] != '0') {
                                                             if ($gconfig['globaldisctype'] == '0') { ?>
                                                                 var globaldisc  = <?= $gconfig['globaldisc'] ?>;
                                                             <?php } else { ?>
-                                                                var globaldisc  = varbargain.value * <?= ((Int)$gconfig['globaldisc']  / 100) ?>;
+                                                                var globaldisc  = (sellprice.value - discvar) * <?= ((Int)$gconfig['globaldisc']  / 100) ?>;
                                                             <?php } ?>
 
-                                                            // var price           = count * (sellprice.value - globaldisc);
-                                                            var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                            var price           = count * ((sellprice.value - discvar) - globaldisc);
+                                                            // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
                                                         <?php } else { ?>
-                                                            var bargainprice    = varbargain.value * inputqty.value;
-                                                            // var price           = count * sellprice.value;
+                                                            // var bargainprice    = varbargain.value * inputqty.value;
+                                                            var price           = count * (sellprice.value - discvar);
                                                         <?php } ?>
+                                                    } else {
+                                                        <?php if ($gconfig['globaldisc'] != '0') {
+                                                            if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                            <?php } else { ?>
+                                                                var globaldisc  = sellprice.value * <?= ((Int)$gconfig['globaldisc']  / 100) ?>;
+                                                            <?php } ?>
+
+                                                            var price           = count * (sellprice.value - globaldisc);
+                                                            // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                        <?php } else { ?>
+                                                            // var bargainprice    = varbargain.value * inputqty.value;
+                                                            var price           = count * sellprice.value;
+                                                        <?php } ?>
+                                                    }
+
+                                                    // var price = count * sellprice.value;
+                                                    // var bargainprice = varbargain.value * inputqty.value;
+                                                    if(varbargain.value) {
+                                                        if (varprice.value) {
+                                                            <?php if ($gconfig['globaldisc'] != '0') {
+                                                                if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                    var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                <?php } else { ?>
+                                                                    var globaldisc  = (varbargain.value - discvar) * <?= ((Int)$gconfig['globaldisc']  / 100) ?>;
+                                                                <?php } ?>
+
+                                                                // var price           = count * (sellprice.value - globaldisc);
+                                                                var bargainprice    = (varbargain.value - discvar) * inputqty.value;
+                                                            <?php } else { ?>
+                                                                var bargainprice    = (varbargain.value - discvar) * inputqty.value;
+                                                                // var price           = count * sellprice.value;
+                                                            <?php } ?>
+                                                        } else {
+                                                            <?php if ($gconfig['globaldisc'] != '0') {
+                                                                if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                    var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                <?php } else { ?>
+                                                                    var globaldisc  = varbargain.value * <?= ((Int)$gconfig['globaldisc']  / 100) ?>;
+                                                                <?php } ?>
+
+                                                                // var price           = count * (sellprice.value - globaldisc);
+                                                                var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                            <?php } else { ?>
+                                                                var bargainprice    = varbargain.value * inputqty.value;
+                                                                // var price           = count * sellprice.value;
+                                                            <?php } ?>
+                                                        }
                                                         document.getElementById('price'+id).innerHTML = bargainprice;
                                                     }
                                                     else {
-                                                        productprice.innerHTML = price;
-                                                        productprice.value = price;
+                                                        if (varprice.value) {
+                                                            productprice.innerHTML = (price - discvar);
+                                                            productprice.value = (price - discvar);
+                                                        } else {
+                                                            productprice.innerHTML = price;
+                                                            productprice.value = price;
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1498,66 +1567,122 @@
                                             var sellprice = document.getElementById('sellprice'+id);
                                             var productprice = document.getElementById('price'+id);
                                             var productgrid = document.getElementById('product'+id);
+                                            var bargain = varbargain.value;
+                                            var discvar = varprice.value;
+
                                             if (inputqty.value > inputqty.getAttribute('max')) {
                                                 inputqty.value = inputqty.getAttribute('max');
                                                 alert('<?=lang('Global.alertstock')?>');
-                                                
-                                                <?php if ($gconfig['globaldisc'] != '0') {
-                                                    if ($gconfig['globaldisctype'] == '0') { ?>
-                                                        var globaldisc  = <?= $gconfig['globaldisc'] ?>;
-                                                    <?php } else { ?>
-                                                        var globaldisc  = varbargain.value * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                    <?php } ?>
-
-                                                    var bargainprice = (varbargain.value - globaldisc) * inputqty.value;
-                                                <?php } else { ?>
-                                                    var bargainprice = varbargain.value * inputqty.value;
-                                                <?php } ?>
 
                                                 // var bargainprice = varbargain.value * inputqty.value;
                                                 if (varbargain.value) {
+                                                    if (varprice.value) {
+                                                        <?php if ($gconfig['globaldisc'] != '0') {
+                                                            if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                            <?php } else { ?>
+                                                                var globaldisc  = (bargain - discvar) * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                            <?php } ?>
+
+                                                            var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
+                                                        <?php } else { ?>
+                                                            var bargainprice = (bargain - discvar) * inputqty.value;
+                                                        <?php } ?>
+                                                    } else {
+                                                        <?php if ($gconfig['globaldisc'] != '0') {
+                                                            if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                            <?php } else { ?>
+                                                                var globaldisc  = bargain * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                            <?php } ?>
+
+                                                            var bargainprice = (bargain - globaldisc) * inputqty.value;
+                                                        <?php } else { ?>
+                                                            var bargainprice = bargain * inputqty.value;
+                                                        <?php } ?>
+                                                    }
                                                     document.getElementById('price'+id).innerHTML = bargainprice;
                                                 } else {
-                                                    productprice.innerHTML = price;
-                                                    productprice.value = price;
+                                                    if (varprice.value) {
+                                                        productprice.innerHTML = price - discvar;
+                                                        productprice.value = price - discvar;
+                                                    } else {
+                                                        productprice.innerHTML = price;
+                                                        productprice.value = price;
+                                                    }
                                                 }
                                             } else if (inputqty.value < 1) {
                                                 inputqty.value = '0';
                                                 inputqty.remove();
                                                 productgrid.remove();
                                             } else {
-                                                <?php if ($gconfig['globaldisc'] != '0') {
-                                                    if ($gconfig['globaldisctype'] == '0') { ?>
-                                                        var globaldisc  = <?= $gconfig['globaldisc'] ?>;
-                                                    <?php } else { ?>
-                                                        var globaldisc  = sellprice.value * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                    <?php } ?>
-
-                                                    var price           = count * (sellprice.value - globaldisc);
-                                                    // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                <?php } else { ?>
-                                                    var price           = count * sellprice.value;
-                                                    // var bargainprice    = varbargain.value * inputqty.value;
-                                                <?php } ?>
-
-                                                // var price = count * sellprice.value;
-                                                // var bargainprice = varbargain.value * inputqty.value;
-                                                if(varbargain.value) {
+                                                if (varprice.value) {
                                                     <?php if ($gconfig['globaldisc'] != '0') {
                                                         if ($gconfig['globaldisctype'] == '0') { ?>
                                                             var globaldisc  = <?= $gconfig['globaldisc'] ?>;
                                                         <?php } else { ?>
-                                                            var globaldisc  = varbargain.value * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                            var globaldisc  = (sellprice.value - discvar) * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
                                                         <?php } ?>
 
-                                                        var bargainprice = (varbargain.value - globaldisc) * inputqty.value;
+                                                        var price           = count * ((sellprice.value - discvar) - globaldisc);
+                                                        // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
                                                     <?php } else { ?>
-                                                        var bargainprice = varbargain.value * inputqty.value;
+                                                        var price           = count * (sellprice.value - discvar);
+                                                        // var bargainprice    = varbargain.value * inputqty.value;
                                                     <?php } ?>
+                                                } else {
+                                                    <?php if ($gconfig['globaldisc'] != '0') {
+                                                        if ($gconfig['globaldisctype'] == '0') { ?>
+                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                        <?php } else { ?>
+                                                            var globaldisc  = sellprice.value * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                        <?php } ?>
+
+                                                        var price           = count * (sellprice.value - globaldisc);
+                                                        // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                    <?php } else { ?>
+                                                        var price           = count * sellprice.value;
+                                                        // var bargainprice    = varbargain.value * inputqty.value;
+                                                    <?php } ?>
+                                                }
+
+                                                // var price = count * sellprice.value;
+                                                // var bargainprice = varbargain.value * inputqty.value;
+                                                if(varbargain.value) {
+                                                    if (varprice.value) {
+                                                        <?php if ($gconfig['globaldisc'] != '0') {
+                                                            if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                            <?php } else { ?>
+                                                                var globaldisc  = (varbargain.value - discvar) * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                            <?php } ?>
+
+                                                            var bargainprice = ((varbargain.value - discvar) - globaldisc) * inputqty.value;
+                                                        <?php } else { ?>
+                                                            var bargainprice = (varbargain.value - discvar) * inputqty.value;
+                                                        <?php } ?>
+                                                    } else {
+                                                        <?php if ($gconfig['globaldisc'] != '0') {
+                                                            if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                            <?php } else { ?>
+                                                                var globaldisc  = varbargain.value * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                            <?php } ?>
+
+                                                            var bargainprice = (varbargain.value - globaldisc) * inputqty.value;
+                                                        <?php } else { ?>
+                                                            var bargainprice = varbargain.value * inputqty.value;
+                                                        <?php } ?>
+                                                    }
                                                     document.getElementById('price'+id).innerHTML = bargainprice;
                                                 } else {
-                                                    productprice.innerHTML = price;
-                                                    productprice.value = price;
+                                                    if (varprice.value) {
+                                                        productprice.innerHTML = (price - discavr);
+                                                        productprice.value = (price - discavr);
+                                                    } else {
+                                                        productprice.innerHTML = price;
+                                                        productprice.value = price;
+                                                    }
                                                 }
                                             }
                                         };
