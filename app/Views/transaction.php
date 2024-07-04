@@ -1646,13 +1646,13 @@
                                                             }
 
                                                             varprice.onchange = function() {
-                                                                var discvar = varprice.value;
+                                                                var discvar = varprice.value * inputqty.value;
 
                                                                 if (discvar) {
                                                                     if (varbargain.value) {
-                                                                        var subvalue    = varbargain.value - discvar;
+                                                                        var subvalue    = (varbargain.value * inputqty.value) - discvar;
                                                                     } else {
-                                                                        var subvalue    = variantarray[x]['sellprice'] - discvar;
+                                                                        var subvalue    = (variantarray[x]['sellprice'] * inputqty.value) - discvar;
                                                                     }
 
                                                                     <?php if ($gconfig['globaldisc'] != '0') {
