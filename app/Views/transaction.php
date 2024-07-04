@@ -1804,7 +1804,11 @@
                                                                 var discvar = varprice.value;
 
                                                                 if (discvar) {
-                                                                    var subvalue    = productprice.value - discvar;
+                                                                    if (varbargain.value) {
+                                                                        var subvalue    = varbargain.value - discvar;
+                                                                    } else {
+                                                                        var subvalue    = variantarray[x]['sellprice'] - discvar;
+                                                                    }
 
                                                                     <?php if ($gconfig['globaldisc'] != '0') {
                                                                         if ($gconfig['globaldisctype'] == '0') { ?>
@@ -1822,7 +1826,6 @@
                                                                     document.getElementById('price'+variant).innerHTML = showprice();
                                                                 }
                                                             }
-
 
                                                             var sellprice = document.createElement('input');
                                                             sellprice.setAttribute('id', 'sellprice'+variant);
