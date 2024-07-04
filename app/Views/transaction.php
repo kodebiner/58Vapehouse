@@ -1804,9 +1804,7 @@
                                                                 var discvar = varprice.value;
 
                                                                 if (discvar) {
-                                                                    // document.getElementById('price'+variant).innerHTML = variantarray[x]['sellprice'] - discvar;
-
-                                                                    var subvalue    = variantarray[x]['sellprice'] - discvar;
+                                                                    var subvalue    = productprice.value - discvar;
 
                                                                     <?php if ($gconfig['globaldisc'] != '0') {
                                                                         if ($gconfig['globaldisctype'] == '0') { ?>
