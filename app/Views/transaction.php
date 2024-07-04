@@ -1781,17 +1781,34 @@
                                                             inputqty.onchange = function() {handleChangeCount(variant)};
 
                                                             varbargain.onchange = function() {
-                                                                <?php if ($gconfig['globaldisc'] != '0') {
-                                                                    if ($gconfig['globaldisctype'] == '0') { ?>
-                                                                        var globaldisc  = <?= $gconfig['globaldisc'] ?>;
-                                                                    <?php } else { ?>
-                                                                        var globaldisc  = varbargain.value * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                                    <?php } ?>
+                                                                var discvar = varprice.value;
+                                                                var bargain = varbargain.value;
 
-                                                                    var bargainprice = (varbargain.value - globaldisc) * inputqty.value;
-                                                                <?php } else { ?>
-                                                                    var bargainprice = varbargain.value * inputqty.value;
-                                                                <?php } ?>
+                                                                if ($varprice.value) {
+                                                                    <?php if ($gconfig['globaldisc'] != '0') {
+                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                        <?php } else { ?>
+                                                                            var globaldisc  = (bargain - discvar) * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                        <?php } ?>
+
+                                                                        var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
+                                                                    <?php } else { ?>
+                                                                        var bargainprice = bargain * inputqty.value;
+                                                                    <?php } ?>
+                                                                } else {
+                                                                    <?php if ($gconfig['globaldisc'] != '0') {
+                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                            var globaldisc  = <?= $gconfig['globaldisc'] ?>;
+                                                                        <?php } else { ?>
+                                                                            var globaldisc  = bargain * <?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                        <?php } ?>
+
+                                                                        var bargainprice = (bargain - globaldisc) * inputqty.value;
+                                                                    <?php } else { ?>
+                                                                        var bargainprice = bargain * inputqty.value;
+                                                                    <?php } ?>
+                                                                }
 
                                                                 if (bargainprice) {
                                                                     document.getElementById('price'+variant).innerHTML = bargainprice;
