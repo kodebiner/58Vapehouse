@@ -613,6 +613,15 @@
                                                                                     }
                                                                                 }
 
+                                                                                varprice.onchange = function() {
+                                                                                    var discvar = varprice.value * inputqty.value;
+                                                                                    if (discvar) {
+                                                                                        document.getElementById('price<?=$variant['id']?>').innerHTML = showprice() - discvar;
+                                                                                    } else {
+                                                                                        document.getElementById('price<?=$variant['id']?>').innerHTML = showprice();
+                                                                                    }
+                                                                                }
+
                                                                                 addcontainer.appendChild(productqtyinputadd);
                                                                                 productqty.appendChild(inputqty);
                                                                                 quantitycontainer.appendChild(productqty);
