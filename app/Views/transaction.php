@@ -1710,12 +1710,13 @@
                                         };
 
                                         function handleCount(id, type) {
-                                            var inputqty = document.getElementById('qty['+id+']');
-                                            var varbargain = document.getElementById('varbargain'+id);
-                                            var sellprice = document.getElementById('sellprice'+id);
-                                            var productprice = document.getElementById('price'+id);
-                                            var productgrid = document.getElementById('product'+id);
-                                            var count = inputqty.value;
+                                            var inputqty        = document.getElementById('qty['+id+']');
+                                            var varbargain      = document.getElementById('varbargain'+id);
+                                            var sellprice       = document.getElementById('sellprice'+id);
+                                            var productprice    = document.getElementById('price'+id);
+                                            var productgrid     = document.getElementById('product'+id);
+                                            var count           = inputqty.value;
+                                            var discvar         = varprice.value;
                                             if (type == 1) {
                                                 count++;
                                                 if (inputqty.value == inputqty.getAttribute('max')) {
@@ -1724,7 +1725,6 @@
                                                     alert('<?=lang('Global.alertstock')?>');
                                                 } else {
                                                     inputqty.value      = count;
-                                                    var discvar         = varprice.value;
                                                 
                                                     if (varprice.value) {
                                                         <?php if ($gconfig['globaldisc'] != '0') {
@@ -1799,7 +1799,6 @@
                                                     productgrid.remove();
                                                 } else {
                                                     inputqty.value  = count;
-                                                    var discvar     = varprice.value;
                                                 
                                                     if (varprice.value) {
                                                         <?php if ($gconfig['globaldisc'] != '0') {
@@ -1879,13 +1878,13 @@
                                         };
 
                                         function handleChangeCount(id) {
-                                            var inputqty = document.getElementById('qty['+id+']');
-                                            var varbargain = document.getElementById('varbargain'+id);
-                                            var sellprice = document.getElementById('sellprice'+id);
-                                            var productprice = document.getElementById('price'+id);
-                                            var productgrid = document.getElementById('product'+id);
-                                            var bargain = varbargain.value;
-                                            var discvar = varprice.value;
+                                            var inputqty        = document.getElementById('qty['+id+']');
+                                            var varbargain      = document.getElementById('varbargain'+id);
+                                            var sellprice       = document.getElementById('sellprice'+id);
+                                            var productprice    = document.getElementById('price'+id);
+                                            var productgrid     = document.getElementById('product'+id);
+                                            var bargain         = varbargain.value;
+                                            var discvar         = varprice.value;
 
                                             if (inputqty.value > inputqty.getAttribute('max')) {
                                                 inputqty.value = inputqty.getAttribute('max');
