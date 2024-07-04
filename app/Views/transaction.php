@@ -1578,7 +1578,7 @@
                                                             const varpriceform = document.createElement('div');
                                                             varpriceform.setAttribute('class','uk-form-controls');
                                                             
-                                                            const varprice = document.createElement('input');
+                                                            let varprice = document.createElement('input');
                                                             varprice.setAttribute('class', 'uk-input uk-form-width-small varprice');
                                                             varprice.setAttribute('data-index', variant);
                                                             varprice.setAttribute('id', 'varprice'+variant);
