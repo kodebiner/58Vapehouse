@@ -308,10 +308,10 @@ class Home extends BaseController
 
                     // Transaction Detail Discount Variant
                     // if ($trxdet['discvar'] != '0') {
-                        $discount[]     = $trxdet['discvar'];
+                        $discount[]     = 0;
                     // }
                     // if ($trxdet['globaldisc'] != '0') {
-                        $discount[]     = $trxdet['globaldisc'];
+                        $discount[]     = 0;
                     // }
                 }
 
