@@ -288,6 +288,8 @@ class Report extends BaseController
 
         $grossales = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
 
+        dd($transactiondisc);
+
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.salesreport');

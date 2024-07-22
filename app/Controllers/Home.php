@@ -507,6 +507,8 @@ class Home extends BaseController
         }
         $transactiondata['bussyday'] = $bussyday;
 
+        dd($transactions);
+
         // Parsing Data To View
         $data                       = $this->data;
         $data['title']              = lang('Global.dashboard');
