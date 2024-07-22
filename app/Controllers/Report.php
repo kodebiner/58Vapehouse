@@ -288,7 +288,7 @@ class Report extends BaseController
 
         $grossales = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
 
-        dd($transactiondisc);
+        dd($variantdisc);
 
         // Parsing Data to View
         $data                   = $this->data;
