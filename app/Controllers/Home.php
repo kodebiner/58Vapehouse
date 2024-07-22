@@ -194,7 +194,7 @@ class Home extends BaseController
             foreach ($trxdetailsdata as $trxdet) {
                 // Transaction Detail Margin Modal
                 // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
-                $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']);
+                // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']);
     
                 // // Transaction Detail Discount Variant
                 // if ($trxdet['discvar'] != 0) {
@@ -227,6 +227,9 @@ class Home extends BaseController
                         //     $discount[]     = $trxdet['discvar'];
                         // }
 
+                        // Transaction Detail Margin Modal
+                        $marginmodal[] = ((int)$trxdet['marginmodal'] * (int)$trxdet['qty']);
+
                         // Transaction Detail Discount Variant
                         if ($trxdet['discvar'] != '0') {
                             $discount[]     = $trxdet['discvar'];
@@ -248,6 +251,9 @@ class Home extends BaseController
                         // if ($trxdet['discvar'] != 0) {
                         //     $discount[]     = 0;
                         // }
+
+                        // Transaction Detail Margin Modal
+                        $marginmodal[] = 0;
                         
                         // Transaction Detail Discount Variant
                         // if ($trxdet['discvar'] != '0') {
@@ -283,6 +289,9 @@ class Home extends BaseController
                     //     $discount[]     = $trxdet['discvar'];
                     // }
 
+                    // Transaction Detail Margin Modal
+                    $marginmodal[] = ((int)$trxdet['marginmodal'] * (int)$trxdet['qty']);
+
                     // Transaction Detail Discount Variant
                     if ($trxdet['discvar'] != '0') {
                         $discount[]     = $trxdet['discvar'];
@@ -305,6 +314,9 @@ class Home extends BaseController
                     // if ($trxdet['discvar'] != 0) {
                     //     $discount[]     = 0;
                     // }
+
+                    // Transaction Detail Margin Modal
+                    $marginmodal[] = 0;
 
                     // Transaction Detail Discount Variant
                     // if ($trxdet['discvar'] != '0') {
