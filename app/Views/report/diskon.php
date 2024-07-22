@@ -15,7 +15,7 @@
         var data = google.visualization.arrayToDataTable([
             ['Task', 'Hours per Day'],
             ['<?=lang('Global.discount')?> <?=lang('Global.variant')?>', <?php echo ' '.$trxvardis.'';?>],
-            ['<?=lang('Global.discount')?> Discount Global', <?php echo ' '.$trxglodis.'';?>],
+            ['<?=lang('Global.discount')?> Global', <?php echo ' '.$trxglodis.'';?>],
             ['<?=lang('Global.discount')?> <?=lang('Global.transaction')?>', <?php echo ' '.$trxdisc.'';?>],
             ['<?=lang('Global.discount')?> <?=lang('Global.point')?>',  <?php echo ' '.$poindisc.'';?>],
         ]);       
@@ -101,7 +101,7 @@
 
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body">
-                <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discount')?> Discount Global</h3>
+                <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discount')?> Global</h3>
                 <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.totaldiscvar')?></p>
                 <hr>
                 <div>
