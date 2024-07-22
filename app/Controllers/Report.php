@@ -149,6 +149,7 @@ class Report extends BaseController
         $discounttrx        = array();
         $discountvariant    = array();
         $discountpoin       = array();
+        $discountglobal     = array();
         // for ($date = $startdate; $date <= $enddate; $date += (86400)) {
         //     if ($this->data['outletPick'] === null) {
         //         $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00', $date))->where('date <=', date('Y-m-d 23:59:59', $date))->find();
@@ -221,13 +222,20 @@ class Report extends BaseController
                         if (!empty($productsdata)) {
                             // Transaction Detail Discount Variant
                             if ($trxdetail['discvar'] != '0') {
-                                $discountvariant[]     = $trxdetail['discvar'];
+                                $discountvariant[]      = $trxdetail['discvar'];
+                            }
+                            if ($trxdetail['globaldisc'] != '0') {
+                                $discountglobal[]       = $trxdetail['globaldisc'];
                             }
                         } else {
                             // Transaction Detail Discount Variant
-                            if ($trxdetail['discvar'] != '0') {
-                                $discountvariant[]     = 0;
-                            }
+                            // if ($trxdetail['discvar'] != '0') {
+                                $discountvariant[]      = 0;
+                                // $discountglobal[]       = 0;
+                            // }
+                            // if ($trxdetail['globaldisc'] != '0') {
+                                $discountglobal[]       = 0;
+                            // }
                         }
                     } else {
                         $productsdata   = '';
@@ -239,13 +247,19 @@ class Report extends BaseController
                     if (!empty($bundlesdata)) {
                         // Transaction Detail Discount Variant
                         if ($trxdetail['discvar'] != '0') {
-                            $discountvariant[]     = $trxdetail['discvar'];
+                            $discountvariant[]      = $trxdetail['discvar'];
+                        }
+                        if ($trxdetail['globaldisc'] != '0') {
+                            $discountglobal[]       = $trxdetail['globaldisc'];
                         }
                     } else {
                         // Transaction Detail Discount Variant
-                        if ($trxdetail['discvar'] != '0') {
-                            $discountvariant[]     = 0;
-                        }
+                        // if ($trxdetail['discvar'] != '0') {
+                            $discountvariant[]      = 0;
+                        // }
+                        // if ($trxdetail['globaldisc'] != '0') {
+                            $discountglobal[]       = 0;
+                        // }
                     }
                 }
             }
@@ -256,13 +270,15 @@ class Report extends BaseController
         }
 
         // $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($discounttrxpersen)) + (int)(array_sum($memberdisc));
-        $transactiondisc = (int)(array_sum($discounttrx)) + (int)(array_sum($memberdisc));
-        $variantdisc     = array_sum($discountvariant);
-        $poindisc        = array_sum($discountpoin);
+        $transactiondisc    = (int)(array_sum($discounttrx)) + (int)(array_sum($memberdisc));
+        $variantdisc        = array_sum($discountvariant);
+        $globaldisc         = array_sum($discountglobal);
+        $poindisc           = array_sum($discountpoin);
 
         $dicount[] = [
             'trxdisc'       => $transactiondisc,
             'variantdis'    => $variantdisc,
+            'globaldis'     => $globaldisc,
             'poindisc'      => $poindisc,
         ];
 
@@ -270,7 +286,7 @@ class Report extends BaseController
 
         $salesresult = array_sum(array_column($transactions, 'value'));
 
-        $grossales = $salesresult + $variantdisc + $transactiondisc + $poindisc;
+        $grossales = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
 
         // Parsing Data to View
         $data                   = $this->data;
