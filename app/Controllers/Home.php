@@ -507,7 +507,7 @@ class Home extends BaseController
         }
         $transactiondata['bussyday'] = $bussyday;
 
-        dd($transactions);
+        dd($transactiondata);
 
         // Parsing Data To View
         $data                       = $this->data;
