@@ -196,10 +196,13 @@ class Home extends BaseController
                 // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
                 $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']);
     
-                // Transaction Detail Discount Variant
-                if ($trxdet['discvar'] != 0) {
-                    $discount[]     = $trxdet['discvar'];
-                }
+                // // Transaction Detail Discount Variant
+                // if ($trxdet['discvar'] != 0) {
+                //     $discount[]     = $trxdet['discvar'];
+                // }
+                // if ($trxdet['globaldisc'] != '0') {
+                //     $discountglobal[]       = $trxdet['globaldisc'];
+                // }
 
                 // Data Variant
                 $variantsdata       = $VariantModel->find($trxdet['variantid']);
@@ -223,6 +226,14 @@ class Home extends BaseController
                         // if ($trxdet['discvar'] != 0) {
                         //     $discount[]     = $trxdet['discvar'];
                         // }
+
+                        // Transaction Detail Discount Variant
+                        if ($trxdet['discvar'] != '0') {
+                            $discount[]     = $trxdet['discvar'];
+                        }
+                        if ($trxdet['globaldisc'] != '0') {
+                            $discount[]     = $trxdet['globaldisc'];
+                        }
                     } else {
                         $prodname   = '';
     
@@ -236,6 +247,14 @@ class Home extends BaseController
                         // // Transaction Detail Discount Variant
                         // if ($trxdet['discvar'] != 0) {
                         //     $discount[]     = 0;
+                        // }
+                        
+                        // Transaction Detail Discount Variant
+                        // if ($trxdet['discvar'] != '0') {
+                            $discount[]      = 0;
+                        // }
+                        // if ($trxdet['globaldisc'] != '0') {
+                            $discount[]       = 0;
                         // }
                     }
                 } else {
@@ -263,6 +282,14 @@ class Home extends BaseController
                     // if ($trxdet['discvar'] != 0) {
                     //     $discount[]     = $trxdet['discvar'];
                     // }
+
+                    // Transaction Detail Discount Variant
+                    if ($trxdet['discvar'] != '0') {
+                        $discount[]     = $trxdet['discvar'];
+                    }
+                    if ($trxdet['globaldisc'] != '0') {
+                        $discount[]     = $trxdet['globaldisc'];
+                    }
                 } else {
                     $bundleid       = '';
                     $bundlename     = '';
@@ -277,6 +304,14 @@ class Home extends BaseController
                     // // Transaction Detail Discount Variant
                     // if ($trxdet['discvar'] != 0) {
                     //     $discount[]     = 0;
+                    // }
+
+                    // Transaction Detail Discount Variant
+                    // if ($trxdet['discvar'] != '0') {
+                        $discount[]     = $trxdet['discvar'];
+                    // }
+                    // if ($trxdet['globaldisc'] != '0') {
+                        $discount[]     = $trxdet['globaldisc'];
                     // }
                 }
 

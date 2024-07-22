@@ -496,21 +496,30 @@ class export extends BaseController
         // $casout = array_sum($cashout);
 
         foreach ($transaction as $trx) {
-            $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+            $trxdetails  = $TrxdetailModel->where('transactionid', $trx['id'])->find();
 
             if (!empty($trx['discvalue'])) {
+                // if ($trx['disctype'] == "0") {
+                //     $discounttrx[]  = $trx['discvalue'];
+                // } else {
+                //     $discounttrxpersen[]  = (int)$trx['value'] * ((int)$trx['discvalue'] / 100);
+                // }
                 $discounttrx[]  = $trx['discvalue'];
             }
 
             $discountpoin[]             = $trx['pointused'];
-
             $memberdisc[]               = $trx['memberdisc'];
 
             foreach ($trxdetails as $trxdetail) {
-                // $discountvariant[]  = $trxdetail['discvar'];
-                // $marginmodals[]     = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
-                // $margindasars[]     = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                
+                // if ($trx['disctype'] === "0") {
+                //     $discounttrx[]          = $trx['discvalue'];
+                // }
+                // if ($trx['disctype'] !== "0") {
+                //     $sub =  ((int)$trxdetail['value'] * (int)$trxdetail['qty']);
+                //     $discounttrxpersen[]    =  ((int)$trx['discvalue'] / 100) * (int)$sub;
+                // }
+                // $discountvariant[]          = $trxdetail['discvar'];
+
                 // Data Variant
                 $variantsdata       = $VariantModel->find($trxdetail['variantid']);
 
@@ -518,17 +527,22 @@ class export extends BaseController
                     $productsdata   = $ProductModel->find($variantsdata['productid']);
 
                     if (!empty($productsdata)) {
-                        // Transaction Detail Margin Modal
-                        $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
-
-                        // Transaction Detail Margin Dasar
-                        $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                        // Transaction Detail Discount Variant
+                        if ($trxdetail['discvar'] != '0') {
+                            $discountvariant[]      = $trxdetail['discvar'];
+                        }
+                        if ($trxdetail['globaldisc'] != '0') {
+                            $discountglobal[]       = $trxdetail['globaldisc'];
+                        }
                     } else {
-                        // Transaction Detail Margin Modal
-                        $marginmodals[] = 0;
-
-                        // Transaction Detail Margin Dasar
-                        $margindasars[] = 0;
+                        // Transaction Detail Discount Variant
+                        // if ($trxdetail['discvar'] != '0') {
+                            $discountvariant[]      = 0;
+                            // $discountglobal[]       = 0;
+                        // }
+                        // if ($trxdetail['globaldisc'] != '0') {
+                            $discountglobal[]       = 0;
+                        // }
                     }
                 } else {
                     $productsdata   = '';
@@ -538,17 +552,21 @@ class export extends BaseController
                 $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
 
                 if (!empty($bundlesdata)) {
-                    // Transaction Detail Margin Modal
-                    $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
-
-                    // Transaction Detail Margin Dasar
-                    $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                    // Transaction Detail Discount Variant
+                    if ($trxdetail['discvar'] != '0') {
+                        $discountvariant[]      = $trxdetail['discvar'];
+                    }
+                    if ($trxdetail['globaldisc'] != '0') {
+                        $discountglobal[]       = $trxdetail['globaldisc'];
+                    }
                 } else {
-                    // Transaction Detail Margin Modal
-                    $marginmodals[] = 0;
-
-                    // Transaction Detail Margin Dasar
-                    $margindasars[] = 0;
+                    // Transaction Detail Discount Variant
+                    // if ($trxdetail['discvar'] != '0') {
+                        $discountvariant[]      = 0;
+                    // }
+                    // if ($trxdetail['globaldisc'] != '0') {
+                        $discountglobal[]       = 0;
+                    // }
                 }
             }
         }
@@ -556,6 +574,7 @@ class export extends BaseController
         // Getting Discount Data
         $transactiondisc    = (int)(array_sum($discounttrx)) + (int)(array_sum($memberdisc));
         $variantdisc        = array_sum($discountvariant);
+        $globaldisc         = array_sum($discountglobal);
 
         // Total Point Used
         $poindisc           = array_sum($discountpoin);
@@ -565,13 +584,13 @@ class export extends BaseController
         $margindasarsum     = array_sum($margindasars);
 
         // Total Discount
-        $alldisc            = (Int)$variantdisc + (Int)$transactiondisc;
+        $alldisc            = (Int)$globaldisc + (Int)$variantdisc + (Int)$transactiondisc;
 
         // Total Sales
         $salesresult        = array_sum(array_column($transaction, 'value'));
 
         // Gross Sales
-        $grossales          = $salesresult + $variantdisc + $transactiondisc + $poindisc;
+        $grossales          = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
 
         // Profit Calculation
         $profitvalue        = (Int)$marginmodalsum - (Int)$transactiondisc;
