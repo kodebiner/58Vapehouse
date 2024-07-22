@@ -212,6 +212,16 @@ class Report extends BaseController
                     //     $discounttrxpersen[]    =  ((int)$trx['discvalue'] / 100) * (int)$sub;
                     // }
                     // $discountvariant[]          = $trxdetail['discvar'];
+    
+                    // Transaction Detail Discount Variant
+                    if ($trxdetail['discvar'] != 0) {
+                        $discountvariant[]      = $trxdetail['discvar'];
+                    }
+
+                    // Transaction Detail Discount Global
+                    if ($trxdetail['globaldisc'] != '0') {
+                        $discountglobal[]       = $trxdetail['globaldisc'];
+                    }
 
                     // Data Variant
                     $variantsdata       = $VariantModel->find($trxdetail['variantid']);
@@ -219,24 +229,24 @@ class Report extends BaseController
                     if (!empty($variantsdata)) {
                         $productsdata   = $ProductModel->find($variantsdata['productid']);
 
-                        if (!empty($productsdata)) {
-                            // Transaction Detail Discount Variant
-                            if ($trxdetail['discvar'] != '0') {
-                                $discountvariant[]      = $trxdetail['discvar'];
-                            }
-                            if ($trxdetail['globaldisc'] != '0') {
-                                $discountglobal[]       = $trxdetail['globaldisc'];
-                            }
-                        } else {
-                            // Transaction Detail Discount Variant
-                            // if ($trxdetail['discvar'] != '0') {
-                                $discountvariant[]      = 0;
-                                // $discountglobal[]       = 0;
-                            // }
-                            // if ($trxdetail['globaldisc'] != '0') {
-                                $discountglobal[]       = 0;
-                            // }
-                        }
+                        // if (!empty($productsdata)) {
+                        //     // Transaction Detail Discount Variant
+                        //     if ($trxdetail['discvar'] != '0') {
+                        //         $discountvariant[]      = $trxdetail['discvar'];
+                        //     }
+                        //     if ($trxdetail['globaldisc'] != '0') {
+                        //         $discountglobal[]       = $trxdetail['globaldisc'];
+                        //     }
+                        // } else {
+                        //     // Transaction Detail Discount Variant
+                        //     // if ($trxdetail['discvar'] != '0') {
+                        //         $discountvariant[]      = 0;
+                        //         // $discountglobal[]       = 0;
+                        //     // }
+                        //     // if ($trxdetail['globaldisc'] != '0') {
+                        //         $discountglobal[]       = 0;
+                        //     // }
+                        // }
                     } else {
                         $productsdata   = '';
                     }
@@ -244,23 +254,23 @@ class Report extends BaseController
                     // Data Bundle
                     $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
 
-                    if (!empty($bundlesdata)) {
-                        // Transaction Detail Discount Variant
-                        if ($trxdetail['discvar'] != '0') {
-                            $discountvariant[]      = $trxdetail['discvar'];
-                        }
-                        if ($trxdetail['globaldisc'] != '0') {
-                            $discountglobal[]       = $trxdetail['globaldisc'];
-                        }
-                    } else {
-                        // Transaction Detail Discount Variant
-                        // if ($trxdetail['discvar'] != '0') {
-                            $discountvariant[]      = 0;
-                        // }
-                        // if ($trxdetail['globaldisc'] != '0') {
-                            $discountglobal[]       = 0;
-                        // }
-                    }
+                    // if (!empty($bundlesdata)) {
+                    //     // Transaction Detail Discount Variant
+                    //     if ($trxdetail['discvar'] != '0') {
+                    //         $discountvariant[]      = $trxdetail['discvar'];
+                    //     }
+                    //     if ($trxdetail['globaldisc'] != '0') {
+                    //         $discountglobal[]       = $trxdetail['globaldisc'];
+                    //     }
+                    // } else {
+                    //     // Transaction Detail Discount Variant
+                    //     // if ($trxdetail['discvar'] != '0') {
+                    //         $discountvariant[]      = 0;
+                    //     // }
+                    //     // if ($trxdetail['globaldisc'] != '0') {
+                    //         $discountglobal[]       = 0;
+                    //     // }
+                    // }
                 }
             }
             $transactions[] = [
@@ -355,11 +365,11 @@ class Report extends BaseController
                 }
 
                 foreach ($trxdetails as $trxdetail) {
-                    // // Transaction Detail Margin Modal
-                    // $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+                    // Transaction Detail Margin Modal
+                    $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
 
-                    // // Transaction Detail Margin Dasar
-                    // $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                    // Transaction Detail Margin Dasar
+                    $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
 
                     // Data Variant
                     $variantsdata       = $VariantModel->find($trxdetail['variantid']);
@@ -367,19 +377,19 @@ class Report extends BaseController
                     if (!empty($variantsdata)) {
                         $productsdata   = $ProductModel->find($variantsdata['productid']);
 
-                        if (!empty($productsdata)) {
-                            // Transaction Detail Margin Modal
-                            $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+                        // if (!empty($productsdata)) {
+                        //     // Transaction Detail Margin Modal
+                        //     $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
 
-                            // Transaction Detail Margin Dasar
-                            $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                        } else {
-                            // Transaction Detail Margin Modal
-                            $marginmodals[] = 0;
+                        //     // Transaction Detail Margin Dasar
+                        //     $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                        // } else {
+                        //     // Transaction Detail Margin Modal
+                        //     $marginmodals[] = 0;
 
-                            // Transaction Detail Margin Dasar
-                            $margindasars[] = 0;
-                        }
+                        //     // Transaction Detail Margin Dasar
+                        //     $margindasars[] = 0;
+                        // }
                     } else {
                         $productsdata   = '';
                     }
@@ -387,19 +397,19 @@ class Report extends BaseController
                     // Data Bundle
                     $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
 
-                    if (!empty($bundlesdata)) {
-                        // Transaction Detail Margin Modal
-                        $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+                    // if (!empty($bundlesdata)) {
+                    //     // Transaction Detail Margin Modal
+                    //     $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
 
-                        // Transaction Detail Margin Dasar
-                        $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                    } else {
-                        // Transaction Detail Margin Modal
-                        $marginmodals[] = 0;
+                    //     // Transaction Detail Margin Dasar
+                    //     $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                    // } else {
+                    //     // Transaction Detail Margin Modal
+                    //     $marginmodals[] = 0;
 
-                        // Transaction Detail Margin Dasar
-                        $margindasars[] = 0;
-                    }
+                    //     // Transaction Detail Margin Dasar
+                    //     $margindasars[] = 0;
+                    // }
                 }
             }
 
@@ -930,7 +940,7 @@ class Report extends BaseController
                                 // $transactiondata[$productid]['qty']             = $trxdet['qty'];
                                 $transactiondata[$products['id']]['qty'][]           = $trxdet['qty'];
                                 $transactiondata[$products['id']]['netvalue'][]      = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                                $transactiondata[$products['id']]['grossvalue'][]    = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                $transactiondata[$products['id']]['grossvalue'][]    = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
     
                                 // $grossval[$products['id']][]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
                                 // $netval[$products['id']][]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
@@ -941,11 +951,11 @@ class Report extends BaseController
                         } else {
                             $products   = [];
                             $category   = [];
-                            $transactiondata[0]['name']           = 'Kategori / Produk / Variant Terhapus';
-                            $transactiondata[0]['category']       = 'Kategori / Produk / Variant Terhapus';
-                            $transactiondata[0]['qty'][]                        = $trxdet['qty'];
-                            $transactiondata[0]['netvalue'][]                   = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                            $transactiondata[0]['grossvalue'][]                 = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                            $transactiondata[0]['name']             = 'Kategori / Produk / Variant Terhapus';
+                            $transactiondata[0]['category']         = 'Kategori / Produk / Variant Terhapus';
+                            $transactiondata[0]['qty'][]            = $trxdet['qty'];
+                            $transactiondata[0]['netvalue'][]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                            $transactiondata[0]['grossvalue'][]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
     
                             // $grossval[]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
                             // $netval[]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
@@ -1348,7 +1358,7 @@ class Report extends BaseController
                                         $transactiondata[$category['id']]['name']               = $category['name'];
                                         $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
                                         $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                                        $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                        $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
     
                                     }
                                 } else {
@@ -1361,7 +1371,7 @@ class Report extends BaseController
                                 $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
                                 $transactiondata[0]['qty'][]                            = $trxdet['qty'];
                                 $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                                $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
                             }
                         }
 
@@ -1393,7 +1403,7 @@ class Report extends BaseController
                                                     $transactiondata[$category['id']]['name']               = $category['name'];
                                                     $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
                                                     $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                                                    $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                                    $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
                 
                                                 }
                                             } else {
@@ -1406,7 +1416,7 @@ class Report extends BaseController
                                             $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
                                             $transactiondata[0]['qty'][]                            = $trxdet['qty'];
                                             $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                                            $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                            $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
                                         }
                                     }
                                 }
@@ -1728,6 +1738,7 @@ class Report extends BaseController
         $discounttrxpersen  = array();
         $discountmember     = array();
         $discountvariant    = array();
+        $discountglobal     = array();
         $discountpoin       = array();
 
         foreach ($transaction as $trx) {
@@ -1762,6 +1773,11 @@ class Report extends BaseController
                 // Discount Variant
                 if ($trxdetail['discvar'] != '0') {
                     $discountvariant[]     = $trxdetail['discvar'];
+                }
+
+                // Discount Global
+                if ($trxdetail['globaldisc'] != '0') {
+                    $discountglobal[]     = $trxdetail['globaldisc'];
                 }
 
                 // // Data Variant
@@ -1814,9 +1830,10 @@ class Report extends BaseController
             // ];
         }
 
-        $transactiondisc = array_sum($discount);
-        $variantdisc     = array_sum($discountvariant);
-        $poindisc        = array_sum($pointused);
+        $transactiondisc    = array_sum($discount);
+        $variantdisc        = array_sum($discountvariant);
+        $globaldisc         = array_sum($discountglobal);
+        $poindisc           = array_sum($pointused);
 
         // $trxvar = array_sum(array_column($transactions, 'variantdis'));
         // $trxdis = array_sum(array_column($transactions, 'trxdisc'));
@@ -1828,6 +1845,7 @@ class Report extends BaseController
         $data['description']    = lang('Global.profitListDesc');
         $data['transactions']   = $transactions;
         $data['trxvardis']      = $variantdisc;
+        $data['trxglodis']      = $globaldisc;
         $data['trxdisc']        = $transactiondisc;
         $data['poindisc']       = $poindisc;
         $data['startdate']      = strtotime($startdate);

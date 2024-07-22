@@ -194,15 +194,17 @@ class Home extends BaseController
             foreach ($trxdetailsdata as $trxdet) {
                 // Transaction Detail Margin Modal
                 // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']) - ((int)$disc);
-                // $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']);
+                $marginmodal[]      = ((Int)$trxdet['marginmodal'] * (Int)$trxdet['qty']);
     
-                // // Transaction Detail Discount Variant
-                // if ($trxdet['discvar'] != 0) {
-                //     $discount[]     = $trxdet['discvar'];
-                // }
-                // if ($trxdet['globaldisc'] != '0') {
-                //     $discountglobal[]       = $trxdet['globaldisc'];
-                // }
+                // Transaction Detail Discount Variant
+                if ($trxdet['discvar'] != 0) {
+                    $discount[]     = $trxdet['discvar'];
+                }
+
+                // Transaction Detail Discount Global
+                if ($trxdet['globaldisc'] != '0') {
+                    $discountglobal[]       = $trxdet['globaldisc'];
+                }
 
                 // Data Variant
                 $variantsdata       = $VariantModel->find($trxdet['variantid']);
@@ -227,16 +229,16 @@ class Home extends BaseController
                         //     $discount[]     = $trxdet['discvar'];
                         // }
 
-                        // Transaction Detail Margin Modal
-                        $marginmodal[] = ((int)$trxdet['marginmodal'] * (int)$trxdet['qty']);
+                        // // Transaction Detail Margin Modal
+                        // $marginmodal[] = ((int)$trxdet['marginmodal'] * (int)$trxdet['qty']);
 
-                        // Transaction Detail Discount Variant
-                        if ($trxdet['discvar'] != '0') {
-                            $discount[]     = $trxdet['discvar'];
-                        }
-                        if ($trxdet['globaldisc'] != '0') {
-                            $discount[]     = $trxdet['globaldisc'];
-                        }
+                        // // Transaction Detail Discount Variant
+                        // if ($trxdet['discvar'] != '0') {
+                        //     $discount[]     = $trxdet['discvar'];
+                        // }
+                        // if ($trxdet['globaldisc'] != '0') {
+                        //     $discount[]     = $trxdet['globaldisc'];
+                        // }
                     } else {
                         $prodname   = '';
     
@@ -252,16 +254,16 @@ class Home extends BaseController
                         //     $discount[]     = 0;
                         // }
 
-                        // Transaction Detail Margin Modal
-                        $marginmodal[] = 0;
+                        // // Transaction Detail Margin Modal
+                        // $marginmodal[] = 0;
                         
-                        // Transaction Detail Discount Variant
-                        // if ($trxdet['discvar'] != '0') {
-                            $discount[]      = 0;
-                        // }
-                        // if ($trxdet['globaldisc'] != '0') {
-                            $discount[]       = 0;
-                        // }
+                        // // Transaction Detail Discount Variant
+                        // // if ($trxdet['discvar'] != '0') {
+                        //     $discount[]      = 0;
+                        // // }
+                        // // if ($trxdet['globaldisc'] != '0') {
+                        //     $discount[]       = 0;
+                        // // }
                     }
                 } else {
                     $varname        = '';
@@ -289,16 +291,16 @@ class Home extends BaseController
                     //     $discount[]     = $trxdet['discvar'];
                     // }
 
-                    // Transaction Detail Margin Modal
-                    $marginmodal[] = ((int)$trxdet['marginmodal'] * (int)$trxdet['qty']);
+                    // // Transaction Detail Margin Modal
+                    // $marginmodal[] = ((int)$trxdet['marginmodal'] * (int)$trxdet['qty']);
 
-                    // Transaction Detail Discount Variant
-                    if ($trxdet['discvar'] != '0') {
-                        $discount[]     = $trxdet['discvar'];
-                    }
-                    if ($trxdet['globaldisc'] != '0') {
-                        $discount[]     = $trxdet['globaldisc'];
-                    }
+                    // // Transaction Detail Discount Variant
+                    // if ($trxdet['discvar'] != '0') {
+                    //     $discount[]     = $trxdet['discvar'];
+                    // }
+                    // if ($trxdet['globaldisc'] != '0') {
+                    //     $discount[]     = $trxdet['globaldisc'];
+                    // }
                 } else {
                     $bundleid       = '';
                     $bundlename     = '';
@@ -315,16 +317,16 @@ class Home extends BaseController
                     //     $discount[]     = 0;
                     // }
 
-                    // Transaction Detail Margin Modal
-                    $marginmodal[] = 0;
+                    // // Transaction Detail Margin Modal
+                    // $marginmodal[] = 0;
 
-                    // Transaction Detail Discount Variant
-                    // if ($trxdet['discvar'] != '0') {
-                        $discount[]     = 0;
-                    // }
-                    // if ($trxdet['globaldisc'] != '0') {
-                        $discount[]     = 0;
-                    // }
+                    // // Transaction Detail Discount Variant
+                    // // if ($trxdet['discvar'] != '0') {
+                    //     $discount[]     = 0;
+                    // // }
+                    // // if ($trxdet['globaldisc'] != '0') {
+                    //     $discount[]     = 0;
+                    // // }
                 }
 
                 // Best Selling Product

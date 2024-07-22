@@ -301,6 +301,7 @@ class export extends BaseController
         $memberdisc         = array();
         $discounttrx        = array();
         $discountvariant    = array();
+        $discountglobal     = array();
         $discountpoin       = array();
         $marginmodals       = array();
         $margindasars       = array();
@@ -520,30 +521,40 @@ class export extends BaseController
                 // }
                 // $discountvariant[]          = $trxdetail['discvar'];
 
+                // Transaction Detail Discount Variant
+                if ($trxdetail['discvar'] != 0) {
+                    $discountvariant[]      = $trxdetail['discvar'];
+                }
+
+                // Transaction Detail Discount Global
+                if ($trxdetail['globaldisc'] != '0') {
+                    $discountglobal[]       = $trxdetail['globaldisc'];
+                }
+
                 // Data Variant
                 $variantsdata       = $VariantModel->find($trxdetail['variantid']);
 
                 if (!empty($variantsdata)) {
                     $productsdata   = $ProductModel->find($variantsdata['productid']);
 
-                    if (!empty($productsdata)) {
-                        // Transaction Detail Discount Variant
-                        if ($trxdetail['discvar'] != '0') {
-                            $discountvariant[]      = $trxdetail['discvar'];
-                        }
-                        if ($trxdetail['globaldisc'] != '0') {
-                            $discountglobal[]       = $trxdetail['globaldisc'];
-                        }
-                    } else {
-                        // Transaction Detail Discount Variant
-                        // if ($trxdetail['discvar'] != '0') {
-                            $discountvariant[]      = 0;
-                            // $discountglobal[]       = 0;
-                        // }
-                        // if ($trxdetail['globaldisc'] != '0') {
-                            $discountglobal[]       = 0;
-                        // }
-                    }
+                    // if (!empty($productsdata)) {
+                    //     // Transaction Detail Discount Variant
+                    //     if ($trxdetail['discvar'] != '0') {
+                    //         $discountvariant[]      = $trxdetail['discvar'];
+                    //     }
+                    //     if ($trxdetail['globaldisc'] != '0') {
+                    //         $discountglobal[]       = $trxdetail['globaldisc'];
+                    //     }
+                    // } else {
+                    //     // Transaction Detail Discount Variant
+                    //     // if ($trxdetail['discvar'] != '0') {
+                    //         $discountvariant[]      = 0;
+                    //         // $discountglobal[]       = 0;
+                    //     // }
+                    //     // if ($trxdetail['globaldisc'] != '0') {
+                    //         $discountglobal[]       = 0;
+                    //     // }
+                    // }
                 } else {
                     $productsdata   = '';
                 }
@@ -551,23 +562,23 @@ class export extends BaseController
                 // Data Bundle
                 $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
 
-                if (!empty($bundlesdata)) {
-                    // Transaction Detail Discount Variant
-                    if ($trxdetail['discvar'] != '0') {
-                        $discountvariant[]      = $trxdetail['discvar'];
-                    }
-                    if ($trxdetail['globaldisc'] != '0') {
-                        $discountglobal[]       = $trxdetail['globaldisc'];
-                    }
-                } else {
-                    // Transaction Detail Discount Variant
-                    // if ($trxdetail['discvar'] != '0') {
-                        $discountvariant[]      = 0;
-                    // }
-                    // if ($trxdetail['globaldisc'] != '0') {
-                        $discountglobal[]       = 0;
-                    // }
-                }
+                // if (!empty($bundlesdata)) {
+                //     // Transaction Detail Discount Variant
+                //     if ($trxdetail['discvar'] != '0') {
+                //         $discountvariant[]      = $trxdetail['discvar'];
+                //     }
+                //     if ($trxdetail['globaldisc'] != '0') {
+                //         $discountglobal[]       = $trxdetail['globaldisc'];
+                //     }
+                // } else {
+                //     // Transaction Detail Discount Variant
+                //     // if ($trxdetail['discvar'] != '0') {
+                //         $discountvariant[]      = 0;
+                //     // }
+                //     // if ($trxdetail['globaldisc'] != '0') {
+                //         $discountglobal[]       = 0;
+                //     // }
+                // }
             }
         }
 
@@ -717,11 +728,11 @@ class export extends BaseController
                 }
 
                 foreach ($trxdetails as $trxdetail) {
-                    // // Transaction Detail Margin Modal
-                    // $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+                    // Transaction Detail Margin Modal
+                    $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
 
-                    // // Transaction Detail Margin Dasar
-                    // $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                    // Transaction Detail Margin Dasar
+                    $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
 
                     // Data Variant
                     $variantsdata       = $VariantModel->find($trxdetail['variantid']);
@@ -729,19 +740,19 @@ class export extends BaseController
                     if (!empty($variantsdata)) {
                         $productsdata   = $ProductModel->find($variantsdata['productid']);
 
-                        if (!empty($productsdata)) {
-                            // Transaction Detail Margin Modal
-                            $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+                        // if (!empty($productsdata)) {
+                        //     // Transaction Detail Margin Modal
+                        //     $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
 
-                            // Transaction Detail Margin Dasar
-                            $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                        } else {
-                            // Transaction Detail Margin Modal
-                            $marginmodals[] = 0;
+                        //     // Transaction Detail Margin Dasar
+                        //     $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                        // } else {
+                        //     // Transaction Detail Margin Modal
+                        //     $marginmodals[] = 0;
 
-                            // Transaction Detail Margin Dasar
-                            $margindasars[] = 0;
-                        }
+                        //     // Transaction Detail Margin Dasar
+                        //     $margindasars[] = 0;
+                        // }
                     } else {
                         $productsdata   = '';
                     }
@@ -749,19 +760,19 @@ class export extends BaseController
                     // Data Bundle
                     $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
 
-                    if (!empty($bundlesdata)) {
-                        // Transaction Detail Margin Modal
-                        $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+                    // if (!empty($bundlesdata)) {
+                    //     // Transaction Detail Margin Modal
+                    //     $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
 
-                        // Transaction Detail Margin Dasar
-                        $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                    } else {
-                        // Transaction Detail Margin Modal
-                        $marginmodals[] = 0;
+                    //     // Transaction Detail Margin Dasar
+                    //     $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                    // } else {
+                    //     // Transaction Detail Margin Modal
+                    //     $marginmodals[] = 0;
 
-                        // Transaction Detail Margin Dasar
-                        $margindasars[] = 0;
-                    }
+                    //     // Transaction Detail Margin Dasar
+                    //     $margindasars[] = 0;
+                    // }
                 }
             }
 
@@ -2062,13 +2073,13 @@ class export extends BaseController
         
         foreach ($transactiondata as $trxdata) {
             $productsales[] = array_sum($trxdata['qty']);
-            $netval[]       = array_sum($trxdata['netvalue']);
-            $grossval[]     = array_sum($trxdata['grossvalue']);
+            $netval[]       = array_sum($trxdata['value']);
+            // $grossval[]     = array_sum($trxdata['grossvalue']);
         }
         
         $totalsalesitem     = array_sum($productsales);
         $totalnetsales      = array_sum($netval);
-        $totalcatgross      = array_sum($grossval);
+        // $totalcatgross      = array_sum($grossval);
         array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
 
         header("Content-type: application/vnd-ms-excel");
@@ -2112,7 +2123,7 @@ class export extends BaseController
                 echo '<td style="text-align:center;font-weight:700;">Total</th>';
                 echo '<td style="font-weight:700;">' . $totalsalesitem . '</td>';
                 echo '<td style="font-weight:700;">' . $totalnetsales . '</td>';
-                echo '<td style="font-weight:700;">' . $totalcatgross . '</td>';
+                // echo '<td style="font-weight:700;">' . $totalcatgross . '</td>';
             echo '</tr>';
         echo '</tfoot>';
         echo '</table>';
@@ -2192,6 +2203,7 @@ class export extends BaseController
         $discount           = array();
         $pointused          = array();
         $discountvariant    = array();
+        $discountglobal     = array();
 
         foreach ($transaction as $trx) {
             // Transaction Point Used Array
@@ -2213,12 +2225,18 @@ class export extends BaseController
                 if ($trxdetail['discvar'] != '0') {
                     $discountvariant[]     = $trxdetail['discvar'];
                 }
+
+                // Discount Global
+                if ($trxdetail['globaldisc'] != '0') {
+                    $discountglobal[]     = $trxdetail['globaldisc'];
+                }
             }
         }
 
-        $transactiondisc = array_sum($discount);
-        $variantdisc     = array_sum($discountvariant);
-        $poindisc        = array_sum($pointused);
+        $transactiondisc    = array_sum($discount);
+        $variantdisc        = array_sum($discountvariant);
+        $globaldisc         = array_sum($discountglobal);
+        $poindisc           = array_sum($pointused);
 
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=Laporan Diskon $startdate-$enddate.xls");
@@ -2244,6 +2262,7 @@ class export extends BaseController
             echo '<tr>';
                 echo '<th>Diskon Transaksi</th>';
                 echo '<th>Diskon Variant</th>';
+                echo '<th>Diskon Global</th>';
                 echo '<th>Diskon Poin</th>';
             echo '</tr>';
         echo '</thead>';
@@ -2258,6 +2277,7 @@ class export extends BaseController
             echo '<tr>';
                 echo '<td >' . $transactiondisc . '</td>';
                 echo '<td >' . $variantdisc . '</td>';
+                echo '<td >' . $globaldisc . '</td>';
                 echo '<td >' . $poindisc . '</td>';
             echo '</tr>';
         echo '</tbody>';

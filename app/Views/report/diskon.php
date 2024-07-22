@@ -15,6 +15,7 @@
         var data = google.visualization.arrayToDataTable([
             ['Task', 'Hours per Day'],
             ['<?=lang('Global.discount')?> <?=lang('Global.variant')?>', <?php echo ' '.$trxvardis.'';?>],
+            ['<?=lang('Global.discount')?> Discount Global', <?php echo ' '.$trxglodis.'';?>],
             ['<?=lang('Global.discount')?> <?=lang('Global.transaction')?>', <?php echo ' '.$trxdisc.'';?>],
             ['<?=lang('Global.discount')?> <?=lang('Global.point')?>',  <?php echo ' '.$poindisc.'';?>],
         ]);       
@@ -71,7 +72,7 @@
         <div id="piechart" class="uk-width-auto"></div>
     </div>
 
-    <div class="uk-child-width-1-3@m uk-grid-match uk-margin-top" uk-grid>
+    <div class="uk-child-width-1-4@m uk-grid-match uk-margin-top" uk-grid>
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body">
                 <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discpoint')?></h3>
@@ -93,6 +94,19 @@
                 <div>
                     <div uk-grid>
                         <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxvardis,2,',','.');" ";?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="uk-card uk-card-default uk-card-hover uk-card-body">
+                <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discount')?> Discount Global</h3>
+                <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.totaldiscvar')?></p>
+                <hr>
+                <div>
+                    <div uk-grid>
+                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxglodis,2,',','.');" ";?></div>
                     </div>
                 </div>
             </div>
