@@ -947,11 +947,6 @@ class Report extends BaseController
                                 // $productsales[$products['id']][] = $trxdet['qty'];
                             } else {
                                 $category   = [];
-                                $transactiondata[0]['name']             = 'Kategori / Produk / Variant Terhapus';
-                                $transactiondata[0]['category']         = 'Kategori / Produk / Variant Terhapus';
-                                $transactiondata[0]['qty'][]            = $trxdet['qty'];
-                                $transactiondata[0]['netvalue'][]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                                $transactiondata[0]['grossvalue'][]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
                             }
                         } else {
                             $products   = [];

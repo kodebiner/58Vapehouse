@@ -1385,18 +1385,13 @@ class export extends BaseController
                             // $transactiondata[$productid]['qty']             = $trxdet['qty'];
                             $transactiondata[$products['id']]['qty'][]           = $trxdet['qty'];
                             $transactiondata[$products['id']]['netvalue'][]      = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                            $transactiondata[$products['id']]['grossvalue'][]    = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                            $transactiondata[$products['id']]['grossvalue'][]    = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
 
                             // $grossval[$products['id']][]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
                             // $netval[$products['id']][]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
                             // $productsales[$products['id']][] = $trxdet['qty'];
                         } else {
                             $category   = [];
-                            $transactiondata[0]['name']             = 'Kategori / Produk / Variant Terhapus';
-                            $transactiondata[0]['category']         = 'Kategori / Produk / Variant Terhapus';
-                            $transactiondata[0]['qty'][]            = $trxdet['qty'];
-                            $transactiondata[0]['netvalue'][]       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
-                            $transactiondata[0]['grossvalue'][]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
                         }
                     } else {
                         $products   = [];
