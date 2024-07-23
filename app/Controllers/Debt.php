@@ -527,12 +527,6 @@ class Debt extends BaseController
         $bundles = [];
         $paymentid = [];
         $point = "";
-        $dataarray  = [];
-        $dataarray[$id]              = $TransactionModel->find($id);
-        $dataarray[$id]['payment']   = $TrxpaymentModel->where('transactionid', $id)->find();
-        $dataarray[$id]['debt']      = $DebtModel->where('transactionid', $id)->find();
-        $dataarray[$id]['detail']    = $TrxdetailModel->where('transactionid', $id)->find();
-        dd($dataarray);
 
         foreach ($transactionhist as $trxhist) {
 
@@ -657,26 +651,26 @@ class Debt extends BaseController
         // foreach ($trxpay as $pay) {
         //     $TrxpaymentModel->delete($pay);
         // }
-        // $TrxpaymentModel->where('transactionid', $id)->delete();
+        $TrxpaymentModel->where('transactionid', $id)->delete();
 
         // Delete Transaction Payment
         // $debt = $DebtModel->where('transactionid', $id)->find();
         // foreach ($debt as $deb) {
         //     $DebtModel->delete($deb);
         // }
-        // $DebtModel->where('transactionid', $id)->delete();
+        $DebtModel->where('transactionid', $id)->delete();
 
         // Delete Tansaction Detail
         // $trxdet = $TrxdetailModel->where('transactionid', $id)->find();
         // foreach ($trxdet as $detail) {
         //     $TrxdetailModel->delete($detail);
         // }
-        // $TrxdetailModel->where('transactionid', $id)->delete();
+        $TrxdetailModel->where('transactionid', $id)->delete();
 
         // Delete Transaction
         // $trx = $TransactionModel->find($id);
         // $TransactionModel->delete($trx);
-        // $TransactionModel->delete($id);
+        $TransactionModel->delete($id);
 
         return redirect()->back()->with('massage', lang('global.deleted'));
     }
