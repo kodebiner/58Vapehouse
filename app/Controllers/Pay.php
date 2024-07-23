@@ -405,40 +405,177 @@ class Pay extends BaseController
         //Insert Trx Payment 
         $total = (int)$subtotal - (int)$discount - (int)$input['poin'] - (int)$memberdisc + (int)$ppn;
 
-        // Debt Transaction
-        if (!empty($input['duedate']) && !empty($input['payment']) && empty($input['value'])) {
-            // Insert Debt
-            $debt = [
-                'memberid'      => $input['customerid'],
-                'transactionid' => $trxId,
-                'value'         => $input['debt'],
-                'deadline'      => $input['duedate'],
-            ];
-            $DebtModel->save($debt);
-        } elseif (!empty($input['duedate']) && !empty($input['payment']) && !empty($input['value'])) {
-            // Debt & Down Payment
+        // // Debt Transaction
+        // if (!empty($input['duedate']) && !empty($input['payment']) && empty($input['value'])) {
+        //     // Insert Debt
+        //     $debt = [
+        //         'memberid'      => $input['customerid'],
+        //         'transactionid' => $trxId,
+        //         'value'         => $input['debt'],
+        //         'deadline'      => $input['duedate'],
+        //     ];
+        //     $DebtModel->insert($debt);
 
-            // Insert Debt
-            $debt = [
-                'memberid'      => $input['customerid'],
-                'transactionid' => $trxId,
-                'value'         => $input['debt'],
-                'deadline'      => $input['duedate'],
-            ];
-            $DebtModel->save($debt);
+        // } elseif (!empty($input['duedate']) && !empty($input['payment']) && !empty($input['value'])) {
+        //     // Debt & Down Payment
 
-            // Insert Cash
-            $payment    = $PaymentModel->where('id', $input['payment'])->first();
-            $cashPlus   = $CashModel->where('id', $payment['cashid'])->first();
+        //     // Insert Debt
+        //     $debt = [
+        //         'memberid'      => $input['customerid'],
+        //         'transactionid' => $trxId,
+        //         'value'         => $input['debt'],
+        //         'deadline'      => $input['duedate'],
+        //     ];
+        //     $DebtModel->insert($debt);
+
+        //     // Insert Cash
+        //     $payment    = $PaymentModel->where('id', $input['payment'])->first();
+        //     $cashPlus   = $CashModel->where('id', $payment['cashid'])->first();
+
+        //     $cash = [
+        //         'id'    => $cashPlus['id'],
+        //         'qty'   => (int)$total + (int)$cashPlus['qty'],
+        //     ];
+        //     $CashModel->save($cash);
+
+        // } elseif (!empty($input['duedate']) && !isset($input['payment']) && isset($input['firstpayment'])) {
+        //     // Debt and Down Payment with Split Payment
+
+        //     // Insert Debt
+        //     $debt = [
+        //         'memberid'      => $input['customerid'],
+        //         'transactionid' => $trxId,
+        //         'value'         => $input['debt'],
+        //         'deadline'      => $input['duedate'],
+        //     ];
+        //     $DebtModel->insert($debt);
+
+        //     // Insert First Payment
+        //     $payment    = $PaymentModel->where('id', $input['firstpayment'])->first();
+        //     $cashPlus   = $CashModel->find($payment['cashid']);
+        //     $cashUp     = (int)$cashPlus['qty'] + (int)$input['firstpay'];
+        //     $cash       = [
+        //         'id'    => $cashPlus['id'],
+        //         'qty'   => $cashUp
+        //     ];
+        //     $CashModel->save($cash);
+
+        //     // Insert Second Payment
+        //     $payment     = $PaymentModel->where('id', $input['secpayment'])->first();
+        //     $cashPlus2   = $CashModel->find($payment['cashid']);
+        //     $cashUp2     = (int)$cashPlus2['qty'] + (int)$input['secondpay'];
+        //     $cash2       = [
+        //         'id'    => $cashPlus2['id'],
+        //         'qty'   => $cashUp2,
+        //     ];
+        //     $CashModel->save($cash2);
+
+        // } else {
+        //     // Normal Transaction
+
+        //     // Insert Cash
+        //     if (!empty($input['payment'])) {
+        //         $payment    = $PaymentModel->where('id', $input['payment'])->first();
+        //         $cashPlus   = $CashModel->where('id', $payment['cashid'])->first();
+
+        //         $cash = [
+        //             'id'    => $cashPlus['id'],
+        //             'qty'   => (int)$total + (int)$cashPlus['qty'],
+        //         ];
+        //         $CashModel->save($cash);
+
+        //     } elseif (!isset($input['payment']) && isset($input['firstpayment'])) {
+        //         // Normal Transaction with Split Payment
+
+        //         // Insert First Payment
+        //         $payment    = $PaymentModel->where('id', $input['firstpayment'])->first();
+        //         $cashPlus   = $CashModel->find($payment['cashid']);
+        //         $cashUp     = (int)$cashPlus['qty'] + (int)$input['firstpay'];
+        //         $cash       = [
+        //             'id'    => $cashPlus['id'],
+        //             'qty'   => $cashUp
+        //         ];
+        //         $CashModel->save($cash);
+
+        //         // Insert Second Payment
+        //         $payment    = $PaymentModel->where('id', $input['secpayment'])->first();
+        //         $cashPlus2  = $CashModel->find($payment['cashid']);
+        //         $cashUp2    = (int)$cashPlus2['qty'] + (int)$input['secondpay'];
+        //         $cash2      = [
+        //             'id'    => $cashPlus2['id'],
+        //             'qty'   => $cashUp2,
+        //         ];
+        //         $CashModel->save($cash2);
+        //     }
+        // }
+
+        // Normal Transaction
+        if (!isset($input['firstpayment']) && !isset($input['secpayment']) && isset($input['payment']) && !isset($input['duedate'])) {
+            // Single Payment Method
+            // $payment = $PaymentModel->find($input['payment']);
+            // Insert Transaction Payment
+            $paymethod = [
+                'paymentid'     => $input['payment'],
+                'transactionid' => $trxId,
+                'value'         => $total,
+            ];
+            $TrxpaymentModel->insert($paymethod);
+
+            // Save Cash
+            $payment    = $PaymentModel->find($input['payment']);
+            $cashPlus   = $CashModel->find($payment['cashid']);
 
             $cash = [
                 'id'    => $cashPlus['id'],
                 'qty'   => (int)$total + (int)$cashPlus['qty'],
             ];
             $CashModel->save($cash);
-        } elseif (!empty($input['duedate']) && !isset($input['payment']) && isset($input['firstpayment'])) {
-            // Debt and Down Payment with Split Payment
+        }
+        
+        // Splitbill
+        elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && !isset($input['duedate'])) {
+            // Split Payment Method
+            // $firstpayment = $PaymentModel->find();
+            // Insert Transaction First Payment
+            $paymet = [
+                'paymentid'     => $input['firstpayment'],
+                'transactionid' => $trxId,
+                'value'         => $input['firstpay'],
+            ];
+            $TrxpaymentModel->insert($paymet);
+            
+            // Save Cash First Payment
+            $splitpayment1  = $PaymentModel->find($input['firstpayment']);
+            $cashPlus       = $CashModel->find($splitpayment1['cashid']);
+            $cashUp         = (int)$cashPlus['qty'] + (int)$input['firstpay'];
+            $cash           = [
+                'id'    => $cashPlus['id'],
+                'qty'   => $cashUp
+            ];
+            $CashModel->save($cash);
 
+            // $secpayment = $PaymentModel->find();
+            // Insert Transaction Second Payment
+            $pay = [
+                'paymentid'     => $input['secpayment'],
+                'transactionid' => $trxId,
+                'value'         => $input['secondpay'],
+            ];
+            $TrxpaymentModel->insert($pay);
+
+            // Save Cash Second Payment
+            $splitpayment2  = $PaymentModel->where('id', $input['secpayment'])->first();
+            $cashPlus2      = $CashModel->find($splitpayment2['cashid']);
+            $cashUp2        = (int)$cashPlus2['qty'] + (int)$input['secondpay'];
+            $cash2          = [
+                'id'    => $cashPlus2['id'],
+                'qty'   => $cashUp2,
+            ];
+            $CashModel->save($cash2);
+        }
+
+        // Single Debt Method
+        elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] === "0" && isset($input['payment']) && isset($input['duedate'])) {
             // Insert Debt
             $debt = [
                 'memberid'      => $input['customerid'],
@@ -446,143 +583,109 @@ class Pay extends BaseController
                 'value'         => $input['debt'],
                 'deadline'      => $input['duedate'],
             ];
-            $DebtModel->save($debt);
+            $DebtModel->insert($debt);
 
-            // Insert First Payment
-            $payment    = $PaymentModel->where('id', $input['firstpayment'])->first();
-            $cashPlus   = $CashModel->find($payment['cashid']);
-            $cashUp     = (int)$cashPlus['qty'] + (int)$input['firstpay'];
-            $cash       = [
-                'id'    => $cashPlus['id'],
-                'qty'   => $cashUp
-            ];
-            $CashModel->save($cash);
-
-            // Insert Second Payment
-            $payment     = $PaymentModel->where('id', $input['secpayment'])->first();
-            $cashPlus2   = $CashModel->find($payment['cashid']);
-            $cashUp2     = (int)$cashPlus2['qty'] + (int)$input['secondpay'];
-            $cash2       = [
-                'id'    => $cashPlus2['id'],
-                'qty'   => $cashUp2,
-            ];
-            $CashModel->save($cash2);
-        } else {
-            // Normal Transaction
-
-            // Insert Cash
-            if (!empty($input['payment'])) {
-                $payment    = $PaymentModel->where('id', $input['payment'])->first();
-                $cashPlus   = $CashModel->where('id', $payment['cashid'])->first();
-
-                $cash = [
-                    'id'    => $cashPlus['id'],
-                    'qty'   => (int)$total + (int)$cashPlus['qty'],
-                ];
-                $CashModel->save($cash);
-            } elseif (!isset($input['payment']) && isset($input['firstpayment'])) {
-                // Normal Transaction with Split Payment
-
-                // Insert First Payment
-                $payment    = $PaymentModel->where('id', $input['firstpayment'])->first();
-                $cashPlus   = $CashModel->find($payment['cashid']);
-                $cashUp     = (int)$cashPlus['qty'] + (int)$input['firstpay'];
-                $cash       = [
-                    'id'    => $cashPlus['id'],
-                    'qty'   => $cashUp
-                ];
-                $CashModel->save($cash);
-
-                // Insert Second Payment
-                $payment    = $PaymentModel->where('id', $input['secpayment'])->first();
-                $cashPlus2  = $CashModel->find($payment['cashid']);
-                $cashUp2    = (int)$cashPlus2['qty'] + (int)$input['secondpay'];
-                $cash2      = [
-                    'id'    => $cashPlus2['id'],
-                    'qty'   => $cashUp2,
-                ];
-                $CashModel->save($cash2);
-            }
-        }
-
-        // Transaction Payment
-        if (!isset($input['firstpayment']) && !isset($input['secpayment']) && isset($input['payment']) && !isset($input['duedate'])) {
-            // Single Payment Method
-            $payment = $PaymentModel->find($input['payment']);
-            $paymethod = [
-                'paymentid'     => $input['payment'],
-                'transactionid' => $trxId,
-                'value'         => $total,
-            ];
-            $TrxpaymentModel->save($paymethod);
-        } elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && !isset($input['duedate'])) {
-            // Split Payment Method
-            // First payment
-            $firstpayment = $PaymentModel->find();
-            $paymet = [
-                'paymentid'     => $input['firstpayment'],
-                'transactionid' => $trxId,
-                'value'         => $input['firstpay'],
-            ];
-            $TrxpaymentModel->save($paymet);
-
-            // Second Payment
-            $secpayment = $PaymentModel->find();
-            $pay = [
-                'paymentid'     => $input['secpayment'],
-                'transactionid' => $trxId,
-                'value'         => $input['secondpay'],
-            ];
-            $TrxpaymentModel->save($pay);
-        } elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] === "0" && isset($input['payment']) && isset($input['duedate'])) {
             // Debt Payment Method
             $paymentmethod = [
                 'paymentid'     => "0",
                 'transactionid' => $trxId,
                 'value'         => $total,
             ];
-            $TrxpaymentModel->save($paymentmethod);
-        } elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] !== "0" && isset($input['payment']) && isset($input['duedate'])) {
+            $TrxpaymentModel->insert($paymentmethod);
+        }
+        
+        // Debt With Down Payment
+        elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] !== "0" && isset($input['payment']) && isset($input['duedate'])) {
+            // Insert Debt
+            $debt = [
+                'memberid'      => $input['customerid'],
+                'transactionid' => $trxId,
+                'value'         => $input['debt'],
+                'deadline'      => $input['duedate'],
+            ];
+            $DebtModel->insert($debt);
+
             // Debt With Down Payment Method
-            $paymentmethod = [
+            $debtmethod = [
                 'paymentid'     => "0",
                 'transactionid' => $trxId,
                 'value'         => (int)$total - (int)$input['value'],
             ];
-            $TrxpaymentModel->save($paymentmethod);
+            $TrxpaymentModel->insert($debtmethod);
 
             $paymentmethod = [
                 'paymentid'     => $input['payment'],
                 'transactionid' => $trxId,
                 'value'         => $input['value'],
             ];
-            $TrxpaymentModel->save($paymentmethod);
-        } elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && isset($input['duedate'])) {
-            // Split Payment & Debt Method
+            $TrxpaymentModel->insert($paymentmethod);
+
+            // Insert Cash
+            $payment    = $PaymentModel->find($input['payment']);
+            $cashPlus   = $CashModel->find($payment['cashid']);
+            $cash = [
+                'id'    => $cashPlus['id'],
+                'qty'   => (int)$total + (int)$cashPlus['qty'],
+            ];
+            $CashModel->save($cash);
+        }
+        
+        // Debt With Splitbill Payment
+        elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && isset($input['duedate'])) {
+            // Insert Debt
+            $debt = [
+                'memberid'      => $input['customerid'],
+                'transactionid' => $trxId,
+                'value'         => $input['debt'],
+                'deadline'      => $input['duedate'],
+            ];
+            $DebtModel->insert($debt);
+            
+            // Insert Debt Payment Method
             $paymentmethod = [
                 'paymentid'     => "0",
                 'transactionid' => $trxId,
                 'value'         => ((int)$total - ((int)$input['firstpay'] + (int)$input['secondpay'])),
             ];
-            $TrxpaymentModel->save($paymentmethod);
+            $TrxpaymentModel->insert($paymentmethod);
 
-            // First payment
-            $firstpayment = $PaymentModel->find();
+            // Insert Debt First Payment
+            // $firstpayment = $PaymentModel->find();
             $paymet = [
                 'paymentid'     => $input['firstpayment'],
                 'transactionid' => $trxId,
                 'value'         => $input['firstpay'],
             ];
-            $TrxpaymentModel->save($paymet);
+            $TrxpaymentModel->insert($paymet);
 
-            // Second Payment
-            $secpayment = $PaymentModel->find();
+            // Save Cash Debt First Payment
+            $splitpayment1  = $PaymentModel->find($input['firstpayment']);
+            $cashPlus       = $CashModel->find($splitpayment1['cashid']);
+            $cashUp         = (int)$cashPlus['qty'] + (int)$input['firstpay'];
+            $cash           = [
+                'id'    => $cashPlus['id'],
+                'qty'   => $cashUp
+            ];
+            $CashModel->save($cash);
+
+            // Insert Debt Second Payment
+            // $secpayment = $PaymentModel->find();
             $pay = [
                 'paymentid'     => $input['secpayment'],
                 'transactionid' => $trxId,
                 'value'         => $input['secondpay'],
             ];
-            $TrxpaymentModel->save($pay);
+            $TrxpaymentModel->insert($pay);
+
+            // Save Cash Debt Second Payment
+            $splitpayment2  = $PaymentModel->find($input['secpayment']);
+            $cashPlus2      = $CashModel->find($splitpayment2['cashid']);
+            $cashUp2        = (int)$cashPlus2['qty'] + (int)$input['secondpay'];
+            $cash2          = [
+                'id'    => $cashPlus2['id'],
+                'qty'   => $cashUp2,
+            ];
+            $CashModel->save($cash2);
         }
 
         // Gconfig poin setup
