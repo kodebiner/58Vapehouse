@@ -539,14 +539,11 @@ class Report extends BaseController
             foreach ($payments as $payment) {
                 $transactiondata[$payment['id']]['name']    = $payment['name'];
                 $transactiondata[0]['name']                 = 'Debt';
-                $transactiondata[9999]['name']              = 'Data Terhapus';
                 
                 $trxtotal           = array();
                 $trxvalue           = array();
                 $debttotal          = array();
                 $debtvalue          = array();
-                $untrxtotal         = array();
-                $untrxvalue         = array();
                 if (!empty($transactions)) {
                     foreach ($transactions as $trx) {
                         $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', $payment['id'])->find();
@@ -556,9 +553,6 @@ class Report extends BaseController
                                 $trxtotal[] = $trxpayment['id'];
                                 $trxvalue[] = $trxpayment['value'];
                             }
-                        } else {
-                            $untrxtotal[] = '1';
-                            $untrxvalue[] = $trx['value'];
                         }
                         if (!empty($debtpayments)) {
                             foreach ($debtpayments as $debtpayment) {
@@ -577,8 +571,6 @@ class Report extends BaseController
                 }
                 $transactiondata[$payment['id']]['qty']         = count($trxtotal);
                 $transactiondata[$payment['id']]['value']       = array_sum($trxvalue);
-                $transactiondata[9999]['qty']                   = count($untrxvalue);
-                $transactiondata[9999]['value']                 = array_sum($trxvalue);
                 $transactiondata[0]['qty']                      = count($debttotal);
                 $transactiondata[0]['value']                    = array_sum($debtvalue);
             }
