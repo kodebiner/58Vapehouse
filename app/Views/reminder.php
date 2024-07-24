@@ -20,11 +20,11 @@
         <thead>
             <tr>
                 <?php if ($outletPick === null) { ?>
-                    <th><?= lang('Global.outlet') ?></th>
+                    <th class="uk-width-medium"><?= lang('Global.outlet') ?></th>
                 <?php } ?>
-                <th class=""><?=lang('Global.product')?></th>
-                <th class=""><?=lang('Global.variant')?></th>
-                <th class="uk-text-center"><?=lang('Global.reminder')?></th>
+                <th class="uk-width-medium"><?=lang('Global.product')?></th>
+                <th class="uk-width-medium"><?=lang('Global.variant')?></th>
+                <th class="uk-text-center uk-width-large"><?=lang('Global.reminder')?></th>
             </tr>
         </thead>
         <tbody>
@@ -35,7 +35,7 @@
                 $newdate    = date_format($date, 'Y-m-d H:i:s');
                 if ($stock['sale'] > $newdate || $stock['qty'] == "0") {
                     foreach ($products as $product) {
-                        foreach($variants as $variant) {
+                        foreach ($variants as $variant) {
                             $origin         = new DateTime($stock['sale']);
                             $target         = new DateTime('now');
                             $interval       = $origin->diff($target);
@@ -47,7 +47,7 @@
                                 $stockremind    = lang('Global.stockremind');
                                 $saleremind     = lang('Global.saleremind'); ?>
                                 <tr>
-                                    <td>
+                                    <td class="uk-width-medium">
                                         <?php foreach ($outlets as $out) {
                                             if ($out['id'] === $stock['outletid']) {
                                                 echo $out['name'];
