@@ -619,14 +619,9 @@ class Home extends BaseController
         $VariantModel   = new VariantModel;
 
         $variants       = $VariantModel->findAll();
-        $varid          = [];
 
-        foreach ($variants as $var) {
-            $varid[]['id']    = $var['id'];
-        }
-
-        $maxdata        = count($varid);
-        dd($varid);
+        $maxdata        = count($variants);
+        dd($maxdata);
 
         // foreach ($variants as $variant) {
         //     $variantdata = [
