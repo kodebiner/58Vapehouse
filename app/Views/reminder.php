@@ -19,9 +19,7 @@
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
-                <?php if ($outletPick === null) { ?>
-                    <th class="uk-width-medium"><?= lang('Global.outlet') ?></th>
-                <?php } ?>
+                <th class="uk-width-medium"><?= lang('Global.outlet') ?></th>
                 <th class="uk-width-medium"><?=lang('Global.product')?></th>
                 <th class="uk-width-medium"><?=lang('Global.variant')?></th>
                 <th class="uk-text-center uk-width-large"><?=lang('Global.reminder')?></th>
