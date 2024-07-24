@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class VariantModel extends Model
 {
     protected $allowedFields = [
-        'productid','name','hargadasar','hargamodal','hargajual','hargarekomendasi'
+        'productid','sku','name','hargadasar','hargamodal','hargajual','hargarekomendasi'
 
     ];
 

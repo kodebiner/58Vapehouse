@@ -1177,8 +1177,8 @@
                 </div>
             </div>
             <div class="uk-modal-body">
-                <div class="uk-child-width-1-2@m uk-flex-middle" uk-grid>
-                    <div>
+                <div class="uk-flex-middle" uk-grid>
+                    <div class="uk-width-1-3@m">
                         <?php if (!empty($product['thumbnail'])) { ?>
                             <img class="uk-width-1-1" src="/img/product/<?= $product['thumbnail'] ?>" />
                         <?php } else { ?>
@@ -1220,7 +1220,7 @@
                             </svg>
                         <?php } ?>
                     </div>
-                    <div>
+                    <div class="uk-width-2-3@m">
                         <?php
                         $toqty = 0;
                         foreach ($stocks as $stock) {
@@ -1247,7 +1247,8 @@
                         <table class="uk-table uk-table-justify uk-table-middle" style="background-color: #fff;">
                             <thead>
                                 <tr>
-                                    <th class="uk-width-medium"></th>
+                                    <th class="uk-width-medium" style="color: #000;">SKU</th>
+                                    <th class="uk-width-medium" style="color: #000;">Name</th>
                                     <th class="uk-text-center uk-width-small" style="color: #000;"><?= lang('Global.stock') ?></th>
                                     <th class="uk-width-large" style="color: #000;"><?= lang('Global.price') ?></th>
                                 </tr>
@@ -1256,6 +1257,7 @@
                                 <?php foreach ($variants as $variant) { ?>
                                     <?php if ($variant['productid'] === $product['id']) { ?>
                                         <tr>
+                                            <td class="uk-text-bold">00000000</td>
                                             <td class="uk-text-bold"><?= $variant['name'] ?></td>
                                             <td class="uk-text-center">
                                                 <?php

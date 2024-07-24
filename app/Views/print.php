@@ -205,7 +205,7 @@
                                             </div>
                                             <div class="uk-grid-collapse" uk-grid>
                                                 <?php
-                                                if (!empty($trxdet['discvar'])){
+                                                if ($trxdet['discvar'] != '0') {
                                                     echo "<div class='uk-width-1-2'>(".$trxdet['discvar'].")</div>";
                                                     echo "<div class='uk-width-1-2 uk-text-right'>-" .$trxdet['discvar']. "</div>";
                                                 }

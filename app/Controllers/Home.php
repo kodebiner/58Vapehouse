@@ -614,6 +614,29 @@ class Home extends BaseController
         }
     }
 
+    public function sku()
+    {
+        $VariantModel   = new VariantModel;
+
+        $variants       = $VariantModel->findAll();
+        $varid          = [];
+
+        foreach ($variants as $var) {
+            $varid[]['id']    = $var['id'];
+        }
+
+        $maxdata        = count($varid);
+        dd($varid);
+
+        // foreach ($variants as $variant) {
+        //     $variantdata = [
+        //         'id'        => $variant['id'],
+        //         'sku'       => str_pad(mt_rand(0,99999999), 8, '0', STR_PAD_LEFT)
+        //     ];
+        //     $VariantModel->save($variantdata);
+        // }
+    }
+
     public function phpinfo()
     {
         phpinfo();

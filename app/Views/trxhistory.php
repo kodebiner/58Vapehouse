@@ -216,20 +216,20 @@
                                                         <div><?= ((int)$variantval * (int)$trxdet['qty']) ?></div>
                                                     </div>
                                                 </div>
-                                                <?php if (!empty($trxdet['discvar'])) { ?>
+                                                <?php if ($trxdet['discvar'] != '0') { ?>
                                                     <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
                                                         <div>
-                                                            <div>(<?= $trxdet['discvar'] ?>)</div>
+                                                            <div>(<?= (Int)$trxdet['discvar'] / (Int)$trxdet['qty'] ?>)</div>
                                                         </div>
                                                         <div class="uk-text-right">
                                                             <div>- <?= $trxdet['discvar'] ?></div>
                                                         </div>
                                                     </div>
                                                 <?php } ?>
-                                                <?php if (!empty($trxdet['globaldisc'])) { ?>
+                                                <?php if ($trxdet['globaldisc'] != '0') { ?>
                                                     <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
                                                         <div>
-                                                            <div>(<?= $trxdet['globaldisc'] ?>)</div>
+                                                            <div>(<?= (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'] ?>)</div>
                                                         </div>
                                                         <div class="uk-text-right">
                                                             <div>- <?= $trxdet['globaldisc'] ?></div>
@@ -269,10 +269,10 @@
                                                         <div><?= (int)$variantval * (int)$trxdet['qty'] ?></div>
                                                     </div>
                                                 </div>
-                                                <?php if (!empty($trxdet['globaldisc'])) { ?>
+                                                <?php if ($trxdet['globaldisc'] != '0') { ?>
                                                     <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
                                                         <div>
-                                                            <div>(<?= $trxdet['globaldisc'] ?>)</div>
+                                                            <div>(<?= (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'] ?>)</div>
                                                         </div>
                                                         <div class="uk-text-right">
                                                             <div>- <?= $trxdet['globaldisc'] ?></div>
@@ -324,7 +324,7 @@
                                             <div><?= lang('Global.memberDiscount') ?></div>
                                         </div>
                                         <div class="uk-width-1-2 uk-text-right">
-                                            <div>- <?= $gconfig['memberdisc'] ?></div>
+                                            <div>- <?= $transaction['memberdisc'] ?></div>
                                         </div>
                                     <?php } ?>
                                 </div>
