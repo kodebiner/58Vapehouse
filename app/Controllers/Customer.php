@@ -30,7 +30,7 @@ class Customer extends BaseController
             $customers  = $MemberModel->orderBy('id', 'DESC')->paginate(20, 'customer');
         }
 
-        if ($this->data['outletPick'] != null) {
+        // if ($this->data['outletPick'] != null) {
             // Date Range
             $inputdate = $this->request->getGet('daterange');
             if (!empty($inputdate)) {
@@ -44,7 +44,11 @@ class Customer extends BaseController
 
             // Transactions
             // if ($startdate === $enddate) {
+            if ($this->data['outletPick'] != null) {
                 $transactions   = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            } else {
+                $transactions   = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            }
             // } else {
             //     $transactions   = $TransactionModel->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->where('outletid', $this->data['outletPick'])->find();
             // }
@@ -74,9 +78,9 @@ class Customer extends BaseController
                     'trx'   => count($totaltrx),
                 ];
             }
-        } else {
-            return redirect()->to('');
-        }
+        // } else {
+        //     return redirect()->to('');
+        // }
 
         // Parsing Data to View
         $data                   = $this->data;

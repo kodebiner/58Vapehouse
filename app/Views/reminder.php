@@ -33,7 +33,7 @@
                 $date       = date_create($today);
                 date_add($date, date_interval_create_from_date_string('30 days'));
                 $newdate    = date_format($date, 'Y-m-d H:i:s');
-                if ($stock['sale'] > $newdate || $stock['qty'] <= "5") {
+                if ($stock['sale'] > $newdate || $stock['qty'] == "0") {
                     foreach ($products as $product) {
                         foreach($variants as $variant) {
                             $origin         = new DateTime($stock['sale']);
@@ -47,15 +47,13 @@
                                 $stockremind    = lang('Global.stockremind');
                                 $saleremind     = lang('Global.saleremind'); ?>
                                 <tr>
-                                    <?php if ($outletPick === null) { ?>
-                                        <td>
-                                            <?php foreach ($outlets as $out) {
-                                                if ($out['id'] === $stock['outletid']) {
-                                                    echo $out['name'];
-                                                }
-                                            } ?>
-                                        </td>
-                                    <?php } ?>
+                                    <td>
+                                        <?php foreach ($outlets as $out) {
+                                            if ($out['id'] === $stock['outletid']) {
+                                                echo $out['name'];
+                                            }
+                                        } ?>
+                                    </td>
                                     <td class="uk-width-medium"><?= $productname ?></td>
                                     <td class="uk-width-medium"><?= $varname ?></td>
                                     <td class="uk-text-center uk-width-large">
