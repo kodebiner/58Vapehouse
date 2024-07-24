@@ -1257,7 +1257,7 @@
                                 <?php foreach ($variants as $variant) { ?>
                                     <?php if ($variant['productid'] === $product['id']) { ?>
                                         <tr>
-                                            <td class="uk-text-bold">00000000</td>
+                                            <td class="uk-text-bold"><?= $variant['sku'] ?></td>
                                             <td class="uk-text-bold"><?= $variant['name'] ?></td>
                                             <td class="uk-text-center">
                                                 <?php

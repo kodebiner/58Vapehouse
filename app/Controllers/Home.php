@@ -620,16 +620,15 @@ class Home extends BaseController
 
         $variants       = $VariantModel->findAll();
 
-        $maxdata        = count($variants);
-        dd($maxdata);
+        foreach ($variants as $variant) {
+            $variantdata = [
+                'id'        => $variant['id'],
+                'sku'       => strtoupper(substr(md5(hexdec(uniqid(rand(), true))), 0, 8)),
+            ];
+            $VariantModel->save($variantdata);
+        }
 
-        // foreach ($variants as $variant) {
-        //     $variantdata = [
-        //         'id'        => $variant['id'],
-        //         'sku'       => str_pad(mt_rand(0,99999999), 8, '0', STR_PAD_LEFT)
-        //     ];
-        //     $VariantModel->save($variantdata);
-        // }
+        // return redirect()->to('product');
     }
 
     public function phpinfo()
