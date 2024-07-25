@@ -214,11 +214,12 @@ class Product extends BaseController
     public function create()
     {
         // calling Model
-        $ProductModel = new ProductModel();
-        $StockModel = new StockModel();
-        $OldStockModel = new OldStockModel();
-        $VariantModel = new VariantModel();
-        $OutletModel = new OutletModel();
+        $ProductModel   = new ProductModel();
+        $CategoryModel  = new CategoryModel();
+        $StockModel     = new StockModel();
+        $OldStockModel  = new OldStockModel();
+        $VariantModel   = new VariantModel();
+        $OutletModel    = new OutletModel();
 
         // search all data
         $input = $this->request->getPost();
@@ -253,16 +254,21 @@ class Product extends BaseController
         $ProductModel->insert($data);
 
         // Get inserted Product ID
-        $productId = $ProductModel->getInsertID();
+        $productId  = $ProductModel->getInsertID();
+        $category   = $CategoryModel->find($input['catid']);
+        $lastvar    = $VariantModel->like('sku', $category['catcode'])->selectMax('sku')->first();
+        $lastcode   = preg_replace("/[^0-9]/", '', $lastvar['sku']);
+        $lastcode++;
 
         // insert variant
         foreach ($input['varBase'] as $baseKey => $baseValue) {
-            $variant['productid'] = $productId;
-            $variant['hargadasar'] = $baseValue;
+            $variant['productid']   = $productId;
+            $variant['hargadasar']  = $baseValue;
 
             foreach ($input['varName'] as $nameKey => $nameValue) {
                 if ($nameKey === $baseKey) {
-                    $variant['name'] = $nameValue;
+                    $variant['name']    = $nameValue;
+                    $variant['sku']     = strtoupper($category['catcode'].str_pad($lastcode++, 6, '0', STR_PAD_LEFT));
                 }
             }
 
@@ -350,17 +356,22 @@ class Product extends BaseController
     public function createvar($id)
     {
         // calling Model
-        $ProductModel    = new ProductModel();
-        $VariantModel    = new VariantModel();
-        $OutletModel     = new OutletModel();
-        $StockModel      = new StockModel();
-        $OldStockModel   = new OldStockModel();
+        $ProductModel       = new ProductModel();
+        $CategoryModel      = new CategoryModel();
+        $VariantModel       = new VariantModel();
+        $OutletModel        = new OutletModel();
+        $StockModel         = new StockModel();
+        $OldStockModel      = new OldStockModel();
 
         // search all data
-        $products    = $ProductModel->where('id', $id)->first();
-        $outlets     = $OutletModel->findAll();
-        $input       = $this->request->getPost();
-
+        $products           = $ProductModel->find($id);
+        $category           = $CategoryModel->find($products['catid']);
+        $lastvar            = $VariantModel->like('sku', $category['catcode'])->selectMax('sku')->first();
+        $lastcode           = preg_replace("/[^0-9]/", '', $lastvar['sku']);
+        $lastcode++;
+        $outlets            = $OutletModel->findAll();
+        $input              = $this->request->getPost();
+        
         //populating data
         $data = $this->data;
         $data['products'] = $products;
@@ -382,6 +393,7 @@ class Product extends BaseController
         // get data
         $data = [
             'productid'             => $id,
+            'sku'                   => strtoupper($category['catcode'].str_pad($lastcode++, 6, '0', STR_PAD_LEFT)),
             'name'                  => $input['name'],
             'hargadasar'            => $input['hargadasar'],
             'hargamodal'            => $input['hargamodal'],
@@ -419,15 +431,16 @@ class Product extends BaseController
     {
         // calling Model
         $ProductModel   = new ProductModel();
+        $CategoryModel  = new CategoryModel();
         $StockModel     = new StockModel();
         $VariantModel   = new VariantModel();
         $OutletModel    = new OutletModel();
 
         // inisialize
-        $input = $this->request->getPost();
+        $input          = $this->request->getPost();
 
         // search id
-        $data['products'] = $ProductModel->where('id', $id)->first();
+        $products       = $ProductModel->find($id);
 
         // rules validation
         $rule = [
@@ -444,24 +457,40 @@ class Product extends BaseController
 
         // get data
         if (!empty($input['status'])) {
-            $data = [
-                'id'            => $id,
-                'name'          => $input['name'],
-                'description'   => $input['description'],
-                'brandid'       => $input['brandid' . $id],
-                'catid'         => $input['catid' . $id],
-                'status'        => $input['status'],
-            ];
+            $status = $input['status'];
         } else {
-            $data = [
-                'id'            => $id,
-                'name'          => $input['name'],
-                'description'   => $input['description'],
-                'brandid'       => $input['brandid' . $id],
-                'catid'         => $input['catid' . $id],
-                'status'        => 0,
-            ];
+            $status = 0;
         }
+
+        if ($input['catid' . $id] != $products['catid']) {
+            $catid      = $input['catid' . $id];
+
+            $category   = $CategoryModel->find($catid);
+            $variants   = $VariantModel->where('productid', $id)->find();
+            $lastvar    = $VariantModel->like('sku', $category['catcode'])->selectMax('sku')->first();
+            $lastcode   = preg_replace("/[^0-9]/", '', $lastvar['sku']);
+            $lastcode++;
+
+            foreach ($variants as $var) {
+                $vardata  = [
+                    'id'    => $var['id'],
+                    'sku'   => strtoupper($category['catcode'].str_pad($lastcode++, 6, '0', STR_PAD_LEFT)),
+                ];
+                
+                $VariantModel->save($vardata);
+            }
+        } else {
+            $catid      = $products['catid'];
+        }
+
+        $data = [
+            'id'            => $id,
+            'name'          => $input['name'],
+            'description'   => $input['description'],
+            'brandid'       => $input['brandid' . $id],
+            'catid'         => $catid,
+            'status'        => $status,
+        ];
 
         // insert data product
         $ProductModel->save($data);
@@ -604,7 +633,8 @@ class Product extends BaseController
 
         // create categoroy
         $data = [
-            'name' => $input['name'],
+            'name'      => $input['name'],
+            'catcode'   => strtoupper($input['catcode']),
         ];
         $CategoryModel->insert($data);
         return redirect()->back()->with('message', lang('Global.saved'));
@@ -613,16 +643,38 @@ class Product extends BaseController
     public function editcat($id)
     {
         // parsing data
-        $CategoryModel = new CategoryModel();
-        $data['category'] = $CategoryModel->where('id', $id)->first();
+        $CategoryModel      = new CategoryModel();
+        $VariantModel       = new VariantModel();
 
         // inizialise
         $input = $this->request->getPost();
 
+        // Populating Data
+        $category           = $CategoryModel->find($id);
+        $variants           = $VariantModel->like('sku', $category['catcode'])->find();
+
+        if ($input['catcode'] == $category['catcode']) {
+            $catcode    = $category['catcode'];
+        } else {
+            $catcode    = $input['catcode'];
+
+            foreach ($variants as $var) {
+                $number = substr($var['sku'], -6);
+
+                $vardata[]  = [
+                    'id'    => $var['id'],
+                    'sku'   => strtoupper($catcode.$number),
+                ];
+                
+                $VariantModel->save($vardata);
+            }
+        }
+
         // get data
         $data = [
-            'id' => $id,
-            'name' => $input['name'],
+            'id'        => $id,
+            'name'      => $input['name'],
+            'catcode'   => strtoupper($catcode),
         ];
 
         // update data

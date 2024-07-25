@@ -616,19 +616,59 @@ class Home extends BaseController
 
     public function sku()
     {
+        $ProductModel   = new ProductModel;
         $VariantModel   = new VariantModel;
+        $CategoryModel  = new CategoryModel;
+        // $variants       = $VariantModel->findAll();
 
-        $variants       = $VariantModel->findAll();
+        // $arr    = [];
 
-        foreach ($variants as $variant) {
-            $variantdata = [
-                'id'        => $variant['id'],
-                'sku'       => strtoupper(substr(md5(hexdec(uniqid(rand(), true))), 0, 8)),
-            ];
-            $VariantModel->save($variantdata);
+        // foreach ($variants as $variant) {
+        //     $arr[]  = $variant['sku'];
+        // }
+        
+        // $findDuplicate = array_diff_assoc( 
+        //     $arr, 
+        //     array_unique($arr) 
+        // ); 
+        // dd($findDuplicate);
+
+        $category       = $CategoryModel->findAll();
+
+        foreach ($category as $cate) {
+            $i              = 1;
+            $products   = $ProductModel->where('catid', $cate['id'])->find();
+
+            if (!empty($products)) {
+                foreach ($products as $prod) {
+                    $variants   = $VariantModel->where('productid', $prod['id'])->find();
+
+                    if (!empty($variants)) {
+                        foreach ($variants as $variant) {
+                            $variantdata = [
+                                'id'        => $variant['id'],
+                                // 'sku'       => strtoupper($cate['catcode'].substr(md5(hexdec(uniqid(rand(), true))), 0, 6)),
+                                'sku'       => strtoupper($cate['catcode'].str_pad($i++, 6, '0', STR_PAD_LEFT)),
+                            ];
+                            $VariantModel->save($variantdata);
+                        }
+                    }
+                }
+            }
+            // dd($products);
         }
 
-        // return redirect()->to('product');
+        // $variants       = $VariantModel->findAll();
+
+        // foreach ($variants as $variant) {
+        //     $variantdata = [
+        //         'id'        => $variant['id'],
+        //         'sku'       => strtoupper(substr(md5(hexdec(uniqid(rand(), true))), 0, 8)),
+        //     ];
+        //     $VariantModel->save($variantdata);
+        // }
+
+        return redirect()->to('product');
     }
 
     public function phpinfo()

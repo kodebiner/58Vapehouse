@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class CategoryModel extends Model
 {
     protected $allowedFields = [
-        'name',
+        'name', 'catcode',
 
     ];
 

@@ -95,7 +95,7 @@
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
         <thead>
             <tr>
-                <th class="uk-text-center uk-width-small">No</th>
+                <th class="uk-text-center uk-width-small">SKU</th>
                 <th class="uk-text-center uk-width-large"><?=lang('Global.name')?></th>
                 <th class="uk-text-center uk-width-medium"><?=lang('Global.basePrice')?></th>
                 <th class="uk-text-center uk-width-medium"><?=lang('Global.capitalPrice')?></th>
@@ -109,7 +109,7 @@
             <?php $i = 1 ; ?>
             <?php foreach ($variants as $variant) { ?>
                 <tr>
-                    <td class="uk-text-center"><?= $i++; ?></td>
+                    <td class="uk-text-center"><?= $variant['sku'] ?></td>
                     <td class="uk-text-center"><?= $variant['name'] ?></td>
                     <td class="uk-text-center">Rp <?= number_format((Int)$variant['hargadasar'],2,',','.'); ?></td>
                     <td class="uk-text-center">Rp <?= number_format((Int)$variant['hargamodal'],2,',','.'); ?></td>

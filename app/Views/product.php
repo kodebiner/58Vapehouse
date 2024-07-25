@@ -178,7 +178,7 @@
                             $(function() {
                                 var category = [
                                     <?php foreach ($category as $cat) {
-                                        echo '{label:"' . $cat['name'] . '",idx:' . (int)$cat['id'] . '},';
+                                        echo '{label:"' . $cat['name'] . ' ('. $cat['catcode'] .')' . '",idx:' . (int)$cat['id'] . '},';
                                     } ?>
                                 ];
                                 $("#category").autocomplete({
@@ -492,9 +492,10 @@
                 <table class="uk-table uk-table-justify uk-table-middle uk-table-divider">
                     <thead class="uk-h5"><?= lang('Global.categoryList') ?>
                         <tr>
-                            <th class="uk-text-center">No</th>
-                            <th class="uk-text-center"><?= lang('Global.name') ?></th>
-                            <th class="uk-text-center"><?= lang('Global.action') ?></th>
+                            <th class="uk-text-center" style="color: #000;">No</th>
+                            <th class="uk-text-center" style="color: #000;"><?= lang('Global.name') ?></th>
+                            <th class="uk-text-center" style="color: #000;">Code</th>
+                            <th class="uk-text-center" style="color: #000;"><?= lang('Global.action') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -503,6 +504,7 @@
                             <tr>
                                 <td class="uk-text-center"><?= $i++; ?></td>
                                 <td class="uk-text-center"><?= $cate['name']; ?></td>
+                                <td class="uk-text-center"><?= $cate['catcode']; ?></td>
                                 <td class="uk-text-center">
                                     <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editcat<?= $cate['id'] ?>"></a>
                                     <a class="uk-icon-button-delete" uk-icon="trash" href="product/deletecat/<?= $cate['id'] ?>"></a>
@@ -532,6 +534,13 @@
                                             </div>
                                         </div>
 
+                                        <div class="uk-margin-bottom">
+                                            <label class="uk-form-label" for="catcode">Code</label>
+                                            <div class="uk-form-controls">
+                                                <input type="text" class="uk-input" id="catcode" name="catcode" value="<?= $cate['catcode']; ?>" autofocus />
+                                            </div>
+                                        </div>
+
                                         <hr>
 
                                         <div class="uk-margin">
@@ -552,6 +561,13 @@
                         <label class="uk-form-label" for="name"><?= lang('Global.name') ?></label>
                         <div class="uk-form-controls">
                             <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?= lang('Global.name') ?>" autofocus required />
+                        </div>
+                    </div>
+
+                    <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="catcode">Code</label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input <?php if (session('errors.catcode')) : ?>tm-form-invalid<?php endif ?>" id="catcode" name="catcode" placeholder="Code" autofocus required />
                         </div>
                     </div>
 
@@ -605,7 +621,7 @@
                     </tbody>
                 </table>
 
-                <!-- Modal Edit Category -->
+                <!-- Modal Edit Brand -->
                 <?php foreach ($brand as $bran) : ?>
                     <div uk-modal class="uk-flex-top" id="editbrand<?= $bran['id'] ?>">
                         <div class="uk-modal-dialog uk-margin-auto-vertical">
@@ -636,7 +652,7 @@
                         </div>
                     </div>
                 <?php endforeach; ?>
-                <!-- End Of Modal Edit Category -->
+                <!-- End Of Modal Edit Brand -->
 
                 <form class="uk-form-stacked" role="form" action="product/createbrand" method="post">
                     <?= csrf_field() ?>
@@ -658,7 +674,7 @@
         </div>
     </div>
 </div>
-<!-- End Of Modal Add Category -->
+<!-- End Of Modal Add Brand -->
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto">
@@ -904,7 +920,7 @@
                                     <?php if ($product['catid'] != "0") {
                                         foreach ($category as $cat) { 
                                             if (($cat['id'] === $product['catid'])) { ?>
-                                                <input class="uk-input" name="category<?= $product['id'] ?>" id="category<?= $product['id'] ?>" value="<?= $cat['name']; ?>" required />
+                                                <input class="uk-input" name="category<?= $product['id'] ?>" id="category<?= $product['id'] ?>" value="<?= $cat['name'] . ' ('. $cat['catcode'] .')'; ?>" required />
                                                 <input id="catid<?= $product['id'] ?>" name="catid<?= $product['id'] ?>" value="<?= $cat['id']; ?>" hidden />
                                             <?php }
                                         }
@@ -922,7 +938,7 @@
                                 $(function() {
                                     var category = [
                                         <?php foreach ($category as $cat) {
-                                            echo '{label:"' . $cat['name'] . '",idx:' . (int)$cat['id'] . '},';
+                                            echo '{label:"' . $cat['name'] . ' ('. $cat['catcode'] .')' . '",idx:' . (int)$cat['id'] . '},';
                                         } ?>
                                     ];
                                     $("#category<?= $product['id'] ?>").autocomplete({
