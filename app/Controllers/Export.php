@@ -2534,4 +2534,44 @@ class export extends BaseController
         echo '</tbody>';
         echo '</table>';
     }
+
+    public function customerlist()
+    {
+        // Calling Models
+        $MemberModel        = new MemberModel;
+
+        // Populating Data
+        $members            = $MemberModel->findAll();
+        $outletname         = "58vapehouse";
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=Customer List.xls");
+
+        // export
+        echo '<table>';
+            echo '<thead>';
+                echo '<tr>';
+                    echo '<th colspan="2" style="align-text:center;">Daftar Member</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="2" style="align-text:center;">' . $outletname . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="2" style="align-text:center;"></th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th>Nama</th>';
+                    echo '<th>Nomor Telephone</th>';
+                echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+                foreach ($members as $cust) {
+                    echo '<tr>';
+                        echo '<td>' . $cust['name'] . '</td>';
+                        echo '<td>' . $cust['phone'] . '</td>';
+                    echo '</tr>';
+                }
+            echo '</tbody>';
+        echo '</table>';
+    }
 }

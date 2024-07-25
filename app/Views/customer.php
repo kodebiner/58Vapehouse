@@ -11,38 +11,48 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <div uk-grid class="uk-child-width-1-1 uk-child-width-1-3@m uk-flex-middle">
+    <div uk-grid class="uk-child-width-1-1 uk-child-width-1-2@m uk-flex-middle">
         <div class="">
             <h3 class="tm-h3"><?= lang('Global.customerList') ?></h3>
         </div>
 
-        <!-- Date Range -->
-        <div class="">
-            <form id="short" action="customer" method="get">
-                <div class="uk-inline">
-                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?= date('m/d/Y', $startdate) ?> - <?= date('m/d/Y', $enddate) ?>" />
+        <div class="uk-text-right@m">
+            <div class="uk-child-width-1-3@m uk-child-width-1-1 uk-grid-small" uk-grid>
+                <!-- Date Range -->
+                <div class="">
+                    <form id="short" action="customer" method="get">
+                        <div class="uk-inline">
+                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                            <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?= date('m/d/Y', $startdate) ?> - <?= date('m/d/Y', $enddate) ?>" />
+                        </div>
+                    </form>
+                    <script>
+                        $(function() {
+                            $('input[name="daterange"]').daterangepicker({
+                                maxDate: new Date(),
+                                opens: 'right'
+                            }, function(start, end, label) {
+                                document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                                document.getElementById('short').submit();
+                            });
+                        });
+                    </script>
                 </div>
-            </form>
-            <script>
-                $(function() {
-                    $('input[name="daterange"]').daterangepicker({
-                        maxDate: new Date(),
-                        opens: 'right'
-                    }, function(start, end, label) {
-                        document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
-                        document.getElementById('short').submit();
-                    });
-                });
-            </script>
-        </div>
-        <!-- Date Range -->
+                <!-- Date Range -->
 
-        <!-- Button Trigger Modal Add -->
-        <div class="uk-text-right">
-            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?= lang('Global.addCustomer') ?></button>
+                <!-- Button Export -->
+                <div>
+                    <a type="button" class="uk-button uk-button-primary uk-preserve-color" target="_blank" href="export/customerlist"><?=lang('Global.export')?></a>
+                </div>
+                <!-- End Of Button Export -->
+
+                <!-- Button Trigger Modal Add -->
+                <div>
+                    <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?= lang('Global.addCustomer') ?></button>
+                </div>
+                <!-- End Of Button Trigger Modal Add -->
+            </div>
         </div>
-        <!-- End Of Button Trigger Modal Add -->
     </div>
 </div>
 <!-- End of Page Heading -->
