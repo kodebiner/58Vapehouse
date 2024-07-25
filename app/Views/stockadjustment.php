@@ -53,7 +53,7 @@
 <?= view('Views/Auth/_message_block') ?>
 
 <!-- Modal Add -->
-<div uk-modal class="uk-flex-top" id="tambahdata">
+<div uk-modal class="uk-flex-top uk-modal-container" id="tambahdata">
     <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
             <div class="uk-modal-header">
@@ -107,10 +107,13 @@
                     <div id="tablevariant"></div>
 
                     <div class="uk-margin-small uk-flex uk-flex-middle " uk-grid>
-                        <div class="uk-width-1-2">
+                        <div class="uk-width-1-3">
+                            <div class="">SKU</div>
+                        </div>
+                        <div class="uk-width-1-3">
                             <div class=""><?= lang('Global.variant') ?></div>
                         </div>
-                        <div class="uk-width-1-2">
+                        <div class="uk-width-1-3">
                             <div class=""><?= lang('Global.quantity') ?></div>
                         </div>
                     </div>
@@ -175,31 +178,40 @@
 
                         for (k in variantarray) {
                             //alert(variantarray[k]['name']);
+                            var varskucon = document.createElement('div');
+                            varskucon.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
+                                                            
+                            var varsku = document.createElement('div');
+                            varsku.setAttribute('class','');
+                            varsku.innerHTML = variantarray[k]['sku'];
+
                             var varcontainer = document.createElement('div');
-                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-2-3 uk-margin-small');
+                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
                                                             
                             var varname = document.createElement('div');
                             varname.setAttribute('class','');
                             varname.innerHTML = variantarray[k]['name'];
                             
                             var stockcontainer = document.createElement('div');
-                            stockcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6 uk-margin-small');
+                            stockcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
                                                             
                             var stock = document.createElement('div');
                             stock.setAttribute('class','');
                             stock.innerHTML = variantarray[k]['qty'];
 
                             var cartcontainer = document.createElement('div');
-                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-6 uk-margin-small');
+                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
 
                             var cart = document.createElement('a');
                             cart.setAttribute('class', 'uk-icon-button');
                             cart.setAttribute('uk-icon', 'plus');
                             cart.setAttribute('onclick', 'createVar('+variantarray[k]['id']+')');
 
+                            varskucon.appendChild(varsku);
                             varcontainer.appendChild(varname);
                             stockcontainer.appendChild(stock);
                             cartcontainer.appendChild(cart);
+                            productgrid.appendChild(varskucon);
                             productgrid.appendChild(varcontainer);
                             productgrid.appendChild(stockcontainer);
                             productgrid.appendChild(cartcontainer);
@@ -227,14 +239,22 @@
                     // } else {
                         let minval = count;
                         var prods = document.getElementById('tableproduct');
-                                                    
+                        
                         var pgrid = document.createElement('div');
                         pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
                         pgrid.setAttribute('class', 'uk-margin-small');
                         pgrid.setAttribute('uk-grid', '');
 
+                        var skucon = document.createElement('div');
+                        skucon.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
+                                                        
+                        var vsku = document.createElement('div');
+                        vsku.setAttribute('id','var'+variantarray[k]['id']);
+                        vsku.setAttribute('class','');
+                        vsku.innerHTML = variantarray[k]['sku'];
+
                         var vcontainer = document.createElement('div');
-                        vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2');
+                        vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
                                                         
                         var vname = document.createElement('div');
                         vname.setAttribute('id','var'+variantarray[k]['id']);
@@ -242,7 +262,7 @@
                         vname.innerHTML = variantarray[k]['name'];
 
                         var tcontainer = document.createElement('div');
-                        tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2');
+                        tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-3');
 
                         var tot = document.createElement('input');
                         tot.setAttribute('type', 'number');
@@ -257,9 +277,11 @@
                         pieces.setAttribute('class', 'uk-margin-small-left');
                         pieces.innerHTML = 'Pcs';
 
+                        skucon.appendChild(vsku);
                         vcontainer.appendChild(vname);
                         tcontainer.appendChild(tot);
                         tcontainer.appendChild(pieces);
+                        pgrid.appendChild(skucon);
                         pgrid.appendChild(vcontainer);
                         pgrid.appendChild(tcontainer);
                         prods.appendChild(pgrid);
@@ -284,6 +306,7 @@
             <tr>
                 <th class="uk-text-center">No</th>
                 <th class=""><?=lang('Global.date')?></th>
+                <th class="">SKU</th>
                 <th class=""><?=lang('Global.product')?></th>
                 <th class=""><?=lang('Global.outlet')?></th>
                 <th class="uk-text-center"><?=lang('Global.quantity')?></th>
@@ -292,26 +315,25 @@
         </thead>
         <tbody>
             <?php $i = 1 ; ?>
-            <?php foreach ($stockadj as $stokadj) : ?>
+            <?php foreach ($stockadj as $stokadj) : 
+                foreach ($variants as $variant) {
+                    if ($variant['id'] === $stokadj['variantid']) {
+                        $varName    = $variant['name'];
+                        $varsku     = $variant['sku'];
+                        foreach ($products as $product) {
+                            if ($variant['productid'] === $product['id']) {
+                                $ProdName = $product['name'];
+
+                                $comName    = $ProdName.' - '.$varName;
+                            }
+                        }
+                    }
+                } ?>
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td class=""><?= date('l, d M Y, H:i:s', strtotime($stokadj['date'])); ?></td>
-                    <td class="">
-                        <?php 
-                            foreach ($variants as $variant) {
-                                if ($variant['id'] === $stokadj['variantid']) {
-                                    $varName = $variant['name'];
-                                    foreach ($products as $product) {
-                                        if ($variant['productid'] === $product['id']) {
-                                            $ProdName = $product['name'];
-
-                                            echo $ProdName.' - '.$varName;
-                                        }
-                                    }
-                                }
-                            }
-                        ?>
-                    </td>
+                    <td class=""><?= $varsku ?></td>
+                    <td class=""><?= $comName ?></td>
                     <td class="">
                         <?php foreach ($outlets as $outlet) {
                         if ($outlet['id'] === $stokadj['outletid']) {

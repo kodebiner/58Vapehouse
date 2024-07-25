@@ -297,6 +297,7 @@ class Stock extends BaseController
     
                             $varid      = $purchasevariants['id'];
                             $variants   = $purchasevariants['name'];
+                            $sku        = $purchasevariants['sku'];
     
                             if (!empty($purchaseproducts)) {
                                 $product = $purchaseproducts['name'];
@@ -325,6 +326,7 @@ class Stock extends BaseController
                         }
     
                         $purchasedata[$purchase['id']]['detail'][$purdet['id']]['name']         = $product.' - '.$variants;
+                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['sku']          = $sku;
                         $purchasedata[$purchase['id']]['detail'][$purdet['id']]['productname']  = $product;
                         $purchasedata[$purchase['id']]['detail'][$purdet['id']]['variantname']  = $variants;
                         $purchasedata[$purchase['id']]['detail'][$purdet['id']]['varid']        = $varid;
@@ -393,6 +395,7 @@ class Stock extends BaseController
                         'id'        => $variant['id'],
                         'product'   => $product['name'],
                         'variant'   => $variant['name'],
+                        'sku'       => $variant['sku'],
                         'name'      => $product['name'].' - '.$variant['name'],
                         'qty'       => $stock['qty'],
                         'price'     => $variant['hargadasar'],

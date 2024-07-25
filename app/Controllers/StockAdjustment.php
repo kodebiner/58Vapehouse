@@ -129,6 +129,7 @@ class StockAdjustment extends BaseController
                 if ($stock['variantid'] === $variant['id']) {
                     $return[] = [
                         'id'    => $variant['id'],
+                        'sku'   => $variant['sku'],
                         'name'  => $product['name'] . ' - ' . $variant['name'],
                         'qty'   => $stock['qty'],
 

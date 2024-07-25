@@ -43,7 +43,7 @@
 <?= view('Views/Auth/_message_block') ?>
 
 <!-- Modal Add -->
-<div uk-modal class="uk-flex-top" id="tambahdata">
+<div uk-modal class="uk-flex-top uk-modal-container" id="tambahdata">
     <div class="uk-modal-dialog uk-margin-auto-vertical">
         <div class="uk-modal-content">
             <div class="uk-modal-header">
@@ -78,16 +78,19 @@
                     <div id="tablevariant"></div>
 
                     <div class="uk-margin-small" uk-grid>
-                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                            <div class="">SKU</div>
+                        </div>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                             <div class=""><?= lang('Global.variant') ?></div>
                         </div>
-                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                             <div class=""><?= lang('Global.quantity') ?></div>
                         </div>
-                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                             <div class=""><?= lang('Global.pcsPrice') ?></div>
                         </div>
-                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                             <div class=""><?= lang('Global.total') ?></div>
                         </div>
                     </div>
@@ -158,23 +161,32 @@
 
                         for (k in variantarray) {
                             //alert(variantarray[k]['name']);
+                            var varskucontainer = document.createElement('div');
+                            varskucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3 uk-margin-small');
+                                                            
+                            var varsku = document.createElement('div');
+                            varsku.setAttribute('class','');
+                            varsku.innerHTML = variantarray[k]['sku'];
+                            
                             var varcontainer = document.createElement('div');
-                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2 uk-margin-small');
+                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3 uk-margin-small');
                                                             
                             var varname = document.createElement('div');
                             varname.setAttribute('class','');
                             varname.innerHTML = variantarray[k]['name'];
 
                             var cartcontainer = document.createElement('div');
-                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2 uk-margin-small');
+                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-3 uk-margin-small');
 
                             var cart = document.createElement('a');
                             cart.setAttribute('class', 'uk-icon-button');
                             cart.setAttribute('uk-icon', 'cart');
                             cart.setAttribute('onclick', 'createVar('+variantarray[k]['id']+')');
 
+                            varskucontainer.appendChild(varsku);
                             varcontainer.appendChild(varname);
                             cartcontainer.appendChild(cart);
+                            productgrid.appendChild(varskucontainer);
                             productgrid.appendChild(varcontainer);
                             productgrid.appendChild(cartcontainer);
                         };
@@ -204,8 +216,16 @@
                     pgrid.setAttribute('class', 'uk-margin-small');
                     pgrid.setAttribute('uk-grid', '');
 
+                    var skucontainer = document.createElement('div');
+                    skucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5');
+                                                    
+                    var sku = document.createElement('div');
+                    sku.setAttribute('id','var'+variantarray[k]['id']);
+                    sku.setAttribute('class','');
+                    sku.innerHTML = variantarray[k]['sku'];
+
                     var vcontainer = document.createElement('div');
-                    vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                    vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5');
                                                     
                     var vname = document.createElement('div');
                     vname.setAttribute('id','var'+variantarray[k]['id']);
@@ -213,7 +233,7 @@
                     vname.innerHTML = variantarray[k]['name'];
 
                     var tcontainer = document.createElement('div');
-                    tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                    tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
 
                     var tot = document.createElement('input');
                     tot.setAttribute('type', 'number');
@@ -228,7 +248,7 @@
                     pieces.innerHTML = 'Pcs';
 
                     var pricecontainer = document.createElement('div');
-                    pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                    pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
 
                     var price = document.createElement('input');
                     price.setAttribute('type', 'number');
@@ -239,7 +259,7 @@
                     price.setAttribute('required', '');
 
                     var subtotcontainer = document.createElement('div');
-                    subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+                    subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-5');
 
                     var subtotal = document.createElement('div');
                     subtotal.setAttribute('id', "subtotal"+variantarray[k]['id']+"");
@@ -257,11 +277,13 @@
                         subtotal.innerHTML = subprice;
                     }
 
+                    skucontainer.appendChild(sku);
                     vcontainer.appendChild(vname);
                     tcontainer.appendChild(tot);
                     tcontainer.appendChild(pieces);
                     pricecontainer.appendChild(price);
                     subtotcontainer.appendChild(subtotal);
+                    pgrid.appendChild(skucontainer);
                     pgrid.appendChild(vcontainer);
                     pgrid.appendChild(tcontainer);
                     pgrid.appendChild(pricecontainer);
@@ -419,6 +441,7 @@
                             <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" style="background-color: #fff;">
                                 <thead>
                                     <tr>
+                                        <th class="uk-width-small uk-text-emphasis">SKU</th>
                                         <th class="uk-width-small uk-text-emphasis"><?=lang('Global.product')?></th>
                                         <th class="uk-width-small uk-text-emphasis"><?=lang('Global.variant')?></th>
                                         <th class="uk-width-small uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
@@ -433,6 +456,7 @@
                                     foreach ($purchasedata[$purchase['id']]['detail'] as $detail) {
                                         $subtotalpurchase[] = (Int)$detail['inputqty'] * (Int)$detail['inputprice']; ?>
                                         <tr>
+                                            <td><?= $detail['sku']; ?></td>
                                             <td><?= $detail['productname']; ?></td>
                                             <td><?= $detail['variantname']; ?></td>
                                                 
@@ -591,6 +615,7 @@ foreach ($purchases as $purchase) { ?>
                         <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-table-small" style="background-color: #fff; color: #000;">
                             <thead>
                                 <tr>
+                                    <th class="uk-text-emphasis">SKU</th>
                                     <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
@@ -606,6 +631,7 @@ foreach ($purchases as $purchase) { ?>
                             <tbody>
                                 <?php foreach ($purchasedata[$purchase['id']]['detail'] as $detail) { ?>
                                     <tr>
+                                        <td><?= $detail['sku']; ?></td>
                                         <td><?= $detail['productname']; ?></td>
                                         <td><?= $detail['variantname']; ?></td>
                                         <td><?= $detail['inputqty']; ?> Pcs</td>
@@ -632,6 +658,7 @@ foreach ($purchases as $purchase) { ?>
                             <tfoot>
                                 <tr>
                                     <td><?= lang('Global.totalPurchase'); ?></td>
+                                    <td></td>
                                     <td></td>
                                     <td><?= $purchasedata[$purchase['id']]['totalqty'] ?> Pcs</td>
                                     <td></td>
@@ -704,16 +731,19 @@ foreach ($purchases as $purchase) { ?>
                             <div id="tabvar<?= $purchase['id'] ?>"></div>
 
                             <div class="uk-margin-small" uk-grid>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                                    <div class="">SKU</div>
+                                </div>
+                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                     <div class=""><?= lang('Global.variant') ?></div>
                                 </div>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                     <div class=""><?= lang('Global.quantity') ?></div>
                                 </div>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                     <div class=""><?= lang('Global.pcsPrice') ?></div>
                                 </div>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                     <div class=""><?= lang('Global.total') ?></div>
                                 </div>
                             </div>
@@ -754,23 +784,32 @@ foreach ($purchases as $purchase) { ?>
 
                                                     for (x in variantarray<?=$purchase['id']?>) {
                                                         //alert(variantarray<?=$purchase['id']?>[k]['name']);
+                                                        var skucontainer = document.createElement('div');
+                                                        skucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3 uk-margin-small');
+                                                                                        
+                                                        var skuvar = document.createElement('div');
+                                                        skuvar.setAttribute('class','');
+                                                        skuvar.innerHTML = variantarray<?=$purchase['id']?>[x]['sku'];
+
                                                         var varcontainer = document.createElement('div');
-                                                        varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-2 uk-margin-small');
+                                                        varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3 uk-margin-small');
                                                                                         
                                                         var varname = document.createElement('div');
                                                         varname.setAttribute('class','');
                                                         varname.innerHTML = variantarray<?=$purchase['id']?>[x]['name'];
 
                                                         var cartcontainer = document.createElement('div');
-                                                        cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-2 uk-margin-small');
+                                                        cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-3 uk-margin-small');
 
                                                         var cart = document.createElement('a');
                                                         cart.setAttribute('class', 'uk-icon-button');
                                                         cart.setAttribute('uk-icon', 'cart');
                                                         cart.setAttribute('onclick', 'createVare<?=$purchase['id']?>('+variantarray<?=$purchase['id']?>[x]['id']+')');
 
+                                                        skucontainer.appendChild(skuvar);
                                                         varcontainer.appendChild(varname);
                                                         cartcontainer.appendChild(cart);
+                                                        productgrid.appendChild(skucontainer);
                                                         productgrid.appendChild(varcontainer);
                                                         productgrid.appendChild(cartcontainer);
                                                     };
@@ -800,8 +839,16 @@ foreach ($purchases as $purchase) { ?>
                                                 epgrid.setAttribute('class', 'uk-margin-small');
                                                 epgrid.setAttribute('uk-grid', '');
 
+                                                var evskucontainer = document.createElement('div');
+                                                evskucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-flex-center uk-width-1-5');
+                                                                                
+                                                var evsku = document.createElement('div');
+                                                evsku.setAttribute('id','var'+variantarray<?=$purchase['id']?>[x]['id']);
+                                                evsku.setAttribute('class','');
+                                                evsku.innerHTML = variantarray<?=$purchase['id']?>[x]['sku'];
+
                                                 var evcontainer = document.createElement('div');
-                                                evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                                                evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5');
                                                                                 
                                                 var evname = document.createElement('div');
                                                 evname.setAttribute('id','var'+variantarray<?=$purchase['id']?>[x]['id']);
@@ -809,7 +856,7 @@ foreach ($purchases as $purchase) { ?>
                                                 evname.innerHTML = variantarray<?=$purchase['id']?>[x]['name'];
 
                                                 var etcontainer = document.createElement('div');
-                                                etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                                                etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
 
                                                 var etot = document.createElement('input');
                                                 etot.setAttribute('type', 'number');
@@ -824,7 +871,7 @@ foreach ($purchases as $purchase) { ?>
                                                 epieces.innerHTML = 'Pcs';
 
                                                 var epricecontainer = document.createElement('div');
-                                                epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                                                epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
 
                                                 var eprice = document.createElement('input');
                                                 eprice.setAttribute('type', 'number');
@@ -835,7 +882,7 @@ foreach ($purchases as $purchase) { ?>
                                                 eprice.setAttribute('required', '');
 
                                                 var esubtotcontainer = document.createElement('div');
-                                                esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+                                                esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-5');
 
                                                 var esubtotal = document.createElement('div');
                                                 esubtotal.setAttribute('id', "esubtotal"+variantarray<?=$purchase['id']?>[x]['id']+"");
@@ -853,11 +900,13 @@ foreach ($purchases as $purchase) { ?>
                                                     esubtotal.innerHTML = subprice;
                                                 }
 
+                                                evskucontainer.appendChild(evsku);
                                                 evcontainer.appendChild(evname);
                                                 etcontainer.appendChild(etot);
                                                 etcontainer.appendChild(epieces);
                                                 epricecontainer.appendChild(eprice);
                                                 esubtotcontainer.appendChild(esubtotal);
+                                                epgrid.appendChild(evskucontainer);
                                                 epgrid.appendChild(evcontainer);
                                                 epgrid.appendChild(etcontainer);
                                                 epgrid.appendChild(epricecontainer);
@@ -880,17 +929,20 @@ foreach ($purchases as $purchase) { ?>
                             $tot[$purchase['id']] = array();
                             foreach ($purchasedata[$purchase['id']]['detail'] as $detailid => $detail) { ?>
                                 <div id="eproduct<?=$purchase['id'].$detail['varid']?>" class="uk-margin-small" uk-grid>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5">
+                                        <div class=""><?= $detail['sku'] ?></div>
+                                    </div>
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5">
                                         <div class=""><?= $detail['name'] ?></div>
                                     </div>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                         <input class="uk-input" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" required />
                                         <div class="uk-margin-small-left">Pcs</div>
                                     </div>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                         <input class="uk-input" type="number" id="bprice[<?=$detailid?>]" name="bprice[<?=$detailid?>]" value="<?= $detail['inputprice'] ?>" required />
                                     </div>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center subvariant<?= $purchase['id'] ?>" id="subtotal<?= $detailid ?>">
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center subvariant<?= $purchase['id'] ?>" id="subtotal<?= $detailid ?>">
                                         <?= (Int)$detail['inputprice'] * (Int)$detail['inputqty'] ?>
                                     </div>
                                 </div>
