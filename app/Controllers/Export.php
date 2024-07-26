@@ -1340,25 +1340,25 @@ class export extends BaseController
         
         foreach ($transactions as $trx) {
             $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->where('bundleid', '0')->find();
-            // $totaltrxdet    = count($trxdetails);
+            $totaltrxdet    = count($trxdetails);
+    
+            if ($trx['discvalue'] != null) {
+                $discval   = round((int)$trx['discvalue'] / (int)$totaltrxdet);
+            } else {
+                $discval   = 0;
+            }
 
-            // if ($trx['discvalue'] != null) {
-            //     $disc   = floor((int)$trx['discvalue'] / (int)$totaltrxdet);
-            // } else {
-            //     $disc   = 0;
-            // }
+            if ($trx['memberdisc'] != null) {
+                $discmem   = round((int)$trx['memberdisc'] / (int)$totaltrxdet);
+            } else {
+                $discmem   = 0;
+            }
 
-            // if ($trx['memberdisc'] != null) {
-            //     $disc   = floor((int)$trx['memberdisc'] / (int)$totaltrxdet);
-            // } else {
-            //     $disc   = 0;
-            // }
-
-            // if ($trx['pointused'] != '0') {
-            //     $disc   = floor((int)$trx['pointused'] / (int)$totaltrxdet);
-            // } else {
-            //     $disc   = 0;
-            // }
+            if ($trx['pointused'] != '0') {
+                $discpoin   = round((int)$trx['pointused'] / (int)$totaltrxdet);
+            } else {
+                $discpoin   = 0;
+            }
             
             if (!empty($trxdetails)) {
                 foreach ($trxdetails as $trxdet) {
@@ -1384,7 +1384,7 @@ class export extends BaseController
                             // $transactiondata[$productid]['netvalue']        = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - (Int)$disc;
                             // $transactiondata[$productid]['qty']             = $trxdet['qty'];
                             $transactiondata[$products['id']]['qty'][]           = $trxdet['qty'];
-                            $transactiondata[$products['id']]['netvalue'][]      = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                            $transactiondata[$products['id']]['netvalue'][]      = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
                             $transactiondata[$products['id']]['grossvalue'][]    = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
 
                             // $grossval[$products['id']][]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
@@ -1400,7 +1400,7 @@ class export extends BaseController
                         $transactiondata[0]['name']         = 'Kategori / Produk / Variant Terhapus';
                         $transactiondata[0]['category']     = 'Kategori / Produk / Variant Terhapus';
                         $transactiondata[0]['qty'][]        = $trxdet['qty'];
-                        $transactiondata[0]['netvalue'][]   = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                        $transactiondata[0]['netvalue'][]   = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
                         $transactiondata[0]['grossvalue'][] = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'];
 
                         // $grossval[]     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
@@ -1628,25 +1628,25 @@ class export extends BaseController
         
         foreach ($transactions as $trx) {
             $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-            // $totaltrxdet    = count($trxdetails);
+            $totaltrxdet    = count($trxdetails);
+    
+            if ($trx['discvalue'] != null) {
+                $discval   = round((int)$trx['discvalue'] / (int)$totaltrxdet);
+            } else {
+                $discval   = 0;
+            }
 
-            // if ($trx['discvalue'] != null) {
-            //     $disc   = floor((int)$trx['discvalue'] / (int)$totaltrxdet);
-            // } else {
-            //     $disc   = 0;
-            // }
+            if ($trx['memberdisc'] != null) {
+                $discmem   = round((int)$trx['memberdisc'] / (int)$totaltrxdet);
+            } else {
+                $discmem   = 0;
+            }
 
-            // if ($trx['memberdisc'] != null) {
-            //     $disc   = floor((int)$trx['memberdisc'] / (int)$totaltrxdet);
-            // } else {
-            //     $disc   = 0;
-            // }
-
-            // if ($trx['pointused'] != '0') {
-            //     $disc   = floor((int)$trx['pointused'] / (int)$totaltrxdet);
-            // } else {
-            //     $disc   = 0;
-            // }
+            if ($trx['pointused'] != '0') {
+                $discpoin   = round((int)$trx['pointused'] / (int)$totaltrxdet);
+            } else {
+                $discpoin   = 0;
+            }
             
             if (!empty($trxdetails)) {
                 foreach ($trxdetails as $trxdet) {
@@ -1668,7 +1668,7 @@ class export extends BaseController
                                 if (!empty($category)) {
                                     $transactiondata[$category['id']]['name']               = $category['name'];
                                     $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
-                                    $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                                    $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
                                     $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
 
                                 }
@@ -1681,7 +1681,7 @@ class export extends BaseController
 
                             $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
                             $transactiondata[0]['qty'][]                            = $trxdet['qty'];
-                            $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                            $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
                             $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
                         }
                     }
@@ -1713,7 +1713,7 @@ class export extends BaseController
                                             if (!empty($category)) {
                                                 $transactiondata[$category['id']]['name']               = $category['name'];
                                                 $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
-                                                $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                                                $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
                                                 $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
             
                                             }
@@ -1726,7 +1726,7 @@ class export extends BaseController
             
                                         $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
                                         $transactiondata[0]['qty'][]                            = $trxdet['qty'];
-                                        $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                                        $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
                                         $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
                                     }
                                 }
@@ -2568,7 +2568,7 @@ class export extends BaseController
                 foreach ($members as $cust) {
                     echo '<tr>';
                         echo '<td>' . $cust['name'] . '</td>';
-                        echo '<td>' . $cust['phone'] . '</td>';
+                        echo '<td>+62' . $cust['phone'] . '</td>';
                     echo '</tr>';
                 }
             echo '</tbody>';

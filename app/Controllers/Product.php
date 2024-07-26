@@ -661,7 +661,7 @@ class Product extends BaseController
             foreach ($variants as $var) {
                 $number = substr($var['sku'], -6);
 
-                $vardata[]  = [
+                $vardata  = [
                     'id'    => $var['id'],
                     'sku'   => strtoupper($catcode.$number),
                 ];

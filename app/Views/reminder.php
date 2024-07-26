@@ -56,11 +56,12 @@
                                     <td class="uk-width-medium"><?= $varname ?></td>
                                     <td class="uk-text-center uk-width-large">
                                         <?php
-                                            if (($formatday >= 30) && ($stock['qty'] <= "5")) {
-                                                echo '<div class="uk-child-width-1-1" uk-grid><div><div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$saleremind.' '.$formatday.' '.lang('Global.day').'</div></div><div class="uk-margin-small-top"><div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$stockremind.'</div></div></div>';
-                                            } elseif ($formatday >= 30) {
-                                                echo '<div class="uk-text-danger uk-width-1-1" style="border-style: solid; border-color: #f0506e;">'.$saleremind.' '.$formatday.' '.lang('Global.day').'</div>';
-                                            } elseif ($stock['qty'] <= "5") {
+                                            // if (($formatday >= 30) && ($stock['qty'] == "0")) {
+                                            //     echo '<div class="uk-child-width-1-1" uk-grid><div><div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$saleremind.' '.$formatday.' '.lang('Global.day').'</div></div><div class="uk-margin-small-top"><div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$stockremind.'</div></div></div>';
+                                            // } elseif ($formatday >= 30) {
+                                            //     echo '<div class="uk-text-danger uk-width-1-1" style="border-style: solid; border-color: #f0506e;">'.$saleremind.' '.$formatday.' '.lang('Global.day').'</div>';
+                                            // } else
+                                            if ($stock['qty'] == "0") {
                                                 echo '<div class="uk-text-danger uk-width-1-1" style="border-style: solid; border-color: #f0506e;">'.$stockremind.'</div>';
                                             }
                                         ?>

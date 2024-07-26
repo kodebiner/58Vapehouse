@@ -116,9 +116,9 @@ class Stock extends BaseController
         $data           = $this->data;
         
         if ($this->data['outletPick'] === null) {
-            $stock      = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->orderBy('sale', 'ASC')->paginate(20, 'stockcycle');
+            $stock      = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('qty !=', '0')->orderBy('sale', 'ASC')->paginate(20, 'stockcycle');
         } else {
-            $stock      = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->orderBy('sale', 'ASC')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockcycle');
+            $stock      = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('qty !=', '0')->orderBy('sale', 'ASC')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockcycle');
         }
 
         $stockdata  = [];

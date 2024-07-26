@@ -174,7 +174,7 @@ return [
     'productsales'      => 'Penjualan Produk',
     'descproductsales'  => 'Produk yang terjual dari transaksi.',
     'totalproductsales' => 'Total Produk Terjual',
-    'stockremind'       => 'Jumlah Stok Mulai Menipis',
+    'stockremind'       => 'Stok Habis',
     'saleremind'        => 'Produk tidak terjual selama',
     'restockremind'     => 'Stok ditambahkan',
     'day'               => 'hari',

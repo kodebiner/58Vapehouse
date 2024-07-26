@@ -76,6 +76,8 @@ class Debt extends BaseController
             // }
         }
 
+        $transactiondata    = [];
+
         $trxid = array();
         $memberid = array();
         foreach ($transactions as $transaction) {
