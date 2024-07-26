@@ -166,7 +166,8 @@
                             <label class="uk-form-label" for="outlet"><?=lang('Global.outlet')?></label>
                             <div class="uk-form-controls">
                                 <select class="uk-select" name="outlet">
-                                    <option disabled><?=lang('Global.allOutlets')?></option>
+                                    <!-- <option disabled><?=lang('Global.allOutlets')?></option> -->
+                                    <option value="0"><?=lang('Global.allOutlets')?></option>
                                     <?php foreach ($outlets as $outlet) { ?>
                                         <option value="<?= $outlet['id']; ?>" <?php if ($outlet['id'] === $cash['outletid']) {echo 'selected';} ?>><?= $outlet['name']; ?></option>
                                     <?php }?>

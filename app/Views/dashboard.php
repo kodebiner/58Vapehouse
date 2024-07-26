@@ -125,6 +125,18 @@
                         </div>
                     </div>
                 </div>
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <div class="uk-child-width-1-1" uk-grid>
+                            <div>
+                                <div class="tm-h5" style="color: #000;">Outlet Bill</div>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                <div class="tm-h4" style="color: #000;">Rp <?= number_format($transactiondata['bills'],0,',','.') ?></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Report Short List End -->
@@ -528,58 +540,31 @@
                                     <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                         <tbody>
                                             <?php foreach ($stocks as $stock) {
-                                                $today      = $stock['restock'];
-                                                $date       = date_create($today);
-                                                $now        = date_create();
-                                                $nowdates   = date_format($now,'Y-m-d H:i:s');
-                                                $todays     = strtotime($today);
-                                                $dates      = strtotime($nowdates);
-                                                date_add($date, date_interval_create_from_date_string('0 days'));
-                                                $newdate        = date_format($date, 'Y-m-d H:i:s');
+                                                // $today      = $stock['sale'];
+                                                // $date       = date_create($today);
+                                                // $now        = date_create();
+                                                // $nowdates   = date_format($now,'Y-m-d H:i:s');
+                                                // $todays     = strtotime($today);
+                                                // $dates      = strtotime($nowdates);
+                                                // date_add($date, date_interval_create_from_date_string('0 days'));
+                                                // $newdate        = date_format($date, 'Y-m-d H:i:s');
                                                 $origin         = new DateTime($stock['sale']);
-                                                $restock        = new DateTime($stock['restock']);
+                                                // $restock        = new DateTime($stock['restock']);
                                                 $target         = new DateTime('now');
                                                 $interval       = $origin->diff($target);
                                                 $formatday      = substr($interval->format('%R%a'), 1);
                                                 $saleremind     = lang('Global.saleremind');
-                                                $restockremind  = lang('Global.restockremind');
-                                                $intervals      = $restock->diff($target);
+                                                // $restockremind  = lang('Global.restockremind');
+                                                // $intervals      = $restock->diff($target);
 
-                                                if ($stock['sale'] > $newdate) {
+                                                // if ($stock['sale'] > $newdate) {
                                                     if ($formatday >= 0) { ?>
                                                         <tr>
-                                                            <td>
-                                                                <?php foreach ($variants as $variant) {
-                                                                    foreach ($products as $product){
-                                                                        if ($variant['id'] === $stock['variantid']) {
-                                                                            if ($variant['productid'] === $product['id']) {
-                                                                                echo ($product['name']."-".$variant['name']);
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                } ?>
-                                                            </td>
+                                                            <td><?= $stock['name'] ?></td>
                                                             <td><?= $formatday.' '.lang('Global.pastday') ?></td>
                                                         </tr>
                                                     <?php }
-                                                } elseif ($intervals = "30") {
-                                                    if ($formatday >= 0) { ?>
-                                                        <tr>
-                                                            <td>
-                                                                <?php foreach ($variants as $variant) {
-                                                                    foreach ($products as $product) {
-                                                                        if ($variant['id'] === $stock['variantid']) {
-                                                                            if ($variant['productid'] === $product['id']) {
-                                                                                echo ($product['name']."-".$variant['name']);
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                } ?>
-                                                            </td>
-                                                            <td><?= $formatday.' '.lang('Global.pastday'); ?></td>
-                                                        </tr>
-                                                    <?php }
-                                                } 
+                                                // }
                                             } ?>
                                         </tbody>
                                     </table>

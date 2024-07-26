@@ -103,43 +103,85 @@ class Stock extends BaseController
     // Stock Cycle
     public function stockcycle()
     {
+        // Calling Services
+        $pager      = \Config\Services::pager();
+
         // Calling Model
         $StockModel     = new StockModel;
         $VariantModel   = new VariantModel;
         $ProductModel   = new ProductModel;
+        $OutletModel    = new OutletModel;
 
         // Find Data
         $data           = $this->data;
         
         if ($this->data['outletPick'] === null) {
-            $stock      = $StockModel->orderBy('restock', 'DESC')->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->paginate(20, 'stockcycle');
+            $stock      = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->orderBy('sale', 'ASC')->paginate(20, 'stockcycle');
         } else {
-            $stock      = $StockModel->orderBy('restock', 'DESC')->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockcycle');
+            $stock      = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->orderBy('sale', 'ASC')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockcycle');
         }
 
+        $stockdata  = [];
+        // $variants   = $VariantModel->findAll();
+
+        // foreach ($variants as $variant) {
+        //     $stockdata[$variant['id']]['id']    = $variant['id'];
+
+        //     $products   = $ProductModel->find($variant['productid']);
+        //     $stockdata[$variant['id']]['name']  = $products['name'].'-'.$variant['name'];
+
+        //     if ($this->data['outletPick'] === null) {
+        //         $stock      = $StockModel->where('variantid', $variant['id'])->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->find();
+        //     } else {
+        //         $stock      = $StockModel->where('variantid', $variant['id'])->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->find();
+        //     }
+        // }
+        // dd($stock);
         if (!empty($stock)) {
-            $varid  = array();
             foreach ($stock as $stok) {
-                $varid[]    = $stok['variantid'];
+                $variants       = $VariantModel->find($stok['variantid']);
+                $vname          = $variants['name'];
+                $outlet         = $OutletModel->find($stok['outletid']);
+
+                if (!empty($variants)) {
+                    $products   = $ProductModel->find($variants['productid']);
+                    
+                    if (!empty($products)) {
+                        $pname      = $products['name'];
+                    }
+
+                    $stockdata[$stok['id']]['outlet']   = $outlet['name'];
+                    $stockdata[$stok['id']]['name']     = $pname.'-'.$vname;
+                    $stockdata[$stok['id']]['restock']  = $stok['restock'];
+                    $stockdata[$stok['id']]['sale']     = $stok['sale'];
+                    $stockdata[$stok['id']]['qty']      = $stok['qty'];
+                }
             }
-            $variants       = $VariantModel->find($varid);
+            
+            // $varid  = array();
+            // foreach ($stock as $stok) {
+            //     $varid[]    = $stok['variantid'];
+            // }
+            // $variants       = $VariantModel->find($varid);
     
-            $prodid = array();
-            foreach ($variants as $var) {
-                $prodid[]   = $var['productid'];
-            }
-            $products   = $ProductModel->find($prodid);
+            // $prodid = array();
+            // foreach ($variants as $var) {
+            //     $prodid[]   = $var['productid'];
+            // }
+            // $products   = $ProductModel->find($prodid);
         } else {
             $variants       = array();
             $products       = array();
         }
+        array_multisort(array_column($stockdata, 'sale'), SORT_ASC, $stockdata);
 
         // Parsing data to view
         $data['title']          = lang('Global.stockCycle');
         $data['description']    = lang('Global.stockCycleDesc');
-        $data['stocks']         = $stock;
-        $data['variants']       = $variants;
-        $data['products']       = $products;
+        // $data['stocks']         = $stock;
+        // $data['variants']       = $variants;
+        // $data['products']       = $products;
+        $data['stocks']         = $stockdata;
         $data['pager']          = $StockModel->pager;
 
         return view ('Views/stockcycle', $data);

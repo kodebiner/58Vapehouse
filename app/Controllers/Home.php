@@ -53,6 +53,7 @@ class Home extends BaseController
         $MemberModel        = new MemberModel();
         $PurchaseModel      = new PurchaseModel();
         $PurchasedetModel   = new PurchasedetailModel();
+        $CashModel          = new CashModel();
 
         // Populating Data
         $input          = $this->request->getGet('daterange');
@@ -94,7 +95,8 @@ class Home extends BaseController
             $trxmonths      = $TransactionModel->where('date >=', $firstday.' 00:00:00')->where('date <=', $lastday.' 23:59:59')->find();
             $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
             $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->find();
-            $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->findAll();
+            $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->orderBy('sale', 'ASC')->find();
+            $cashes         = $CashModel->findAll();
         } else {
             // if ($startdate === $enddate) {
             //     $transactions   = $TransactionModel->where('date >=', $startdate.' 00:00:00')->where('date <=', $enddate.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
@@ -107,12 +109,38 @@ class Home extends BaseController
             $trxmonths      = $TransactionModel->where('date >=', $firstday.' 00:00:00')->where('date <=', $lastday.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             $todayexpenses  = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             $trxtodays      = $TransactionModel->where('date >=', $today.' 00:00:00')->where('date <=', $today.' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-            $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->find();
+            $stocks         = $StockModel->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->orderBy('sale', 'ASC')->where('outletid', $this->data['outletPick'])->find();
+            $cashes         = $CashModel->where('outletid', $this->data['outletPick'])->find();
         }
 
         // Stock Cycle
-        $stok           = array_slice($stocks, 0, 3);
-        array_multisort(array_column($stok, 'restock'), SORT_DESC, $stok);
+        $stockdata  = [];
+        if (!empty($stocks)) {
+            foreach ($stocks as $stok) {
+                $variants       = $VariantModel->find($stok['variantid']);
+                $vname          = $variants['name'];
+
+                if (!empty($variants)) {
+                    $products   = $ProductModel->find($variants['productid']);
+                    
+                    if (!empty($products)) {
+                        $pname      = $products['name'];
+                    }
+
+                    $stockdata[$stok['id']]['name']     = $pname.'-'.$vname;
+                    $stockdata[$stok['id']]['restock']  = $stok['restock'];
+                    $stockdata[$stok['id']]['sale']     = $stok['sale'];
+                    $stockdata[$stok['id']]['qty']      = $stok['qty'];
+                }
+            }
+        } else {
+            $variants       = array();
+            $products       = array();
+        }
+        array_multisort(array_column($stockdata, 'sale'), SORT_ASC, $stockdata);
+        $stok           = array_slice($stockdata, 0, 3);
+        // $stok           = array_slice($stocks, 0, 3);
+        // array_multisort(array_column($stok, 'restock'), SORT_DESC, $stok);
 
         // Transaction Data
         $transactiondata    = array();
@@ -520,6 +548,13 @@ class Home extends BaseController
             $bussyday   = $datesale->format('l');
         }
         $transactiondata['bussyday'] = $bussyday;
+        
+        // Outlet Bill
+        $money  = [];
+        foreach ($cashes as $cash) {
+            $money[]    = $cash['qty'];
+        }
+        $transactiondata['bills']   = array_sum($money);
 
         // dd($transactiondata);
 
