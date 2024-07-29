@@ -87,8 +87,8 @@
 
     <?//php foreach ($transactiondata as $trx) { ?>
         <!-- Report Short List -->
-        <div class="uk-container uk-container-large uk-margin-top">
-            <div class="uk-child-width-1-2 uk-flex-center uk-flex-middle" uk-grid uk-height-match="target: > div > .uk-card">
+        <div class="uk-container uk-container-large uk-margin-medium-top">
+            <div class="uk-child-width-1-2 uk-flex-center uk-flex-middle " uk-grid uk-height-match="target: > div > .uk-card">
                 <div>
                     <div class="uk-card uk-card-default uk-card-body">
                         <div class="uk-child-width-1-1" uk-grid>

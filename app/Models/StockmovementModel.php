@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class StockmovementModel extends Model
 {
     protected $allowedFields = [
-        'variantid','origin','destination','qty','date',
+        'origin','destination','date','status',
 
     ];
 
@@ -13,6 +13,4 @@ class StockmovementModel extends Model
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType     = 'array';
-    
-
 }
