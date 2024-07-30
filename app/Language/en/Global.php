@@ -205,7 +205,13 @@ return [
     'diffprice'         => 'Difference Price',
     'soldItem'          => 'Sold Item',
     'storeNotClosed'    => 'Outlet not closed yet',
-
+    'smovecreated'      => 'Stock movement created by ',
+    'smovesent'         => 'Stock movement approved and sent by ',
+    'smovepending'      => 'Stock movement waiting respons from ',
+    'smoveaccepted'     => 'Stock movement approved and accepted by ',
+    'smovecanceled'     => 'Stock movement canceled',
+    'movementInfo'      => 'Stock Movement Information',
+    'totalMovement'     => 'Total Stock Movement',
    
     // Button
     'edit'              => 'Edit',

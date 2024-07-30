@@ -49,11 +49,13 @@
         </div>
         <!-- End Of Button Daterange-->
 
-        <!-- Button Trigger Modal Add -->
-        <div class="uk-width-1-3@m uk-width-1-2 uk-text-right">
-            <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addStockMove')?></button>
-        </div>
-        <!-- End Of Button Trigger Modal Add -->
+        <?php if ($outletPick != null) { ?>
+            <!-- Button Trigger Modal Add -->
+            <div class="uk-width-1-3@m uk-width-1-2 uk-text-right">
+                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addStockMove')?></button>
+            </div>
+            <!-- End Of Button Trigger Modal Add -->
+        <?php } ?>
     </div>
 </div>
 <!-- Page Heading End -->
@@ -67,7 +69,7 @@
             <div class="uk-modal-header">
                 <div class="uk-child-width-1-2" uk-grid>
                     <div>
-                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addPurchase')?></h5>
+                        <h5 class="uk-modal-title" id="tambahdata" ><?=lang('Global.addStockMove')?></h5>
                     </div>
                     <div class="uk-text-right">
                         <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
@@ -75,8 +77,42 @@
                 </div>
             </div>
             <div class="uk-modal-body">
-                <form class="uk-form-stacked" role="form" action="stock/createpur" method="post">
+                <form class="uk-form-stacked" role="form" action="stockmove/create" method="post">
                     <?= csrf_field() ?>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="origin"><?=lang('Global.origin')?></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select" name="origin">
+                                <option selected disabled><?=lang('Global.origin')?></option>
+                                <?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $outletPick) {
+                                        $checked = 'selected';
+                                    } else {
+                                        $checked = 'disabled';
+                                    } ?>
+                                    <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="destination"><?=lang('Global.destination')?></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select" name="destination" required>
+                                <option selected disabled><?=lang('Global.destination')?></option>
+                                <?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $outletPick) {
+                                        $disabled = 'disabled';
+                                    } else {
+                                        $disabled = '';
+                                    } ?>
+                                    <option value="<?= $outlet['id']; ?>" <?=$disabled?>><?= $outlet['name']; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
@@ -98,7 +134,7 @@
                             <div class=""><?= lang('Global.quantity') ?></div>
                         </div>
                         <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                            <div class=""><?= lang('Global.pcsPrice') ?></div>
+                            <div class=""><?= lang('Global.capitalPrice') ?></div>
                         </div>
                         <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                             <div class=""><?= lang('Global.total') ?></div>
@@ -136,7 +172,7 @@
             select: function(e, i) {
                 var data = { 'id' : i.item.idx };
                 $.ajax({
-                    url:"stock/product",
+                    url:"stockmove/product",
                     method:"POST",
                     data: data,
                     dataType: "json",
@@ -162,21 +198,35 @@
                         for (k in variantarray) {
                             //alert(variantarray[k]['name']);
                             var varskucontainer = document.createElement('div');
-                            varskucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3 uk-margin-small');
+                            varskucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5 uk-margin-small');
                                                             
                             var varsku = document.createElement('div');
                             varsku.setAttribute('class','');
                             varsku.innerHTML = variantarray[k]['sku'];
                             
                             var varcontainer = document.createElement('div');
-                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3 uk-margin-small');
+                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5 uk-margin-small');
                                                             
                             var varname = document.createElement('div');
                             varname.setAttribute('class','');
                             varname.innerHTML = variantarray[k]['name'];
 
+                            var stockcontainer = document.createElement('div');
+                            stockcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5 uk-margin-small');
+                                                            
+                            var stock = document.createElement('div');
+                            stock.setAttribute('class','');
+                            stock.innerHTML = variantarray[k]['qty'];
+
+                            var wholesalecontainer = document.createElement('div');
+                            wholesalecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5 uk-margin-small');
+                                                            
+                            var wholesale = document.createElement('div');
+                            wholesale.setAttribute('class','');
+                            wholesale.innerHTML = variantarray[k]['wholesale'];
+
                             var cartcontainer = document.createElement('div');
-                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-3 uk-margin-small');
+                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5 uk-margin-small');
 
                             var cart = document.createElement('a');
                             cart.setAttribute('class', 'uk-icon-button');
@@ -185,9 +235,13 @@
 
                             varskucontainer.appendChild(varsku);
                             varcontainer.appendChild(varname);
+                            stockcontainer.appendChild(stock);
+                            wholesalecontainer.appendChild(wholesale);
                             cartcontainer.appendChild(cart);
                             productgrid.appendChild(varskucontainer);
                             productgrid.appendChild(varcontainer);
+                            productgrid.appendChild(stockcontainer);
+                            productgrid.appendChild(wholesalecontainer);
                             productgrid.appendChild(cartcontainer);
                         };
                         
@@ -201,100 +255,112 @@
     function createVar(id) {
         for (k in variantarray) {
             if (variantarray[k]['id'] == id) {
-                document.getElementById('variantlist').remove();
-                var elemexist = document.getElementById('product'+variantarray[k]['id']);
-                document.getElementById('tablevariant').setAttribute('hidden', '');
-                var count = 1;
-                if ( $( "#product"+variantarray[k]['id'] ).length ) {
-                    alert('<?=lang('Global.readyAdd');?>');
-                } else {
-                    let minval = count;
-                    var prods = document.getElementById('tableproduct');
-                                                
-                    var pgrid = document.createElement('div');
-                    pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
-                    pgrid.setAttribute('class', 'uk-margin-small');
-                    pgrid.setAttribute('uk-grid', '');
-
-                    var skucontainer = document.createElement('div');
-                    skucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5');
+                if (variantarray[k]['qty'] != "0") {
+                    document.getElementById('variantlist').remove();
+                    var elemexist = document.getElementById('product'+variantarray[k]['id']);
+                    document.getElementById('tablevariant').setAttribute('hidden', '');
+                    var count = 1;
+                    if ( $( "#product"+variantarray[k]['id'] ).length ) {
+                        alert('<?=lang('Global.readyAdd');?>');
+                    } else {
+                        let minval = count;
+                        var prods = document.getElementById('tableproduct');
                                                     
-                    var sku = document.createElement('div');
-                    sku.setAttribute('id','var'+variantarray[k]['id']);
-                    sku.setAttribute('class','');
-                    sku.innerHTML = variantarray[k]['sku'];
+                        var pgrid = document.createElement('div');
+                        pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
+                        pgrid.setAttribute('class', 'uk-margin-small');
+                        pgrid.setAttribute('uk-grid', '');
 
-                    var vcontainer = document.createElement('div');
-                    vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5');
-                                                    
-                    var vname = document.createElement('div');
-                    vname.setAttribute('id','var'+variantarray[k]['id']);
-                    vname.setAttribute('class','');
-                    vname.innerHTML = variantarray[k]['name'];
+                        var skucontainer = document.createElement('div');
+                        skucontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
+                                                        
+                        var sku = document.createElement('div');
+                        sku.setAttribute('id','var'+variantarray[k]['id']);
+                        sku.setAttribute('class','');
+                        sku.innerHTML = variantarray[k]['sku'];
 
-                    var tcontainer = document.createElement('div');
-                    tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
+                        var vcontainer = document.createElement('div');
+                        vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5');
+                                                        
+                        var vname = document.createElement('div');
+                        vname.setAttribute('id','var'+variantarray[k]['id']);
+                        vname.setAttribute('class','');
+                        vname.innerHTML = variantarray[k]['name'];
 
-                    var tot = document.createElement('input');
-                    tot.setAttribute('type', 'number');
-                    tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
-                    tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
-                    tot.setAttribute('class', 'uk-input');
-                    tot.setAttribute('value', '1');
-                    tot.setAttribute('required', '');
+                        var tcontainer = document.createElement('div');
+                        tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
 
-                    var pieces = document.createElement('div');
-                    pieces.setAttribute('class', 'uk-margin-small-left');
-                    pieces.innerHTML = 'Pcs';
+                        var tot = document.createElement('input');
+                        tot.setAttribute('type', 'number');
+                        tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
+                        tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
+                        tot.setAttribute('max', variantarray[k]['qty']);
+                        tot.setAttribute('class', 'uk-input');
+                        tot.setAttribute('value', '1');
+                        tot.setAttribute('required', '');
 
-                    var pricecontainer = document.createElement('div');
-                    pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
+                        var pieces = document.createElement('div');
+                        pieces.setAttribute('class', 'uk-margin-small-left');
+                        pieces.innerHTML = 'Pcs';
 
-                    var price = document.createElement('input');
-                    price.setAttribute('type', 'number');
-                    price.setAttribute('id', "bprice["+variantarray[k]['id']+"]");
-                    price.setAttribute('name', "bprice["+variantarray[k]['id']+"]");
-                    price.setAttribute('class', 'uk-input');
-                    price.setAttribute('value', variantarray[k]['price']);
-                    price.setAttribute('required', '');
+                        var pricecontainer = document.createElement('div');
+                        pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
 
-                    var subtotcontainer = document.createElement('div');
-                    subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-5');
+                        var price = document.createElement('input');
+                        price.setAttribute('type', 'number');
+                        price.setAttribute('hidden', '');
+                        price.setAttribute('id', "bprice["+variantarray[k]['id']+"]");
+                        price.setAttribute('name', "bprice["+variantarray[k]['id']+"]");
+                        price.setAttribute('class', 'uk-input');
+                        price.setAttribute('value', variantarray[k]['wholesale']);
+                        price.setAttribute('required', '');
 
-                    var subtotal = document.createElement('div');
-                    subtotal.setAttribute('id', "subtotal"+variantarray[k]['id']+"");
-                    subtotal.setAttribute('class', 'subvariant');
+                        var pricediv = document.createElement('div');
+                        pricediv.innerHTML = variantarray[k]['wholesale'];
 
-                    totalprice();
-                    tot.addEventListener('change', totalprice);
-                    price.addEventListener('change', totalprice);
+                        var subtotcontainer = document.createElement('div');
+                        subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-5');
 
-                    function totalprice() {
-                        var varprice = price.value;
-                        var varqty = tot.value;
-                        var subprice = varprice * varqty;
-                        subtotal.setAttribute('value', subprice);
-                        subtotal.innerHTML = subprice;
-                    }
+                        var subtotal = document.createElement('div');
+                        subtotal.setAttribute('id', "subtotal"+variantarray[k]['id']+"");
+                        subtotal.setAttribute('class', 'subvariant');
 
-                    skucontainer.appendChild(sku);
-                    vcontainer.appendChild(vname);
-                    tcontainer.appendChild(tot);
-                    tcontainer.appendChild(pieces);
-                    pricecontainer.appendChild(price);
-                    subtotcontainer.appendChild(subtotal);
-                    pgrid.appendChild(skucontainer);
-                    pgrid.appendChild(vcontainer);
-                    pgrid.appendChild(tcontainer);
-                    pgrid.appendChild(pricecontainer);
-                    pgrid.appendChild(subtotcontainer);
-                    prods.appendChild(pgrid);
+                        totalprice();
+                        tot.addEventListener('change', totalprice);
+                        price.addEventListener('change', totalprice);
 
-                    tot.addEventListener("change", function removeproduct() {
-                        if (tot.value == '0') {
-                            pgrid.remove();
+                        function totalprice() {
+                            var varprice = price.value;
+                            var varqty = tot.value;
+                            var subprice = varprice * varqty;
+                            subtotal.setAttribute('value', subprice);
+                            subtotal.innerHTML = subprice;
                         }
-                    });
+
+                        skucontainer.appendChild(sku);
+                        vcontainer.appendChild(vname);
+                        tcontainer.appendChild(tot);
+                        tcontainer.appendChild(pieces);
+                        pricecontainer.appendChild(price);
+                        pricecontainer.appendChild(pricediv);
+                        subtotcontainer.appendChild(subtotal);
+                        pgrid.appendChild(skucontainer);
+                        pgrid.appendChild(vcontainer);
+                        pgrid.appendChild(tcontainer);
+                        pgrid.appendChild(pricecontainer);
+                        pgrid.appendChild(subtotcontainer);
+                        prods.appendChild(pgrid);
+
+                        tot.addEventListener("change", function removeproduct() {
+                            if (tot.value == '0') {
+                                pgrid.remove();
+                            }
+                        });
+                    }
+                    $('#productname').val('');
+                    return false;
+                } else {
+                    alert('<?=lang('Global.alertstock');?>');
                 }
             }
         }
@@ -331,41 +397,65 @@
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
-                <th class="uk-width-medium"><?=lang('Global.date')?></th>
-                <th class="uk-width-small"><?=lang('Global.total')?></th>
+                <th class="uk-width-small"><?=lang('Global.date')?></th>
+                <th class="uk-width-small"><?=lang('Global.origin')?></th>
+                <th class="uk-width-small"><?=lang('Global.destination')?></th>
+                <th class="uk-text-center uk-width-small"><?=lang('Global.totalMovement')?></th>
+                <th class="uk-width-small"><?=lang('Global.total').' '.lang('Global.capitalPrice')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.status')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
             </tr>
         </thead>
         <tbody>
             <?php
-            $success    = lang('Global.success');
-            $cancel     = lang('Global.cancel');
-            $pending    = lang('Global.pending');
+            $created    = lang('Global.smovecreated');
+            $sent       = lang('Global.smovesent');
+            $pending    = lang('Global.smovepending');
+            $success    = lang('Global.smoveaccpeted');
+            $cancel     = lang('Global.smovecanceled');
 
-            foreach ($stockmovements as $stockmove) { ?>
-                <tr>
-                    <td class="uk-width-medium"><?= date('l, d M Y, H:i:s', strtotime($stockmove['date'])); ?></td>
+            foreach ($stockmovedata as $stockmove) {
+                if ($outletPick == $stockmove['destinationid']) {
+                    if ($stockmove['status'] == '0') {
+                        $hidden = 'hidden';
+                    } else {
+                        $hidden = '';
+                    }
+                } else {
+                    $hidden = '';
+                } ?>
+                <tr <?= $hidden ?>>
+                    <td class="uk-width-small"><?= date('l, d M Y, H:i:s', strtotime($stockmove['date'])); ?></td>
+
+                    <td class="uk-width-small"><?= $stockmove['origin'] ?></td>
+                    
+                    <td class="uk-width-small"><?= $stockmove['destination'] ?></td>
+
+                    <td class="uk-text-center uk-width-small">
+                        <?= $stockmove['totalqty'] ?> Pcs
+                    </td>
 
                     <td class="uk-width-small">
-                        <?php
-                        $prices = array();
-                        foreach ($stockmovedata[$stockmove['id']]['detail'] as $detail) {
-                            $prices[] = (Int)$detail['inputqty'] * (Int)$detail['wholesale'];
-                        }
-                        $sum = array_sum($prices);
-                        echo "Rp " . number_format($sum,2,',','.');
-                        ?>
+                        <?= "Rp " . number_format($stockmove['totalwholesale'],2,',','.') ?>
                     </td>
 
                     <td class="uk-text-center uk-width-small">
                         <?php if ($stockmove['status'] === "0") {
-                            echo '<div class="uk-text-primary" style="border-style: solid; border-color: #1e87f0;">'.$pending.'</div>';
+                            echo '<div class="uk-text-primary" style="border-style: solid; border-color: #1e87f0;">'.$created.$stockmove['origin'].'</div>';
                         } elseif ($stockmove['status'] === "1") {
-                            echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.$success.'</div>';
+                            if ($outletPick == $stockmove['destinationid']) {
+                                echo '<div class="uk-text-warning" style="border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['destination'].'</div>';
+                            } elseif ($outletPick == $stockmove['originid']) {
+                                echo '<div class="uk-text-warning" style="border-style: solid; border-color: #faa05a;">'.$sent.$stockmove['origin'].'</div>';
+                            } else {
+                                echo '<div class="uk-text-warning" style="border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['origin'].' / '.$stockmove['destination'].'</div>';
+                            }
                         } elseif ($stockmove['status'] === "2") {
                             echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$cancel.'</div>';
-                        } ?>
+                        } elseif ($stockmove['status'] === "3") {
+                            echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">'.$success.$stockmove['destination'].'</div>';
+                        }
+                        ?>
                     </td>
 
                     <?php if ($stockmove['status'] === "0") { ?>
@@ -390,7 +480,7 @@
 
                             <!-- Button Cancel -->
                             <div>
-                                <form class="uk-form-stacked" role="form" action="stock/cancelpur/<?= $stockmove['id'] ?>" method="post">
+                                <form class="uk-form-stacked" role="form" action="stockmove/cancel/<?= $stockmove['id'] ?>" method="post">
                                     <button type="submit" uk-icon="close" class="uk-icon-button-delete" onclick="return confirm('<?=lang('Global.cancelConfirm')?>')"></button>
                                 </form>
                             </div>
@@ -458,10 +548,11 @@
                                             <td><?= $detail['variantname']; ?></td>
                                                 
                                             <td>
-                                                <input type="number" class="uk-input" id="ctotalpcs[<?=$stockmove['id']?>][<?=$detail['varid']?>]" name="ctotalpcs[<?=$stockmove['id']?>][<?=$detail['varid']?>]" value="<?= $detail['inputqty']; ?>" required />
+                                                <input type="number" class="uk-input" id="ctotalpcs[<?=$stockmove['id']?>][<?=$detail['varid']?>]" name="ctotalpcs[<?=$stockmove['id']?>][<?=$detail['varid']?>]" value="<?= $detail['inputqty']; ?>" max="<?= $detail['qty']; ?>" required />
                                             </td>
                                             <td>
-                                                <input type="number" class="uk-input" id="cbprice[<?=$stockmove['id']?>][<?=$detail['varid']?>]" name="cbprice[<?=$stockmove['id']?>][<?=$detail['varid']?>]" value="<?= $detail['wholesale']; ?>" required />
+                                                <input hidden type="number" class="uk-input" id="cbprice[<?=$stockmove['id']?>][<?=$detail['varid']?>]" name="cbprice[<?=$stockmove['id']?>][<?=$detail['varid']?>]" value="<?= $detail['wholesale']; ?>" required />
+                                                <div><?= $detail['wholesale']; ?></div>
                                             </td>
                                             <td id="csubtotal<?=$stockmove['id']?><?=$detail['varid']?>" class="uk-width-small csubvariant<?=$stockmove['id']?>"><?= (Int)$detail['wholesale'] * (Int)$detail['inputqty']; ?></td>
                                         </tr>
@@ -556,7 +647,7 @@ foreach ($stockmovements as $stockmove) { ?>
                 <div class="uk-modal-body">
                     <div class="uk-form-horizontal">
                         <div class="uk-margin">
-                            <div class="tm-h2 uk-h4"><?=lang('Global.purchaseInfo')?></div>
+                            <div class="tm-h2 uk-h4"><?=lang('Global.movementInfo')?></div>
                         </div>
 
                         <div class="uk-margin">
@@ -597,14 +688,14 @@ foreach ($stockmovements as $stockmove) { ?>
                                     <th class="uk-text-emphasis">SKU</th>
                                     <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
-                                    <th class="uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
+                                    <th class="uk-text-emphasis"><?=lang('Global.quantity').' '.lang('Global.stock')?></th>
                                     <?php if ($stockmove['status'] != "0") { ?>
                                         <th class="uk-text-emphasis"><?=lang('Global.oldprice')?></th>
                                         <th class="uk-text-emphasis"><?=lang('Global.adjprice')?></th>
                                         <th class="uk-text-emphasis"><?=lang('Global.diffprice')?></th>
                                     <?php } ?>
-                                    <th class="uk-text-emphasis"><?=lang('Global.pcsPrice')?></th>
-                                    <th class="uk-text-emphasis"><?=lang('Global.total')?></th>
+                                    <th class="uk-text-emphasis"><?=lang('Global.capitalPrice')?></th>
+                                    <th class="uk-text-emphasis"><?=lang('Global.total').' '.lang('Global.capitalPrice')?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -636,7 +727,7 @@ foreach ($stockmovements as $stockmove) { ?>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td><?= lang('Global.totalPurchase'); ?></td>
+                                    <td><?= lang('Global.totalMovement'); ?></td>
                                     <td></td>
                                     <td></td>
                                     <td><?= $stockmovedata[$stockmove['id']]['totalqty'] ?> Pcs</td>
@@ -659,7 +750,7 @@ foreach ($stockmovements as $stockmove) { ?>
 <!-- Modal Detail End -->
 
 <!-- Modal Edit -->
-<?php foreach ($stockmovements as $stockmove) {
+<?php foreach ($stockmovedata as $stockmove) {
     if ($stockmove['status'] === "0") { ?>
         <div uk-modal class="uk-flex-top uk-modal-container" id="editdata<?= $stockmove['id'] ?>">
             <div class="uk-modal-dialog uk-margin-auto-vertical">
@@ -676,8 +767,42 @@ foreach ($stockmovements as $stockmove) { ?>
                     </div>
 
                     <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="stock/updatepur/<?= $stockmove['id'] ?>" method="post">
+                        <form class="uk-form-stacked" role="form" action="stockmove/update/<?= $stockmove['id'] ?>" method="post">
                             <?= csrf_field() ?>
+
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="origin"><?=lang('Global.origin')?></label>
+                                <div class="uk-form-controls">
+                                    <select class="uk-select" name="origin">
+                                        <option disabled><?=lang('Global.origin')?></option>
+                                        <?php foreach ($outlets as $outlet) {
+                                            if ($outlet['id'] === $stockmove['originid']) {
+                                                $checked = 'selected';
+                                            } else {
+                                                $checked = '';
+                                            } ?>
+                                            <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="destination"><?=lang('Global.destination')?></label>
+                                <div class="uk-form-controls">
+                                    <select class="uk-select" name="destination" required>
+                                        <option disabled><?=lang('Global.destination')?></option>
+                                        <?php foreach ($outlets as $outlet) {
+                                            if ($outlet['id'] === $stockmove['destinationid']) {
+                                                $checked = 'selected';
+                                            } else {
+                                                $checked = '';
+                                            } ?>
+                                            <option value="<?= $outlet['id']; ?>" <?=$checked?>><?= $outlet['name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="product"><?=lang('Global.product')?></label>
@@ -699,7 +824,7 @@ foreach ($stockmovements as $stockmove) { ?>
                                     <div class=""><?= lang('Global.quantity') ?></div>
                                 </div>
                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                                    <div class=""><?= lang('Global.pcsPrice') ?></div>
+                                    <div class=""><?= lang('Global.capitalPrice') ?></div>
                                 </div>
                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                     <div class=""><?= lang('Global.total') ?></div>
@@ -714,10 +839,10 @@ foreach ($stockmovements as $stockmove) { ?>
                                         select: function(e, i) {
                                             var data = {
                                                 'id'        : i.item.idx,
-                                                'outletid'  : <?= $stockmove['origin'] ?>
+                                                'outletid'  : <?= $stockmove['originid'] ?>
                                             };
                                             $.ajax({
-                                                url:"stock/product",
+                                                url:"stockmove/product",
                                                 method:"POST",
                                                 data: data,
                                                 dataType: "json",
@@ -743,21 +868,28 @@ foreach ($stockmovements as $stockmove) { ?>
                                                     for (x in variantarray<?=$stockmove['id']?>) {
                                                         //alert(variantarray<?=$stockmove['id']?>[k]['name']);
                                                         var skucontainer = document.createElement('div');
-                                                        skucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3 uk-margin-small');
+                                                        skucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
                                                                                         
                                                         var skuvar = document.createElement('div');
                                                         skuvar.setAttribute('class','');
                                                         skuvar.innerHTML = variantarray<?=$stockmove['id']?>[x]['sku'];
 
                                                         var varcontainer = document.createElement('div');
-                                                        varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3 uk-margin-small');
+                                                        varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
                                                                                         
                                                         var varname = document.createElement('div');
                                                         varname.setAttribute('class','');
                                                         varname.innerHTML = variantarray<?=$stockmove['id']?>[x]['name'];
 
+                                                        var stockcontainer = document.createElement('div');
+                                                        stockcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
+                                                                                        
+                                                        var stock = document.createElement('div');
+                                                        stock.setAttribute('class','');
+                                                        stock.innerHTML = variantarray<?=$stockmove['id']?>[x]['qty'];
+
                                                         var cartcontainer = document.createElement('div');
-                                                        cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-3 uk-margin-small');
+                                                        cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
 
                                                         var cart = document.createElement('a');
                                                         cart.setAttribute('class', 'uk-icon-button');
@@ -766,9 +898,11 @@ foreach ($stockmovements as $stockmove) { ?>
 
                                                         skucontainer.appendChild(skuvar);
                                                         varcontainer.appendChild(varname);
+                                                        stockcontainer.appendChild(stock);
                                                         cartcontainer.appendChild(cart);
                                                         productgrid.appendChild(skucontainer);
                                                         productgrid.appendChild(varcontainer);
+                                                        productgrid.appendChild(stockcontainer);
                                                         productgrid.appendChild(cartcontainer);
                                                     };
                                                     
@@ -820,6 +954,7 @@ foreach ($stockmovements as $stockmove) { ?>
                                                 etot.setAttribute('type', 'number');
                                                 etot.setAttribute('id', "addtotalpcs["+variantarray<?=$stockmove['id']?>[x]['id']+"]");
                                                 etot.setAttribute('name', "addtotalpcs["+variantarray<?=$stockmove['id']?>[x]['id']+"]");
+                                                etot.setAttribute('max', variantarray<?=$stockmove['id']?>[x]['qty']);
                                                 etot.setAttribute('class', 'uk-input');
                                                 etot.setAttribute('value', '1');
                                                 etot.setAttribute('required', '');
@@ -833,11 +968,15 @@ foreach ($stockmovements as $stockmove) { ?>
 
                                                 var eprice = document.createElement('input');
                                                 eprice.setAttribute('type', 'number');
+                                                eprice.setAttribute('hidden', '');
                                                 eprice.setAttribute('id', "addbprice["+variantarray<?=$stockmove['id']?>[x]['id']+"]");
                                                 eprice.setAttribute('name', "addbprice["+variantarray<?=$stockmove['id']?>[x]['id']+"]");
                                                 eprice.setAttribute('class', 'uk-input');
                                                 eprice.setAttribute('value', variantarray<?=$stockmove['id']?>[x]['price']);
                                                 eprice.setAttribute('required', '');
+
+                                                var epricediv = document.createElement('div');
+                                                epricediv.innerHTML = variantarray<?=$stockmove['id']?>[x]['price'];
 
                                                 var esubtotcontainer = document.createElement('div');
                                                 esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-5');
@@ -863,6 +1002,7 @@ foreach ($stockmovements as $stockmove) { ?>
                                                 etcontainer.appendChild(etot);
                                                 etcontainer.appendChild(epieces);
                                                 epricecontainer.appendChild(eprice);
+                                                epricecontainer.appendChild(epricediv);
                                                 esubtotcontainer.appendChild(esubtotal);
                                                 epgrid.appendChild(evskucontainer);
                                                 epgrid.appendChild(evcontainer);
@@ -877,6 +1017,8 @@ foreach ($stockmovements as $stockmove) { ?>
                                                     }
                                                 });
                                             }
+                                            $('#prodname<?= $stockmove['id'] ?>').val('');
+                                            return false;
                                         }
                                     }
                                 };
@@ -894,11 +1036,12 @@ foreach ($stockmovements as $stockmove) { ?>
                                         <div class=""><?= $detail['name'] ?></div>
                                     </div>
                                     <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                                        <input class="uk-input" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" required />
+                                        <input class="uk-input" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="1" max="<?= $detail['qty'] ?>" required />
                                         <div class="uk-margin-small-left">Pcs</div>
                                     </div>
                                     <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                                        <input class="uk-input" type="number" id="bprice[<?=$detailid?>]" name="bprice[<?=$detailid?>]" value="<?= $detail['wholesale'] ?>" required />
+                                        <input hidden class="uk-input" type="number" id="bprice[<?=$detailid?>]" name="bprice[<?=$detailid?>]" value="<?= $detail['wholesale'] ?>" required />
+                                        <div><?= $detail['wholesale'] ?></div>
                                     </div>
                                     <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center subvariant<?= $stockmove['id'] ?>" id="subtotal<?= $detailid ?>">
                                         <?= (Int)$detail['wholesale'] * (Int)$detail['inputqty'] ?>

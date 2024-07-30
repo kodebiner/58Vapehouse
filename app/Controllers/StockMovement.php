@@ -23,6 +23,7 @@ class StockMovement extends BaseController
         $ProductModel               = new ProductModel();
         $VariantModel               = new VariantModel();
         $OutletModel                = new OutletModel();
+        $StockModel                 = new StockModel();
         $StockmovementModel         = new StockmovementModel();
         $StockMoveDetailModel       = new StockMoveDetailModel();
 
@@ -46,6 +47,8 @@ class StockMovement extends BaseController
             $stockmovements         = $StockmovementModel->where('origin', $this->data['outletPick'])->orWhere('destination', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->paginate(20, 'stockmovement');
         }
 
+        $outlets                    = $OutletModel->findAll();
+
         $productlist                = $ProductModel->where('status', '1')->find();
 
         $stockmovedata              = array();
@@ -57,18 +60,25 @@ class StockMovement extends BaseController
 
                 if (!empty($dataorigin)) {
                     $origin         = $dataorigin['name'];
+                    $originid       = $dataorigin['id'];
                 } else {
-                    $origin = '';
+                    $origin         = '';
+                    $originid       = '';
                 }
 
                 if (!empty($datadestination)) {
-                    $destination = $datadestination['name'];
+                    $destination    = $datadestination['name'];
+                    $destinationid  = $datadestination['id'];
                 } else {
                     $destination = '';
+                    $destinationid  = '';
                 }
 
+                $stockmovedata[$stockmove['id']]['id']              = $stockmove['id'];
                 $stockmovedata[$stockmove['id']]['origin']          = $origin;
+                $stockmovedata[$stockmove['id']]['originid']        = $originid;
                 $stockmovedata[$stockmove['id']]['destination']     = $destination;
+                $stockmovedata[$stockmove['id']]['destinationid']   = $destinationid;
                 $stockmovedata[$stockmove['id']]['date']            = $stockmove['date'];
                 $stockmovedata[$stockmove['id']]['status']          = $stockmove['status'];
 
@@ -80,11 +90,18 @@ class StockMovement extends BaseController
     
                         if (!empty($movementvariants)) {
                             $movementproducts       = $ProductModel->find($movementvariants['productid']);
+                            $stocks                 = $StockModel->where('variantid', $movementvariants['id'])->where('outletid', $stockmove['origin'])->first();
     
                             if (!empty($movementproducts)) {
                                 $product = $movementproducts['name'];
                             } else {
                                 $product = '';
+                            }
+    
+                            if (!empty($stocks)) {
+                                $qty = $stocks['qty'];
+                            } else {
+                                $qty = '';
                             }
     
                             $varid      = $movementvariants['id'];
@@ -94,7 +111,9 @@ class StockMovement extends BaseController
                         } else {
                             $varid      = '';
                             $variants   = '';
+                            $sku        = '';
                             $product    = '';
+                            $qty        = '';
                             $wholesale  = '';
                         }
     
@@ -103,6 +122,7 @@ class StockMovement extends BaseController
                         $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['variantname']   = $variants;
                         $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['sku']           = $sku;
                         $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['varid']         = $varid;
+                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['qty']           = $qty;
                         $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['wholesale']     = $wholesale;
                         $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['inputqty']      = $movedet['qty'];
     
@@ -124,6 +144,7 @@ class StockMovement extends BaseController
         $data['stockmovements']     = $stockmovements;
         $data['stockmovedata']      = $stockmovedata;
         $data['productlist']        = $productlist;
+        $data['outlets']            = $outlets;
         $data['pager']              = $StockmovementModel->pager;
         $data['startdate']          = strtotime($startdate);
         $data['enddate']            = strtotime($enddate);
@@ -165,6 +186,7 @@ class StockMovement extends BaseController
                         'product'   => $product['name'],
                         'variant'   => $variant['name'],
                         'sku'       => $variant['sku'],
+                        'wholesale' => $variant['hargamodal'],
                         'name'      => $product['name'].' - '.$variant['name'],
                         'qty'       => $stock['qty'],
                         'price'     => $variant['hargadasar'],

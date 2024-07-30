@@ -361,6 +361,7 @@ class Stock extends BaseController
                         } else {
                             $varid      = '';
                             $variants   = '';
+                            $sku        = '';
                             $product    = '';
                             $hargadasar = '';
                             $hargaold   = '';
