@@ -718,6 +718,7 @@ class Home extends BaseController
 
         // Populating Data
         $oldstockmove               = $StockMovementModelBackup->findAll();
+        dd($oldstockmove);
         foreach ($oldstockmove as $old) {
             $datamove   = [
                 'id'                => $old['id'],
