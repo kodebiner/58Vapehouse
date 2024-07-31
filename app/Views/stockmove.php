@@ -411,20 +411,21 @@
             $created    = lang('Global.smovecreated');
             $sent       = lang('Global.smovesent');
             $pending    = lang('Global.smovepending');
-            $success    = lang('Global.smoveaccpeted');
+            $success    = lang('Global.smoveaccepted');
             $cancel     = lang('Global.smovecanceled');
 
             foreach ($stockmovedata as $stockmove) {
-                if ($outletPick == $stockmove['destinationid']) {
-                    if ($stockmove['status'] == '0') {
-                        $hidden = 'hidden';
-                    } else {
-                        $hidden = '';
-                    }
-                } else {
-                    $hidden = '';
-                } ?>
-                <tr <?= $hidden ?>>
+                // if ($outletPick == $stockmove['destinationid']) {
+                //     if ($stockmove['status'] == '0') {
+                //         $hidden = 'hidden';
+                //     } else {
+                //         $hidden = '';
+                //     }
+                // } else {
+                //     $hidden = '';
+                // }
+            ?>
+                <tr>
                     <td class="uk-width-small"><?= date('l, d M Y, H:i:s', strtotime($stockmove['date'])); ?></td>
 
                     <td class="uk-width-small"><?= $stockmove['origin'] ?></td>
@@ -444,11 +445,11 @@
                             echo '<div class="uk-text-primary" style="border-style: solid; border-color: #1e87f0;">'.$created.$stockmove['origin'].'</div>';
                         } elseif ($stockmove['status'] === "1") {
                             if ($outletPick == $stockmove['destinationid']) {
-                                echo '<div class="uk-text-warning" style="border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['destination'].'</div>';
+                                echo '<div style="border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['destination'].'</div>';
                             } elseif ($outletPick == $stockmove['originid']) {
-                                echo '<div class="uk-text-warning" style="border-style: solid; border-color: #faa05a;">'.$sent.$stockmove['origin'].'</div>';
+                                echo '<div style="border-style: solid; border-color: #faa05a;">'.$sent.$stockmove['origin'].'</div>';
                             } else {
-                                echo '<div class="uk-text-warning" style="border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['origin'].' / '.$stockmove['destination'].'</div>';
+                                echo '<div style="border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['origin'].' / '.$stockmove['destination'].'</div>';
                             }
                         } elseif ($stockmove['status'] === "2") {
                             echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">'.$cancel.'</div>';
@@ -458,35 +459,77 @@
                         ?>
                     </td>
 
-                    <?php if ($stockmove['status'] === "0") { ?>
-                        <td class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small uk-text-center" uk-grid>
-                            <!-- Button Trigger Modal Detail -->
-                            <div class="">
-                                <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $stockmove['id'] ?>"></a>
-                            </div>
-                            <!-- End Of Button Trigger Modal Detail -->
+                    <?php if ((($stockmove['status'] == "0") || ($stockmove['status'] == "1")) && ($outletPick != null)) {
+                        if (($outletPick == $stockmove['originid']) && ($stockmove['status'] != '1')) { ?>
+                            <td>
+                                <div class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small uk-text-center" uk-grid>
+                                    <!-- Button Trigger Modal Detail -->
+                                    <div class="">
+                                        <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $stockmove['id'] ?>"></a>
+                                    </div>
+                                    <!-- End Of Button Trigger Modal Detail -->
 
-                            <!-- Button Trigger Modal Edit -->
-                            <div class="">
-                                <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $stockmove['id'] ?>"></a>
-                            </div>
-                            <!-- End Of Button Trigger Edit Detail -->
+                                    <!-- Button Trigger Modal Edit -->
+                                    <div class="">
+                                        <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $stockmove['id'] ?>"></a>
+                                    </div>
+                                    <!-- End Of Button Trigger Edit Detail -->
 
-                            <!-- Button Confirmation -->
-                            <div>
-                                <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $stockmove['id'] ?>"></a>
-                            </div>
-                            <!-- End Of Button Confirmation -->
+                                    <!-- Button Confirmation -->
+                                    <div>
+                                        <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $stockmove['id'] ?>"></a>
+                                    </div>
+                                    <!-- End Of Button Confirmation -->
 
-                            <!-- Button Cancel -->
-                            <div>
-                                <form class="uk-form-stacked" role="form" action="stockmove/cancel/<?= $stockmove['id'] ?>" method="post">
-                                    <button type="submit" uk-icon="close" class="uk-icon-button-delete" onclick="return confirm('<?=lang('Global.cancelConfirm')?>')"></button>
-                                </form>
-                            </div>
-                            <!-- End Of Button Cancel -->
-                        </td>
-                    <?php } else { ?>
+                                    <!-- Button Cancel -->
+                                    <div>
+                                        <form class="uk-form-stacked" role="form" action="stockmove/cancel/<?= $stockmove['id'] ?>" method="post">
+                                            <button type="submit" uk-icon="close" class="uk-icon-button-delete" onclick="return confirm('<?=lang('Global.cancelConfirm')?>')"></button>
+                                        </form>
+                                    </div>
+                                    <!-- End Of Button Cancel -->
+                                </div>
+                            </td>
+                        <?php } elseif (($outletPick == $stockmove['destinationid']) && ($stockmove['status'] == '1')) { ?>
+                            <td>
+                                <div class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small uk-text-center" uk-grid>
+                                    <!-- Button Trigger Modal Detail -->
+                                    <div class="">
+                                        <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $stockmove['id'] ?>"></a>
+                                    </div>
+                                    <!-- End Of Button Trigger Modal Detail -->
+
+                                    <!-- Button Trigger Modal Edit -->
+                                    <div class="">
+                                        <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $stockmove['id'] ?>"></a>
+                                    </div>
+                                    <!-- End Of Button Trigger Edit Detail -->
+
+                                    <!-- Button Confirmation -->
+                                    <div>
+                                        <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $stockmove['id'] ?>"></a>
+                                    </div>
+                                    <!-- End Of Button Confirmation -->
+
+                                    <!-- Button Cancel -->
+                                    <div>
+                                        <form class="uk-form-stacked" role="form" action="stockmove/cancel/<?= $stockmove['id'] ?>" method="post">
+                                            <button type="submit" uk-icon="close" class="uk-icon-button-delete" onclick="return confirm('<?=lang('Global.cancelConfirm')?>')"></button>
+                                        </form>
+                                    </div>
+                                    <!-- End Of Button Cancel -->
+                                </div>
+                            </td>
+                        <?php } else { ?>
+                            <td class="uk-text-center uk-width-small">
+                                <!-- Button Trigger Modal Detail -->
+                                <div class="uk-text-center">
+                                    <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $stockmove['id'] ?>"></a>
+                                </div>
+                                <!-- End Of Button Trigger Modal Detail -->
+                            </td>
+                        <?php }
+                    } else { ?>
                         <td class="uk-text-center uk-width-small">
                             <!-- Button Trigger Modal Detail -->
                             <div class="uk-text-center">
@@ -506,8 +549,8 @@
 <!-- Table Content End -->
 
 <!-- Modal Confirm -->
-<?php foreach ($stockmovements as $stockmove) {
-    if ($stockmove['status'] === "0") { ?>
+<?php foreach ($stockmovedata as $stockmove) {
+    if ((($outletPick == $stockmove['originid']) && ($stockmove['status'] != '1')) || (($outletPick == $stockmove['destinationid']) && ($stockmove['status'] == '1'))) { ?>
         <div uk-modal class="uk-flex-top uk-modal-container" id="savedata<?= $stockmove['id'] ?>">
             <div class="uk-modal-dialog uk-margin-auto-vertical">
                 <div class="uk-modal-content">
@@ -522,9 +565,10 @@
                         </div>
                     </div>
                     <div class="uk-modal-body">
-                        <form class="uk-form-stacked" role="form" action="stock/confirm/<?= $stockmove['id'] ?>" method="post">
+                        <form class="uk-form-stacked" role="form" action="stockmove/confirm/<?= $stockmove['id'] ?>" method="post">
                             <?= csrf_field() ?>
                             <input type="hidden" name="id" value="<?= $stockmove['id']; ?>">
+                            <input type="hidden" name="outletpick" value="<?= $outletPick ?>">
                             
                             <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" style="background-color: #fff;">
                                 <thead>
@@ -626,11 +670,13 @@
 
 <!-- Modal Detail -->
 <?php
-$success    = lang('Global.success');
-$cancel     = lang('Global.cancel');
-$pending    = lang('Global.pending');
+$created    = lang('Global.smovecreated');
+$sent       = lang('Global.smovesent');
+$pending    = lang('Global.smovepending');
+$success    = lang('Global.smoveaccepted');
+$cancel     = lang('Global.smovecanceled');
 
-foreach ($stockmovements as $stockmove) { ?>
+foreach ($stockmovedata as $stockmove) { ?>
     <div uk-modal class="uk-flex-top uk-modal-container" id="detail<?= $stockmove['id'] ?>">
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
@@ -640,7 +686,14 @@ foreach ($stockmovements as $stockmove) { ?>
                             <h5 class="uk-modal-title" id="detail<?= $stockmove['id'] ?>" ><?=lang('Global.detail')?></h5>
                         </div>
                         <div class="uk-text-right">
-                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                            <div class="uk-child-width-1-6 uk-flex-right" uk-grid>
+                                <div>
+                                    <a class="uk-icon-button" uk-icon="print" href="stockmove/stockmovementprint/<?= $stockmove['id'] ?>" target="_blank"></a>
+                                </div>
+                                <div>
+                                    <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -654,18 +707,32 @@ foreach ($stockmovements as $stockmove) { ?>
                             <label class="uk-form-label"><?=lang('Global.status')?></label>
                             <div class="uk-form-controls">
                                 <?php if ($stockmove['status'] === "0") {
-                                    echo '<span class="uk-text-primary" style="padding: 5px; border-style: solid; border-color: #1e87f0;">'.$pending.'</span>';
+                                    echo '<span class="uk-text-primary" style="padding: 5px; border-style: solid; border-color: #1e87f0;">'.$created.$stockmove['origin'].'</span>';
                                 } elseif ($stockmove['status'] === "1") {
-                                    echo '<span class="uk-text-success uk-width-auto" style="padding: 5px; border-style: solid; border-color: #32d296;">'.$success.'</span>';
+                                    if ($outletPick == $stockmove['destinationid']) {
+                                        echo '<span style="padding: 5px; border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['destination'].'</span>';
+                                    } elseif ($outletPick == $stockmove['originid']) {
+                                        echo '<span style="padding: 5px; border-style: solid; border-color: #faa05a;">'.$sent.$stockmove['origin'].'</span>';
+                                    } else {
+                                        echo '<span style="padding: 5px; border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['origin'].' / '.$stockmove['destination'].'</span>';
+                                    }
                                 } elseif ($stockmove['status'] === "2") {
                                     echo '<span class="uk-text-danger uk-width-auto" style="padding: 5px; border-style: solid; border-color: #f0506e;">'.$cancel.'</span>';
-                                } ?>
+                                } elseif ($stockmove['status'] === "3") {
+                                    echo '<span class="uk-text-success uk-width-auto" style="padding: 5px; border-style: solid; border-color: #32d296;">'.$success.$stockmove['destination'].'</span>';
+                                }
+                                ?>
                             </div>
                         </div>
                         
                         <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.date')?></label>
                             <div class="uk-form-controls"><?= date('l, d M Y, H:i:s', strtotime($stockmove['date'])); ?></div>
+                        </div>
+                        
+                        <div class="uk-margin">
+                            <label class="uk-form-label">No. <?=lang('Global.invoice')?></label>
+                            <div class="uk-form-controls" id="invoice<?= $stockmove['id'] ?>"></div>
                         </div>
 
                         <div class="uk-margin">
@@ -689,11 +756,6 @@ foreach ($stockmovements as $stockmove) { ?>
                                     <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.quantity').' '.lang('Global.stock')?></th>
-                                    <?php if ($stockmove['status'] != "0") { ?>
-                                        <th class="uk-text-emphasis"><?=lang('Global.oldprice')?></th>
-                                        <th class="uk-text-emphasis"><?=lang('Global.adjprice')?></th>
-                                        <th class="uk-text-emphasis"><?=lang('Global.diffprice')?></th>
-                                    <?php } ?>
                                     <th class="uk-text-emphasis"><?=lang('Global.capitalPrice')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.total').' '.lang('Global.capitalPrice')?></th>
                                 </tr>
@@ -705,21 +767,6 @@ foreach ($stockmovements as $stockmove) { ?>
                                         <td><?= $detail['productname']; ?></td>
                                         <td><?= $detail['variantname']; ?></td>
                                         <td><?= $detail['inputqty']; ?> Pcs</td>
-                                        <?php if ($stockmove['status'] != "0") {
-                                            $oldprice   = $detail['wholesale'];
-                                            $newprice   = $detail['hargadasar'];
-                                            $diffprice  = (Int)$newprice - (Int)$oldprice; ?>
-                                            <td>
-                                                <?= $oldprice ?>
-                                            </td>
-                                            <td>
-                                                <?= $newprice ?>
-                                            </td>
-                                            <td>
-                                                <?= $diffprice ?>
-                                            </td>
-                                        <?php } ?>
-                                            
                                         <td><?= $detail['wholesale']; ?></td>
                                         <td><?= (Int)$detail['wholesale'] * (Int)$detail['inputqty']; ?></td>
                                     </tr>
@@ -730,14 +777,9 @@ foreach ($stockmovements as $stockmove) { ?>
                                     <td><?= lang('Global.totalMovement'); ?></td>
                                     <td></td>
                                     <td></td>
-                                    <td><?= $stockmovedata[$stockmove['id']]['totalqty'] ?> Pcs</td>
+                                    <td><?= $stockmove['totalqty'] ?> Pcs</td>
                                     <td></td>
-                                    <?php if ($stockmove['status'] != "0") { ?>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    <?php } ?>
-                                    <td><?= "Rp ".number_format($stockmovedata[$stockmove['id']]['totalwholesale'],0,',','.'); ?></td>
+                                    <td><?= "Rp ".number_format($stockmove['totalwholesale'],0,',','.'); ?></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -746,12 +788,42 @@ foreach ($stockmovements as $stockmove) { ?>
             </div>
         </div>
     </div>
+
+    <script>
+        // Date In Indonesia
+        var publishupdate   = "<?= $stockmove['date'] ?>";
+        var thatdate        = publishupdate.split( /[- :]/ );
+        thatdate[1]--;
+        var publishthatdate = new Date( ...thatdate );
+        var publishyear     = publishthatdate.getFullYear();
+        var publishmonth    = publishthatdate.getMonth();
+        var publishdate     = publishthatdate.getDate();
+        // var publishday      = publishthatdate.getDay();
+
+        switch(publishmonth) {
+            case 0: publishmonth   = "01"; break;
+            case 1: publishmonth   = "02"; break;
+            case 2: publishmonth   = "03"; break;
+            case 3: publishmonth   = "04"; break;
+            case 4: publishmonth   = "05"; break;
+            case 5: publishmonth   = "06"; break;
+            case 6: publishmonth   = "07"; break;
+            case 7: publishmonth   = "08"; break;
+            case 8: publishmonth   = "09"; break;
+            case 9: publishmonth   = "10"; break;
+            case 10: publishmonth  = "11"; break;
+            case 11: publishmonth  = "12"; break;
+        }
+
+        var invoice         =   "SM" + publishyear + publishmonth + publishdate + "<?= $stockmove['id'] ?>"
+        document.getElementById("invoice<?= $stockmove['id'] ?>").innerHTML = invoice;
+    </script>
 <?php } ?>
 <!-- Modal Detail End -->
 
 <!-- Modal Edit -->
 <?php foreach ($stockmovedata as $stockmove) {
-    if ($stockmove['status'] === "0") { ?>
+    if ((($outletPick == $stockmove['originid']) && ($stockmove['status'] == '0')) || (($outletPick == $stockmove['destinationid']) && ($stockmove['status'] == '1'))) { ?>
         <div uk-modal class="uk-flex-top uk-modal-container" id="editdata<?= $stockmove['id'] ?>">
             <div class="uk-modal-dialog uk-margin-auto-vertical">
                 <div class="uk-modal-content">
@@ -818,7 +890,7 @@ foreach ($stockmovements as $stockmove) { ?>
                                     <div class="">SKU</div>
                                 </div>
                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                                    <div class=""><?= lang('Global.variant') ?></div>
+                                    <div class=""><?= lang('Global.product') ?></div>
                                 </div>
                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                     <div class=""><?= lang('Global.quantity') ?></div>

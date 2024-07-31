@@ -27,6 +27,8 @@ use App\Models\BookingModel;
 use App\Models\BookingdetailModel;
 use App\Models\PurchaseModel;
 use App\Models\PurchasedetailModel;
+use App\Models\StockMovementModel;
+use App\Models\StockMoveDetailModel;
 use App\Models\PresenceModel;
 
 class export extends BaseController

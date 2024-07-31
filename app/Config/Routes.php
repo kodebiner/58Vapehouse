@@ -297,8 +297,12 @@ $routes->group('sop', ['filter'=>'login'], function($routes){
 // Stock Movement
 $routes->group('stockmove', ['filter'=>'login'], function($routes){
     $routes->get('', 'StockMovement::index', ['filter' => 'role:owner']);
-    $routes->post('create', 'StockMovement::create', ['filter' => 'role:owner']);
     $routes->post('product', 'StockMovement::product', ['filter' => 'role:owner']);
+    $routes->post('create', 'StockMovement::create', ['filter' => 'role:owner']);
+    $routes->post('confirm/(:num)', 'StockMovement::confirm/$1', ['filter' => 'role:owner']);
+    $routes->post('update/(:num)', 'StockMovement::update/$1', ['filter' => 'role:owner']);
+    $routes->post('cancel/(:num)', 'StockMovement::cancel/$1', ['filter' => 'role:owner']);
+    $routes->get('stockmovementprint/(:num)', 'StockMovement::print/$1');
 });
 
 // Stock Adjustment

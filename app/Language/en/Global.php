@@ -212,6 +212,8 @@ return [
     'smovecanceled'     => 'Stock movement canceled',
     'movementInfo'      => 'Stock Movement Information',
     'totalMovement'     => 'Total Stock Movement',
+    'sender'            => 'Shipper',
+    'receiver'          => 'Recipient',
    
     // Button
     'edit'              => 'Edit',

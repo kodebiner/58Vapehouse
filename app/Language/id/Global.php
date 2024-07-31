@@ -212,6 +212,8 @@ return [
     'smovecanceled'     => 'Pemindahan stok telah dibatalkan',
     'movementInfo'      => 'Informasi Pemindahan Stok',
     'totalMovement'     => 'Total Pemindahan Stok',
+    'sender'            => 'Pengirim',
+    'receiver'          => 'Penerima',
 
     // Button
     'edit'              => 'Ubah',
