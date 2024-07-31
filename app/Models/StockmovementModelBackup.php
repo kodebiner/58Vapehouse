@@ -2,14 +2,14 @@
 
 use CodeIgniter\Model;
 
-class StockmovementModel extends Model
+class StockmovementModelBackup extends Model
 {
     protected $allowedFields = [
         'variantid','origin','destination','qty','date',
 
     ];
 
-    protected $table      = 'stockmovement';
+    protected $table      = 'stockmovementbackup';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType     = 'array';

@@ -27,6 +27,9 @@ use App\Models\PresenceModel;
 use App\Models\GroupUserModel;
 use App\Models\OldStockModel;
 use Myth\Auth\Models\GroupModel;
+use App\Models\StockMovementModel;
+use App\Models\StockMoveDetailModel;
+use App\Models\StockmovementModelBackup;
 
 class Home extends BaseController
 {
@@ -704,6 +707,40 @@ class Home extends BaseController
         // }
 
         return redirect()->to('product');
+    }
+
+    public function stockmove()
+    {
+        // Calling Models
+        $StockMovementModel         = new StockMovementModel;
+        $StockMoveDetailModel       = new StockMoveDetailModel;
+        $StockMovementModelBackup   = new StockMovementModelBackup;
+
+        // Populating Data
+        $oldstockmove               = $StockMovementModelBackup->findAll();
+        foreach ($oldstockmove as $old) {
+            $datamove   = [
+                'id'                => $old['id'],
+                'origin'            => $old['origin'],
+                'destination'       => $old['destination'],
+                'date'              => $old['date'],
+                'status'            => 3,
+            ];
+            $StockMovementModel->insert($datamove);
+
+            // Get Stock Movement ID
+            $stockmoveid            = $StockMovementModel->getInsertID();
+
+            $datadetail = [
+                'stockmoveid'       => $stockmoveid,
+                'variantid'         => $old['variantid'],
+                'qty'               => $old['qty'],
+            ];
+            $StockMoveDetailModel->insert($datadetail);
+        }
+
+        // Return
+        return redirect()->to('stockmove');
     }
 
     public function phpinfo()
