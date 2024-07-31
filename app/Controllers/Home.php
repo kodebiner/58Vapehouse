@@ -716,7 +716,6 @@ class Home extends BaseController
         $StockMoveDetailModel       = new StockMoveDetailModel;
         $StockMovementModelBackup   = new StockMovementModelBackup;
 
-        dd($StockMovementModelBackup);
         // Populating Data
         $oldstockmove               = $StockMovementModelBackup->findAll();
         foreach ($oldstockmove as $old) {
