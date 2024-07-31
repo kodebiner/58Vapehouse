@@ -510,7 +510,7 @@ class StockMovement extends BaseController
         $data['stockmovedata']  = $stockmovedata;
         
         $mpdf   = new \Mpdf\Mpdf([
-            'default_font_size' => 5,
+            'default_font_size' => 12,
         ]);
         $mpdf->Image('./img/logo.png', 80, 0, 210, 297, 'png', '', true, false);
         $mpdf->showImageErrors = true;
