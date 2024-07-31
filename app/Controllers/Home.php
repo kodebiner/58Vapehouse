@@ -27,7 +27,7 @@ use App\Models\PresenceModel;
 use App\Models\GroupUserModel;
 use App\Models\OldStockModel;
 use Myth\Auth\Models\GroupModel;
-use App\Models\StockMovementModel;
+use App\Models\StockmovementModel;
 use App\Models\StockMoveDetailModel;
 use App\Models\StockmovementModelBackup;
 
@@ -712,7 +712,7 @@ class Home extends BaseController
     public function stockmove()
     {
         // Calling Models
-        $StockMovementModel         = new StockMovementModel;
+        $StockmovementModel         = new StockmovementModel;
         $StockMoveDetailModel       = new StockMoveDetailModel;
         $StockMovementModelBackup   = new StockMovementModelBackup;
 
@@ -727,10 +727,10 @@ class Home extends BaseController
                 'date'              => $old['date'],
                 'status'            => 3,
             ];
-            $StockMovementModel->insert($datamove);
+            $StockmovementModel->insert($datamove);
 
             // Get Stock Movement ID
-            $stockmoveid            = $StockMovementModel->getInsertID();
+            $stockmoveid            = $StockmovementModel->getInsertID();
 
             $datadetail = [
                 'stockmoveid'       => $stockmoveid,
