@@ -446,14 +446,14 @@
                                                         <td class="uk-text-right">Rp <?= number_format($bestpayment['value'],0,',','.') ?></td>
                                                     </tr>
                                                 <?php } 
-                                            } else {
-                                                foreach ($payments as $pay) { ?>
-                                                    <tr>
-                                                        <td><?= $i++; ?></td>
-                                                        <td><?= $pay['name'] ?></td>
+                                            // } else {
+                                            //     foreach ($payments as $pay) { ?>
+                                                    <!-- <tr>
+                                                        <td><?//= $i++; ?></td>
+                                                        <td><?//= $pay['name'] ?></td>
                                                         <td class="uk-text-right">0</td>
-                                                    </tr>
-                                                <?php }
+                                                    </tr> -->
+                                                <?php //}
                                             } ?>
                                         </tbody>
                                     </table>
