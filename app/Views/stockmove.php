@@ -101,7 +101,7 @@
                         <label class="uk-form-label" for="destination"><?=lang('Global.destination')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select" name="destination" required>
-                                <option selected disabled><?=lang('Global.destination')?></option>
+                                <option disabled><?=lang('Global.destination')?></option>
                                 <?php foreach ($outlets as $outlet) {
                                     if ($outlet['id'] === $outletPick) {
                                         $disabled = 'disabled';

@@ -52,13 +52,23 @@ class export extends BaseController
         } else {
             $outlet     = $OutletModel->find($this->data['outletPick']);
             $outletname = $outlet['name'];
+            
+            // if ($this->data['outletPick'] != null) {
+            //     $outlet     = $OutletModel->find($this->data['outletPick']);
+            //     $outletname = $outlet['name'];
+            // } else {
+            //     $outletname = lang('Global.allOutlets');
+            // }
 
             $exported   = $db->table('stock');
-            $stockexp   = $exported->select('stock.qty as qty, variant.hargamodal as hargamodal, variant.hargadasar as hargadasar, variant.hargajual as hargajual, variant.hargarekomendasi as hargarekomendasi, variant.name as varname, product.name as prodname, category.name as catname, brand.name as brandname');
+            $stockexp   = $exported->select('stock.qty as qty, variant.hargamodal as hargamodal, variant.hargadasar as hargadasar, variant.hargajual as hargajual, variant.hargarekomendasi as hargarekomendasi, variant.name as varname, product.name as prodname, category.name as catname, brand.name as brandname, variant.sku as sku');
             $stockexp   = $exported->join('variant', 'stock.variantid = variant.id', 'left');
             $stockexp   = $exported->join('product', 'variant.productid = product.id', 'left');
             $stockexp   = $exported->join('category', 'product.catid = category.id', 'left');
             $stockexp   = $exported->join('brand', 'product.brandid = brand.id', 'left');
+            // if ($this->data['outletPick'] != null) {
+            //     $stockexp   = $exported->where('stock.outletid', $this->data['outletPick']);
+            // }
             $stockexp   = $exported->where('stock.outletid', $this->data['outletPick']);
             $stockexp   = $exported->orderBy('product.name', 'ASC');
             $stockexp   = $exported->get();
@@ -73,6 +83,7 @@ class export extends BaseController
             echo '<table>';
             echo '<thead>';
             echo '<tr>';
+            echo '<th>SKU</th>';
             echo '<th>Nama</th>';
             echo '<th>Merek</th>';
             echo '<th>Kategori</th>';
@@ -87,6 +98,7 @@ class export extends BaseController
             foreach ($productval as $product) {
                 $hargajual = (int)$product['hargamodal'] + (int)$product['hargajual'];
                 echo '<tr>';
+                echo '<td>' . $product['sku'] . '</td>';
                 echo '<td>' . $product['prodname'] . '-' . $product['varname'] . '</td>';
                 echo '<td>' . $product['brandname'] . '</td>';
                 echo '<td>' . $product['catname'] . '</td>';
@@ -157,21 +169,21 @@ class export extends BaseController
         $otname = $transactionhist['0']['outlet'];
         $otaddress = $transactionhist['0']['address'];
 
-?>
-        <style>
-            .cntr {
-                text-align: center;
-            }
+        ?>
+            <style>
+                .cntr {
+                    text-align: center;
+                }
 
-            th {
-                text-align: center;
-            }
+                th {
+                    text-align: center;
+                }
 
-            td {
-                text-align: left;
-            }
-        </style>
-<?php
+                td {
+                    text-align: left;
+                }
+            </style>
+        <?php
 
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=transaction$startdate-$enddate.xls");
@@ -1375,7 +1387,7 @@ class export extends BaseController
                         // }
 
                         if (!empty($products)) {
-                            $transactiondata[$products['id']]['name']            = $products['name'];
+                            $transactiondata[$products['id']]['name']           = $products['name'];
                             $category   = $CategoryModel->find($products['catid']);
 
                             if (!empty($category)) {
@@ -1451,6 +1463,7 @@ class export extends BaseController
                     echo '<th colspan="4" style="align-text:center;"></th>';
                 echo '</tr>';
                 echo '<tr>';
+                    echo '<th>SKU</th>';
                     echo '<th>Produk</th>';
                     echo '<th>Kategory</th>';
                     echo '<th>Jumlah Terjual</th>';
