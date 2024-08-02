@@ -514,7 +514,7 @@ class StockMovement extends BaseController
         ]);
         $mpdf->Image('./img/logo.png', 80, 0, 210, 297, 'png', '', true, false);
         $mpdf->showImageErrors = true;
-        $mpdf->AddPage("L", "", "", "", "", "15", "15", "2", "15", "", "", "", "", "", "", "", "", "", "", "", "A4-L");
+        $mpdf->AddPage("P", "", "", "", "", "15", "15", "2", "15", "", "", "", "", "", "", "", "", "", "", "", "A4-P");
 
         $date       = date_create($stockmovedata['date']);
         $filename   = "SM" . date_format($date, 'Ymd') . $stockmovedata['id'] . ".pdf";

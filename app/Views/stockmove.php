@@ -686,7 +686,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                             <h5 class="uk-modal-title" id="detail<?= $stockmove['id'] ?>" ><?=lang('Global.detail')?></h5>
                         </div>
                         <div class="uk-text-right">
-                            <div class="uk-child-width-1-6 uk-flex-right" uk-grid>
+                            <div class="uk-child-width-1-4 uk-flex-right" uk-grid>
                                 <div>
                                     <a class="uk-icon-button" uk-icon="print" href="stockmove/stockmovementprint/<?= $stockmove['id'] ?>" target="_blank"></a>
                                 </div>
