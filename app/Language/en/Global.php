@@ -214,6 +214,7 @@ return [
     'totalMovement'     => 'Total Stock Movement',
     'sender'            => 'Shipper',
     'receiver'          => 'Recipient',
+    'location'          => 'Location',
    
     // Button
     'edit'              => 'Edit',

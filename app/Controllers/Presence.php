@@ -51,34 +51,34 @@ class Presence extends BaseController
         // Populating Data
 
         // initialize
-        $input = $this->request->getPost();
+        $input              = $this->request->getPost();
 
-        $location = $input['geoloc'];
-        $status = $input['status'];
-        $img = $input['image'];
-        $folderPath = "img/presence/";
-    
-        $image_parts = explode(";base64,", $img);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type = $image_type_aux[1];
-    
-        $image_base64 = base64_decode($image_parts[1]);
-        $fileName = uniqid() . '.png';
-    
-        $file = $folderPath . $fileName;
+        $location           = $input['geoloc'];
+        $status             = $input['status'];
+        $img                = $input['image'];
+
+        $folderPath         = "img/presence/";
+        $image_parts        = explode(";base64,", $img);
+        $image_type_aux     = explode("image/", $image_parts[0]);
+        $image_type         = $image_type_aux[1];
+        $image_base64       = base64_decode($image_parts[1]);
+        $fileName           = uniqid() . '.png';
+        $file               = $folderPath . $fileName;
         file_put_contents($file, $image_base64);
     
         // get user id
-        $auth = service('authentication');
-        $userId = $auth->id();
+        $auth               = service('authentication');
+        $userId             = $auth->id();
 
-        $data = [
-            'userid'        => $userId,
-            'datetime'      => date("Y-m-d H:i:s"),
-            'photo'         => $fileName,
-            'geoloc'        => $location,
-            'status'        => $status,
-        ];
+        // Shift
+        $shift              = $input['shift'];
+        // $todays             = date('Y-m-d') .' 00:00:01';
+        // $checkin            = $PresenceModel->where('userid', $this->data['uid'])->where('datetime >=', $todays)->where('status', '1')->orderBy('id', 'DESC')->limit(1)->first();
+        // if ($status == '1') {
+        //     $shift  = $input['shift'];
+        // } else {
+        //     $shift  = $checkin['shift'];
+        // }
         
         if (! $this->validate([
             'geoloc'        => 'required',
@@ -87,6 +87,15 @@ class Presence extends BaseController
                 
            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
+
+        $data = [
+            'userid'        => $userId,
+            'shift'         => $shift,
+            'datetime'      => date("Y-m-d H:i:s"),
+            'photo'         => $fileName,
+            'geoloc'        => $location,
+            'status'        => $status,
+        ];
             
         // Inserting Outlet
         $PresenceModel->insert($data);

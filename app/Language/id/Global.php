@@ -214,6 +214,7 @@ return [
     'totalMovement'     => 'Total Pemindahan Stok',
     'sender'            => 'Pengirim',
     'receiver'          => 'Penerima',
+    'location'          => 'Lokasi',
 
     // Button
     'edit'              => 'Ubah',

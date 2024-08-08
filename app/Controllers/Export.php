@@ -2308,21 +2308,21 @@ class export extends BaseController
         $GroupModel     = new GroupModel;
 
         // populating data
-        $presences  = $PresenceModel->findAll();
-        $users      = $UserModel->findAll();
-        $usergroups = $UserGroupModel->findAll();
-        $groups     = $GroupModel->findAll();
+        // $presences  = $PresenceModel->findAll();
+        // $users      = $UserModel->findAll();
+        // $usergroups = $UserGroupModel->findAll();
+        // $groups     = $GroupModel->findAll();
 
         // Calling Models
-        $db                 = \Config\Database::connect();
-        $TransactionModel   = new TransactionModel;
-        $MemberModel        = new MemberModel;
-        $DebtModel          = new DebtModel;
+        // $db                 = \Config\Database::connect();
+        // $TransactionModel   = new TransactionModel;
+        // $MemberModel        = new MemberModel;
+        // $DebtModel          = new DebtModel;
         $OutletModel        = new OutletMOdel;
 
         // Populating Data
-        $members            = $MemberModel->findAll();
-        $debts              = $DebtModel->findAll();
+        // $members            = $MemberModel->findAll();
+        // $debts              = $DebtModel->findAll();
 
         $input = $this->request->getGet('daterange');
 
@@ -2335,105 +2335,176 @@ class export extends BaseController
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
-        $addres = '';
-        $presences = $PresenceModel->where('datetime >=', $startdate . " 00:00:00")->where('datetime <=', $enddate . " 23:59:59")->find();
+        $presencedata   = [];
         if ($this->data['outletPick'] === null) {
-            // if ($startdate === $enddate) {
-            //     $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
-            // }
-            $addres = "All Outlets";
+            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
+            $addres     = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            // if ($startdate === $enddate) {
-            //     $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
-            // }
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
+            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
+            $outlets    = $OutletModel->find($this->data['outletPick']);
+            $addres     = $outlets['address'];
             $outletname = $outlets['name'];
         }
-
-
-        $absen = array();
+        
         foreach ($presences as $presence) {
-            foreach ($users as $user) {
-                if ($presence['userid'] === $user->id) {
-                    foreach ($usergroups as $ugroups) {
-                        if ($ugroups['user_id'] === $user->id) {
-                            foreach ($groups as $group) {
-                                if ($ugroups['group_id'] === $group->id) {
-                                    $absen[] = [
-                                        'id'        => $user->id,
-                                        'name'      => $user->username,
-                                        'date'      => $presence['datetime'],
-                                        'status'    => $presence['status'],
-                                        'role'      => $group->name,
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            // Get User Data
+            $users          = $UserModel->find($presence['userid']);
+            $usergroups     = $UserGroupModel->where('user_id', $users->id)->first();
+            $groups         = $GroupModel->find($usergroups['group_id']);
+
+            // Define Time
+            $s      = strtotime($presence['datetime']);
+            $date   = date('d-m-Y', $s);
+            $time   = date('H:i', $s);
+
+            $shift  = $presence['shift'];
+            $status = $presence['status'];
+
+            $presencedata[$date.$shift]['id']       = $presence['id'];
+            $presencedata[$date.$shift]['date']     = $date;
+            $presencedata[$date.$shift]['name']     = $users->name;
+            $presencedata[$date.$shift]['role']     = $groups->name;
+            $presencedata[$date.$shift]['shift']    = $presence['shift'];
+
+            $presencedata[$date.$shift]['detail'][$status]['time']         = $time;
+            $presencedata[$date.$shift]['detail'][$status]['photo']        = $presence['photo'];
+            $presencedata[$date.$shift]['detail'][$status]['geoloc']       = $presence['geoloc'];
+            $presencedata[$date.$shift]['detail'][$status]['status']       = $presence['status'];
         }
 
-        // Sum Total  Presence
-        $admin = [];
-        foreach ($absen as $abs) {
-            $present = array();
-            foreach ($absen as $abs) {
-                if ($abs['status'] === '1') {
-                    $present[] = $abs['status'];
-                }
-            }
-            $presen = count($present);
-            if (!isset($admin[$abs['id'] . $abs['name']])) {
-                $admin[$abs['id'] . $abs['name']] = $abs;
-            } else {
-                $admin[$abs['id'] . $abs['name']]['status'] += $abs['status'];
-            }
-        }
-        $admin = array_values($admin);
+        // $addres = '';
+        // $presences = $PresenceModel->where('datetime >=', $startdate . " 00:00:00")->where('datetime <=', $enddate . " 23:59:59")->find();
+        // if ($this->data['outletPick'] === null) {
+        //     // if ($startdate === $enddate) {
+        //     //     $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+        //     // } else {
+        //     //     $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+        //     // }
+        //     $addres = "All Outlets";
+        //     $outletname = "58vapehouse";
+        // } else {
+        //     // if ($startdate === $enddate) {
+        //     //     $presences = $PresenceModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+        //     // } else {
+        //     //     $presences  = $PresenceModel->where('datetime >=', $startdate)->where('datetime <=', $enddate)->find();
+        //     // }
+        //     $outlets = $OutletModel->find($this->data['outletPick']);
+        //     $addres = $outlets['address'];
+        //     $outletname = $outlets['name'];
+        // }
+
+
+        // $absen = array();
+        // foreach ($presences as $presence) {
+        //     foreach ($users as $user) {
+        //         if ($presence['userid'] === $user->id) {
+        //             foreach ($usergroups as $ugroups) {
+        //                 if ($ugroups['user_id'] === $user->id) {
+        //                     foreach ($groups as $group) {
+        //                         if ($ugroups['group_id'] === $group->id) {
+        //                             $absen[] = [
+        //                                 'id'        => $user->id,
+        //                                 'name'      => $user->username,
+        //                                 'date'      => $presence['datetime'],
+        //                                 'status'    => $presence['status'],
+        //                                 'role'      => $group->name,
+        //                             ];
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // // Sum Total  Presence
+        // $admin = [];
+        // foreach ($absen as $abs) {
+        //     $present = array();
+        //     foreach ($absen as $abs) {
+        //         if ($abs['status'] === '1') {
+        //             $present[] = $abs['status'];
+        //         }
+        //     }
+        //     $presen = count($present);
+        //     if (!isset($admin[$abs['id'] . $abs['name']])) {
+        //         $admin[$abs['id'] . $abs['name']] = $abs;
+        //     } else {
+        //         $admin[$abs['id'] . $abs['name']]['status'] += $abs['status'];
+        //     }
+        // }
+        // $admin = array_values($admin);
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=presence$startdate-$enddate.xls");
+        header("Content-Disposition: attachment; filename=Presence Report $startdate-$enddate.xls");
 
         // export
         echo '<table>';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">Ringkasan Pelanggan</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $outletname . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $addres . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="3" style="align-text:center;"></th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th>Nama</th>';
-        echo '<th>Posisi</th>';
-        echo '<th>Kehadiran</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        foreach ($admin as $adm) {
-            echo '<tr>';
-            echo '<td>' . $adm['name'] . '</td>';
-            echo '<td>' . $adm['role'] . '</td>';
-            echo '<td>' . $presen . '</td>';
-            echo '</tr>';
-        }
-        echo '</tbody>';
+            echo '<thead>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">Laporan Presensi</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">' . $outletname . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">' . $addres . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;"></th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th>Tanggal</th>';
+                    echo '<th>Nama</th>';
+                    echo '<th>Posisi</th>';
+                    echo '<th>Shift</th>';
+                    echo '<th>Jam Masuk</th>';
+                    echo '<th>Keterlambatan</th>';
+                    echo '<th>Lokasi Masuk</th>';
+                    echo '<th>Jam Keluar</th>';
+                    echo '<th>Lokasi Keluar</th>';
+                echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+                foreach ($presencedata as $presence) {
+                    if ($presence['shift'] == '0') {
+                        $waktu  = 'Pagi (09:00)';
+                    } elseif ($presence['shift'] == '1') {
+                        $waktu  = 'Siang (12:00 - 16:00)';
+                    } elseif ($presence['shift'] == '2') {
+                        $waktu  = 'Sore (16:00)';
+                    }
+                    echo '<tr>';
+                        echo '<td>' . date('l, d M Y', strtotime($presence['date'])) . '</td>';
+                        echo '<td>' . $presence['name'] . '</td>';
+                        echo '<td>' . $presence['role'] . '</td>';
+                        echo '<td>' . $waktu . '</td>';
+                        foreach ($presence['detail'] as $detail) {
+                            echo '<td>' . $detail['time'] . '</td>';
+                            if ($detail['status'] == '1') {
+                                if ($presence['shift'] == '0') {
+                                    $kompensasi  = '09:15';
+                                } elseif ($presence['shift'] == '1') {
+                                    $kompensasi  = '16:15';
+                                } elseif ($presence['shift'] == '2') {
+                                    $kompensasi  = '16:15';
+                                }
+                                
+                                if (str_replace(":","", $detail['time']) > str_replace(":","", $kompensasi)) {
+                                    echo '<td>' . str_replace(":","", $detail['time']) - str_replace(":","", $kompensasi) . '</td>';
+                                } else {
+                                    echo '<td></td>';
+                                }
+                            }
+                            echo '<td>' . $detail['geoloc'] . '</td>';
+                        }
+                    echo '</tr>';
+                }
+            echo '</tbody>';
         echo '</table>';
     }
 

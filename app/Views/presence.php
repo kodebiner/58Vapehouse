@@ -29,7 +29,18 @@
 <!-- Content -->
 <div class="uk-container uk-margin">
     <form class="uk-form-stacked" id="presence" method="POST" action="presence/create">
-        <?php if (empty($checkin)) { ?>
+        <div class="uk-margin uk-light">
+            <label class="uk-form-label" for="shift">Shift</label>
+            <div class="uk-form-controls">
+                <select class="uk-select" name="shift">
+                    <option value="0">Pagi (09:00)</option>
+                    <option value="1">Siang (12:00 - 16:00)</option>
+                    <option value="2">Sore (16:00)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- </?php if (empty($checkin)) { ?>
             <div class="uk-margin uk-light">
                 <label class="uk-form-label" for="shift">Shift</label>
                 <div class="uk-form-controls">
@@ -40,7 +51,7 @@
                     </select>
                 </div>
             </div>
-        <?php } ?>
+        </?php } ?> -->
 
         <div class="uk-child-width-1-2@m" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-body">
             <div>
@@ -75,17 +86,26 @@
         </div>
 
         <div class="uk-child-width-auto uk-flex-center uk-flex uk-flex-center uk-margin-large-top" id="gridBtn" uk-grid hidden>
-            <?php if (empty($checkin)) { ?>
+            <div>
+                <button  class="uk-button uk-button-success uk-button-large" id="checkin" Onclick="klik()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkin')?></button>
+            </div>
+            <div>
+                <button class="uk-button uk-button-danger uk-button-large" id="checkout" Onclick="klik2()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkout')?></button>
+            </div>
+        </div>
+
+        <!-- <div class="uk-child-width-auto uk-flex-center uk-flex uk-flex-center uk-margin-large-top" id="gridBtn" uk-grid hidden>
+            </?php if (empty($checkin)) { ?>
                 <div>
                     <button  class="uk-button uk-button-success uk-button-large" id="checkin" Onclick="klik()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkin')?></button>
                 </div>
-            <?php } ?>
-            <?php if (empty($checkout)) { ?>
+            </?php } ?>
+            </?php if (empty($checkout)) { ?>
                 <div>
                     <button class="uk-button uk-button-danger uk-button-large" id="checkout" Onclick="klik2()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkout')?></button>
                 </div>
-            <?php } ?>
-        </div>
+            </?php } ?>
+        </div> -->
     </form>
 </div>
 <!-- End Content -->

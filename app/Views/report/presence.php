@@ -40,45 +40,76 @@
         <div class="uk-width-auto@m uk-text-right@m">
             <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" target="_blank" href="export/presence?daterange=<?= date('Y-m-d', $startdate) ?>+-+<?= date('Y-m-d', $enddate) ?>"><?= lang('Global.export') ?></a>
         </div>
+        <!-- Button Trigger Modal export End -->
     </div>
 </div>
-
-
-<table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
-    <thead>
-        <tr>
-            <th class="uk-text-large uk-text-bold"><?= lang('Global.name') ?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?= lang('Global.position') ?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?= lang('Global.presence') ?></th>
-            <th class="uk-text-center uk-text-large uk-text-bold"><?= lang('Global.detail') ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($presences as $presence) { ?>
-            <?php
-            $paramet = [];
-            $paramet[] = [
-                'id' => $presence['id'],
-                'date' => date('Y-m-d', $startdate) . "-" . date('Y-m-d', $enddate),
-            ];
-            $pram = [$presence['id'], date('Y-m-d', $startdate) . "-" . date('Y-m-d', $enddate)];
-            ?>
-            <tr>
-                <td style="color:white;"><?= $presence['name'] ?></td>
-                <td class="uk-text-center" style="color:white;"><?= $presence['role'] ?></td>
-                <td class="uk-text-center" style="color:white;"><?= $presence['status'] ?></td>
-                <td class="uk-text-center"><a class="uk-icon-link uk-margin-small-right" uk-icon="icon: eye;" href="report/presence/<?= $presence['id'] . "-" . date('Ymd', $startdate) . "-" . date('Ymd', $enddate) ?>"></a></td>
-            </tr>
-        <?php } ?>
-    </tbody>
-</table>
-
 <!-- End Of Page Heading -->
-<script>
-    $(document).ready(function() {
-        $('#example').DataTable();
-    });
-</script>
+
+<div class="uk-overflow-auto uk-margin">
+    <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top">
+        <thead>
+            <tr>
+                <th class="uk-width-medium uk-text-bold"><?= lang('Global.date') ?></th>
+                <th class="uk-width-medium uk-text-bold"><?= lang('Global.name') ?></th>
+                <th class="uk-width-small uk-text-bold"><?= lang('Global.position') ?></th>
+                <th class="uk-width-small uk-text-bold">Shift</th>
+                <th class="uk-width-small uk-text-bold"><?= lang('Global.time').' '.lang('Global.checkin') ?></th>
+                <th class="uk-width-small uk-text-bold">Keterlambatan</th>
+                <th class="uk-width-small uk-text-bold"><?= lang('Global.photo').' '.lang('Global.checkin') ?></th>
+                <th class="uk-width-small uk-text-bold"><?= lang('Global.location').' '.lang('Global.checkin') ?></th>
+                <th class="uk-width-small uk-text-bold"><?= lang('Global.time').' '.lang('Global.checkout') ?></th>
+                <th class="uk-width-small uk-text-bold"><?= lang('Global.photo').' '.lang('Global.checkout') ?></th>
+                <th class="uk-width-small uk-text-bold"><?= lang('Global.location').' '.lang('Global.checkout') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($presences as $presence) {
+                if ($presence['shift'] == '0') {
+                    $waktu  = 'Pagi (09:00)';
+                } elseif ($presence['shift'] == '1') {
+                    $waktu  = 'Siang (12:00 - 16:00)';
+                } elseif ($presence['shift'] == '2') {
+                    $waktu  = 'Sore (16:00)';
+                } ?>
+                <tr>
+                    <td style="color:white;"><?= date('l, d M Y', strtotime($presence['date'])) ?></td>
+                    <td style="color:white;"><?= $presence['name'] ?></td>
+                    <td style="color:white;"><?= $presence['role'] ?></td>
+                    <td style="color:white;"><?= $waktu ?></td>
+                    <?php foreach ($presence['detail'] as $detail) { ?>
+                        <td style="color:white;"><?= $detail['time'] ?></td>
+                        <?php if ($detail['status'] == '1') {
+                            if ($presence['shift'] == '0') {
+                                $kompensasi  = '09:15';
+                            } elseif ($presence['shift'] == '1') {
+                                $kompensasi  = '16:15';
+                            } elseif ($presence['shift'] == '2') {
+                                $kompensasi  = '16:15';
+                            }
+                            
+                            if (str_replace(":","", $detail['time']) > str_replace(":","", $kompensasi)) { ?>
+                                <td style="color:white;"><?= str_replace(":","", $detail['time']) - str_replace(":","", $kompensasi) ?></td>
+                            <?php } else { ?>
+                                <td style="color:white;"></td>
+                            <?php } ?>
+                        <?php } ?>
+                        <td style="color:white;">
+                            <div uk-lightbox>
+                                <a class="uk-inline" href="img/presence/<?= $detail['photo'] ?>">
+                                    <img class="uk-preserve-width uk-border-circle" id="img<?php echo $presence['id'] ?>" src="img/presence/<?php echo $detail['photo'];?>" width="40" height="40" alt="<?= $detail['photo'] ?>">
+                                </a>
+                            </div>
+                        </td>
+                        <td style="color:white;"><?= $detail['geoloc'] ?></td>
+                    <?php } ?>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+    <div>
+        <?= $pager->links('presence', 'front_full') ?>
+    </div>
+</div>
 <?= view('Views/Auth/_message_block') ?>
 
 <?= $this->endSection() ?>

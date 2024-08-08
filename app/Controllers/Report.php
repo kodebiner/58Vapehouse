@@ -1865,10 +1865,10 @@ class Report extends BaseController
         $OutletModel    = new OutletModel;
 
         // populating data
-        $presences  = $PresenceModel->findAll();
-        $users      = $UserModel->findAll();
-        $usergroups = $UserGroupModel->findAll();
-        $groups     = $GroupModel->findAll();
+        // $presences      = $PresenceModel->findAll();
+        // $users          = $UserModel->findAll();
+        // $usergroups     = $UserGroupModel->findAll();
+        // $groups         = $GroupModel->findAll();
 
         $input = $this->request->getGet('daterange');
 
@@ -1882,75 +1882,72 @@ class Report extends BaseController
         }
 
         $addres = '';
+        // if ($this->data['outletPick'] === null) {
+        //     // if ($startdate === $enddate) {
+        //         $presences = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->paginate(20, 'presence');
+        //     // } else {
+        //     //     $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate)->find();
+        //     // }
+        //     $addres = "All Outlets";
+        //     $outletname = "58vapehouse";
+        // } else {
+        //     // if ($startdate === $enddate) {
+        //         $presences = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->paginate(20, 'presence');
+        //     // } else {
+        //     //     $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
+        //     // }
+        //     $outlets = $OutletModel->find($this->data['outletPick']);
+        //     $addres = $outlets['address'];
+        //     $outletname = $outlets['name'];
+        // }
+
+        $presencedata   = [];
+        
         if ($this->data['outletPick'] === null) {
-            // if ($startdate === $enddate) {
-                $presences = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
-            // } else {
-            //     $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate)->find();
-            // }
-            $addres = "All Outlets";
+            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->paginate(20, 'presence');
+            $addres     = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            // if ($startdate === $enddate) {
-                $presences = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
-            // } else {
-            //     $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
-            // }
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
+            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->paginate(20, 'presence');
+            $outlets    = $OutletModel->find($this->data['outletPick']);
+            $addres     = $outlets['address'];
             $outletname = $outlets['name'];
         }
-
-        $absen = array();
+        
         foreach ($presences as $presence) {
-            foreach ($users as $user) {
-                if ($presence['userid'] === $user->id) {
-                    foreach ($usergroups as $ugroups) {
-                        if ($ugroups['user_id'] === $user->id) {
-                            foreach ($groups as $group) {
-                                if ($ugroups['group_id'] === $group->id) {
-                                    $absen[] = [
-                                        'id'        => $user->id,
-                                        'name'      => $user->username,
-                                        'date'      => $presence['datetime'],
-                                        'status'    => $presence['status'],
-                                        'role'      => $group->name,
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+            // Get User Data
+            $users          = $UserModel->find($presence['userid']);
+            $usergroups     = $UserGroupModel->where('user_id', $users->id)->first();
+            $groups         = $GroupModel->find($usergroups['group_id']);
 
-        // Sum Total Presence
-        $present = array();
-        foreach ($absen as $presence) {
-            if ($presence['status'] === '1') {
-                $present[] = $presence['status'];
-            }
-        }
-        $presen = count($present);
+            // Define Time
+            $s      = strtotime($presence['datetime']);
+            $date   = date('d-m-Y', $s);
+            $time   = date('H:i', $s);
 
-        $admin = [];
-        $presen = '';
-        foreach ($absen as $abs) {
-            if (!isset($admin[$abs['id'] . $abs['name']])) {
-                $admin[$abs['id'] . $abs['name']] = $abs;
-            } else {
-                $admin[$abs['id'] . $abs['name']]['status'] += $abs['status'];
-            }
-        }
-        $admin = array_values($admin);
+            $shift  = $presence['shift'];
+            $status = $presence['status'];
 
+            $presencedata[$date.$shift]['id']       = $presence['id'];
+            $presencedata[$date.$shift]['date']     = $date;
+            $presencedata[$date.$shift]['name']     = $users->name;
+            $presencedata[$date.$shift]['role']     = $groups->name;
+            $presencedata[$date.$shift]['shift']    = $presence['shift'];
+
+            $presencedata[$date.$shift]['detail'][$status]['time']         = $time;
+            $presencedata[$date.$shift]['detail'][$status]['photo']        = $presence['photo'];
+            $presencedata[$date.$shift]['detail'][$status]['geoloc']       = $presence['geoloc'];
+            $presencedata[$date.$shift]['detail'][$status]['status']       = $presence['status'];
+        }
+        // dd($presencedata);
 
         // parsing data to view
         $data                   = $this->data;
         $data['title']          = lang('Global.presencereport');
         $data['description']    = lang('Global.presenceListDesc');
-        $data['presences']      = $admin;
-        $data['present']        = $presen;
+        $data['presences']      = $presencedata;
+        // $data['present']        = $presen;
+        $data['pager']          = $PresenceModel->pager;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
 
@@ -2167,18 +2164,25 @@ class Report extends BaseController
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
-        if (!empty($input['daterange'])) {
-            // if ($startdate === $enddate) {
-                $sopdetails       = $SopDetailModel->orderby('updated_at', 'DESC')->where('updated_at >=', $startdate . '00:00:00')->where('updated_at <=', $enddate . '23:59:59')->paginate(20, 'sop');
-            // } else {
-            //     $sopdetails       = $SopDetailModel->orderBy('updated_at', 'DESC')->where('updated_at >=', $startdate . '00:00:00')->where('updated_at <=', $enddate . '23:59:59')->paginate(20, 'sop');
-            // }
-        } else {
-            $sopdetails           = $SopDetailModel->orderBy('updated_at', 'DESC')->paginate(20, 'sop');
-        }
+        $sopdetails     = $SopDetailModel->orderby('updated_at', 'DESC')->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
 
-        $sops               = $SopModel->findAll();
-        $users              = $UserModel->findAll();
+        $sopdata            = [];
+        foreach ($sopdetails as $sopdet) {
+            // Get Data SOP
+            $sops   = $SopModel->find($sopdet['sopid']);
+            $users  = $UserModel->find($sopdet['userid']);
+
+            // Define Time
+            $s      = strtotime($sopdet['created_at']);
+            $date   = date('d-m-Y', $s);
+            $time   = date('H:i', $s);
+
+            $sopdata[$date]['date'] = $date;
+            $sopdata[$date]['sop']  = $sops['name'];
+
+        }
+        dd($sopdetails);
+
 
         // Parsing Data to View
         $data                   = $this->data;
