@@ -2151,8 +2151,10 @@ class Report extends BaseController
         // Calling Data
         $SopModel           = new SopModel();
         $SopDetailModel     = new SopDetailModel();
+        $OutletModel        = new OutletModel();
         $UserModel          = new UserModel();
         
+        // Populating Data
         $input = $this->request->getGet('daterange');
 
         if (!empty($input['daterange'])) {
@@ -2164,36 +2166,62 @@ class Report extends BaseController
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
-        $sopdetails     = $SopDetailModel->orderby('updated_at', 'DESC')->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
+        if ($this->data['outletPick'] === null) {
+            $sopdetails = $SopDetailModel->orderby('updated_at', 'DESC')->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $sopdetails = $SopDetailModel->orderby('updated_at', 'DESC')->where('outletid', $this->data['outletPick'])->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
 
-        $sopdata            = [];
+        $sopdata        = [];
+        $count          = 0;
         foreach ($sopdetails as $sopdet) {
             // Get Data SOP
-            $sops   = $SopModel->find($sopdet['sopid']);
-            $users  = $UserModel->find($sopdet['userid']);
+            $sops       = $SopModel->find($sopdet['sopid']);
+            $users      = $UserModel->find($sopdet['userid']);
+            $outlet     = $OutletModel->find($sopdet['outletid']);
+
+            if (!empty($outlet)) {
+                $outletid   = $outlet['id'];
+                $outletname = $outlet['name'];
+            } else {
+                $outletid   = 0;
+                $outletname = 'Semua Outlet';
+            }
+            
+            if (!empty($users)) {
+                $username   = $users->firstname.' '.$users->lastname;
+            } else {
+                $username   = 'Belum Tersedia';
+            }
 
             // Define Time
             $s      = strtotime($sopdet['created_at']);
             $date   = date('d-m-Y', $s);
             $time   = date('H:i', $s);
 
-            $sopdata[$date]['date'] = $date;
-            $sopdata[$date]['sop']  = $sops['name'];
-
+            $sopdata[$date.$outletid]['id']                               = $count++;
+            $sopdata[$date.$outletid]['date']                             = $date;
+            $sopdata[$date.$outletid]['outlet']                           = $outletname;
+            $sopdata[$date.$outletid]['detail'][$sops['id']]['sop']       = $sops['name'];
+            $sopdata[$date.$outletid]['detail'][$sops['id']]['employee']  = $username;
+            $sopdata[$date.$outletid]['detail'][$sops['id']]['status']    = $sopdet['status'];
         }
-        dd($sopdetails);
-
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = "Laporan SOP";
         $data['description']    = "Laporan SOP yang telah dilakukan";
-        $data['sops']           = $sops;
-        $data['sopdetails']     = $sopdetails;
-        $data['users']          = $users;
+        // $data['sops']           = $sops;
+        $data['sopdetails']     = $sopdata;
+        // $data['users']          = $users;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
-        $data['pager']          = $SopDetailModel->pager;
+        // $data['pager']          = $SopDetailModel->pager;
 
         return view('Views/report/sop', $data);
     }

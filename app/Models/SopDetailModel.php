@@ -9,7 +9,7 @@ class SopDetailModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $allowedFields    = [
-        'sopid','userid','status','created_at','updated_at','deleted_at',
+        'sopid','userid','outletid','status','created_at','updated_at','deleted_at',
     ];
     protected $useTimestamps   = true;
 }

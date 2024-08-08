@@ -30,6 +30,8 @@ use App\Models\PurchasedetailModel;
 use App\Models\StockMovementModel;
 use App\Models\StockMoveDetailModel;
 use App\Models\PresenceModel;
+use App\Models\SopModel;
+use App\Models\SopDetailModel;
 
 class export extends BaseController
 {
@@ -2655,6 +2657,144 @@ class export extends BaseController
                     echo '<tr>';
                         echo '<td>' . $cust['name'] . '</td>';
                         echo '<td>+62' . $cust['phone'] . '</td>';
+                    echo '</tr>';
+                }
+            echo '</tbody>';
+        echo '</table>';
+    }
+
+    public function sop()
+    {
+        // Calling Data
+        $SopModel           = new SopModel();
+        $SopDetailModel     = new SopDetailModel();
+        $OutletModel        = new OutletModel();
+        $UserModel          = new UserModel();
+        
+        // Populating Data
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input['daterange'])) {
+            $daterange = explode(' - ', $input['daterange']);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
+
+        if ($this->data['outletPick'] === null) {
+            $sopdetails = $SopDetailModel->orderby('updated_at', 'DESC')->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
+            $addres     = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $sopdetails = $SopDetailModel->orderby('updated_at', 'DESC')->where('outletid', $this->data['outletPick'])->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
+            $outlets    = $OutletModel->find($this->data['outletPick']);
+            $addres     = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
+
+        $sopdata        = [];
+        $count          = 0;
+        foreach ($sopdetails as $sopdet) {
+            // Get Data SOP
+            $sops       = $SopModel->find($sopdet['sopid']);
+            $users      = $UserModel->find($sopdet['userid']);
+            $outlet     = $OutletModel->find($sopdet['outletid']);
+
+            if (!empty($outlet)) {
+                $outletid   = $outlet['id'];
+                $outletname = $outlet['name'];
+            } else {
+                $outletid   = 0;
+                $outletname = 'Semua Outlet';
+            }
+            
+            if (!empty($users)) {
+                $username   = $users->firstname.' '.$users->lastname;
+            } else {
+                $username   = 'Belum Tersedia';
+            }
+
+            // Define Time
+            $s      = strtotime($sopdet['created_at']);
+            $date   = date('d-m-Y', $s);
+            $time   = date('H:i', $s);
+
+            $sopdata[$date.$outletid]['id']                               = $count++;
+            $sopdata[$date.$outletid]['date']                             = $date;
+            $sopdata[$date.$outletid]['outlet']                           = $outletname;
+            $sopdata[$date.$outletid]['detail'][$sops['id']]['sop']       = $sops['name'];
+            $sopdata[$date.$outletid]['detail'][$sops['id']]['employee']  = $username;
+            $sopdata[$date.$outletid]['detail'][$sops['id']]['status']    = $sopdet['status'];
+        }
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=SOP Report $startdate-$enddate.xls");
+
+        // export
+        echo '<table>';
+            echo '<thead>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">Laporan Presensi</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">' . $outletname . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">' . $addres . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;"></th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th>'.lang('Global.date').'</th>';
+                    echo '<th>'.lang('Global.outlet').'</th>';
+                    echo '<th>'.lang('Global.detail').'</th>';
+                    echo '<th>Shift</th>';
+                    echo '<th>Jam Masuk</th>';
+                    echo '<th>Keterlambatan</th>';
+                    echo '<th>Lokasi Masuk</th>';
+                    echo '<th>Jam Keluar</th>';
+                    echo '<th>Lokasi Keluar</th>';
+                echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+                foreach ($presencedata as $presence) {
+                    if ($presence['shift'] == '0') {
+                        $waktu  = 'Pagi (09:00)';
+                    } elseif ($presence['shift'] == '1') {
+                        $waktu  = 'Siang (12:00 - 16:00)';
+                    } elseif ($presence['shift'] == '2') {
+                        $waktu  = 'Sore (16:00)';
+                    }
+                    echo '<tr>';
+                        echo '<td>' . date('l, d M Y', strtotime($presence['date'])) . '</td>';
+                        echo '<td>' . $presence['name'] . '</td>';
+                        echo '<td>' . $presence['role'] . '</td>';
+                        echo '<td>' . $waktu . '</td>';
+                        foreach ($presence['detail'] as $detail) {
+                            echo '<td>' . $detail['time'] . '</td>';
+                            if ($detail['status'] == '1') {
+                                if ($presence['shift'] == '0') {
+                                    $kompensasi  = '09:15';
+                                } elseif ($presence['shift'] == '1') {
+                                    $kompensasi  = '16:15';
+                                } elseif ($presence['shift'] == '2') {
+                                    $kompensasi  = '16:15';
+                                }
+                                
+                                if (str_replace(":","", $detail['time']) > str_replace(":","", $kompensasi)) {
+                                    echo '<td>' . str_replace(":","", $detail['time']) - str_replace(":","", $kompensasi) . '</td>';
+                                } else {
+                                    echo '<td></td>';
+                                }
+                            }
+                            echo '<td>' . $detail['geoloc'] . '</td>';
+                        }
                     echo '</tr>';
                 }
             echo '</tbody>';

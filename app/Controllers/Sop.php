@@ -111,19 +111,20 @@ class Sop extends BaseController
         // initialize
         $sops                       = $SopModel->findAll();
         $today                      = date('Y-m-d') .' 00:00:01';
-        $sopdetails                 = $SopDetailModel->where('created_at >', $today)->find();
+        $sopdetails                 = $SopDetailModel->where('outletid', $this->data['outletPick'])->where('created_at >', $today)->find();
         
         if (empty($sopdetails)) {
             foreach ($sops as $sop) {
                 $datasop = [
                     'sopid'         => $sop['id'],
+                    'outletid'      => $this->data['outletPick'],
                     'status'        => "0"
                 ];
                 $SopDetailModel->save($datasop);
             }
         }
 
-        $sopdet = $SopDetailModel->where('created_at >', $today)->find();
+        $sopdet = $SopDetailModel->where('outletid', $this->data['outletPick'])->where('created_at >', $today)->find();
         
         // Parsing Data to View
         $data                       = $this->data; 

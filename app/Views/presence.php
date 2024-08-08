@@ -17,9 +17,11 @@
         <div class="uk-width-1-2@s">
             <h3 class="tm-h3"><?=lang('Global.presence')?></h3>
         </div>
-        <div class ="uk-width-1-2@s uk-text-right@s">
-            <a href="sop/todolist" class="uk-button uk-button-primary uk-button-default uk-preserve-color">To Do List</a>
-        </div>
+        <?php if ($outletPick != null) { ?>
+            <div class ="uk-width-1-2@s uk-text-right@s">
+                <a href="sop/todolist" class="uk-button uk-button-primary uk-button-default uk-preserve-color">To Do List</a>
+            </div>
+        <?php } ?>
     </div>
 </div>
 <!-- End Of Page Heading -->
