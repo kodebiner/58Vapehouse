@@ -2775,9 +2775,9 @@ class export extends BaseController
         $input = $this->request->getGet('daterange');
 
         if (!empty($input['daterange'])) {
-            $daterange = explode(' - ', $input['daterange']);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
+            $daterange  = explode(' - ', $input['daterange']);
+            $startdate  = $daterange[0];
+            $enddate    = $daterange[1];
         } else {
             $startdate  = date('Y-m-1');
             $enddate    = date('Y-m-t');
