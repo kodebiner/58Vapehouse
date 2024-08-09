@@ -624,7 +624,6 @@ class Stock extends BaseController
 
             // Update Stock
             $stock = $StockModel->where('variantid', $key)->where('outletid', $purchase['outletid'])->first();
-            dd($stock);
             $stockdata = [
                 'id'                => $stock['id'],
                 'qty'               => $stock['qty'] + $value,
