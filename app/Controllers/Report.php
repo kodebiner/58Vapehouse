@@ -2258,7 +2258,6 @@ class Report extends BaseController
             $sopdata[$date.$outletid]['detail'][$sops['id']]['employee']  = $username;
             $sopdata[$date.$outletid]['detail'][$sops['id']]['status']    = $sopdet['status'];
         }
-        dd($sopdata);
 
         // Parsing Data to View
         $data                   = $this->data;
