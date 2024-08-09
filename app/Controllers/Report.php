@@ -1991,17 +1991,17 @@ class Report extends BaseController
 
     public function customer()
     {
-
         // Calling Models
         $db                 = \Config\Database::connect();
         $TransactionModel   = new TransactionModel;
         $MemberModel        = new MemberModel;
         $DebtModel          = new DebtModel;
         $OutletModel        = new OutletModel;
+        $TrxdetailModel     = new TrxdetailModel;
+        $ProductModel       = new ProductModel;
+        $VariantModel       = new VariantModel;
 
-        $this->db       = \Config\Database::connect();
-        $pager          = \Config\Services::pager();
-
+        // Populating Data
         // Search Filter
         $inputsearch    = $this->request->getGet('search');
         if (!empty($inputsearch)) {
@@ -2010,83 +2010,130 @@ class Report extends BaseController
             $members   = $MemberModel->orderBy('name', 'ASC')->paginate(20, 'member');
         }
 
-        // dd($members);
-        // Populating Data
-        $debts              = $DebtModel->findAll();
+        // Daterange Filter
+        $input = $this->request->getGet('daterange');
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
 
-        if ($this->data['outletPick'] != null) {
-            $input = $this->request->getGet('daterange');
+        $addres = '';
+        if ($this->data['outletPick'] === null) {
+            $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            $addres = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            $outlets = $OutletModel->find($this->data['outletPick']);
+            $addres = $outlets['address'];
+            $outletname = $outlets['name'];
+        }
 
-            if (!empty($input)) {
-                $daterange = explode(' - ', $input);
-                $startdate = $daterange[0];
-                $enddate = $daterange[1];
-            } else {
-                $startdate  = date('Y-m-1' . ' 00:00:00');
-                $enddate    = date('Y-m-t' . ' 23:59:59');
+        $customerdata   = [];
+        foreach ($members as $member) {
+            $debts      = $DebtModel->where('memberid', $member['id'])->find();
+            $debtvalue  = [];
+            if (!empty($debts)) {
+                foreach ($debts as $debt) {
+                    $debtvalue[]    = $debt['value'];
+                }
             }
-
-            $addres = '';
+            
             if ($this->data['outletPick'] === null) {
-                // if ($startdate === $enddate) {
-                    $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-                // } else {
-                //     $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-                // }
+                $transactions = $TransactionModel->where('memberid', $member['id'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
                 $addres = "All Outlets";
                 $outletname = "58vapehouse";
             } else {
-                // if ($startdate === $enddate) {
-                    $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                // } else {
-                //     $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                // }
+                $transactions = $TransactionModel->where('memberid', $member['id'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
                 $outlets = $OutletModel->find($this->data['outletPick']);
                 $addres = $outlets['address'];
                 $outletname = $outlets['name'];
             }
-
-
-            $customer = array();
-            foreach ($members as $member) {
-                $totaltrx = array();
-                $trxval = array();
-                $debtval    = array();
-                foreach ($debts as $debt) {
-                    if ($member['id'] === $debt['memberid']) {
-                        $debtval[]  = $debt['value'];
-                    }
-                }
+            
+            $trxvalue   = [];
+            if (!empty($transactions)) {
                 foreach ($transactions as $trx) {
-                    if ($member['id'] === $trx['memberid']) {
-                        $totaltrx[] = $trx['memberid'];
-                        $trxval[]   = $trx['value'];
+                    $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+                    $trxvalue[]     = $trx['value'];
+                
+                    if (!empty($trxdetails)) {
+                        foreach ($trxdetails as $trxdet) {
+                            $variants       = $VariantModel->find($trxdet['variantid']);
+                            
+                            if (!empty($variants)) {
+                                $products   = $ProductModel->find($variants['productid']);
+        
+                                if (!empty($products)) {
+                                    $customerdata[$member['id']]['product'][$products['id']]['name']            = $products['name'];
+                                    $customerdata[$member['id']]['product'][$products['id']]['qty'][]           = $trxdet['qty'];
+                                }
+                            } else {
+                                $products   = [];
+                                $customerdata[$member['id']]['product'][0]['name']             = 'Kategori / Produk / Variant Terhapus';
+                                $customerdata[$member['id']]['product'][0]['category']         = 'Kategori / Produk / Variant Terhapus';
+                                $customerdata[$member['id']]['product'][0]['qty'][]            = $trxdet['qty'];
+                            }
+                        }
+                    } else {
+                        $variants   = [];
+                        $products   = [];
                     }
                 }
-
-                $customer[] = [
-                    'id'    => $member['id'],
-                    'name'  => $member['name'],
-                    'debt'  => array_sum($debtval),
-                    'trx'   => count($totaltrx),
-                    'value' => array_sum($trxval),
-                    'phone' => $member['phone'],
-                ];
+            } else {
+                $customerdata[$member['id']]['product'] = [];
             }
-
-            // Parsing Data to View
-            $data                       = $this->data;
-            $data['title']              = lang('Global.customer');
-            $data['description']        = lang('Global.customerListDesc');
-            $data['customers']          = $customer;
-            $data['pager']              = $MemberModel->pager;
-            $data['startdate']          = strtotime($startdate);
-            $data['enddate']            = strtotime($enddate);
-
-            return view('Views/report/customer', $data);
-        } else {
-            return redirect()->to('');
+            
+            $customerdata[$member['id']]['id']          = $member['id'];
+            $customerdata[$member['id']]['name']        = $member['name'];
+            $customerdata[$member['id']]['phone']       = $member['phone'];
+            $customerdata[$member['id']]['debt']        = array_sum($debtvalue);
+            $customerdata[$member['id']]['trx']         = count($transactions);
+            $customerdata[$member['id']]['trxvalue']    = array_sum($trxvalue);
         }
+
+        // $this->db           = \Config\Database::connect();
+        // $pager              = \Config\Services::pager();
+        // $customer = array();
+        // foreach ($members as $member) {
+        //     $totaltrx = array();
+        //     $trxval = array();
+        //     $debtval    = array();
+        //     foreach ($debts as $debt) {
+        //         if ($member['id'] === $debt['memberid']) {
+        //             $debtval[]  = $debt['value'];
+        //         }
+        //     }
+        //     foreach ($transactions as $trx) {
+        //         if ($member['id'] === $trx['memberid']) {
+        //             $totaltrx[] = $trx['memberid'];
+        //             $trxval[]   = $trx['value'];
+        //         }
+        //     }
+
+        //     $customer[] = [
+        //         'id'    => $member['id'],
+        //         'name'  => $member['name'],
+        //         'debt'  => array_sum($debtval),
+        //         'trx'   => count($totaltrx),
+        //         'value' => array_sum($trxval),
+        //         'phone' => $member['phone'],
+        //     ];
+        // }
+
+        // Parsing Data to View
+        $data                       = $this->data;
+        $data['title']              = lang('Global.customer');
+        $data['description']        = lang('Global.customerListDesc');
+        $data['customers']          = $customerdata;
+        $data['pager']              = $MemberModel->pager;
+        $data['startdate']          = strtotime($startdate);
+        $data['enddate']            = strtotime($enddate);
+
+        return view('Views/report/customer', $data);
     }
 
     public function customerdetail($id)

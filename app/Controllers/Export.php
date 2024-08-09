@@ -2517,14 +2517,22 @@ class export extends BaseController
         $TransactionModel   = new TransactionModel;
         $MemberModel        = new MemberModel;
         $DebtModel          = new DebtModel;
-        $OutletModel        = new OutletMOdel;
+        $OutletModel        = new OutletModel;
+        $TrxdetailModel     = new TrxdetailModel;
+        $ProductModel       = new ProductModel;
+        $VariantModel       = new VariantModel;
 
         // Populating Data
-        $members            = $MemberModel->findAll();
-        $debts              = $DebtModel->findAll();
+        // Search Filter
+        $inputsearch    = $this->request->getGet('search');
+        if (!empty($inputsearch)) {
+            $members   = $MemberModel->like('name', $inputsearch)->orderBy('name', 'ASC')->paginate(20, 'member');
+        } else {
+            $members   = $MemberModel->orderBy('name', 'ASC')->paginate(20, 'member');
+        }
 
+        // Daterange Filter
         $input = $this->request->getGet('daterange');
-
         if (!empty($input)) {
             $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
@@ -2536,90 +2544,182 @@ class export extends BaseController
 
         $addres = '';
         if ($this->data['outletPick'] === null) {
-            // if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
-            // }
+            $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            // if ($startdate === $enddate) {
-                $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
-            // } else {
-            //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
-            // }
+            $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
         }
-        $customer = array();
-        foreach ($members as $member) {
-            $totaltrx = array();
-            $trxval = array();
-            $debtval    = array();
-            foreach ($debts as $debt) {
-                if ($member['id'] === $debt['memberid']) {
-                    $debtval[]  = $debt['value'];
-                }
-            }
-            foreach ($transactions as $trx) {
-                if ($member['id'] === $trx['memberid']) {
-                    $totaltrx[] = $trx['memberid'];
-                    $trxval[]   = $trx['value'];
-                }
-            }
 
-            $customer[] = [
-                'id'    => $member['id'],
-                'name'  => $member['name'],
-                'debt'  => array_sum($debtval),
-                'trx'   => count($totaltrx),
-                'value' => array_sum($trxval),
-                'phone' => $member['phone'],
-            ];
+        $customerdata   = [];
+        foreach ($members as $member) {
+            $debts      = $DebtModel->where('memberid', $member['id'])->find();
+            $debtvalue  = [];
+            if (!empty($debts)) {
+                foreach ($debts as $debt) {
+                    $debtvalue[]    = $debt['value'];
+                }
+            }
+            
+            if ($this->data['outletPick'] === null) {
+                $transactions   = $TransactionModel->where('memberid', $member['id'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+                $addres         = "All Outlets";
+                $outletname     = "58vapehouse";
+            } else {
+                $transactions   = $TransactionModel->where('memberid', $member['id'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+                $outlets        = $OutletModel->find($this->data['outletPick']);
+                $addres         = $outlets['address'];
+                $outletname     = $outlets['name'];
+            }
+            
+            $trxvalue   = [];
+            if (!empty($transactions)) {
+                foreach ($transactions as $trx) {
+                    $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+                    $trxvalue[]     = $trx['value'];
+                
+                    if (!empty($trxdetails)) {
+                        foreach ($trxdetails as $trxdet) {
+                            $variants       = $VariantModel->find($trxdet['variantid']);
+                            
+                            if (!empty($variants)) {
+                                $products   = $ProductModel->find($variants['productid']);
+        
+                                if (!empty($products)) {
+                                    $customerdata[$member['id']]['product'][$products['id']]['name']            = $products['name'];
+                                    $customerdata[$member['id']]['product'][$products['id']]['qty'][]           = $trxdet['qty'];
+                                }
+                            } else {
+                                $products   = [];
+                                $customerdata[$member['id']]['product'][0]['name']             = 'Kategori / Produk / Variant Terhapus';
+                                $customerdata[$member['id']]['product'][0]['category']         = 'Kategori / Produk / Variant Terhapus';
+                                $customerdata[$member['id']]['product'][0]['qty'][]            = $trxdet['qty'];
+                            }
+                        }
+                    } else {
+                        $variants   = [];
+                        $products   = [];
+                    }
+                }
+            } else {
+                $customerdata[$member['id']]['product'] = [];
+            }
+            
+            $customerdata[$member['id']]['id']          = $member['id'];
+            $customerdata[$member['id']]['name']        = $member['name'];
+            $customerdata[$member['id']]['phone']       = $member['phone'];
+            $customerdata[$member['id']]['debt']        = array_sum($debtvalue);
+            $customerdata[$member['id']]['trx']         = count($transactions);
+            $customerdata[$member['id']]['trxvalue']    = array_sum($trxvalue);
         }
+
+        $datestart  = date('d M Y', strtotime($startdate));
+        $dateend    = date('d M Y', strtotime($enddate));
+
+        // // Populating Data
+        // $members            = $MemberModel->findAll();
+        // $debts              = $DebtModel->findAll();
+
+        // $input = $this->request->getGet('daterange');
+
+        // if (!empty($input)) {
+        //     $daterange = explode(' - ', $input);
+        //     $startdate = $daterange[0];
+        //     $enddate = $daterange[1];
+        // } else {
+        //     $startdate  = date('Y-m-1' . ' 00:00:00');
+        //     $enddate    = date('Y-m-t' . ' 23:59:59');
+        // }
+
+        // $addres = '';
+        // if ($this->data['outletPick'] === null) {
+        //     // if ($startdate === $enddate) {
+        //         $transactions = $TransactionModel->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+        //     // } else {
+        //     //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->find();
+        //     // }
+        //     $addres = "All Outlets";
+        //     $outletname = "58vapehouse";
+        // } else {
+        //     // if ($startdate === $enddate) {
+        //         $transactions = $TransactionModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . " 00:00:00")->where('date <=', $enddate . " 23:59:59")->find();
+        //     // } else {
+        //     //     $transactions = $TransactionModel->where('date >=', $startdate)->where('date <=', $enddate)->where('outletid', $this->data['outletPick'])->find();
+        //     // }
+        //     $outlets = $OutletModel->find($this->data['outletPick']);
+        //     $addres = $outlets['address'];
+        //     $outletname = $outlets['name'];
+        // }
+        // $customer = array();
+        // foreach ($members as $member) {
+        //     $totaltrx = array();
+        //     $trxval = array();
+        //     $debtval    = array();
+        //     foreach ($debts as $debt) {
+        //         if ($member['id'] === $debt['memberid']) {
+        //             $debtval[]  = $debt['value'];
+        //         }
+        //     }
+        //     foreach ($transactions as $trx) {
+        //         if ($member['id'] === $trx['memberid']) {
+        //             $totaltrx[] = $trx['memberid'];
+        //             $trxval[]   = $trx['value'];
+        //         }
+        //     }
+
+        //     $customer[] = [
+        //         'id'    => $member['id'],
+        //         'name'  => $member['name'],
+        //         'debt'  => array_sum($debtval),
+        //         'trx'   => count($totaltrx),
+        //         'value' => array_sum($trxval),
+        //         'phone' => $member['phone'],
+        //     ];
+        // }
 
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=customer$startdate-$enddate.xls");
 
         // export
         echo '<table>';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th colspan="5" style="align-text:center;">Ringkasan Pelanggan</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="5" style="align-text:center;">' . $outletname . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="5" style="align-text:center;">' . $addres . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="5" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="5" style="align-text:center;"></th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th>Nama</th>';
-        echo '<th>Jumlah Transaksi</th>';
-        echo '<th>Nominal Transaksi</th>';
-        echo '<th>Hutang</th>';
-        echo '<th>No Telphone</th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
-        foreach ($customer as $cust) {
-            echo '<tr>';
-            echo '<td>' . $cust['name'] . '</td>';
-            echo '<td>' . $cust['trx'] . '</td>';
-            echo '<td>' . $cust['value'] . '</td>';
-            echo '<td>' . $cust['debt'] . '</td>';
-            echo '<td>' . $cust['phone'] . '</td>';
-            echo '</tr>';
-        }
-        echo '</tbody>';
+            echo '<thead>';
+                echo '<tr>';
+                    echo '<th colspan="5" style="align-text:center;">Ringkasan Pelanggan</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="5" style="align-text:center;">' . $outletname . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                        echo '<th colspan="5" style="align-text:center;">' . $addres . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="5" style="align-text:center;">' . $datestart . ' - ' . $dateend . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="5" style="align-text:center;"></th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th>Nama</th>';
+                    echo '<th>Jumlah Transaksi</th>';
+                    echo '<th>Nominal Transaksi</th>';
+                    echo '<th>Hutang</th>';
+                    echo '<th>No Telphone</th>';
+                echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+                foreach ($customerdata as $cust) {
+                    echo '<tr>';
+                        echo '<td>' . $cust['name'] . '</td>';
+                        echo '<td>' . $cust['trx'] . '</td>';
+                        echo '<td>' . $cust['trxvalue'] . '</td>';
+                        echo '<td>' . $cust['debt'] . '</td>';
+                        echo '<td>' . $cust['phone'] . '</td>';
+                    echo '</tr>';
+                }
+            echo '</tbody>';
         echo '</table>';
     }
 
@@ -2679,8 +2779,8 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
+            $startdate  = date('Y-m-1');
+            $enddate    = date('Y-m-t');
         }
 
         if ($this->data['outletPick'] === null) {
@@ -2713,7 +2813,13 @@ class export extends BaseController
             if (!empty($users)) {
                 $username   = $users->firstname.' '.$users->lastname;
             } else {
-                $username   = 'Belum Tersedia';
+                $username   = '!';
+            }
+            
+            if ($sopdet['status'] == '0') {
+                $status     = 'Belum Dilakukan';
+            } else {
+                $status     = 'Telah Dilakukan Oleh';
             }
 
             // Define Time
@@ -2721,14 +2827,18 @@ class export extends BaseController
             $date   = date('d-m-Y', $s);
             $time   = date('H:i', $s);
 
-            $sopdata[$date.$outletid]['id']                               = $count++;
-            $sopdata[$date.$outletid]['date']                             = $date;
-            $sopdata[$date.$outletid]['outlet']                           = $outletname;
-            $sopdata[$date.$outletid]['detail'][$sops['id']]['sop']       = $sops['name'];
-            $sopdata[$date.$outletid]['detail'][$sops['id']]['employee']  = $username;
-            $sopdata[$date.$outletid]['detail'][$sops['id']]['status']    = $sopdet['status'];
+            $sopdata[$outletid]['id']                                                   = $count++;
+            $sopdata[$outletid]['outlet']                                               = $outletname;
+            $sopdata[$outletid]['date'][$date]['datename']                              = $date;
+            $sopdata[$outletid]['sop'][$sops['id']]['name']                             = $sops['name'];
+            $sopdata[$outletid]['sop'][$sops['id']]['detail'][$date]['employee']        = $username;
+            $sopdata[$outletid]['sop'][$sops['id']]['detail'][$date]['status']          = $status;
         }
-
+        
+        $datestart  = date('d M Y', strtotime($startdate));
+        $dateend    = date('d M Y', strtotime($enddate));
+        $i = 1;
+        
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=SOP Report $startdate-$enddate.xls");
 
@@ -2736,68 +2846,41 @@ class export extends BaseController
         echo '<table>';
             echo '<thead>';
                 echo '<tr>';
-                    echo '<th colspan="9" style="align-text:center;">Laporan Presensi</th>';
+                    echo '<th colspan="9" style="align-text:center;">Laporan SOP</th>';
                 echo '</tr>';
                 echo '<tr>';
-                    echo '<th colspan="9" style="align-text:center;">' . $outletname . '</th>';
-                echo '</tr>';
-                echo '<tr>';
-                    echo '<th colspan="9" style="align-text:center;">' . $addres . '</th>';
-                echo '</tr>';
-                echo '<tr>';
-                    echo '<th colspan="9" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
+                    echo '<th colspan="9" style="align-text:center;">' . $datestart . ' - ' . $dateend . '</th>';
                 echo '</tr>';
                 echo '<tr>';
                     echo '<th colspan="9" style="align-text:center;"></th>';
                 echo '</tr>';
-                echo '<tr>';
-                    echo '<th>'.lang('Global.date').'</th>';
-                    echo '<th>'.lang('Global.outlet').'</th>';
-                    echo '<th>'.lang('Global.detail').'</th>';
-                    echo '<th>Shift</th>';
-                    echo '<th>Jam Masuk</th>';
-                    echo '<th>Keterlambatan</th>';
-                    echo '<th>Lokasi Masuk</th>';
-                    echo '<th>Jam Keluar</th>';
-                    echo '<th>Lokasi Keluar</th>';
-                echo '</tr>';
             echo '</thead>';
-            echo '<tbody>';
-                foreach ($presencedata as $presence) {
-                    if ($presence['shift'] == '0') {
-                        $waktu  = 'Pagi (09:00)';
-                    } elseif ($presence['shift'] == '1') {
-                        $waktu  = 'Siang (12:00 - 16:00)';
-                    } elseif ($presence['shift'] == '2') {
-                        $waktu  = 'Sore (16:00)';
-                    }
+        echo '</table>';
+        foreach ($sopdata as $sopdat) {
+            echo '<table>';
+                echo '<thead>';
                     echo '<tr>';
-                        echo '<td>' . date('l, d M Y', strtotime($presence['date'])) . '</td>';
-                        echo '<td>' . $presence['name'] . '</td>';
-                        echo '<td>' . $presence['role'] . '</td>';
-                        echo '<td>' . $waktu . '</td>';
-                        foreach ($presence['detail'] as $detail) {
-                            echo '<td>' . $detail['time'] . '</td>';
-                            if ($detail['status'] == '1') {
-                                if ($presence['shift'] == '0') {
-                                    $kompensasi  = '09:15';
-                                } elseif ($presence['shift'] == '1') {
-                                    $kompensasi  = '16:15';
-                                } elseif ($presence['shift'] == '2') {
-                                    $kompensasi  = '16:15';
-                                }
-                                
-                                if (str_replace(":","", $detail['time']) > str_replace(":","", $kompensasi)) {
-                                    echo '<td>' . str_replace(":","", $detail['time']) - str_replace(":","", $kompensasi) . '</td>';
-                                } else {
-                                    echo '<td></td>';
-                                }
-                            }
-                            echo '<td>' . $detail['geoloc'] . '</td>';
+                        echo '<th style="border:1px solid black">No.</th>';
+                        echo '<th colspan="5" style="border:1px solid black">'.$sopdat['outlet'].'</th>';
+                        foreach ($sopdat['date'] as $date) {
+                            echo '<th style="border:1px solid black">'.$date['datename'].'</th>';
                         }
                     echo '</tr>';
-                }
-            echo '</tbody>';
-        echo '</table>';
+                echo '</thead>';
+                echo '<tbody>';
+                    foreach ($sopdat['sop'] as $sop) {
+                        echo '<tr>';
+                        echo '<td style="text-align:center; border:1px solid black">'.$i++.'</td>';
+                            echo '<td colspan="5" style="border:1px solid black">'.$sop['name'].'</td>';
+                            foreach ($sop['detail'] as $detail) {
+                                echo '<td style="border:1px solid black">'.$detail['status'].' '.$detail['employee'].'</td>';
+                            }
+                        echo '</tr>';
+                    }
+                echo '</tbody>';
+            echo '</table>';
+            echo '<table>';
+            echo '</table>';
+        }
     }
 }
