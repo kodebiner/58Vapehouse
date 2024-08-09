@@ -2214,11 +2214,11 @@ class Report extends BaseController
         }
 
         if ($this->data['outletPick'] === null) {
-            $sopdetails = $SopDetailModel->orderby('updated_at', 'DESC')->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
+            $sopdetails = $SopDetailModel->orderby('updated_at', 'ASC')->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
             $addres = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $sopdetails = $SopDetailModel->orderby('updated_at', 'DESC')->where('outletid', $this->data['outletPick'])->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
+            $sopdetails = $SopDetailModel->orderby('updated_at', 'ASC')->where('outletid', $this->data['outletPick'])->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
             $outlets = $OutletModel->find($this->data['outletPick']);
             $addres = $outlets['address'];
             $outletname = $outlets['name'];
