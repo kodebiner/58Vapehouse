@@ -589,6 +589,8 @@ class Stock extends BaseController
 
         $PurchaseModel->save($data);
 
+        $purchase   = $PurchaseModel->find($id);
+
         foreach ($input['ctotalpcs'][$id] as $key => $value) {
             // Update Purchase Detail
             $purdet = $PurchasedetailModel->where('purchaseid', $id)->where('variantid', $key)->first();
@@ -621,7 +623,8 @@ class Stock extends BaseController
             }
 
             // Update Stock
-            $stock = $StockModel->where('variantid', $key)->where('outletid', $this->data['outletPick'])->first();
+            $stock = $StockModel->where('variantid', $key)->where('outletid', $purchase['outletid'])->find();
+            dd($stock);
             $stockdata = [
                 'id'                => $stock['id'],
                 'qty'               => $stock['qty'] + $value,
