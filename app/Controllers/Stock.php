@@ -597,6 +597,11 @@ class Stock extends BaseController
                 'qty'               => $value,
                 'price'             => $input['cbprice'][$id][$key]
             ];
+            if ($purdetdata['qty'] === "0") {
+                $PurchasedetailModel->delete($purdet['id']);
+            }
+
+            // Save Data Purchase Detail
             $PurchasedetailModel->save($purdetdata);
 
             // Update Old Stock
@@ -619,7 +624,7 @@ class Stock extends BaseController
             $stock = $StockModel->where('variantid', $key)->where('outletid', $this->data['outletPick'])->first();
             $stockdata = [
                 'id'                => $stock['id'],
-                'qty'               => $stock['qty']+$value,
+                'qty'               => $stock['qty'] + $value,
                 'restock'           => $tanggal
             ];
             $StockModel->save($stockdata);
