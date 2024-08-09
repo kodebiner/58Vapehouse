@@ -2772,15 +2772,15 @@ class export extends BaseController
         $UserModel          = new UserModel();
         
         // Populating Data
+        // Daterange Filter
         $input = $this->request->getGet('daterange');
-
-        if (!empty($input['daterange'])) {
-            $daterange  = explode(' - ', $input['daterange']);
+        if (!empty($input)) {
+            $daterange  = explode(' - ', $input);
             $startdate  = $daterange[0];
             $enddate    = $daterange[1];
         } else {
-            $startdate  = date('Y-m-1');
-            $enddate    = date('Y-m-t');
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         if ($this->data['outletPick'] === null) {
