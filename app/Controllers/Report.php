@@ -2202,10 +2202,10 @@ class Report extends BaseController
         $UserModel          = new UserModel();
         
         // Populating Data
+        // Daterange Filter
         $input = $this->request->getGet('daterange');
-
-        if (!empty($input['daterange'])) {
-            $daterange = explode(' - ', $input['daterange']);
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
@@ -2215,12 +2215,12 @@ class Report extends BaseController
 
         if ($this->data['outletPick'] === null) {
             $sopdetails = $SopDetailModel->orderby('updated_at', 'ASC')->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
-            $addres = "All Outlets";
+            $addres     = "All Outlets";
             $outletname = "58vapehouse";
         } else {
             $sopdetails = $SopDetailModel->orderby('updated_at', 'ASC')->where('outletid', $this->data['outletPick'])->where('updated_at >=', $startdate . ' 00:00:00')->where('updated_at <=', $enddate . ' 23:59:59')->find();
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
+            $outlets    = $OutletModel->find($this->data['outletPick']);
+            $addres     = $outlets['address'];
             $outletname = $outlets['name'];
         }
 
