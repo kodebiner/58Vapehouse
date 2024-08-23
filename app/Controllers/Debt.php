@@ -625,29 +625,29 @@ class Debt extends BaseController
 
         // Refund Payment
         $debtval = "";
-        if (!empty($paymentid)) {
-            foreach ($paymentid as $payid => $payval) {
-                if (!empty($payid)) {
-                    $pay = $PaymentModel->find($payid);
-                    $cash = $CashModel->where('id', $pay['cashid'])->find();
-                    foreach ($cash as $cas) {
-                        $paymentdata = [
-                            'id'    => $cas['id'],
-                            'qty'   => $cas['qty'] - $payval,
-                        ];
-                        $CashModel->save($paymentdata);
-                    }
-                } else {
-                    $debtval = $payval;
-                    $debt = $DebtModel->where('memberid', $memberid)->first();
-                    $debtdata = [
-                        'id'    => $debt['id'],
-                        'value' => $debt['value'] - $debtval,
-                    ];
-                    $DebtModel->save($debtdata);
-                }
-            }
-        }
+        // if (!empty($paymentid)) {
+        //     foreach ($paymentid as $payid => $payval) {
+        //         if (!empty($payid)) {
+        //             $pay = $PaymentModel->find($payid);
+        //             $cash = $CashModel->where('id', $pay['cashid'])->find();
+        //             foreach ($cash as $cas) {
+        //                 $paymentdata = [
+        //                     'id'    => $cas['id'],
+        //                     'qty'   => $cas['qty'] - $payval,
+        //                 ];
+        //                 $CashModel->save($paymentdata);
+        //             }
+        //         } else {
+        //             $debtval = $payval;
+        //             $debt = $DebtModel->where('memberid', $memberid)->first();
+        //             $debtdata = [
+        //                 'id'    => $debt['id'],
+        //                 'value' => $debt['value'] - $debtval,
+        //             ];
+        //             $DebtModel->save($debtdata);
+        //         }
+        //     }
+        // }
 
         // Delete Transaction Payment
         // $trxpay = $TrxpaymentModel->where('transactionid', $id)->find();
