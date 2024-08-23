@@ -571,83 +571,83 @@ class Debt extends BaseController
         }
 
         // Refund Variant
-        // if (!empty($variant)) {
-        //     foreach ($variant as $varid => $varqty) {
-        //         $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
-        //         $saleVarStock = [
-        //             'id'        => $stock['id'],
-        //             'sale'      => $date,
-        //             'qty'       => (int)$stock['qty'] + (int)$varqty
-        //         ];
-        //         $StockModel->save($saleVarStock);
-        //     }
-        // }
+        if (!empty($variant)) {
+            foreach ($variant as $varid => $varqty) {
+                $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
+                $saleVarStock = [
+                    'id'        => $stock['id'],
+                    'sale'      => $date,
+                    'qty'       => (int)$stock['qty'] + (int)$varqty
+                ];
+                $StockModel->save($saleVarStock);
+            }
+        }
 
-        // // Refund Bundle
-        // if (!empty($bundles)) {
-        //     foreach ($bundles as $bunid => $bunqty) {
-        //         $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
-        //         foreach ($bundledetail as $BundleDetail) {
-        //             if (!empty($BundleDetail['variantid'])) {
-        //                 $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
-        //                 $saleBunStock = [
-        //                     'id'        => $bunstock['id'],
-        //                     'sale'      => $date,
-        //                     'qty'       => (int)$bunstock['qty'] + (int)$bunqty,
-        //                 ];
-        //                 $StockModel->save($saleBunStock);
-        //             }
-        //         }
-        //     }
-        // }
+        // Refund Bundle
+        if (!empty($bundles)) {
+            foreach ($bundles as $bunid => $bunqty) {
+                $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
+                foreach ($bundledetail as $BundleDetail) {
+                    if (!empty($BundleDetail['variantid'])) {
+                        $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
+                        $saleBunStock = [
+                            'id'        => $bunstock['id'],
+                            'sale'      => $date,
+                            'qty'       => (int)$bunstock['qty'] + (int)$bunqty,
+                        ];
+                        $StockModel->save($saleBunStock);
+                    }
+                }
+            }
+        }
 
-        // // Refund Member Poin
-        // $pointres = '';
-        // if (!empty($memberid)) {
-        //     $cust       = $MemberModel->find($memberid);
-        //     if (!empty($point) && $point != "0") {
-        //         $pointres   = ((int)$cust['poin'] + (int)$point) - $poinresult;
-        //         $point = [
-        //             'id'    => $cust['id'],
-        //             'poin'  => $pointres,
-        //             'trx'   => (int)$cust['trx'] - 1,
-        //         ];
-        //         $MemberModel->save($point);
-        //     } else {
-        //         $point = [
-        //             'id'    => $cust['id'],
-        //             'poin'  => (int)$cust['poin'] - $poinresult,
-        //             'trx'   => (int)$cust['trx'] - 1,
-        //         ];
-        //         $MemberModel->save($point);
-        //     }
-        // }
+        // Refund Member Poin
+        $pointres = '';
+        if (!empty($memberid)) {
+            $cust       = $MemberModel->find($memberid);
+            if (!empty($point) && $point != "0") {
+                $pointres   = ((int)$cust['poin'] + (int)$point) - $poinresult;
+                $point = [
+                    'id'    => $cust['id'],
+                    'poin'  => $pointres,
+                    'trx'   => (int)$cust['trx'] - 1,
+                ];
+                $MemberModel->save($point);
+            } else {
+                $point = [
+                    'id'    => $cust['id'],
+                    'poin'  => (int)$cust['poin'] - $poinresult,
+                    'trx'   => (int)$cust['trx'] - 1,
+                ];
+                $MemberModel->save($point);
+            }
+        }
 
         // Refund Payment
         $debtval = "";
-        // if (!empty($paymentid)) {
-        //     foreach ($paymentid as $payid => $payval) {
-        //         if (!empty($payid)) {
-        //             $pay = $PaymentModel->find($payid);
-        //             $cash = $CashModel->where('id', $pay['cashid'])->find();
-        //             foreach ($cash as $cas) {
-        //                 $paymentdata = [
-        //                     'id'    => $cas['id'],
-        //                     'qty'   => $cas['qty'] - $payval,
-        //                 ];
-        //                 $CashModel->save($paymentdata);
-        //             }
-        //         } else {
-        //             $debtval = $payval;
-        //             $debt = $DebtModel->where('memberid', $memberid)->first();
-        //             $debtdata = [
-        //                 'id'    => $debt['id'],
-        //                 'value' => $debt['value'] - $debtval,
-        //             ];
-        //             $DebtModel->save($debtdata);
-        //         }
-        //     }
-        // }
+        if (!empty($paymentid)) {
+            foreach ($paymentid as $payid => $payval) {
+                if (!empty($payid)) {
+                    $pay = $PaymentModel->find($payid);
+                    $cash = $CashModel->where('id', $pay['cashid'])->find();
+                    foreach ($cash as $cas) {
+                        $paymentdata = [
+                            'id'    => $cas['id'],
+                            'qty'   => $cas['qty'] - $payval,
+                        ];
+                        $CashModel->save($paymentdata);
+                    }
+                } else {
+                    $debtval = $payval;
+                    $debt = $DebtModel->where('memberid', $memberid)->first();
+                    $debtdata = [
+                        'id'    => $debt['id'],
+                        'value' => $debt['value'] - $debtval,
+                    ];
+                    $DebtModel->save($debtdata);
+                }
+            }
+        }
 
         // Delete Transaction Payment
         // $trxpay = $TrxpaymentModel->where('transactionid', $id)->find();
