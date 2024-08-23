@@ -525,10 +525,11 @@ class Debt extends BaseController
         // Initialize 
         $date = date('Y-m-d H:i:s');
 
-        $variant = [];
-        $bundles = [];
-        $paymentid = [];
-        $point = "";
+        $variant    = [];
+        $bundles    = [];
+        $paymentid  = [];
+        $point      = '';
+        $total      = '';
 
         foreach ($transactionhist as $trxhist) {
 
@@ -550,6 +551,23 @@ class Debt extends BaseController
             $memberid = $trxhist['memberid'];
             $point = $trxhist['redempoin'];
             $trx = $trxhist['trx'];
+        }
+
+        // Poin Setup
+        $minimumtrx = $Gconf['poinorder'];
+        $poinvalue  = $Gconf['poinvalue'];
+
+        $poinresult = "";
+        if ($total >= $minimumtrx) {
+            if ($minimumtrx != "0") {
+                $value      = (int)$total / (int)$minimumtrx;
+            } else {
+                $value      = 0;
+            }
+            $result         = floor($value);
+            $poinresult     = (int)$result * (int)$poinvalue;
+        } else {
+            $poinresult = 0;
         }
 
         // Refund Variant
@@ -581,23 +599,6 @@ class Debt extends BaseController
                     }
                 }
             }
-        }
-
-        // Poin Setup
-        $minimumtrx = $Gconf['poinorder'];
-        $poinvalue  = $Gconf['poinvalue'];
-
-        $poinresult = "";
-        if ($total >= $minimumtrx) {
-            if ($minimumtrx != "0") {
-                $value      = (int)$total / (int)$minimumtrx;
-            } else {
-                $value      = 0;
-            }
-            $result         = floor($value);
-            $poinresult     = (int)$result * (int)$poinvalue;
-        } else {
-            $poinresult = 0;
         }
 
         // Refund Member Poin
