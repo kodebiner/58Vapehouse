@@ -98,7 +98,7 @@ class CashMove extends BaseController
         $CashmoveModel->insert($data);
 
         // insert minus qty origin
-        $cashmin    = $CashModel->where('id', $input['origin'])->first();
+        $cashmin    = $CashModel->find($input['origin']);
         $cashqty    = $cashmin['qty'] - $input['qty'];
 
         $quantity = [
@@ -109,7 +109,7 @@ class CashMove extends BaseController
         $CashModel->save($quantity);
 
         // insert plus qty origin
-        $cashplus    = $CashModel->where('id', $input['destination'])->first();
+        $cashplus   = $CashModel->find($input['destination']);
         $cashqty    = $cashplus['qty'] + $input['qty'];
 
         $quant = [

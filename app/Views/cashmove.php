@@ -80,7 +80,7 @@
                     <label class="uk-form-label" for="origin"><?=lang('Global.origin')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select" name="origin" id="sel_ori">
-                                <option><?=lang('Global.origin')?></option>
+                                <option selected disabled><?=lang('Global.origin')?></option>
                                     <?php foreach ($cashmans as $cas) { ?>
                                         <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
                                     <?php  } ?>
@@ -94,7 +94,7 @@
                     <label class="uk-form-label" for="destination"><?=lang('Global.destination')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select" name="destination" id="sel_des">
-                                <option><?=lang('Global.destination')?></option>
+                                <option selected disabled><?=lang('Global.destination')?></option>
                                     <?php foreach ($cashmans as $cas) { ?>
                                         <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
                                     <?php } ?>
@@ -202,8 +202,8 @@
                                         } ?>
                                     </option>
                                     <?php foreach ($cashmans as $cas) { ?>
-                                            <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
-                                        <?php } ?>
+                                        <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
@@ -221,9 +221,9 @@
                                             }
                                         } ?>
                                     </option>
-                                        <?php foreach ($cashmans as $cas) { ?>
-                                            <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
-                                        <?php } ?>
+                                    <?php foreach ($cashmans as $cas) { ?>
+                                        <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
