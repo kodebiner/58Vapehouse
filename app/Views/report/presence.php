@@ -106,9 +106,9 @@
             <?php } ?>
         </tbody>
     </table>
-    <div>
-        <?= $pager->links('presence', 'front_full') ?>
-    </div>
+    <!-- <div>
+        </?= $pager->links('presence', 'front_full') ?>
+    </div> -->
 </div>
 <?= view('Views/Auth/_message_block') ?>
 

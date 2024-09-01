@@ -420,7 +420,7 @@
                                     </table>
                                 </div>
                                 <div class="uk-text-right uk-margin-top">
-                                    <a class="uk-link-reset" href="<//?= base_url('report/product') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                                    <a class="uk-link-reset" href="<?= base_url('report/product') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
                                 </div>
                             </div>
                         </div>

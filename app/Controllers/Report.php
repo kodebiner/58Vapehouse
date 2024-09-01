@@ -1904,11 +1904,11 @@ class Report extends BaseController
         $presencedata   = [];
         
         if ($this->data['outletPick'] === null) {
-            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->paginate(20, 'presence');
+            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
             $addres     = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->paginate(20, 'presence');
+            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
             $outlets    = $OutletModel->find($this->data['outletPick']);
             $addres     = $outlets['address'];
             $outletname = $outlets['name'];
@@ -1947,7 +1947,7 @@ class Report extends BaseController
         $data['description']    = lang('Global.presenceListDesc');
         $data['presences']      = $presencedata;
         // $data['present']        = $presen;
-        $data['pager']          = $PresenceModel->pager;
+        // $data['pager']          = $PresenceModel->pager;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
 
