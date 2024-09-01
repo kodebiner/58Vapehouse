@@ -213,7 +213,7 @@ class Auth extends BaseConfig
      *
      * @var bool
      */
-    public $allowRemembering = true;
+    public $allowRemembering = false;
 
     /**
      * --------------------------------------------------------------------
