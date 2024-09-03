@@ -2338,12 +2338,12 @@ class export extends BaseController
         }
 
         $presencedata   = [];
+        $presences      = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
+        
         if ($this->data['outletPick'] === null) {
-            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
             $addres     = "All Outlets";
             $outletname = "58vapehouse";
         } else {
-            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
             $outlets    = $OutletModel->find($this->data['outletPick']);
             $addres     = $outlets['address'];
             $outletname = $outlets['name'];
@@ -2363,16 +2363,27 @@ class export extends BaseController
             $shift  = $presence['shift'];
             $status = $presence['status'];
 
-            $presencedata[$date.$shift]['id']       = $presence['id'];
-            $presencedata[$date.$shift]['date']     = $date;
-            $presencedata[$date.$shift]['name']     = $users->name;
-            $presencedata[$date.$shift]['role']     = $groups->name;
-            $presencedata[$date.$shift]['shift']    = $presence['shift'];
+            $presencedata[$date.$users->id.$shift]['id']       = $presence['id'];
+            $presencedata[$date.$users->id.$shift]['date']     = $date;
+            $presencedata[$date.$users->id.$shift]['name']     = $users->name;
+            $presencedata[$date.$users->id.$shift]['role']     = $groups->name;
+            $presencedata[$date.$users->id.$shift]['shift']    = $presence['shift'];
 
-            $presencedata[$date.$shift]['detail'][$status]['time']         = $time;
-            $presencedata[$date.$shift]['detail'][$status]['photo']        = $presence['photo'];
-            $presencedata[$date.$shift]['detail'][$status]['geoloc']       = $presence['geoloc'];
-            $presencedata[$date.$shift]['detail'][$status]['status']       = $presence['status'];
+            $presencedata[$date.$users->id.$shift]['detail'][$status]['time']         = $time;
+            $presencedata[$date.$users->id.$shift]['detail'][$status]['photo']        = $presence['photo'];
+            $presencedata[$date.$users->id.$shift]['detail'][$status]['geoloc']       = $presence['geoloc'];
+            $presencedata[$date.$users->id.$shift]['detail'][$status]['status']       = $presence['status'];
+
+            // $presencedata[$date.$shift]['id']       = $presence['id'];
+            // $presencedata[$date.$shift]['date']     = $date;
+            // $presencedata[$date.$shift]['name']     = $users->name;
+            // $presencedata[$date.$shift]['role']     = $groups->name;
+            // $presencedata[$date.$shift]['shift']    = $presence['shift'];
+
+            // $presencedata[$date.$shift]['detail'][$status]['time']         = $time;
+            // $presencedata[$date.$shift]['detail'][$status]['photo']        = $presence['photo'];
+            // $presencedata[$date.$shift]['detail'][$status]['geoloc']       = $presence['geoloc'];
+            // $presencedata[$date.$shift]['detail'][$status]['status']       = $presence['status'];
         }
 
         // $addres = '';
@@ -2499,7 +2510,7 @@ class export extends BaseController
                                 if (str_replace(":","", $detail['time']) > str_replace(":","", $kompensasi)) {
                                     echo '<td>' . str_replace(":","", $detail['time']) - str_replace(":","", $kompensasi) . '</td>';
                                 } else {
-                                    echo '<td></td>';
+                                    echo '<td>0</td>';
                                 }
                             }
                             echo '<td>' . $detail['geoloc'] . '</td>';

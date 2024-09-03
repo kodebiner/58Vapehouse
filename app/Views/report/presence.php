@@ -90,7 +90,7 @@
                             if (str_replace(":","", $detail['time']) > str_replace(":","", $kompensasi)) { ?>
                                 <td style="color:white;"><?= str_replace(":","", $detail['time']) - str_replace(":","", $kompensasi) ?></td>
                             <?php } else { ?>
-                                <td style="color:white;"></td>
+                                <td style="color:white;">0</td>
                             <?php } ?>
                         <?php } ?>
                         <td style="color:white;">
