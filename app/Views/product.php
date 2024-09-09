@@ -690,7 +690,7 @@
                 </div>
                 <div class="uk-margin-small-top">
                     <select class="uk-select" id="filter" name="category" style="border-radius: 5px; border-style: solid;">
-                        <option value="" selected disabled><?= lang('Global.selectcat') ?></option>
+                        <option value="" selected><?= lang('Global.selectcat') ?></option>
                         <?php foreach ($category as $cate) { ?>
                             <option value="<?= $cate['id'] ?>" <?= ((!empty($input['category'])) && ($input['category'] === $cate['id'])) ? 'selected' : '' ?>><?= $cate['name'] ?></option>
                         <?php } ?>

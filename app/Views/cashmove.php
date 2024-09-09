@@ -81,27 +81,27 @@
                         <div class="uk-form-controls">
                             <select class="uk-select" name="origin" id="sel_ori">
                                 <option selected disabled><?=lang('Global.origin')?></option>
-                                    <?php foreach ($cashmans as $cas) { ?>
-                                        <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
+                                    <?php foreach ($origins as $origin) { ?>
+                                        <option value="<?= $origin['id']; ?>"><?= $origin['name']; ?></option>
                                     <?php  } ?>
                             </select>
                         </div>
                     </div>
                     <!-- end select origin-->
                     
-                    <!-- select origin -->
+                    <!-- select destination -->
                     <div class="uk-margin-bottom">
                     <label class="uk-form-label" for="destination"><?=lang('Global.destination')?></label>
                         <div class="uk-form-controls">
                             <select class="uk-select" name="destination" id="sel_des">
                                 <option selected disabled><?=lang('Global.destination')?></option>
-                                    <?php foreach ($cashmans as $cas) { ?>
-                                        <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
+                                    <?php foreach ($destinations as $destination) { ?>
+                                        <option value="<?= $destination['id']; ?>"><?= $destination['name']; ?></option>
                                     <?php } ?>
                             </select>
                         </div>
                     </div>
-                    <!-- end select origin-->
+                    <!-- end select destination-->
 
                     <div class="uk-margin">
                         <label class="uk-form-label" for="description"><?=lang('Global.quantity')?></label>
@@ -195,14 +195,14 @@
                             <div class="uk-form-controls">
                                 <select class="uk-select" name="origin" id="sel_ori">
                                     <option value="<?= $cashmv['origin']; ?>">
-                                        <?php foreach ($cashmans as $cas) {
-                                            if ($cashmv['origin']===$cas['id']){
-                                                echo $cas['name'];
+                                        <?php foreach ($origins as $origin) {
+                                            if ($cashmv['origin'] == $origin['id']){
+                                                echo $origin['name'];
                                             }
                                         } ?>
                                     </option>
-                                    <?php foreach ($cashmans as $cas) { ?>
-                                        <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
+                                    <?php foreach ($origins as $origin) { ?>
+                                        <option value="<?= $origin['id']; ?>"><?= $origin['name']; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -215,14 +215,14 @@
                             <div class="uk-form-controls">
                                 <select class="uk-select" name="destination" id="sel_des">
                                     <option value="<?= $cashmv['destination']; ?>"> 
-                                        <?php foreach ($cashmans as $cas) {
-                                            if ($cashmv['destination']===$cas['id']){
-                                                echo $cas['name'];
+                                        <?php foreach ($destinations as $destination) {
+                                            if ($cashmv['destination'] == $destination['id']){
+                                                echo $destination['name'];
                                             }
                                         } ?>
                                     </option>
-                                    <?php foreach ($cashmans as $cas) { ?>
-                                        <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
+                                    <?php foreach ($destinations as $destination) { ?>
+                                        <option value="<?= $destination['id']; ?>"><?= $destination['name']; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>

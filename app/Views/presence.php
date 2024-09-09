@@ -38,7 +38,17 @@
                     <option value="0">Pagi (09:00)</option>
                     <option value="1">Siang (12:00 - 16:00)</option>
                     <option value="2">Sore (16:00)</option>
+                    <option value="3">UGM (10:00)</option>
                 </select>
+            </div>
+        </div>
+
+        <div class="uk-child-width-auto uk-flex-center uk-flex uk-flex-center uk-margin-large-top" id="gridBtn" uk-grid hidden>
+            <div>
+                <button  class="uk-button uk-button-success uk-button-large" id="checkin" Onclick="klik()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkin')?></button>
+            </div>
+            <div>
+                <button class="uk-button uk-button-danger uk-button-large" id="checkout" Onclick="klik2()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkout')?></button>
             </div>
         </div>
 
@@ -84,15 +94,6 @@
                         <div class="tm-h4 uk-text-center"><?=lang('Global.imgres')?></div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="uk-child-width-auto uk-flex-center uk-flex uk-flex-center uk-margin-large-top" id="gridBtn" uk-grid hidden>
-            <div>
-                <button  class="uk-button uk-button-success uk-button-large" id="checkin" Onclick="klik()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkin')?></button>
-            </div>
-            <div>
-                <button class="uk-button uk-button-danger uk-button-large" id="checkout" Onclick="klik2()" style="width: 223px; border-radius: 15px; font-size: 25.5px;"><?=lang('Global.checkout')?></button>
             </div>
         </div>
 

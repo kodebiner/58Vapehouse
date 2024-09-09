@@ -36,7 +36,14 @@ class CashMove extends BaseController
         }
 
         $outlets                = $OutletModel->findAll();
-        $cashman                = $CashModel->findAll();
+        // $cashman                = $CashModel->findAll();
+        if ($this->data['outletPick'] != null) {
+            $origins                = $CashModel->where('outletid', $this->data['outletPick'])->find();
+            $destinations           = $CashModel->where('outletid !=', $this->data['outletPick'])->find();
+        } else {
+            $origins                = $CashModel->findAll();
+            $destinations           = $CashModel->findAll();
+        }
 
         // if (!empty($input)) {
         //     if ($startdate === $enddate) {
@@ -53,7 +60,9 @@ class CashMove extends BaseController
         $data['title']          = lang('Global.walletMoveList');
         $data['description']    = lang('Global.walletMoveListDesc');
         $data['cashmoves']      = $cashmoves;
-        $data['cashmans']       = $cashman;
+        $data['origins']        = $origins;
+        $data['destinations']   = $destinations;
+        // $data['cashmans']       = $cashman;
         $data['outlets']        = $outlets;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);

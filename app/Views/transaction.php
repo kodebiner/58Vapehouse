@@ -1119,7 +1119,7 @@
                                                     $( "#duedate" ).datepicker({
                                                         dateFormat: "yy-mm-dd",
                                                         minDate: 0,
-                                                        maxDate: "+1m +1w"
+                                                        maxDate: "+2w"
                                                     });
                                                 } );
                                             </script>
