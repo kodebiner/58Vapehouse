@@ -143,16 +143,16 @@
                     <td><?= $cashmv['description']; ?></td>
                     <td><?= date('l, d M Y', strtotime($cashmv['date'])); ?></td>
                     <td>
-                        <?php foreach ($cashmans as $cash) {
-                            if ($cash['id'] === $cashmv['origin']) {
-                                echo $cash['name'];
+                        <?php foreach ($origins as $origin) {
+                            if ($origin['id'] == $cashmv['origin']) {
+                                echo $origin['name'];
                             }
                         } ?>
                     </td>
                     <td>
-                        <?php foreach ($cashmans as $cash){
-                            if( $cash['id']===$cashmv['destination']){
-                                echo $cash['name'];
+                        <?php foreach ($destinations as $destination){
+                            if ($destination['id'] == $cashmv['destination']) {
+                                echo $destination['name'];
                             }
                         }
                         ?>
