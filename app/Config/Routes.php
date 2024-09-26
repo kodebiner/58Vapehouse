@@ -32,8 +32,8 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 
-$routes->get('/', 'Presence::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
-$routes->get('home/index', 'Presence::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
+$routes->get('/', 'Transaction::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
+$routes->get('home/index', 'Transaction::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
 // $routes->get('/', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
 // $routes->get('home/index', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
 $routes->get('trial', 'Home::trial');
