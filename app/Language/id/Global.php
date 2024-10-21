@@ -81,6 +81,7 @@ return [
     'choosewallet'      => 'Pilih Dompet',
     'chooseoutlet'      => 'Pilih Outlet Dahulu',
     'storeNotOpen'      => 'Buka toko terlebih dahulu',
+    'storeClosed'       => 'Toko sudah Tutup',
     'alertstock'        => 'Stok tidak mencukupi',
     'splitbill'         => 'Pecah Pembayaran',
     'wanttosplit'       => 'Ingin pisah pembayaran?',

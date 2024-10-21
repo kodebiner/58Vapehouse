@@ -259,8 +259,8 @@
                 <div class="uk-offcanvas-bar" role="dialog" aria-modal="true">
                     <nav>
                         <ul class="uk-nav uk-nav-default tm-nav uk-light" uk-nav>
-                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
-                                <a class="tm-h3" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='dashboard')?'uk-active':''?>">
+                                <a class="tm-h3" href="<?= base_url('dashboard') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                             </li>          
                             <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
                                 <a class="tm-h3" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
@@ -305,8 +305,8 @@
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='dayrep')?'uk-active':''?>">
                                 <a class="tm-h3" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
                             </li>
-                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='transaction')?'uk-active':''?>">
-                                <a class="tm-h3" href="<?= base_url('transaction') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
+                                <a class="tm-h3" href="<?= base_url('') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
                             </li>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
                                 <a class="tm-h3" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
@@ -422,8 +422,8 @@
         <?php } else { ?>
             <nav class="tm-sidebar-left">
                 <ul class="uk-nav uk-nav-default tm-nav uk-light" uk-nav>
-                    <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
-                        <a class="tm-h3" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
+                    <li class="tm-main-navbar <?=($uri->getSegment(1)==='dashboard')?'uk-active':''?>">
+                        <a class="tm-h3" href="<?= base_url('dashboard') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                     </li>
                     <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
                         <a class="tm-h3" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
@@ -468,8 +468,8 @@
                     <li class="tm-main-navbar <?=($uri->getSegment(1)==='dayrep')?'uk-active':''?>">
                         <a class="tm-h3" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
                     </li>
-                    <li class="tm-main-navbar <?=($uri->getSegment(1)==='transaction')?'uk-active':''?>">
-                        <a class="tm-h3" href="<?= base_url('transaction') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
+                    <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
+                        <a class="tm-h3" href="<?= base_url('') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
                     </li>
                     <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
                         <a class="tm-h3" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>

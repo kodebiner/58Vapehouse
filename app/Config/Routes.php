@@ -34,8 +34,8 @@ $routes->set404Override();
 
 $routes->get('/', 'Transaction::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
 $routes->get('home/index', 'Transaction::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
-// $routes->get('/', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
-// $routes->get('home/index', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
+$routes->get('dashboard', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
+// $routes->get('home/dashboard', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
 $routes->get('trial', 'Home::trial');
 $routes->get('ownership', 'Home::ownership');
 // $routes->get('stockmovemigrate', 'Home::stockmove');

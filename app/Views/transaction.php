@@ -1275,8 +1275,8 @@
             <div class="uk-offcanvas-bar" role="dialog" aria-modal="true">
                 <nav>
                     <ul class="uk-nav uk-nav-default tm-nav uk-light" uk-nav>
-                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
-                            <a class="tm-h3" href="<?= base_url('') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
+                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='dashboard')?'uk-active':''?>">
+                            <a class="tm-h3" href="<?= base_url('dashboard') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                         </li>
                         <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
                             <a class="tm-h3" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
@@ -1321,8 +1321,8 @@
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='dayrep')?'uk-active':''?>">
                             <a class="tm-h3" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
                         </li>
-                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='transaction')?'uk-active':''?>">
-                            <a class="tm-h3" href="<?= base_url('transaction') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
+                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
+                            <a class="tm-h3" href="<?= base_url('') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
                         </li>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
                             <a class="tm-h3" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
@@ -1815,12 +1815,52 @@
 
                                 <!-- Button To Manage Cash -->
                                 <div class="uk-margin-remove uk-flex uk-flex-center">
-                                    <a class="uk-width-1-6@m uk-button uk-button-primary" href="<?= base_url('cashinout') ?>" style="border-radius: 10px;">
-                                        <div class="tm-h6 uk-text-center" style="color: #fff !important;"><?=lang('Global.open')?></div>
-                                    </a>
+                                    <button type="button" class="uk-width-1-6@m uk-button uk-button-primary" style="border-radius: 10px;" uk-toggle="target: #open"><?= lang('Global.open') ?></button>
                                 </div>
                                 <!-- Button To Manage Cash End -->
+
+                                <!-- Modal Open -->
+                                <div uk-modal class="uk-flex-top" id="open">
+                                    <div class="uk-modal-dialog uk-margin-auto-vertical">
+                                        <div class="uk-modal-content">
+                                            <div class="uk-modal-header">
+                                                <div class="uk-child-width-1-2" uk-grid>
+                                                    <div>
+                                                        <h3 class="tm-h2 uk-text-center"><?= lang('Global.initialcash') ?></h3>
+                                                    </div>
+                                                    <div class="uk-text-right">
+                                                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="uk-modal-body">
+                                                <form class="uk-form-stacked" role="form" action="dayrep/open" method="post">
+                                                    <?= csrf_field() ?>
+
+                                                    <div class="uk-form-controls">
+                                                        <input type="number" class="uk-input uk-form-large uk-text-center" style="border-radius: 10px;" id="initialcash" name="initialcash" placeholder="<?= lang('Global.initialcash') ?>" required />
+                                                    </div>
+
+                                                    <hr>
+
+                                                    <div class="uk-margin">
+                                                        <button type="submit" class="uk-button uk-button-primary uk-width-1-1" style="border-radius: 10px;"><?= lang('Global.open') ?></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal Open End -->
                             </div>
+                        <?php } elseif (!empty($closed)) { ?>
+                            <!-- Alert Store Closed -->
+                            <div class="uk-margin-small uk-flex uk-flex-center">
+                                <div class="uk-width-1-6@m uk-card uk-card-default uk-card-small uk-card-body">
+                                    <div class="tm-h1 uk-text-center"><?=lang('Global.storeClosed')?></div>
+                                </div>
+                            </div>
+                            <!-- Alert Store Closed End -->
                         <?php } else { ?>
                             <?= view('Views/Auth/_message_block') ?>
                             <div class="uk-margin uk-flex uk-flex-center">
