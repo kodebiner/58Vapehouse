@@ -32,8 +32,6 @@ class DailyReport extends BaseController
         if ($this->data['outletPick'] != null) {
             $pager      = \Config\Services::pager();
 
-            // LAST WORKING ON FINDING TOTAL PRODUCT SELL
-
             // Calling Models
             $TransactionModel   = new TransactionModel;
             $TrxdetailModel     = new TrxdetailModel;
@@ -90,6 +88,10 @@ class DailyReport extends BaseController
                 // Date Open
                 $dailyreportdata[$dayrep['id']]['dateopen']         = date('l, d M Y, H:i:s', strtotime($dayrep['dateopen']));
 
+                // Transaction Data
+                $transactions       = $TransactionModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();
+                $totalproductsell   = [];
+
                 // Date Closed
                 if ($dayrep['dateclose'] != '0000-00-00 00:00:00') {
                     $dailyreportdata[$dayrep['id']]['dateclose']    = date('l, d M Y, H:i:s', strtotime($dayrep['dateclose']));
@@ -97,11 +99,82 @@ class DailyReport extends BaseController
                     // User Close Store
                     $userclose                                      = $UserModel->find($dayrep['useridclose']);
                     $dailyreportdata[$dayrep['id']]['userclose']    = $userclose->firstname.' '.$userclose->lastname;
+
+                    // Transaction Data
+                    foreach ($transactions as $trx) {
+                        // Product Seliing Data
+                        $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+                        
+                        if (!empty($trxdetails)) {
+                            foreach ($trxdetails as $trxdet) {
+                                $variants       = $VariantModel->find($trxdet['variantid']);
+                                
+                                if (!empty($variants)) {
+                                    $products   = $ProductModel->find($variants['productid']);
+            
+                                    $dailyreportdata[$dayrep['id']]['productsell'][$products['id']]['name']            = $products['name'];
+                                    $dailyreportdata[$dayrep['id']]['productsell'][$products['id']]['qty'][]           = $trxdet['qty'];
+                                } else {
+                                    $products   = [];
+
+                                    $dailyreportdata[$dayrep['id']]['productsell'][0]['name']             = 'Produk / Variant Terhapus';
+                                    $dailyreportdata[$dayrep['id']]['productsell'][0]['name'][]            = $trxdet['qty'];
+                                }
+
+                                $totalproductsell[]                                                                     = $trxdet['qty'];
+                            }
+                        } else {
+                            $variants   = [];
+                            $products   = [];
+                        }
+
+                        // Customer Name
+                        if ($trx['memberid'] == '0') {
+                            $member     = 'Non Member';
+                        } else {
+                            $members    = $MemberModel->find($trx['memberid']);
+                            $member     = $members['name'];
+                        }
+                        $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['custname']            = $member;
+
+                        // Transaction Date
+                        $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['time']                = date('H:i:s', strtotime($trx['date']));
+
+                        // LAST WORK BELOW, NEEDS TO CONFIGURE TRXPAYMENT
+                        // Payment Methods
+                        $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', $payment['id'])->find();
+                        $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
+                        $dailyreportdata['payments'][$trx['id']]['custname']      = $payment['name'];
+                        if (!empty($trxpayments)) {
+                            foreach ($trxpayments as $trxpayment) {
+                                // $dailyreportdata['payments'][$payment['id']]['value'][]             = $trxpayment['value'];
+                                $dailyreportdata['payments']['detail'][$trx['id']]['name']      = $payment['name'];
+                                $dailyreportdata['payments']['detail'][$trx['id']]['value']     = $trxpayment['value'];
+                            }
+                        }
+                        if (!empty($debtpayments)) {
+                            foreach ($debtpayments as $debtpayment) {
+                                // $dailyreportdata['payments'][0]['value'][]                          = $debtpayment['value'];
+                                $dailyreportdata['payments']['detail'][$trx['id']]['name']                   = $payment['name'];
+                                $dailyreportdata['payments']['detail'][$trx['id']]['value']                  = $debtpayment['value'];
+                            }
+                        }
+                    }
                 } else {
                     $dailyreportdata[$dayrep['id']]['dateclose']    = lang('Global.storeNotClosed');
 
                     // User Close Store
                     $dailyreportdata[$dayrep['id']]['userclose']    = lang('Global.storeNotClosed');
+
+                    // Product Seliing Data
+                    $trxdetails                                     = [];
+                    $dailyreportdata[$dayrep['id']]['productsell']  = [];
+                    $totalproductsell[]                             = [];
+                    $variants                                       = [];
+                    $products                                       = [];
+
+                    // Payment Methods
+                    $dailyreportdata[$dayrep['id']]['payments']     = [];
                 }
 
                 // Total Cash In
@@ -119,68 +192,6 @@ class DailyReport extends BaseController
                 // User Open Store
                 $useropen                                           = $UserModel->find($dayrep['useridopen']);
                 $dailyreportdata[$dayrep['id']]['useropen']         = $useropen->firstname.' '.$useropen->lastname;
-
-                // Transaction Data
-                $transactions       = $TransactionModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();
-                
-                $totalproductsell   = [];
-                foreach ($transactions as $trx) {
-                    // Product Seliing Data
-                    $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-                    
-                    if (!empty($trxdetails)) {
-                        foreach ($trxdetails as $trxdet) {
-                            $variants       = $VariantModel->find($trxdet['variantid']);
-                            
-                            if (!empty($variants)) {
-                                $products   = $ProductModel->find($variants['productid']);
-                                
-                                $dailyreportdata[$dayrep['id']]['productsell'][$products['id']]['name']             = $products['name'];
-                                $dailyreportdata[$dayrep['id']]['productsell'][$products['id']]['qty'][]            = $trxdet['qty'];
-                            } else {
-                                $products   = [];
-                                $dailyreportdata[$dayrep['id']]['productsell'][0]['name']                           = 'Kategori / Produk / Variant Terhapus';
-                                $dailyreportdata[$dayrep['id']]['productsell'][0]['qty'][]                          = $trxdet['qty'];
-                            }
-
-                            $totalproductsell[]                                                                     = $trxdet['qty'];
-                        }
-                    } else {
-                        $variants   = [];
-                        $products   = [];
-                    }
-
-                    // Customer Name
-                    if ($trx['memberid'] == '0') {
-                        $member     = 'Non Member';
-                    } else {
-                        $members    = $MemberModel->find($trx['memberid']);
-                        $member     = $members['name'];
-                    }
-                    $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['custname']            = $member;
-
-                    // Transaction Date
-                    $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['time']                = date('H:i:s', strtotime($trx['date']));
-
-                    // // Payment Methods
-                    // $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', $payment['id'])->find();
-                    // $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
-                    // $dailyreportdata['payments'][$trx['id']]['custname']      = $payment['name'];
-                    // if (!empty($trxpayments)) {
-                    //     foreach ($trxpayments as $trxpayment) {
-                    //         // $dailyreportdata['payments'][$payment['id']]['value'][]             = $trxpayment['value'];
-                    //         $dailyreportdata['payments']['detail'][$trx['id']]['name']      = $payment['name'];
-                    //         $dailyreportdata['payments']['detail'][$trx['id']]['value']     = $trxpayment['value'];
-                    //     }
-                    // }
-                    // if (!empty($debtpayments)) {
-                    //     foreach ($debtpayments as $debtpayment) {
-                    //         // $dailyreportdata['payments'][0]['value'][]                          = $debtpayment['value'];
-                    //         $dailyreportdata['payments']['detail'][$trx['id']]['name']                   = $payment['name'];
-                    //         $dailyreportdata['payments']['detail'][$trx['id']]['value']                  = $debtpayment['value'];
-                    //     }
-                    // }
-                }
 
                 // Total Prodcuct Sell
                 $dailyreportdata[$dayrep['id']]['totalproductsell']     = array_sum($totalproductsell);

@@ -249,7 +249,6 @@
 
                     <hr>
                     
-                    <!-- NEXT WORK BELOW -->
                     <div class="uk-margin">
                         <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.productsales') ?></h5>
                         <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.descproductsales') ?></h6>
@@ -260,7 +259,8 @@
                                 </div>
                                 <div class="uk-text-right">
                                     <div>
-                                        <?php
+                                        <?= $dayrep['totalproductsell'] ?>
+                                        <!-- </?php
                                             $totalproduct   = array();
                                             foreach ($transactions as $trx) {
                                                 if ($trx['date'] > $dayrep['dateopen'] && $trx['date'] < $dayrep['dateclose']) {
@@ -273,7 +273,7 @@
                                             }
                                             $sumtotalproduct = array_sum($totalproduct);
                                             echo $sumtotalproduct;
-                                        ?>
+                                        ?> -->
                                     </div>
                                 </div>
                             </div>
@@ -286,6 +286,7 @@
 
                     <hr>
                     
+                    <!-- LAST WORK BELOW, NEEDS TO CONFIGURE TRXPAYMENT -->
                     <div class="uk-margin">
                         <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.sales') ?></h5>
                         <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.descsales') ?></h6>
@@ -640,22 +641,34 @@
                         </div>
                         <div>
                             <div class="uk-text-right">
-                                <?php
+                                <?= $dayrep['totalproductsell'] ?>
+                                <!-- </?php
                                     echo $sumtotalproduct;
-                                ?>
+                                ?> -->
                             </div>
                         </div>
                     </div>
 
                     <div style="background-color: #e5e5e5;">
                         <h5>
-                            <?php
+                            <?= $dayrep['dateopen'] ?>
+                            <!-- </?php
                                 echo date('l, d M Y', strtotime($dayrep['dateopen']));
-                            ?>
+                            ?> -->
                         </h5>
                     </div>
 
-                    <?php
+                    <?php foreach ($dayrep['productsell'] as $productsell) { ?>
+                        <div class="uk-child-width-1-2 uk-margin-small-top" uk-grid>
+                            <div>
+                                <div class=""><?= $productsell['name'] ?></div>
+                            </div>
+                            <div class="uk-text-right uk-text-bolder" style="color: #000;">
+                                <div><?= array_sum($productsell['qty']) ?> Pcs</div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <!-- </?php
                         $variantsale = array();
                         foreach ($variants as $variant) {
                             foreach ($products as $product) {
@@ -707,15 +720,15 @@
                             if ($sale['qty'] != 0) { ?>
                                 <div class="uk-child-width-1-2 uk-margin-small-top" uk-grid>
                                     <div>
-                                        <div class=""><?= $sale['name'] ?></div>
+                                        <div class=""></?= $sale['name'] ?></div>
                                     </div>
                                     <div class="uk-text-right uk-text-bolder" style="color: #000;">
-                                        <div><?= $sale['qty'] ?> Pcs</div>
+                                        <div></?= $sale['qty'] ?> Pcs</div>
                                     </div>
                                 </div>
-                            <?php }
+                            </?php }
                         }
-                    ?>
+                    ?> -->
                 </div>
             </div>
         </div>
