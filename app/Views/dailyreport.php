@@ -66,16 +66,52 @@
                     </td>
 
                     <td class="">
-                        <?php foreach ($outlets as $outlet) {
+                        <?= $dayrep['outlet'] ?>
+                        <!-- </?php foreach ($outlets as $outlet) {
                             if ($outlet['id'] === $dayrep['outletid']) { ?>
-                                <?= $outlet['name'] ?>
-                            <?php }
+                                </?= $outlet['name'] ?>
+                            </?php }
+                        } ?> -->
+                    </td>
+
+                    <td><?= $dayrep['dateopen'] ?></td>
+                    <!-- <td></?= date('l, d M Y, H:i:s', strtotime($dayrep['dateopen'])); ?></td> -->
+
+                    <td>
+                        <?= $dayrep['dateclose'] ?>
+                        <!-- </?php
+                        if ($dayrep['dateclose'] != '0000-00-00 00:00:00') {
+                            echo date('l, d M Y, H:i:s', strtotime($dayrep['dateclose']));
+                        } else {
+                            echo lang('Global.storeNotClosed');
+                        }
+                        ?> -->
+                    </td>
+                    
+                    <td>Rp <?= number_format($dayrep['totalcashin'],2,',','.');?></td>
+                    <td>Rp <?= number_format($dayrep['totalcashout'],2,',','.');?></td>
+                    <td>Rp <?= number_format((Int)$dayrep['cashclose'],2,',','.');?></td>
+                    <td>Rp <?= number_format((Int)$dayrep['noncashclose'],2,',','.');?></td>
+
+                    <!-- <td>Rp </?= number_format($dayrep['totalcashin'],2,',','.');?></td>
+                    <td>Rp </?= number_format($dayrep['totalcashout'],2,',','.');?></td>
+                    <td>Rp </?= number_format((Int)$dayrep['cashclose'],2,',','.');?></td>
+                    <td>Rp </?= number_format((Int)$dayrep['noncashclose'],2,',','.');?></td> -->
+                    <!-- <td class="uk-flex-middle uk-text-center">
+                        <a class="uk-icon-link uk-icon" uk-icon="eye" uk-toggle="target:#detail-</?= $dayrep['id'] ?>"></a>
+                    </td>
+
+                    <td class="">
+                        </?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $dayrep['outletid']) { ?>
+                                </?= $outlet['name'] ?>
+                            </?php }
                         } ?>
                     </td>
 
-                    <td><?= date('l, d M Y, H:i:s', strtotime($dayrep['dateopen'])); ?></td>
+                    <td></?= date('l, d M Y, H:i:s', strtotime($dayrep['dateopen'])); ?></td>
                     <td>
-                        <?php
+                        </?php
                         if ($dayrep['dateclose'] != '0000-00-00 00:00:00') {
                             echo date('l, d M Y, H:i:s', strtotime($dayrep['dateclose']));
                         } else {
@@ -83,10 +119,10 @@
                         }
                         ?>
                     </td>
-                    <td>Rp <?= number_format($dayrep['totalcashin'],2,',','.');?></td>
-                    <td>Rp <?= number_format($dayrep['totalcashout'],2,',','.');?></td>
-                    <td>Rp <?= number_format((Int)$dayrep['cashclose'],2,',','.');?></td>
-                    <td>Rp <?= number_format((Int)$dayrep['noncashclose'],2,',','.');?></td>
+                    <td>Rp </?= number_format($dayrep['totalcashin'],2,',','.');?></td>
+                    <td>Rp </?= number_format($dayrep['totalcashout'],2,',','.');?></td>
+                    <td>Rp </?= number_format((Int)$dayrep['cashclose'],2,',','.');?></td>
+                    <td>Rp </?= number_format((Int)$dayrep['noncashclose'],2,',','.');?></td> -->
                 </tr>
             <?php } ?>
         </tbody>
@@ -123,11 +159,7 @@
                             </div>
                             <div class="uk-margin-remove">
                                 <div class="uk-text-muted">
-                                    <?php foreach ($users as $user) {
-                                        if ($user->id === $dayrep['useridopen']) {
-                                            echo $user->firstname.' '.$user->lastname;
-                                        }
-                                    } ?>
+                                    <?= $dayrep['useropen'] ?>
                                 </div>
                             </div>
                         </div>
@@ -143,11 +175,7 @@
                             </div>
                             <div class="uk-margin-remove">
                                 <div class="uk-text-muted">
-                                    <?php foreach ($users as $user) {
-                                        if ($user->id === $dayrep['useridclose']) {
-                                            echo $user->firstname.' '.$user->lastname;
-                                        }
-                                    } ?>
+                                    <?= $dayrep['userclose'] ?>
                                 </div>
                             </div>
                         </div>
@@ -159,17 +187,69 @@
                         </div>
                         <div class="uk-text-right">
                             <div>
-                                <?php foreach ($outlets as $outlet) {
+                                <?= $dayrep['outlet'] ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <div class=""></?= lang('Global.open') ?></div>
+                        </div>
+                        <div class="uk-text-right uk-margin-remove-left uk-padding-remove uk-child-width-1-1" uk-grid>
+                            <div>
+                                <div></?= $dayrep['dateopen'] ?></div>
+                            </div>
+                            <div class="uk-margin-remove">
+                                <div class="uk-text-muted">
+                                    </?php foreach ($users as $user) {
+                                        if ($user->id === $dayrep['useridopen']) {
+                                            echo $user->firstname.' '.$user->lastname;
+                                        }
+                                    } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="uk-child-width-1-2 uk-margin-small-top" uk-grid>
+                        <div>
+                            <div class=""></?= lang('Global.close') ?></div>
+                        </div>
+                        <div class="uk-text-right uk-margin-remove-left uk-padding-remove uk-child-width-1-1" uk-grid>
+                            <div>
+                                <div></?= $dayrep['dateclose'] ?></div>
+                            </div>
+                            <div class="uk-margin-remove">
+                                <div class="uk-text-muted">
+                                    </?php foreach ($users as $user) {
+                                        if ($user->id === $dayrep['useridclose']) {
+                                            echo $user->firstname.' '.$user->lastname;
+                                        }
+                                    } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="uk-child-width-1-2 uk-margin-small-top" uk-grid>
+                        <div>
+                            <div class=""></?= lang('Global.outlet') ?></div>
+                        </div>
+                        <div class="uk-text-right">
+                            <div>
+                                </?php foreach ($outlets as $outlet) {
                                     if ($outlet['id'] === $dayrep['outletid']) {
                                         echo $outlet['name'];
                                     }
                                 } ?>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <hr>
                     
+                    <!-- NEXT WORK BELOW -->
                     <div class="uk-margin">
                         <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.productsales') ?></h5>
                         <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.descproductsales') ?></h6>
@@ -849,5 +929,4 @@
     </div>
     <!-- Modal Cash History End -->
 <?php } ?>
-<!-- Modal Detail End -->
 <?= $this->endSection() ?>
