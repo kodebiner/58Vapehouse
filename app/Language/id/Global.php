@@ -130,6 +130,7 @@ return [
     'expectedcash'      => 'Jumlah tunai yang diharapkan',
     'cashreceived'      => 'Jumlah Tunai',
     'noncashreceived'   => 'Jumlah Non Tunai',
+    'totalreceived'     => 'Total Diterima',
     'totalsystemrec'    => 'Total Penerimaan Sistem',
     'actualreceipts'    => 'Penerimaan Aktual',
     'includeinitcash'   => 'Termasuk Kas Awal',

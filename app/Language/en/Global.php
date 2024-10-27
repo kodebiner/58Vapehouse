@@ -130,6 +130,7 @@ return [
     'expectedcash'      => 'Expected Cash',
     'cashreceived'      => 'Cash Receive',
     'noncashreceived'   => 'Non Cash Receive',
+    'totalreceived'     => 'Total Receive',
     'totalsystemrec'    => 'Total System Receipts',
     'actualreceipts'    => 'Actual Receipts',
     'includeinitcash'   => 'Include Initial Cash',

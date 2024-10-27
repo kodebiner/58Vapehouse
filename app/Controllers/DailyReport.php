@@ -61,19 +61,10 @@ class DailyReport extends BaseController
                 $enddate    = date('Y-m-t' . ' 23:59:59');
             }
 
-            $today                  = date('Y-m-d') . ' 00:00:01';
-            // if (!empty($input)) {
-            //     if ($startdate === $enddate) {
-                    $dailyreports       = $DailyReportModel->orderby('dateopen', 'DESC')->where('dateopen >=', $startdate . " 00:00:00")->where('dateopen <=', $enddate . " 23:59:59")->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
-            //     } else {
-            //         $dailyreports       = $DailyReportModel->orderBy('dateopen', 'DESC')->where('dateopen >=', $startdate . '00:00:00')->where('dateopen <=', $enddate . '23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
-            //     }
-            // } else {
-            //     $dailyreports           = $DailyReportModel->orderBy('dateopen', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
-            // }
+            $cashdata       = $CashModel->where('outletid', $this->data['outletPick'])->find();
+            $dailyreports   = $DailyReportModel->orderby('dateopen', 'DESC')->where('dateopen >=', $startdate . " 00:00:00")->where('dateopen <=', $enddate . " 23:59:59")->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
 
             $dailyreportdata    = [];
-            $payments           = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
             foreach ($dailyreports as $dayrep) {
                 // Id
                 $dailyreportdata[$dayrep['id']]['id']               = $dayrep['id'];
@@ -117,8 +108,8 @@ class DailyReport extends BaseController
                                 } else {
                                     $products   = [];
 
-                                    $dailyreportdata[$dayrep['id']]['productsell'][0]['name']             = 'Produk / Variant Terhapus';
-                                    $dailyreportdata[$dayrep['id']]['productsell'][0]['name'][]            = $trxdet['qty'];
+                                    $dailyreportdata[$dayrep['id']]['productsell'][0]['name']                           = 'Produk / Variant Terhapus';
+                                    $dailyreportdata[$dayrep['id']]['productsell'][0]['name'][]                         = $trxdet['qty'];
                                 }
 
                                 $totalproductsell[]                                                                     = $trxdet['qty'];
@@ -135,31 +126,60 @@ class DailyReport extends BaseController
                             $members    = $MemberModel->find($trx['memberid']);
                             $member     = $members['name'];
                         }
-                        $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['custname']            = $member;
 
-                        // Transaction Date
-                        $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['time']                = date('H:i:s', strtotime($trx['date']));
-
-                        // LAST WORK BELOW, NEEDS TO CONFIGURE TRXPAYMENT
-                        // Payment Methods
-                        $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', $payment['id'])->find();
+                        // Cash, Non-Cash, Debt
+                        $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid !=', '0')->find();
                         $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
-                        $dailyreportdata['payments'][$trx['id']]['custname']      = $payment['name'];
+
                         if (!empty($trxpayments)) {
                             foreach ($trxpayments as $trxpayment) {
-                                // $dailyreportdata['payments'][$payment['id']]['value'][]             = $trxpayment['value'];
-                                $dailyreportdata['payments']['detail'][$trx['id']]['name']      = $payment['name'];
-                                $dailyreportdata['payments']['detail'][$trx['id']]['value']     = $trxpayment['value'];
+                                $payment        = $PaymentModel->find($trxpayment['paymentid']);
+                                $cashdata       = $CashModel->find($payment['cashid']);
+
+                                if (strcmp($cashdata['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+                                    $cashname   = 'Tunai';
+                                } else {
+                                    $cashname   = $cashdata['name'];
+                                }
+
+                                // Transaction Summary
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][$cashdata['id']]['name']                                 = $cashname;
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][$cashdata['id']]['detail'][$trxpayment['id']]['name']    = $payment['name'];
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][$cashdata['id']]['detail'][$trxpayment['id']]['value']   = $trxpayment['value'];
+
+                                // Detail Transaction
+                                $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][$payment['id']]['name']               = $payment['name'];
+                                $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][$payment['id']]['value']              = $trxpayment['value'];
+                                $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][$payment['id']]['custname']           = $member;
+                                $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][$payment['id']]['time']               = date('H:i:s', strtotime($trx['date']));
+                                $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][$payment['id']]['proof']              = $trx['photo'];
                             }
                         }
                         if (!empty($debtpayments)) {
                             foreach ($debtpayments as $debtpayment) {
-                                // $dailyreportdata['payments'][0]['value'][]                          = $debtpayment['value'];
-                                $dailyreportdata['payments']['detail'][$trx['id']]['name']                   = $payment['name'];
-                                $dailyreportdata['payments']['detail'][$trx['id']]['value']                  = $debtpayment['value'];
+                                // Transaction Summary
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['name']                               = 'Kasbon';
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][0]['name']                  = 'Kasbon';
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][0]['value']                 = $debtpayment['value'];
+
+                                // Detail Transaction
+                                $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['name']            = 'Kasbon';
+                                $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['value']           = $debtpayment['value'];
+                                $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['custname']        = $member;
+                                $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['time']            = date('H:i:s', strtotime($trx['date']));
+                                $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['proof']           = $trx['photo'];
                             }
                         }
                     }
+
+                    // Actual Cash Close
+                    $dailyreportdata[$dayrep['id']]['cashclose']        = $dayrep['cashclose'];
+    
+                    // Actual Non Cash Close
+                    $dailyreportdata[$dayrep['id']]['noncashclose']     = $dayrep['noncashclose'];
+    
+                    // Actual Cashier Summary
+                    $dailyreportdata[$dayrep['id']]['actualsummary']    = (Int)$dayrep['cashclose'] + (Int)$dayrep['noncashclose'];
                 } else {
                     $dailyreportdata[$dayrep['id']]['dateclose']    = lang('Global.storeNotClosed');
 
@@ -175,7 +195,120 @@ class DailyReport extends BaseController
 
                     // Payment Methods
                     $dailyreportdata[$dayrep['id']]['payments']     = [];
+                    $dailyreportdata[$dayrep['id']]['trxpayments']  = [];
+
+                    // Actual Cash Close
+                    $dailyreportdata[$dayrep['id']]['cashclose']        = '0';
+    
+                    // Actual Non Cash Close
+                    $dailyreportdata[$dayrep['id']]['noncashclose']     = '0';
+    
+                    // Actual Cashier Summary
+                    $dailyreportdata[$dayrep['id']]['actualsummary']    = (Int)$dayrep['cashclose'] + (Int)$dayrep['noncashclose'];
                 }
+
+                // User Open Store
+                $useropen                                           = $UserModel->find($dayrep['useridopen']);
+                $dailyreportdata[$dayrep['id']]['useropen']         = $useropen->firstname.' '.$useropen->lastname;
+
+                // Total Prodcuct Sell
+                $dailyreportdata[$dayrep['id']]['totalproductsell'] = array_sum($totalproductsell);
+
+                // Cash Flow
+                $trxothers  = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->notLike('description', 'Cash Withdraw')->notLike('description', 'Debt')->notLike('description', 'Top Up')->find();
+                $debtins    = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Debt')->find();
+                $topups     = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Top Up')->find();
+                $withdraws  = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Cash Withdraw')->find();
+
+                if (!empty($trxothers)) {
+                    foreach ($trxothers as $trxother) {
+                        // User Cashier
+                        $usercashcier   = $UserModel->find($trxother['userid']);
+
+                        // Cashflow Data
+                        $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['cashier'] = $usercashcier->firstname.' '.$usercashcier->lastname;
+                        $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['type']    = $trxother['type'];
+                        $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['desc']    = $trxother['description'];
+                        $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['date']    = date('H:i:s', strtotime($trxother['date']));
+                        $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['qty']     = $trxother['qty'];
+                        $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['proof']   = $trxother['photo'];
+                    }
+                } else {
+                    $usercashcier   = [];
+                    $dailyreportdata[$dayrep['id']]['cashflow'] = [];
+                }
+
+                if (!empty($debtins)) {
+                    foreach ($debtins as $debtin) {
+                        // User Cashier
+                        $usercashcier   = $UserModel->find($debtin['userid']);
+
+                        // Debt Installment Data
+                        $cashdebt       = $CashModel->find($debtin['cashid']);
+                        $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['name']                             = $cashdebt['name'];
+
+                        // Detail Debt Installment
+                        $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['value']   = $debtin['qty'];
+                        $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['cashier'] = $usercashcier->firstname.' '.$usercashcier->lastname;
+                        $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['type']    = $debtin['type'];
+                        $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['desc']    = $debtin['description'];
+                        $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['date']    = date('H:i:s', strtotime($debtin['date']));
+                        $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['qty']     = $debtin['qty'];
+                        $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['proof']   = $debtin['photo'];
+                    }
+                } else {
+                    $usercashcier   = [];
+                    $dailyreportdata[$dayrep['id']]['debtins'] = [];
+                }
+
+                if (!empty($topups)) {
+                    foreach ($topups as $topup) {
+                        // User Cashier
+                        $usercashcier   = $UserModel->find($topup['userid']);
+
+                        // Top Up Data
+                        $cashtopup      = $CashModel->find($topup['cashid']);
+                        $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['name']                              = $cashtopup['name'];
+
+                        // Detail Top Up
+                        $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['value']     = $topup['qty'];
+                        $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['cashier']   = $usercashcier->firstname.' '.$usercashcier->lastname;
+                        $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['type']      = $topup['type'];
+                        $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['desc']      = $topup['description'];
+                        $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['date']      = date('H:i:s', strtotime($topup['date']));
+                        $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['qty']       = $topup['qty'];
+                        $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['proof']     = $topup['photo'];
+                    }
+                } else {
+                    $usercashcier   = [];
+                    $dailyreportdata[$dayrep['id']]['topup'] = [];
+                }
+
+                if (!empty($withdraws)) {
+                    foreach ($withdraws as $withdraw) {
+                        // User Cashier
+                        $usercashcier   = $UserModel->find($withdraw['userid']);
+
+                        // Withdraw Data
+                        $cashwithdraw   = $CashModel->find($withdraw['cashid']);
+                        $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['name']                                = $cashwithdraw['name'];
+
+                        // Detail Withdraw
+                        $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['value']    = $withdraw['qty'];
+                        $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['cashier']  = $usercashcier->firstname.' '.$usercashcier->lastname;
+                        $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['type']     = $withdraw['type'];
+                        $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['desc']     = $withdraw['description'];
+                        $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['date']     = date('H:i:s', strtotime($withdraw['date']));
+                        $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['qty']      = $withdraw['qty'];
+                        $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['proof']    = $withdraw['photo'];
+                    }
+                } else {
+                    $usercashcier   = [];
+                    $dailyreportdata[$dayrep['id']]['withdraw'] = [];
+                }
+
+                // Initial Cash
+                $dailyreportdata[$dayrep['id']]['initialcash']      = $dayrep['initialcash'];
 
                 // Total Cash In
                 $dailyreportdata[$dayrep['id']]['totalcashin']      = $dayrep['totalcashin'];
@@ -183,60 +316,8 @@ class DailyReport extends BaseController
                 // Total Cash Out
                 $dailyreportdata[$dayrep['id']]['totalcashout']     = $dayrep['totalcashout'];
 
-                // Actual Cash Close
-                $dailyreportdata[$dayrep['id']]['cashclose']        = $dayrep['cashclose'];
-
-                // Actual Non Cash Close
-                $dailyreportdata[$dayrep['id']]['noncashclose']     = $dayrep['noncashclose'];
-
-                // User Open Store
-                $useropen                                           = $UserModel->find($dayrep['useridopen']);
-                $dailyreportdata[$dayrep['id']]['useropen']         = $useropen->firstname.' '.$useropen->lastname;
-
-                // Total Prodcuct Sell
-                $dailyreportdata[$dayrep['id']]['totalproductsell']     = array_sum($totalproductsell);
-
-                // // Payment Methods
-                // foreach ($payments as $payment) {
-                //     $dailyreportdata['payments'][$payment['id']]['name']    = $payment['name'];
-                //     $dailyreportdata['payments'][0]['name']                 = 'Debt';
-                    
-                //     $trxtotal           = array();
-                //     $trxvalue           = array();
-                //     $debttotal          = array();
-                //     $debtvalue          = array();
-                //     if (!empty($transactions)) {
-                //         foreach ($transactions as $trx) {
-                //             $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', $payment['id'])->find();
-                //             $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
-
-                //             $members        = $MemberModel->find($trx['memberid']);
-                //             dd($members);
-                //             $dailyreportdata['payments'][$trx['id']]['custname']      = $payment['name'];
-                //             if (!empty($trxpayments)) {
-                //                 foreach ($trxpayments as $trxpayment) {
-                //                     // $dailyreportdata['payments'][$payment['id']]['value'][]             = $trxpayment['value'];
-                //                     $dailyreportdata['payments']['detail'][$trx['id']]['name']      = $payment['name'];
-                //                     $dailyreportdata['payments']['detail'][$trx['id']]['value']     = $trxpayment['value'];
-                //                 }
-                //             }
-                //             if (!empty($debtpayments)) {
-                //                 foreach ($debtpayments as $debtpayment) {
-                //                     // $dailyreportdata['payments'][0]['value'][]                          = $debtpayment['value'];
-                //                     $dailyreportdata['payments']['detail'][$trx['id']]['name']                   = $payment['name'];
-                //                     $dailyreportdata['payments']['detail'][$trx['id']]['value']                  = $debtpayment['value'];
-                //                 }
-                //             }
-                //         }
-                //     } else {
-                //         $trxpayments    = [];
-                //         $debtpayments   = [];
-                //         $trxtotal[]     = [];
-                //         $trxvalue[]     = [];
-                //         $debttotal[]    = [];
-                //         $debtvalue[]    = [];
-                //     }
-                // }
+                // // Cash Summary
+                // $dailyreportdata[$dayrep['id']]['cashsummary']      = ((Int)$dayrep['initialcash'] + (Int)$dayrep['totalcashin']) - (Int)$dayrep['totalcashout'];
             }
             // dd($dailyreportdata);
 
@@ -248,7 +329,7 @@ class DailyReport extends BaseController
             //     $thefirst = $firstreport['dateclose'];
             // }
 
-            // $cashs                  = $CashModel->findAll();
+            // $cashs                  = $CashModel->foutdAll();
             // $payments               = $PaymentModel->findAll();
             // $transactions           = $TransactionModel->where('date <=', $thefirst)->where('date >=', $lastreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
             // $trxothers              = $TrxotherModel->where('date <=', $thefirst)->where('date >=', $lastreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();

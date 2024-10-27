@@ -1671,18 +1671,18 @@ class Pay extends BaseController
         ];
         $CashModel->save($wallet);
 
-        // Find Data for Daily Report
-        $today                  = date('Y-m-d') . ' 00:00:01';
-        $dailyreports           = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
-        if ($payments['cashid'] === $pettycash) {
-            foreach ($dailyreports as $dayrep) {
-                $tcashin = [
-                    'id'            => $dayrep['id'],
-                    'totalcashin'   => (int)$dayrep['totalcashin'] + (int)$input['value'],
-                ];
-                $DailyReportModel->save($tcashin);
-            }
-        }
+        // // Find Data for Daily Report
+        // $today                  = date('Y-m-d') . ' 00:00:01';
+        // $dailyreports           = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
+        // if ($payments['cashid'] === $pettycash) {
+        //     foreach ($dailyreports as $dayrep) {
+        //         $tcashin = [
+        //             'id'            => $dayrep['id'],
+        //             'totalcashin'   => (int)$dayrep['totalcashin'] + (int)$input['value'],
+        //         ];
+        //         $DailyReportModel->save($tcashin);
+        //     }
+        // }
 
         // return
         return redirect()->back()->with('message', lang('Global.saved'));

@@ -302,16 +302,16 @@ class Debt extends BaseController
         ];
         $CashModel->save($wallet);
 
-        // Find Data for Daily Report
-        $today                  = date('Y-m-d') . ' 00:00:01';
-        $dailyreports           = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
-        foreach ($dailyreports as $dayrep) {
-            $tcashin = [
-                'id'            => $dayrep['id'],
-                'totalcashin'   => (int)$dayrep['totalcashin'] + (int)$input['value'],
-            ];
-            $DailyReportModel->save($tcashin);
-        }
+        // // Find Data for Daily Report
+        // $today                  = date('Y-m-d') . ' 00:00:01';
+        // $dailyreports           = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
+        // foreach ($dailyreports as $dayrep) {
+        //     $tcashin = [
+        //         'id'            => $dayrep['id'],
+        //         'totalcashin'   => (int)$dayrep['totalcashin'] + (int)$input['value'],
+        //     ];
+        //     $DailyReportModel->save($tcashin);
+        // }
 
         // Return
         return redirect()->back()->with('massage', lang('global.saved'));

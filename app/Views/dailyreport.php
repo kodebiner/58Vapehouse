@@ -64,65 +64,13 @@
                     <td class="uk-flex-middle uk-text-center">
                         <a class="uk-icon-link uk-icon" uk-icon="eye" uk-toggle="target:#detail-<?= $dayrep['id'] ?>"></a>
                     </td>
-
-                    <td class="">
-                        <?= $dayrep['outlet'] ?>
-                        <!-- </?php foreach ($outlets as $outlet) {
-                            if ($outlet['id'] === $dayrep['outletid']) { ?>
-                                </?= $outlet['name'] ?>
-                            </?php }
-                        } ?> -->
-                    </td>
-
+                    <td class=""><?= $dayrep['outlet'] ?></td>
                     <td><?= $dayrep['dateopen'] ?></td>
-                    <!-- <td></?= date('l, d M Y, H:i:s', strtotime($dayrep['dateopen'])); ?></td> -->
-
-                    <td>
-                        <?= $dayrep['dateclose'] ?>
-                        <!-- </?php
-                        if ($dayrep['dateclose'] != '0000-00-00 00:00:00') {
-                            echo date('l, d M Y, H:i:s', strtotime($dayrep['dateclose']));
-                        } else {
-                            echo lang('Global.storeNotClosed');
-                        }
-                        ?> -->
-                    </td>
-                    
+                    <td><?= $dayrep['dateclose'] ?></td>
                     <td>Rp <?= number_format($dayrep['totalcashin'],2,',','.');?></td>
                     <td>Rp <?= number_format($dayrep['totalcashout'],2,',','.');?></td>
                     <td>Rp <?= number_format((Int)$dayrep['cashclose'],2,',','.');?></td>
                     <td>Rp <?= number_format((Int)$dayrep['noncashclose'],2,',','.');?></td>
-
-                    <!-- <td>Rp </?= number_format($dayrep['totalcashin'],2,',','.');?></td>
-                    <td>Rp </?= number_format($dayrep['totalcashout'],2,',','.');?></td>
-                    <td>Rp </?= number_format((Int)$dayrep['cashclose'],2,',','.');?></td>
-                    <td>Rp </?= number_format((Int)$dayrep['noncashclose'],2,',','.');?></td> -->
-                    <!-- <td class="uk-flex-middle uk-text-center">
-                        <a class="uk-icon-link uk-icon" uk-icon="eye" uk-toggle="target:#detail-</?= $dayrep['id'] ?>"></a>
-                    </td>
-
-                    <td class="">
-                        </?php foreach ($outlets as $outlet) {
-                            if ($outlet['id'] === $dayrep['outletid']) { ?>
-                                </?= $outlet['name'] ?>
-                            </?php }
-                        } ?>
-                    </td>
-
-                    <td></?= date('l, d M Y, H:i:s', strtotime($dayrep['dateopen'])); ?></td>
-                    <td>
-                        </?php
-                        if ($dayrep['dateclose'] != '0000-00-00 00:00:00') {
-                            echo date('l, d M Y, H:i:s', strtotime($dayrep['dateclose']));
-                        } else {
-                            echo lang('Global.storeNotClosed');
-                        }
-                        ?>
-                    </td>
-                    <td>Rp </?= number_format($dayrep['totalcashin'],2,',','.');?></td>
-                    <td>Rp </?= number_format($dayrep['totalcashout'],2,',','.');?></td>
-                    <td>Rp </?= number_format((Int)$dayrep['cashclose'],2,',','.');?></td>
-                    <td>Rp </?= number_format((Int)$dayrep['noncashclose'],2,',','.');?></td> -->
                 </tr>
             <?php } ?>
         </tbody>
@@ -149,6 +97,7 @@
                     </div>
                 </div>
                 <div class="uk-modal-body" uk-overflow-auto>
+                    <!-- Report Information -->
                     <div class="uk-child-width-1-2" uk-grid>
                         <div>
                             <div class=""><?= lang('Global.open') ?></div>
@@ -191,64 +140,11 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- <div class="uk-child-width-1-2" uk-grid>
-                        <div>
-                            <div class=""></?= lang('Global.open') ?></div>
-                        </div>
-                        <div class="uk-text-right uk-margin-remove-left uk-padding-remove uk-child-width-1-1" uk-grid>
-                            <div>
-                                <div></?= $dayrep['dateopen'] ?></div>
-                            </div>
-                            <div class="uk-margin-remove">
-                                <div class="uk-text-muted">
-                                    </?php foreach ($users as $user) {
-                                        if ($user->id === $dayrep['useridopen']) {
-                                            echo $user->firstname.' '.$user->lastname;
-                                        }
-                                    } ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="uk-child-width-1-2 uk-margin-small-top" uk-grid>
-                        <div>
-                            <div class=""></?= lang('Global.close') ?></div>
-                        </div>
-                        <div class="uk-text-right uk-margin-remove-left uk-padding-remove uk-child-width-1-1" uk-grid>
-                            <div>
-                                <div></?= $dayrep['dateclose'] ?></div>
-                            </div>
-                            <div class="uk-margin-remove">
-                                <div class="uk-text-muted">
-                                    </?php foreach ($users as $user) {
-                                        if ($user->id === $dayrep['useridclose']) {
-                                            echo $user->firstname.' '.$user->lastname;
-                                        }
-                                    } ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="uk-child-width-1-2 uk-margin-small-top" uk-grid>
-                        <div>
-                            <div class=""></?= lang('Global.outlet') ?></div>
-                        </div>
-                        <div class="uk-text-right">
-                            <div>
-                                </?php foreach ($outlets as $outlet) {
-                                    if ($outlet['id'] === $dayrep['outletid']) {
-                                        echo $outlet['name'];
-                                    }
-                                } ?>
-                            </div>
-                        </div>
-                    </div> -->
+                    <!-- Report Information End -->
 
                     <hr>
                     
+                    <!-- Product Selling -->
                     <div class="uk-margin">
                         <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.productsales') ?></h5>
                         <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.descproductsales') ?></h6>
@@ -258,23 +154,7 @@
                                     <div class=""><?= lang('Global.totalproductsales') ?></div>
                                 </div>
                                 <div class="uk-text-right">
-                                    <div>
-                                        <?= $dayrep['totalproductsell'] ?>
-                                        <!-- </?php
-                                            $totalproduct   = array();
-                                            foreach ($transactions as $trx) {
-                                                if ($trx['date'] > $dayrep['dateopen'] && $trx['date'] < $dayrep['dateclose']) {
-                                                    foreach ($trxdetails as $trxdet) {
-                                                        if ($trxdet['transactionid'] === $trx['id']) {
-                                                            $totalproduct[] = $trxdet['qty'];
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            $sumtotalproduct = array_sum($totalproduct);
-                                            echo $sumtotalproduct;
-                                        ?> -->
-                                    </div>
+                                    <div><?= $dayrep['totalproductsell'] ?></div>
                                 </div>
                             </div>
                         </div>
@@ -283,68 +163,36 @@
                             <a class="uk-button uk-button-default" uk-toggle="target:#productsales-<?= $dayrep['id'] ?>" style="width: 540px; border-radius: 5px;"><?= lang('Global.productsales') ?></a>
                         </div>
                     </div>
+                    <!-- Product Selling End -->
 
                     <hr>
                     
-                    <!-- LAST WORK BELOW, NEEDS TO CONFIGURE TRXPAYMENT -->
+                    <!-- Sales -->
                     <div class="uk-margin">
                         <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.sales') ?></h5>
                         <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.descsales') ?></h6>
-                        <div class="uk-margin-small-top">
-                            <div class="uk-child-width-1-2" uk-grid>
-                                <div>
-                                    <div class=""><?= lang('Global.cashreceived') ?></div>
-                                </div>
-                                <div class="uk-text-right">
+                        <?php
+                        $totaltrxvalue  = [];
+                        foreach ($dayrep['trxpayments'] as $trxpayment) {
+                            $paymethodval   = [];
+                            foreach ($trxpayment['detail'] as $detail) {
+                                $paymethodval[] = $detail['value'];
+                            }
+                            $totalpaymethodvalue    = array_sum($paymethodval);
+                            $totaltrxvalue[]        = $totalpaymethodvalue; ?>
+                            <div class="uk-margin-small-top">
+                                <div class="uk-child-width-1-2" uk-grid>
                                     <div>
-                                        <?php
-                                            $trxcash = array();
-                                            foreach ($transactions as $transaction) {
-                                                foreach ($trxpayments as $trxpayment) {
-                                                    foreach ($payments as $payment) {
-                                                        if (($payment['name'] === 'Cash') && ($payment['outletid'] === $outletPick)) {
-                                                            if (($transaction['date'] >= $dayrep['dateopen']) && ($transaction['date'] <= $dayrep['dateclose']) && ($trxpayment['transactionid'] === $transaction['id']) && ($trxpayment['paymentid'] === $payment['id'])) {
-                                                                $trxcash[] = $trxpayment['value'];
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            $cashpay = array_sum($trxcash);
-                                            echo "Rp ".number_format($cashpay,2,',','.');
-                                            ?>
+                                        <div class=""><?= lang('Global.totalreceived').' '.$trxpayment['name'] ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?= 'Rp '.number_format($totalpaymethodvalue,2,',','.'); ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="uk-margin-small-top">
-                            <div class="uk-child-width-1-2" uk-grid>
-                                <div>
-                                    <div class=""><?= lang('Global.noncashreceived') ?></div>
-                                </div>
-                                <div class="uk-text-right">
-                                    <div>
-                                        <?php
-                                            $trxnoncash = array();
-                                            foreach ($transactions as $transaction) {
-                                                foreach ($trxpayments as $trxpayment) {
-                                                    foreach ($payments as $payment) {
-                                                        if (($payment['name'] != 'Cash') && (($payment['outletid'] === $outletPick) || ($payment['outletid'] === '0'))) {
-                                                            if (($transaction['date'] >= $dayrep['dateopen']) && ($transaction['date'] <= $dayrep['dateclose']) && ($transaction['outletid'] === $outletPick) && ($trxpayment['transactionid'] === $transaction['id']) && ($trxpayment['paymentid'] === $payment['id'])) {
-                                                                $trxnoncash[] = $trxpayment['value'];
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            $noncashpay = array_sum($trxnoncash);
-                                            echo "Rp ".number_format($noncashpay,2,',','.');
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <?php } ?>
 
                         <div class="uk-margin-small-top">
                             <div class="uk-child-width-1-2 uk-text-bolder" style="color: #000;" uk-grid>
@@ -354,8 +202,8 @@
                                 <div class="uk-text-right">
                                     <div>
                                         <?php
-                                            $totalcashnoncash = $noncashpay + $cashpay;
-                                            echo "Rp ".number_format($totalcashnoncash,2,',','.');
+                                            $totalvalue = array_sum($totaltrxvalue);
+                                            echo "Rp ".number_format($totalvalue,2,',','.');
                                         ?>
                                     </div>
                                 </div>
@@ -366,9 +214,11 @@
                             <a class="uk-button uk-button-default" uk-toggle="target:#trxhistory-<?= $dayrep['id'] ?>" style="width: 540px; border-radius: 5px;"><?= lang('Global.trxHistory') ?></a>
                         </div>
                     </div>
+                    <!-- Sales End -->
 
                     <hr>
 
+                    <!-- Cashflow -->
                     <div class="uk-margin">
                         <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.cashflow') ?></h5>
                         <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.desccashflow') ?></h6>
@@ -383,13 +233,26 @@
                             </div>
                         </div>
 
+                        <?php
+                        $totalcashin    = [];
+                        $totalcashout   = [];
+                        foreach ($dayrep['cashflow'] as $cashflow) {
+                            if ($cashflow['type'] == '0') {
+                                $totalcashin[]  = $cashflow['qty'];
+                            } else {
+                                $totalcashout[] = $cashflow['qty'];
+                            }
+                        }
+                        $summarycashin  = array_sum($totalcashin);
+                        $summarycashout = array_sum($totalcashout); ?>
+
                         <div class="uk-margin-small-top">
                             <div class="uk-child-width-1-2" uk-grid>
                                 <div>
                                     <div class=""><?= lang('Global.totalcashin') ?></div>
                                 </div>
                                 <div class="uk-text-right">
-                                    <div>Rp <?= number_format($dayrep['totalcashin'],2,',','.') ?></div>
+                                    <div>Rp <?= number_format($summarycashin,2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -400,7 +263,7 @@
                                     <div class=""><?= lang('Global.totalcashout') ?></div>
                                 </div>
                                 <div class="uk-text-right">
-                                    <div>-Rp <?= number_format($dayrep['totalcashout'],2,',','.') ?></div>
+                                    <div>-Rp <?= number_format($summarycashout,2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -411,7 +274,7 @@
                                     <div class=""><?= lang('Global.totalcash') ?></div>
                                 </div>
                                 <div class="uk-text-right">
-                                    <div>Rp <?= number_format(($dayrep['initialcash'] + $dayrep['totalcashin']) - $dayrep['totalcashout'],2,',','.') ?></div>
+                                    <div>Rp <?= number_format(((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)),2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -420,9 +283,164 @@
                             <a class="uk-button uk-button-default" uk-toggle="target:#cashhistory-<?= $dayrep['id'] ?>" style="width: 540px; border-radius: 5px;"><?= lang('Global.cashhistory') ?></a>
                         </div>
                     </div>
+                    <!-- Cashflow End -->
 
                     <hr>
 
+                    <!-- Debt Installment -->
+                    <div class="uk-margin">
+                        <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.debtInstallments') ?></h5>
+                        <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.descdebtins') ?></h6>
+                        <?php
+                        $totaldebtins   = [];
+                        foreach ($dayrep['debtins'] as $debtins) {
+                            $debtinsval = [];
+                            foreach ($debtins['detail'] as $debtdetail) {
+                                $debtinsval[]       = $debtdetail['value'];
+                            }
+                            $totaldebtinstallment   = array_sum($debtinsval);
+                            $totaldebtins[]         = $totaldebtinstallment; ?>
+                            <div class="uk-margin-small-top">
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div class=""><?= lang('Global.totalreceived').' '.$debtins['name'] ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?= 'Rp '.number_format($totaldebtinstallment,2,',','.'); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <div class="uk-margin-small-top">
+                            <div class="uk-child-width-1-2 uk-text-bolder" style="color: #000;" uk-grid>
+                                <div>
+                                    <div class=""><?= lang('Global.totaldebtins') ?></div>
+                                </div>
+                                <div class="uk-text-right">
+                                    <div>
+                                        <?php
+                                            $totaldebtvalue = array_sum($totaldebtins);
+                                            echo "Rp ".number_format($totaldebtvalue,2,',','.');
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="uk-margin-small-top">
+                            <a class="uk-button uk-button-default" uk-toggle="target:#debtins-<?= $dayrep['id'] ?>" style="width: 540px; border-radius: 5px;"><?= lang('Global.debtinsHistory') ?></a>
+                        </div>
+                    </div>
+                    <!-- Debt Installment End -->
+
+                    <hr>
+
+                    <!-- Top Up -->
+                    <div class="uk-margin">
+                        <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.topup') ?></h5>
+                        <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.desctopup') ?></h6>
+                        <?php
+                        $totaltopup   = [];
+                        foreach ($dayrep['topup'] as $topup) {
+                            $topupval = [];
+                            foreach ($topup['detail'] as $topupdetail) {
+                                $topupval[]     = $topupdetail['value'];
+                            }
+                            $totaltopups        = array_sum($topupval);
+                            $totaltopup[]       = $totaltopups; ?>
+                            <div class="uk-margin-small-top">
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div class=""><?= lang('Global.totalreceived').' '.$topup['name'] ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?= 'Rp '.number_format($totaltopups,2,',','.'); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <div class="uk-margin-small-top">
+                            <div class="uk-child-width-1-2 uk-text-bolder" style="color: #000;" uk-grid>
+                                <div>
+                                    <div class=""><?= lang('Global.totaltopup') ?></div>
+                                </div>
+                                <div class="uk-text-right">
+                                    <div>
+                                        <?php
+                                            $totaldebtvalue = array_sum($totaltopup);
+                                            echo "Rp ".number_format($totaldebtvalue,2,',','.');
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="uk-margin-small-top">
+                            <a class="uk-button uk-button-default" uk-toggle="target:#topup-<?= $dayrep['id'] ?>" style="width: 540px; border-radius: 5px;"><?= lang('Global.topupHistory') ?></a>
+                        </div>
+                    </div>
+                    <!-- Top Up End -->
+
+                    <hr>
+
+                    <!-- Withdraw -->
+                    <div class="uk-margin">
+                        <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.withdraw') ?></h5>
+                        <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.descwithdraw') ?></h6>
+                        <?php
+                        $totalwithdraw   = [];
+                        foreach ($dayrep['withdraw'] as $withdraw) {
+                            $withdrawval = [];
+                            foreach ($withdraw['detail'] as $withdrawdetail) {
+                                $withdrawval[]     = $withdrawdetail['value'];
+                            }
+                            $totalwithdraws        = array_sum($withdrawval);
+                            $totalwithdraw[]       = $totalwithdraws; ?>
+                            <div class="uk-margin-small-top">
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div class=""><?= lang('Global.totalreceived').' '.$withdraw['name'] ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?= 'Rp '.number_format($totalwithdraws,2,',','.'); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <div class="uk-margin-small-top">
+                            <div class="uk-child-width-1-2 uk-text-bolder" style="color: #000;" uk-grid>
+                                <div>
+                                    <div class=""><?= lang('Global.totalwithdraw') ?></div>
+                                </div>
+                                <div class="uk-text-right">
+                                    <div>
+                                        <?php
+                                            $totaldebtvalue = array_sum($totalwithdraw);
+                                            echo "Rp ".number_format($totaldebtvalue,2,',','.');
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="uk-margin-small-top">
+                            <a class="uk-button uk-button-default" uk-toggle="target:#withdraw-<?= $dayrep['id'] ?>" style="width: 540px; border-radius: 5px;"><?= lang('Global.withdrawHistory') ?></a>
+                        </div>
+                    </div>
+                    <!-- Withdraw End -->
+
+                    <hr>
+
+                    <!-- Actual Receipts -->
                     <div class="uk-margin">
                         <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.actualreceipts') ?></h5>
                         <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.descactualreceipt') ?></h6>
@@ -432,7 +450,7 @@
                                     <div class=""><?= lang('Global.cashreceived') ?></div>
                                 </div>
                                 <div class="uk-text-right">
-                                    <div>Rp <?= number_format((Int)$dayrep['cashclose'],2,',','.') ?></div>
+                                    <div>Rp <?= number_format($dayrep['cashclose'],2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -443,7 +461,7 @@
                                     <div class=""><?= lang('Global.noncashreceived') ?></div>
                                 </div>
                                 <div class="uk-text-right">
-                                    <div>Rp <?= number_format((Int)$dayrep['noncashclose'],2,',','.') ?></div>
+                                    <div>Rp <?= number_format($dayrep['noncashclose'],2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -454,14 +472,16 @@
                                     <div class=""><?= lang('Global.totalactualrec') ?></div>
                                 </div>
                                 <div class="uk-text-right">
-                                    <div>Rp <?= number_format(((Int)$dayrep['cashclose'] + (Int)$dayrep['noncashclose']),2,',','.') ?></div>
+                                    <div>Rp <?= number_format($dayrep['actualsummary'],2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!-- Actual Receipts End -->
 
                     <hr>
 
+                    <!-- Summary & Difference -->
                     <div class="uk-margin">
                         <h5 class="tm-h3 uk-margin-remove"><?= lang('Global.summary') ?></h5>
                         <div class="uk-margin-small-top">
@@ -471,12 +491,7 @@
                                     <div class="uk-text-muted"><?= lang('Global.descreception') ?></div>
                                 </div>
                                 <div class="uk-text-right">
-                                    <div>
-                                        <?php
-                                            $totaltrxsum    = ($totalcashnoncash + ($dayrep['initialcash'] + $dayrep['totalcashin']) - $dayrep['totalcashout']);
-                                            echo "Rp ".number_format($totaltrxsum,2,',','.');
-                                        ?>
-                                    </div>
+                                    <div>Rp <?=number_format((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)),2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -489,16 +504,13 @@
                                 </div>
                                 <div class="uk-text-right uk-text-bolder" style="color: #000;">
                                     <div>
-                                        <?php
-                                            $actualrec      = ((Int)$dayrep['cashclose'] + (Int)$dayrep['noncashclose']);
-                                            $diff           = $actualrec - $totaltrxsum;
-                                            echo "Rp ".number_format($diff,2,',','.');
-                                        ?>
+                                        <?= number_format((Int)$dayrep['actualsummary'] - ((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout))),2,',','.') ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!-- Summary & Difference End -->
                 </div>
             </div>
         </div>
@@ -527,7 +539,7 @@
                         <div>
                             <div class="uk-text-right">
                                 <?php
-                                    echo "Rp ".number_format($totalcashnoncash,2,',','.');
+                                    echo "Rp ".number_format($totalvalue,2,',','.');
                                 ?>
                             </div>
                         </div>
@@ -537,83 +549,49 @@
 
                     <div class="uk-text-center">
                         <h5 class="uk-text-bolder tm-h5 uk-margin-remove-bottom" style="color: #000;">
-                            <?php
-                                echo date('l, d M Y', strtotime($dayrep['dateopen']));
-                            ?>
+                            <?= $dayrep['date'] ?>
                         </h5>
                     </div>
 
-                    <?php
-                        foreach ($transactions as $transaction) {
-                            if (($transaction['date'] >= $dayrep['dateopen']) && ($transaction['date'] <= $dayrep['dateclose']) && ($transaction['outletid'] === $outletPick)) {
-                                $trxvalue = array();
-                                foreach ($trxpayments as $trxpayment) {
-                                    if (($trxpayment['transactionid'] === $transaction['id']) && ($trxpayment['paymentid'] != '0')) {
-                                        $trxvalue[] = $trxpayment['value'];
-                                    }
-                                }
-                                if ($transaction['paymentid'] != '0') {
-                                    foreach ($payments as $payment) {
-                                        if ($transaction['paymentid'] === $payment['id']) {
-                                            $paymentmethod = $payment['name'];
-                                        }
-                                    }
-                                } else {
-                                    $paymentmethod = lang('Global.splitbill');
-                                }
-                                $value = array_sum($trxvalue); ?>
-                                
-                                <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+                    <?php foreach ($dayrep['payments'] as $payments) {
+                        foreach ($payments['detail'] as $detail) { ?>
+                            <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
 
-                                <div class="uk-child-width-1-2" uk-grid>
-                                    <div>
-                                        <h5 class="uk-margin-remove-bottom">
-                                            <?php
-                                                echo date('H:i:s', strtotime($transaction['date']))
-                                            ?>
-                                        </h5>
-                                    </div>
-
-                                    <div class="uk-text-right">
-                                        <div>
-                                            <?php
-                                                if ($transaction['memberid'] === '0') {
-                                                    $member = 'Non Member';
-                                                } else {
-                                                    foreach ($customers as $cust) {
-                                                        if ($transaction['memberid'] === $cust['id']) {
-                                                            $member = $cust['name'];
-                                                        }
-                                                    }
-                                                }
-                                                echo $member;
-                                            ?>
-                                        </div>
-                                    </div>
+                            <div class="uk-child-width-1-2" uk-grid>
+                                <div>
+                                    <h5 class="uk-margin-remove-bottom">
+                                        <?= $detail['time'] ?>
+                                    </h5>
                                 </div>
 
-                                <div class="uk-child-width-1-2 uk-flex-middle uk-margin-small-top" uk-grid>
+                                <div class="uk-text-right">
                                     <div>
-                                        <div><?= $paymentmethod ?></div>
-                                    </div>
-                                    <div class="uk-text-right uk-text-bold" style="color: #000;">
-                                        Rp <?= number_format($value,2,',','.') ?>
+                                        <?= $detail['custname'] ?>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="uk-child-width-1-2 uk-margin-remove-top uk-flex-middle" uk-grid>
-                                    <div>
-                                        <div><?= lang('Global.photo') ?></div>
-                                    </div>
-                                    <div class="uk-text-right" uk-lightbox>
-                                        <a class="uk-inline" href="/img/tfproof/<?= $transaction['photo'];?>">
-                                            <img src="/img/tfproof/<?= $transaction['photo'];?>" alt="<?= $transaction['photo'];?>" style="width: 100px;">
-                                        </a>
-                                    </div>
+                            <div class="uk-child-width-1-2 uk-flex-middle uk-margin-small-top" uk-grid>
+                                <div>
+                                    <div><?= $detail['name'] ?></div>
                                 </div>
-                            <?php }
-                        }
-                    ?>
+                                <div class="uk-text-right uk-text-bold" style="color: #000;">
+                                    Rp <?= number_format($detail['value'],2,',','.') ?>
+                                </div>
+                            </div>
+
+                            <div class="uk-child-width-1-2 uk-margin-remove-top uk-flex-middle" uk-grid>
+                                <div>
+                                    <div><?= lang('Global.photo') ?></div>
+                                </div>
+                                <div class="uk-text-right" uk-lightbox>
+                                    <a class="uk-inline" href="/img/tfproof/<?= $detail['proof'];?>">
+                                        <img src="/img/tfproof/<?= $detail['proof'];?>" alt="<?= $detail['proof'];?>" style="width: 100px;">
+                                    </a>
+                                </div>
+                            </div>
+                        <?php }
+                    } ?>
                 </div>
             </div>
         </div>
@@ -642,9 +620,6 @@
                         <div>
                             <div class="uk-text-right">
                                 <?= $dayrep['totalproductsell'] ?>
-                                <!-- </?php
-                                    echo $sumtotalproduct;
-                                ?> -->
                             </div>
                         </div>
                     </div>
@@ -652,9 +627,6 @@
                     <div style="background-color: #e5e5e5;">
                         <h5>
                             <?= $dayrep['dateopen'] ?>
-                            <!-- </?php
-                                echo date('l, d M Y', strtotime($dayrep['dateopen']));
-                            ?> -->
                         </h5>
                     </div>
 
@@ -668,67 +640,6 @@
                             </div>
                         </div>
                     <?php } ?>
-                    <!-- </?php
-                        $variantsale = array();
-                        foreach ($variants as $variant) {
-                            foreach ($products as $product) {
-                                if ($variant['productid'] === $product['id']) {
-                                    $name = $product['name'].' - '.$variant['name'];
-                                }
-                            }
-
-                            $varqty = array();
-                            foreach ($transactions as $transaction) {
-                                if (($transaction['date'] > $dayrep['dateopen']) && ($transaction['date'] < $dayrep['dateclose'])) {
-                                    foreach ($trxdetails as $trxdet) {
-                                        if (($trxdet['variantid'] === $variant['id']) && ($trxdet['transactionid'] === $transaction['id'])) {
-                                            $varqty[] = $trxdet['qty'];
-                                        }
-                                    }
-                                }
-                            }
-
-                            $variantsale[] = [
-                                'id'    => $variant['id'],
-                                'name'  => $name,
-                                'qty'   => array_sum($varqty)
-                            ];
-                        }
-
-                        foreach ($bundles as $bundle) {
-                            $name = $bundle['name'];
-
-                            $varqty = array();
-                            foreach ($transactions as $transaction) {
-                                if (($transaction['date'] > $dayrep['dateopen']) && ($transaction['date'] < $dayrep['dateclose'])) {
-                                    foreach ($trxdetails as $trxdet) {
-                                        if (($trxdet['bundleid'] === $bundle['id']) && ($trxdet['transactionid'] === $transaction['id'])) {
-                                            $varqty[] = $trxdet['qty'];
-                                        }
-                                    }
-                                }
-                            }
-
-                            $variantsale[] = [
-                                'id'    => $bundle['id'],
-                                'name'  => $name,
-                                'qty'   => array_sum($varqty)
-                            ];
-                        }
-
-                        foreach ($variantsale as $sale) {
-                            if ($sale['qty'] != 0) { ?>
-                                <div class="uk-child-width-1-2 uk-margin-small-top" uk-grid>
-                                    <div>
-                                        <div class=""></?= $sale['name'] ?></div>
-                                    </div>
-                                    <div class="uk-text-right uk-text-bolder" style="color: #000;">
-                                        <div></?= $sale['qty'] ?> Pcs</div>
-                                    </div>
-                                </div>
-                            </?php }
-                        }
-                    ?> -->
                 </div>
             </div>
         </div>
@@ -749,31 +660,13 @@
                 </div>
             </div>
             <div class="uk-modal-body" uk-overflow-auto>
-                <?php
-                    $totalcash = array();
-                    $totalnoncash = array();
-                    foreach ($noncashtrx as $noncashtr) {
-                        if (($noncashtr['date'] > $dayrep['dateopen']) && ($noncashtr['date'] < $dayrep['dateclose']) && ($dayrep['outletid'] === $noncashtr['outletid'])) {
-                            $noncashall = $noncashtr['value'];
-                            $totalnoncash[] = $noncashall;
-                        }
-                    }
-                    foreach ($cashtrx as $cashtr) {
-                        if (($cashtr['date'] > $dayrep['dateopen']) && ($cashtr['date'] < $dayrep['dateclose']) && ($dayrep['outletid'] === $cashtr['outletid'])) {
-                            $cashall = $cashtr['value'];
-                            $totalcash[] = $cashall;
-                        }
-                    }
-                    $sumnoncash = array_sum($totalnoncash);
-                    $cashsum = array_sum($totalcash);
-                ?>
                 <div class="uk-margin">
                     <div class="uk-child-width-1-2 uk-text-bolder" style="color: #000;" uk-grid>
                         <div>
                             <div><?= lang('Global.close') ?></div>
                         </div>
                         <div>
-                            <div class="uk-text-right">Rp <?= number_format((($sumnoncash + $cashsum) + (($dayrep['initialcash'] + $dayrep['totalcashin']) - $dayrep['totalcashout'])),2,',','.') ?></div>
+                            <div class="uk-text-right">Rp <?= number_format((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)),2,',','.') ?></div>
                         </div>
                     </div>
 
@@ -796,11 +689,7 @@
                         </div>
                         <div class="uk-text-right">
                             <div>
-                                <?php foreach ($users as $user) {
-                                    if ($user->id === $dayrep['useridclose']) {
-                                        echo $user->firstname.' '.$user->lastname;
-                                    }
-                                } ?>
+                                <?= $dayrep['userclose'] ?>
                             </div>
                         </div>
                     </div>
@@ -815,80 +704,74 @@
                     <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
                 </div>
                 
-                <?php foreach ($trxothers as $trxot) {
-                    if (($trxot['date'] > $dayrep['dateopen']) && ($trxot['date'] < $dayrep['dateclose']) && ($dayrep['outletid'] === $trxot['outletid'])) { ?>
-                        <div class="uk-margin">
-                            <div class="uk-child-width-1-2 uk-text-bolder" uk-grid>
+                <?php foreach ($dayrep['cashflow'] as $trxot) { ?>
+                    <div class="uk-margin">
+                        <div class="uk-child-width-1-2 uk-text-bolder" uk-grid>
+                            <div>
                                 <div>
-                                    <div>
-                                        <?php if ($trxot['type'] === "0") {
-                                            echo "<div class='uk-text-success'>".lang('Global.cashin')."</div>";
-                                        } else {
-                                            echo "<div class='uk-text-danger'>".lang('Global.cashout')."</div>";
-                                        } ?>
-                                    </div>
-                                </div>
-                                <div class="uk-text-right">
-                                    <div>
-                                        <?php if ($trxot['type'] === "0") {
-                                            echo "<div class='uk-text-success'>"."+Rp ".number_format($trxot['qty'],2,',','.')."</div>";
-                                        } else {
-                                            echo "<div class='uk-text-danger'>"."-Rp ".number_format($trxot['qty'],2,',','.')."</div>";
-                                        } ?>
-                                    </div>
+                                    <?php if ($trxot['type'] == '0') {
+                                        echo "<div class='uk-text-success'>".lang('Global.cashin')."</div>";
+                                    } else {
+                                        echo "<div class='uk-text-danger'>".lang('Global.cashout')."</div>";
+                                    } ?>
                                 </div>
                             </div>
-
-                            <hr class="uk-margin-small-top uk-margin-small-bottom">
-
-                            <div class="uk-text-muted"><?= lang('Global.information') ?> :</div>
-
-                            <div class="uk-child-width-1-2" uk-grid>
+                            <div class="uk-text-right">
                                 <div>
-                                    <div><?= lang('Global.time') ?></div>
-                                </div>
-                                <div class="uk-text-right">
-                                    <div><?= $trxot['date'] ?></div>
-                                </div>
-                            </div>
-                            
-                            <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
-                                <div>
-                                    <div><?= lang('Global.employee') ?></div>
-                                </div>
-                                <div class="uk-text-right">
-                                    <div>
-                                        <?php foreach ($users as $user) {
-                                            if ($user->id === $trxot['userid']) {
-                                                echo $user->firstname.' '.$user->lastname;
-                                            }
-                                        } ?>
-                                    </div>
+                                    <?php if ($trxot['type'] == '0') {
+                                        echo "<div class='uk-text-success'>"."+Rp ".number_format($trxot['qty'],2,',','.')."</div>";
+                                    } else {
+                                        echo "<div class='uk-text-danger'>"."-Rp ".number_format($trxot['qty'],2,',','.')."</div>";
+                                    } ?>
                                 </div>
                             </div>
-                            
-                            <div class="uk-child-width-1-2 uk-margin-remove-top uk-flex-middle" uk-grid>
-                                <div>
-                                    <div><?= lang('Global.photo') ?></div>
-                                </div>
-                                <div class="uk-text-right" uk-lightbox>
-                                    <a class="uk-inline" href="/img/tfproof/<?= $trxot['photo'];?>">
-                                        <img src="/img/tfproof/<?= $trxot['photo'];?>" alt="<?= $trxot['photo'];?>" style="width: 100px;">
-                                    </a>
-                                </div>
-                            </div>
-
-                            <hr class="uk-margin-small-top uk-margin-small-bottom">
-
-                            <div class="uk-margin-remove-top">
-                                <div><?= lang('Global.note') ?> :</div>
-                                <div><?= $trxot['description'] ?></div>
-                            </div>
-
-                            <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
                         </div>
-                    <?php }
-                } ?>
+
+                        <hr class="uk-margin-small-top uk-margin-small-bottom">
+
+                        <div class="uk-text-muted"><?= lang('Global.information') ?> :</div>
+
+                        <div class="uk-child-width-1-2" uk-grid>
+                            <div>
+                                <div><?= lang('Global.time') ?></div>
+                            </div>
+                            <div class="uk-text-right">
+                                <div><?= $trxot['date'] ?></div>
+                            </div>
+                        </div>
+                        
+                        <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                            <div>
+                                <div><?= lang('Global.employee') ?></div>
+                            </div>
+                            <div class="uk-text-right">
+                                <div>
+                                    <?= $trxot['cashier'] ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="uk-child-width-1-2 uk-margin-remove-top uk-flex-middle" uk-grid>
+                            <div>
+                                <div><?= lang('Global.photo') ?></div>
+                            </div>
+                            <div class="uk-text-right" uk-lightbox>
+                                <a class="uk-inline" href="/img/tfproof/<?= $trxot['proof'];?>">
+                                    <img src="/img/tfproof/<?= $trxot['proof'];?>" alt="<?= $trxot['proof'];?>" style="width: 100px;">
+                                </a>
+                            </div>
+                        </div>
+
+                        <hr class="uk-margin-small-top uk-margin-small-bottom">
+
+                        <div class="uk-margin-remove-top">
+                            <div><?= lang('Global.note') ?> :</div>
+                            <div><?= $trxot['desc'] ?></div>
+                        </div>
+
+                        <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+                    </div>
+                <?php } ?>
 
                 <div class="uk-margin">
                     <div class="uk-child-width-1-2 uk-text-bolder uk-text-success" uk-grid>
@@ -919,11 +802,7 @@
                         </div>
                         <div class="uk-text-right">
                             <div>
-                                <?php foreach ($users as $user) {
-                                    if ($user->id === $dayrep['useridopen']) {
-                                        echo $user->firstname.' '.$user->lastname;
-                                    }
-                                } ?>
+                                <?= $dayrep['useropen'] ?>
                             </div>
                         </div>
                     </div>
