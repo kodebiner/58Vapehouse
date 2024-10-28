@@ -2904,11 +2904,8 @@ class export extends BaseController
     {
         // Calling Models
         $TransactionModel   = new TransactionModel;
-        $TrxdetailModel     = new TrxdetailModel;
         $TrxpaymentModel    = new TrxpaymentModel;
         $TrxotherModel      = new TrxotherModel;
-        $ProductModel       = new ProductModel;
-        $VariantModel       = new VariantModel;
         $PaymentModel       = new PaymentModel;
         $UserModel          = new UserModel;
         $CashModel          = new CashModel;
@@ -2966,40 +2963,6 @@ class export extends BaseController
 
                 // Transaction Data
                 foreach ($transactions as $trx) {
-                    // Product Seliing Data
-                    $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-                    
-                    if (!empty($trxdetails)) {
-                        foreach ($trxdetails as $trxdet) {
-                            $variants       = $VariantModel->find($trxdet['variantid']);
-                            
-                            if (!empty($variants)) {
-                                $products   = $ProductModel->find($variants['productid']);
-        
-                                $dailyreportdata[$dayrep['id']]['productsell'][$products['id']]['name']            = $products['name'];
-                                $dailyreportdata[$dayrep['id']]['productsell'][$products['id']]['qty'][]           = $trxdet['qty'];
-                            } else {
-                                $products   = [];
-
-                                $dailyreportdata[$dayrep['id']]['productsell'][0]['name']                           = 'Produk / Variant Terhapus';
-                                $dailyreportdata[$dayrep['id']]['productsell'][0]['name'][]                         = $trxdet['qty'];
-                            }
-
-                            $totalproductsell[]                                                                     = $trxdet['qty'];
-                        }
-                    } else {
-                        $variants   = [];
-                        $products   = [];
-                    }
-
-                    // Customer Name
-                    if ($trx['memberid'] == '0') {
-                        $member     = 'Non Member';
-                    } else {
-                        $members    = $MemberModel->find($trx['memberid']);
-                        $member     = $members['name'];
-                    }
-
                     // Cash, Non-Cash, Debt
                     $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid !=', '0')->find();
                     $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
@@ -3010,37 +2973,24 @@ class export extends BaseController
                             $cashdata       = $CashModel->find($payment['cashid']);
 
                             if (strcmp($cashdata['name'], 'Petty Cash ' . $outlets['name']) == 0) {
-                                $cashname   = 'Tunai';
+                                // Transaction Summary
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['name']                               = 'Tunai';
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][$trxpayment['id']]['type']  = '0';
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][$trxpayment['id']]['value'] = $trxpayment['value'];
                             } else {
-                                $cashname   = $cashdata['name'];
+                                // Transaction Summary
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][1]['name']                               = 'Non-Tunai';
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][1]['detail'][$trxpayment['id']]['type']  = '1';
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][1]['detail'][$trxpayment['id']]['value'] = $trxpayment['value'];
                             }
-
-                            // Transaction Summary
-                            $dailyreportdata[$dayrep['id']]['trxpayments'][$cashdata['id']]['name']                                 = $cashname;
-                            $dailyreportdata[$dayrep['id']]['trxpayments'][$cashdata['id']]['detail'][$trxpayment['id']]['name']    = $payment['name'];
-                            $dailyreportdata[$dayrep['id']]['trxpayments'][$cashdata['id']]['detail'][$trxpayment['id']]['value']   = $trxpayment['value'];
-
-                            // Detail Transaction
-                            $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][$payment['id']]['name']               = $payment['name'];
-                            $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][$payment['id']]['value']              = $trxpayment['value'];
-                            $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][$payment['id']]['custname']           = $member;
-                            $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][$payment['id']]['time']               = date('H:i:s', strtotime($trx['date']));
-                            $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][$payment['id']]['proof']              = $trx['photo'];
                         }
                     }
                     if (!empty($debtpayments)) {
                         foreach ($debtpayments as $debtpayment) {
                             // Transaction Summary
-                            $dailyreportdata[$dayrep['id']]['trxpayments'][0]['name']                               = 'Kasbon';
-                            $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][0]['name']                  = 'Kasbon';
-                            $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][0]['value']                 = $debtpayment['value'];
-
-                            // Detail Transaction
-                            $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['name']            = 'Kasbon';
-                            $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['value']           = $debtpayment['value'];
-                            $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['custname']        = $member;
-                            $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['time']            = date('H:i:s', strtotime($trx['date']));
-                            $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['proof']           = $trx['photo'];
+                            $dailyreportdata[$dayrep['id']]['trxpayments'][2]['name']               = 'Kasbon';
+                            $dailyreportdata[$dayrep['id']]['trxpayments'][2]['detail'][0]['type']  = '2';
+                            $dailyreportdata[$dayrep['id']]['trxpayments'][2]['detail'][0]['value'] = $debtpayment['value'];
                         }
                     }
                 }
@@ -3058,13 +3008,6 @@ class export extends BaseController
 
                 // User Close Store
                 $dailyreportdata[$dayrep['id']]['userclose']    = lang('Global.storeNotClosed');
-
-                // Product Seliing Data
-                $trxdetails                                     = [];
-                $dailyreportdata[$dayrep['id']]['productsell']  = [];
-                $totalproductsell[]                             = [];
-                $variants                                       = [];
-                $products                                       = [];
 
                 // Payment Methods
                 $dailyreportdata[$dayrep['id']]['payments']     = [];
@@ -3095,88 +3038,66 @@ class export extends BaseController
 
             if (!empty($trxothers)) {
                 foreach ($trxothers as $trxother) {
-                    // User Cashier
-                    $usercashcier   = $UserModel->find($trxother['userid']);
-
                     // Cashflow Data
-                    $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['cashier'] = $usercashcier->firstname.' '.$usercashcier->lastname;
                     $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['type']    = $trxother['type'];
-                    $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['desc']    = $trxother['description'];
-                    $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['date']    = date('H:i:s', strtotime($trxother['date']));
                     $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['qty']     = $trxother['qty'];
-                    $dailyreportdata[$dayrep['id']]['cashflow'][$trxother['id']]['proof']   = $trxother['photo'];
                 }
             } else {
-                $usercashcier   = [];
                 $dailyreportdata[$dayrep['id']]['cashflow'] = [];
             }
 
             if (!empty($debtins)) {
                 foreach ($debtins as $debtin) {
-                    // User Cashier
-                    $usercashcier   = $UserModel->find($debtin['userid']);
-
                     // Debt Installment Data
                     $cashdebt       = $CashModel->find($debtin['cashid']);
-                    $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['name']                             = $cashdebt['name'];
 
-                    // Detail Debt Installment
-                    $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['value']   = $debtin['qty'];
-                    $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['cashier'] = $usercashcier->firstname.' '.$usercashcier->lastname;
-                    $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['type']    = $debtin['type'];
-                    $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['desc']    = $debtin['description'];
-                    $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['date']    = date('H:i:s', strtotime($debtin['date']));
-                    $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['qty']     = $debtin['qty'];
-                    $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['proof']   = $debtin['photo'];
+                    if (strcmp($cashdebt['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+                        // Transaction Summary
+                        $dailyreportdata[$dayrep['id']]['debtins'][0]['name']                               = 'Tunai';
+                        $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['type']      = '0';
+                        $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['value']     = $debtin['qty'];
+                    } else {
+                        // Transaction Summary
+                        $dailyreportdata[$dayrep['id']]['debtins'][1]['name']                               = 'Non-Tunai';
+                        $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtin['id']]['type']      = '1';
+                        $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtin['id']]['value']     = $debtin['qty'];
+                    }
                 }
             } else {
-                $usercashcier   = [];
                 $dailyreportdata[$dayrep['id']]['debtins'] = [];
             }
 
             if (!empty($topups)) {
                 foreach ($topups as $topup) {
-                    // User Cashier
-                    $usercashcier   = $UserModel->find($topup['userid']);
-
                     // Top Up Data
                     $cashtopup      = $CashModel->find($topup['cashid']);
-                    $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['name']                              = $cashtopup['name'];
 
-                    // Detail Top Up
-                    $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['value']     = $topup['qty'];
-                    $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['cashier']   = $usercashcier->firstname.' '.$usercashcier->lastname;
-                    $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['type']      = $topup['type'];
-                    $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['desc']      = $topup['description'];
-                    $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['date']      = date('H:i:s', strtotime($topup['date']));
-                    $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['qty']       = $topup['qty'];
-                    $dailyreportdata[$dayrep['id']]['topup'][$cashtopup['id']]['detail'][$topup['id']]['proof']     = $topup['photo'];
+                    if (strcmp($cashtopup['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+                        // Transaction Summary
+                        $dailyreportdata[$dayrep['id']]['topup'][0]['name']                             = 'Tunai';
+                        $dailyreportdata[$dayrep['id']]['topup'][0]['detail'][$topup['id']]['type']     = '0';
+                        $dailyreportdata[$dayrep['id']]['topup'][0]['detail'][$topup['id']]['value']    = $topup['qty'];
+                    } else {
+                        // Transaction Summary
+                        $dailyreportdata[$dayrep['id']]['topup'][1]['name']                             = 'Non-Tunai';
+                        $dailyreportdata[$dayrep['id']]['topup'][1]['detail'][$topup['id']]['type']     = '1';
+                        $dailyreportdata[$dayrep['id']]['topup'][1]['detail'][$topup['id']]['value']    = $topup['qty'];
+                    }
                 }
             } else {
-                $usercashcier   = [];
                 $dailyreportdata[$dayrep['id']]['topup'] = [];
             }
 
             if (!empty($withdraws)) {
                 foreach ($withdraws as $withdraw) {
-                    // User Cashier
-                    $usercashcier   = $UserModel->find($withdraw['userid']);
-
                     // Withdraw Data
                     $cashwithdraw   = $CashModel->find($withdraw['cashid']);
                     $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['name']                                = $cashwithdraw['name'];
 
                     // Detail Withdraw
                     $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['value']    = $withdraw['qty'];
-                    $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['cashier']  = $usercashcier->firstname.' '.$usercashcier->lastname;
-                    $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['type']     = $withdraw['type'];
-                    $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['desc']     = $withdraw['description'];
-                    $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['date']     = date('H:i:s', strtotime($withdraw['date']));
-                    $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['qty']      = $withdraw['qty'];
-                    $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['proof']    = $withdraw['photo'];
                 }
             } else {
-                $usercashcier   = [];
                 $dailyreportdata[$dayrep['id']]['withdraw'] = [];
             }
 
@@ -3189,99 +3110,196 @@ class export extends BaseController
             // Total Cash Out
             $dailyreportdata[$dayrep['id']]['totalcashout']     = $dayrep['totalcashout'];
         }
-
-        // // Getting Discount Data
-        // $transactiondisc    = (int)(array_sum($discounttrx)) + (int)(array_sum($memberdisc));
-        // $variantdisc        = array_sum($discountvariant);
-        // $globaldisc         = array_sum($discountglobal);
-
-        // // Total Point Used
-        // $poindisc           = array_sum($discountpoin);
-
-        // // Getting Margin  Data
-        // $marginmodalsum     = array_sum($marginmodals);
-        // $margindasarsum     = array_sum($margindasars);
-
-        // // Total Discount
-        // $alldisc            = (Int)$globaldisc + (Int)$variantdisc + (Int)$transactiondisc;
-
-        // // Total Sales
-        // $salesresult        = array_sum(array_column($transaction, 'value'));
-
-        // // Gross Sales
-        // $grossales          = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
-
-        // // Profit Calculation
-        // $profitvalue        = (Int)$marginmodalsum - (Int)$transactiondisc;
-
-        // // Cashin and Cash Out
-        // $cashin     = [];
-        // $cashout    = [];
-        // foreach ($trxothers as $trxother) {
-        //     if ($trxother['type'] === "0") {
-        //         $cashin[] = $trxother['qty'];
-        //     } else {
-        //         $cashout[] = $trxother['qty'];
-        //     }
-        // }
-        // $casin      = array_sum($cashin);
-        // $casout     = array_sum($cashout);
-
+        // dd($dailyreportdata);
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=Laporan Harian $date1-$date2.xls");
 
-        echo '<style type="text/css">
+        echo '<table>';
+            echo '<thead>';
+                echo '<tr>';
+                    echo '<th colspan="17" style="align-text:center;">Laporan Harian</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="17" style="align-text:center;">' . $outletname . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="17" style="align-text:center;">' . $address . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="17" style="align-text:center;">' . date('d M Y', strtotime($startdate)) . ' - ' . date('d M Y', strtotime($enddate)) . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="17" style="align-text:center;"></th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th rowspan="2">Tanggal</th>';
+                    echo '<th colspan="3">Arus Kas</th>';
+                    echo '<th colspan="3">Penjualan</th>';
+                    echo '<th colspan="2">Angsuran Hutang</th>';
+                    echo '<th colspan="2">Top Up</th>';
+                    echo '<th rowspan="2">Tarik Tunai</th>';
+                    echo '<th colspan="2">Penerimaan Sistem</th>';
+                    echo '<th colspan="2">Penerimaan Aktual</th>';
+                    echo '<th rowspan="2">Selisih</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th>Modal</th>';
+                    echo '<th>Masuk</th>';
+                    echo '<th>Keluar</th>';
+                    echo '<th>Tunai</th>';
+                    echo '<th>Non-Tunai</th>';
+                    echo '<th>Kasbon</th>';
+                    echo '<th>Tunai</th>';
+                    echo '<th>Non-Tunai</th>';
+                    echo '<th>Tunai</th>';
+                    echo '<th>Non-Tunai</th>';
+                    echo '<th>Tunai</th>';
+                    echo '<th>Non-Tunai</th>';
+                    echo '<th>Tunai</th>';
+                    echo '<th>Non-Tunai</th>';
+                echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+                foreach ($dailyreportdata as $dayrep) {
+                    echo '<tr>';
+                        // Date
+                        echo '<td>' . date('l, d M Y', strtotime($dayrep['date'])) . '</td>';
+                        // Date End
 
-        </style>';
-        echo '<table  style="width: 30%;">';
-        echo '<tr>';
-        echo '<th colspan="2" style="align-text:center;">Ringkasan Laporan Harian</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="2" style="align-text:center;">' . $outletname . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="2" style="align-text:center;">' . $address . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="2" style="align-text:center;">' . $date1 . ' - ' . $date2 . '</th>';
-        echo '</tr>';
-        echo '<tr>';
-        echo '<th colspan="2" style="align-text:center;"></th>';
-        echo '</tr>';
+                        // Cashflow
+                        echo '<td>' . $dayrep['initialcash'] . '</td>';
+                        $totalcashin    = [];
+                        $totalcashout   = [];
+                        foreach ($dayrep['cashflow'] as $cashflow) {
+                            if ($cashflow['type'] == '0') {
+                                $totalcashin[]  = $cashflow['qty'];
+                            } else {
+                                $totalcashout[] = $cashflow['qty'];
+                            }
+                        }
+                        $summarycashin  = array_sum($totalcashin);
+                        $summarycashout = array_sum($totalcashout);
+                        echo '<td>' . $summarycashin . '</td>';
+                        echo '<td>' . $summarycashout . '</td>';
+                        // Cashflow End
 
-        // echo '<tr >';
-        // echo '<th style="text-align: left;">Penjualan</th>';
-        // echo '<td style="text-align: right;">' . $salesresult . '</td>';
-        // echo '</tr>';
-        // echo '<tr>';
-        // echo '<th style="text-align: left;">Diskon</th>';
-        // echo '<td style="text-align: right;">' . $alldisc . '</td>';
-        // echo '</tr>';
-        // echo '<tr>';
-        // echo '<th style="text-align: left;">Total Omset</th>';
-        // echo '<td style="text-align: right;">' . $grossales . '</td>';
-        // echo '</tr>';
-        // echo '<tr>';
-        // echo '<th style="text-align: left;">Harga Modal</th>';
-        // echo '<td style="text-align: right;">' . $marginmodalsum . '</td>';
-        // echo '</tr>';
-        // echo '<tr>';
-        // echo '<th style="text-align: left;">Harga Dasar</th>';
-        // echo '<td style="text-align: right;">' . $margindasarsum . '</td>';
-        // echo '</tr>';
-        // echo '<tr>';
-        // echo '<th style="text-align: left;">Kas Masuk</th>';
-        // echo '<td style="text-align: right;">' . $casin . '</td>';
-        // echo '</tr>';
-        // echo '<tr>';
-        // echo '<th style="text-align: left;">Kas Keluar</th>';
-        // echo '<td style="text-align: right;">' . $casout . '</td>';
-        // echo '</tr>';
-        // echo '<tr>';
-        // echo '<th style="text-align: left;">Keuntungan</th>';
-        // echo '<td style="text-align: right; font-family: arial, sans-serif; font-weight: bold;">' . $profitvalue . '</td>';
-        // echo '</tr>';
+                        // Transaction Data
+                        $totaltrxcash       = [];
+                        $totaltrxnoncash    = [];
+                        $totaltrxdebt       = [];
+                        foreach ($dayrep['trxpayments'] as $trxpayment) {
+                            $trxcash    = [];
+                            $trxnoncash = [];
+                            $trxdebt    = [];
+                            foreach ($trxpayment['detail'] as $detail) {
+                                if ($detail['type'] == '0') {
+                                    $trxcash[] = $detail['value'];
+                                }
+                                if ($detail['type'] == '1') {
+                                    $trxnoncash[]  = $detail['value'];
+                                }
+                                if ($detail['type'] == '2') {
+                                    $trxdebt[] = $detail['value'];
+                                }
+                                $paymethodval[] = $detail['value'];
+                            }
+                            $arraytrxcash       = array_sum($trxcash);
+                            $totaltrxcash[]     = $arraytrxcash;
+                            $arraytrxnoncash    = array_sum($trxnoncash);
+                            $totaltrxnoncash[]  = $arraytrxnoncash;
+                            $arraytrxdebt       = array_sum($trxdebt);
+                            $totaltrxdebt[]     = $arraytrxdebt;
+                        }
+                        $totalcash      = array_sum($totaltrxcash);
+                        $totalnoncash   = array_sum($totaltrxnoncash);
+                        $totaldebt      = array_sum($totaltrxdebt);
+                        echo '<td>' . $totalcash . '</td>';
+                        echo '<td>' . $totalnoncash . '</td>';
+                        echo '<td>' . $totaldebt . '</td>';
+                        // Transaction Data End
+
+                        // Debt Installment
+                        $totaldebtcash      = [];
+                        $totaldebtnoncash   = [];
+                        foreach ($dayrep['debtins'] as $debtins) {
+                            $debtcash       = [];
+                            $debtnoncash    = [];
+                            foreach ($debtins['detail'] as $debtdetail) {
+                                if ($debtdetail['type'] == '0') {
+                                    $debtcash[]    = $debtdetail['value'];
+                                } else {
+                                    $debtnoncash[] = $debtdetail['value'];
+                                }
+                            }
+                            $arraydebtcash      = array_sum($debtcash);
+                            $totaldebtcash[]    = $arraydebtcash;
+                            $arraydebtnoncash   = array_sum($debtnoncash);
+                            $totaldebtnoncash[] = $arraydebtnoncash;
+                        }
+                        $totaldebtcashvalue     = array_sum($totaldebtcash);
+                        $totaldebtnoncashvalue  = array_sum($totaldebtnoncash);
+                        echo '<td>' . $totaldebtcashvalue . '</td>';
+                        echo '<td>' . $totaldebtnoncashvalue . '</td>';
+                        // Debt Installment End
+                        
+                        // Top Up
+                        $totaltopupcash      = [];
+                        $totaltopupnoncash   = [];
+                        foreach ($dayrep['topup'] as $topup) {
+                            $topupcash       = [];
+                            $topupnoncash    = [];
+                            foreach ($topup['detail'] as $topupdetail) {
+                                if ($topupdetail['type'] == '0') {
+                                    $topupcash[]    = $topupdetail['value'];
+                                } else {
+                                    $topupnoncash[] = $topupdetail['value'];
+                                }
+                            }
+                            $arraytopupcash      = array_sum($topupcash);
+                            $totaltopupcash[]    = $arraytopupcash;
+                            $arraytopupnoncash   = array_sum($topupnoncash);
+                            $totaltopupnoncash[] = $arraytopupnoncash;
+                        }
+                        $totaltopupcashvalue     = array_sum($totaltopupcash);
+                        $totaltopupnoncashvalue  = array_sum($totaltopupnoncash);
+                        echo '<td>' . $totaltopupcashvalue . '</td>';
+                        echo '<td>' . $totaltopupnoncashvalue . '</td>';
+                        // Top Up End
+
+                        // Cash Withdraw
+                        $totalwithdraw      = [];
+                        foreach ($dayrep['withdraw'] as $withdraw) {
+                            $datawithdraw       = [];
+                            foreach ($withdraw['detail'] as $withdrawdetail) {
+                                $datawithdraw[]    = $withdrawdetail['value'];
+                            }
+                            $arraydatawithdraw      = array_sum($datawithdraw);
+                            $totalwithdraw[]    = $arraydatawithdraw;
+                        }
+                        $totalwithdrawvalue     = array_sum($totalwithdraw);
+                        echo '<td>' . $totalwithdrawvalue . '</td>';
+                        // Cash Withdraw End
+
+                        // System Receive
+                        $systemreceivecash      = (Int)$totalcash + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)) + (Int)$totaldebtcashvalue + (Int)$totaltopupcashvalue;
+                        $systemreceivenoncash   = (Int)$totalnoncash + (Int)$totaldebt + (Int)$totaldebtnoncashvalue + (Int)$totaltopupnoncashvalue + (Int)$totalwithdrawvalue;
+                        $systemreceivetotal     = (Int)$systemreceivecash + (Int)$systemreceivenoncash;
+                        echo '<td>' . $systemreceivecash . '</td>';
+                        echo '<td>' . $systemreceivenoncash . '</td>';
+                        // System Receive End
+
+                        // Actual Receive
+                        echo '<td>' . $dayrep['cashclose'] . '</td>';
+                        echo '<td>' . $dayrep['noncashclose'] . '</td>';
+                        // Actual Receive End
+
+                        // Difference
+                        $totaldifference    = (Int)$dayrep['actualsummary'] - (Int)$systemreceivetotal;
+                        echo '<td>' . $totaldifference . '</td>';
+                        // Difference End
+                    echo '</tr>';
+                }
+            echo '</tbody>';
         echo '</table>';
     }
 }
