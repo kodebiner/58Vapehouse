@@ -170,7 +170,7 @@ return [
     'totalsalestrx'     => 'Total Sales Transaction',
     'summary'           => 'Summary',
     'reception'         => 'Reception',
-    'descreception'     => '(Total Cash + Total Sales Transaction)',
+    'descreception'     => '(Total Cash + Total Sales Transaction + Total Debt Installment + Total Top Up + Total Cash Withdraw)',
     'totaldifference'   => 'Total Difference',
     'descdifference'    => 'Total Actual Cashier Receipts - Total System Receipts',
     'productsales'      => 'Product Sales',
@@ -217,6 +217,12 @@ return [
     'sender'            => 'Shipper',
     'receiver'          => 'Recipient',
     'location'          => 'Location',
+    'descdebtins'       => 'Debt Installment outside the Sales Transaction.',
+    'totaldebtins'      => 'Debt Installment Total',
+    'desctopup'         => 'Top Up adding member point.',
+    'totaltopup'        => 'Top Up Total',
+    'descwithdraw'      => 'Cash Withdraw from cashier.',
+    'totalwithdraw'     => 'Cash Withdraw Total',
    
     // Button
     'edit'              => 'Edit',
@@ -265,6 +271,9 @@ return [
     'export'            => 'Export',
     'selectcat'         => 'Select Category',
     'percentage'        => 'Percentage',
+    'debtinsHistory'    => 'Debt Installment History',
+    'topupHistory'      => 'Top Up History',
+    'withdrawHistory'   => 'Withdraw History',
     
     // Menu
     'dashboard'         => 'Dashboard',

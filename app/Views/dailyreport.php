@@ -14,12 +14,18 @@
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
     <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-2@m">
+        <div class="uk-width-1-3@m">
             <h3 class="tm-h3"><?=lang('Global.dailyreportList')?></h3>
         </div>
 
+        <!-- Button Trigger Modal export -->
+        <div class="uk-width-1-3@m uk-text-center@m">
+            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" target="_blank" href="export/dayrep?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
+        </div>
+        <!-- End Of Button Trigger Modal export-->
+
         <!-- Button Daterange -->
-        <div class="uk-width-1-2@m uk-text-right@m">
+        <div class="uk-width-1-3@m uk-text-right@m">
             <form id="short" action="dayrep" method="get">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
@@ -373,8 +379,8 @@
                                 <div class="uk-text-right">
                                     <div>
                                         <?php
-                                            $totaldebtvalue = array_sum($totaltopup);
-                                            echo "Rp ".number_format($totaldebtvalue,2,',','.');
+                                            $totaltopupvalue = array_sum($totaltopup);
+                                            echo "Rp ".number_format($totaltopupvalue,2,',','.');
                                         ?>
                                     </div>
                                 </div>
@@ -424,8 +430,8 @@
                                 <div class="uk-text-right">
                                     <div>
                                         <?php
-                                            $totaldebtvalue = array_sum($totalwithdraw);
-                                            echo "Rp ".number_format($totaldebtvalue,2,',','.');
+                                            $totalwithdrawvalue = array_sum($totalwithdraw);
+                                            echo "Rp ".number_format($totalwithdrawvalue,2,',','.');
                                         ?>
                                     </div>
                                 </div>
@@ -491,7 +497,7 @@
                                     <div class="uk-text-muted"><?= lang('Global.descreception') ?></div>
                                 </div>
                                 <div class="uk-text-right">
-                                    <div>Rp <?=number_format((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)),2,',','.') ?></div>
+                                    <div>Rp <?=number_format((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$totaldebtvalue + (Int)$totaltopupvalue + (Int)$totalwithdrawvalue + ((Int)$summarycashin - (Int)$summarycashout))),2,',','.') ?></div>
                                 </div>
                             </div>
                         </div>
@@ -504,7 +510,7 @@
                                 </div>
                                 <div class="uk-text-right uk-text-bolder" style="color: #000;">
                                     <div>
-                                        <?= number_format((Int)$dayrep['actualsummary'] - ((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout))),2,',','.') ?>
+                                        <?= number_format((Int)$dayrep['actualsummary'] - ((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$totaldebtvalue + (Int)$totaltopupvalue + (Int)$totalwithdrawvalue + ((Int)$summarycashin - (Int)$summarycashout)))),2,',','.') ?>
                                     </div>
                                 </div>
                             </div>
@@ -516,6 +522,54 @@
         </div>
     </div>
     <!-- Modal Detail End -->
+
+    <!-- Modal Product Sales -->
+    <div uk-modal class="uk-flex-top" id="productsales-<?= $dayrep['id'] ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-header">
+                <div class="uk-flex uk-flex-middle uk-child-width-auto" uk-grid>
+                    <div class="uk-padding-remove uk-margin-medium-left">
+                        <a uk-icon="arrow-left" uk-toggle="#detail-<?= $dayrep['id'] ?>" width="35" height="35"></a>
+                    </div>
+                    <div>
+                        <h5 class="uk-modal-title"><?=lang('Global.productsales')?></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-modal-body" uk-overflow-auto>
+                <div class="uk-margin">
+                    <div class="uk-child-width-1-2 uk-text-bolder uk-margin-small-bottom" style="color: #000;" uk-grid>
+                        <div>
+                            <div><?= lang('Global.total') ?></div>
+                        </div>
+                        <div>
+                            <div class="uk-text-right">
+                                <?= $dayrep['totalproductsell'] ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background-color: #e5e5e5;">
+                        <h5>
+                            <?= $dayrep['dateopen'] ?>
+                        </h5>
+                    </div>
+
+                    <?php foreach ($dayrep['productsell'] as $productsell) { ?>
+                        <div class="uk-child-width-1-2 uk-margin-small-top" uk-grid>
+                            <div>
+                                <div class=""><?= $productsell['name'] ?></div>
+                            </div>
+                            <div class="uk-text-right uk-text-bolder" style="color: #000;">
+                                <div><?= array_sum($productsell['qty']) ?> Pcs</div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Product Sales End -->
 
     <!-- Modal Transaction History -->
     <div uk-modal class="uk-flex-top" id="trxhistory-<?= $dayrep['id'] ?>">
@@ -597,54 +651,6 @@
         </div>
     </div>
     <!-- Modal Transaction History End -->
-
-    <!-- Modal Product Sales -->
-    <div uk-modal class="uk-flex-top" id="productsales-<?= $dayrep['id'] ?>">
-        <div class="uk-modal-dialog uk-margin-auto-vertical">
-            <div class="uk-modal-header">
-                <div class="uk-flex uk-flex-middle uk-child-width-auto" uk-grid>
-                    <div class="uk-padding-remove uk-margin-medium-left">
-                        <a uk-icon="arrow-left" uk-toggle="#detail-<?= $dayrep['id'] ?>" width="35" height="35"></a>
-                    </div>
-                    <div>
-                        <h5 class="uk-modal-title"><?=lang('Global.productsales')?></h5>
-                    </div>
-                </div>
-            </div>
-            <div class="uk-modal-body" uk-overflow-auto>
-                <div class="uk-margin">
-                    <div class="uk-child-width-1-2 uk-text-bolder uk-margin-small-bottom" style="color: #000;" uk-grid>
-                        <div>
-                            <div><?= lang('Global.total') ?></div>
-                        </div>
-                        <div>
-                            <div class="uk-text-right">
-                                <?= $dayrep['totalproductsell'] ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="background-color: #e5e5e5;">
-                        <h5>
-                            <?= $dayrep['dateopen'] ?>
-                        </h5>
-                    </div>
-
-                    <?php foreach ($dayrep['productsell'] as $productsell) { ?>
-                        <div class="uk-child-width-1-2 uk-margin-small-top" uk-grid>
-                            <div>
-                                <div class=""><?= $productsell['name'] ?></div>
-                            </div>
-                            <div class="uk-text-right uk-text-bolder" style="color: #000;">
-                                <div><?= array_sum($productsell['qty']) ?> Pcs</div>
-                            </div>
-                        </div>
-                    <?php } ?>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal Product Sales End -->
 
     <!-- Modal Cash History -->
     <div uk-modal class="uk-flex-top" id="cashhistory-<?= $dayrep['id'] ?>">
@@ -820,5 +826,340 @@
         </div>
     </div>
     <!-- Modal Cash History End -->
+
+    <!-- Modal Debt Installment -->
+    <div uk-modal class="uk-flex-top" id="debtins-<?= $dayrep['id'] ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-header">
+                <div class="uk-flex uk-flex-middle uk-child-width-auto" uk-grid>
+                    <div class="uk-padding-remove uk-margin-medium-left">
+                        <a uk-icon="arrow-left" uk-toggle="#detail-<?= $dayrep['id'] ?>" width="35" height="35"></a>
+                    </div>
+                    <div>
+                        <h5 class="uk-modal-title"><?=lang('Global.debtinsHistory')?></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-modal-body" uk-overflow-auto>
+                <div class="uk-margin">
+                    <div class="uk-child-width-1-2 uk-text-bolder uk-margin-small-bottom" style="color: #000;" uk-grid>
+                        <div>
+                            <div class=""><?= lang('Global.totaldebtins') ?></div>
+                        </div>
+                        <div>
+                            <div class="uk-text-right">
+                                <?php
+                                    $totaldebtvalue = array_sum($totaldebtins);
+                                    echo "Rp ".number_format($totaldebtvalue,2,',','.');
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+
+                    <div class="uk-text-center">
+                        <h5 class="uk-text-bolder tm-h5 uk-margin-remove-bottom" style="color: #000;">
+                            <?= $dayrep['date'] ?>
+                        </h5>
+                    </div>
+                    
+                    <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+                
+                    <?php foreach ($dayrep['debtins'] as $debtins) {
+                        foreach ($debtins['detail'] as $debtdetail) { ?>
+                            <div class="uk-margin">
+                                <div class="uk-child-width-1-2 uk-text-bolder" uk-grid>
+                                    <div>
+                                        <div>
+                                            <?php if ($debtdetail['type'] == '0') {
+                                                echo "<div class='uk-text-success'>".lang('Global.cashin')."</div>";
+                                            } ?>
+                                        </div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?php if ($debtdetail['type'] == '0') {
+                                                echo "<div class='uk-text-success'>"."+Rp ".number_format($debtdetail['value'],2,',','.')."</div>";
+                                            } else {
+                                                echo "<div class='uk-text-danger'>"."-Rp ".number_format($debtdetail['value'],2,',','.')."</div>";
+                                            } ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom">
+
+                                <div class="uk-text-muted"><?= lang('Global.information') ?> :</div>
+
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.time') ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div><?= $debtdetail['date'] ?></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.employee') ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?= $debtdetail['cashier'] ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="uk-child-width-1-2 uk-margin-remove-top uk-flex-middle" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.photo') ?></div>
+                                    </div>
+                                    <div class="uk-text-right" uk-lightbox>
+                                        <a class="uk-inline" href="/img/tfproof/<?= $debtdetail['proof'];?>">
+                                            <img src="/img/tfproof/<?= $debtdetail['proof'];?>" alt="<?= $debtdetail['proof'];?>" style="width: 100px;">
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom">
+
+                                <div class="uk-margin-remove-top">
+                                    <div><?= lang('Global.note') ?> :</div>
+                                    <div><?= $debtdetail['desc'] ?></div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+                            </div>
+                        <?php }
+                    } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Debt Installment End -->
+
+    <!-- Modal Top Up -->
+    <div uk-modal class="uk-flex-top" id="topup-<?= $dayrep['id'] ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-header">
+                <div class="uk-flex uk-flex-middle uk-child-width-auto" uk-grid>
+                    <div class="uk-padding-remove uk-margin-medium-left">
+                        <a uk-icon="arrow-left" uk-toggle="#detail-<?= $dayrep['id'] ?>" width="35" height="35"></a>
+                    </div>
+                    <div>
+                        <h5 class="uk-modal-title"><?=lang('Global.topupHistory')?></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-modal-body" uk-overflow-auto>
+                <div class="uk-margin">
+                    <div class="uk-child-width-1-2 uk-text-bolder uk-margin-small-bottom" style="color: #000;" uk-grid>
+                        <div>
+                            <div class=""><?= lang('Global.totaltopup') ?></div>
+                        </div>
+                        <div>
+                            <div class="uk-text-right">
+                                <?php
+                                    $totaltopupvalue = array_sum($totaltopup);
+                                    echo "Rp ".number_format($totaltopupvalue,2,',','.');
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+
+                    <div class="uk-text-center">
+                        <h5 class="uk-text-bolder tm-h5 uk-margin-remove-bottom" style="color: #000;">
+                            <?= $dayrep['date'] ?>
+                        </h5>
+                    </div>
+                    
+                    <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+                
+                    <?php foreach ($dayrep['topup'] as $topup) {
+                        foreach ($topup['detail'] as $topupdetail) { ?>
+                            <div class="uk-margin">
+                                <div class="uk-child-width-1-2 uk-text-bolder" uk-grid>
+                                    <div>
+                                        <div>
+                                            <?php if ($topupdetail['type'] == '0') {
+                                                echo "<div class='uk-text-success'>".lang('Global.cashin')."</div>";
+                                            } ?>
+                                        </div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?php if ($topupdetail['type'] == '0') {
+                                                echo "<div class='uk-text-success'>"."+Rp ".number_format($topupdetail['value'],2,',','.')."</div>";
+                                            } ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom">
+
+                                <div class="uk-text-muted"><?= lang('Global.information') ?> :</div>
+
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.time') ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div><?= $topupdetail['date'] ?></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.employee') ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?= $topupdetail['cashier'] ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="uk-child-width-1-2 uk-margin-remove-top uk-flex-middle" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.photo') ?></div>
+                                    </div>
+                                    <div class="uk-text-right" uk-lightbox>
+                                        <a class="uk-inline" href="/img/tfproof/<?= $topupdetail['proof'];?>">
+                                            <img src="/img/tfproof/<?= $topupdetail['proof'];?>" alt="<?= $topupdetail['proof'];?>" style="width: 100px;">
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom">
+
+                                <div class="uk-margin-remove-top">
+                                    <div><?= lang('Global.note') ?> :</div>
+                                    <div><?= $topupdetail['desc'] ?></div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+                            </div>
+                        <?php }
+                    } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Top Up End -->
+
+    <!-- Modal Cash Withdraw -->
+    <div uk-modal class="uk-flex-top" id="withdraw-<?= $dayrep['id'] ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-header">
+                <div class="uk-flex uk-flex-middle uk-child-width-auto" uk-grid>
+                    <div class="uk-padding-remove uk-margin-medium-left">
+                        <a uk-icon="arrow-left" uk-toggle="#detail-<?= $dayrep['id'] ?>" width="35" height="35"></a>
+                    </div>
+                    <div>
+                        <h5 class="uk-modal-title"><?=lang('Global.withdrawHistory')?></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-modal-body" uk-overflow-auto>
+                <div class="uk-margin">
+                    <div class="uk-child-width-1-2 uk-text-bolder uk-margin-small-bottom" style="color: #000;" uk-grid>
+                        <div>
+                            <div class=""><?= lang('Global.totalwithdraw') ?></div>
+                        </div>
+                        <div>
+                            <div class="uk-text-right">
+                                <?php
+                                    $totalwithdrawvalue = array_sum($totalwithdraw);
+                                    echo "Rp ".number_format($totalwithdrawvalue,2,',','.');
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+
+                    <div class="uk-text-center">
+                        <h5 class="uk-text-bolder tm-h5 uk-margin-remove-bottom" style="color: #000;">
+                            <?= $dayrep['date'] ?>
+                        </h5>
+                    </div>
+                    
+                    <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+                
+                    <?php foreach ($dayrep['withdraw'] as $withdraw) {
+                        foreach ($withdraw['detail'] as $withdrawdetail) { ?>
+                            <div class="uk-margin">
+                                <div class="uk-child-width-1-2 uk-text-bolder" uk-grid>
+                                    <div>
+                                        <div>
+                                            <?php if ($withdrawdetail['type'] == '1') {
+                                                echo "<div class='uk-text-success'>".lang('Global.cashin')."</div>";
+                                            } ?>
+                                        </div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?php if ($withdrawdetail['type'] == '1') {
+                                                echo "<div class='uk-text-success'>"."+Rp ".number_format($withdrawdetail['value'],2,',','.')."</div>";
+                                            } ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom">
+
+                                <div class="uk-text-muted"><?= lang('Global.information') ?> :</div>
+
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.time') ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div><?= $withdrawdetail['date'] ?></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.employee') ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?= $withdrawdetail['cashier'] ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="uk-child-width-1-2 uk-margin-remove-top uk-flex-middle" uk-grid>
+                                    <div>
+                                        <div><?= lang('Global.photo') ?></div>
+                                    </div>
+                                    <div class="uk-text-right" uk-lightbox>
+                                        <a class="uk-inline" href="/img/tfproof/<?= $withdrawdetail['proof'];?>">
+                                            <img src="/img/tfproof/<?= $withdrawdetail['proof'];?>" alt="<?= $withdrawdetail['proof'];?>" style="width: 100px;">
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom">
+
+                                <div class="uk-margin-remove-top">
+                                    <div><?= lang('Global.note') ?> :</div>
+                                    <div><?= $withdrawdetail['desc'] ?></div>
+                                </div>
+
+                                <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
+                            </div>
+                        <?php }
+                    } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Cash Withdraw End -->
 <?php } ?>
 <?= $this->endSection() ?>

@@ -215,7 +215,7 @@ class DailyReport extends BaseController
                 $dailyreportdata[$dayrep['id']]['totalproductsell'] = array_sum($totalproductsell);
 
                 // Cash Flow
-                $trxothers  = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->notLike('description', 'Cash Withdraw')->notLike('description', 'Debt')->notLike('description', 'Top Up')->find();
+                $trxothers  = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->notLike('description', 'Debt')->notLike('description', 'Top Up')->find();
                 $debtins    = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Debt')->find();
                 $topups     = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Top Up')->find();
                 $withdraws  = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Cash Withdraw')->find();
@@ -315,11 +315,7 @@ class DailyReport extends BaseController
 
                 // Total Cash Out
                 $dailyreportdata[$dayrep['id']]['totalcashout']     = $dayrep['totalcashout'];
-
-                // // Cash Summary
-                // $dailyreportdata[$dayrep['id']]['cashsummary']      = ((Int)$dayrep['initialcash'] + (Int)$dayrep['totalcashin']) - (Int)$dayrep['totalcashout'];
             }
-            // dd($dailyreportdata);
 
             // $lastreport             = end($dailyreports);
             // $firstreport            = $dailyreports[0];

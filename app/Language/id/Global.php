@@ -170,7 +170,7 @@ return [
     'totalsalestrx'     => 'Total Pendapatan Penjualan',
     'summary'           => 'Ringkasan',
     'reception'         => 'Penerimaan Sistem',
-    'descreception'     => '(Total Kas + Total Transaksi Penjualan)',
+    'descreception'     => '(Total Kas + Total Transaksi Penjualan + Total Angsuran Hutang + Total Top Up + Total Tarik Tunai)',
     'totaldifference'   => 'Selisih Total',
     'descdifference'    => 'Total Penerimaan Aktual - Total Penerimaan Sistem',
     'productsales'      => 'Penjualan Produk',
@@ -217,6 +217,12 @@ return [
     'sender'            => 'Pengirim',
     'receiver'          => 'Penerima',
     'location'          => 'Lokasi',
+    'descdebtins'       => 'Angsuran hutang diluar Transaksi Penjualan.',
+    'totaldebtins'      => 'Total Angsuran Hutang',
+    'desctopup'         => 'Top Up penambahan poin member.',
+    'totaltopup'        => 'Total Top Up',
+    'descwithdraw'      => 'Penarikan Tunai dari kasir.',
+    'totalwithdraw'     => 'Total Tarik Tunai',
 
     // Button
     'edit'              => 'Ubah',
@@ -265,6 +271,9 @@ return [
     'export'            => 'Export',
     'selectcat'         => 'Pilih Kategori',
     'percentage'        => 'Persentase',
+    'debtinsHistory'    => 'Riwayat Angsuran Hutang',
+    'topupHistory'      => 'Riwayat Top Up',
+    'withdrawHistory'   => 'Riwayat Tarik Tunai',
 
     // Menu
     'dashboard'         => 'Dasbor',
