@@ -62,37 +62,50 @@
                     <td class="uk-flex-middle uk-text-center">
                         <a class="uk-icon-link uk-icon" uk-toggle="target:#detail-<?= $transaction['id'] ?>" uk-icon="search"></a>
                     </td>
+                    <td><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></td>
+                    <td><?= $transaction['outlet'] ?></td>
+                    <td><?= $transaction['cashier'] ?></td>
+                    <td><?= $transaction['payment'] ?></td>
+                    <td><?= "Rp " . number_format($transaction['value'], 2, ',', '.'); ?></td>
+                    <td class="uk-text-center uk-column-1-2">
+                        <?= $transaction['paidstatus'] ?>
+                        <div class="uk-text-success" id="refund" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')" style="border-style: solid; border-color: red;"><a href="trxhistory/refund/<?= $transaction['id'] ?>" class="uk-link-heading">Refund</a></div>
+                    </td>
 
-                    <td class=""><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></td>
+                    <!-- <td class="uk-flex-middle uk-text-center">
+                        <a class="uk-icon-link uk-icon" uk-toggle="target:#detail-</?= $transaction['id'] ?>" uk-icon="search"></a>
+                    </td>
 
-                    <?php foreach ($outlets as $outlet) {
+                    <td class=""></?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></td>
+
+                    </?php foreach ($outlets as $outlet) {
                         if ($outlet['id'] === $transaction['outletid']) { ?>
-                            <td class=""><?= $outlet['name'] ?></td>
-                    <?php }
+                            <td class=""></?= $outlet['name'] ?></td>
+                    </?php }
                     } ?>
 
-                    <?php foreach ($users as $user) {
+                    </?php foreach ($users as $user) {
                         if ($user->id === $transaction['userid']) { ?>
-                            <td class=""><?= $user->name ?></td>
-                    <?php }
+                            <td class=""></?= $user->name ?></td>
+                    </?php }
                     } ?>
 
-                    <?php if (($transaction['paymentid'] === "0") && ($transaction['amountpaid'] != "0")) { ?>
-                        <td class=""><?= lang('Global.splitbill') ?></td>
-                    <?php } elseif (($transaction['paymentid'] === "0") && ($transaction['amountpaid'] === "0")) { ?>
-                        <td class=""><?= lang('Global.debt') ?></td>
-                    <?php } else {
+                    </?php if (($transaction['paymentid'] === "0") && ($transaction['amountpaid'] != "0")) { ?>
+                        <td class=""></?= lang('Global.splitbill') ?></td>
+                    </?php } elseif (($transaction['paymentid'] === "0") && ($transaction['amountpaid'] === "0")) { ?>
+                        <td class=""></?= lang('Global.debt') ?></td>
+                    </?php } else {
                         foreach ($payments as $payment) {
                             if ($payment['id'] === $transaction['paymentid']) { ?>
-                                <td class=""><?= $payment['name'] ?></td>
-                            <?php }
+                                <td class=""></?= $payment['name'] ?></td>
+                            </?php }
                         }
                     } ?>
 
-                    <td class=""><?= "Rp " . number_format($transaction['value'], 2, ',', '.'); ?></td>
+                    <td class=""></?= "Rp " . number_format($transaction['value'], 2, ',', '.'); ?></td>
 
                     <td class="uk-text-center uk-column-1-2">
-                        <?php if (!empty($transaction['amountpaid'])) {
+                        </?php if (!empty($transaction['amountpaid'])) {
                             echo '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">' . lang('Global.paid') . '</div>';
                         } else {
                             foreach ($debts as $debt) {
@@ -105,8 +118,8 @@
                                 }
                             }
                         } ?>
-                        <div class="uk-text-success" id="refund" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')" style="border-style: solid; border-color: red;"><a href="trxhistory/refund/<?= $transaction['id'] ?>" class="uk-link-heading">Refund</a></div>
-                    </td>
+                        <div class="uk-text-success" id="refund" onclick="return confirm('</?= lang('Global.deleteConfirm') ?>')" style="border-style: solid; border-color: red;"><a href="trxhistory/refund/</?= $transaction['id'] ?>" class="uk-link-heading">Refund</a></div>
+                    </td> -->
                 </tr>
             <?php } ?>
         </tbody>
@@ -139,152 +152,73 @@
                     <div class="uk-margin">
                         <div class="uk-padding-small">
                             <div class="uk-flex uk-flex-center">
-                                <?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
-                                    <img src="/img/<?= $gconfig['logo']; ?>" alt="<?= $gconfig['bizname']; ?>" style="height: 90px;">
-                                <?php } else { ?>
-                                    <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 90px;">
-                                <?php } ?>
+                                <img src="/img/<?= $transaction['bizlogo']; ?>" alt="<?= $transaction['bizname']; ?>" style="height: 90px;">
+                            </div>
+
+                            <div class="uk-flex uk-flex-center">
+                                <div class="fpoutlet uk-h3 uk-margin-remove uk-text-justify"><?= $transaction['outlet'] ?></div>
                             </div>
                             <div class="uk-flex uk-flex-center">
-                                <?php foreach ($outlets as $outlet) {
-                                    if ($outlet['id'] === $transaction['outletid']) { ?>
-                                        <div class="fpoutlet uk-h3 uk-margin-remove uk-text-justify"><?= $outlet['name'] ?></div>
-                                <?php }
-                                } ?>
+                                <div class="fpaddress uk-h4 uk-margin-remove"><?= $transaction['bizaddress'] ?></div>
                             </div>
                             <div class="uk-flex uk-flex-center">
-                                <?php foreach ($outlets as $outlet) {
-                                    if ($outlet['id'] === $transaction['outletid']) { ?>
-                                        <div class="fpaddress uk-h4 uk-margin-remove"><?= $outlet['address'] ?></div>
-                                <?php }
-                                } ?>
+                                <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="instagram"></span> : <?= $transaction['bizinstagram'] ?></div>
                             </div>
                             <div class="uk-flex uk-flex-center">
-                                <?php foreach ($outlets as $outlet) {
-                                    if ($outlet['id'] === $transaction['outletid']) { ?>
-                                        <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="instagram"></span> : <?= $outlet['instagram'] ?></div>
-                                <?php }
-                                } ?>
-                            </div>
-                            <div class="uk-flex uk-flex-center">
-                                <?php foreach ($outlets as $outlet) {
-                                    if ($outlet['id'] === $transaction['outletid']) { ?>
-                                        <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="whatsapp"></span> : <?= $outlet['phone'] ?></div>
-                                <?php }
-                                } ?>
+                                <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="whatsapp"></span> : <?= $transaction['bizphone'] ?></div>
                             </div>
 
                             <div uk-grid>
-                                <div class="uk-width-1-2">Invoice: <?= (strtotime($transaction['date'])) ?></div>
-                                <div class="uk-width-1-2 uk-text-right"><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></div>
+                                <div class="uk-width-1-2">Invoice: <?= $transaction['invoice'] ?></div>
+
+                                <div class="uk-width-1-2 uk-text-right"><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])) ?></div>
                             </div>
+
                             <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
-                                <?php foreach ($users as $user) {
-                                    if ($user->id === $transaction['userid']) { ?>
-                                        <div>Cashier: <?= $user->name ?></div>
-                                    <?php }
-                                } ?>
+                                <div>Cashier: <?= $transaction['cashier'] ?></div>
+
                                 <div class="uk-text-right">
-                                    <?php if ($transaction['paymentid'] === "0") { ?>
-                                        <?= lang('Global.splitbill') ?>
-                                    <?php } else {
-                                        foreach ($payments as $payment) {
-                                            if ($payment['id'] === $transaction['paymentid']) { ?>
-                                                <?= $payment['name'] ?>
-                                            <?php }
-                                        }
-                                    } ?>
+                                    <?= $transaction['payment'] ?>
                                 </div>
                             </div>
 
                             <hr style="border-top: 3px double #8c8b8b">
 
-                            <?php foreach ($trxdetails as $trxdet) {
-                                // Variant
-                                if ($trxdet['variantid'] !== "0") {
-                                    foreach ($products as $product) {
-                                        if (($trxdet['variantid'] === $product['id']) && ($trxdet['transactionid'] === $transaction['id'])) {
-                                            $variantval      = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
-                            ?>
-                                            <div class="uk-margin-small">
-                                                <div class="uk-h5 uk-text-bolder uk-margin-remove"><?= $product['name'] ?></div>
-                                                <div uk-grid>
-                                                    <div class="uk-width-1-2">
-                                                        <div>x<?= $trxdet['qty'] ?> @<?= $variantval ?></div>
-                                                    </div>
-                                                    <div class="uk-width-1-2 uk-text-right">
-                                                        <div><?= ((int)$variantval * (int)$trxdet['qty']) ?></div>
-                                                    </div>
-                                                </div>
-                                                <?php if ($trxdet['discvar'] != '0') { ?>
-                                                    <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
-                                                        <div>
-                                                            <div>(<?= (Int)$trxdet['discvar'] / (Int)$trxdet['qty'] ?>)</div>
-                                                        </div>
-                                                        <div class="uk-text-right">
-                                                            <div>- <?= $trxdet['discvar'] ?></div>
-                                                        </div>
-                                                    </div>
-                                                <?php } ?>
-                                                <?php if ($trxdet['globaldisc'] != '0') { ?>
-                                                    <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
-                                                        <div>
-                                                            <div>(<?= (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'] ?>)</div>
-                                                        </div>
-                                                        <div class="uk-text-right">
-                                                            <div>- <?= $trxdet['globaldisc'] ?></div>
-                                                        </div>
-                                                    </div>
-                                                <?php } ?>
-                                            </div>
-                                        <?php }
-                                    }
-                                }
-                                // Variant End
+                            <?php foreach ($transaction['detail'] as $detail) { ?>
+                                <div class="uk-margin-small">
+                                    <div class="uk-h5 uk-text-bolder uk-margin-remove"><?= $detail['name'] ?></div>
+                                    <div uk-grid>
+                                        <div class="uk-width-1-2">
+                                            <div>x<?= $detail['qty'] ?> @<?= $detail['value'] ?></div>
+                                        </div>
+                                        <div class="uk-width-1-2 uk-text-right">
+                                            <div><?= $detail['total'] ?></div>
+                                        </div>
+                                    </div>
 
-                                // Bundle
-                                if ($trxdet['bundleid'] !== "0") {
-                                    foreach ($bundles as $bundle) {
-                                        if (($trxdet['transactionid'] === $transaction['id']) && ($trxdet['bundleid'] === $bundle['id'])) {
-                                            $bundleName      = $bundle['name'];
-                                            $variantval      = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
-                                            ?>
-
-                                            <div class="uk-margin-small">
-                                                <div class="uk-h5 uk-text-bolder uk-margin-remove"><?= $bundleName ?></div>
-                                                <div class="uk-margin-small-left">
-                                                    <?php foreach ($bundets as $bundet) {
-                                                        foreach ($products as $product) {
-                                                            if (($product['id'] === $bundet['variantid']) && ($trxdet['bundleid'] === $bundet['bundleid']) && ($bundle['id'] === $bundet['bundleid'])) {
-                                                                echo "# " . $product['name'] . "</br>";
-                                                            }
-                                                        }
-                                                    } ?>
-                                                </div>
-                                                <div uk-grid>
-                                                    <div class="uk-width-1-2">
-                                                        <div>x<?= $trxdet['qty'] ?> @<?= $variantval ?></div>
-                                                    </div>
-                                                    <div class="uk-width-1-2 uk-text-right">
-                                                        <div><?= (int)$variantval * (int)$trxdet['qty'] ?></div>
-                                                    </div>
-                                                </div>
-                                                <?php if ($trxdet['globaldisc'] != '0') { ?>
-                                                    <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
-                                                        <div>
-                                                            <div>(<?= (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'] ?>)</div>
-                                                        </div>
-                                                        <div class="uk-text-right">
-                                                            <div>- <?= $trxdet['globaldisc'] ?></div>
-                                                        </div>
-                                                    </div>
-                                                <?php } ?>
+                                    <?php if ($detail['discvar'] != '0') { ?>
+                                        <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                            <div>
+                                                <div>(<?= $detail['discitem'] ?>)</div>
                                             </div>
-                                        <?php }
-                                    }
-                                }
-                                // Bundle End
-                            } ?>
+                                            <div class="uk-text-right">
+                                                <div>- <?= $detail['discvar'] ?></div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                    
+                                    <?php if ($detail['globaldisc'] != '0') { ?>
+                                        <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                            <div>
+                                                <div>(<?= (Int)$detail['globaldisc'] / (Int)$detail['qty'] ?>)</div>
+                                            </div>
+                                            <div class="uk-text-right">
+                                                <div>- <?= $detail['globaldisc'] ?></div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            <?php } ?>
 
                             <hr style="border-top: 3px double #8c8b8b">
 
@@ -294,32 +228,23 @@
                                         <div><?= lang('Global.subtotal') ?></div>
                                     </div>
                                     <div class="uk-width-1-2 uk-text-right uk-text-bold" style="color: #000;">
-                                        <?php
-                                        $subtotal = array();
-                                        foreach ($trxdetails as $trxdet) {
-                                            if ($transaction['id'] === $trxdet['transactionid']) {
-                                                $total = ((int)$trxdet['qty'] * (int)$trxdet['value']);
-                                                $subtotal[] = $total; ?>
-                                        <?php }
-                                        }
-                                        $sum = array_sum($subtotal); ?>
-                                        <div><?= $sum; ?></div>
+                                        <div><?= $transaction['totaldetailvalue']; ?></div>
                                     </div>
                                 </div>
 
                                 <div class="uk-margin-remove-top" uk-grid>
-                                    <?php if (!empty($transaction['discvalue'])) { ?>
+                                    <?php if (!empty($transaction['trxdiscount'])) { ?>
                                         <div class="uk-width-1-2">
                                             <div><?= lang('Global.discount') ?></div>
                                         </div>
                                         <div class="uk-width-1-2 uk-text-right">
-                                            <div>- <?= $transaction['discvalue'] ?></div>
+                                            <div>- <?= $transaction['trxdiscount'] ?></div>
                                         </div>
                                     <?php } ?>
                                 </div>
 
                                 <div class="uk-margin-remove-top" uk-grid>
-                                    <?php if (($transaction['memberid'] !== "0") && ($gconfig['memberdisc'] !== "0")) { ?>
+                                    <?php if ($transaction['memberdisc'] != '0') { ?>
                                         <div class="uk-width-1-2">
                                             <div><?= lang('Global.memberDiscount') ?></div>
                                         </div>
@@ -330,7 +255,7 @@
                                 </div>
 
                                 <div class="uk-margin-remove-top" uk-grid>
-                                    <?php if (($transaction['memberid'] !== "0") && ($transaction['pointused'] !== "0")) { ?>
+                                    <?php if ($transaction['pointused'] != '0') { ?>
                                         <div class="uk-width-1-2">
                                             <div><?= lang('Global.redeemPoint') ?></div>
                                         </div>
@@ -363,7 +288,7 @@
                                 </div>
 
                                 <div class="uk-margin-remove-top" uk-grid>
-                                    <?php if (($transaction['amountpaid'] - $transaction['value'] !== "0")) { ?>
+                                    <?php if ((int)$transaction['amountpaid'] - (int)$transaction['value'] != '0') { ?>
                                         <div class="uk-width-1-2">
                                             <div><?= lang('Global.change') ?></div>
                                         </div>
@@ -374,25 +299,19 @@
                                 </div>
 
                                 <hr style="border-top: 3px double #8c8b8b">
+                                
+                                <?php if ($transaction['memberid'] != '0') { ?>
+                                    <div class="uk-margin-remove-top" uk-grid>
+                                        <div class="uk-width-1-2">
+                                            <div><?= lang('Global.customer') ?></div>
+                                        </div>
+                                        <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
+                                            <div><?= $transaction['membername'] ?></div>
+                                        </div>
+                                    </div>
 
-                                <div class="uk-margin-remove-top" uk-grid>
-                                    <?php if ($transaction['memberid'] !== "0") {
-                                        foreach ($customers as $customer) {
-                                            if ($customer['id'] === $transaction['memberid']) { ?>
-                                                <div class="uk-width-1-2">
-                                                    <div><?= lang('Global.customer') ?></div>
-                                                </div>
-                                                <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
-                                                    <div><?= $customer['name'] ?></div>
-                                                </div>
-                                    <?php }
-                                        }
-                                    } ?>
-                                </div>
-
-                                <div class="uk-margin-remove-top" uk-grid>
-                                    <?php if (($transaction['memberid'] !== "0")) {
-                                        if ($gconfig['poinorder'] != "0") {
+                                    <div class="uk-margin-remove-top" uk-grid>
+                                        <?php if ($gconfig['poinorder'] != '0') {
                                             $pointearn = (floor((int)$transaction['value'] / (int)$gconfig['poinorder'])) * (int)$gconfig['poinvalue'];
                                         } else {
                                             $pointearn = (int)$transaction['value'] * (int)$gconfig['poinvalue'];
@@ -403,19 +322,303 @@
                                         <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
                                             <div><?= $pointearn ?></div>
                                         </div>
-                                    <?php } ?>
+                                    </div>
+
+                                    <div class="uk-margin-remove-top" uk-grid>
+                                        <div class="uk-width-1-2">
+                                            <div><?= lang('Global.totalpoint') ?></div>
+                                        </div>
+                                        <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
+                                            <div><?= $transaction['memberpoin'] ?></div>
+                                        </div>
+                                    </div>
+
+                                    <hr style="border-top: 3px double #8c8b8b">
+                                <?php } ?>
+
+                                <div class="uk-flex uk-flex-center">
+                                    <div class="fptagline uk-h3 uk-margin-remove">#VapingSambilNongkrong</div>
+                                </div>
+                            </div>
+
+                            <!-- <div class="uk-flex uk-flex-center">
+                                </?php if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) { ?>
+                                    <img src="/img/</?= $gconfig['logo']; ?>" alt="</?= $gconfig['bizname']; ?>" style="height: 90px;">
+                                </?php } else { ?>
+                                    <img src="/img/binary111-logo-icon.svg" alt="PT. Kodebiner Teknologi Indonesia" style="height: 90px;">
+                                </?php } ?>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                </?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $transaction['outletid']) { ?>
+                                        <div class="fpoutlet uk-h3 uk-margin-remove uk-text-justify"></?= $outlet['name'] ?></div>
+                                </?php }
+                                } ?>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                </?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $transaction['outletid']) { ?>
+                                        <div class="fpaddress uk-h4 uk-margin-remove"></?= $outlet['address'] ?></div>
+                                </?php }
+                                } ?>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                </?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $transaction['outletid']) { ?>
+                                        <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="instagram"></span> : </?= $outlet['instagram'] ?></div>
+                                </?php }
+                                } ?>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                </?php foreach ($outlets as $outlet) {
+                                    if ($outlet['id'] === $transaction['outletid']) { ?>
+                                        <div class="fpaddress uk-h4 uk-margin-remove"><span uk-icon="whatsapp"></span> : </?= $outlet['phone'] ?></div>
+                                </?php }
+                                } ?>
+                            </div>
+
+                            <div uk-grid>
+                                <div class="uk-width-1-2">Invoice: </?= (strtotime($transaction['date'])) ?></div>
+                                <div class="uk-width-1-2 uk-text-right"></?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></div>
+                            </div>
+                            <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
+                                </?php foreach ($users as $user) {
+                                    if ($user->id === $transaction['userid']) { ?>
+                                        <div>Cashier: </?= $user->name ?></div>
+                                    </?php }
+                                } ?>
+                                <div class="uk-text-right">
+                                    </?php if ($transaction['paymentid'] === "0") { ?>
+                                        </?= lang('Global.splitbill') ?>
+                                    </?php } else {
+                                        foreach ($payments as $payment) {
+                                            if ($payment['id'] === $transaction['paymentid']) { ?>
+                                                </?= $payment['name'] ?>
+                                            </?php }
+                                        }
+                                    } ?>
+                                </div>
+                            </div>
+
+                            <hr style="border-top: 3px double #8c8b8b">
+
+                            </?php foreach ($trxdetails as $trxdet) {
+                                // Variant
+                                if ($trxdet['variantid'] !== "0") {
+                                    foreach ($products as $product) {
+                                        if (($trxdet['variantid'] === $product['id']) && ($trxdet['transactionid'] === $transaction['id'])) {
+                                            $variantval      = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                            ?>
+                                            <div class="uk-margin-small">
+                                                <div class="uk-h5 uk-text-bolder uk-margin-remove"></?= $product['name'] ?></div>
+                                                <div uk-grid>
+                                                    <div class="uk-width-1-2">
+                                                        <div>x</?= $trxdet['qty'] ?> @</?= $variantval ?></div>
+                                                    </div>
+                                                    <div class="uk-width-1-2 uk-text-right">
+                                                        <div></?= ((int)$variantval * (int)$trxdet['qty']) ?></div>
+                                                    </div>
+                                                </div>
+                                                </?php if ($trxdet['discvar'] != '0') { ?>
+                                                    <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                                        <div>
+                                                            <div>(</?= (Int)$trxdet['discvar'] / (Int)$trxdet['qty'] ?>)</div>
+                                                        </div>
+                                                        <div class="uk-text-right">
+                                                            <div>- </?= $trxdet['discvar'] ?></div>
+                                                        </div>
+                                                    </div>
+                                                </?php } ?>
+                                                </?php if ($trxdet['globaldisc'] != '0') { ?>
+                                                    <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                                        <div>
+                                                            <div>(</?= (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'] ?>)</div>
+                                                        </div>
+                                                        <div class="uk-text-right">
+                                                            <div>- </?= $trxdet['globaldisc'] ?></div>
+                                                        </div>
+                                                    </div>
+                                                </?php } ?>
+                                            </div>
+                                        </?php }
+                                    }
+                                }
+                                // Variant End
+
+                                // Bundle
+                                if ($trxdet['bundleid'] !== "0") {
+                                    foreach ($bundles as $bundle) {
+                                        if (($trxdet['transactionid'] === $transaction['id']) && ($trxdet['bundleid'] === $bundle['id'])) {
+                                            $bundleName      = $bundle['name'];
+                                            $variantval      = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                                            ?>
+
+                                            <div class="uk-margin-small">
+                                                <div class="uk-h5 uk-text-bolder uk-margin-remove"></?= $bundleName ?></div>
+                                                <div class="uk-margin-small-left">
+                                                    </?php foreach ($bundets as $bundet) {
+                                                        foreach ($products as $product) {
+                                                            if (($product['id'] === $bundet['variantid']) && ($trxdet['bundleid'] === $bundet['bundleid']) && ($bundle['id'] === $bundet['bundleid'])) {
+                                                                echo "# " . $product['name'] . "</br>";
+                                                            }
+                                                        }
+                                                    } ?>
+                                                </div>
+                                                <div uk-grid>
+                                                    <div class="uk-width-1-2">
+                                                        <div>x</?= $trxdet['qty'] ?> @</?= $variantval ?></div>
+                                                    </div>
+                                                    <div class="uk-width-1-2 uk-text-right">
+                                                        <div></?= (int)$variantval * (int)$trxdet['qty'] ?></div>
+                                                    </div>
+                                                </div>
+                                                </?php if ($trxdet['globaldisc'] != '0') { ?>
+                                                    <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                                        <div>
+                                                            <div>(</?= (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'] ?>)</div>
+                                                        </div>
+                                                        <div class="uk-text-right">
+                                                            <div>- </?= $trxdet['globaldisc'] ?></div>
+                                                        </div>
+                                                    </div>
+                                                </?php } ?>
+                                            </div>
+                                        </?php }
+                                    }
+                                }
+                                // Bundle End
+                            } ?>
+
+                            <hr style="border-top: 3px double #8c8b8b">
+
+                            <div class="uk-margin-small">
+                                <div uk-grid>
+                                    <div class="uk-width-1-2">
+                                        <div></?= lang('Global.subtotal') ?></div>
+                                    </div>
+                                    <div class="uk-width-1-2 uk-text-right uk-text-bold" style="color: #000;">
+                                        </?php
+                                        $subtotal = array();
+                                        foreach ($trxdetails as $trxdet) {
+                                            if ($transaction['id'] === $trxdet['transactionid']) {
+                                                $total = ((int)$trxdet['qty'] * (int)$trxdet['value']);
+                                                $subtotal[] = $total; ?>
+                                        </?php }
+                                        }
+                                        $sum = array_sum($subtotal); ?>
+                                        <div></?= $sum; ?></div>
+                                    </div>
                                 </div>
 
                                 <div class="uk-margin-remove-top" uk-grid>
-                                    <?php foreach ($customers as $cust) {
+                                    </?php if (!empty($transaction['discvalue'])) { ?>
+                                        <div class="uk-width-1-2">
+                                            <div></?= lang('Global.discount') ?></div>
+                                        </div>
+                                        <div class="uk-width-1-2 uk-text-right">
+                                            <div>- </?= $transaction['discvalue'] ?></div>
+                                        </div>
+                                    </?php } ?>
+                                </div>
+
+                                <div class="uk-margin-remove-top" uk-grid>
+                                    </?php if (($transaction['memberid'] !== "0") && ($gconfig['memberdisc'] !== "0")) { ?>
+                                        <div class="uk-width-1-2">
+                                            <div></?= lang('Global.memberDiscount') ?></div>
+                                        </div>
+                                        <div class="uk-width-1-2 uk-text-right">
+                                            <div>- </?= $transaction['memberdisc'] ?></div>
+                                        </div>
+                                    </?php } ?>
+                                </div>
+
+                                <div class="uk-margin-remove-top" uk-grid>
+                                    </?php if (($transaction['memberid'] !== "0") && ($transaction['pointused'] !== "0")) { ?>
+                                        <div class="uk-width-1-2">
+                                            <div></?= lang('Global.redeemPoint') ?></div>
+                                        </div>
+                                        <div class="uk-width-1-2 uk-text-right">
+                                            <div>- </?= $transaction['pointused'] ?></div>
+                                        </div>
+                                    </?php } ?>
+                                </div>
+
+                                <hr style="border-top: 3px double #8c8b8b">
+
+                                <div class="uk-margin-remove-top" uk-grid>
+                                    <div class="uk-width-1-2">
+                                        <div></?= lang('Global.total') ?></div>
+                                    </div>
+                                    <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: red;">
+                                        <div></?= $transaction['value'] ?></div>
+                                    </div>
+                                </div>
+
+                                <hr style="border-top: 3px double #8c8b8b">
+
+                                <div class="uk-margin-remove-top" uk-grid>
+                                    <div class="uk-width-1-2">
+                                        <div></?= lang('Global.accepted') ?></div>
+                                    </div>
+                                    <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
+                                        <div></?= $transaction['amountpaid'] ?></div>
+                                    </div>
+                                </div>
+
+                                <div class="uk-margin-remove-top" uk-grid>
+                                    </?php if (($transaction['amountpaid'] - $transaction['value'] !== "0")) { ?>
+                                        <div class="uk-width-1-2">
+                                            <div></?= lang('Global.change') ?></div>
+                                        </div>
+                                        <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
+                                            <div></?= (int)$transaction['amountpaid'] - (int)$transaction['value'] ?></div>
+                                        </div>
+                                    </?php } ?>
+                                </div>
+
+                                <hr style="border-top: 3px double #8c8b8b">
+
+                                <div class="uk-margin-remove-top" uk-grid>
+                                    </?php if ($transaction['memberid'] !== "0") {
+                                        foreach ($customers as $customer) {
+                                            if ($customer['id'] === $transaction['memberid']) { ?>
+                                                <div class="uk-width-1-2">
+                                                    <div></?= lang('Global.customer') ?></div>
+                                                </div>
+                                                <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
+                                                    <div></?= $customer['name'] ?></div>
+                                                </div>
+                                    </?php }
+                                        }
+                                    } ?>
+                                </div>
+
+                                <div class="uk-margin-remove-top" uk-grid>
+                                    </?php if (($transaction['memberid'] !== "0")) {
+                                        if ($gconfig['poinorder'] != "0") {
+                                            $pointearn = (floor((int)$transaction['value'] / (int)$gconfig['poinorder'])) * (int)$gconfig['poinvalue'];
+                                        } else {
+                                            $pointearn = (int)$transaction['value'] * (int)$gconfig['poinvalue'];
+                                        } ?>
+                                        <div class="uk-width-1-2">
+                                            <div></?= lang('Global.pointearn') ?></div>
+                                        </div>
+                                        <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
+                                            <div></?= $pointearn ?></div>
+                                        </div>
+                                    </?php } ?>
+                                </div>
+
+                                <div class="uk-margin-remove-top" uk-grid>
+                                    </?php foreach ($customers as $cust) {
                                         if (($transaction['memberid'] !== "0") && $transaction['memberid'] === $cust['id']) { ?>
                                             <div class="uk-width-1-2">
-                                                <div><?= lang('Global.totalpoint') ?></div>
+                                                <div></?= lang('Global.totalpoint') ?></div>
                                             </div>
                                             <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
-                                                <div><?= $cust['poin'] ?></div>
+                                                <div></?= $cust['poin'] ?></div>
                                             </div>
-                                    <?php }
+                                    </?php }
                                     } ?>
                                 </div>
 
@@ -424,7 +627,7 @@
                                 <div class="uk-flex uk-flex-center">
                                     <div class="fptagline uk-h3 uk-margin-remove">#VapingSambilNongkrong</div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

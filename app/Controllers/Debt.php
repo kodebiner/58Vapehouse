@@ -37,7 +37,7 @@ class Debt extends BaseController
 
         // Calling Models
         $BundleModel            = new BundleModel;
-        $BundledetModel         = new BundledetailModel;
+        $BundledetailModel      = new BundledetailModel;
         $CashModel              = new CashModel;
         $OutletModel            = new OutletModel;
         $UserModel              = new UserModel;
@@ -49,6 +49,7 @@ class Debt extends BaseController
         $TrxdetailModel         = new TrxdetailModel;
         $TrxpaymentModel        = new TrxpaymentModel;
         $DebtModel              = new DebtModel;
+        $GconfigModel           = new GconfigModel;
 
         $input  = $this->request->getGet('daterange');
 
@@ -76,74 +77,239 @@ class Debt extends BaseController
             // }
         }
 
+        // Logo Gconfig
+        $gconfig    = $GconfigModel->first();
+        if (($gconfig['logo'] != null) && ($gconfig['bizname'] != null)) {
+            $bizlogo    = $gconfig['logo'];
+            $bizname    = $gconfig['bizname'];
+        } else {
+            $bizlogo    = 'binary111-logo-icon.svg';
+            $bizname    = 'PT. Kodebiner Teknologi Indonesia';
+        }
+
         $transactiondata    = [];
+        foreach ($transactions as $trx) {
+            // Outlet
+            $outlets        = $OutletModel->find($trx['outletid']);
+            $outletname     = $outlets['name'];
+            $bizaddress     = $outlets['address'];
+            $bizinstagram   = $outlets['instagram'];
+            $bizphone       = $outlets['phone'];
 
-        $trxid = array();
-        $memberid = array();
-        foreach ($transactions as $transaction) {
-            $trxid[] = $transaction['id'];
-            if ($transaction['memberid'] != '0') {
-                $memberid[] = $transaction['memberid'];
+            // Cashier
+            $cashier                                = $UserModel->find($trx['userid']);
+
+            // Payment Method
+            $payments       = $PaymentModel->find($trx['paymentid']);
+            if (!empty($payments)) {
+                $paymentmethod  = $payments['name'];
+            } else {
+                if ($trx['amountpaid'] == '0') {
+                    $paymentmethod  = lang('Global.debt');
+                } else {
+                    $paymentmethod  = lang('Global.splitbill');
+                }
             }
-        }
 
-        $bundles                = $BundleModel->findAll();
-        $bundets                = $BundledetModel->findAll();
-        $cash                   = $CashModel->findAll();
-        $outlets                = $OutletModel->findAll();
-        $users                  = $UserModel->findAll();
-        $payments               = $PaymentModel->findAll();
-
-        if (!empty($memberid)) {
-            $customers              = $MemberModel->find($memberid);
-        } else {
-            $customers              = array();
-        }
-
-        if (!empty($trxid)) {
-            $trxdetails             = $TrxdetailModel->whereIn('transactionid', $trxid)->find();
-            $trxpayments            = $TrxpaymentModel->whereIn('transactionid', $trxid)->find();
-            $debts                  = $DebtModel->whereIn('transactionid', $trxid)->find();
-            $variantid = array();
-            foreach ($trxdetails as $trxdetail) {
-                $variantid[] = $trxdetail['variantid'];
+            // Member
+            $members    = $MemberModel->find($trx['memberid']);
+            if (!empty($members)) {
+                $membername     = $members['name'];
+                $memberphone    = $members['phone'];
+                $memberpoin     = $members['poin'];
+            } else {
+                $membername     = '';
+                $memberphone    = '';
+                $memberpoin     = '';
             }
-            $productbuilder         = $db->table('variant');
-            $productarray           = $productbuilder->select('product.name as product, variant.name as variant, variant.id as id');
-            $productarray           = $productbuilder->join('product', 'variant.productid = product.id', 'left');
-            $productarray           = $productbuilder->whereIn('variant.id', $variantid);
-            $productarray           = $productbuilder->get();
-            $productsresult         = $productarray->getResult();
-            $products = array();
-            foreach ($productsresult as $prod) {
-                $products[] = [
-                    'id'    => $prod->id,
-                    'name'  => $prod->product . ' - ' . $prod->variant
-                ];
+
+            // Debt Data
+            $debts  = $DebtModel->where('transactionid', $trx['id'])->find();
+            if (!empty($debts)) {
+                foreach ($debts as $debt) {
+                    if ((Int)$trx['amountpaid'] - (Int)$debt['value'] <= '0') {
+                        $paidstatus = '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">' . lang('Global.notpaid') . '</div>';
+                    } else {
+                        $paidstatus = '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">' . lang('Global.paid') . '</div>';
+                    }
+                }
+            } else {
+                $paidstatus = '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">' . lang('Global.paid') . '</div>';
             }
-        } else {
-            $trxdetails             = array();
-            $trxpayments            = array();
-            $debts                  = array();
-            $products               = array();
+
+            // Transaction Data
+            $transactiondata[$trx['id']]['id']              = $trx['id'];
+            $transactiondata[$trx['id']]['date']            = $trx['date'];
+            $transactiondata[$trx['id']]['outlet']          = $outletname;
+            $transactiondata[$trx['id']]['cashier']         = $cashier->firstname.' '.$cashier->lastname;
+            $transactiondata[$trx['id']]['payment']         = $paymentmethod;
+            $transactiondata[$trx['id']]['value']           = $trx['value'];
+            $transactiondata[$trx['id']]['amountpaid']      = $trx['amountpaid'];
+            $transactiondata[$trx['id']]['paidstatus']      = $paidstatus;
+            $transactiondata[$trx['id']]['bizlogo']         = $bizlogo;
+            $transactiondata[$trx['id']]['bizname']         = $bizname;
+            $transactiondata[$trx['id']]['bizaddress']      = $bizaddress;
+            $transactiondata[$trx['id']]['bizinstagram']    = $bizinstagram;
+            $transactiondata[$trx['id']]['bizphone']        = $bizphone;
+            $transactiondata[$trx['id']]['invoice']         = (strtotime($trx['date']));
+            $transactiondata[$trx['id']]['trxdiscount']     = $trx['discvalue'];
+            $transactiondata[$trx['id']]['memberid']        = $trx['memberid'];
+            $transactiondata[$trx['id']]['memberdisc']      = $trx['memberdisc'];
+            $transactiondata[$trx['id']]['pointused']       = $trx['pointused'];
+            $transactiondata[$trx['id']]['membername']      = $membername;
+            $transactiondata[$trx['id']]['memberphone']     = $memberphone;
+            $transactiondata[$trx['id']]['memberpoin']      = $memberpoin;
+
+            // Transaction Detail Data
+            $subtotal = [];
+            $trxdetails = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+            if (!empty($trxdetails)) {
+                foreach ($trxdetails as $trxdet) {
+                    $subtotal[] = ((int)$trxdet['qty'] * (int)$trxdet['value']);
+
+                    // Variant Data
+                    if (($trxdet['variantid'] != '0') && ($trxdet['bundleid'] == '0')) {
+                        $variants       = $VariantModel->find($trxdet['variantid']);
+                        
+                        if (!empty($variants)) {
+                            $products   = $ProductModel->find($variants['productid']);
+    
+                            if (!empty($products)) {
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']           = $products['name'].' - '.$variants['name'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']            = $trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']       = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']        = $trxdet['discvar'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem'] = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldisc']     = $trxdet['globaldisc'];
+                            } else {
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']           = 'Kategori / Produk / Variant Terhapus';
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']            = $trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']       = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']        = $trxdet['discvar'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem'] = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldisc']     = $trxdet['globaldisc'];
+                            }
+                        } else {
+                            $products   = [];
+
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']               = 'Kategori / Produk / Variant Terhapus';
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']           = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']            = $trxdet['discvar'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem']     = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldisc']         = $trxdet['globaldisc'];
+                        }
+                    }
+
+                    // Data Bundle
+                    if (($trxdet['variantid'] == '0') && ($trxdet['bundleid'] != '0')) {
+                        $bundles        = $BundleModel->find($trxdet['bundleid']);
+
+                        if (!empty($bundles)) {
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']               = $bundles['name'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']           = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']            = $trxdet['discvar'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem']     = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldisc']         = $trxdet['globaldisc'];
+                        } else {
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']               = 'Bundle Terhapus';
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']           = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']            = $trxdet['discvar'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem']     = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldisc']         = $trxdet['globaldisc'];
+                        }
+                    }
+                }
+            } else {
+                $variants   = [];
+                $products   = [];
+                $bundles    = [];
+                $transactiondata[$trx['id']]['detail']  = [];
+            }
+
+            $transactiondata[$trx['id']]['totaldetailvalue']    = array_sum($subtotal);
         }
+        // dd($transactiondata);
+
+        // $trxid = array();
+        // $memberid = array();
+        // foreach ($transactions as $transaction) {
+        //     $trxid[] = $transaction['id'];
+        //     if ($transaction['memberid'] != '0') {
+        //         $memberid[] = $transaction['memberid'];
+        //     }
+        // }
+
+        // $bundles                = $BundleModel->findAll();
+        // $bundets                = $BundledetModel->findAll();
+        // $cash                   = $CashModel->findAll();
+        // $outlets                = $OutletModel->findAll();
+        // $users                  = $UserModel->findAll();
+        // $payments               = $PaymentModel->findAll();
+
+        // if (!empty($memberid)) {
+        //     $customers              = $MemberModel->find($memberid);
+        // } else {
+        //     $customers              = array();
+        // }
+
+        // if (!empty($trxid)) {
+        //     $trxdetails             = $TrxdetailModel->whereIn('transactionid', $trxid)->find();
+        //     $trxpayments            = $TrxpaymentModel->whereIn('transactionid', $trxid)->find();
+        //     $debts                  = $DebtModel->whereIn('transactionid', $trxid)->find();
+        //     $variantid = array();
+        //     foreach ($trxdetails as $trxdetail) {
+        //         $variantid[] = $trxdetail['variantid'];
+        //     }
+        //     $productbuilder         = $db->table('variant');
+        //     $productarray           = $productbuilder->select('product.name as product, variant.name as variant, variant.id as id');
+        //     $productarray           = $productbuilder->join('product', 'variant.productid = product.id', 'left');
+        //     $productarray           = $productbuilder->whereIn('variant.id', $variantid);
+        //     $productarray           = $productbuilder->get();
+        //     $productsresult         = $productarray->getResult();
+        //     $products = array();
+        //     foreach ($productsresult as $prod) {
+        //         $products[] = [
+        //             'id'    => $prod->id,
+        //             'name'  => $prod->product . ' - ' . $prod->variant
+        //         ];
+        //     }
+        // } else {
+        //     $trxdetails             = array();
+        //     $trxpayments            = array();
+        //     $debts                  = array();
+        //     $products               = array();
+        // }
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.trxHistory');
         $data['description']    = lang('Global.trxHistoryListDesc');
-        $data['bundles']        = $bundles;
-        $data['bundets']        = $bundets;
-        $data['cash']           = $cash;
-        $data['users']          = $users;
-        $data['transactions']   = $transactions;
-        $data['outlets']        = $outlets;
-        $data['payments']       = $payments;
-        $data['customers']      = $customers;
-        $data['products']       = $products;
-        $data['trxdetails']     = $trxdetails;
-        $data['trxpayments']    = $trxpayments;
-        $data['debts']          = $debts;
+        // $data['bundles']        = $bundles;
+        // $data['bundets']        = $bundets;
+        // $data['cash']           = $cash;
+        // $data['users']          = $users;
+        // $data['transactions']   = $transactions;
+        $data['transactions']   = $transactiondata;
+        // $data['outlets']        = $outlets;
+        // $data['payments']       = $payments;
+        // $data['customers']      = $customers;
+        // $data['products']       = $products;
+        // $data['trxdetails']     = $trxdetails;
+        // $data['trxpayments']    = $trxpayments;
+        // $data['debts']          = $debts;
         $data['pager']          = $TransactionModel->pager;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
