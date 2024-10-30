@@ -227,7 +227,7 @@
                             </div>
                         </div>
 
-                        <?php if (in_groups('owner')) : ?>
+                        <?php if (in_groups('owner')) { ?>
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="poin"><?= lang('Global.point') ?></label>
                                 <div class="uk-form-controls">
@@ -236,7 +236,9 @@
                                     </div>
                                 </div>
                             </div>
-                        <?php endif ?>
+                        <?php } else { ?>
+                            <input class="uk-input" id="poin" name="poin" type="number" value="<?= $customer['poin']; ?>" aria-label="Not clickable icon" hidden>
+                        <?php } ?>
 
                         <hr>
 

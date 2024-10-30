@@ -158,6 +158,8 @@
                                             }
                                         }
                                     }
+                                } elseif ($transactions['paymentid'] == "-1") {
+                                     echo lang('Global.redeemPoint');
                                 } else { ?>
                                     <?= lang('Global.debt')?>
                                 <?php }
@@ -493,12 +495,19 @@
                             <div class="uk-width-1-2  uk-text-bold uk-text-right"><?=$total?></div>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if ($pay !== "0"){
+                            <?php
+                                $pays =  lang('Global.pay');
+                                echo "<div class='uk-width-1-2'>$pays</div>";
+                                echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>$pay</div>";
+                            ?>
+                        </div>
+                        <!-- <div class="uk-grid-collapse" uk-grid>
+                            </?php if ($pay !== "0"){
                                 $pays =  lang('Global.pay');
                                 echo "<div class='uk-width-1-2'>$pays</div>";
                                 echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>$pay</div>";
                             }?>
-                        </div>
+                        </div> -->
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if ($change !== "0"){
                                 $changes = lang('Global.change');

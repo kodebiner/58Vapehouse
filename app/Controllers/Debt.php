@@ -104,8 +104,10 @@ class Debt extends BaseController
             if (!empty($payments)) {
                 $paymentmethod  = $payments['name'];
             } else {
-                if ($trx['amountpaid'] == '0') {
+                if (($trx['amountpaid'] == '0') && ($trx['paymentid'] == "0")) {
                     $paymentmethod  = lang('Global.debt');
+                } elseif ($trx['paymentid'] == "-1") {
+                    $paymentmethod  = lang('Global.redeemPoint');
                 } else {
                     $paymentmethod  = lang('Global.splitbill');
                 }

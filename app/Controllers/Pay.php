@@ -183,12 +183,17 @@ class Pay extends BaseController
 
         // When Discount Member In Transaction and not dicount member per item
         $value = (int)$subtotal - (int)$memberdisc - (int)$discount - (int)$poin;
+        if ($value == '0') {
+            $value  = $input['poin'];
+        }
 
         // // Discount member per item
         // $value = (int)$subtotal - (int)$discount - (int)$poin;
 
         if (!empty($input['payment']) && empty($input['duedate'])) {
             $paymentid = $input['payment'];
+        } elseif (empty($input['payment']) && empty($input['duedate'])) {
+            $paymentid  = '-1';
         } else {
             $paymentid = '0';
         }
@@ -404,6 +409,9 @@ class Pay extends BaseController
 
         //Insert Trx Payment 
         $total = (int)$subtotal - (int)$discount - (int)$input['poin'] - (int)$memberdisc + (int)$ppn;
+        if ($total == '0') {
+            $total  = $input['poin'];
+        }
 
         // // Debt Transaction
         // if (!empty($input['duedate']) && !empty($input['payment']) && empty($input['value'])) {
@@ -530,6 +538,19 @@ class Pay extends BaseController
                 'qty'   => (int)$total + (int)$cashPlus['qty'],
             ];
             $CashModel->save($cash);
+        }
+
+        // Point Used
+        if (!isset($input['firstpayment']) && !isset($input['secpayment']) && ($paymentid == '-1') && !isset($input['duedate'])) {
+            // Single Payment Method
+            // $payment = $PaymentModel->find($input['payment']);
+            // Insert Transaction Payment
+            $paymethod = [
+                'paymentid'     => $paymentid,
+                'transactionid' => $trxId,
+                'value'         => $total,
+            ];
+            $TrxpaymentModel->insert($paymethod);
         }
         
         // Splitbill
@@ -813,13 +834,21 @@ class Pay extends BaseController
             $data['vardiscval']     = "0";
         }
 
-        if (!empty($input['value'])) {
-            $data['pay']            = $input['value'];
-        } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
+        if (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
             $data['pay']            = (int)$input['firstpay'] + (int)$input['secondpay'];
         } elseif (!empty($input['duedate']) && empty($input['value'])) {
             $data['pay']            = "0";
+        } else {
+            $data['pay']            = $input['value'];
         }
+
+        // if (!empty($input['value'])) {
+        //     $data['pay']            = $input['value'];
+        // } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
+        //     $data['pay']            = (int)$input['firstpay'] + (int)$input['secondpay'];
+        // } elseif (!empty($input['duedate']) && empty($input['value'])) {
+        //     $data['pay']            = "0";
+        // }
 
         $data['discount'] = "0";
 

@@ -1531,7 +1531,7 @@
                             <div id="paymentmethod" class="uk-margin">
                                 <h4 class="uk-margin-remove"><?=lang('Global.paymethod')?></h4>
                                 <div class="uk-form-controls uk-margin-small">
-                                    <select class="uk-select" id="payment" name="payment" required>
+                                    <select class="uk-select" id="payment" name="payment">
                                         <option value="" selected disabled hidden>-- <?=lang('Global.paymethod')?> --</option>
                                         <?php
                                         foreach ($payments as $pay) {

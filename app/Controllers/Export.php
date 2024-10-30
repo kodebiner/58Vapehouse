@@ -943,15 +943,20 @@ class export extends BaseController
 
             foreach ($payments as $payment) {
                 $transactiondata[$payment['id']]['name']    = $payment['name'];
-                $transactiondata[0]['name']                 = 'Debt';
+                $transactiondata[0]['name']                 = lang('Global.debt');
+                $transactiondata[-1]['name']                = lang('Global.redeemPoint');
+                
                 $trxtotal           = array();
                 $trxvalue           = array();
                 $debttotal          = array();
                 $debtvalue          = array();
+                $pointtotal         = array();
+                $pointvalue         = array();
                 if (!empty($transactions)) {
                     foreach ($transactions as $trx) {
                         $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', $payment['id'])->find();
                         $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
+                        $pointpayments  = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '-1')->find();
                         if (!empty($trxpayments)) {
                             foreach ($trxpayments as $trxpayment) {
                                 $trxtotal[] = $trxpayment['id'];
@@ -964,6 +969,12 @@ class export extends BaseController
                                 $debtvalue[] = $debtpayment['value'];
                             }
                         }
+                        if (!empty($pointpayments)) {
+                            foreach ($pointpayments as $pointpayment) {
+                                $pointtotal[]   = $pointpayment['id'];
+                                $pointvalue[]   = $pointpayment['value'];
+                            }
+                        }
                     }
                 } else {
                     $trxpayments    = [];
@@ -972,11 +983,15 @@ class export extends BaseController
                     $trxvalue[]     = [];
                     $debttotal[]    = [];
                     $debtvalue[]    = [];
+                    $pointtotal[]   = [];
+                    $pointvalue[]   = [];
                 }
                 $transactiondata[$payment['id']]['qty']         = count($trxtotal);
                 $transactiondata[$payment['id']]['value']       = array_sum($trxvalue);
                 $transactiondata[0]['qty']                      = count($debttotal);
                 $transactiondata[0]['value']                    = array_sum($debtvalue);
+                $transactiondata[-1]['qty']                     = count($pointtotal);
+                $transactiondata[-1]['value']                   = array_sum($pointvalue);
             }
 
             $totalvalue = array_sum(array_column($transactiondata, 'value'));

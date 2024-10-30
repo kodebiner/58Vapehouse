@@ -283,12 +283,18 @@
                                         <div><?= lang('Global.accepted') ?></div>
                                     </div>
                                     <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
-                                        <div><?= $transaction['amountpaid'] ?></div>
+                                        <div>
+                                            <?php if ((Int)$transaction['value'] - (Int)$transaction['pointused'] == '0') {
+                                                echo $transaction['value'];
+                                            } else {
+                                                echo $transaction['amountpaid'];
+                                            } ?>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="uk-margin-remove-top" uk-grid>
-                                    <?php if ((int)$transaction['amountpaid'] - (int)$transaction['value'] != '0') { ?>
+                                    <?php if ((int)$transaction['amountpaid'] - (int)$transaction['value'] >= '0') { ?>
                                         <div class="uk-width-1-2">
                                             <div><?= lang('Global.change') ?></div>
                                         </div>
