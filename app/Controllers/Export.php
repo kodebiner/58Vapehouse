@@ -2981,6 +2981,7 @@ class export extends BaseController
                     // Cash, Non-Cash, Debt
                     $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid !=', '0')->find();
                     $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
+                    $pointpayments  = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '-1')->find();
 
                     if (!empty($trxpayments)) {
                         foreach ($trxpayments as $trxpayment) {
@@ -3000,12 +3001,22 @@ class export extends BaseController
                             }
                         }
                     }
+
                     if (!empty($debtpayments)) {
                         foreach ($debtpayments as $debtpayment) {
                             // Transaction Summary
                             $dailyreportdata[$dayrep['id']]['trxpayments'][2]['name']               = 'Kasbon';
                             $dailyreportdata[$dayrep['id']]['trxpayments'][2]['detail'][0]['type']  = '2';
                             $dailyreportdata[$dayrep['id']]['trxpayments'][2]['detail'][0]['value'] = $debtpayment['value'];
+                        }
+                    }
+
+                    if (!empty($pointpayments)) {
+                        foreach ($pointpayments as $pointpayment) {
+                            // Transaction Summary
+                            $dailyreportdata[$dayrep['id']]['trxpayments'][3]['name']               = lang('Global.redeemPoint');
+                            $dailyreportdata[$dayrep['id']]['trxpayments'][3]['detail'][0]['type']  = '3';
+                            $dailyreportdata[$dayrep['id']]['trxpayments'][3]['detail'][0]['value'] = $pointpayment['value'];
                         }
                     }
                 }

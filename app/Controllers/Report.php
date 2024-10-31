@@ -552,18 +552,21 @@ class Report extends BaseController
                         $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', $payment['id'])->find();
                         $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
                         $pointpayments  = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '-1')->find();
+                        
                         if (!empty($trxpayments)) {
                             foreach ($trxpayments as $trxpayment) {
                                 $trxtotal[] = $trxpayment['id'];
                                 $trxvalue[] = $trxpayment['value'];
                             }
                         }
+
                         if (!empty($debtpayments)) {
                             foreach ($debtpayments as $debtpayment) {
                                 $debttotal[] = $debtpayment['id'];
                                 $debtvalue[] = $debtpayment['value'];
                             }
                         }
+
                         if (!empty($pointpayments)) {
                             foreach ($pointpayments as $pointpayment) {
                                 $pointtotal[]   = $pointpayment['id'];

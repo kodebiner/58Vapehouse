@@ -44,7 +44,7 @@
                     </div>
                     <!-- Button Trigger Modal CashInOut End -->
                 </div>
-        <?php }
+            <?php }
         } ?>
     </div>
     <div class="uk-width-expand@m uk-margin uk-text-right@l uk-text-center">
@@ -94,6 +94,20 @@
                                 <div><?= lang('Global.cashflow') ?></div>
                             </div>
                             <div>
+                                <!-- </?php
+                                $totalcashin    = [];
+                                $totalcashout   = [];
+                                foreach ($dayrep['cashflow'] as $cashflow) {
+                                    if ($cashflow['type'] == '0') {
+                                        $totalcashin[]  = $cashflow['qty'];
+                                    } else {
+                                        $totalcashout[] = $cashflow['qty'];
+                                    }
+                                }
+                                $summarycashin  = array_sum($totalcashin);
+                                $summarycashout = array_sum($totalcashout);
+                                $totalcashflow  = ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)); ?>
+                                <div class="uk-text-right">Rp </?= number_format($totalcashflow, 2, ',', '.') ?></div> -->
                                 <div class="uk-text-right">Rp <?= number_format($cashflow, 2, ',', '.') ?></div>
                             </div>
                         </div>
@@ -106,8 +120,6 @@
                                 <div class="uk-text-right">Rp <?= number_format($cashtrxvalue, 2, ',', '.') ?></div>
                             </div>
                         </div>
-
-                        <?php if (!empty($topup)) ?>
 
                         <hr class="uk-margin-small-top uk-margin-small-bottom">
 
