@@ -529,15 +529,15 @@ class Pay extends BaseController
             ];
             $TrxpaymentModel->insert($paymethod);
 
-            // Save Cash
-            $payment    = $PaymentModel->find($input['payment']);
-            $cashPlus   = $CashModel->find($payment['cashid']);
+            // // Save Cash
+            // $payment    = $PaymentModel->find($input['payment']);
+            // $cashPlus   = $CashModel->find($payment['cashid']);
 
-            $cash = [
-                'id'    => $cashPlus['id'],
-                'qty'   => (int)$total + (int)$cashPlus['qty'],
-            ];
-            $CashModel->save($cash);
+            // $cash = [
+            //     'id'    => $cashPlus['id'],
+            //     'qty'   => (int)$total + (int)$cashPlus['qty'],
+            // ];
+            // $CashModel->save($cash);
         }
 
         // Point Used

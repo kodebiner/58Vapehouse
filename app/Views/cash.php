@@ -94,10 +94,10 @@
                                 <div><?= lang('Global.cashflow') ?></div>
                             </div>
                             <div>
-                                <!-- </?php
+                                <?php
                                 $totalcashin    = [];
                                 $totalcashout   = [];
-                                foreach ($dayrep['cashflow'] as $cashflow) {
+                                foreach ($dailyreport['cashflow'] as $cashflow) {
                                     if ($cashflow['type'] == '0') {
                                         $totalcashin[]  = $cashflow['qty'];
                                     } else {
@@ -106,18 +106,59 @@
                                 }
                                 $summarycashin  = array_sum($totalcashin);
                                 $summarycashout = array_sum($totalcashout);
-                                $totalcashflow  = ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)); ?>
-                                <div class="uk-text-right">Rp </?= number_format($totalcashflow, 2, ',', '.') ?></div> -->
-                                <div class="uk-text-right">Rp <?= number_format($cashflow, 2, ',', '.') ?></div>
+                                $totalcashflow  = ((Int)$dailyreport['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)); ?>
+                                <div class="uk-text-right">Rp <?= number_format($totalcashflow, 2, ',', '.') ?></div>
+                                <!-- <div class="uk-text-right">Rp </?= number_format($cashflow, 2, ',', '.') ?></div> -->
                             </div>
                         </div>
 
-                        <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
+                        <?php
+                        $totaltrxvalue  = [];
+                        foreach ($dailyreport['trxpayments'] as $trxpayment) {
+                            $paymethodval   = [];
+                            foreach ($trxpayment['detail'] as $detail) {
+                                $paymethodval[] = $detail['value'];
+                            }
+                            $totalpaymethodvalue    = array_sum($paymethodval);
+                            $totaltrxvalue[]        = $totalpaymethodvalue; ?>
+                            <div class="uk-margin-small-top">
+                                <div class="uk-child-width-1-2" uk-grid>
+                                    <div>
+                                        <div class=""><?= lang('Global.sales').' '.$trxpayment['name'] ?></div>
+                                    </div>
+                                    <div class="uk-text-right">
+                                        <div>
+                                            <?= 'Rp '.number_format($totalpaymethodvalue,2,',','.'); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <hr class="uk-margin-small-top uk-margin-small-bottom">
+
+                        <div class="uk-margin-small-top">
+                            <div class="uk-child-width-1-2 uk-text-bolder" style="color: #000;" uk-grid>
+                                <div>
+                                    <div class=""><?= lang('Global.totalsystemrec') ?></div>
+                                </div>
+                                <div class="uk-text-right">
+                                    <div>
+                                        <?php
+                                            $totalvalue = array_sum($totaltrxvalue);
+                                            echo "Rp ".number_format($totalvalue,2,',','.');
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
                             <div>
-                                <div><?= lang('Global.cashsales') ?></div>
+                                <div></?= lang('Global.cashsales') ?></div>
                             </div>
                             <div>
-                                <div class="uk-text-right">Rp <?= number_format($cashtrxvalue, 2, ',', '.') ?></div>
+                                <div class="uk-text-right">Rp </?= number_format($cashtrxvalue, 2, ',', '.') ?></div>
                             </div>
                         </div>
 
@@ -125,32 +166,32 @@
 
                         <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
                             <div>
-                                <div><?= lang('Global.expectedcash') ?></div>
+                                <div></?= lang('Global.expectedcash') ?></div>
                             </div>
                             <div>
-                                <div class="uk-text-right">Rp <?= number_format($expectedcash, 2, ',', '.') ?></div>
+                                <div class="uk-text-right">Rp </?= number_format($expectedcash, 2, ',', '.') ?></div>
                             </div>
                         </div>
 
                         <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
                             <div>
-                                <div><?= lang('Global.noncashreceived') ?></div>
+                                <div></?= lang('Global.noncashreceived') ?></div>
                             </div>
                             <div>
-                                <div class="uk-text-right">Rp <?= number_format($noncashtrxvalue, 2, ',', '.') ?></div>
+                                <div class="uk-text-right">Rp </?= number_format($noncashtrxvalue, 2, ',', '.') ?></div>
                             </div>
-                        </div>
+                        </div> -->
 
-                        <hr class="uk-margin-small-top uk-margin-small-bottom">
+                        <!-- <hr class="uk-margin-small-top uk-margin-small-bottom">
 
                         <div class="uk-margin-remove-top uk-child-width-1-2" uk-grid>
                             <div>
-                                <div><?= lang('Global.totalsystemrec') ?></div>
+                                <div></?= lang('Global.totalsystemrec') ?></div>
                             </div>
                             <div>
-                                <div class="uk-text-right uk-text-bolder">Rp <?= number_format($totalsystemrec, 2, ',', '.') ?></div>
+                                <div class="uk-text-right uk-text-bolder">Rp </?= number_format($totalsystemrec, 2, ',', '.') ?></div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <hr class="uk-divider-icon">
@@ -162,13 +203,13 @@
 
                             <div class="uk-form-controls uk-margin">
                                 <label class="uk-h6 uk-margin-small-left uk-text-muted"><?= lang('Global.cashreceived') ?></label>
-                                <input type="number" class="uk-input cash" style="border-radius: 5px;" id="actualcash" name="actualcash" value="<?= $expectedcash ?>" placeholder="<?= lang('Global.cashreceived') ?>" required />
+                                <input type="number" class="uk-input cash" style="border-radius: 5px;" id="actualcash" name="actualcash" placeholder="<?= lang('Global.cashreceived') ?>" required />
                                 <label class="uk-h6 uk-margin-small-left uk-text-muted"><?= lang('Global.includeinitcash') ?></label>
                             </div>
 
                             <div class="uk-form-controls uk-margin">
                                 <label class="uk-h6 uk-margin-small-left uk-text-muted"><?= lang('Global.noncashreceived') ?></label>
-                                <input type="number" class="uk-input noncash" style="border-radius: 5px;" id="actualnoncash" name="actualnoncash" value="<?= $noncashtrxvalue ?>" placeholder="<?= lang('Global.noncashreceived') ?>" required />
+                                <input type="number" class="uk-input noncash" style="border-radius: 5px;" id="actualnoncash" name="actualnoncash" placeholder="<?= lang('Global.noncashreceived') ?>" required />
                             </div>
 
                             <div class="uk-margin" uk-grid>
@@ -204,7 +245,7 @@
         function totalprice() {
             var actualcash = Number(cash.value);
             var actualnoncash = Number(noncash.value);
-            var finalprice = actualcash + actualnoncash - <?= $totalsystemrec ?>;
+            var finalprice = actualcash + actualnoncash - <?= $totalvalue ?>;
             var marker = finalprice;
 
             if (marker < '0') {
