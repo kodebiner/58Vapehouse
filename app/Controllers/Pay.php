@@ -596,7 +596,8 @@ class Pay extends BaseController
         }
 
         // Single Debt Method
-        elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] === "0" && isset($input['payment']) && isset($input['duedate'])) {
+        // elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] === "0" && isset($input['payment']) && isset($input['duedate'])) {
+        elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] === "0" && isset($input['duedate'])) {
             // Insert Debt
             $debt = [
                 'memberid'      => $input['customerid'],
@@ -616,7 +617,8 @@ class Pay extends BaseController
         }
         
         // Debt With Down Payment
-        elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] !== "0" && isset($input['payment']) && isset($input['duedate'])) {
+        // elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] !== "0" && isset($input['payment']) && isset($input['duedate'])) {
+        elseif (!isset($input['firstpayment']) && !isset($input['secpayment']) && $input['value'] !== "0" && isset($input['duedate'])) {
             // Insert Debt
             $debt = [
                 'memberid'      => $input['customerid'],
@@ -652,7 +654,8 @@ class Pay extends BaseController
         }
         
         // Debt With Splitbill Payment
-        elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && isset($input['duedate'])) {
+        // elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && isset($input['duedate'])) {
+        elseif (isset($input['firstpayment']) && isset($input['secpayment']) && isset($input['duedate'])) {
             // Insert Debt
             $debt = [
                 'memberid'      => $input['customerid'],

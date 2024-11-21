@@ -272,7 +272,14 @@
                                         <div><?= lang('Global.total') ?></div>
                                     </div>
                                     <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: red;">
-                                        <div><?= $transaction['value'] ?></div>
+                                        <!-- <div></?= $transaction['value'] ?></div> -->
+                                         <div>
+                                            <?php if ((Int)$transaction['value'] - (Int)$transaction['pointused'] != '0') {
+                                                echo $transaction['value'];
+                                            } else {
+                                                echo $transaction['amountpaid'];
+                                            } ?>
+                                         </div>
                                     </div>
                                 </div>
 
@@ -284,11 +291,12 @@
                                     </div>
                                     <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
                                         <div>
-                                            <?php if ((Int)$transaction['value'] - (Int)$transaction['pointused'] == '0') {
+                                            <!-- </?php if ((Int)$transaction['value'] - (Int)$transaction['pointused'] == '0') {
                                                 echo $transaction['value'];
                                             } else {
                                                 echo $transaction['amountpaid'];
-                                            } ?>
+                                            } ?> -->
+                                             <?= $transaction['amountpaid'] ?>
                                         </div>
                                     </div>
                                 </div>

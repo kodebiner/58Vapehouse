@@ -351,11 +351,34 @@ class Debt extends BaseController
             // if ($startdate === $enddate) {
             //     $debts       = $DebtModel->orderby('deadline', 'DESC')->where('value !=', '0')->where('deadline', $startdate . ' 00:00:00')->where('deadline <=', $enddate . ' 23:59:59')->paginate(20, 'debt');
             // } else {
-                $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(30, 'debt');
+                // $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(30, 'debt');
+                // $debts = $DebtModel->where('value !=', '0')->where('deadline <=', $enddate)->find();
             // }
         } else {
             $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->paginate(30, 'debt');
+            // $debts = $DebtModel->where('value !=', '0')->find();
         }
+
+        // $debtdata   = [];
+        // foreach ($debts as $debt) {
+        //     $members        = $MemberModel->find($debt['memberid']);
+
+        //     if (!empty($members)) {
+        //         $transaction    = $TransactionModel->where('memberid', $members['id'])->find($debt['transactionid']);
+
+        //         $debtdata[$members['id']]['name']       = $members['name'].' - '.$members['phone'];
+        //         $debtvalue[]  = $debt['value'];
+
+        //         if (!empty($transaction)) {
+        //             $trxvalue[]   = $transaction['value'];
+        //         }
+
+        //         $debtdata[$members['id']]['debtvalue']  = array_sum($debtvalue);
+        //         $debtdata[$members['id']]['trxvalue']  = array_sum($trxvalue);
+        //         $debtdata[$members['id']]['deadline']  = $debt['deadline'];
+        //     }
+        // }
+        // dd($debtdata);
 
         $trxid      = array();
         $memberid   = array();
