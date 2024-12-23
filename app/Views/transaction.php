@@ -198,15 +198,15 @@
                                         </div>
                                     </div>
 
-                                    <div class="uk-margin">
+                                    <!-- <div class="uk-margin">
                                         <div class="uk-form-controls">
-                                            <a class="uk-button uk-button-default" uk-toggle="#topupproof"><?= lang('Global.topupproof') ?></a>
+                                            <a class="uk-button uk-button-default" uk-toggle="#topupproof"></?= lang('Global.topupproof') ?></a>
                                         </div>
                                     </div>
 
                                     <div class="uk-margin" hidden>
                                         <input class="image-tag" name="image">
-                                    </div>
+                                    </div> -->
 
                                     <div class="uk-modal-footer uk-text-right">
                                         <button class="uk-button uk-button-primary" type="submit" value="submit"><?= lang('Global.save') ?></button>
@@ -218,7 +218,7 @@
                     <!-- Modal Top Up Point End -->
 
                     <!-- Modal Top Up Proof -->
-                    <div uk-modal class="uk-flex-top" id="topupproof">
+                    <!-- <div uk-modal class="uk-flex-top" id="topupproof">
                         <div class="uk-modal-dialog uk-margin-auto-vertical">
                             <div class="uk-modal-content">
                                 <div class="uk-modal-header">
@@ -227,7 +227,7 @@
                                             <a uk-icon="arrow-left" uk-toggle="#modal-sections" width="35" height="35"></a>
                                         </div>
                                         <div>
-                                            <h5 class="uk-modal-title" ><?=lang('Global.topupproof')?></h5>
+                                            <h5 class="uk-modal-title" ></?=lang('Global.topupproof')?></h5>
                                         </div>
                                     </div>
                                 </div>
@@ -238,10 +238,10 @@
                                             <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="topup_snapshot()">
                                         </div>
                                         <div class="uk-text-center" id="topup_results"></div>
-                                    </div>
+                                    </div> -->
 
                                     <!-- Script Webcam Top Up Proof -->
-                                    <script type="text/javascript">
+                                    <!-- <script type="text/javascript">
 
                                         Webcam.set({
                                             width: 490,
@@ -264,12 +264,12 @@
                                                 document.getElementById('topup_results').innerHTML = '<img src="'+data_uri+'"/>';
                                             } );
                                         }
-                                    </script>
+                                    </script> -->
                                     <!-- Script Webcam Top Up Proof End -->
-                                </div>
+                                <!-- </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- Modal Top Up Proof End -->
 
                     <!-- Modal Booking -->
@@ -1281,7 +1281,7 @@
                         <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
                             <a class="tm-h3" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">
-                                <?php if (in_groups('owner')) : ?>
+                                <?php if ((in_groups('owner')) || (in_groups('supervisor'))) : ?>
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?>">
                                         <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
                                     </li>

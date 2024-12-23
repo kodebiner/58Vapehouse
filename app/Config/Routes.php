@@ -269,23 +269,23 @@ $routes->get('pay/invoicebook/(:num)', 'Pay::invoicebook/$1');
 
 // Report Routes
 $routes->group('report', ['filter'=>'login'], function($routes){
-    $routes->get('', 'Report::index', ['filter' => 'role:owner']);
-    $routes->get('penjualan', 'Report::penjualan', ['filter' => 'role:owner']);
-    $routes->get('keuntungan', 'Report::keuntungan', ['filter' => 'role:owner']);
-    $routes->get('keuntungandasar', 'Report::keuntungandasar', ['filter' => 'role:owner']);
-    $routes->get('diskon', 'Report::diskon', ['filter' => 'role:owner']);
-    $routes->get('bundle', 'Report::bundle', ['filter' => 'role:owner']);
-    $routes->get('payment', 'Report::payment', ['filter' => 'role:owner']);
-    $routes->get('product', 'Report::product', ['filter' => 'role:owner']);
-    $routes->get('presence', 'Report::presence', ['filter' => 'role:owner']);
-    $routes->get('presence/(:num)', 'Report::presencedetail/$1', ['filter' => 'role:owner']);
-    $routes->get('presence/(:any)', 'Report::presencedetail/$1', ['filter' => 'role:owner']);
-    $routes->get('employe', 'Report::employe', ['filter' => 'role:owner']);
-    $routes->get('customer', 'Report::customer', ['filter' => 'role:owner']);
-    $routes->get('customerdetail/(:num)', 'Report::customerdetail/$1', ['filter' => 'role:owner']);
-    $routes->get('category', 'Report::category', ['filter' => 'role:owner']);
-    $routes->get('sop', 'Report::sop', ['filter' => 'role:owner']);
-    // $routes->get('stockcategory', 'Report::stockcategory', ['filter' => 'role:owner']);
+    $routes->get('', 'Report::index', ['filter' => 'role:owner,supervisor']);
+    $routes->get('penjualan', 'Report::penjualan', ['filter' => 'role:owner,supervisor']);
+    $routes->get('keuntungan', 'Report::keuntungan', ['filter' => 'role:owner,supervisor']);
+    $routes->get('keuntungandasar', 'Report::keuntungandasar', ['filter' => 'role:owner,supervisor']);
+    $routes->get('diskon', 'Report::diskon', ['filter' => 'role:owner,supervisor']);
+    $routes->get('bundle', 'Report::bundle', ['filter' => 'role:owner,supervisor']);
+    $routes->get('payment', 'Report::payment', ['filter' => 'role:owner,supervisor']);
+    $routes->get('product', 'Report::product', ['filter' => 'role:owner,supervisor']);
+    $routes->get('presence', 'Report::presence', ['filter' => 'role:owner,supervisor']);
+    $routes->get('presence/(:num)', 'Report::presencedetail/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->get('presence/(:any)', 'Report::presencedetail/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->get('employe', 'Report::employe', ['filter' => 'role:owner,supervisor']);
+    $routes->get('customer', 'Report::customer', ['filter' => 'role:owner,supervisor']);
+    $routes->get('customerdetail/(:num)', 'Report::customerdetail/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->get('category', 'Report::category', ['filter' => 'role:owner,supervisor']);
+    $routes->get('sop', 'Report::sop', ['filter' => 'role:owner,supervisor']);
+    // $routes->get('stockcategory', 'Report::stockcategory', ['filter' => 'role:owner,supervisor']);
 
 });
 
