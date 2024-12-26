@@ -125,7 +125,7 @@
 
                     <div class="uk-margin-small" uk-grid>
                         <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                            <div class="">SKU</div>
+                            <!-- <div class="">SKU</div> -->
                         </div>
                         <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                             <div class=""><?= lang('Global.variant') ?></div>
@@ -198,12 +198,12 @@
 
                         for (k in variantarray) {
                             //alert(variantarray[k]['name']);
-                            var varskucontainer = document.createElement('div');
-                            varskucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5 uk-margin-small');
+                            // var varskucontainer = document.createElement('div');
+                            // varskucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5 uk-margin-small');
                                                             
-                            var varsku = document.createElement('div');
-                            varsku.setAttribute('class','');
-                            varsku.innerHTML = variantarray[k]['sku'];
+                            // var varsku = document.createElement('div');
+                            // varsku.setAttribute('class','');
+                            // varsku.innerHTML = variantarray[k]['sku'];
                             
                             var varcontainer = document.createElement('div');
                             varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5 uk-margin-small');
@@ -234,12 +234,12 @@
                             cart.setAttribute('uk-icon', 'cart');
                             cart.setAttribute('onclick', 'createVar('+variantarray[k]['id']+')');
 
-                            varskucontainer.appendChild(varsku);
+                            // varskucontainer.appendChild(varsku);
                             varcontainer.appendChild(varname);
                             stockcontainer.appendChild(stock);
                             wholesalecontainer.appendChild(wholesale);
                             cartcontainer.appendChild(cart);
-                            productgrid.appendChild(varskucontainer);
+                            // productgrid.appendChild(varskucontainer);
                             productgrid.appendChild(varcontainer);
                             productgrid.appendChild(stockcontainer);
                             productgrid.appendChild(wholesalecontainer);
@@ -272,13 +272,13 @@
                         pgrid.setAttribute('class', 'uk-margin-small');
                         pgrid.setAttribute('uk-grid', '');
 
-                        var skucontainer = document.createElement('div');
-                        skucontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
+                        // var skucontainer = document.createElement('div');
+                        // skucontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
                                                         
-                        var sku = document.createElement('div');
-                        sku.setAttribute('id','var'+variantarray[k]['id']);
-                        sku.setAttribute('class','');
-                        sku.innerHTML = variantarray[k]['sku'];
+                        // var sku = document.createElement('div');
+                        // sku.setAttribute('id','var'+variantarray[k]['id']);
+                        // sku.setAttribute('class','');
+                        // sku.innerHTML = variantarray[k]['sku'];
 
                         var vcontainer = document.createElement('div');
                         vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5');
@@ -338,14 +338,14 @@
                             subtotal.innerHTML = subprice;
                         }
 
-                        skucontainer.appendChild(sku);
+                        // skucontainer.appendChild(sku);
                         vcontainer.appendChild(vname);
                         tcontainer.appendChild(tot);
                         tcontainer.appendChild(pieces);
                         pricecontainer.appendChild(price);
                         pricecontainer.appendChild(pricediv);
                         subtotcontainer.appendChild(subtotal);
-                        pgrid.appendChild(skucontainer);
+                        // pgrid.appendChild(skucontainer);
                         pgrid.appendChild(vcontainer);
                         pgrid.appendChild(tcontainer);
                         pgrid.appendChild(pricecontainer);
@@ -394,7 +394,7 @@
 <!-- Script Modal Add End -->
 
 <!-- Table Of Content -->
-<div class="uk-overflow-auto uk-margin">
+<!-- <div class="uk-overflow-auto uk-margin"> -->
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
@@ -546,7 +546,7 @@
     <div>
         <?= $pager->links('stockmovement', 'front_full') ?>
     </div>
-</div>
+<!-- </div> -->
 <!-- Table Content End -->
 
 <!-- Modal Confirm -->
@@ -571,11 +571,11 @@
                             <input type="hidden" name="id" value="<?= $stockmove['id']; ?>">
                             <input type="hidden" name="outletpick" value="<?= $outletPick ?>">
                             
-                            <div class="uk-overflow-auto">
+                            <!-- <div class="uk-overflow-auto"> -->
                                 <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" style="background-color: #fff;">
                                     <thead>
                                         <tr>
-                                            <th class="uk-width-small uk-text-emphasis">SKU</th>
+                                            <!-- <th class="uk-width-small uk-text-emphasis">SKU</th> -->
                                             <th class="uk-width-small uk-text-emphasis"><?=lang('Global.product')?></th>
                                             <th class="uk-width-small uk-text-emphasis"><?=lang('Global.variant')?></th>
                                             <th class="uk-width-small uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
@@ -589,7 +589,7 @@
                                         foreach ($stockmovedata[$stockmove['id']]['detail'] as $detail) {
                                             $subtotalpurchase[] = (Int)$detail['inputqty'] * (Int)$detail['wholesale']; ?>
                                             <tr>
-                                                <td><?= $detail['sku']; ?></td>
+                                                <!-- <td></?= $detail['sku']; ?></td> -->
                                                 <td><?= $detail['productname']; ?></td>
                                                 <td><?= $detail['variantname']; ?></td>
                                                     
@@ -618,7 +618,7 @@
                                         <?php } ?>
                                     </tbody>
                                 </table>
-                            </div>
+                            <!-- </div> -->
 
                             <div class="uk-modal-footer">
                                 <div class="uk-margin">
@@ -751,11 +751,11 @@ foreach ($stockmovedata as $stockmove) { ?>
 
                     <div class="uk-divider-icon"></div>
                     
-                    <div class="uk-overflow-auto">
+                    <!-- <div class="uk-overflow-auto"> -->
                         <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-table-small" style="background-color: #fff; color: #000;">
                             <thead>
                                 <tr>
-                                    <th class="uk-text-emphasis">SKU</th>
+                                    <!-- <th class="uk-text-emphasis">SKU</th> -->
                                     <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
                                     <th class="uk-text-emphasis"><?=lang('Global.quantity').' '.lang('Global.stock')?></th>
@@ -766,7 +766,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                             <tbody>
                                 <?php foreach ($stockmovedata[$stockmove['id']]['detail'] as $detail) { ?>
                                     <tr>
-                                        <td><?= $detail['sku']; ?></td>
+                                        <!-- <td></?= $detail['sku']; ?></td> -->
                                         <td><?= $detail['productname']; ?></td>
                                         <td><?= $detail['variantname']; ?></td>
                                         <td><?= $detail['inputqty']; ?> Pcs</td>
@@ -786,7 +786,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                 </tr>
                             </tfoot>
                         </table>
-                    </div>
+                    <!-- </div> -->
                 </div>
             </div>
         </div>
@@ -890,7 +890,7 @@ foreach ($stockmovedata as $stockmove) { ?>
 
                             <div class="uk-margin-small" uk-grid>
                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                                    <div class="">SKU</div>
+                                    <!-- <div class="">SKU</div> -->
                                 </div>
                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                     <div class=""><?= lang('Global.product') ?></div>
@@ -942,12 +942,12 @@ foreach ($stockmovedata as $stockmove) { ?>
 
                                                     for (x in variantarray<?=$stockmove['id']?>) {
                                                         //alert(variantarray<?=$stockmove['id']?>[k]['name']);
-                                                        var skucontainer = document.createElement('div');
-                                                        skucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
+                                                        // var skucontainer = document.createElement('div');
+                                                        // skucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
                                                                                         
-                                                        var skuvar = document.createElement('div');
-                                                        skuvar.setAttribute('class','');
-                                                        skuvar.innerHTML = variantarray<?=$stockmove['id']?>[x]['sku'];
+                                                        // var skuvar = document.createElement('div');
+                                                        // skuvar.setAttribute('class','');
+                                                        // skuvar.innerHTML = variantarray</?=$stockmove['id']?>[x]['sku'];
 
                                                         var varcontainer = document.createElement('div');
                                                         varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
@@ -971,11 +971,11 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                         cart.setAttribute('uk-icon', 'cart');
                                                         cart.setAttribute('onclick', 'createVare<?=$stockmove['id']?>('+variantarray<?=$stockmove['id']?>[x]['id']+')');
 
-                                                        skucontainer.appendChild(skuvar);
+                                                        // skucontainer.appendChild(skuvar);
                                                         varcontainer.appendChild(varname);
                                                         stockcontainer.appendChild(stock);
                                                         cartcontainer.appendChild(cart);
-                                                        productgrid.appendChild(skucontainer);
+                                                        // productgrid.appendChild(skucontainer);
                                                         productgrid.appendChild(varcontainer);
                                                         productgrid.appendChild(stockcontainer);
                                                         productgrid.appendChild(cartcontainer);
@@ -1006,13 +1006,13 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 epgrid.setAttribute('class', 'uk-margin-small');
                                                 epgrid.setAttribute('uk-grid', '');
 
-                                                var evskucontainer = document.createElement('div');
-                                                evskucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-flex-center uk-width-1-5');
+                                                // var evskucontainer = document.createElement('div');
+                                                // evskucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-flex-center uk-width-1-5');
                                                                                 
-                                                var evsku = document.createElement('div');
-                                                evsku.setAttribute('id','var'+variantarray<?=$stockmove['id']?>[x]['id']);
-                                                evsku.setAttribute('class','');
-                                                evsku.innerHTML = variantarray<?=$stockmove['id']?>[x]['sku'];
+                                                // var evsku = document.createElement('div');
+                                                // evsku.setAttribute('id','var'+variantarray</?=$stockmove['id']?>[x]['id']);
+                                                // evsku.setAttribute('class','');
+                                                // evsku.innerHTML = variantarray</?=$stockmove['id']?>[x]['sku'];
 
                                                 var evcontainer = document.createElement('div');
                                                 evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5');
@@ -1072,14 +1072,14 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                     esubtotal.innerHTML = subprice;
                                                 }
 
-                                                evskucontainer.appendChild(evsku);
+                                                // evskucontainer.appendChild(evsku);
                                                 evcontainer.appendChild(evname);
                                                 etcontainer.appendChild(etot);
                                                 etcontainer.appendChild(epieces);
                                                 epricecontainer.appendChild(eprice);
                                                 epricecontainer.appendChild(epricediv);
                                                 esubtotcontainer.appendChild(esubtotal);
-                                                epgrid.appendChild(evskucontainer);
+                                                // epgrid.appendChild(evskucontainer);
                                                 epgrid.appendChild(evcontainer);
                                                 epgrid.appendChild(etcontainer);
                                                 epgrid.appendChild(epricecontainer);
@@ -1105,7 +1105,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                             foreach ($stockmovedata[$stockmove['id']]['detail'] as $detailid => $detail) { ?>
                                 <div id="eproduct<?=$stockmove['id'].$detail['varid']?>" class="uk-margin-small" uk-grid>
                                     <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5">
-                                        <div class=""><?= $detail['sku'] ?></div>
+                                        <!-- <div class=""></?= $detail['sku'] ?></div> -->
                                     </div>
                                     <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5">
                                         <div class=""><?= $detail['name'] ?></div>
