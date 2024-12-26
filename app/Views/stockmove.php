@@ -124,21 +124,33 @@
                     <div id="tablevariant"></div>
 
                     <div class="uk-margin-small" uk-grid>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.variant') ?></div>
+                        </div>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.quantity') ?></div>
+                        </div>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.capitalPrice') ?></div>
+                        </div>
+                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                            <div class=""><?= lang('Global.total') ?></div>
+                        </div>
                         <!-- <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                             <div class="">SKU</div>
                         </div> -->
-                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                            <div class=""><?= lang('Global.variant') ?></div>
+                        <!-- <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                            <div class=""></?= lang('Global.variant') ?></div>
                         </div>
                         <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                            <div class=""><?= lang('Global.quantity') ?></div>
+                            <div class=""></?= lang('Global.quantity') ?></div>
                         </div>
                         <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                            <div class=""><?= lang('Global.capitalPrice') ?></div>
+                            <div class=""></?= lang('Global.capitalPrice') ?></div>
                         </div>
                         <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                            <div class=""><?= lang('Global.total') ?></div>
-                        </div>
+                            <div class=""></?= lang('Global.total') ?></div>
+                        </div> -->
                     </div>
 
                     <div id="tableproduct"></div>
@@ -206,28 +218,28 @@
                             // varsku.innerHTML = variantarray[k]['sku'];
                             
                             var varcontainer = document.createElement('div');
-                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5 uk-margin-small');
+                            varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
                                                             
                             var varname = document.createElement('div');
                             varname.setAttribute('class','');
                             varname.innerHTML = variantarray[k]['name'];
 
                             var stockcontainer = document.createElement('div');
-                            stockcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5 uk-margin-small');
+                            stockcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
                                                             
                             var stock = document.createElement('div');
                             stock.setAttribute('class','');
                             stock.innerHTML = variantarray[k]['qty'];
 
                             var wholesalecontainer = document.createElement('div');
-                            wholesalecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5 uk-margin-small');
+                            wholesalecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
                                                             
                             var wholesale = document.createElement('div');
                             wholesale.setAttribute('class','');
                             wholesale.innerHTML = variantarray[k]['wholesale'];
 
                             var cartcontainer = document.createElement('div');
-                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5 uk-margin-small');
+                            cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
 
                             var cart = document.createElement('a');
                             cart.setAttribute('class', 'uk-icon-button');
@@ -281,7 +293,7 @@
                         // sku.innerHTML = variantarray[k]['sku'];
 
                         var vcontainer = document.createElement('div');
-                        vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5');
+                        vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
                                                         
                         var vname = document.createElement('div');
                         vname.setAttribute('id','var'+variantarray[k]['id']);
@@ -289,7 +301,7 @@
                         vname.innerHTML = variantarray[k]['name'];
 
                         var tcontainer = document.createElement('div');
-                        tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
+                        tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
 
                         var tot = document.createElement('input');
                         tot.setAttribute('type', 'number');
@@ -305,7 +317,7 @@
                         pieces.innerHTML = 'Pcs';
 
                         var pricecontainer = document.createElement('div');
-                        pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
+                        pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
 
                         var price = document.createElement('input');
                         price.setAttribute('type', 'number');
@@ -320,7 +332,7 @@
                         pricediv.innerHTML = variantarray[k]['wholesale'];
 
                         var subtotcontainer = document.createElement('div');
-                        subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-5');
+                        subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
 
                         var subtotal = document.createElement('div');
                         subtotal.setAttribute('id', "subtotal"+variantarray[k]['id']+"");
@@ -892,16 +904,16 @@ foreach ($stockmovedata as $stockmove) { ?>
                                 <!-- <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                     <div class="">SKU</div>
                                 </div> -->
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
                                     <div class=""><?= lang('Global.product') ?></div>
                                 </div>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
                                     <div class=""><?= lang('Global.quantity') ?></div>
                                 </div>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
                                     <div class=""><?= lang('Global.capitalPrice') ?></div>
                                 </div>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
                                     <div class=""><?= lang('Global.total') ?></div>
                                 </div>
                             </div>
@@ -1107,18 +1119,18 @@ foreach ($stockmovedata as $stockmove) { ?>
                                     <!-- <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5">
                                         <div class=""></?= $detail['sku'] ?></div>
                                     </div> -->
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5">
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4">
                                         <div class=""><?= $detail['name'] ?></div>
                                     </div>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
                                         <input class="uk-input" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="1" max="<?= $detail['qty'] ?>" required />
                                         <div class="uk-margin-small-left">Pcs</div>
                                     </div>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
                                         <input hidden class="uk-input" type="number" id="bprice[<?=$detailid?>]" name="bprice[<?=$detailid?>]" value="<?= $detail['wholesale'] ?>" required />
                                         <div><?= $detail['wholesale'] ?></div>
                                     </div>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center subvariant<?= $stockmove['id'] ?>" id="subtotal<?= $detailid ?>">
+                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center subvariant<?= $stockmove['id'] ?>" id="subtotal<?= $detailid ?>">
                                         <?= (Int)$detail['wholesale'] * (Int)$detail['inputqty'] ?>
                                     </div>
                                 </div>
