@@ -71,63 +71,63 @@
                 </div>
 
                 <?php if(!empty($transactions['id'])){ ?>
-                <div class="uk-flex uk-flex-center">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $transactions['outletid']) { ?>
-                            <div class="fpoutlet uk-margin-remove uk-text-justify" style="font-size:12px;" ><?= $outlet['name'] ?></div>
-                        <?php }
-                    } ?>
-                </div>
-                <div class="uk-flex uk-flex-center">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $transactions['outletid']) { ?>
-                            <p class="fpaddress uk-margin-remove uk-text-bold" style="font-size:10px;"><?= $outlet['address'] ?></p>
-                        <?php }
-                    } ?>
-                </div>
-                <div class="uk-flex uk-flex-center">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $transactions['outletid']) { ?>
-                            <p class="fpaddress uk-margin-remove uk-text-bold" style="font-size:10px;"><span uk-icon="instagram" style="width: 10px;"></span> : <?= $outlet['instagram'] ?></p>
-                        <?php }
-                    } ?>
-                </div>
-                <div class="uk-flex uk-flex-center">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $transactions['outletid']) { ?>
-                            <p class="fpaddress uk-margin-remove uk-text-bold" style="font-size:10px;"><span uk-icon="whatsapp" style="width: 10px;"></span> : <?= $outlet['phone'] ?></p>
-                        <?php }
-                    } ?>
-                </div>
-                <?php } elseif (!empty($bookings['id'])){ ?>
                     <div class="uk-flex uk-flex-center">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $bookings['outletid']) { ?>
-                            <div class="fpoutlet uk-margin-remove" style="font-size:12px;" ><?= $outlet['name'] ?></div>
-                        <?php }
-                    } ?>
-                </div>
-                <div class="uk-flex uk-flex-center">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $bookings['outletid']) { ?>
-                            <p class="fpaddress uk-margin-remove uk-text-bold" style="font-size:10px;"><?= $outlet['address'] ?></p>
-                        <?php }
-                    } ?>
-                </div>
-                <div class="uk-flex uk-flex-center">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $bookings['outletid']) { ?>
-                            <span uk-icon="instagram" style="width: 10px;"></span> : <?= $outlet['instagram'] ?>
-                        <?php }
-                    } ?>
-                </div>
-                <div class="uk-flex uk-flex-center">
-                    <?php foreach ($outlets as $outlet) {
-                        if ($outlet['id'] === $bookings['outletid']) { ?>
-                            <span uk-icon="whatsapp" style="width: 10px;"></span> : <?= $outlet['phone'] ?>
-                        <?php }
-                    } ?>
-                </div>
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $transactions['outletid']) { ?>
+                                <div class="fpoutlet uk-margin-remove uk-text-justify" style="font-size:12px;" ><?= $outlet['name'] ?></div>
+                            <?php }
+                        } ?>
+                    </div>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $transactions['outletid']) { ?>
+                                <p class="fpaddress uk-margin-remove uk-text-bold uk-text-center" style="font-size:10px;"><?= $outlet['address'] ?></p>
+                            <?php }
+                        } ?>
+                    </div>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $transactions['outletid']) { ?>
+                                <p class="fpaddress uk-margin-remove uk-text-bold uk-text-center" style="font-size:10px;"><span uk-icon="instagram" style="width: 10px;"></span> : <?= $outlet['instagram'] ?></p>
+                            <?php }
+                        } ?>
+                    </div>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $transactions['outletid']) { ?>
+                                <p class="fpaddress uk-margin-remove uk-text-bold uk-text-center" style="font-size:10px;"><span uk-icon="whatsapp" style="width: 10px;"></span> : <?= $outlet['phone'] ?></p>
+                            <?php }
+                        } ?>
+                    </div>
+                <?php } elseif (!empty($bookings['id'])) { ?>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $bookings['outletid']) { ?>
+                                <div class="fpoutlet uk-margin-remove" style="font-size:12px;" ><?= $outlet['name'] ?></div>
+                            <?php }
+                        } ?>
+                    </div>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $bookings['outletid']) { ?>
+                                <p class="fpaddress uk-margin-remove uk-text-bold uk-text-center" style="font-size:10px;"><?= $outlet['address'] ?></p>
+                            <?php }
+                        } ?>
+                    </div>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $bookings['outletid']) { ?>
+                                <p class="fpaddress uk-margin-remove uk-text-bold uk-text-center" style="font-size:10px;"><span uk-icon="instagram" style="width: 10px;"></span> : <?= $outlet['instagram'] ?></p>
+                            <?php }
+                        } ?>
+                    </div>
+                    <div class="uk-flex uk-flex-center">
+                        <?php foreach ($outlets as $outlet) {
+                            if ($outlet['id'] === $bookings['outletid']) { ?>
+                                <p class="fpaddress uk-margin-remove uk-text-bold uk-text-center" style="font-size:10px;"><span uk-icon="whatsapp" style="width: 10px;"></span> : <?= $outlet['phone'] ?></p>
+                            <?php }
+                        } ?>
+                    </div>
                 <?php } ?>
                     
                 <div class="uk-text-xsmall uk-margin-top">
@@ -169,8 +169,10 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- <hr style ="border-top: 1px  dotted black;"> -->
                 <hr style ="border-top: 3px double #8c8b8b">
+
                 <?php if (!empty($transactions['id'])){ ?>
                     <!-- variant transaction -->
                     <?php foreach ($trxdetails as $trxdet) {
@@ -386,38 +388,69 @@
                             <div class="uk-width-1-2  uk-text-bold uk-text-right"><?=$subtotal?></div>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if(!empty($discount)){
+                            <?php
                                 $disc =  lang('Global.discount');
-                                echo "<div class='uk-width-1-2 uk-text-bold'>$disc</div>";
-                                echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>".$discount."</div>";
-                            }?>
+                                echo "<div class='uk-width-1-2 uk-text-bold'>".$disc."</div>";
+                                if ($discount != '0') {
+                                    echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>".$discount."</div>";
+                                } else {
+                                    echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>0</div>";
+                                }
+                            ?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if (($bookings['memberid'] !== "0") && ($bookings['id']=== $bookingid) && ($gconfig['memberdisc'] !== "0")) {
+                            <?php if (($bookings['memberid'] != '0') && ($bookings['id'] == $bookingid)) {
                                 $memberdisc = $gconfig['memberdisc'];
                                 $discmember = lang('Global.memberDiscount');
                                 echo "<div class='uk-width-1-2'>$discmember</div>";
-                                echo "<div class='uk-width-1-2 uk-text-right'>$memberdisc</div>";
+                                if ($gconfig['memberdisc'] != '0') {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>".$memberdisc."</div>";
+                                } else {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>0</div>";
+                                }
+                            } ?> 
+                        </div>
+                        <div class="uk-grid-collapse" uk-grid>
+                            <?php if (($bookings['memberid'] != "0") && ($bookings['id'] == $bookingid)) {
+                                $poinearn = $gconfig['poinvalue'];
+                                $reedem = lang('Global.redeemPoint');
+                                echo "<div class='uk-width-1-2'>$reedem</div>";
+                                if  ($poinused != '0') {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>".$poinused."</div>";
+                                } else {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>0</div>";
+                                }
                             }?> 
                         </div>
+                        
+                        <hr style ="border-top: 3px double #8c8b8b">
+                        
                         <div class="uk-grid-collapse" uk-grid>
                             <?php $tot =  lang('Global.total');?>
                             <div class="uk-width-1-2 uk-text-bold"><?=$tot?></div>
                             <div class="uk-width-1-2 uk-text-bold uk-text-right"><?=$total?></div>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if (!empty($pay)){
+                            <?php
                                 $pays =  lang('Global.pay');
-                                echo "<div class='uk-width-1-2'>$pays</div>";
-                                echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>$pay</div>";
-                            }?>
+                                echo "<div class='uk-width-1-2'>".$pays."</div>";
+                                if ($pay != '0') {
+                                    echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>".$pay."</div>";
+                                } else {
+                                    echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>0</div>";
+                                }
+                            ?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if ($change > "0"){
+                            <?php
                                 $changes = lang('Global.change');
-                                echo "<div class='uk-width-1-2'>$changes</div>";
-                                echo "<div class='uk-width-1-2 uk-text-right'>$change</div>";
-                            }?>
+                                echo "<div class='uk-width-1-2'>".$changes."</div>";
+                                if ($change > "0") {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>".$change."</div>";
+                                } else {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>0</div>";
+                                }
+                            ?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (($bookings['memberid'] !== "0") && ($bookings['id']=== $bookingid)) {
@@ -432,14 +465,6 @@
                                 $pointearned = lang('Global.pointearn');
                                 echo "<div class='uk-width-1-2'>$pointearned</div>";
                                 echo "<div class='uk-width-1-2 uk-text-right'>$poinearn</div>";
-                            }?> 
-                        </div>
-                        <div class="uk-grid-collapse" uk-grid>
-                            <?php if (($bookings['memberid'] !== "0") && ($bookings['id']=== $bookingid) && (!empty($poinused))) {
-                                $poinearn = $gconfig['poinvalue'];
-                                $reedem = lang('Global.redeemPoint');
-                                echo "<div class='uk-width-1-2'>$reedem</div>";
-                                echo "<div class='uk-width-1-2 uk-text-right'>$poinused</div>";
                             }?> 
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
@@ -466,7 +491,7 @@
                     </div>
                     <!-- end total booking -->
                     <!-- total transaction -->
-                <?php } elseif(!empty($transactions['id'])) { ?>
+                <?php } elseif (!empty($transactions['id'])) { ?>
                     <hr style ="border-top: 3px double #8c8b8b">                    
                     <div class="uk-margin-small uk-text-xsmall">
                         <div class="uk-grid-collapse" uk-grid>
@@ -475,28 +500,49 @@
                             <div class="uk-width-1-2  uk-text-bold uk-text-right"><?=$subtotal?></div>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if(!empty($discount)){
+                            <?php
                                 $disc =  lang('Global.discount');
                                 echo "<div class='uk-width-1-2 uk-text-bold'>$disc</div>";
-                                echo "<div class='uk-width-1-2  uk-text-bold uk-text-right'>".$discount."</div>";
-                            }?>
+                                if (!empty($discount)) {
+                                    echo "<div class='uk-width-1-2  uk-text-bold uk-text-right'>".$discount."</div>";
+                                } else {
+                                    echo "<div class='uk-width-1-2  uk-text-bold uk-text-right'>0</div>";
+                                }
+                            ?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if (($transactions['memberid'] !== "0") && ($gconfig['memberdisc'] !== "0")) {
+                            <?php if ($transactions['memberid'] !== "0") {
                                 $memberdisc = $gconfig['memberdisc'];
                                 $discmember = lang('Global.memberDiscount');
                                 echo "<div class='uk-width-1-2'>$discmember</div>";
-                                echo "<div class='uk-width-1-2 uk-text-right'>$memberdisc</div>";
+                                if ($gconfig['memberdisc'] !== "0") {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>".$memberdisc."</div>";
+                                } else {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>0</div>";
+                                }
                             }?> 
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php $tot =  lang('Global.total');?>
+                            <?php
+                            if ($transactions['memberid'] !== "0") {
+                                $reedem = lang('Global.redeemPoint');
+                                echo "<div class='uk-width-1-2'>$reedem</div>";
+                                if ($transactions['pointused'] !== "0") {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>".$poinused."</div>";
+                                } else {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>0</div>";
+                                }
+                            }
+                            ?> 
+                        </div>
+                        <div class="uk-grid-collapse" uk-grid>
+                            <?php $tot  = lang('Global.total');?>
                             <div class="uk-width-1-2 uk-text-bold"><?=$tot?></div>
                             <div class="uk-width-1-2  uk-text-bold uk-text-right"><?=$total?></div>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php
-                                $pays =  lang('Global.pay');
+                                $pays   = lang('Global.pay');
                                 echo "<div class='uk-width-1-2'>$pays</div>";
                                 echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>$pay</div>";
                             ?>
@@ -509,11 +555,15 @@
                             }?>
                         </div> -->
                         <div class="uk-grid-collapse" uk-grid>
-                            <?php if ($change !== "0"){
+                            <?php
                                 $changes = lang('Global.change');
                                 echo "<div class='uk-width-1-2'>$changes</div>";
-                                echo "<div class='uk-width-1-2 uk-text-right'>$change</div>";
-                            }?>
+                                if ($change != "0") {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>".$change."</div>";
+                                } else {
+                                    echo "<div class='uk-width-1-2 uk-text-right'>0</div>";
+                                }
+                            ?>
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (($transactions['memberid'] !== "0") ) {
@@ -528,13 +578,6 @@
                                 $pointearned = lang('Global.pointearn');
                                 echo "<div class='uk-width-1-2'>$pointearned</div>";
                                 echo "<div class='uk-width-1-2 uk-text-left uk-text-right'>$poinearn</div>";
-                            }?> 
-                        </div>
-                        <div class="uk-grid-collapse" uk-grid>
-                            <?php if (($transactions['memberid'] !== "0") && ($transactions['pointused']) !== "0") {
-                                $reedem = lang('Global.redeemPoint');
-                                echo "<div class='uk-width-1-2'>$reedem</div>";
-                                echo "<div class='uk-width-1-2 uk-text-right'>$poinused</div>";
                             }?> 
                         </div>
                         <div class="uk-grid-collapse" uk-grid>

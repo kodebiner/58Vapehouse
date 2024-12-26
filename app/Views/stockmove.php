@@ -187,6 +187,7 @@
                             elements.remove();
                         }
                         var products = document.getElementById('tablevariant');
+                        products.setAttribute('class', 'variantlist');
                         
                         var productgrid = document.createElement('div');
                         productgrid.setAttribute('id', 'variantlist');
@@ -393,7 +394,7 @@
 <!-- Script Modal Add End -->
 
 <!-- Table Of Content -->
-<div class="uk-margin">
+<div class="uk-overflow-auto uk-margin">
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
@@ -570,52 +571,54 @@
                             <input type="hidden" name="id" value="<?= $stockmove['id']; ?>">
                             <input type="hidden" name="outletpick" value="<?= $outletPick ?>">
                             
-                            <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" style="background-color: #fff;">
-                                <thead>
-                                    <tr>
-                                        <th class="uk-width-small uk-text-emphasis">SKU</th>
-                                        <th class="uk-width-small uk-text-emphasis"><?=lang('Global.product')?></th>
-                                        <th class="uk-width-small uk-text-emphasis"><?=lang('Global.variant')?></th>
-                                        <th class="uk-width-small uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
-                                        <th class="uk-width-medium uk-text-emphasis"><?=lang('Global.pcsPrice')?></th>
-                                        <th class="uk-width-small uk-text-emphasis"><?=lang('Global.total')?></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ctableproduct<?=$stockmove['id']?>">
-                                    <?php
-                                    $subtotalpurchase = array();
-                                    foreach ($stockmovedata[$stockmove['id']]['detail'] as $detail) {
-                                        $subtotalpurchase[] = (Int)$detail['inputqty'] * (Int)$detail['wholesale']; ?>
+                            <div class="uk-overflow-auto">
+                                <table class="uk-table uk-table-justify uk-table-middle uk-table-divider" style="background-color: #fff;">
+                                    <thead>
                                         <tr>
-                                            <td><?= $detail['sku']; ?></td>
-                                            <td><?= $detail['productname']; ?></td>
-                                            <td><?= $detail['variantname']; ?></td>
-                                                
-                                            <td>
-                                                <input type="number" class="uk-input" id="ctotalpcs[<?=$stockmove['id']?>][<?=$detail['varid']?>]" name="ctotalpcs[<?=$stockmove['id']?>][<?=$detail['varid']?>]" value="<?= $detail['inputqty']; ?>" max="<?= $detail['qty']; ?>" required />
-                                            </td>
-                                            <td>
-                                                <input hidden type="number" class="uk-input" id="cbprice[<?=$stockmove['id']?>][<?=$detail['varid']?>]" name="cbprice[<?=$stockmove['id']?>][<?=$detail['varid']?>]" value="<?= $detail['wholesale']; ?>" required />
-                                                <div><?= $detail['wholesale']; ?></div>
-                                            </td>
-                                            <td id="csubtotal<?=$stockmove['id']?><?=$detail['varid']?>" class="uk-width-small csubvariant<?=$stockmove['id']?>"><?= (Int)$detail['wholesale'] * (Int)$detail['inputqty']; ?></td>
+                                            <th class="uk-width-small uk-text-emphasis">SKU</th>
+                                            <th class="uk-width-small uk-text-emphasis"><?=lang('Global.product')?></th>
+                                            <th class="uk-width-small uk-text-emphasis"><?=lang('Global.variant')?></th>
+                                            <th class="uk-width-small uk-text-emphasis"><?=lang('Global.totalPurchase')?></th>
+                                            <th class="uk-width-medium uk-text-emphasis"><?=lang('Global.pcsPrice')?></th>
+                                            <th class="uk-width-small uk-text-emphasis"><?=lang('Global.total')?></th>
                                         </tr>
+                                    </thead>
+                                    <tbody id="ctableproduct<?=$stockmove['id']?>">
+                                        <?php
+                                        $subtotalpurchase = array();
+                                        foreach ($stockmovedata[$stockmove['id']]['detail'] as $detail) {
+                                            $subtotalpurchase[] = (Int)$detail['inputqty'] * (Int)$detail['wholesale']; ?>
+                                            <tr>
+                                                <td><?= $detail['sku']; ?></td>
+                                                <td><?= $detail['productname']; ?></td>
+                                                <td><?= $detail['variantname']; ?></td>
+                                                    
+                                                <td>
+                                                    <input type="number" class="uk-input" id="ctotalpcs[<?=$stockmove['id']?>][<?=$detail['varid']?>]" name="ctotalpcs[<?=$stockmove['id']?>][<?=$detail['varid']?>]" value="<?= $detail['inputqty']; ?>" max="<?= $detail['qty']; ?>" required />
+                                                </td>
+                                                <td>
+                                                    <input hidden type="number" class="uk-input" id="cbprice[<?=$stockmove['id']?>][<?=$detail['varid']?>]" name="cbprice[<?=$stockmove['id']?>][<?=$detail['varid']?>]" value="<?= $detail['wholesale']; ?>" required />
+                                                    <div><?= $detail['wholesale']; ?></div>
+                                                </td>
+                                                <td id="csubtotal<?=$stockmove['id']?><?=$detail['varid']?>" class="uk-width-small csubvariant<?=$stockmove['id']?>"><?= (Int)$detail['wholesale'] * (Int)$detail['inputqty']; ?></td>
+                                            </tr>
 
-                                        <script type="text/javascript">
-                                            var cqty<?=$stockmove['id']?><?=$detail['varid']?>         = document.getElementById('ctotalpcs[<?=$stockmove['id']?>][<?=$detail['varid']?>]');
-                                            var cprice<?=$stockmove['id']?><?=$detail['varid']?>       = document.getElementById('cbprice[<?=$stockmove['id']?>][<?=$detail['varid']?>]');
-                                            var csubtotal<?=$stockmove['id']?><?=$detail['varid']?>    = document.getElementById('csubtotal<?=$stockmove['id']?><?=$detail['varid']?>');
-                                            
-                                            cqty<?=$stockmove['id']?><?=$detail['varid']?>.addEventListener('change', ctotalprice<?=$stockmove['id']?><?=$detail['varid']?>);
-                                            cprice<?=$stockmove['id']?><?=$detail['varid']?>.addEventListener('change', ctotalprice<?=$stockmove['id']?><?=$detail['varid']?>);
+                                            <script type="text/javascript">
+                                                var cqty<?=$stockmove['id']?><?=$detail['varid']?>         = document.getElementById('ctotalpcs[<?=$stockmove['id']?>][<?=$detail['varid']?>]');
+                                                var cprice<?=$stockmove['id']?><?=$detail['varid']?>       = document.getElementById('cbprice[<?=$stockmove['id']?>][<?=$detail['varid']?>]');
+                                                var csubtotal<?=$stockmove['id']?><?=$detail['varid']?>    = document.getElementById('csubtotal<?=$stockmove['id']?><?=$detail['varid']?>');
+                                                
+                                                cqty<?=$stockmove['id']?><?=$detail['varid']?>.addEventListener('change', ctotalprice<?=$stockmove['id']?><?=$detail['varid']?>);
+                                                cprice<?=$stockmove['id']?><?=$detail['varid']?>.addEventListener('change', ctotalprice<?=$stockmove['id']?><?=$detail['varid']?>);
 
-                                            function ctotalprice<?=$stockmove['id']?><?=$detail['varid']?>() {
-                                                csubtotal<?=$stockmove['id']?><?=$detail['varid']?>.innerHTML = cqty<?=$stockmove['id']?><?=$detail['varid']?>.value * cprice<?=$stockmove['id']?><?=$detail['varid']?>.value;
-                                            }
-                                        </script>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
+                                                function ctotalprice<?=$stockmove['id']?><?=$detail['varid']?>() {
+                                                    csubtotal<?=$stockmove['id']?><?=$detail['varid']?>.innerHTML = cqty<?=$stockmove['id']?><?=$detail['varid']?>.value * cprice<?=$stockmove['id']?><?=$detail['varid']?>.value;
+                                                }
+                                            </script>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
 
                             <div class="uk-modal-footer">
                                 <div class="uk-margin">
@@ -748,7 +751,7 @@ foreach ($stockmovedata as $stockmove) { ?>
 
                     <div class="uk-divider-icon"></div>
                     
-                    <!-- <div class="uk-overflow-auto"> -->
+                    <div class="uk-overflow-auto">
                         <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-table-small" style="background-color: #fff; color: #000;">
                             <thead>
                                 <tr>
@@ -783,7 +786,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                 </tr>
                             </tfoot>
                         </table>
-                    <!-- </div> -->
+                    </div>
                 </div>
             </div>
         </div>
