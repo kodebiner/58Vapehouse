@@ -124,9 +124,9 @@
                     <div id="tablevariant"></div>
 
                     <div class="uk-margin-small" uk-grid>
-                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                            <!-- <div class="">SKU</div> -->
-                        </div>
+                        <!-- <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                            <div class="">SKU</div>
+                        </div> -->
                         <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                             <div class=""><?= lang('Global.variant') ?></div>
                         </div>
@@ -889,9 +889,9 @@ foreach ($stockmovedata as $stockmove) { ?>
                             <div id="tabvar<?= $stockmove['id'] ?>"></div>
 
                             <div class="uk-margin-small" uk-grid>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
-                                    <!-- <div class="">SKU</div> -->
-                                </div>
+                                <!-- <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
+                                    <div class="">SKU</div>
+                                </div> -->
                                 <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                     <div class=""><?= lang('Global.product') ?></div>
                                 </div>
@@ -1104,9 +1104,9 @@ foreach ($stockmovedata as $stockmove) { ?>
                             $tot[$stockmove['id']] = array();
                             foreach ($stockmovedata[$stockmove['id']]['detail'] as $detailid => $detail) { ?>
                                 <div id="eproduct<?=$stockmove['id'].$detail['varid']?>" class="uk-margin-small" uk-grid>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5">
-                                        <!-- <div class=""></?= $detail['sku'] ?></div> -->
-                                    </div>
+                                    <!-- <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5">
+                                        <div class=""></?= $detail['sku'] ?></div>
+                                    </div> -->
                                     <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5">
                                         <div class=""><?= $detail['name'] ?></div>
                                     </div>
