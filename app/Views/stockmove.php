@@ -312,9 +312,9 @@
                         tot.setAttribute('value', '1');
                         tot.setAttribute('required', '');
 
-                        var pieces = document.createElement('div');
-                        pieces.setAttribute('class', 'uk-margin-small-left');
-                        pieces.innerHTML = 'Pcs';
+                        // var pieces = document.createElement('div');
+                        // pieces.setAttribute('class', 'uk-margin-small-left');
+                        // pieces.innerHTML = 'Pcs';
 
                         var pricecontainer = document.createElement('div');
                         pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
@@ -353,7 +353,7 @@
                         // skucontainer.appendChild(sku);
                         vcontainer.appendChild(vname);
                         tcontainer.appendChild(tot);
-                        tcontainer.appendChild(pieces);
+                        // tcontainer.appendChild(pieces);
                         pricecontainer.appendChild(price);
                         pricecontainer.appendChild(pricediv);
                         subtotcontainer.appendChild(subtotal);
@@ -446,7 +446,8 @@
                     <td class="uk-width-small"><?= $stockmove['destination'] ?></td>
 
                     <td class="uk-text-center uk-width-small">
-                        <?= $stockmove['totalqty'] ?> Pcs
+                        <?= $stockmove['totalqty'] ?>
+                        <!-- Pcs -->
                     </td>
 
                     <td class="uk-width-small">
@@ -781,7 +782,10 @@ foreach ($stockmovedata as $stockmove) { ?>
                                         <!-- <td></?= $detail['sku']; ?></td> -->
                                         <td><?= $detail['productname']; ?></td>
                                         <td><?= $detail['variantname']; ?></td>
-                                        <td><?= $detail['inputqty']; ?> Pcs</td>
+                                        <td>
+                                            <?= $detail['inputqty']; ?>
+                                            <!-- Pcs -->
+                                        </td>
                                         <td><?= $detail['wholesale']; ?></td>
                                         <td><?= (Int)$detail['wholesale'] * (Int)$detail['inputqty']; ?></td>
                                     </tr>
@@ -792,7 +796,10 @@ foreach ($stockmovedata as $stockmove) { ?>
                                     <td><?= lang('Global.totalMovement'); ?></td>
                                     <td></td>
                                     <td></td>
-                                    <td><?= $stockmove['totalqty'] ?> Pcs</td>
+                                    <td>
+                                        <?= $stockmove['totalqty'] ?>
+                                        <!-- Pcs -->
+                                    </td>
                                     <td></td>
                                     <td><?= "Rp ".number_format($stockmove['totalwholesale'],0,',','.'); ?></td>
                                 </tr>
@@ -1046,9 +1053,9 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 etot.setAttribute('value', '1');
                                                 etot.setAttribute('required', '');
 
-                                                var epieces = document.createElement('div');
-                                                epieces.setAttribute('class', 'uk-margin-small-left');
-                                                epieces.innerHTML = 'Pcs';
+                                                // var epieces = document.createElement('div');
+                                                // epieces.setAttribute('class', 'uk-margin-small-left');
+                                                // epieces.innerHTML = 'Pcs';
 
                                                 var epricecontainer = document.createElement('div');
                                                 epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
@@ -1087,7 +1094,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 // evskucontainer.appendChild(evsku);
                                                 evcontainer.appendChild(evname);
                                                 etcontainer.appendChild(etot);
-                                                etcontainer.appendChild(epieces);
+                                                // etcontainer.appendChild(epieces);
                                                 epricecontainer.appendChild(eprice);
                                                 epricecontainer.appendChild(epricediv);
                                                 esubtotcontainer.appendChild(esubtotal);
@@ -1124,7 +1131,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                     </div>
                                     <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
                                         <input class="uk-input" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="1" max="<?= $detail['qty'] ?>" required />
-                                        <div class="uk-margin-small-left">Pcs</div>
+                                        <!-- <div class="uk-margin-small-left">Pcs</div> -->
                                     </div>
                                     <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
                                         <input hidden class="uk-input" type="number" id="bprice[<?=$detailid?>]" name="bprice[<?=$detailid?>]" value="<?= $detail['wholesale'] ?>" required />
