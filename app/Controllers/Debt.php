@@ -586,8 +586,11 @@ class Debt extends BaseController
         $pager      = \Config\Services::pager();
 
         // Calling Model
-        $TrxotherModel      = new TrxotherModel;
-        $OutletModel        = new OutletModel;
+        $TrxotherModel      = new TrxotherModel();
+        $TransactionModel   = new TransactionModel();
+        $MemberModel        = new MemberModel();
+        $DebtInsModel       = new DebtInsModel();
+        $OutletModel        = new OutletModel();
 
         // Find Data
         $input = $this->request->getGet('daterange');
@@ -601,12 +604,14 @@ class Debt extends BaseController
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
+        // $outlets            = $OutletModel->findAll();
         if ($this->data['outletPick'] === null) {
             // $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
 
             // if (!empty($input)) {
             //     if ($startdate === $enddate) {
-                    $trxothers      = $TrxotherModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
+                    $trxothers          = $TrxotherModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->like('description', 'Debt')->find();
+                    $debtinstallments   = $DebtInsModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
             //     } else {
             //         $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
             //     }
@@ -616,21 +621,50 @@ class Debt extends BaseController
 
             // if (!empty($input)) {
             //     if ($startdate === $enddate) {
-                    $trxothers      = $TrxotherModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
+                    $trxothers          = $TrxotherModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->like('description', 'Debt')->find();
+                    $debtinstallments   = $DebtInsModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
             //     } else {
             //         $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'debtpay');
             //     }
             // }
         }
+        $debtinsdata    = [];
+        foreach ($trxothers as $trxot) {
+            $outlet                         = $OutletModel->find($trxot['outletid']);
+            $debtinsdata[$trxot['date']]['date']          = $trxot['date'];
+            $debtinsdata[$trxot['date']]['outlet']        = $outlet['name'];
+            $debtinsdata[$trxot['date']]['description']   = $trxot['description'];
+            $debtinsdata[$trxot['date']]['qty']           = $trxot['qty'];
+        }
 
-        $outlets            = $OutletModel->findAll();
+        foreach ($debtinstallments as $debt) {
+            $transaction    = $TransactionModel->find($debt['transactionid']);
+            $members        = $MemberModel->find($debt['memberid']);
+
+            if (!empty($transaction)) {
+                $outlets                        = $OutletModel->find($transaction['outletid']);
+                $debtinsdata[$debt['date']]['date']          = $debt['date'];
+                $debtinsdata[$debt['date']]['description']   = 'Debt - '.$members['name'].' / '.$members['phone'];
+                $debtinsdata[$debt['date']]['outlet']        = $outlets['name'];
+                $debtinsdata[$debt['date']]['qty']           = $debt['qty'];
+            }
+        }
+        array_multisort(array_column($debtinsdata, 'date'), SORT_DESC, $debtinsdata);
+
+        $page       = (int) ($this->request->getGet('page') ?? 1);
+        $perPage    = 20;
+        $total      = count($debtinsdata);
+        // dd($debtinsdata);
 
         // Parsing data to view
         $data                       = $this->data;
         $data['title']              = lang('Global.debtInstallments');
         $data['description']        = lang('Global.debtInstallmentsListDesc');
-        $data['trxothers']          = $trxothers;
-        $data['outlets']            = $outlets;
+        $data['trxothers']          = array_slice($debtinsdata, ($page*20)-20, $page*20);
+        // $data['trxothers']          = $debtinsdata;
+        // $data['trxothers']          = $trxothers;
+        // $data['outlets']            = $outlets;
+        $data['pager_links']        = $pager->makeLinks($page, $perPage, $total, 'front_full');
         $data['startdate']          = strtotime($startdate);
         $data['enddate']            = strtotime($enddate);
         $data['pager']              = $TrxotherModel->pager;

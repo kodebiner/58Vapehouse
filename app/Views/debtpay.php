@@ -54,13 +54,14 @@
             <?php foreach ($trxothers as $trx) { ?>
                 <tr>
                     <td class=""><?= date('l, d M Y, H:i:s', strtotime($trx['date'])); ?></td>
-                    <td>
-                        <?php foreach ($outlets as $outlet) {
+                    <td><?= $trx['outlet'] ?></td>
+                    <!-- <td>
+                        </?php foreach ($outlets as $outlet) {
                             if ($outlet['id'] === $trx['outletid']) {
                                 echo $outlet['name'];
                             }
                         } ?>
-                    </td>
+                    </td> -->
                     <td class=""><?= $trx['description'];?></td>
                     <td class="uk-text-center">Rp <?= number_format($trx['qty'],2,',','.');?></td>
                 </tr>
@@ -68,7 +69,8 @@
         </tbody>
     </table>
     <div>
-        <?= $pager->links('debtpay', 'front_full') ?>
+        <?= $pager_links ?>
+        <!-- </?= $pager->links('debtpay', 'front_full') ?> -->
     </div>
 </div>
 <!-- Table Of Content End -->

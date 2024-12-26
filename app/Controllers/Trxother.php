@@ -236,10 +236,36 @@ class Trxother extends BaseController
             }
 
             // Debt Installment
-            // $debtins    = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->Like('description', 'Debt')->find();
-            $debtins    = $DebtInsModel->where('transactionid', $trx['id'])->where('outletid', $this->data['outletPick'])->find();
+            $debtins    = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->Like('description', 'Debt')->find();
+            // $debtins    = $DebtInsModel->where('transactionid', $trx['id'])->where('outletid', $this->data['outletPick'])->find();
             if (!empty($debtins)) {
                 foreach ($debtins as $debtin) {
+                    // User Cashier
+                    $usercashcier   = $UserModel->find($debtin['userid']);
+
+                    // Debt Installment Data
+                    // $paymentins     = $PaymentModel->find($debtin['paymentid']);
+                    $cashdebt       = $CashModel->find($debtin['cashid']);
+                    $dailyreportdata['debtins'][$cashdebt['id']]['name']                             = $cashdebt['name'];
+
+                    // Detail Debt Installment
+                    $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['value']   = $debtin['qty'];
+                    $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['cashier'] = $usercashcier->firstname.' '.$usercashcier->lastname;
+                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['type']    = $debtin['type'];
+                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['desc']    = $debtin['description'];
+                    $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['date']    = date('H:i:s', strtotime($debtin['date']));
+                    $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['qty']     = $debtin['qty'];
+                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['proof']   = $debtin['photo'];
+                }
+            } else {
+                $usercashcier   = [];
+                $dailyreportdata['debtins'] = [];
+            }
+
+            // Debt Installment
+            $debtinst    = $DebtInsModel->where('outletid', $this->data['outletPick'])->find();
+            if (!empty($debtinst)) {
+                foreach ($debtinst as $debtin) {
                     // User Cashier
                     $usercashcier   = $UserModel->find($debtin['userid']);
 

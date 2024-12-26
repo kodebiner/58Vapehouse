@@ -63,7 +63,7 @@ class Transaction extends BaseController
         $transactions           = $TransactionModel->findAll();
         $trxdetails             = $TrxdetailModel->findAll();
         $trxpayments            = $TrxpaymentModel->findAll();
-        $bookings               = $BookingModel->where('status', '0')->orderBy('created_at', 'DESC')->findAll();
+        $bookings               = $BookingModel->where('outletid', $this->data['outletPick'])->where('status', '0')->orderBy('created_at', 'DESC')->findAll();
         // $bookingdetails         = $BookingdetailModel->findAll();
 
         // Bundle Data

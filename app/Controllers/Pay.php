@@ -1506,7 +1506,7 @@ class Pay extends BaseController
 
         $prices = array();
         foreach ($bookingdetails as $trxdet) {
-            if ($trxdet['transactionid'] === $id) {
+            if ($trxdet['bookingid'] === $id) {
                 $total      = (int)$trxdet['qty'] * (int)$trxdet['value'];
                 $prices[]   = $total;
             }

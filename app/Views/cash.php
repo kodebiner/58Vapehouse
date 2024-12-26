@@ -174,8 +174,9 @@
                                 <div class="uk-text-right">
                                     <div>
                                         <?php
-                                            $totalvalue = array_sum($totaltrxvalue);
-                                            echo "Rp ".number_format(((Int)$totalvalue + (Int)$totaldebtins + (Int)$totalcashflow),2,',','.');
+                                            $totalvalue             = array_sum($totaltrxvalue);
+                                            $totaldebtinstallment   = array_sum($totaldebtins);
+                                            echo "Rp ".number_format(((Int)$totalvalue + (Int)$totaldebtinstallment + (Int)$totalcashflow),2,',','.');
                                         ?>
                                     </div>
                                 </div>
@@ -274,7 +275,7 @@
         function totalprice() {
             var actualcash = Number(cash.value);
             var actualnoncash = Number(noncash.value);
-            var finalprice = actualcash + actualnoncash - <?= $totalvalue ?>;
+            var finalprice = actualcash + actualnoncash - <?= (Int)$totalvalue + (Int)$totaldebtinstallment + (Int)$totalcashflow ?>;
             var marker = finalprice;
 
             if (marker < '0') {

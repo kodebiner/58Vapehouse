@@ -16,6 +16,7 @@ use App\Models\OutletModel;
 use App\Models\GroupUserModel;
 use Myth\Auth\Models\GroupModel;
 use App\Models\DebtModel;
+use App\Models\DebtInsModel;
 use App\Models\GconfigModel;
 use App\Models\MemberModel;
 use App\Models\PaymentModel;
@@ -2918,15 +2919,16 @@ class export extends BaseController
     public function dayrep()
     {
         // Calling Models
-        $TransactionModel   = new TransactionModel;
-        $TrxpaymentModel    = new TrxpaymentModel;
-        $TrxotherModel      = new TrxotherModel;
-        $PaymentModel       = new PaymentModel;
-        $UserModel          = new UserModel;
-        $CashModel          = new CashModel;
-        $OutletModel        = new OutletModel;
-        $DailyReportModel   = new DailyReportModel;
-        $MemberModel        = new MemberModel;
+        $TransactionModel   = new TransactionModel();
+        $TrxpaymentModel    = new TrxpaymentModel();
+        $TrxotherModel      = new TrxotherModel();
+        $PaymentModel       = new PaymentModel();
+        $UserModel          = new UserModel();
+        $CashModel          = new CashModel();
+        $OutletModel        = new OutletModel();
+        $DailyReportModel   = new DailyReportModel();
+        $MemberModel        = new MemberModel();
+        $DebtInsModel       = new DebtInsModel();
 
         // Populating Data
         $input = $this->request->getGet('daterange');
@@ -2986,18 +2988,20 @@ class export extends BaseController
                     if (!empty($trxpayments)) {
                         foreach ($trxpayments as $trxpayment) {
                             $payment        = $PaymentModel->find($trxpayment['paymentid']);
-                            $cashdata       = $CashModel->find($payment['cashid']);
-
-                            if (strcmp($cashdata['name'], 'Petty Cash ' . $outlets['name']) == 0) {
-                                // Transaction Summary
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['name']                               = 'Tunai';
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][$trxpayment['id']]['type']  = '0';
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][$trxpayment['id']]['value'] = $trxpayment['value'];
-                            } else {
-                                // Transaction Summary
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][1]['name']                               = 'Non-Tunai';
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][1]['detail'][$trxpayment['id']]['type']  = '1';
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][1]['detail'][$trxpayment['id']]['value'] = $trxpayment['value'];
+                            if (!empty($payment)) {
+                                $cashdata       = $CashModel->find($payment['cashid']);
+    
+                                if (strcmp($cashdata['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+                                    // Transaction Summary
+                                    $dailyreportdata[$dayrep['id']]['trxpayments'][0]['name']                               = 'Tunai';
+                                    $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][$trxpayment['id']]['type']  = '0';
+                                    $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][$trxpayment['id']]['value'] = $trxpayment['value'];
+                                } else {
+                                    // Transaction Summary
+                                    $dailyreportdata[$dayrep['id']]['trxpayments'][1]['name']                               = 'Non-Tunai';
+                                    $dailyreportdata[$dayrep['id']]['trxpayments'][1]['detail'][$trxpayment['id']]['type']  = '1';
+                                    $dailyreportdata[$dayrep['id']]['trxpayments'][1]['detail'][$trxpayment['id']]['value'] = $trxpayment['value'];
+                                }
                             }
                         }
                     }
@@ -3029,6 +3033,28 @@ class export extends BaseController
 
                 // Actual Cashier Summary
                 $dailyreportdata[$dayrep['id']]['actualsummary']    = (Int)$dayrep['cashclose'] + (Int)$dayrep['noncashclose'];
+
+                // Debt Installment
+                $debtins    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->find();
+                if (!empty($debtins)) {
+                    foreach ($debtins as $debtin) {
+                        // Debt Installment Data
+                        $paymentins     = $PaymentModel->find($debtin['paymentid']);
+                        $cashdebtins    = $CashModel->find($paymentins['cashid']);
+
+                        if (strcmp($cashdebtins['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+                            $dailyreportdata[$dayrep['id']]['debtins'][0]['name']                               = 'Tunai';
+                            $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['type']      = '0';
+                            $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['value']     = $debtin['qty'];
+                        } else {
+                            $dailyreportdata[$dayrep['id']]['debtins'][1]['name']                               = 'Non-Tunai';
+                            $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtin['id']]['type']      = '1';
+                            $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtin['id']]['value']     = $debtin['qty'];
+                        }
+                    }
+                } else {
+                    $dailyreportdata[$dayrep['id']]['debtins'] = [];
+                }
             } else {
                 $dailyreportdata[$dayrep['id']]['dateclose']    = lang('Global.storeNotClosed');
 
@@ -3047,6 +3073,9 @@ class export extends BaseController
 
                 // Actual Cashier Summary
                 $dailyreportdata[$dayrep['id']]['actualsummary']    = (Int)$dayrep['cashclose'] + (Int)$dayrep['noncashclose'];
+
+                // Debt Installment
+                $dailyreportdata[$dayrep['id']]['debtins'] = [];
             }
 
             // User Open Store
