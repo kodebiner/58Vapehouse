@@ -270,6 +270,7 @@ return [
     'cashhistory'       => 'Cash History',
     'export'            => 'Export',
     'selectcat'         => 'Select Category',
+    'selectbrand'       => 'Select Brand',
     'percentage'        => 'Percentage',
     'debtinsHistory'    => 'Debt Installment History',
     'topupHistory'      => 'Top Up History',

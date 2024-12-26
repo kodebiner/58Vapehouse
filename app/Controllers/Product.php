@@ -51,14 +51,22 @@ class Product extends BaseController
 
         // Populating Data
         $input      = $this->request->getGet();
-        if (!empty($input['search']) && empty($input['category'])) {
-            $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        } elseif (empty($input['search']) && !empty($input['category'])) {
-            $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        } elseif (!empty($input['search']) && !empty($input['category'])) {
-            $products   = $ProductModel->where('catid', $input['category'])->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        } else {
+        // if (!empty($input['search']) && empty($input['category'])) {
+        //     $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        // } elseif (empty($input['search']) && !empty($input['category'])) {
+        //     $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        // } elseif (!empty($input['search']) && !empty($input['category'])) {
+        //     $products   = $ProductModel->where('catid', $input['category'])->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        // } else {
             $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+        // }
+
+        if (!empty($input['search'])) {
+            $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        } if (!empty($input['category'])) {
+            $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        } if (!empty($input['brand'])) {
+            $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
         }
 
         $productcount = count($ProductModel->findAll());

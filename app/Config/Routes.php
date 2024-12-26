@@ -266,6 +266,7 @@ $routes->group('pay', ['filter'=>'login'], function($routes){
 //Invoice 
 $routes->get('pay/invoice/(:num)', 'Pay::invoice/$1');
 $routes->get('pay/invoicebook/(:num)', 'Pay::invoicebook/$1');
+$routes->get('debt/invoice/(:num)', 'Debt::invoice/$1');
 
 // Report Routes
 $routes->group('report', ['filter'=>'login'], function($routes){

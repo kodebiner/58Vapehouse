@@ -1,5 +1,5 @@
 <!doctype html>
-<html dir="ltr "lang="<?=$lang?>" vocab="http://schema.org/" style="overflow-y: hidden; background-color:#000;">
+<html dir="ltr "lang="<?=$lang?>" vocab="http://schema.org/" style="background-color:#000;">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -159,7 +159,7 @@
                                         }
                                     }
                                 } elseif ($transactions['paymentid'] == "-1") {
-                                     echo lang('Global.redeemPoint');
+                                    echo lang('Global.redeemPoint');
                                 } else { ?>
                                     <?= lang('Global.debt')?>
                                 <?php }
@@ -466,7 +466,7 @@
                     </div>
                     <!-- end total booking -->
                     <!-- total transaction -->
-                    <?php } elseif(!empty($transactions['id'])) { ?>
+                <?php } elseif(!empty($transactions['id'])) { ?>
                     <hr style ="border-top: 3px double #8c8b8b">                    
                     <div class="uk-margin-small uk-text-xsmall">
                         <div class="uk-grid-collapse" uk-grid>

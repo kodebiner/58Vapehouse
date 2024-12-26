@@ -681,7 +681,7 @@
     <!-- Search Engine -->
     <div class="uk-margin-medium-bottom">
         <form action="product" method="GET">
-            <div class="uk-child-width-1-1 uk-child-width-1-3@m uk-flex-middle" uk-grid>
+            <div class="uk-child-width-1-1 uk-child-width-1-4@m uk-flex-middle" uk-grid>
                 <div class="uk-text-right@l uk-margin-small-top">
                     <div class="uk-search uk-search-default uk-width-1-1">
                         <span class="uk-form-icon" uk-icon="icon: search" style="color: #000;"></span>
@@ -693,6 +693,14 @@
                         <option value="" selected><?= lang('Global.selectcat') ?></option>
                         <?php foreach ($category as $cate) { ?>
                             <option value="<?= $cate['id'] ?>" <?= ((!empty($input['category'])) && ($input['category'] === $cate['id'])) ? 'selected' : '' ?>><?= $cate['name'] ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="uk-margin-small-top">
+                    <select class="uk-select" id="filterbrand" name="brand" style="border-radius: 5px; border-style: solid;">
+                        <option value="" <?= ((isset($input['brand'])) && ($input['brand'] == '')) ? 'selected' : '' ?>><?=lang('Global.selectbrand')?></option>
+                        <?php foreach ($brand as $bran) { ?>
+                            <option value="<?= $bran['id'] ?>" <?= ((isset($input['brand'])) && ($input['brand'] == $bran['id'])) ? 'selected' : '' ?>><?= $bran['name'] ?></option>
                         <?php } ?>
                     </select>
                 </div>

@@ -18,6 +18,7 @@ use App\Models\TrxdetailModel;
 use App\Models\TrxotherModel;
 use App\Models\TrxpaymentModel;
 use App\Models\DebtModel;
+use App\Models\DebtInsModel;
 use App\Models\DailyReportModel;
 
 class Trxother extends BaseController
@@ -41,14 +42,15 @@ class Trxother extends BaseController
         $pager      = \Config\Services::pager();
 
         // Calling Model
-        $TransactionModel   = new TransactionModel;
-        $TrxpaymentModel    = new TrxpaymentModel;
-        $TrxotherModel      = new TrxotherModel;
-        $PaymentModel       = new PaymentModel;
-        $UserModel          = new UserModel;
-        $CashModel          = new CashModel;
-        $OutletModel        = new OutletModel;
-        $DailyReportModel   = new DailyReportModel;
+        $TransactionModel   = new TransactionModel();
+        $TrxpaymentModel    = new TrxpaymentModel();
+        $TrxotherModel      = new TrxotherModel();
+        $PaymentModel       = new PaymentModel();
+        $UserModel          = new UserModel();
+        $CashModel          = new CashModel();
+        $OutletModel        = new OutletModel();
+        $DailyReportModel   = new DailyReportModel();
+        $DebtInsModel       = new DebtInsModel();
 
         // Find Data
         $auth               = service('authentication');
@@ -212,7 +214,6 @@ class Trxother extends BaseController
 
             // Cash Flow
             $trxother   = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->notLike('description', 'Debt')->notLike('description', 'Top Up')->find();
-            $debtins    = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->Like('description', 'Debt')->find();
             $topups     = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->Like('description', 'Top Up')->find();
             $withdraws  = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->Like('description', 'Cash Withdraw')->find();
 
@@ -234,23 +235,27 @@ class Trxother extends BaseController
                 $dailyreportdata['cashflow'] = [];
             }
 
+            // Debt Installment
+            // $debtins    = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->Like('description', 'Debt')->find();
+            $debtins    = $DebtInsModel->where('transactionid', $trx['id'])->where('outletid', $this->data['outletPick'])->find();
             if (!empty($debtins)) {
                 foreach ($debtins as $debtin) {
                     // User Cashier
                     $usercashcier   = $UserModel->find($debtin['userid']);
 
                     // Debt Installment Data
-                    $cashdebt       = $CashModel->find($debtin['cashid']);
+                    $paymentins     = $PaymentModel->find($debtin['paymentid']);
+                    $cashdebt       = $CashModel->find($paymentins['cashid']);
                     $dailyreportdata['debtins'][$cashdebt['id']]['name']                             = $cashdebt['name'];
 
                     // Detail Debt Installment
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['value']   = $debtin['qty'];
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['cashier'] = $usercashcier->firstname.' '.$usercashcier->lastname;
-                    $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['type']    = $debtin['type'];
-                    $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['desc']    = $debtin['description'];
+                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['type']    = $debtin['type'];
+                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['desc']    = $debtin['description'];
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['date']    = date('H:i:s', strtotime($debtin['date']));
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['qty']     = $debtin['qty'];
-                    $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['proof']   = $debtin['photo'];
+                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['proof']   = $debtin['photo'];
                 }
             } else {
                 $usercashcier   = [];

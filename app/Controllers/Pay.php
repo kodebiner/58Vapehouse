@@ -1664,16 +1664,16 @@ class Pay extends BaseController
         $outlet                 = $OutletModel->find($this->data['outletPick']);
         $pettycash              = $CashModel->where('name', 'Petty Cash ' . $outlet['name'])->first();
 
-        // Image Capture
-        $img                    = $input['image'];
-        $folderPath             = "img/tfproof/";
-        $image_parts            = explode(";base64,", $img);
-        $image_type_aux         = explode("image/", $image_parts[0]);
-        $image_type             = $image_type_aux[1];
-        $image_base64           = base64_decode($image_parts[1]);
-        $fileName               = uniqid() . '.png';
-        $file                   = $folderPath . $fileName;
-        file_put_contents($file, $image_base64);
+        // // Image Capture
+        // $img                    = $input['image'];
+        // $folderPath             = "img/tfproof/";
+        // $image_parts            = explode(";base64,", $img);
+        // $image_type_aux         = explode("image/", $image_parts[0]);
+        // $image_type             = $image_type_aux[1];
+        // $image_base64           = base64_decode($image_parts[1]);
+        // $fileName               = uniqid() . '.png';
+        // $file                   = $folderPath . $fileName;
+        // file_put_contents($file, $image_base64);
 
         // Cash In 
         $cashin = [
@@ -1684,7 +1684,7 @@ class Pay extends BaseController
             'type'              => "0",
             'date'              => $tanggal,
             'qty'               => $input['value'],
-            'photo'             => $fileName,
+            // 'photo'             => $fileName,
         ];
         $TrxotherModel->save($cashin);
 

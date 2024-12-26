@@ -37,14 +37,14 @@ class StockMovement extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $startdate  = date('Y-m-m' . ' 00:00:00');
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
         if ($this->data['outletPick'] === null) {
             $stockmovements         = $StockmovementModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('date', 'DESC')->paginate(20, 'stockmovement');
         } else {
-            $stockmovements         = $StockmovementModel->where('origin', $this->data['outletPick'])->orWhere('destination', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('date', 'DESC')->paginate(20, 'stockmovement');
+            $stockmovements         = $StockmovementModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('origin', $this->data['outletPick'])->orWhere('destination', $this->data['outletPick'])->orderBy('date', 'DESC')->paginate(20, 'stockmovement');
         }
 
         $outlets                    = $OutletModel->findAll();

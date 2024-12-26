@@ -872,18 +872,22 @@
                                 <div class="uk-child-width-1-2 uk-text-bolder" uk-grid>
                                     <div>
                                         <div>
-                                            <?php if ($debtdetail['type'] == '0') {
+                                            <?php
+                                            // if ($debtdetail['type'] == '0') {
                                                 echo "<div class='uk-text-success'>".lang('Global.cashin')."</div>";
-                                            } ?>
+                                            // }
+                                            ?>
                                         </div>
                                     </div>
                                     <div class="uk-text-right">
                                         <div>
-                                            <?php if ($debtdetail['type'] == '0') {
+                                            <?php
+                                            // if ($debtdetail['type'] == '0') {
                                                 echo "<div class='uk-text-success'>"."+Rp ".number_format($debtdetail['value'],2,',','.')."</div>";
-                                            } else {
-                                                echo "<div class='uk-text-danger'>"."-Rp ".number_format($debtdetail['value'],2,',','.')."</div>";
-                                            } ?>
+                                            // } else {
+                                            //     echo "<div class='uk-text-danger'>"."-Rp ".number_format($debtdetail['value'],2,',','.')."</div>";
+                                            // }
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -912,23 +916,28 @@
                                     </div>
                                 </div>
                                 
-                                <div class="uk-child-width-1-2 uk-margin-remove-top uk-flex-middle" uk-grid>
+                                <!-- <div class="uk-child-width-1-2 uk-margin-remove-top uk-flex-middle" uk-grid>
                                     <div>
-                                        <div><?= lang('Global.photo') ?></div>
+                                        <div></?= lang('Global.photo') ?></div>
                                     </div>
                                     <div class="uk-text-right" uk-lightbox>
-                                        <a class="uk-inline" href="/img/tfproof/<?= $debtdetail['proof'];?>">
-                                            <img src="/img/tfproof/<?= $debtdetail['proof'];?>" alt="<?= $debtdetail['proof'];?>" style="width: 100px;">
+                                        <a class="uk-inline" href="/img/tfproof/</?= $debtdetail['proof'];?>">
+                                            <img src="/img/tfproof/</?= $debtdetail['proof'];?>" alt="</?= $debtdetail['proof'];?>" style="width: 100px;">
                                         </a>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <hr class="uk-margin-small-top uk-margin-small-bottom">
 
                                 <div class="uk-margin-remove-top">
-                                    <div><?= lang('Global.note') ?> :</div>
-                                    <div><?= $debtdetail['desc'] ?></div>
+                                    <div><?= lang('Global.customer') ?> :</div>
+                                    <div><?= $debtdetail['member'] ?></div>
                                 </div>
+
+                                <!-- <div class="uk-margin-remove-top">
+                                    <div></?= lang('Global.note') ?> :</div>
+                                    <div></?= $debtdetail['desc'] ?></div>
+                                </div> -->
 
                                 <hr class="uk-margin-small-top uk-margin-small-bottom" style="border-top: 7px solid #e5e5e5">
                             </div>

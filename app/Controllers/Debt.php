@@ -21,6 +21,7 @@ use App\Models\TrxdetailModel;
 use App\Models\TrxotherModel;
 use App\Models\TrxpaymentModel;
 use App\Models\DebtModel;
+use App\Models\DebtInsModel;
 use App\Models\DailyReportModel;
 
 class Debt extends BaseController
@@ -36,20 +37,20 @@ class Debt extends BaseController
         $pager      = \Config\Services::pager();
 
         // Calling Models
-        $BundleModel            = new BundleModel;
-        $BundledetailModel      = new BundledetailModel;
-        $CashModel              = new CashModel;
-        $OutletModel            = new OutletModel;
-        $UserModel              = new UserModel;
-        $MemberModel            = new MemberModel;
-        $PaymentModel           = new PaymentModel;
-        $ProductModel           = new ProductModel;
-        $VariantModel           = new VariantModel;
-        $TransactionModel       = new TransactionModel;
-        $TrxdetailModel         = new TrxdetailModel;
-        $TrxpaymentModel        = new TrxpaymentModel;
-        $DebtModel              = new DebtModel;
-        $GconfigModel           = new GconfigModel;
+        $BundleModel            = new BundleModel();
+        $BundledetailModel      = new BundledetailModel();
+        $CashModel              = new CashModel();
+        $OutletModel            = new OutletModel();
+        $UserModel              = new UserModel();
+        $MemberModel            = new MemberModel();
+        $PaymentModel           = new PaymentModel();
+        $ProductModel           = new ProductModel();
+        $VariantModel           = new VariantModel();
+        $TransactionModel       = new TransactionModel();
+        $TrxdetailModel         = new TrxdetailModel();
+        $TrxpaymentModel        = new TrxpaymentModel();
+        $DebtModel              = new DebtModel();
+        $GconfigModel           = new GconfigModel();
 
         $input  = $this->request->getGet('daterange');
 
@@ -129,7 +130,7 @@ class Debt extends BaseController
             $debts  = $DebtModel->where('transactionid', $trx['id'])->find();
             if (!empty($debts)) {
                 foreach ($debts as $debt) {
-                    if ((Int)$trx['amountpaid'] - (Int)$debt['value'] <= '0') {
+                    if ((Int)$trx['amountpaid'] - (Int)$debt['value'] < '0') {
                         $paidstatus = '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">' . lang('Global.notpaid') . '</div>';
                     } else {
                         $paidstatus = '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">' . lang('Global.paid') . '</div>';
@@ -334,87 +335,89 @@ class Debt extends BaseController
         $outlets                = $OutletModel->findAll();
         $payments               = $PaymentModel->findAll();
 
-        $input = $this->request->getGet('daterange');
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            // $startdate  = date('Y-m-1' . ' 00:00:00');
-            // $enddate    = date('Y-m-t' . ' 23:59:59');
-            $startdate  = date('Y-m-1');
-            $enddate    = date('Y-m-t');
-        }
+        // $input = $this->request->getGet('daterange');
+        // if (!empty($input)) {
+        //     $daterange = explode(' - ', $input);
+        //     $startdate = $daterange[0];
+        //     $enddate = $daterange[1];
+        // } else {
+        //     // $startdate  = date('Y-m-1' . ' 00:00:00');
+        //     // $enddate    = date('Y-m-t' . ' 23:59:59');
+        //     $startdate  = date('2023-01-01');
+        //     $enddate    = date('Y-m-t');
+        // }
 
         // Populating Data
-        if (!empty($input)) {
+        // if (!empty($input)) {
             // if ($startdate === $enddate) {
             //     $debts       = $DebtModel->orderby('deadline', 'DESC')->where('value !=', '0')->where('deadline', $startdate . ' 00:00:00')->where('deadline <=', $enddate . ' 23:59:59')->paginate(20, 'debt');
             // } else {
                 // $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->where('deadline >=', $startdate)->where('deadline <=', $enddate)->paginate(30, 'debt');
                 // $debts = $DebtModel->where('value !=', '0')->where('deadline <=', $enddate)->find();
             // }
-        } else {
-            $debts = $DebtModel->orderBy('deadline', 'DESC')->where('value !=', '0')->paginate(30, 'debt');
+        // } else {
+            $debts = $DebtModel->where('value !=', '0')->paginate(50, 'debt');
             // $debts = $DebtModel->where('value !=', '0')->find();
-        }
-
-        // $debtdata   = [];
-        // foreach ($debts as $debt) {
-        //     $members        = $MemberModel->find($debt['memberid']);
-
-        //     if (!empty($members)) {
-        //         $transaction    = $TransactionModel->where('memberid', $members['id'])->find($debt['transactionid']);
-
-        //         $debtdata[$members['id']]['name']       = $members['name'].' - '.$members['phone'];
-        //         $debtvalue[]  = $debt['value'];
-
-        //         if (!empty($transaction)) {
-        //             $trxvalue[]   = $transaction['value'];
-        //         }
-
-        //         $debtdata[$members['id']]['debtvalue']  = array_sum($debtvalue);
-        //         $debtdata[$members['id']]['trxvalue']  = array_sum($trxvalue);
-        //         $debtdata[$members['id']]['deadline']  = $debt['deadline'];
-        //     }
         // }
+
+        $debtdata   = [];
+        $debttotal  = [];
+        foreach ($debts as $debt) {
+            $transaction    = $TransactionModel->find($debt['transactionid']);
+            $members        = $MemberModel->find($debt['memberid']);
+
+            if (!empty($transaction)) {
+                $debttotal[]    = $debt['value'];
+                $outlet         = $OutletModel->find($transaction['outletid']);
+
+                $debtdata[$transaction['id']]['id']         = $debt['id'];
+                $debtdata[$transaction['id']]['name']       = $members['name'].' - '.$members['phone'];
+                $debtdata[$transaction['id']]['outlet']     = $outlet['name'];
+                $debtdata[$transaction['id']]['value']      = $debt['value'];
+                $debtdata[$transaction['id']]['trxdate']    = $transaction['date'];
+                $debtdata[$transaction['id']]['deadline']   = $debt['deadline'];
+            }
+        }
+        array_multisort(array_column($debtdata, 'trxdate'), SORT_DESC, $debtdata);
+        $totaldebt  = array_sum($debttotal);
         // dd($debtdata);
 
-        $trxid      = array();
-        $memberid   = array();
-        $debtlist   = array();
-        foreach ($debts as $debt) {
-            $trxid[]    = $debt['transactionid'];
-            $memberid[] = $debt['memberid'];
-            $debtlist[] = $debt['value'];
-        }
+        // $trxid      = array();
+        // $memberid   = array();
+        // $debtlist   = array();
+        // foreach ($debts as $debt) {
+        //     $trxid[]    = $debt['transactionid'];
+        //     $memberid[] = $debt['memberid'];
+        //     $debtlist[] = $debt['value'];
+        // }
 
-        $totaldebt  = array_sum($debtlist);
+        // $totaldebt  = array_sum($debtlist);
 
-        if (!empty($trxid)) {
-            $transactions           = $TransactionModel->find($trxid);
-        } else {
-            $transactions           = array();
-        }
+        // if (!empty($trxid)) {
+        //     $transactions           = $TransactionModel->find($trxid);
+        // } else {
+        //     $transactions           = array();
+        // }
 
-        if (!empty($memberid)) {
-            $customers              = $MemberModel->find($memberid);
-        } else {
-            $customers              = array();
-        }
+        // if (!empty($memberid)) {
+        //     $customers              = $MemberModel->find($memberid);
+        // } else {
+        //     $customers              = array();
+        // }
 
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = lang('Global.debt');
         $data['description']    = lang('Global.debtListDesc');
-        $data['transactions']   = $transactions;
-        $data['outlets']        = $outlets;
-        $data['customers']      = $customers;
-        $data['debts']          = $debts;
+        // $data['transactions']   = $transactions;
+        // $data['outlets']        = $outlets;
+        // $data['customers']      = $customers;
+        // $data['debts']          = $debts;
+        $data['debts']          = $debtdata;
         $data['payments']       = $payments;
         $data['totaldebt']      = $totaldebt;
-        $data['startdate']      = strtotime($startdate);
-        $data['enddate']        = strtotime($enddate);
+        // $data['startdate']      = strtotime($startdate);
+        // $data['enddate']        = strtotime($enddate);
         $data['pager']          = $DebtModel->pager;
 
         return view('Views/debt', $data);
@@ -426,12 +429,13 @@ class Debt extends BaseController
         $validation = \Config\Services::validation();
 
         // Calling Models
-        $DebtModel              = new DebtModel;
-        $CashModel              = new CashModel;
-        $TrxotherModel          = new TrxotherModel;
-        $PaymentModel           = new PaymentModel;
-        $MemberModel            = new MemberModel;
-        $DailyReportModel       = new DailyReportModel;
+        $DebtModel              = new DebtModel();
+        $DebtInsModel           = new DebtInsModel();
+        $CashModel              = new CashModel();
+        $TrxotherModel          = new TrxotherModel();
+        $PaymentModel           = new PaymentModel();
+        $MemberModel            = new MemberModel();
+        $DailyReportModel       = new DailyReportModel();
 
         // Initialize
         $input = $this->request->getPost();
@@ -439,7 +443,7 @@ class Debt extends BaseController
         // Populating Data
         $debts                  = $DebtModel->find($id);
         $payments               = $PaymentModel->where('id', $input['payment'])->first();
-        $customers              = $MemberModel->where('id', $debts['memberid'])->first();
+        // $customers              = $MemberModel->where('id', $debts['memberid'])->first();
         $cash                   = $CashModel->where('id', $payments['cashid'])->first();
 
         // Date Time Stamp
@@ -450,7 +454,7 @@ class Debt extends BaseController
             $data = [
                 'id'            => $id,
                 'value'         => $debts['value'] - $input['value'],
-                'deadline'      => $input['duedate' . $id],
+                // 'deadline'      => $input['duedate' . $id],
             ];
         } else {
             $data = [
@@ -459,32 +463,45 @@ class Debt extends BaseController
                 'deadline'      => NULL,
             ];
         }
+
         // Save Data Debt
         $DebtModel->save($data);
 
-        // Image Capture
-        $img                    = $input['image'];
-        $folderPath             = "img/tfproof/";
-        $image_parts            = explode(";base64,", $img);
-        $image_type_aux         = explode("image/", $image_parts[0]);
-        $image_type             = $image_type_aux[1];
-        $image_base64           = base64_decode($image_parts[1]);
-        $fileName               = uniqid() . '.png';
-        $file                   = $folderPath . $fileName;
-        file_put_contents($file, $image_base64);
+        // // Image Capture
+        // $img                    = $input['image'];
+        // $folderPath             = "img/tfproof/";
+        // $image_parts            = explode(";base64,", $img);
+        // $image_type_aux         = explode("image/", $image_parts[0]);
+        // $image_type             = $image_type_aux[1];
+        // $image_base64           = base64_decode($image_parts[1]);
+        // $fileName               = uniqid() . '.png';
+        // $file                   = $folderPath . $fileName;
+        // file_put_contents($file, $image_base64);
 
-        // Trx Other Cash In
-        $cashin = [
+        // // Trx Other Cash In
+        // $cashin = [
+        //     'userid'        => $this->data['uid'],
+        //     'outletid'      => $this->data['outletPick'],
+        //     'cashid'        => $payments['cashid'],
+        //     'description'   => "Debt - " . $customers['name'] . '/' . $customers['phone'],
+        //     'type'          => "0",
+        //     'date'          => $tanggal,
+        //     'qty'           => $input['value'],
+        //     // 'photo'         => $fileName,
+        // ];
+        // $TrxotherModel->save($cashin);
+
+        // Debt Installment
+        $debtins = [
+            'debtid'        => $id,
+            'transactionid' => $debts['transactionid'],
             'userid'        => $this->data['uid'],
             'outletid'      => $this->data['outletPick'],
-            'cashid'        => $payments['cashid'],
-            'description'   => "Debt - " . $customers['name'] . '/' . $customers['phone'],
-            'type'          => "0",
+            'paymentid'     => $input['payment'],
             'date'          => $tanggal,
             'qty'           => $input['value'],
-            'photo'         => $fileName,
         ];
-        $TrxotherModel->save($cashin);
+        $DebtInsModel->save($debtins);
 
         // Input Value to cash
         $wallet = [
@@ -828,15 +845,16 @@ class Debt extends BaseController
                         ];
                         $CashModel->save($paymentdata);
                     }
-                } else {
-                    $debtval = $payval;
-                    $debt = $DebtModel->where('memberid', $memberid)->first();
-                    $debtdata = [
-                        'id'    => $debt['id'],
-                        'value' => $debt['value'] - $debtval,
-                    ];
-                    $DebtModel->save($debtdata);
                 }
+                // else {
+                //     $debtval = $payval;
+                //     $debt = $DebtModel->where('memberid', $memberid)->first();
+                //     $debtdata = [
+                //         'id'    => $debt['id'],
+                //         'value' => $debt['value'] - $debtval,
+                //     ];
+                //     $DebtModel->save($debtdata);
+                // }
             }
         }
 
@@ -867,5 +885,117 @@ class Debt extends BaseController
         $TransactionModel->delete($id);
 
         return redirect()->back()->with('massage', lang('global.deleted'));
+    }
+
+    public function invoice($id)
+    {
+        // Calling Models
+        $DebtModel              = new DebtModel();
+        $DebtInsModel           = new DebtInsModel();
+        $BundleModel            = new BundleModel();
+        $OutletModel            = new OutletModel();
+        $UserModel              = new UserModel();
+        $MemberModel            = new MemberModel();
+        $ProductModel           = new ProductModel();
+        $VariantModel           = new VariantModel();
+        $TransactionModel       = new TransactionModel();
+        $TrxdetailModel         = new TrxdetailModel();
+
+        // Populating Data
+        $debt                   = $DebtModel->find($id);
+        $debtdata               = [];
+        $transaction            = $TransactionModel->find($debt['transactionid']);
+        $members                = $MemberModel->find($debt['memberid']);
+
+        if (!empty($transaction)) {
+            $outlet             = $OutletModel->find($transaction['outletid']);
+            $user               = $UserModel->find($transaction['userid']);
+
+            $debtdata[$transaction['id']]['id']         = $debt['id'];
+            $debtdata[$transaction['id']]['deadline']   = $debt['deadline'];
+            $debtdata[$transaction['id']]['value']      = $debt['value'];
+            $debtdata[$transaction['id']]['name']       = $members['name'].' - '.$members['phone'];
+            $debtdata[$transaction['id']]['phone']      = $members['phone'];
+            $debtdata[$transaction['id']]['outlet']     = $outlet['name'];
+            $debtdata[$transaction['id']]['address']    = $outlet['address'];
+            $debtdata[$transaction['id']]['outletig']   = $outlet['instagram'];
+            $debtdata[$transaction['id']]['outletwa']   = $outlet['phone'];
+            $debtdata[$transaction['id']]['cashier']    = $user->firstname.' '.$user->lastname;
+            $debtdata[$transaction['id']]['trxdate']    = $transaction['date'];
+            $debtdata[$transaction['id']]['trxvalue']   = $transaction['value'];
+            $debtdata[$transaction['id']]['trxdisc']    = $transaction['discvalue'];
+            $debtdata[$transaction['id']]['trxpoin']    = $transaction['pointused'];
+            $debtdata[$transaction['id']]['trxpaid']    = $transaction['amountpaid'];
+            $debtdata[$transaction['id']]['trxmemdisc'] = $transaction['memberdisc'];
+            $debtdata[$transaction['id']]['debtval']    = $debt['value'];
+
+            $trxdetails     = $TrxdetailModel->where('transactionid', $transaction['id'])->find();
+            $total          = [];
+            if (!empty($trxdetails)) {
+                foreach ($trxdetails as $trxdet) {
+                    // Data Variant
+                    if ($trxdet['variantid'] != '0') {
+                        $variants       = $VariantModel->find($trxdet['variantid']);
+                        
+                        if (!empty($variants)) {
+                            $products   = $ProductModel->find($variants['productid']);
+    
+                            if (!empty($products)) {
+                                $debtdata[$transaction['id']]['detailvar'][$variants['id']]['name']            = $products['name'].' - '.$variants['name'];
+                                $debtdata[$transaction['id']]['detailvar'][$variants['id']]['qty']             = $trxdet['qty'];
+                                $debtdata[$transaction['id']]['detailvar'][$variants['id']]['discvar']         = $trxdet['discvar'];
+                                $debtdata[$transaction['id']]['detailvar'][$variants['id']]['globaldisc']      = $trxdet['globaldisc'];
+                                $debtdata[$transaction['id']]['detailvar'][$variants['id']]['value']           = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                            }
+                        } else {
+                            $products   = [];
+                            $debtdata[$transaction['id']]['detailvar'][0]['name']                              = 'Produk / Variant Terhapus';
+                            $debtdata[$transaction['id']]['detailvar'][0]['qty']                               = $trxdet['qty'];
+                            $debtdata[$transaction['id']]['detailvar'][0]['discvar']                           = $trxdet['discvar'];
+                            $debtdata[$transaction['id']]['detailvar'][0]['globaldisc']                        = $trxdet['globaldisc'];
+                            $debtdata[$transaction['id']]['detailvar'][0]['value']                             = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                        }
+                    } else {
+                        $debtdata[$transaction['id']]['detailvar']  = [];
+                    }
+
+                    // Data Bundle
+                    if ($trxdet['bundleid'] != '0') {
+                        $bundles        = $BundleModel->find($trxdet['bundleid']);
+                        if (!empty($bundles)) {
+                            $debtdata[$transaction['id']]['detailbun'][$bundles['id']]['name']          = $bundles['name'];
+                            $debtdata[$transaction['id']]['detailbun'][$bundles['id']]['qty']           = $trxdet['qty'];
+                            $debtdata[$transaction['id']]['detailbun'][$bundles['id']]['globaldisc']    = $trxdet['globaldisc'];
+                            $debtdata[$transaction['id']]['detailbun'][$bundles['id']]['value']         = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                        } else {
+                            $debtdata[$transaction['id']]['detailbun'][0]['name']                       = 'Bundle Terhapus';
+                            $debtdata[$transaction['id']]['detailbun'][0]['qty']                        = $trxdet['qty'];
+                            $debtdata[$transaction['id']]['detailbun'][0]['globaldisc']                 = $trxdet['globaldisc'];
+                            $debtdata[$transaction['id']]['detailbun'][0]['value']                      = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
+                        }
+                    } else {
+                        $debtdata[$transaction['id']]['detailbun']  = [];
+                    }
+                    $total[]    = (Int)$trxdet['value'] * (Int)$trxdet['qty'];
+                }
+            }
+            $debtdata[$transaction['id']]['subtotal']   = array_sum($total);
+
+            $debtinstallment    = $DebtInsModel->where('debtid', $id)->where('transactionid', $transaction['id'])->find();
+            if (!empty($debtinstallment)) {
+                foreach ($debtinstallment as $debtins) {
+                    $debtdata[$transaction['id']]['installment'][$debtins['id']]['date']    = $debtins['date'];
+                    $debtdata[$transaction['id']]['installment'][$debtins['id']]['value']   = $debtins['qty'];
+                }
+            }
+        }
+        // dd($debtdata);
+
+        $data                   = $this->data;
+        $data['debts']          = $debtdata;
+        $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $data['links']          = urlencode($actual_link);
+
+        return view('Views/debtinst', $data);
     }
 }

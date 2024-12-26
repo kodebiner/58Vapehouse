@@ -112,28 +112,57 @@
                             </div>
                         </div>
 
-                        <?php
-                        $totaltrxvalue  = [];
-                        foreach ($dailyreport['trxpayments'] as $trxpayment) {
-                            $paymethodval   = [];
-                            foreach ($trxpayment['detail'] as $detail) {
-                                $paymethodval[] = $detail['value'];
-                            }
-                            $totalpaymethodvalue    = array_sum($paymethodval);
-                            $totaltrxvalue[]        = $totalpaymethodvalue; ?>
-                            <div class="uk-margin-small-top">
-                                <div class="uk-child-width-1-2" uk-grid>
-                                    <div>
-                                        <div class=""><?= lang('Global.sales').' '.$trxpayment['name'] ?></div>
-                                    </div>
-                                    <div class="uk-text-right">
+                        <div class="uk-margin-small-top">
+                            <div><?= lang('Global.sales') ?></div>
+                            <?php
+                            $totaltrxvalue  = [];
+                            foreach ($dailyreport['trxpayments'] as $trxpayment) {
+                                $paymethodval   = [];
+                                foreach ($trxpayment['detail'] as $detail) {
+                                    $paymethodval[] = $detail['value'];
+                                }
+                                $totalpaymethodvalue    = array_sum($paymethodval);
+                                $totaltrxvalue[]        = $totalpaymethodvalue; ?>
+                                <div class="uk-margin-remove-top">
+                                    <div class="uk-child-width-1-2" uk-grid>
                                         <div>
-                                            <?= 'Rp '.number_format($totalpaymethodvalue,2,',','.'); ?>
+                                            <div class="uk-margin-left"><?= $trxpayment['name'] ?></div>
+                                        </div>
+                                        <div class="uk-text-right">
+                                            <div>
+                                                <?= 'Rp '.number_format($totalpaymethodvalue,2,',','.'); ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php } ?>
+                            <?php } ?>
+                        </div>
+
+                        <div class="uk-margin-small-top">
+                            <div><?= lang('Global.debtInstallments') ?></div>
+                            <?php
+                            $totaldebtins  = [];
+                            foreach ($dailyreport['debtins'] as $debtins) {
+                                $debtinstallments   = [];
+                                foreach ($debtins['detail'] as $detail) {
+                                    $debtinstallments[] = $detail['value'];
+                                }
+                                $totaldebtinstallment   = array_sum($debtinstallments);
+                                $totaldebtins[]         = $totaldebtinstallment; ?>
+                                <div class="uk-margin-remove-top">
+                                    <div class="uk-child-width-1-2" uk-grid>
+                                        <div>
+                                            <div class="uk-margin-left"><?= $debtins['name'] ?></div>
+                                        </div>
+                                        <div class="uk-text-right">
+                                            <div>
+                                                <?= 'Rp '.number_format($totaldebtinstallment,2,',','.'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
 
                         <hr class="uk-margin-small-top uk-margin-small-bottom">
 
@@ -146,7 +175,7 @@
                                     <div>
                                         <?php
                                             $totalvalue = array_sum($totaltrxvalue);
-                                            echo "Rp ".number_format($totalvalue,2,',','.');
+                                            echo "Rp ".number_format(((Int)$totalvalue + (Int)$totaldebtins + (Int)$totalcashflow),2,',','.');
                                         ?>
                                     </div>
                                 </div>

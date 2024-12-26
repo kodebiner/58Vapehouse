@@ -270,6 +270,7 @@ return [
     'cashhistory'       => 'Riwayat Kas',
     'export'            => 'Export',
     'selectcat'         => 'Pilih Kategori',
+    'selectbrand'       => 'Pilih Brand',
     'percentage'        => 'Persentase',
     'debtinsHistory'    => 'Riwayat Angsuran Hutang',
     'topupHistory'      => 'Riwayat Top Up',

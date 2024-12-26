@@ -21,11 +21,11 @@
         </div>
 
         <!-- Date Range -->
-        <div class="uk-width-1-2@m uk-text-right@m">
+        <!-- <div class="uk-width-1-2@m uk-text-right@m">
             <form id="short" action="debt" method="get">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?= date('m/d/Y', $startdate) ?> - <?= date('m/d/Y', $enddate) ?>" />
+                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="</?= date('m/d/Y', $startdate) ?> - </?= date('m/d/Y', $enddate) ?>" />
                 </div>
             </form>
             <script>
@@ -39,7 +39,7 @@
                     });
                 });
             </script>
-        </div>
+        </div> -->
         <!-- End Of Date Range-->
 
     </div>
@@ -72,28 +72,36 @@
                     <td class="uk-flex-middle uk-text-center">
                         <a class="uk-icon-link uk-icon" uk-icon="credit-card" uk-toggle="target:#pay-<?= $debt['id'] ?>"></a>
                     </td>
-
-                    <?php foreach ($transactions as $trx) {
-                        if ($trx['id'] === $debt['transactionid']) { ?>
-                            <td class=""><?= date('l, d M Y', strtotime($trx['date'])); ?></td>
-
-                            <?php foreach ($outlets as $outlet) {
-                                if ($outlet['id'] === $trx['outletid']) { ?>
-                                    <td class=""><?= $outlet['name'] ?></td>
-                            <?php }
-                            } ?>
-                    <?php }
-                    } ?>
-
-                    <?php foreach ($customers as $cust) {
-                        if ($cust['id'] === $debt['memberid']) { ?>
-                            <td class=""><?= $cust['name'] . ' / ' . $cust['phone'] ?></td>
-                    <?php }
-                    } ?>
-
+                    <td class=""><?= date('l, d M Y', strtotime($debt['trxdate'])); ?></td>
+                    <td class=""><?= $debt['outlet'] ?></td>
+                    <td class=""><?= $debt['name'] ?></td>
                     <td class=""><?= date('l, d M Y', strtotime($debt['deadline'])); ?></td>
-
                     <td class="">Rp <?= number_format($debt['value'], 2, ',', '.') ?></td>
+                    <!-- <td class="uk-flex-middle uk-text-center">
+                        <a class="uk-icon-link uk-icon" uk-icon="credit-card" uk-toggle="target:#pay-</?= $debt['id'] ?>"></a>
+                    </td>
+
+                    </?php foreach ($transactions as $trx) {
+                        if ($trx['id'] === $debt['transactionid']) { ?>
+                            <td class=""></?= date('l, d M Y', strtotime($trx['date'])); ?></td>
+
+                            </?php foreach ($outlets as $outlet) {
+                                if ($outlet['id'] === $trx['outletid']) { ?>
+                                    <td class=""></?= $outlet['name'] ?></td>
+                            </?php }
+                            } ?>
+                    </?php }
+                    } ?>
+
+                    </?php foreach ($customers as $cust) {
+                        if ($cust['id'] === $debt['memberid']) { ?>
+                            <td class=""></?= $cust['name'] . ' / ' . $cust['phone'] ?></td>
+                    </?php }
+                    } ?>
+
+                    <td class=""></?= date('l, d M Y', strtotime($debt['deadline'])); ?></td>
+
+                    <td class="">Rp </?= number_format($debt['value'], 2, ',', '.') ?></td> -->
                 </tr>
             <?php } ?>
         </tbody>
@@ -125,21 +133,22 @@
                 <div class="uk-modal-body">
                     <div class="uk-form-horizontal">
                         <div class="uk-text-right">
-                            <?php foreach ($transactions as $transaction) {
+                            <a class="uk-icon-button" uk-icon="print" href="debt/invoice/<?= $debt['id'] ?>"></a>
+                            <!-- </?php foreach ($transactions as $transaction) {
                                 if ($transaction['id'] === $debt['transactionid']) { ?>
-                                    <a class="uk-icon-button" uk-icon="print" href="pay/copyprint/<?= $transaction['id'] ?>"></a>
-                            <?php }
-                            } ?>
+                                    <a class="uk-icon-button" uk-icon="print" href="pay/copyprint/</?= $transaction['id'] ?>"></a>
+                            </?php }
+                            } ?> -->
                         </div>
 
                         <div class="uk-margin uk-margin-remove-top">
                             <label class="uk-form-label"><?= lang('Global.customer') ?></label>
-                            <div class="uk-form-controls">:
-                                <?php foreach ($customers as $cust) {
+                            <div class="uk-form-controls">: <?= $debt['name'] ?>
+                                <!-- </?php foreach ($customers as $cust) {
                                     if ($debt['memberid'] === $cust['id']) {
                                         echo $cust['name'] . ' / ' . $cust['phone'];
                                     }
-                                } ?>
+                                } ?> -->
                             </div>
                         </div>
 
@@ -155,7 +164,7 @@
                                             <option value="" selected disabled hidden><?=lang('Global.payment')?></option>
                                             <?php
                                             foreach ($payments as $pay) {
-                                                if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
+                                                if ($pay['outletid'] == $outletPick) {
                                                     echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
                                                 }
                                             }
@@ -172,18 +181,18 @@
                                 </div>
                             </div>
 
-                            <?php if ($debt['value'] !== "0") { ?>
+                            <!-- </?php if ($debt['value'] !== "0") { ?>
                                 <div class="uk-margin">
-                                    <label class="uk-form-label"><?= lang('Global.duedate') ?></label>
+                                    <label class="uk-form-label"></?= lang('Global.duedate') ?></label>
                                     <div class="uk-form-controls">
                                         <div class="uk-inline">
                                             <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: calendar"></span>
-                                            <input class="uk-input uk-form-width-medium" id="duedate<?= $debt['id'] ?>" name="duedate<?= $debt['id'] ?>" />
+                                            <input class="uk-input uk-form-width-medium" id="duedate</?= $debt['id'] ?>" name="duedate</?= $debt['id'] ?>" />
                                             <script type="text/javascript">
                                                 $(function() {
-                                                    $("#duedate<?= $debt['id'] ?>").datepicker({
+                                                    $("#duedate</?= $debt['id'] ?>").datepicker({
                                                         dateFormat: "yy-mm-dd",
-                                                        minDate: "<?= $debt['deadline'] ?>",
+                                                        minDate: "</?= $debt['deadline'] ?>",
                                                         maxDate: "+1m +1w"
                                                     });
                                                 });
@@ -191,17 +200,17 @@
                                         </div>
                                     </div>
                                 </div>
-                            <?php } ?>
+                            </?php } ?> -->
 
-                            <div class="uk-margin">
+                            <!-- <div class="uk-margin">
                                 <div class="uk-form-controls">
-                                    <a class="uk-button uk-button-default" uk-toggle="#payproof-<?= $debt['id'] ?>"><?= lang('Global.payproof') ?></a>
+                                    <a class="uk-button uk-button-default" uk-toggle="#payproof-</?= $debt['id'] ?>"></?= lang('Global.payproof') ?></a>
                                 </div>
                             </div>
 
                             <div class="uk-margin" hidden>
                                 <input class="image-tag" name="image" required>
-                            </div>
+                            </div> -->
 
                             <hr>
 
@@ -218,30 +227,30 @@
     </div>
 
     <!-- Modal Pay Proof -->
-    <div uk-modal class="uk-flex-top" id="payproof-<?= $debt['id'] ?>">
+    <!-- <div uk-modal class="uk-flex-top" id="payproof-</?= $debt['id'] ?>">
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
                 <div class="uk-modal-header">
                     <div class="uk-flex uk-flex-middle uk-child-width-auto" uk-grid>
                         <div class="uk-padding-remove uk-margin-medium-left">
-                            <a uk-icon="arrow-left" uk-toggle="#pay-<?= $debt['id'] ?>" width="35" height="35"></a>
+                            <a uk-icon="arrow-left" uk-toggle="#pay-</?= $debt['id'] ?>" width="35" height="35"></a>
                         </div>
                         <div>
-                            <h5 class="uk-modal-title"><?= lang('Global.payproof') ?></h5>
+                            <h5 class="uk-modal-title"></?= lang('Global.payproof') ?></h5>
                         </div>
                     </div>
                 </div>
                 <div class="uk-modal-body">
                     <div class="uk-flex-center uk-child-width-1-1" uk-grid>
-                        <div id="pay_camera<?= $debt['id'] ?>"></div>
+                        <div id="pay_camera</?= $debt['id'] ?>"></div>
                         <div class="uk-text-center uk-margin-small-top">
-                            <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="pay_snapshot<?= $debt['id'] ?>()">
+                            <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="pay_snapshot</?= $debt['id'] ?>()">
                         </div>
-                        <div class="uk-text-center" id="pay_results<?= $debt['id'] ?>"></div>
-                    </div>
+                        <div class="uk-text-center" id="pay_results</?= $debt['id'] ?>"></div>
+                    </div> -->
 
                     <!-- Script Webcam Pay Proof -->
-                    <script type="text/javascript">
+                    <!-- <script type="text/javascript">
                         
                         Webcam.set({
                             width: 490,
@@ -256,20 +265,20 @@
                             }
                         });
 
-                        Webcam.attach('#pay_camera<?= $debt['id'] ?>');
+                        Webcam.attach('#pay_camera</?= $debt['id'] ?>');
 
-                        function pay_snapshot<?= $debt['id'] ?>() {
+                        function pay_snapshot</?= $debt['id'] ?>() {
                             Webcam.snap(function(data_uri) {
                                 $(".image-tag").val(data_uri);
-                                document.getElementById('pay_results<?= $debt['id'] ?>').innerHTML = '<img src="' + data_uri + '"/>';
+                                document.getElementById('pay_results</?= $debt['id'] ?>').innerHTML = '<img src="' + data_uri + '"/>';
                             });
                         }
-                    </script>
+                    </script> -->
                     <!-- Script Webcam Pay Proof End -->
-                </div>
+                <!-- </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- Modal Pay Proof End -->
 <?php } ?>
 <!-- Modal Pay Debt End -->

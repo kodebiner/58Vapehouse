@@ -2557,9 +2557,9 @@ class export extends BaseController
         // Search Filter
         $inputsearch    = $this->request->getGet('search');
         if (!empty($inputsearch)) {
-            $members   = $MemberModel->like('name', $inputsearch)->orderBy('name', 'ASC')->paginate(20, 'member');
+            $members   = $MemberModel->like('name', $inputsearch)->orderBy('name', 'ASC')->find();
         } else {
-            $members   = $MemberModel->orderBy('name', 'ASC')->paginate(20, 'member');
+            $members   = $MemberModel->orderBy('name', 'ASC')->find();
         }
 
         // Daterange Filter
@@ -2569,7 +2569,7 @@ class export extends BaseController
             $startdate = $daterange[0];
             $enddate = $daterange[1];
         } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $startdate  = date('2023-01-01' . ' 00:00:00');
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
