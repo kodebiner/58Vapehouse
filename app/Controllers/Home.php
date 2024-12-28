@@ -382,11 +382,13 @@ class Home extends BaseController
     
             foreach ($trxpaymentsdata as $trxpay) {
                 $payments           = $PaymentModel->find($trxpay['paymentid']);
-                $bestpayment[] = [
-                    'id'    => $payments['id'],
-                    'name'  => $payments['name'],
-                    'value' => $trxpay['value'],
-                ];
+                if (!empty($payments)) {
+                    $bestpayment[] = [
+                        'id'    => $payments['id'],
+                        'name'  => $payments['name'],
+                        'value' => $trxpay['value'],
+                    ];
+                }
             }
             
             // Bussy Day
