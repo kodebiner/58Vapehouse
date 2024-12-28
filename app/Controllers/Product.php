@@ -58,16 +58,51 @@ class Product extends BaseController
         // } elseif (!empty($input['search']) && !empty($input['category'])) {
         //     $products   = $ProductModel->where('catid', $input['category'])->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
         // } else {
-            $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+            // $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
         // }
 
         if (!empty($input['search'])) {
-            $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        } if (!empty($input['category'])) {
-            $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        } if (!empty($input['brand'])) {
-            $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+            if (!empty($input['category'])) {
+                if (!empty($input['brand'])) {
+                    $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+                } else {
+                    $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+                }
+            } else {
+                $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
+            }
+        } elseif (!empty($input['category'])) {
+            if (!empty($input['brand'])) {
+                if (!empty($input['search'])) {
+                    $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+                } else {
+                    $products   = $ProductModel->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+                }
+            } else {
+                $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+            }
+        } elseif (!empty($input['brand'])) {
+            if (!empty($input['category'])) {
+                if (!empty($input['search'])) {
+                    $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+                } else {
+                    $products   = $ProductModel->where('brandid', $input['brand'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+                }
+            } else {
+                $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+            }
         }
+        else {
+            $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        
+        // if (!empty($input['category'])) {
+        //     $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        // } if (!empty($input['brand'])) {
+        //     $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        // } else {
+        //     $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+        // }
 
         $productcount = count($ProductModel->findAll());
         $productid  = array();
