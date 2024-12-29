@@ -44,6 +44,25 @@
         <!-- Capital Price End -->
     </div>
     <!-- Counter Total End -->
+
+    <!-- Search Engine -->
+    <div class="uk-margin-medium-bottom">
+        <form action="stock" method="GET">
+            <div class="uk-child-width-1-1 uk-child-width-1-4@m uk-flex-middle" uk-grid>
+                <div class="uk-text-right@l uk-margin-small-top">
+                    <div class="uk-search uk-search-default uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: search" style="color: #000;"></span>
+                        <input class="uk-width-1-1 uk-input" type="search" name="search" style="border-radius: 7px;" placeholder="Search Item ..." aria-label="Search" value="<?= (!empty($input['search']) ? $input['search'] : '') ?>">
+                    </div>
+                </div>
+                <div class="uk-text-center">
+                    <button class="uk-button uk-button-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Search Engine End -->
+
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
@@ -51,6 +70,7 @@
                 <th class=""><?=lang('Global.outlet')?></th>
                 <th class=""><?=lang('Global.product')?></th>
                 <th class="uk-text-center"><?=lang('Global.stock')?></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -59,28 +79,34 @@
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td class="">
-                        <?php foreach ($outlets as $outlet ) {
+                        <?= $stock['outlet'] ?>
+                        <!-- </?php foreach ($outlets as $outlet ) {
                             if ($stock['outletid']=== $outlet['id']) {
                                 echo $outlet['name'];
                             }
-                        } ?>
+                        } ?> -->
                     </td>
                     <td class="">
-                        <?php foreach ($variants as $variant ) {
+                        <?= $stock['name'] ?>
+                        <!-- </?php foreach ($variants as $variant ) {
                             foreach ($products as $product) {
                                 if(($stock['variantid'] === $variant['id']) && ($product['id'] === $variant['productid'])) {
                                     echo $product['name'].' - '.$variant['name'];
                                 }
                             }
-                        } ?>
+                        } ?> -->
                     </td>
                     <td class="uk-text-center"><?= $stock['qty']; ?></td>
+                    <td class="uk-text-center">
+                        <a class="uk-button uk-button-primary" href="product/history/<?= $stock['id'] ?>">Stock History</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
     <div>
-        <?= $pager->links('stock', 'front_full') ?>
+        <?= $pager_links ?>
+        <!-- </?= $pager->links('stock', 'front_full') ?> -->
     </div>
 </div>
 <!-- End Table Content -->
