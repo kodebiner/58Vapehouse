@@ -639,14 +639,14 @@ class Debt extends BaseController
 
         foreach ($debtinstallments as $debt) {
             $transaction    = $TransactionModel->find($debt['transactionid']);
-            $members        = $MemberModel->find($debt['memberid']);
+            $members        = $MemberModel->find($transaction['memberid']);
 
             if (!empty($transaction)) {
-                $outlets                        = $OutletModel->find($transaction['outletid']);
-                $debtinsdata[$debt['date']]['date']          = $debt['date'];
-                $debtinsdata[$debt['date']]['description']   = 'Debt - '.$members['name'].' / '.$members['phone'];
-                $debtinsdata[$debt['date']]['outlet']        = $outlets['name'];
-                $debtinsdata[$debt['date']]['qty']           = $debt['qty'];
+                $outlets                                        = $OutletModel->find($transaction['outletid']);
+                $debtinsdata[$debt['date']]['date']             = $debt['date'];
+                $debtinsdata[$debt['date']]['description']      = 'Debt - '.$members['name'].' / '.$members['phone'];
+                $debtinsdata[$debt['date']]['outlet']           = $outlets['name'];
+                $debtinsdata[$debt['date']]['qty']              = $debt['qty'];
             }
         }
         array_multisort(array_column($debtinsdata, 'date'), SORT_DESC, $debtinsdata);
@@ -667,7 +667,7 @@ class Debt extends BaseController
         $data['pager_links']        = $pager->makeLinks($page, $perPage, $total, 'front_full');
         $data['startdate']          = strtotime($startdate);
         $data['enddate']            = strtotime($enddate);
-        $data['pager']              = $TrxotherModel->pager;
+        // $data['pager']              = $TrxotherModel->pager;
 
         return view('Views/debtpay', $data);
     }
