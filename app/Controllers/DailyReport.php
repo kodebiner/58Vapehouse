@@ -452,37 +452,6 @@ class DailyReport extends BaseController
     
                     // Actual Cashier Summary
                     $dailyreportdata[$dayrep['id']]['actualsummary']    = (Int)$dayrep['cashclose'] + (Int)$dayrep['noncashclose'];
-
-                    // Debt Installment
-                    $debtins    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->find();
-                    if (!empty($debtins)) {
-                        foreach ($debtins as $debtin) {
-                            // User Cashier
-                            $usercashcier   = $UserModel->find($debtin['userid']);
-                            
-                            // Debt Member
-                            // $transaction    = $TransactionModel->find($debtin['transactionid']);
-                            $members        = $MemberModel->find($trx['memberid']);
-        
-                            // Debt Installment Data
-                            $paymentins     = $PaymentModel->find($debtin['paymentid']);
-                            $cashdebt       = $CashModel->find($paymentins['cashid']);
-                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['name']                                = $cashdebt['name'];
-        
-                            // Detail Debt Installment
-                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['value']      = $debtin['qty'];
-                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['cashier']    = $usercashcier->firstname.' '.$usercashcier->lastname;
-                            // $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['type']    = $debtin['type'];
-                            // $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['desc']    = $debtin['description'];
-                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['date']       = date('H:i:s', strtotime($debtin['date']));
-                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['qty']        = $debtin['qty'];
-                            // $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['proof']   = $debtin['photo'];
-                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['member']     = 'Debt - '.$members['name'].' / '.$members['phone'];
-                        }
-                    } else {
-                        $usercashcier   = [];
-                        $dailyreportdata[$dayrep['id']]['debtins'] = [];
-                    }
                 } else {
                     $dailyreportdata[$dayrep['id']]['dateclose']    = lang('Global.storeNotClosed');
 
@@ -508,9 +477,6 @@ class DailyReport extends BaseController
     
                     // Actual Cashier Summary
                     $dailyreportdata[$dayrep['id']]['actualsummary']    = (Int)$dayrep['cashclose'] + (Int)$dayrep['noncashclose'];
-                    
-                    // Debt Installment
-                    $dailyreportdata[$dayrep['id']]['debtins'] = [];
                 }
 
                 // User Open Store
@@ -571,9 +537,67 @@ class DailyReport extends BaseController
                         $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['member']     = $debtin['description'];
                     }
                 } else {
-                    $usercashcier   = [];
-                    $dailyreportdata[$dayrep['id']]['debtins'] = [];
+                    $debtinst    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();
+                    if (!empty($debtinst)) {
+                        foreach ($debtinst as $debtin) {
+                            // User Cashier
+                            $usercashcier   = $UserModel->find($debtin['userid']);
+                            
+                            // Debt Member
+                            $transaction    = $TransactionModel->find($debtin['transactionid']);
+                            $members        = $MemberModel->find($transaction['memberid']);
+        
+                            // Debt Installment Data
+                            $paymentins     = $PaymentModel->find($debtin['paymentid']);
+                            $cashdebt       = $CashModel->find($paymentins['cashid']);
+                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['name']                                = $cashdebt['name'];
+        
+                            // Detail Debt Installment
+                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['value']      = $debtin['qty'];
+                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['cashier']    = $usercashcier->firstname.' '.$usercashcier->lastname;
+                            // $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['type']    = $debtin['type'];
+                            // $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['desc']    = $debtin['description'];
+                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['date']       = date('H:i:s', strtotime($debtin['date']));
+                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['qty']        = $debtin['qty'];
+                            // $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['proof']   = $debtin['photo'];
+                            $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['member']     = 'Debt - '.$members['name'].' / '.$members['phone'];
+                        }
+                    } else {
+                        $usercashcier   = [];
+                        $dailyreportdata[$dayrep['id']]['debtins'] = [];
+                    }
                 }
+
+                // // Debt Installment
+                // $debtinst    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();
+                // if (!empty($debtinst)) {
+                //     foreach ($debtinst as $debtin) {
+                //         // User Cashier
+                //         $usercashcier   = $UserModel->find($debtin['userid']);
+                        
+                //         // Debt Member
+                //         $transaction    = $TransactionModel->find($debtin['transactionid']);
+                //         $members        = $MemberModel->find($transaction['memberid']);
+    
+                //         // Debt Installment Data
+                //         $paymentins     = $PaymentModel->find($debtin['paymentid']);
+                //         $cashdebt       = $CashModel->find($paymentins['cashid']);
+                //         $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['name']                                = $cashdebt['name'];
+    
+                //         // Detail Debt Installment
+                //         $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['value']      = $debtin['qty'];
+                //         $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['cashier']    = $usercashcier->firstname.' '.$usercashcier->lastname;
+                //         // $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['type']    = $debtin['type'];
+                //         // $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['desc']    = $debtin['description'];
+                //         $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['date']       = date('H:i:s', strtotime($debtin['date']));
+                //         $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['qty']        = $debtin['qty'];
+                //         // $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['proof']   = $debtin['photo'];
+                //         $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['member']     = 'Debt - '.$members['name'].' / '.$members['phone'];
+                //     }
+                // } else {
+                //     $usercashcier   = [];
+                //     $dailyreportdata[$dayrep['id']]['debtins'] = [];
+                // }
 
                 if (!empty($topups)) {
                     foreach ($topups as $topup) {

@@ -263,7 +263,7 @@ class Trxother extends BaseController
             }
 
             // Debt Installment
-            $debtinst    = $DebtInsModel->where('outletid', $this->data['outletPick'])->find();
+            $debtinst    = $DebtInsModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
             if (!empty($debtinst)) {
                 foreach ($debtinst as $debtin) {
                     // User Cashier

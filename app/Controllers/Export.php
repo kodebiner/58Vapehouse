@@ -3033,28 +3033,6 @@ class export extends BaseController
 
                 // Actual Cashier Summary
                 $dailyreportdata[$dayrep['id']]['actualsummary']    = (Int)$dayrep['cashclose'] + (Int)$dayrep['noncashclose'];
-
-                // Debt Installment
-                $debtins    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->find();
-                if (!empty($debtins)) {
-                    foreach ($debtins as $debtin) {
-                        // Debt Installment Data
-                        $paymentins     = $PaymentModel->find($debtin['paymentid']);
-                        $cashdebtins    = $CashModel->find($paymentins['cashid']);
-
-                        if (strcmp($cashdebtins['name'], 'Petty Cash ' . $outlets['name']) == 0) {
-                            $dailyreportdata[$dayrep['id']]['debtins'][0]['name']                               = 'Tunai';
-                            $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['type']      = '0';
-                            $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['value']     = $debtin['qty'];
-                        } else {
-                            $dailyreportdata[$dayrep['id']]['debtins'][1]['name']                               = 'Non-Tunai';
-                            $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtin['id']]['type']      = '1';
-                            $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtin['id']]['value']     = $debtin['qty'];
-                        }
-                    }
-                } else {
-                    $dailyreportdata[$dayrep['id']]['debtins'] = [];
-                }
             } else {
                 $dailyreportdata[$dayrep['id']]['dateclose']    = lang('Global.storeNotClosed');
 
@@ -3073,9 +3051,6 @@ class export extends BaseController
 
                 // Actual Cashier Summary
                 $dailyreportdata[$dayrep['id']]['actualsummary']    = (Int)$dayrep['cashclose'] + (Int)$dayrep['noncashclose'];
-
-                // Debt Installment
-                $dailyreportdata[$dayrep['id']]['debtins'] = [];
             }
 
             // User Open Store
@@ -3101,6 +3076,7 @@ class export extends BaseController
                 $dailyreportdata[$dayrep['id']]['cashflow'] = [];
             }
 
+            // Debt Installment
             if (!empty($debtins)) {
                 foreach ($debtins as $debtin) {
                     // Debt Installment Data
@@ -3119,7 +3095,26 @@ class export extends BaseController
                     }
                 }
             } else {
-                $dailyreportdata[$dayrep['id']]['debtins'] = [];
+                $debtinst    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->find();
+                if (!empty($debtinst)) {
+                    foreach ($debtinst as $debtin) {
+                        // Debt Installment Data
+                        $paymentins     = $PaymentModel->find($debtin['paymentid']);
+                        $cashdebtins    = $CashModel->find($paymentins['cashid']);
+    
+                        if (strcmp($cashdebtins['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+                            $dailyreportdata[$dayrep['id']]['debtins'][0]['name']                               = 'Tunai';
+                            $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['type']      = '0';
+                            $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['value']     = $debtin['qty'];
+                        } else {
+                            $dailyreportdata[$dayrep['id']]['debtins'][1]['name']                               = 'Non-Tunai';
+                            $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtin['id']]['type']      = '1';
+                            $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtin['id']]['value']     = $debtin['qty'];
+                        }
+                    }
+                } else {
+                    $dailyreportdata[$dayrep['id']]['debtins'] = [];
+                }    
             }
 
             if (!empty($topups)) {
