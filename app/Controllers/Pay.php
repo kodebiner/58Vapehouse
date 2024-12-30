@@ -540,18 +540,18 @@ class Pay extends BaseController
             // $CashModel->save($cash);
         }
 
-        // Point Used
-        if (!isset($input['firstpayment']) && !isset($input['secpayment']) && ($paymentid == '-1') && !isset($input['duedate'])) {
-            // Single Payment Method
-            // $payment = $PaymentModel->find($input['payment']);
-            // Insert Transaction Payment
-            $paymethod = [
-                'paymentid'     => $paymentid,
-                'transactionid' => $trxId,
-                'value'         => $total,
-            ];
-            $TrxpaymentModel->insert($paymethod);
-        }
+        // // Point Used
+        // if (!isset($input['firstpayment']) && !isset($input['secpayment']) && ($paymentid == '-1') && !isset($input['duedate'])) {
+        //     // Single Payment Method
+        //     // $payment = $PaymentModel->find($input['payment']);
+        //     // Insert Transaction Payment
+        //     $paymethod = [
+        //         'paymentid'     => $paymentid,
+        //         'transactionid' => $trxId,
+        //         'value'         => $total,
+        //     ];
+        //     $TrxpaymentModel->insert($paymethod);
+        // }
         
         // Splitbill
         elseif (isset($input['firstpayment']) && isset($input['secpayment']) && !isset($input['payment']) && !isset($input['duedate'])) {
