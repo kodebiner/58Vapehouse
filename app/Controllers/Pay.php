@@ -192,8 +192,8 @@ class Pay extends BaseController
 
         if (!empty($input['payment']) && empty($input['duedate'])) {
             $paymentid = $input['payment'];
-        } elseif (empty($input['payment']) && empty($input['duedate'])) {
-            $paymentid  = '-1';
+        // } elseif (empty($input['payment']) && empty($input['duedate'])) {
+        //     $paymentid  = '-1';
         } else {
             $paymentid = '0';
         }
