@@ -11,6 +11,13 @@ use App\Models\VariantModel;
 use App\Models\BundleModel;
 use App\Models\BundledetailModel;
 use App\Models\StockModel;
+use App\Models\StockmovementModel;
+use App\Models\StockMoveDetailModel;
+use App\Models\StockAdjustmentModel;
+use App\Models\TransactionModel;
+use App\Models\TrxdetailModel;
+use App\Models\PurchaseModel;
+use App\Models\PurchasedetailModel;
 use App\Models\OldStockModel;
 use App\Models\OutletModel;
 use App\Models\GroupUserModel;
@@ -61,40 +68,72 @@ class Product extends BaseController
             // $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
         // }
 
-        if (!empty($input['search'])) {
-            if (!empty($input['category'])) {
-                if (!empty($input['brand'])) {
-                    $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-                } else {
-                    $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-                }
-            } else {
-                $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
-            }
-        } elseif (!empty($input['category'])) {
-            if (!empty($input['brand'])) {
-                if (!empty($input['search'])) {
-                    $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-                } else {
-                    $products   = $ProductModel->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-                }
-            } else {
-                $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-            }
-        } elseif (!empty($input['brand'])) {
-            if (!empty($input['category'])) {
-                if (!empty($input['search'])) {
-                    $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-                } else {
-                    $products   = $ProductModel->where('brandid', $input['brand'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-                }
-            } else {
-                $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-            }
+        if ((!empty($input['search'])) && (!empty($input['category'])) && (!empty($input['brand']))) {
+            $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        elseif ((!empty($input['search'])) && (!empty($input['category']))) {
+            $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        elseif ((!empty($input['search'])) && (!empty($input['brand']))) {
+            $products   = $ProductModel->like('name', $input['search'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        elseif ((!empty($input['category'])) && (!empty($input['brand']))) {
+            $products   = $ProductModel->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        elseif (!empty($input['search'])) {
+            $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        elseif (!empty($input['category'])) {
+            $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        elseif (!empty($input['brand'])) {
+            $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
         }
         else {
             $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
         }
+
+        // if (!empty($input['search'])) {
+        //     if (!empty($input['category'])) {
+        //         if (!empty($input['brand'])) {
+        //             $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        //         } else {
+        //             $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        //         }
+        //     } else {
+        //         $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        //     }
+        // } else {
+        //     $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+        // }
+
+        // if (!empty($input['category'])) {
+        //     if (!empty($input['brand'])) {
+        //         if (!empty($input['search'])) {
+        //             $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        //         } else {
+        //             $products   = $ProductModel->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        //         }
+        //     } else {
+        //         $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        //     }
+        // } else {
+        //     $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+        // }
+
+        // if (!empty($input['brand'])) {
+        //     if (!empty($input['category'])) {
+        //         if (!empty($input['search'])) {
+        //             $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        //         } else {
+        //             $products   = $ProductModel->where('brandid', $input['brand'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        //         }
+        //     } else {
+        //         $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        //     }
+        // } else {
+        //     $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
+        // }
         
         // if (!empty($input['category'])) {
         //     $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
@@ -827,5 +866,129 @@ class Product extends BaseController
 
         $ProductModel->save($data);
         die(json_encode(array($input)));
+    }
+
+    public function history($id)
+    {
+        $pager      = \Config\Services::pager();
+
+        // Calling Model
+        $ProductModel           = new ProductModel();
+        $VariantModel           = new VariantModel();
+        $StockModel             = new StockModel();
+        $StockmovementModel     = new StockmovementModel();
+        $StockMoveDetailModel   = new StockMoveDetailModel();
+        $StockAdjustmentModel   = new StockAdjustmentModel();
+        $TransactionModel       = new TransactionModel();
+        $TrxdetailModel         = new TrxdetailModel();
+        $PurchaseModel          = new PurchaseModel();
+        $PurchasedetailModel    = new PurchasedetailModel();
+
+        // Populating Data
+        $input          = $this->request->getGet();
+        $historydata    = [];
+
+        if ($this->data['outletPick'] != null) {
+            // Name
+            $variant            = $VariantModel->find($id);
+            $product            = $ProductModel->find($variant['productid']);
+            $name               = $product['name'].' - '.$variant['name'];
+    
+            // SKU
+            $sku                = $variant['sku'];
+    
+            // Stock
+            $stock              = $StockModel->where('variantid', $id)->where('outletid', $this->data['outletPick'])->first();
+            $stocknow           = $stock['qty'];
+
+            if (!empty($variant)) {
+                // Stock Adjustment
+                $stockadj       = $StockAdjustmentModel->where('variantid', $id)->where('outletid', $this->data['outletPick'])->find();
+    
+                if (!empty($stockadj)) {
+                    foreach ($stockadj as $stockad) {
+                        if ($stockad['type'] == '0') {
+                            $historydata[$stockad['date']]['date']      = $stockad['date'];
+                            $historydata[$stockad['date']]['status']    = 1;
+                            // $historydata[$stockad['date']]['status']    = 'Penyesuaian Stok / '.$stockad['note'];
+                            $historydata[$stockad['date']]['qty']       = $stockad['qty'];
+                        } else {
+                            $historydata[$stockad['date']]['date']      = $stockad['date'];
+                            $historydata[$stockad['date']]['status']    = 2;
+                            $historydata[$stockad['date']]['qty']       = $stockad['qty'];
+                        }
+                    }
+                }
+    
+                // Stock Movement
+                $stockmovedet   = $StockMoveDetailModel->where('variantid', $id)->find();
+                if (!empty($stockmovedet)) {
+                    foreach ($stockmovedet as $smdet) {
+                        $stockmovement  = $StockmovementModel->find($smdet['stockmoveid']);
+                        if ($stockmovement['origin'] == $this->data['outletPick']) {
+                            $historydata[$stockmovement['date']]['date']        = $stockmovement['date'];
+                            $historydata[$stockmovement['date']]['status']      = 3;
+                            // $historydata[$stockmovement['date']]['status']      = 'Pemindahan Stok';
+                            $historydata[$stockmovement['date']]['qty']         = $smdet['qty'];
+                        }
+                        if ($stockmovement['destination'] == $this->data['outletPick']) {
+                            $historydata[$stockmovement['date']]['date']        = $stockmovement['date'];
+                            $historydata[$stockmovement['date']]['status']      = 4;
+                            $historydata[$stockmovement['date']]['qty']         = $smdet['qty'];
+                        }
+                    }
+                }
+    
+                // Transaction
+                $trxdetail      = $TrxdetailModel->where('variantid', $id)->find();
+                if (!empty($trxdetail)) {
+                    foreach ($trxdetail as $trxdet) {
+                        $transaction    = $TransactionModel->find($trxdet['transactionid']);
+
+                        $historydata[$transaction['date']]['date']      = $transaction['date'];
+                        $historydata[$transaction['date']]['status']    = 5;
+                        // $historydata[$transaction['date']]['status']    = 'Penjualan';
+                        $historydata[$transaction['date']]['qty']       = $trxdet['qty'];
+                    }
+                }
+    
+                // Purchase
+                $purdet         = $PurchasedetailModel->where('variantid', $id)->find();
+                if (!empty($purdet)) {
+                    foreach ($purdet as $pudet) {
+                        $purchase       = $PurchaseModel->find($pudet['purchaseid']);
+
+                        $historydata[$purchase['date']]['date']         = $purchase['date'];
+                        $historydata[$purchase['date']]['status']       = 6;
+                        // $historydata[$purchase['date']]['status']       = 'Pembelian';
+                        $historydata[$purchase['date']]['qty']          = $pudet['qty'];
+                    }
+                }
+            }
+
+            // $historydata[0]['date']         = date('Y/m/d H:i:s');
+            // $historydata[0]['status']       = 0;
+            // $historydata[0]['qty']          = $stocknow;
+            array_multisort(array_column($historydata, 'date'), SORT_DESC, $historydata);
+
+            $page       = (int) ($this->request->getGet('page') ?? 1);
+            $perPage    = 20;
+            $total      = count($historydata);
+            // dd($historydata);
+
+            // Parsing Data to View
+            $data                   = $this->data;
+            $data['title']          = lang('Global.productList');
+            $data['description']    = lang('Global.productListDesc');
+            $data['stocks']         = array_slice($historydata, ($page*20)-20, $page*20);
+            $data['pager_links']    = $pager->makeLinks($page, $perPage, $total, 'front_full');
+            $data['totalstock']     = $stocknow;
+            $data['name']           = $name;
+            $data['sku']            = $sku;
+    
+            return view('Views/history', $data);
+        } else {
+            return redirect()->to('');
+        }
     }
 }

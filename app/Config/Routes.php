@@ -147,7 +147,11 @@ $routes->group('product', ['filter'=>'login'], function($routes){
     $routes->post('editvar/(:num)', 'Product::editvar/$1', ['filter' => 'role:owner,supervisor']);
     $routes->get('deletevar/(:num)', 'Product::deletevar/$1', ['filter' => 'role:owner,supervisor']);
 
-    $routes->get('export', 'Product::export', ['filter' => 'role:owner,supervisor']);  
+    // Export
+    $routes->get('export', 'Product::export', ['filter' => 'role:owner,supervisor']);
+
+    // Stock History
+    $routes->get('history/(:num)', 'Product::history/$1', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Export

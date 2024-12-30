@@ -1275,6 +1275,7 @@
                                     <th class="uk-width-medium" style="color: #000;">Name</th>
                                     <th class="uk-text-center uk-width-small" style="color: #000;"><?= lang('Global.stock') ?></th>
                                     <th class="uk-width-large" style="color: #000;"><?= lang('Global.price') ?></th>
+                                    <th class="uk-text-center uk-width-small" style="color: #000;">Stock History</th>
                                 </tr>
                             </thead>
                             <tbody style="color: #000;">
@@ -1296,6 +1297,9 @@
                                             </td>
                                             <td>
                                                 <?= "Rp " . number_format(((int)$variant['hargamodal'] + (int)$variant['hargajual']), 2, ',', '.'); ?>
+                                            </td>
+                                            <td class="uk-text-center">
+                                                <a class="uk-icon-button" uk-icon="history" href="product/history/<?= $variant['id'] ?>"></a>
                                             </td>
                                         </tr>
                                     <?php } ?>
