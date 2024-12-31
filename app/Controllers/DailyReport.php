@@ -414,9 +414,9 @@ class DailyReport extends BaseController
                         if (!empty($debtpayments)) {
                             foreach ($debtpayments as $debtpayment) {
                                 // Transaction Summary
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['name']                               = 'Kasbon';
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][0]['name']                  = 'Kasbon';
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][0]['value']                 = $debtpayment['value'];
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['name']                                   = 'Kasbon';
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][$debtpayment['id']]['name']     = 'Kasbon';
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][$debtpayment['id']]['value']    = $debtpayment['value'];
 
                                 // Detail Transaction
                                 $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][0]['name']            = 'Kasbon';
@@ -430,9 +430,9 @@ class DailyReport extends BaseController
                         if (!empty($pointpayments)) {
                             foreach ($pointpayments as $pointpayment) {
                                 // Transaction Summary
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][-1]['name']                              = lang('Global.redeemPoint');
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][-1]['detail'][-1]['name']                = lang('Global.redeemPoint');
-                                $dailyreportdata[$dayrep['id']]['trxpayments'][-1]['detail'][-1]['value']               = $pointpayment['value'];
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][-1]['name']                                  = lang('Global.redeemPoint');
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][-1]['detail'][$pointpayment['id']]['name']   = lang('Global.redeemPoint');
+                                $dailyreportdata[$dayrep['id']]['trxpayments'][-1]['detail'][$pointpayment['id']]['value']  = $pointpayment['value'];
 
                                 // Detail Transaction
                                 $dailyreportdata[$dayrep['id']]['payments'][$trx['id']]['detail'][-1]['name']            = lang('Global.redeemPoint');

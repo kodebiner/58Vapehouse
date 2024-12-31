@@ -3029,8 +3029,8 @@ class export extends BaseController
                         foreach ($debtpayments as $debtpayment) {
                             // Transaction Summary
                             $dailyreportdata[$dayrep['id']]['trxpayments'][2]['name']               = 'Kasbon';
-                            $dailyreportdata[$dayrep['id']]['trxpayments'][2]['detail'][0]['type']  = '2';
-                            $dailyreportdata[$dayrep['id']]['trxpayments'][2]['detail'][0]['value'] = $debtpayment['value'];
+                            $dailyreportdata[$dayrep['id']]['trxpayments'][2]['detail'][$debtpayment['id']]['type']  = '2';
+                            $dailyreportdata[$dayrep['id']]['trxpayments'][2]['detail'][$debtpayment['id']]['value'] = $debtpayment['value'];
                         }
                     }
 
@@ -3038,8 +3038,8 @@ class export extends BaseController
                         foreach ($pointpayments as $pointpayment) {
                             // Transaction Summary
                             $dailyreportdata[$dayrep['id']]['trxpayments'][3]['name']               = lang('Global.redeemPoint');
-                            $dailyreportdata[$dayrep['id']]['trxpayments'][3]['detail'][0]['type']  = '3';
-                            $dailyreportdata[$dayrep['id']]['trxpayments'][3]['detail'][0]['value'] = $pointpayment['value'];
+                            $dailyreportdata[$dayrep['id']]['trxpayments'][3]['detail'][$pointpayment['id']]['type']  = '3';
+                            $dailyreportdata[$dayrep['id']]['trxpayments'][3]['detail'][$pointpayment['id']]['value'] = $pointpayment['value'];
                         }
                     }
                 }
