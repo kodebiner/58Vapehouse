@@ -179,26 +179,50 @@
                         <h6 class="uk-margin-remove-top uk-text-muted"><?= lang('Global.descsales') ?></h6>
                         <?php
                         $totaltrxvalue  = [];
-                        foreach ($dayrep['trxpayments'] as $trxpayment) {
-                            $paymethodval   = [];
-                            foreach ($trxpayment['detail'] as $detail) {
-                                $paymethodval[] = $detail['value'];
-                            }
-                            $totalpaymethodvalue    = array_sum($paymethodval);
-                            $totaltrxvalue[]        = $totalpaymethodvalue; ?>
-                            <div class="uk-margin-small-top">
-                                <div class="uk-child-width-1-2" uk-grid>
-                                    <div>
-                                        <div class=""><?= lang('Global.totalreceived').' '.$trxpayment['name'] ?></div>
-                                    </div>
-                                    <div class="uk-text-right">
+                        $totaltrxvaluedebtpoin  = [];
+                        foreach ($dayrep['trxpayments'] as $key => $trxpayment) {
+                            if ($key > 0) {
+                                $paymethodval   = [];
+                                $paymethodvaldebtpoin   = [];
+                                foreach ($trxpayment['detail'] as $detail) {
+                                    $paymethodval[] = $detail['value'];
+                                }
+                                $totalpaymethodvalue    = array_sum($paymethodval);
+                                $totaltrxvalue[]        = $totalpaymethodvalue; ?>
+                                <div class="uk-margin-small-top">
+                                    <div class="uk-child-width-1-2" uk-grid>
                                         <div>
-                                            <?= 'Rp '.number_format($totalpaymethodvalue,2,',','.'); ?>
+                                            <div class=""><?= lang('Global.totalreceived').' '.$trxpayment['name'] ?></div>
+                                        </div>
+                                        <div class="uk-text-right">
+                                            <div>
+                                                <?= 'Rp '.number_format($totalpaymethodvalue,2,',','.'); ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php } ?>
+                            <?php }
+                            if ($key <= 0) {
+                                $paymethodvaldebtpoin   = [];
+                                foreach ($trxpayment['detail'] as $detail) {
+                                    $paymethodvaldebtpoin[] = $detail['value'];
+                                }
+                                $totalpaymethodvaluedebtpoin    = array_sum($paymethodvaldebtpoin);
+                                $totaltrxvaluedebtpoin[]        = $totalpaymethodvaluedebtpoin; ?>
+                                <div class="uk-margin-small-top">
+                                    <div class="uk-child-width-1-2" uk-grid>
+                                        <div>
+                                            <div class=""><?= lang('Global.totalreceived').' '.$trxpayment['name'] ?></div>
+                                        </div>
+                                        <div class="uk-text-right">
+                                            <div>
+                                                <?= 'Rp '.number_format($totalpaymethodvaluedebtpoin,2,',','.'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php }
+                        } ?>
 
                         <div class="uk-margin-small-top">
                             <div class="uk-child-width-1-2 uk-text-bolder" style="color: #000;" uk-grid>

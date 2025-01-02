@@ -3114,7 +3114,7 @@ class export extends BaseController
                     }
                 }
             } else {
-                $debtinst    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->find();
+                $debtinst    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();
                 if (!empty($debtinst)) {
                     foreach ($debtinst as $debtin) {
                         // Debt Installment Data
@@ -3203,7 +3203,7 @@ class export extends BaseController
                 echo '<tr>';
                     echo '<th rowspan="2">Tanggal</th>';
                     echo '<th colspan="3">Arus Kas</th>';
-                    echo '<th colspan="3">Penjualan</th>';
+                    echo '<th colspan="4">Penjualan</th>';
                     echo '<th colspan="2">Angsuran Hutang</th>';
                     echo '<th colspan="2">Top Up</th>';
                     echo '<th rowspan="2">Tarik Tunai</th>';
@@ -3218,6 +3218,7 @@ class export extends BaseController
                     echo '<th>Tunai</th>';
                     echo '<th>Non-Tunai</th>';
                     echo '<th>Kasbon</th>';
+                    echo '<th>Tukar Poin</th>';
                     echo '<th>Tunai</th>';
                     echo '<th>Non-Tunai</th>';
                     echo '<th>Tunai</th>';
@@ -3256,10 +3257,12 @@ class export extends BaseController
                         $totaltrxcash       = [];
                         $totaltrxnoncash    = [];
                         $totaltrxdebt       = [];
+                        $totaltrxpoin       = [];
                         foreach ($dayrep['trxpayments'] as $trxpayment) {
                             $trxcash    = [];
                             $trxnoncash = [];
                             $trxdebt    = [];
+                            $trxpoin    = [];
                             foreach ($trxpayment['detail'] as $detail) {
                                 if ($detail['type'] == '0') {
                                     $trxcash[] = $detail['value'];
@@ -3270,6 +3273,9 @@ class export extends BaseController
                                 if ($detail['type'] == '2') {
                                     $trxdebt[] = $detail['value'];
                                 }
+                                if ($detail['type'] == '3') {
+                                    $trxpoin[] = $detail['value'];
+                                }
                                 $paymethodval[] = $detail['value'];
                             }
                             $arraytrxcash       = array_sum($trxcash);
@@ -3278,13 +3284,17 @@ class export extends BaseController
                             $totaltrxnoncash[]  = $arraytrxnoncash;
                             $arraytrxdebt       = array_sum($trxdebt);
                             $totaltrxdebt[]     = $arraytrxdebt;
+                            $arraytrxpoin       = array_sum($trxpoin);
+                            $totaltrxpoin[]     = $arraytrxpoin;
                         }
                         $totalcash      = array_sum($totaltrxcash);
                         $totalnoncash   = array_sum($totaltrxnoncash);
                         $totaldebt      = array_sum($totaltrxdebt);
+                        $totalpoin      = array_sum($totaltrxpoin);
                         echo '<td>' . $totalcash . '</td>';
                         echo '<td>' . $totalnoncash . '</td>';
                         echo '<td>' . $totaldebt . '</td>';
+                        echo '<td>' . $totalpoin . '</td>';
                         // Transaction Data End
 
                         // Debt Installment
@@ -3351,7 +3361,7 @@ class export extends BaseController
 
                         // System Receive
                         $systemreceivecash      = (Int)$totalcash + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)) + (Int)$totaldebtcashvalue + (Int)$totaltopupcashvalue;
-                        $systemreceivenoncash   = (Int)$totalnoncash + (Int)$totaldebt + (Int)$totaldebtnoncashvalue + (Int)$totaltopupnoncashvalue + (Int)$totalwithdrawvalue;
+                        $systemreceivenoncash   = (Int)$totalnoncash + (Int)$totaldebtnoncashvalue + (Int)$totaltopupnoncashvalue + (Int)$totalwithdrawvalue;
                         $systemreceivetotal     = (Int)$systemreceivecash + (Int)$systemreceivenoncash;
                         echo '<td>' . $systemreceivecash . '</td>';
                         echo '<td>' . $systemreceivenoncash . '</td>';
