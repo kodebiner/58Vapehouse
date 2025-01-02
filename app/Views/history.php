@@ -1,7 +1,10 @@
 <?= $this->extend('layout') ?>
 
 <?= $this->section('extraScript') ?>
-<script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+    <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -21,119 +24,55 @@
 
 <!-- Table Of Content -->
 <div class="uk-overflow-auto uk-margin">
-    <!-- Counter Total -->
     <div class="uk-light" uk-grid>
-        <div class="uk-width-1-3 uk-width-1-6@m uk-form-horizontal">
+        <!-- Counter Total -->
+        <div class="uk-width-1-2@m uk-width-1-1 uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 100px;"><?= lang('Global.total') ?> <?= lang('Global.stock') ?> :</div>
             <div class="uk-form-controls uk-margin-top uk-margin-remove-left"><?= $totalstock ?></div>
         </div>
-    </div>
-    <!-- Counter Total End -->
+        <!-- Counter Total End -->
 
-    <!-- Search Engine -->
-    <!-- <div class="uk-margin-medium-bottom">
-        <form action="stock" method="GET">
-            <div class="uk-child-width-1-1 uk-child-width-1-4@m uk-flex-middle" uk-grid>
-                <div class="uk-text-right@l uk-margin-small-top">
-                    <div class="uk-search uk-search-default uk-width-1-1">
-                        <span class="uk-form-icon" uk-icon="icon: search" style="color: #000;"></span>
-                        <input class="uk-width-1-1 uk-input" type="search" name="search" style="border-radius: 7px;" placeholder="Search Item ..." aria-label="Search" value="</?= (!empty($input['search']) ? $input['search'] : '') ?>">
-                    </div>
+        <!-- Date Range -->
+        <div class="uk-width-1-2@m uk-width-1-1 uk-text-right">
+            <form id="short" action="product/history/<?= $id ?>" method="get">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
                 </div>
-                <div class="uk-text-center">
-                    <button class="uk-button uk-button-primary" type="submit">Search</button>
-                </div>
-            </div>
-        </form>
-    </div> -->
-    <!-- Search Engine End -->
+            </form>
+            <script>
+                $(function() {
+                    $('input[name="daterange"]').daterangepicker({
+                        maxDate: new Date(),
+                        opens: 'right'
+                    }, function(start, end, label) {
+                        document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                        document.getElementById('short').submit();
+                    });
+                });
+            </script>
+        </div>
+        <!-- Date Range End -->
+    </div>
 
     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light">
         <thead>
             <tr>
                 <th>Tanggal</th>
-                <!-- <th>SKU</th>
-                <th>Nama</th> -->
                 <th>Status</th>
                 <th>Jumlah</th>
-                <th>Sisa Stok</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            <!-- <tr>
-                <td></?= date('l, d M Y, H:i:s', strtotime($stocks[0]['date'])) ?></td>
-                <td>
-                    </?php if ($stocks[0]['status'] == '0') {
-                        echo 'Saat Ini';
-                    } ?>
-                </td>
-                <td></?= $stocks[0]['qty'] ?></td>
-                <td></?= $stocks[0]['qty'] ?></td>
-            </tr> -->
-            <?php foreach ($stocks as $key => $stock) {
-                // if ($key > 0) { ?>
-                    <tr>
-                        <td><?= date('l, d M Y, H:i:s', strtotime($stock['date'])) ?></td>
-                        <!-- <td></?= $stock['sku'] ?></td>
-                        <td></?= $stock['name'] ?></td> -->
-                        <td>
-                            <?php if (($stock['status'] == '1') || ($stock['status'] == '2')) {
-                                echo 'Penyesuaian Stok';
-                            } ?>
-                            <?php if (($stock['status'] == '3') || ($stock['status'] == '4')) {
-                                echo 'Pemindahan Stok';
-                            } ?>
-                            <?php if ($stock['status'] == '5') {
-                                echo 'Penjualan';
-                            } ?>
-                            <?php if ($stock['status'] == '6') {
-                                echo 'Pembelian';
-                            } ?>
-                        </td>
-                        <td>
-                            <?php if ($stock['status'] == '1') {
-                                echo '<div style="color: green">+'.$stock['qty'].'</div>';
-                            } ?>
-                            <?php if ($stock['status'] == '2') {
-                                echo '<div style="color: red">-'.$stock['qty'].'</div>';
-                            } ?>
-                            <?php if ($stock['status'] == '3') {
-                                echo '<div style="color: red">-'.$stock['qty'].'</div>';
-                            } ?>
-                            <?php if ($stock['status'] == '4') {
-                                echo '<div style="color: green">+'.$stock['qty'].'</div>';
-                            } ?>
-                            <?php if ($stock['status'] == '5') {
-                                echo '<div style="color: red">-'.$stock['qty'].'</div>';
-                            } ?>
-                            <?php if ($stock['status'] == '6') {
-                                echo '<div style="color: green">+'.$stock['qty'].'</div>';
-                            } ?>
-                        </td>
-                        <td>
-                            <?php if ($stock['status'] == '1') {
-                                echo (Int)$totalstock - (Int)$stock['qty'];
-                            } ?>
-                            <?php if ($stock['status'] == '2') {
-                                echo (Int)$totalstock + (Int)$stock['qty'];
-                            } ?>
-                            <?php if ($stock['status'] == '3') {
-                                echo (Int)$totalstock + (Int)$stock['qty'];
-                            } ?>
-                            <?php if ($stock['status'] == '4') {
-                                echo (Int)$totalstock - (Int)$stock['qty'];
-                            } ?>
-                            <?php if ($stock['status'] == '5') {
-                                echo (Int)$totalstock + (Int)$stock['qty'];
-                            } ?>
-                            <?php if ($stock['status'] == '6') {
-                                echo (Int)$totalstock - (Int)$stock['qty'];
-                            } ?>
-                        </td>
-                    </tr>
-                <?php
-                // }
-            } ?>
+            <?php foreach ($stocks as $stock) { ?>
+                <tr>
+                    <td><?= date('l, d M Y, H:i:s', strtotime($stock['date'])) ?></td>
+                    <td><?= $stock['status'] ?></td>
+                    <td><?= $stock['qty'] ?></td>
+                    <td><a uk-icon="eye" class="uk-icon-link uk-icon-button" uk-toggle="target: #detail-<?= strtotime($stock['date']) ?>"></a></td>
+                </tr>
+            <?php } ?>
         </tbody>
     </table>
     <div>
@@ -141,4 +80,96 @@
     </div>
 </div>
 <!-- End Table Content -->
+
+<!-- Modal Detail -->
+<?php foreach ($stocks as $stock) { ?>
+    <div uk-modal class="uk-flex-top uk-modal-container" id="detail-<?= strtotime($stock['date']) ?>">
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-content">
+                <div class="uk-modal-header">
+                    <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <h5 class="uk-modal-title" id="detail-<?= strtotime($stock['date']) ?>" ><?=lang('Global.detail')?></h5>
+                        </div>
+                        <div class="uk-text-right">
+                            <div>
+                                <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-modal-body">
+                    <div class="uk-form-horizontal">
+                        <div class="uk-margin">
+                            <div class="tm-h2 uk-h4"><?=lang('Global.movementInfo')?></div>
+                        </div>
+
+                        <div class="uk-margin">
+                            <label class="uk-form-label"><?=lang('Global.status')?></label>
+                            <div class="uk-form-controls">
+                                <!-- </?php if ($stockmove['status'] === "0") {
+                                    echo '<span class="uk-text-primary" style="padding: 5px; border-style: solid; border-color: #1e87f0;">'.$created.$stockmove['origin'].'</span>';
+                                } elseif ($stockmove['status'] === "1") {
+                                    if ($outletPick == $stockmove['destinationid']) {
+                                        echo '<span style="padding: 5px; border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['destination'].'</span>';
+                                    } elseif ($outletPick == $stockmove['originid']) {
+                                        echo '<span style="padding: 5px; border-style: solid; border-color: #faa05a;">'.$sent.$stockmove['origin'].'</span>';
+                                    } else {
+                                        echo '<span style="padding: 5px; border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['origin'].' / '.$stockmove['destination'].'</span>';
+                                    }
+                                } elseif ($stockmove['status'] === "2") {
+                                    echo '<span class="uk-text-danger uk-width-auto" style="padding: 5px; border-style: solid; border-color: #f0506e;">'.$cancel.'</span>';
+                                } elseif ($stockmove['status'] === "3") {
+                                    echo '<span class="uk-text-success uk-width-auto" style="padding: 5px; border-style: solid; border-color: #32d296;">'.$success.$stockmove['destination'].'</span>';
+                                }
+                                ?> -->
+                            </div>
+                        </div>
+                        
+                        <div class="uk-margin">
+                            <label class="uk-form-label"><?=lang('Global.date')?></label>
+                            <div class="uk-form-controls"><?= date('l, d M Y, H:i:s', strtotime($stock['date'])); ?></div>
+                        </div>
+                    </div>
+
+                    <div class="uk-divider-icon"></div>
+                    
+                    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-table-small" style="background-color: #fff; color: #000;">
+                        <thead>
+                            <tr>
+                                <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
+                                <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
+                                <th class="uk-text-emphasis"><?=lang('Global.quantity').' '.lang('Global.stock')?></th>
+                                <th class="uk-text-emphasis"><?=lang('Global.capitalPrice')?></th>
+                                <th class="uk-text-emphasis"><?=lang('Global.total').' '.lang('Global.capitalPrice')?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- </?php foreach ($stockmovedata[$stockmove['id']]['detail'] as $detail) { ?>
+                                <tr>
+                                    <td></?= $detail['productname']; ?></td>
+                                    <td></?= $detail['variantname']; ?></td>
+                                    <td></?= $detail['inputqty']; ?></td>
+                                    <td></?= $detail['wholesale']; ?></td>
+                                    <td></?= (Int)$detail['wholesale'] * (Int)$detail['inputqty']; ?></td>
+                                </tr>
+                            </?php } ?> -->
+                        </tbody>
+                        <tfoot>
+                            <!-- <tr>
+                                <td></?= lang('Global.totalMovement'); ?></td>
+                                <td></td>
+                                <td></td>
+                                <td></?= $stockmove['totalqty'] ?></td>
+                                <td></td>
+                                <td></?= "Rp ".number_format($stockmove['totalwholesale'],0,',','.'); ?></td>
+                            </tr> -->
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+<!-- Modal Detail End -->
 <?= $this->endSection() ?>
