@@ -116,9 +116,10 @@
                             <div><?= lang('Global.sales') ?></div>
                             <?php
                             $totaltrxvalue  = [];
-                            $totaltrxvaluedebtpoin  = [];
-                            foreach ($dailyreport['trxpayments'] as $key => $trxpayment) {
-                                if ($key > 0) {
+                            // $totaltrxvaluedebtpoin  = [];
+                            // foreach ($dailyreport['trxpayments'] as $key => $trxpayment) {
+                            foreach ($dailyreport['trxpayments'] as $trxpayment) {
+                                // if ($key > 0) {
                                     $paymethodval   = [];
                                     foreach ($trxpayment['detail'] as $detail) {
                                         $paymethodval[] = $detail['value'];
@@ -137,27 +138,29 @@
                                             </div>
                                         </div>
                                     </div>
-                                <?php }
-                                if ($key <= 0) {
-                                    $paymethodvaldebtpoin   = [];
-                                    foreach ($trxpayment['detail'] as $detail) {
-                                        $paymethodvaldebtpoin[] = $detail['value'];
-                                    }
-                                    $totalpaymethodvaluedebtpoin    = array_sum($paymethodvaldebtpoin);
-                                    $totaltrxvaluedebtpoin[]        = $totalpaymethodvaluedebtpoin; ?>
-                                    <div class="uk-margin-remove-top">
+                                <?php 
+                                // }
+                                // if ($key <= 0) {
+                                //     $paymethodvaldebtpoin   = [];
+                                //     foreach ($trxpayment['detail'] as $detail) {
+                                //         $paymethodvaldebtpoin[] = $detail['value'];
+                                //     }
+                                //     $totalpaymethodvaluedebtpoin    = array_sum($paymethodvaldebtpoin);
+                                //     $totaltrxvaluedebtpoin[]        = $totalpaymethodvaluedebtpoin; ?>
+                                    <!-- <div class="uk-margin-remove-top">
                                         <div class="uk-child-width-1-2" uk-grid>
                                             <div>
-                                                <div class="uk-margin-left"><?= $trxpayment['name'] ?></div>
+                                                <div class="uk-margin-left"></?= $trxpayment['name'] ?></div>
                                             </div>
                                             <div class="uk-text-right">
                                                 <div>
-                                                    <?= 'Rp '.number_format($totalpaymethodvaluedebtpoin,2,',','.'); ?>
+                                                    </?= 'Rp '.number_format($totalpaymethodvaluedebtpoin,2,',','.'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                <?php }
+                                    </div> -->
+                                <?php 
+                                // }
                             } ?>
                         </div>
 
