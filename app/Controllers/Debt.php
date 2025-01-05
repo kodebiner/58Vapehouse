@@ -642,7 +642,7 @@ class Debt extends BaseController
             $members        = $MemberModel->find($transaction['memberid']);
 
             if (!empty($transaction)) {
-                $outlets                                        = $OutletModel->find($transaction['outletid']);
+                $outlets                                        = $OutletModel->find($debt['outletid']);
                 $debtinsdata[$debt['date']]['date']             = $debt['date'];
                 $debtinsdata[$debt['date']]['description']      = 'Debt - '.$members['name'].' / '.$members['phone'];
                 $debtinsdata[$debt['date']]['outlet']           = $outlets['name'];
