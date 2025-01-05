@@ -3114,28 +3114,28 @@ class export extends BaseController
                     }
                 }
             }
-            else {
+            // else {
                 $debtinst    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();
                 if (!empty($debtinst)) {
-                    foreach ($debtinst as $debtin) {
+                    foreach ($debtinst as $debtinstall) {
                         // Debt Installment Data
-                        $paymentins     = $PaymentModel->find($debtin['paymentid']);
+                        $paymentins     = $PaymentModel->find($debtinstall['paymentid']);
                         $cashdebtins    = $CashModel->find($paymentins['cashid']);
     
                         if (strcmp($cashdebtins['name'], 'Petty Cash ' . $outlets['name']) == 0) {
                             $dailyreportdata[$dayrep['id']]['debtins'][0]['name']                               = 'Tunai';
-                            $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['type']      = '0';
-                            $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['value']     = $debtin['qty'];
+                            $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtinstall['id']]['type']      = '0';
+                            $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtinstall['id']]['value']     = $debtinstall['qty'];
                         } else {
                             $dailyreportdata[$dayrep['id']]['debtins'][1]['name']                               = 'Non-Tunai';
-                            $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtin['id']]['type']      = '1';
-                            $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtin['id']]['value']     = $debtin['qty'];
+                            $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtinstall['id']]['type']      = '1';
+                            $dailyreportdata[$dayrep['id']]['debtins'][1]['detail'][$debtinstall['id']]['value']     = $debtinstall['qty'];
                         }
                     }
                 } else {
                     $dailyreportdata[$dayrep['id']]['debtins'] = [];
                 }    
-            }
+            // }
 
             if (!empty($topups)) {
                 foreach ($topups as $topup) {
