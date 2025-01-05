@@ -537,7 +537,7 @@ class DailyReport extends BaseController
                         $dailyreportdata[$dayrep['id']]['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['member']     = $debtin['description'];
                     }
                 }
-                // else {
+                else {
                     $debtinst    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();
                     if (!empty($debtinst)) {
                         foreach ($debtinst as $debtinstall) {
@@ -567,7 +567,7 @@ class DailyReport extends BaseController
                         $usercashcier   = [];
                         $dailyreportdata[$dayrep['id']]['debtins'] = [];
                     }
-                // }
+                }
 
                 // // Debt Installment
                 // $debtinst    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();

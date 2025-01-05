@@ -3114,7 +3114,7 @@ class export extends BaseController
                     }
                 }
             }
-            // else {
+            else {
                 $debtinst    = $DebtInsModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();
                 if (!empty($debtinst)) {
                     foreach ($debtinst as $debtinstall) {
@@ -3134,8 +3134,8 @@ class export extends BaseController
                     }
                 } else {
                     $dailyreportdata[$dayrep['id']]['debtins'] = [];
-                }    
-            // }
+                }
+            }
 
             if (!empty($topups)) {
                 foreach ($topups as $topup) {
