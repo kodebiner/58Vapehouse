@@ -2964,7 +2964,7 @@ class export extends BaseController
         $date2 = date('Y-m-d', strtotime($enddate));
 
         $cashdata       = $CashModel->where('outletid', $this->data['outletPick'])->find();
-        $dailyreports   = $DailyReportModel->orderby('dateopen', 'DESC')->where('dateopen >=', $startdate . " 00:00:00")->where('dateopen <=', $enddate . " 23:59:59")->where('outletid', $this->data['outletPick'])->paginate(20, 'dailyreport');
+        $dailyreports   = $DailyReportModel->orderby('dateopen', 'DESC')->where('dateopen >=', $startdate . " 00:00:00")->where('dateopen <=', $enddate . " 23:59:59")->where('outletid', $this->data['outletPick'])->paginate(35, 'dailyreport');
 
         // Outlet
         $outlets        = $OutletModel->find($this->data['outletPick']);
