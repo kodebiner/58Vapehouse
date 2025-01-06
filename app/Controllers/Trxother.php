@@ -158,13 +158,14 @@ class Trxother extends BaseController
                                 $dailyreportdata['payments'][$trx['id']]['detail']                                       = [];
                             }
                         }
-                    } else {
-                        // Transaction Summary
-                        $dailyreportdata['trxpayments'] = [];
-
-                        // Detail Transaction
-                        $dailyreportdata['payments']    = [];
                     }
+                    //  else {
+                    //     // Transaction Summary
+                    //     $dailyreportdata['trxpayments'] = [];
+
+                    //     // Detail Transaction
+                    //     $dailyreportdata['payments']    = [];
+                    // }
 
                     if (!empty($debtpayments)) {
                         foreach ($debtpayments as $debtpayment) {
