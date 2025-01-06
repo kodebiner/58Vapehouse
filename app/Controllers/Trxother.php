@@ -172,8 +172,8 @@ class Trxother extends BaseController
                         foreach ($debtpayments as $debtpayment) {
                             // Transaction Summary
                             $dailyreportdata['trxpayments'][0]['name']                               = 'Kasbon';
-                            $dailyreportdata['trxpayments'][0]['detail'][0]['name']                  = 'Kasbon';
-                            $dailyreportdata['trxpayments'][0]['detail'][0]['value']                 = $debtpayment['value'];
+                            $dailyreportdata['trxpayments'][0]['detail'][$debtpayment['id']]['name']                  = 'Kasbon';
+                            $dailyreportdata['trxpayments'][0]['detail'][$debtpayment['id']]['value']                 = $debtpayment['value'];
 
                             // Detail Transaction
                             $dailyreportdata['payments'][$trx['id']]['detail'][0]['name']            = 'Kasbon';
@@ -194,8 +194,8 @@ class Trxother extends BaseController
                         foreach ($pointpayments as $pointpayment) {
                             // Transaction Summary
                             $dailyreportdata['trxpayments'][-1]['name']                              = lang('Global.redeemPoint');
-                            $dailyreportdata['trxpayments'][-1]['detail'][-1]['name']                = lang('Global.redeemPoint');
-                            $dailyreportdata['trxpayments'][-1]['detail'][-1]['value']               = $pointpayment['value'];
+                            $dailyreportdata['trxpayments'][-1]['detail'][$pointpayment['id']]['name']                = lang('Global.redeemPoint');
+                            $dailyreportdata['trxpayments'][-1]['detail'][$pointpayment['id']]['value']               = $pointpayment['value'];
 
                             // Detail Transaction
                             $dailyreportdata['payments'][$trx['id']]['detail'][-1]['name']            = lang('Global.redeemPoint');
