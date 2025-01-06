@@ -178,7 +178,11 @@
                             <div class="uk-margin-bottom">
                                 <label class="uk-form-label" for="value"><?= lang('Global.amountpaid') ?></label>
                                 <div class="uk-form-controls">
-                                    <input type="number" class="uk-input" min="0" max="<?= $debt['value'] ?>" id="value" name="value" placeholder="0" required />
+                                    <?php if ($outletPick == null) { ?>
+                                        <input type="number" class="uk-input" min="0" max="<?= $debt['value'] ?>" id="value" name="value" placeholder="0" disabled required />
+                                    <?php } else { ?>
+                                        <input type="number" class="uk-input" min="0" max="<?= $debt['value'] ?>" id="value" name="value" placeholder="0" required />
+                                    <?php } ?>
                                 </div>
                             </div>
 

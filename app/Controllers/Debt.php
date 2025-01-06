@@ -325,14 +325,15 @@ class Debt extends BaseController
         $pager      = \Config\Services::pager();
 
         // Calling Models
-        $OutletModel            = new OutletModel;
-        $MemberModel            = new MemberModel;
-        $PaymentModel           = new PaymentModel;
-        $TransactionModel       = new TransactionModel;
-        $DebtModel              = new DebtModel;
+        $OutletModel            = new OutletModel();
+        $MemberModel            = new MemberModel();
+        $PaymentModel           = new PaymentModel();
+        $TransactionModel       = new TransactionModel();
+        $TrxpaymentModel        = new TrxpaymentModel();
+        $DebtModel              = new DebtModel();
 
         // Populating Data
-        $outlets                = $OutletModel->findAll();
+        // $outlets                = $OutletModel->findAll();
         $payments               = $PaymentModel->findAll();
 
         // $input = $this->request->getGet('daterange');
@@ -361,27 +362,34 @@ class Debt extends BaseController
         // }
 
         if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('paymentid', '0')->findAll();
+            $transactions   = $TransactionModel->where('paymentid', '0')->findAll();
+            // $payments       = $PaymentModel->findAll();
         } else {
-            $transactions = $TransactionModel->where('paymentid', '0')->where('outletid', $this->data['outletPick'])->find();
+            $transactions   = $TransactionModel->where('paymentid', '0')->where('outletid', $this->data['outletPick'])->find();
+            // $payments       = $PaymentModel->where('outletid', $this->data['outletPick'])->find();
         }
 
         $debtdata   = [];
         $debttotal  = [];
         foreach ($transactions as $trx) {
-            $debts      = $DebtModel->where('value !=', '0')->where('transactionid', $trx['id'])->find();
-            $outlet     = $OutletModel->find($trx['outletid']);
-            if (!empty($debts)) {
-                foreach ($debts as $debt) {
-                    $members        = $MemberModel->find($debt['memberid']);
-                    $debttotal[]    = $debt['value'];
-    
-                    $debtdata[$trx['id']]['id']         = $debt['id'];
-                    $debtdata[$trx['id']]['name']       = $members['name'].' - '.$members['phone'];
-                    $debtdata[$trx['id']]['outlet']     = $outlet['name'];
-                    $debtdata[$trx['id']]['value']      = $debt['value'];
-                    $debtdata[$trx['id']]['trxdate']    = $trx['date'];
-                    $debtdata[$trx['id']]['deadline']   = $debt['deadline'];
+            $trxpayments    = $TrxpaymentModel->where('paymentid', '0')->where('transactionid', $trx['id'])->find();
+            $outlet         = $OutletModel->find($trx['outletid']);
+            if (!empty($trxpayments)) {
+                foreach ($trxpayments as $trxpay) {
+                    $debts          = $DebtModel->where('value !=', '0')->where('transactionid', $trxpay['transactionid'])->find();
+                    if (!empty($debts)) {
+                        foreach ($debts as $debt) {
+                            $members        = $MemberModel->find($debt['memberid']);
+                            $debttotal[]    = $debt['value'];
+            
+                            $debtdata[$trx['id']]['id']         = $debt['id'];
+                            $debtdata[$trx['id']]['name']       = $members['name'].' - '.$members['phone'];
+                            $debtdata[$trx['id']]['outlet']     = $outlet['name'];
+                            $debtdata[$trx['id']]['value']      = $debt['value'];
+                            $debtdata[$trx['id']]['trxdate']    = $trx['date'];
+                            $debtdata[$trx['id']]['deadline']   = $debt['deadline'];
+                        }
+                    }
                 }
             }
         }
