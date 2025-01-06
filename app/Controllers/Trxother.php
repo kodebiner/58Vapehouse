@@ -153,10 +153,11 @@ class Trxother extends BaseController
                                 // Detail Transaction
                                 $dailyreportdata['payments'][$trx['id']]['detail'][$payment['id']]['name']               = $payment['name'];
                                 $dailyreportdata['payments'][$trx['id']]['detail'][$payment['id']]['value']              = $trxpayment['value'];
-                            } else {
-                                // Detail Transaction
-                                $dailyreportdata['payments'][$trx['id']]['detail']                                       = [];
                             }
+                            // else {
+                            //     // Detail Transaction
+                            //     $dailyreportdata['payments'][$trx['id']]['detail']                                       = [];
+                            // }
                         }
                     }
                     //  else {
@@ -178,16 +179,16 @@ class Trxother extends BaseController
                             $dailyreportdata['payments'][$trx['id']]['detail'][0]['name']            = 'Kasbon';
                             $dailyreportdata['payments'][$trx['id']]['detail'][0]['value']           = $debtpayment['value'];
                         }
-                    } else {
-                        // Transaction Summary
-                        $dailyreportdata['trxpayments'][0]['name']                               = 'Kasbon';
-                        $dailyreportdata['trxpayments'][0]['detail'][0]['name']                  = 'Kasbon';
-                        $dailyreportdata['trxpayments'][0]['detail'][0]['value']                 = '0';
-
-                        // Detail Transaction
-                        $dailyreportdata['payments'][$trx['id']]['detail'][0]['name']            = 'Kasbon';
-                        $dailyreportdata['payments'][$trx['id']]['detail'][0]['value']           = '0';
                     }
+                    // else {
+                    //     // Transaction Summary
+                    //     $dailyreportdata['trxpayments'][0]['name']                               = 'Kasbon';
+                    //     $dailyreportdata['trxpayments'][0]['detail'][0]['name']                  = 'Kasbon';
+                    //     $dailyreportdata['trxpayments'][0]['detail'][0]['value']                 = '0';
+
+                    //     // Detail Transaction
+                    //     $dailyreportdata['payments'][$trx['id']]['detail'][0]['name']            = 'Kasbon';
+                    // }
 
                     if (!empty($pointpayments)) {
                         foreach ($pointpayments as $pointpayment) {
@@ -200,16 +201,17 @@ class Trxother extends BaseController
                             $dailyreportdata['payments'][$trx['id']]['detail'][-1]['name']            = lang('Global.redeemPoint');
                             $dailyreportdata['payments'][$trx['id']]['detail'][-1]['value']           = $pointpayment['value'];
                         }
-                    } else {
-                        // Transaction Summary
-                        $dailyreportdata['trxpayments'][-1]['name']                              = lang('Global.redeemPoint');
-                        $dailyreportdata['trxpayments'][-1]['detail'][-1]['name']                = lang('Global.redeemPoint');
-                        $dailyreportdata['trxpayments'][-1]['detail'][-1]['value']               = '0';
-
-                        // Detail Transaction
-                        $dailyreportdata['payments'][$trx['id']]['detail'][-1]['name']            = lang('Global.redeemPoint');
-                        $dailyreportdata['payments'][$trx['id']]['detail'][-1]['value']           = '0';
                     }
+                    // else {
+                    //     // Transaction Summary
+                    //     $dailyreportdata['trxpayments'][-1]['name']                              = lang('Global.redeemPoint');
+                    //     $dailyreportdata['trxpayments'][-1]['detail'][-1]['name']                = lang('Global.redeemPoint');
+                    //     $dailyreportdata['trxpayments'][-1]['detail'][-1]['value']               = '0';
+
+                    //     // Detail Transaction
+                    //     $dailyreportdata['payments'][$trx['id']]['detail'][-1]['name']            = lang('Global.redeemPoint');
+                    //     $dailyreportdata['payments'][$trx['id']]['detail'][-1]['value']           = '0';
+                    // }
                 }
 
                 // Actual Cash Close
