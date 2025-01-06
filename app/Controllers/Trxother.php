@@ -155,6 +155,12 @@ class Trxother extends BaseController
                                 $dailyreportdata['payments'][$trx['id']]['detail'][$payment['id']]['value']              = $trxpayment['value'];
                             }
                         }
+                    } else {
+                        // Transaction Summary
+                        $dailyreportdata['trxpayments'] = [];
+
+                        // Detail Transaction
+                        $dailyreportdata['payments']    = [];
                     }
 
                     if (!empty($debtpayments)) {
@@ -168,6 +174,12 @@ class Trxother extends BaseController
                             $dailyreportdata['payments'][$trx['id']]['detail'][0]['name']            = 'Kasbon';
                             $dailyreportdata['payments'][$trx['id']]['detail'][0]['value']           = $debtpayment['value'];
                         }
+                    } else {
+                        // Transaction Summary
+                        $dailyreportdata['trxpayments'] = [];
+
+                        // Detail Transaction
+                        $dailyreportdata['payments']    = [];
                     }
 
                     if (!empty($pointpayments)) {
@@ -181,6 +193,12 @@ class Trxother extends BaseController
                             $dailyreportdata['payments'][$trx['id']]['detail'][-1]['name']            = lang('Global.redeemPoint');
                             $dailyreportdata['payments'][$trx['id']]['detail'][-1]['value']           = $pointpayment['value'];
                         }
+                    } else {
+                        // Transaction Summary
+                        $dailyreportdata['trxpayments'] = [];
+
+                        // Detail Transaction
+                        $dailyreportdata['payments']    = [];
                     }
                 }
 
