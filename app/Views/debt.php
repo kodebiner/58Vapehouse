@@ -107,7 +107,8 @@
         </tbody>
     </table>
     <div>
-        <?= $pager->links('debt', 'front_full') ?>
+        <!-- </?= $pager->links('debt', 'front_full') ?> -->
+        <?= $pager_links ?>
     </div>
 </div>
 <!-- Table Of Content End -->

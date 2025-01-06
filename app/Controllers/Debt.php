@@ -356,30 +356,58 @@ class Debt extends BaseController
                 // $debts = $DebtModel->where('value !=', '0')->where('deadline <=', $enddate)->find();
             // }
         // } else {
-            $debts = $DebtModel->where('value !=', '0')->paginate(50, 'debt');
+            // $debts = $DebtModel->where('value !=', '0')->paginate(50, 'debt');
             // $debts = $DebtModel->where('value !=', '0')->find();
         // }
 
+        if ($this->data['outletPick'] === null) {
+            $transactions = $TransactionModel->where('paymentid', '0')->findAll();
+        } else {
+            $transactions = $TransactionModel->where('paymentid', '0')->where('outletid', $this->data['outletPick'])->find();
+        }
+
         $debtdata   = [];
         $debttotal  = [];
-        foreach ($debts as $debt) {
-            $transaction    = $TransactionModel->find($debt['transactionid']);
-            $members        = $MemberModel->find($debt['memberid']);
-
-            if (!empty($transaction)) {
-                $debttotal[]    = $debt['value'];
-                $outlet         = $OutletModel->find($transaction['outletid']);
-
-                $debtdata[$transaction['id']]['id']         = $debt['id'];
-                $debtdata[$transaction['id']]['name']       = $members['name'].' - '.$members['phone'];
-                $debtdata[$transaction['id']]['outlet']     = $outlet['name'];
-                $debtdata[$transaction['id']]['value']      = $debt['value'];
-                $debtdata[$transaction['id']]['trxdate']    = $transaction['date'];
-                $debtdata[$transaction['id']]['deadline']   = $debt['deadline'];
+        foreach ($transactions as $trx) {
+            $debts      = $DebtModel->where('value !=', '0')->where('transactionid', $trx['id'])->find();
+            $outlet     = $OutletModel->find($trx['outletid']);
+            if (!empty($debts)) {
+                foreach ($debts as $debt) {
+                    $members        = $MemberModel->find($debt['memberid']);
+                    $debttotal[]    = $debt['value'];
+    
+                    $debtdata[$trx['id']]['id']         = $debt['id'];
+                    $debtdata[$trx['id']]['name']       = $members['name'].' - '.$members['phone'];
+                    $debtdata[$trx['id']]['outlet']     = $outlet['name'];
+                    $debtdata[$trx['id']]['value']      = $debt['value'];
+                    $debtdata[$trx['id']]['trxdate']    = $trx['date'];
+                    $debtdata[$trx['id']]['deadline']   = $debt['deadline'];
+                }
             }
         }
+        // dd($transactions);
+        // foreach ($debts as $debt) {
+        //     $transaction    = $TransactionModel->find($debt['transactionid']);
+        //     $members        = $MemberModel->find($debt['memberid']);
+
+        //     if (!empty($transaction)) {
+        //         $debttotal[]    = $debt['value'];
+        //         $outlet         = $OutletModel->find($transaction['outletid']);
+
+        //         $debtdata[$transaction['id']]['id']         = $debt['id'];
+        //         $debtdata[$transaction['id']]['name']       = $members['name'].' - '.$members['phone'];
+        //         $debtdata[$transaction['id']]['outlet']     = $outlet['name'];
+        //         $debtdata[$transaction['id']]['value']      = $debt['value'];
+        //         $debtdata[$transaction['id']]['trxdate']    = $transaction['date'];
+        //         $debtdata[$transaction['id']]['deadline']   = $debt['deadline'];
+        //     }
+        // }
         array_multisort(array_column($debtdata, 'trxdate'), SORT_DESC, $debtdata);
         $totaldebt  = array_sum($debttotal);
+
+        $page       = (int) ($this->request->getGet('page') ?? 1);
+        $perPage    = 20;
+        $total      = count($debtdata);
         // dd($debtdata);
 
         // $trxid      = array();
@@ -413,12 +441,13 @@ class Debt extends BaseController
         // $data['outlets']        = $outlets;
         // $data['customers']      = $customers;
         // $data['debts']          = $debts;
-        $data['debts']          = $debtdata;
+        $data['debts']          = array_slice($debtdata, ($page*20)-20, $page*20);
         $data['payments']       = $payments;
         $data['totaldebt']      = $totaldebt;
         // $data['startdate']      = strtotime($startdate);
         // $data['enddate']        = strtotime($enddate);
-        $data['pager']          = $DebtModel->pager;
+        // $data['pager']          = $DebtModel->pager;
+        $data['pager_links']    = $pager->makeLinks($page, $perPage, $total, 'front_full');
 
         return view('Views/debt', $data);
     }
@@ -442,14 +471,13 @@ class Debt extends BaseController
 
         // Populating Data
         $debts                  = $DebtModel->find($id);
-        $payments               = $PaymentModel->where('id', $input['payment'])->first();
         // $customers              = $MemberModel->where('id', $debts['memberid'])->first();
-        $cash                   = $CashModel->where('id', $payments['cashid'])->first();
 
         // Date Time Stamp
         $date                   = date_create();
         $tanggal                = date_format($date, 'Y-m-d H:i:s');
 
+        // Save Data Debt
         if ($debts['value'] - $input['value'] != "0") {
             $data = [
                 'id'            => $id,
@@ -463,9 +491,28 @@ class Debt extends BaseController
                 'deadline'      => NULL,
             ];
         }
-
-        // Save Data Debt
         $DebtModel->save($data);
+
+        // Debt Installment
+        $debtins = [
+            'debtid'        => $id,
+            'transactionid' => $debts['transactionid'],
+            'userid'        => $this->data['uid'],
+            'outletid'      => $this->data['outletPick'],
+            'paymentid'     => $input['payment'],
+            'date'          => $tanggal,
+            'qty'           => $input['value'],
+        ];
+        $DebtInsModel->save($debtins);
+
+        // Input Value to cash
+        $payments   = $PaymentModel->find($input['payment']);
+        $cash       = $CashModel->find($payments['cashid']);
+        $wallet     = [
+            'id'    => $cash['id'],
+            'qty'   => (int)$cash['qty'] + (int)$input['value'],
+        ];
+        $CashModel->save($wallet);
 
         // // Image Capture
         // $img                    = $input['image'];
@@ -490,25 +537,6 @@ class Debt extends BaseController
         //     // 'photo'         => $fileName,
         // ];
         // $TrxotherModel->save($cashin);
-
-        // Debt Installment
-        $debtins = [
-            'debtid'        => $id,
-            'transactionid' => $debts['transactionid'],
-            'userid'        => $this->data['uid'],
-            'outletid'      => $this->data['outletPick'],
-            'paymentid'     => $input['payment'],
-            'date'          => $tanggal,
-            'qty'           => $input['value'],
-        ];
-        $DebtInsModel->save($debtins);
-
-        // Input Value to cash
-        $wallet = [
-            'id'    => $payments['cashid'],
-            'qty'   => (int)$cash['qty'] + (int)$input['value'],
-        ];
-        $CashModel->save($wallet);
 
         // // Find Data for Daily Report
         // $today                  = date('Y-m-d') . ' 00:00:01';
