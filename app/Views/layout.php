@@ -356,9 +356,6 @@
                                 <a class="tm-h3" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
                                     <?php if (in_groups('owner')) : ?>
-                                        <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
-                                            <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
-                                        </li>
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='inventory')?'uk-active':''?>">
                                             <a href="<?= base_url('stock/inventory') ?>"><?=lang('Global.store');?></a>
                                         </li>
@@ -375,6 +372,9 @@
                                             <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
                                         </li>
                                     <?php endif ?>
+                                    <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
+                                        <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
+                                    </li>
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='stockmove')?'uk-active':''?>">
                                         <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
                                     </li>
@@ -519,9 +519,6 @@
                         <a class="tm-h3" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
                         <ul class="uk-nav-sub">
                             <?php if (in_groups('owner')) : ?>
-                                <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
-                                    <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
-                                </li>
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='inventory')?'uk-active':''?>">
                                     <a href="<?= base_url('stock/inventory') ?>"><?=lang('Global.store');?></a>
                                 </li>
@@ -538,6 +535,9 @@
                                     <a href="<?= base_url('stock/stockcycle') ?>"><?=lang('Global.stockCycle');?></a>
                                 </li>
                             <?php endif ?>
+                            <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
+                                <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
+                            </li>
                             <li class="tm-h4 <?=($uri->getSegment(1)==='stockmove')?'uk-active':''?>">
                                 <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
                             </li>

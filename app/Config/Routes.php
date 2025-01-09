@@ -185,7 +185,7 @@ $routes->group('customer', ['filter'=>'login'], function($routes){
 // Stock
 $routes->group('stock', ['filter'=>'login'], function($routes){
     // Stock
-    $routes->get('', 'Stock::index', ['filter' => 'role:owner']);
+    $routes->get('', 'Stock::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('create', 'Stock::create', ['filter' => 'role:owner']);
     $routes->post('update/(:num)', 'Stock::update/$1', ['filter' => 'role:owner']);
     $routes->get('delete/(:num)', 'Stock::delete/$1', ['filter' => 'role:owner']);
