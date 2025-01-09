@@ -203,13 +203,13 @@ class export extends BaseController
         // Populating Data
         if ($this->data['outletPick'] === null) {
             // if (!empty($input)) {
-                $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'trxhistory');
+                $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
             // } else {
             //     $transactions = $TransactionModel->orderBy('date', 'DESC')->paginate(20, 'trxhistory');
             // }
         } else {
             // if (!empty($input)) {
-                $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'trxhistory');
+                $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             // } else {
             //     $transactions = $TransactionModel->orderBy('date', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'trxhistory');
             // }
