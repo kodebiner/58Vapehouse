@@ -69,7 +69,9 @@
                     <td><?= "Rp " . number_format($transaction['value'], 2, ',', '.'); ?></td>
                     <td class="uk-text-center uk-column-1-2">
                         <?= $transaction['paidstatus'] ?>
-                        <div class="uk-text-success" id="refund" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')" style="border-style: solid; border-color: red;"><a href="trxhistory/refund/<?= $transaction['id'] ?>" class="uk-link-heading">Refund</a></div>
+                        <?php if (in_groups('owner')) { ?>
+                            <div class="uk-text-success" id="refund" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')" style="border-style: solid; border-color: red;"><a href="trxhistory/refund/<?= $transaction['id'] ?>" class="uk-link-heading">Refund</a></div>
+                        <?php } ?>
                     </td>
 
                     <!-- <td class="uk-flex-middle uk-text-center">

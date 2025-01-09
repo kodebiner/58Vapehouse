@@ -240,7 +240,7 @@ $routes->group('trxhistory', ['filter'=>'login'], function($routes){
     $routes->get('debt', 'Debt::indexdebt', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('debtpay', 'Debt::indexdebtins', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('topup', 'Debt::indextopup', ['filter' => 'role:owner,supervisor,operator']);
-    $routes->get('refund/(:num)', 'Debt::refund/$1');
+    $routes->get('refund/(:num)', 'Debt::refund/$1', ['filter' => 'role:owner']);
 });
 
 // Debt
