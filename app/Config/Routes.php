@@ -156,22 +156,22 @@ $routes->group('product', ['filter'=>'login'], function($routes){
 
 // Export
 $routes->group('export', ['filter'=>'login'], function($routes){
-    $routes->get('prod', 'Export::prod', ['filter' => 'role:owner,']);
-    $routes->get('transaction', 'Export::transaction', ['filter' => 'role:owner,']);
-    $routes->get('payment', 'Export::payment', ['filter' => 'role:owner,']);
-    $routes->get('product', 'Export::product', ['filter' => 'role:owner,']);
-    $routes->get('profit', 'Export::profit', ['filter' => 'role:owner,']);
-    $routes->get('employe', 'Export::employe', ['filter' => 'role:owner,']);
-    $routes->get('customer', 'Export::customer', ['filter' => 'role:owner,']);
-    $routes->get('presence', 'Export::presence', ['filter' => 'role:owner,']);
-    $routes->get('bundle', 'Export::bundle', ['filter' => 'role:owner,']);
-    $routes->get('diskon', 'Export::diskon', ['filter' => 'role:owner,']);
-    $routes->get('sales', 'Export::sales', ['filter' => 'role:owner,']);
-    $routes->get('category', 'Export::category', ['filter' => 'role:owner,']);
-    $routes->get('stockcategory', 'Export::stockcategory', ['filter' => 'role:owner,']);
+    $routes->get('prod', 'Export::prod', ['filter' => 'role:owner,supervisor']);
+    $routes->get('transaction', 'Export::transaction', ['filter' => 'role:owner,supervisor']);
+    $routes->get('payment', 'Export::payment', ['filter' => 'role:owner,supervisor']);
+    $routes->get('product', 'Export::product', ['filter' => 'role:owner,supervisor']);
+    $routes->get('profit', 'Export::profit', ['filter' => 'role:owner,supervisor']);
+    $routes->get('employe', 'Export::employe', ['filter' => 'role:owner,supervisor']);
+    $routes->get('customer', 'Export::customer', ['filter' => 'role:owner,supervisor']);
+    $routes->get('presence', 'Export::presence', ['filter' => 'role:owner,supervisor']);
+    $routes->get('bundle', 'Export::bundle', ['filter' => 'role:owner,supervisor']);
+    $routes->get('diskon', 'Export::diskon', ['filter' => 'role:owner,supervisor']);
+    $routes->get('sales', 'Export::sales', ['filter' => 'role:owner,supervisor']);
+    $routes->get('category', 'Export::category', ['filter' => 'role:owner,supervisor']);
+    $routes->get('stockcategory', 'Export::stockcategory', ['filter' => 'role:owner,supervisor']);
     $routes->get('customerlist', 'Export::customerlist', ['filter' => 'role:owner,supervisor,']);
-    $routes->get('sop', 'Export::sop', ['filter' => 'role:owner']);
-    $routes->get('dayrep', 'Export::dayrep', ['filter' => 'role:owner,']);
+    $routes->get('sop', 'Export::sop', ['filter' => 'role:owner,supervisor']);
+    $routes->get('dayrep', 'Export::dayrep', ['filter' => 'role:owner,supervisor']);
 });
 
 // Customer Routes
