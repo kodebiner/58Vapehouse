@@ -55,6 +55,7 @@ class Pay extends BaseController
 
         // Getting Inputs
         $input = $this->request->getPost();
+        dd($input);
         // Image Capture
         if (!empty($input['image'])) {
 
@@ -74,7 +75,7 @@ class Pay extends BaseController
         // Populating Data
         $date           = date('Y-m-d H:i:s');
         $Gconfig        = $GconfigModel->first();
-        $customers      = $MemberModel->findAll();
+        // $customers      = $MemberModel->findAll();
 
         // Inserting Transaction
         $varvalues      = array();
