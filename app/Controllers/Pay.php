@@ -55,7 +55,7 @@ class Pay extends BaseController
 
         // Getting Inputs
         $input = $this->request->getPost();
-        dd($input);
+        // dd($input);
         // Image Capture
         if (!empty($input['image'])) {
 

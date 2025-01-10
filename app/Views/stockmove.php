@@ -960,7 +960,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                     variantarray<?=$stockmove['id']?> = arguments[0];
 
                                                     for (x in variantarray<?=$stockmove['id']?>) {
-                                                        //alert(variantarray<?=$stockmove['id']?>[k]['name']);
+                                                        // alert(variantarray</?=$stockmove['id']?>[k]['name']);
                                                         // var skucontainer = document.createElement('div');
                                                         // skucontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
                                                                                         
@@ -969,21 +969,21 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                         // skuvar.innerHTML = variantarray</?=$stockmove['id']?>[x]['sku'];
 
                                                         var varcontainer = document.createElement('div');
-                                                        varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
+                                                        varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3 uk-margin-small');
                                                                                         
                                                         var varname = document.createElement('div');
                                                         varname.setAttribute('class','');
                                                         varname.innerHTML = variantarray<?=$stockmove['id']?>[x]['name'];
 
                                                         var stockcontainer = document.createElement('div');
-                                                        stockcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
+                                                        stockcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-3 uk-margin-small');
                                                                                         
                                                         var stock = document.createElement('div');
                                                         stock.setAttribute('class','');
                                                         stock.innerHTML = variantarray<?=$stockmove['id']?>[x]['qty'];
 
                                                         var cartcontainer = document.createElement('div');
-                                                        cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
+                                                        cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-3 uk-margin-small');
 
                                                         var cart = document.createElement('a');
                                                         cart.setAttribute('class', 'uk-icon-button');
