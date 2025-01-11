@@ -184,9 +184,10 @@ class Pay extends BaseController
 
         // When Discount Member In Transaction and not dicount member per item
         $value = (int)$subtotal - (int)$memberdisc - (int)$discount - (int)$poin;
-        if ($value == '0') {
-            $value  = $input['poin'];
-        }
+        
+        // if ($value == '0') {
+        //     $value  = $input['poin'];
+        // }
 
         // // Discount member per item
         // $value = (int)$subtotal - (int)$discount - (int)$poin;
