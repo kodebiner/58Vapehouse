@@ -124,7 +124,8 @@ class Debt extends BaseController
             $debts      = $DebtModel->where('transactionid', $trx['id'])->find();
             if (!empty($debts)) {
                 foreach ($debts as $debt) {
-                    $debtinst   = $DebtInsModel->where('debtid', $debt['id'])->where('transactionid', $trx['id'])->find();
+                    $debtinst       = $DebtInsModel->where('debtid', $debt['id'])->where('transactionid', $trx['id'])->find();
+                    $totaldebtin    = '';
                     if (!empty($debtinst)) {
                         $debtinval  = [];
                         foreach ($debtinst as $debtin) {
