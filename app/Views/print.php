@@ -143,15 +143,15 @@
                         <div class="uk-width-2-3">Cashier: <?= $user ?></div>
                         <div class="uk-text-right uk-width-1-3">
                             <?php if(!empty($transactionid)){
-                                if ($transactions['paymentid'] === "0" && !empty($transactions['amountpaid'])) { ?>
+                                if ($transactions['paymentid'] == '0' && $transactions['amountpaid'] != '0') { ?>
                                     <?= lang('Global.splitbill')?>
-                                <?php } elseif ($transactions['paymentid'] !== "0" && ($transactions['amountpaid'] !== "0")) {
+                                <?php } elseif ($transactions['paymentid'] != '0') {
                                     foreach($payments as $payment) {
-                                        if ($transactions['paymentid'] === $payment['id'] && ($transactions['paymentid'] !== "0")) {
+                                        if ($transactions['paymentid'] == $payment['id'] && ($transactions['paymentid'] != '0')) {
                                             foreach ($trxpayments as $trxpay){
-                                                if($trxpay['paymentid'] === $payment['id']){
+                                                if($trxpay['paymentid'] == $payment['id']){
                                                     foreach ($cash as $cas){
-                                                        if($payment['cashid']  === $cas['id'] )
+                                                        if($payment['cashid']  == $cas['id'] )
                                                         echo $payment['name'];
                                                     }
                                                 }
@@ -160,7 +160,7 @@
                                     }
                                 } elseif ($transactions['paymentid'] == "-1") {
                                     echo lang('Global.redeemPoint');
-                                } else { ?>
+                                } elseif ($transactions['paymentid'] == "0") { ?>
                                     <?= lang('Global.debt')?>
                                 <?php }
                             } elseif (!empty($bookings['id'])) { ?>
@@ -492,7 +492,8 @@
                     <!-- end total booking -->
                     <!-- total transaction -->
                 <?php } elseif (!empty($transactions['id'])) { ?>
-                    <hr style ="border-top: 3px double #8c8b8b">                    
+                    <hr class="uk-margin-small" style ="border-top: 3px double #8c8b8b">
+
                     <div class="uk-margin-small uk-text-xsmall">
                         <div class="uk-grid-collapse" uk-grid>
                             <?php $sub =  lang('Global.subtotal'); ?>
@@ -535,6 +536,9 @@
                             }
                             ?> 
                         </div>
+
+                        <hr class="uk-margin-small" style ="border-top: 3px double #8c8b8b">
+
                         <div class="uk-grid-collapse" uk-grid>
                             <?php $tot  = lang('Global.total');?>
                             <div class="uk-width-1-2 uk-text-bold"><?=$tot?></div>
@@ -547,6 +551,20 @@
                                 echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>$pay</div>";
                             ?>
                         </div>
+                        <div class="uk-grid-collapse" uk-grid>
+                            <?php if (!empty($debt)) {
+                                $debttext = lang('Global.debt');
+                                echo " <div class='uk-width-1-2'>$debttext</div>";
+                                echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>$debt</div>";
+                            }?> 
+                        </div>
+                        <!-- <div class="uk-grid-collapse" uk-grid>
+                            </?php if (!empty($totaldebt)) {
+                                $totdebt = lang('Global.totaldebt');
+                                echo " <div class='uk-width-1-2 uk-text-bold'>$totdebt</div>";
+                                echo "<div class='uk-width-1-2 uk-text-right'>$totaldebt</div>";
+                            }?> 
+                        </div> -->
                         <!-- <div class="uk-grid-collapse" uk-grid>
                             </?php if ($pay !== "0"){
                                 $pays =  lang('Global.pay');
@@ -554,6 +572,9 @@
                                 echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>$pay</div>";
                             }?>
                         </div> -->
+
+                        <hr class="uk-margin-small" style ="border-top: 3px double #8c8b8b">
+
                         <div class="uk-grid-collapse" uk-grid>
                             <?php
                                 $changes = lang('Global.change');
@@ -565,6 +586,9 @@
                                 }
                             ?>
                         </div>
+
+                        <hr class="uk-margin-small" style ="border-top: 3px double #8c8b8b">
+
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (($transactions['memberid'] !== "0") ) {
                                 $cust = $cust['name'];
@@ -585,20 +609,6 @@
                                 $totpoin =  lang('Global.totalpoint');
                                 echo " <div class='uk-width-1-2'>$totpoin</div>";
                                 echo "<div class='uk-width-1-2 uk-text-right'>$mempoin</div>";
-                            }?> 
-                        </div>
-                        <div class="uk-grid-collapse" uk-grid>
-                            <?php if (!empty($debt)) {
-                                $debttext = lang('Global.debt');
-                                echo " <div class='uk-width-1-2  uk-text-bold'>$debttext</div>";
-                                echo "<div class='uk-width-1-2 uk-text-right'>$debt</div>";
-                            }?> 
-                        </div>
-                        <div class="uk-grid-collapse" uk-grid>
-                            <?php if (!empty($totaldebt)) {
-                                $totdebt = lang('Global.totaldebt');
-                                echo " <div class='uk-width-1-2 uk-text-bold'>$totdebt</div>";
-                                echo "<div class='uk-width-1-2 uk-text-right'>$totaldebt</div>";
                             }?> 
                         </div>
                     </div>

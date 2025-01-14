@@ -102,7 +102,7 @@
         <div>
             <div class="uk-card uk-card-default uk-card-hover uk-card-body">
                 <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discount')?> Global</h3>
-                <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.totaldiscvar')?></p>
+                <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.discount')?> yang diatur melalui "Informasi Usaha"</p>
                 <hr>
                 <div>
                     <div uk-grid>

@@ -50,6 +50,7 @@ class Debt extends BaseController
         $TrxdetailModel         = new TrxdetailModel();
         $TrxpaymentModel        = new TrxpaymentModel();
         $DebtModel              = new DebtModel();
+        $DebtInsModel           = new DebtInsModel();
         $GconfigModel           = new GconfigModel();
 
         $input  = $this->request->getGet('daterange');
@@ -65,17 +66,10 @@ class Debt extends BaseController
 
         // Populating Data
         if ($this->data['outletPick'] === null) {
-            // if (!empty($input)) {
-                $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'trxhistory');
-            // } else {
-            //     $transactions = $TransactionModel->orderBy('date', 'DESC')->paginate(20, 'trxhistory');
-            // }
+            $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'trxhistory');
         } else {
             // if (!empty($input)) {
-                $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'trxhistory');
-            // } else {
-            //     $transactions = $TransactionModel->orderBy('date', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'trxhistory');
-            // }
+            $transactions = $TransactionModel->orderBy('date', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'trxhistory');
         }
 
         // Logo Gconfig
@@ -109,7 +103,7 @@ class Debt extends BaseController
                     $paymentmethod  = lang('Global.debt');
                 } elseif ($trx['paymentid'] == "-1") {
                     $paymentmethod  = lang('Global.redeemPoint');
-                } else {
+                } elseif (($trx['amountpaid'] != '0') && ($trx['paymentid'] == "0")) {
                     $paymentmethod  = lang('Global.splitbill');
                 }
             }
@@ -127,10 +121,20 @@ class Debt extends BaseController
             }
 
             // Debt Data
-            $debts  = $DebtModel->where('transactionid', $trx['id'])->find();
+            $debts      = $DebtModel->where('transactionid', $trx['id'])->find();
             if (!empty($debts)) {
                 foreach ($debts as $debt) {
-                    if ((Int)$trx['amountpaid'] - (Int)$debt['value'] < '0') {
+                    $debtinst   = $DebtInsModel->where('debtid', $debt['id'])->where('transactionid', $trx['id'])->find();
+                    if (!empty($debtinst)) {
+                        $debtinval  = [];
+                        foreach ($debtinst as $debtin) {
+                            $debtinval[]    = $debtin['qty'];
+                        }
+                        $totaldebtin    = array_sum($debtinval);
+                    }
+                    $statustrx  = (Int)$trx['value'] - ((Int)$trx['amountpaid'] + (Int)$totaldebtin);
+                    
+                    if ($statustrx != '0') {
                         $paidstatus = '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">' . lang('Global.notpaid') . '</div>';
                     } else {
                         $paidstatus = '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">' . lang('Global.paid') . '</div>';
@@ -244,7 +248,6 @@ class Debt extends BaseController
 
             $transactiondata[$trx['id']]['totaldetailvalue']    = array_sum($subtotal);
         }
-        // dd($transactiondata);
 
         // $trxid = array();
         // $memberid = array();
@@ -393,7 +396,6 @@ class Debt extends BaseController
                 }
             }
         }
-        // dd($transactions);
         // foreach ($debts as $debt) {
         //     $transaction    = $TransactionModel->find($debt['transactionid']);
         //     $members        = $MemberModel->find($debt['memberid']);
@@ -416,7 +418,6 @@ class Debt extends BaseController
         $page       = (int) ($this->request->getGet('page') ?? 1);
         $perPage    = 20;
         $total      = count($debtdata);
-        // dd($debtdata);
 
         // $trxid      = array();
         // $memberid   = array();
@@ -690,7 +691,6 @@ class Debt extends BaseController
         $page       = (int) ($this->request->getGet('page') ?? 1);
         $perPage    = 20;
         $total      = count($debtinsdata);
-        // dd($debtinsdata);
 
         // Parsing data to view
         $data                       = $this->data;
@@ -710,251 +710,363 @@ class Debt extends BaseController
 
     public function refund($id)
     {
-        // Conneting To Database
-        $db = \Config\Database::connect();
-        $gconfig = new GconfigModel();
-
-        // Getting Data Transaction
-        $Gconf = $gconfig->first();
-        $exported   = $db->table('transaction');
-
-        $transactionhist   = $exported->select('transaction.id as id, variant.id as varid, member.id as memberid, users.id as userid, payment.id as paymentid,
-        outlet.id as outletid, bundle.id as bundleid,trxdetail.qty as qty, transaction.value as total, bundle.price as bprice, variant.hargadasar as vprice,
-        transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval,
-        transaction.pointused as redempoin, trxpayment.value as payval, member.name as member, member.trx as trx, product.name as product, variant.name as variant,  
-        variant.hargamodal as modal, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, payment.name as payment,
-        outlet.name as outlet,outlet.address as address, bundle.name as bundle, users.username as kasir');
-
-        $transactionhist   = $exported->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
-        $transactionhist   = $exported->join('users', 'transaction.userid = users.id', 'left');
-        $transactionhist   = $exported->join('outlet', 'transaction.outletid = outlet.id', 'left');
-        $transactionhist   = $exported->join('member', 'transaction.memberid = member.id', 'left');
-        $transactionhist   = $exported->join('trxpayment', 'trxdetail.transactionid = trxpayment.transactionid', 'left');
-        $transactionhist   = $exported->join('bundle', 'trxdetail.bundleid = bundle.id', 'left');
-        $transactionhist   = $exported->join('variant', 'trxdetail.variantid = variant.id', 'left');
-        $transactionhist   = $exported->join('payment', 'trxpayment.paymentid = payment.id', 'left');
-        $transactionhist   = $exported->join('product', 'variant.productid = product.id', 'left');
-        $transactionhist   = $exported->where('transaction.outletid', $this->data['outletPick']);
-        $transactionhist   = $exported->where('transaction.id', $id);
-        $transactionhist   = $exported->get();
-        $transactionhist   = $transactionhist->getResultArray();
-
-        $trxdata = array();
-        foreach ($transactionhist as $trxhist) {
-
-            if ((!empty($trxhist['discval'])) && ($trxhist['disctype'] === '0')) {
-                $discount = $trxhist['discval'];
-                $disctype = "0";
-            } elseif ((!empty($trxhist['discval'])) && ($trxhist['disctype'] === '1')) {
-                $discount = ($trxhist['trxdetval'] * $trxhist['discval'] / 100);
-            } else {
-                $discount = 0;
-            }
-
-            if ($trxhist['disctype'] === '1') {
-                $disctype = "%";
-            } else {
-                $disctype = "Rp";
-            }
-
-            if (!empty($trxhist['member'])) {
-                $membername = $trxhist['member'];
-            } else {
-                $membername = "Non Member";
-            }
-
-            if (!empty($trxhist['product'])) {
-                $product = $trxhist['product'];
-            } else {
-                $product = $trxhist['bundle'];
-            }
-
-            if (!empty($trxhist['discvar'])) {
-                $discvar = $trxhist['discvar'];
-            } else {
-                $discvar = "0";
-            }
-        }
-
-        /*======================================= REFUND DATA =============================================================================*/
-
         // Calling Models
-        $BundleModel            = new BundleModel();
-        $BundledetModel         = new BundledetailModel();
-        $CashModel              = new CashModel();
-        $OutletModel            = new OutletModel();
-        $UserModel              = new UserModel();
-        $MemberModel            = new MemberModel();
-        $PaymentModel           = new PaymentModel();
-        $ProductModel           = new ProductModel();
-        $VariantModel           = new VariantModel();
-        $StockModel             = new StockModel();
         $TransactionModel       = new TransactionModel();
         $TrxdetailModel         = new TrxdetailModel();
+        $BundledetailModel      = new BundledetailModel();
+        $StockModel             = new StockModel();
         $TrxpaymentModel        = new TrxpaymentModel();
+        $PaymentModel           = new PaymentModel();
         $DebtModel              = new DebtModel();
-        $BookingModel           = new BookingModel();
-        $BookingdetailModel     = new BookingdetailModel();
-        $DailyReportModel       = new DailyReportModel();
+        $CashModel              = new CashModel();
+        $MemberModel            = new MemberModel();
+        $GconfigModel           = new GconfigModel();
 
         // Populating Data
-        $bundles                = $BundleModel->findAll();
+        $transactions           = $TransactionModel->find($id);
+        $trxdetails             = $TrxdetailModel->where('transactionid', $id)->find();
+        if (!empty($trxdetails)) {
+            foreach ($trxdetails as $trxdet) {
+                // Refund Variant
+                $stock          = $StockModel->where('outletid', $transactions['outletid'])->where('variantid', $trxdet['variantid'])->first();
+                if (!empty($stock)) {
+                    $saleVarStock = [
+                        'id'        => $stock['id'],
+                        'qty'       => (int)$stock['qty'] + (int)$trxdet['qty'],
+                    ];
+                    $StockModel->save($saleVarStock);
+                }
 
-        // Initialize 
-        $date = date('Y-m-d H:i:s');
-
-        $variant    = [];
-        $bundles    = [];
-        $paymentid  = [];
-        $point      = '';
-        $total      = '';
-
-        foreach ($transactionhist as $trxhist) {
-
-            // Variant
-            if (!empty($trxhist['varid']) && !empty($trxhist['qty'])) {
-                $variant[$trxhist['varid']] = $trxhist['qty'];
-            }
-
-            // Bundle
-            if (!empty($trxhist['bundleid']) && !empty($trxhist['qty'])) {
-                $bundles[$trxhist['bundleid']] = $trxhist['qty'];
-            }
-
-            // Id Payment
-            $paymentid[$trxhist['paymentid']] = $trxhist['payval'];
-            $total = $trxhist['total'];
-
-            // Point
-            $memberid = $trxhist['memberid'];
-            $point = $trxhist['redempoin'];
-            $trx = $trxhist['trx'];
-        }
-
-        // Poin Setup
-        $minimumtrx = $Gconf['poinorder'];
-        $poinvalue  = $Gconf['poinvalue'];
-
-        $poinresult = "";
-        if ($total >= $minimumtrx) {
-            if ($minimumtrx != "0") {
-                $value      = (int)$total / (int)$minimumtrx;
-            } else {
-                $value      = 0;
-            }
-            $result         = floor($value);
-            $poinresult     = (int)$result * (int)$poinvalue;
-        } else {
-            $poinresult = 0;
-        }
-
-        // Refund Variant
-        if (!empty($variant)) {
-            foreach ($variant as $varid => $varqty) {
-                $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
-                $saleVarStock = [
-                    'id'        => $stock['id'],
-                    'sale'      => $date,
-                    'qty'       => (int)$stock['qty'] + (int)$varqty
-                ];
-                $StockModel->save($saleVarStock);
-            }
-        }
-
-        // Refund Bundle
-        if (!empty($bundles)) {
-            foreach ($bundles as $bunid => $bunqty) {
-                $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
-                foreach ($bundledetail as $BundleDetail) {
-                    if (!empty($BundleDetail['variantid'])) {
-                        $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
-                        $saleBunStock = [
-                            'id'        => $bunstock['id'],
-                            'sale'      => $date,
-                            'qty'       => (int)$bunstock['qty'] + (int)$bunqty,
-                        ];
-                        $StockModel->save($saleBunStock);
+                // Refund Bundle
+                $bundledetail = $BundledetailModel->where('bundleid', $trxdet['bundleid'])->find();
+                if (!empty($bundledetail)) {
+                    foreach ($bundledetail as $bundet) {
+                        $bunstock = $StockModel->where('outletid', $transactions['outletid'])->where('variantid', $bundet['variantid'])->first();
+                        if (!empty($bunstock)) {
+                            $saleBunStock = [
+                                'id'        => $bunstock['id'],
+                                'qty'       => (int)$bunstock['qty'] + (int)$trxdet['qty'],
+                            ];
+                            $StockModel->save($saleBunStock);
+                        }
                     }
                 }
             }
         }
 
         // Refund Member Poin
-        $pointres = '';
-        if (!empty($memberid)) {
-            $cust       = $MemberModel->find($memberid);
-            if (!empty($point) && $point != "0") {
-                $pointres   = ((int)$cust['poin'] + (int)$point) - $poinresult;
+        $member         = $MemberModel->find($transactions['memberid']);
+        $Gconf          = $GconfigModel->first();
+        $minimumtrx     = $Gconf['poinorder'];
+        $poinvalue      = $Gconf['poinvalue'];
+
+        if (!empty($member)) {
+            if ($transactions['value'] >= $minimumtrx) {
+                if ($minimumtrx != '0') {
+                    $value      = (int)$transactions['value'] / (int)$minimumtrx;
+                } else {
+                    $value      = 0;
+                }
+                $result         = floor($value);
+                $poinresult     = (int)$result * (int)$poinvalue;
+            } else {
+                $poinresult     = 0;
+            }
+
+            if ($transactions['pointused'] != '0') {
                 $point = [
-                    'id'    => $cust['id'],
-                    'poin'  => $pointres,
-                    'trx'   => (int)$cust['trx'] - 1,
+                    'id'    => $member['id'],
+                    'poin'  => ((int)$member['poin'] + (int)$transactions['pointused']) - $poinresult,
+                    'trx'   => (int)$member['trx'] - 1,
                 ];
                 $MemberModel->save($point);
             } else {
                 $point = [
-                    'id'    => $cust['id'],
-                    'poin'  => (int)$cust['poin'] - $poinresult,
-                    'trx'   => (int)$cust['trx'] - 1,
+                    'id'    => $member['id'],
+                    'poin'  => (int)$member['poin'] - $poinresult,
+                    'trx'   => (int)$member['trx'] - 1,
                 ];
                 $MemberModel->save($point);
             }
         }
 
         // Refund Payment
-        $debtval = "";
-        if (!empty($paymentid)) {
-            foreach ($paymentid as $payid => $payval) {
-                if (!empty($payid)) {
-                    $pay = $PaymentModel->find($payid);
-                    $cash = $CashModel->where('id', $pay['cashid'])->find();
-                    foreach ($cash as $cas) {
+        $trxpayments    = $TrxpaymentModel->where('transactionid', $id)->find();
+        if (!empty($trxpayments)) {
+            foreach ($trxpayments as $trxpay) {
+                $payment    = $PaymentModel->find($trxpay['paymentid']);
+                if (!empty($payment)) {
+                    $cash   = $CashModel->find($payment['cashid']);
+                    if (!empty($cash)) {
                         $paymentdata = [
-                            'id'    => $cas['id'],
-                            'qty'   => $cas['qty'] - $payval,
+                            'id'    => $cash['id'],
+                            'qty'   => $cash['qty'] - $trxpay['value'],
                         ];
                         $CashModel->save($paymentdata);
                     }
                 }
-                // else {
-                //     $debtval = $payval;
-                //     $debt = $DebtModel->where('memberid', $memberid)->first();
-                //     $debtdata = [
-                //         'id'    => $debt['id'],
-                //         'value' => $debt['value'] - $debtval,
-                //     ];
-                //     $DebtModel->save($debtdata);
-                // }
             }
         }
 
-        // Delete Transaction Payment
-        // $trxpay = $TrxpaymentModel->where('transactionid', $id)->find();
-        // foreach ($trxpay as $pay) {
-        //     $TrxpaymentModel->delete($pay);
-        // }
-        $TrxpaymentModel->where('transactionid', $id)->delete();
-
-        // Delete Transaction Payment
-        // $debt = $DebtModel->where('transactionid', $id)->find();
-        // foreach ($debt as $deb) {
-        //     $DebtModel->delete($deb);
-        // }
+        // Delete Debt
         $DebtModel->where('transactionid', $id)->delete();
 
+        // Delete Transaction Payment
+        $TrxpaymentModel->where('transactionid', $id)->delete();
+
         // Delete Tansaction Detail
-        // $trxdet = $TrxdetailModel->where('transactionid', $id)->find();
-        // foreach ($trxdet as $detail) {
-        //     $TrxdetailModel->delete($detail);
-        // }
         $TrxdetailModel->where('transactionid', $id)->delete();
 
         // Delete Transaction
-        // $trx = $TransactionModel->find($id);
-        // $TransactionModel->delete($trx);
         $TransactionModel->delete($id);
 
         return redirect()->back()->with('massage', lang('global.deleted'));
+
+        // // Conneting To Database
+        // $db = \Config\Database::connect();
+        // $gconfig = new GconfigModel();
+
+        // // Getting Data Transaction
+        // $Gconf = $gconfig->first();
+        // $exported   = $db->table('transaction');
+
+        // $transactionhist   = $exported->select('transaction.id as id, variant.id as varid, member.id as memberid, users.id as userid, payment.id as paymentid,
+        // outlet.id as outletid, bundle.id as bundleid,trxdetail.qty as qty, transaction.value as total, bundle.price as bprice, variant.hargadasar as vprice,
+        // transaction.date as date, transaction.disctype as disctype, transaction.discvalue as discval,
+        // transaction.pointused as redempoin, trxpayment.value as payval, member.name as member, member.trx as trx, product.name as product, variant.name as variant,  
+        // variant.hargamodal as modal, variant.hargajual as jual, trxdetail.value as trxdetval, trxdetail.discvar as discvar, payment.name as payment,
+        // outlet.name as outlet,outlet.address as address, bundle.name as bundle, users.username as kasir');
+
+        // $transactionhist   = $exported->join('trxdetail', 'transaction.id = trxdetail.transactionid', 'left');
+        // $transactionhist   = $exported->join('users', 'transaction.userid = users.id', 'left');
+        // $transactionhist   = $exported->join('outlet', 'transaction.outletid = outlet.id', 'left');
+        // $transactionhist   = $exported->join('member', 'transaction.memberid = member.id', 'left');
+        // $transactionhist   = $exported->join('trxpayment', 'trxdetail.transactionid = trxpayment.transactionid', 'left');
+        // $transactionhist   = $exported->join('bundle', 'trxdetail.bundleid = bundle.id', 'left');
+        // $transactionhist   = $exported->join('variant', 'trxdetail.variantid = variant.id', 'left');
+        // $transactionhist   = $exported->join('payment', 'trxpayment.paymentid = payment.id', 'left');
+        // $transactionhist   = $exported->join('product', 'variant.productid = product.id', 'left');
+        // $transactionhist   = $exported->where('transaction.outletid', $this->data['outletPick']);
+        // $transactionhist   = $exported->where('transaction.id', $id);
+        // $transactionhist   = $exported->get();
+        // $transactionhist   = $transactionhist->getResultArray();
+
+        // $trxdata = array();
+        // foreach ($transactionhist as $trxhist) {
+
+        //     if ((!empty($trxhist['discval'])) && ($trxhist['disctype'] === '0')) {
+        //         $discount = $trxhist['discval'];
+        //         $disctype = "0";
+        //     } elseif ((!empty($trxhist['discval'])) && ($trxhist['disctype'] === '1')) {
+        //         $discount = ($trxhist['trxdetval'] * $trxhist['discval'] / 100);
+        //     } else {
+        //         $discount = 0;
+        //     }
+
+        //     if ($trxhist['disctype'] === '1') {
+        //         $disctype = "%";
+        //     } else {
+        //         $disctype = "Rp";
+        //     }
+
+        //     if (!empty($trxhist['member'])) {
+        //         $membername = $trxhist['member'];
+        //     } else {
+        //         $membername = "Non Member";
+        //     }
+
+        //     if (!empty($trxhist['product'])) {
+        //         $product = $trxhist['product'];
+        //     } else {
+        //         $product = $trxhist['bundle'];
+        //     }
+
+        //     if (!empty($trxhist['discvar'])) {
+        //         $discvar = $trxhist['discvar'];
+        //     } else {
+        //         $discvar = "0";
+        //     }
+        // }
+
+        // /*======================================= REFUND DATA =============================================================================*/
+
+        // // Calling Models
+        // $BundleModel            = new BundleModel();
+        // $BundledetModel         = new BundledetailModel();
+        // $CashModel              = new CashModel();
+        // $OutletModel            = new OutletModel();
+        // $UserModel              = new UserModel();
+        // $MemberModel            = new MemberModel();
+        // $PaymentModel           = new PaymentModel();
+        // $ProductModel           = new ProductModel();
+        // $VariantModel           = new VariantModel();
+        // $StockModel             = new StockModel();
+        // $TransactionModel       = new TransactionModel();
+        // $TrxdetailModel         = new TrxdetailModel();
+        // $TrxpaymentModel        = new TrxpaymentModel();
+        // $DebtModel              = new DebtModel();
+        // $BookingModel           = new BookingModel();
+        // $BookingdetailModel     = new BookingdetailModel();
+        // $DailyReportModel       = new DailyReportModel();
+
+        // // Populating Data
+        // $bundles                = $BundleModel->findAll();
+
+        // // Initialize 
+        // $date = date('Y-m-d H:i:s');
+
+        // $variant    = [];
+        // $bundles    = [];
+        // $paymentid  = [];
+        // $point      = '';
+        // $total      = '';
+
+        // foreach ($transactionhist as $trxhist) {
+
+        //     // Variant
+        //     if (!empty($trxhist['varid']) && !empty($trxhist['qty'])) {
+        //         $variant[$trxhist['varid']] = $trxhist['qty'];
+        //     }
+
+        //     // Bundle
+        //     if (!empty($trxhist['bundleid']) && !empty($trxhist['qty'])) {
+        //         $bundles[$trxhist['bundleid']] = $trxhist['qty'];
+        //     }
+
+        //     // Id Payment
+        //     $paymentid[$trxhist['paymentid']] = $trxhist['payval'];
+        //     $total = $trxhist['total'];
+
+        //     // Point
+        //     $memberid = $trxhist['memberid'];
+        //     $point = $trxhist['redempoin'];
+        //     $trx = $trxhist['trx'];
+        // }
+
+        // // Poin Setup
+        // $minimumtrx = $Gconf['poinorder'];
+        // $poinvalue  = $Gconf['poinvalue'];
+
+        // $poinresult = "";
+        // if ($total >= $minimumtrx) {
+        //     if ($minimumtrx != "0") {
+        //         $value      = (int)$total / (int)$minimumtrx;
+        //     } else {
+        //         $value      = 0;
+        //     }
+        //     $result         = floor($value);
+        //     $poinresult     = (int)$result * (int)$poinvalue;
+        // } else {
+        //     $poinresult = 0;
+        // }
+
+        // // Refund Variant
+        // if (!empty($variant)) {
+        //     foreach ($variant as $varid => $varqty) {
+        //         $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
+        //         $saleVarStock = [
+        //             'id'        => $stock['id'],
+        //             'sale'      => $date,
+        //             'qty'       => (int)$stock['qty'] + (int)$varqty
+        //         ];
+        //         $StockModel->save($saleVarStock);
+        //     }
+        // }
+
+        // // Refund Bundle
+        // if (!empty($bundles)) {
+        //     foreach ($bundles as $bunid => $bunqty) {
+        //         $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
+        //         foreach ($bundledetail as $BundleDetail) {
+        //             if (!empty($BundleDetail['variantid'])) {
+        //                 $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
+        //                 $saleBunStock = [
+        //                     'id'        => $bunstock['id'],
+        //                     'sale'      => $date,
+        //                     'qty'       => (int)$bunstock['qty'] + (int)$bunqty,
+        //                 ];
+        //                 $StockModel->save($saleBunStock);
+        //             }
+        //         }
+        //     }
+        // }
+
+        // // Refund Member Poin
+        // $pointres = '';
+        // if (!empty($memberid)) {
+        //     $cust       = $MemberModel->find($memberid);
+        //     if (!empty($point) && $point != "0") {
+        //         $pointres   = ((int)$cust['poin'] + (int)$point) - $poinresult;
+        //         $point = [
+        //             'id'    => $cust['id'],
+        //             'poin'  => $pointres,
+        //             'trx'   => (int)$cust['trx'] - 1,
+        //         ];
+        //         $MemberModel->save($point);
+        //     } else {
+        //         $point = [
+        //             'id'    => $cust['id'],
+        //             'poin'  => (int)$cust['poin'] - $poinresult,
+        //             'trx'   => (int)$cust['trx'] - 1,
+        //         ];
+        //         $MemberModel->save($point);
+        //     }
+        // }
+
+        // // Refund Payment
+        // $debtval = "";
+        // if (!empty($paymentid)) {
+        //     foreach ($paymentid as $payid => $payval) {
+        //         if (!empty($payid)) {
+        //             $pay = $PaymentModel->find($payid);
+        //             $cash = $CashModel->where('id', $pay['cashid'])->find();
+        //             foreach ($cash as $cas) {
+        //                 $paymentdata = [
+        //                     'id'    => $cas['id'],
+        //                     'qty'   => $cas['qty'] - $payval,
+        //                 ];
+        //                 $CashModel->save($paymentdata);
+        //             }
+        //         }
+        //         // else {
+        //         //     $debtval = $payval;
+        //         //     $debt = $DebtModel->where('memberid', $memberid)->first();
+        //         //     $debtdata = [
+        //         //         'id'    => $debt['id'],
+        //         //         'value' => $debt['value'] - $debtval,
+        //         //     ];
+        //         //     $DebtModel->save($debtdata);
+        //         // }
+        //     }
+        // }
+
+        // // Delete Transaction Payment
+        // // $trxpay = $TrxpaymentModel->where('transactionid', $id)->find();
+        // // foreach ($trxpay as $pay) {
+        // //     $TrxpaymentModel->delete($pay);
+        // // }
+        // $TrxpaymentModel->where('transactionid', $id)->delete();
+
+        // // Delete Transaction Payment
+        // // $debt = $DebtModel->where('transactionid', $id)->find();
+        // // foreach ($debt as $deb) {
+        // //     $DebtModel->delete($deb);
+        // // }
+        // $DebtModel->where('transactionid', $id)->delete();
+
+        // // Delete Tansaction Detail
+        // // $trxdet = $TrxdetailModel->where('transactionid', $id)->find();
+        // // foreach ($trxdet as $detail) {
+        // //     $TrxdetailModel->delete($detail);
+        // // }
+        // $TrxdetailModel->where('transactionid', $id)->delete();
+
+        // // Delete Transaction
+        // // $trx = $TransactionModel->find($id);
+        // // $TransactionModel->delete($trx);
+        // $TransactionModel->delete($id);
+
+        // return redirect()->back()->with('massage', lang('global.deleted'));
     }
 
     public function invoice($id)
@@ -1059,7 +1171,6 @@ class Debt extends BaseController
                 }
             }
         }
-        // dd($debtdata);
 
         $data                   = $this->data;
         $data['debts']          = $debtdata;

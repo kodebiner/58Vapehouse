@@ -187,6 +187,7 @@ class export extends BaseController
         $TrxdetailModel         = new TrxdetailModel();
         $TrxpaymentModel        = new TrxpaymentModel();
         $DebtModel              = new DebtModel();
+        $DebtInsModel           = new DebtInsModel();
         $GconfigModel           = new GconfigModel();
 
         $input  = $this->request->getGet('daterange');
@@ -246,7 +247,7 @@ class export extends BaseController
                     $paymentmethod  = lang('Global.debt');
                 } elseif ($trx['paymentid'] == "-1") {
                     $paymentmethod  = lang('Global.redeemPoint');
-                } else {
+                } elseif (($trx['amountpaid'] != '0') && ($trx['paymentid'] == "0")) {
                     $paymentmethod  = lang('Global.splitbill');
                 }
             }
@@ -264,10 +265,20 @@ class export extends BaseController
             }
 
             // Debt Data
-            $debts  = $DebtModel->where('transactionid', $trx['id'])->find();
+            $debts      = $DebtModel->where('transactionid', $trx['id'])->find();
             if (!empty($debts)) {
                 foreach ($debts as $debt) {
-                    if ((Int)$trx['amountpaid'] - (Int)$debt['value'] < '0') {
+                    $debtinst   = $DebtInsModel->where('debtid', $debt['id'])->where('transactionid', $trx['id'])->find();
+                    if (!empty($debtinst)) {
+                        $debtinval  = [];
+                        foreach ($debtinst as $debtin) {
+                            $debtinval[]    = $debtin['qty'];
+                        }
+                        $totaldebtin    = array_sum($debtinval);
+                    }
+                    $statustrx  = (Int)$trx['value'] - ((Int)$trx['amountpaid'] + (Int)$totaldebtin);
+                    
+                    if ($statustrx != '0') {
                         $paidstatus = '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">' . lang('Global.notpaid') . '</div>';
                     } else {
                         $paidstatus = '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">' . lang('Global.paid') . '</div>';
@@ -1103,7 +1114,6 @@ class export extends BaseController
         //     $summary = array_sum(array_column($transaction, 'value'));
         //     $marginmodals = array();
         //     $margindasars = array();
-        //     // dd($transaction);
 
         //     foreach ($transaction as $trx) {
         //         foreach ($trxdetails as $trxdetail) {
@@ -1652,9 +1662,7 @@ class export extends BaseController
         // // Total Gross
         // $grosstotal = array_sum(array_column($produk, 'gross'));
 
-        // dd($transactiondata);
         // foreach ($transactiondata as $product => $value) {
-        //     dd($value);
         // }
         
         $transactiondata    = [];
@@ -3452,7 +3460,7 @@ class export extends BaseController
             // Total Cash Out
             $dailyreportdata[$dayrep['id']]['totalcashout']     = $dayrep['totalcashout'];
         }
-        // dd($dailyreportdata);
+        
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=Laporan Harian $date1-$date2.xls");
 

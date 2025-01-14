@@ -115,7 +115,7 @@ class Trxother extends BaseController
             $dailyreportdata['dateclose']       = $dailyreport['dateclose'];
 
             // Transaction Data
-            $transactions       = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
+            $transactions                       = $TransactionModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
 
             // Date Closed
             // if ($dailyreport['dateclose'] != '0000-00-00 00:00:00') {
@@ -126,92 +126,67 @@ class Trxother extends BaseController
                 // $dailyreportdata['userclose']    = $userclose->firstname.' '.$userclose->lastname;
 
                 // Transaction Data
-                foreach ($transactions as $trx) {
-                    // Cash, Non-Cash, Debt
-                    $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid !=', '0')->find();
-                    $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
-                    $pointpayments  = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '-1')->find();
-
-                    if (!empty($trxpayments)) {
-                        foreach ($trxpayments as $trxpayment) {
-                            $payment        = $PaymentModel->find($trxpayment['paymentid']);
-
-                            if (!empty($payment)) {
-                                $cashdata       = $CashModel->find($payment['cashid']);
-
-                                if (strcmp($cashdata['name'], 'Petty Cash ' . $outlets['name']) == 0) {
-                                    $cashname   = 'Tunai';
-                                } else {
-                                    $cashname   = $cashdata['name'];
+                if (!empty($transactions)) {
+                    foreach ($transactions as $trx) {
+                        // Cash, Non-Cash, Debt
+                        $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid !=', '0')->find();
+                        $debtpayments   = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '0')->find();
+                        $pointpayments  = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid', '-1')->find();
+    
+                        if (!empty($trxpayments)) {
+                            foreach ($trxpayments as $trxpayment) {
+                                $payment        = $PaymentModel->find($trxpayment['paymentid']);
+    
+                                if (!empty($payment)) {
+                                    $cashdata       = $CashModel->find($payment['cashid']);
+    
+                                    if (strcmp($cashdata['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+                                        $cashname   = 'Tunai';
+                                    } else {
+                                        $cashname   = $cashdata['name'];
+                                    }
+    
+                                    // Transaction Summary
+                                    $dailyreportdata['trxpayments'][$cashdata['id']]['name']                                 = $cashname;
+                                    $dailyreportdata['trxpayments'][$cashdata['id']]['detail'][$trxpayment['id']]['name']    = $payment['name'];
+                                    $dailyreportdata['trxpayments'][$cashdata['id']]['detail'][$trxpayment['id']]['value']   = $trxpayment['value'];
+    
+                                    // Detail Transaction
+                                    $dailyreportdata['payments'][$trx['id']]['detail'][$payment['id']]['name']               = $payment['name'];
+                                    $dailyreportdata['payments'][$trx['id']]['detail'][$payment['id']]['value']              = $trxpayment['value'];
                                 }
-
-                                // Transaction Summary
-                                $dailyreportdata['trxpayments'][$cashdata['id']]['name']                                 = $cashname;
-                                $dailyreportdata['trxpayments'][$cashdata['id']]['detail'][$trxpayment['id']]['name']    = $payment['name'];
-                                $dailyreportdata['trxpayments'][$cashdata['id']]['detail'][$trxpayment['id']]['value']   = $trxpayment['value'];
-
-                                // Detail Transaction
-                                $dailyreportdata['payments'][$trx['id']]['detail'][$payment['id']]['name']               = $payment['name'];
-                                $dailyreportdata['payments'][$trx['id']]['detail'][$payment['id']]['value']              = $trxpayment['value'];
                             }
-                            // else {
-                            //     // Detail Transaction
-                            //     $dailyreportdata['payments'][$trx['id']]['detail']                                       = [];
-                            // }
+                        }
+    
+                        if (!empty($debtpayments)) {
+                            foreach ($debtpayments as $debtpayment) {
+                                // Transaction Summary
+                                $dailyreportdata['trxpayments'][0]['name']                                  = 'Kasbon';
+                                $dailyreportdata['trxpayments'][0]['detail'][$debtpayment['id']]['name']    = 'Kasbon';
+                                $dailyreportdata['trxpayments'][0]['detail'][$debtpayment['id']]['value']   = $debtpayment['value'];
+    
+                                // Detail Transaction
+                                $dailyreportdata['payments'][$trx['id']]['detail'][0]['name']               = 'Kasbon';
+                                $dailyreportdata['payments'][$trx['id']]['detail'][0]['value']              = $debtpayment['value'];
+                            }
+                        }
+    
+                        if (!empty($pointpayments)) {
+                            foreach ($pointpayments as $pointpayment) {
+                                // Transaction Summary
+                                $dailyreportdata['trxpayments'][-1]['name']                                 = lang('Global.redeemPoint');
+                                $dailyreportdata['trxpayments'][-1]['detail'][$pointpayment['id']]['name']  = lang('Global.redeemPoint');
+                                $dailyreportdata['trxpayments'][-1]['detail'][$pointpayment['id']]['value'] = $pointpayment['value'];
+    
+                                // Detail Transaction
+                                $dailyreportdata['payments'][$trx['id']]['detail'][-1]['name']            = lang('Global.redeemPoint');
+                                $dailyreportdata['payments'][$trx['id']]['detail'][-1]['value']           = $pointpayment['value'];
+                            }
                         }
                     }
-                    //  else {
-                    //     // Transaction Summary
-                    //     $dailyreportdata['trxpayments'] = [];
-
-                    //     // Detail Transaction
-                    //     $dailyreportdata['payments']    = [];
-                    // }
-
-                    if (!empty($debtpayments)) {
-                        foreach ($debtpayments as $debtpayment) {
-                            // Transaction Summary
-                            $dailyreportdata['trxpayments'][0]['name']                               = 'Kasbon';
-                            $dailyreportdata['trxpayments'][0]['detail'][$debtpayment['id']]['name']                  = 'Kasbon';
-                            $dailyreportdata['trxpayments'][0]['detail'][$debtpayment['id']]['value']                 = $debtpayment['value'];
-
-                            // Detail Transaction
-                            $dailyreportdata['payments'][$trx['id']]['detail'][0]['name']            = 'Kasbon';
-                            $dailyreportdata['payments'][$trx['id']]['detail'][0]['value']           = $debtpayment['value'];
-                        }
-                    }
-                    // else {
-                    //     // Transaction Summary
-                    //     $dailyreportdata['trxpayments'][0]['name']                               = 'Kasbon';
-                    //     $dailyreportdata['trxpayments'][0]['detail'][0]['name']                  = 'Kasbon';
-                    //     $dailyreportdata['trxpayments'][0]['detail'][0]['value']                 = '0';
-
-                    //     // Detail Transaction
-                    //     $dailyreportdata['payments'][$trx['id']]['detail'][0]['name']            = 'Kasbon';
-                    // }
-
-                    if (!empty($pointpayments)) {
-                        foreach ($pointpayments as $pointpayment) {
-                            // Transaction Summary
-                            $dailyreportdata['trxpayments'][-1]['name']                              = lang('Global.redeemPoint');
-                            $dailyreportdata['trxpayments'][-1]['detail'][$pointpayment['id']]['name']                = lang('Global.redeemPoint');
-                            $dailyreportdata['trxpayments'][-1]['detail'][$pointpayment['id']]['value']               = $pointpayment['value'];
-
-                            // Detail Transaction
-                            $dailyreportdata['payments'][$trx['id']]['detail'][-1]['name']            = lang('Global.redeemPoint');
-                            $dailyreportdata['payments'][$trx['id']]['detail'][-1]['value']           = $pointpayment['value'];
-                        }
-                    }
-                    // else {
-                    //     // Transaction Summary
-                    //     $dailyreportdata['trxpayments'][-1]['name']                              = lang('Global.redeemPoint');
-                    //     $dailyreportdata['trxpayments'][-1]['detail'][-1]['name']                = lang('Global.redeemPoint');
-                    //     $dailyreportdata['trxpayments'][-1]['detail'][-1]['value']               = '0';
-
-                    //     // Detail Transaction
-                    //     $dailyreportdata['payments'][$trx['id']]['detail'][-1]['name']            = lang('Global.redeemPoint');
-                    //     $dailyreportdata['payments'][$trx['id']]['detail'][-1]['value']           = '0';
-                    // }
+                } else {
+                    $dailyreportdata['trxpayments']     = [];
+                    $dailyreportdata['payments']        = [];
                 }
 
                 // Actual Cash Close
@@ -274,18 +249,14 @@ class Trxother extends BaseController
                     $usercashcier   = $UserModel->find($debtin['userid']);
 
                     // Debt Installment Data
-                    // $paymentins     = $PaymentModel->find($debtin['paymentid']);
                     $cashdebt       = $CashModel->find($debtin['cashid']);
                     $dailyreportdata['debtins'][$cashdebt['id']]['name']                             = $cashdebt['name'];
 
                     // Detail Debt Installment
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['value']   = $debtin['qty'];
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['cashier'] = $usercashcier->firstname.' '.$usercashcier->lastname;
-                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['type']    = $debtin['type'];
-                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['desc']    = $debtin['description'];
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['date']    = date('H:i:s', strtotime($debtin['date']));
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['qty']     = $debtin['qty'];
-                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['proof']   = $debtin['photo'];
                 }
             } else {
                 $usercashcier   = [];
@@ -307,11 +278,8 @@ class Trxother extends BaseController
                     // Detail Debt Installment
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['value']   = $debtin['qty'];
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['cashier'] = $usercashcier->firstname.' '.$usercashcier->lastname;
-                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['type']    = $debtin['type'];
-                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['desc']    = $debtin['description'];
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['date']    = date('H:i:s', strtotime($debtin['date']));
                     $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['qty']     = $debtin['qty'];
-                    // $dailyreportdata['debtins'][$cashdebt['id']]['detail'][$debtin['id']]['proof']   = $debtin['photo'];
                 }
             } else {
                 $usercashcier   = [];
