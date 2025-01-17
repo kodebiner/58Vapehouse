@@ -928,10 +928,12 @@ class Product extends BaseController
                         $historydata[$stockad['date']]['date']      = $stockad['date'];
                         $historydata[$stockad['date']]['status']    = 'Penyesuaian Stok '.$stockad['note'];
                         $historydata[$stockad['date']]['qty']       = '<div style="color: green">+'.$stockad['qty'].'</div>';
+                        $historydata[$stockad['date']]['type']      = '1';
                     } else {
                         $historydata[$stockad['date']]['date']      = $stockad['date'];
                         $historydata[$stockad['date']]['status']    = 'Penyesuaian Stok '.$stockad['note'];
                         $historydata[$stockad['date']]['qty']       = '<div style="color: red">-'.$stockad['qty'].'</div>';
+                        $historydata[$stockad['date']]['type']      = '1';
                     }
                 }
             }
@@ -942,9 +944,10 @@ class Product extends BaseController
                 foreach ($stockmovementin as $smovein) {
                     $stockmovedetin   = $StockMoveDetailModel->where('stockmoveid', $smovein['id'])->where('variantid', $id)->first();
                     if (!empty($stockmovedetin)) {
-                        $historydata[$smovein['date']]['date']        = $smovein['date'];
-                        $historydata[$smovein['date']]['status']      = 'Pemindahan Stok Masuk';
-                        $historydata[$smovein['date']]['qty']         = '<div style="color: green">+'.$stockmovedetin['qty'].'</div>';
+                        $historydata[$smovein['date']]['date']          = $smovein['date'];
+                        $historydata[$smovein['date']]['status']        = 'Pemindahan Stok Masuk';
+                        $historydata[$smovein['date']]['qty']           = '<div style="color: green">+'.$stockmovedetin['qty'].'</div>';
+                        $historydata[$smovein['date']]['type']          = '2';
                     }
                 }
             }
@@ -958,6 +961,7 @@ class Product extends BaseController
                         $historydata[$smoveout['date']]['date']     = $smoveout['date'];
                         $historydata[$smoveout['date']]['status']   = 'Pemindahan Stok Keluar';
                         $historydata[$smoveout['date']]['qty']      = '<div style="color: red">-'.$stockmovedetout['qty'].'</div>';
+                        $historydata[$smoveout['date']]['type']     = '3';
                     }
                 }
             }
@@ -972,6 +976,7 @@ class Product extends BaseController
                         $historydata[$trx['date']]['date']      = $trx['date'];
                         $historydata[$trx['date']]['status']    = 'Penjualan';
                         $historydata[$trx['date']]['qty']       = '<div style="color: red">-'.$trxdetail['qty'].'</div>';
+                        $historydata[$trx['date']]['type']      = '4';
                     }
                 }
             }
@@ -986,84 +991,15 @@ class Product extends BaseController
                         $historydata[$purchase['date']]['date']         = $purchase['date'];
                         $historydata[$purchase['date']]['status']       = 'Pembelian';
                         $historydata[$purchase['date']]['qty']          = '<div style="color: green">+'.$purdet['qty'].'</div>';
+                        $historydata[$purchase['date']]['type']         = '5';
                     }
                 }
             }
-
-            // if (!empty($variant)) {
-            //     // Stock Adjustment
-            //     $stockadj       = $StockAdjustmentModel->where('variantid', $id)->where('outletid', $this->data['outletPick'])->find();
-    
-            //     if (!empty($stockadj)) {
-            //         foreach ($stockadj as $stockad) {
-            //             if ($stockad['type'] == '0') {
-            //                 $historydata[$stockad['date']]['date']      = $stockad['date'];
-            //                 $historydata[$stockad['date']]['status']    = 1;
-            //                 // $historydata[$stockad['date']]['status']    = 'Penyesuaian Stok / '.$stockad['note'];
-            //                 $historydata[$stockad['date']]['qty']       = $stockad['qty'];
-            //             } else {
-            //                 $historydata[$stockad['date']]['date']      = $stockad['date'];
-            //                 $historydata[$stockad['date']]['status']    = 2;
-            //                 $historydata[$stockad['date']]['qty']       = $stockad['qty'];
-            //             }
-            //         }
-            //     }
-    
-            //     // Stock Movement
-            //     $stockmovedet   = $StockMoveDetailModel->where('variantid', $id)->find();
-            //     if (!empty($stockmovedet)) {
-            //         foreach ($stockmovedet as $smdet) {
-            //             $stockmovement  = $StockmovementModel->find($smdet['stockmoveid']);
-            //             if ($stockmovement['origin'] == $this->data['outletPick']) {
-            //                 $historydata[$stockmovement['date']]['date']        = $stockmovement['date'];
-            //                 $historydata[$stockmovement['date']]['status']      = 3;
-            //                 // $historydata[$stockmovement['date']]['status']      = 'Pemindahan Stok';
-            //                 $historydata[$stockmovement['date']]['qty']         = $smdet['qty'];
-            //             }
-            //             if ($stockmovement['destination'] == $this->data['outletPick']) {
-            //                 $historydata[$stockmovement['date']]['date']        = $stockmovement['date'];
-            //                 $historydata[$stockmovement['date']]['status']      = 4;
-            //                 $historydata[$stockmovement['date']]['qty']         = $smdet['qty'];
-            //             }
-            //         }
-            //     }
-    
-            //     // Transaction
-            //     $trxdetail      = $TrxdetailModel->where('variantid', $id)->find();
-            //     if (!empty($trxdetail)) {
-            //         foreach ($trxdetail as $trxdet) {
-            //             $transaction    = $TransactionModel->find($trxdet['transactionid']);
-
-            //             $historydata[$transaction['date']]['date']      = $transaction['date'];
-            //             $historydata[$transaction['date']]['status']    = 5;
-            //             // $historydata[$transaction['date']]['status']    = 'Penjualan';
-            //             $historydata[$transaction['date']]['qty']       = $trxdet['qty'];
-            //         }
-            //     }
-    
-            //     // Purchase
-            //     $purdet         = $PurchasedetailModel->where('variantid', $id)->find();
-            //     if (!empty($purdet)) {
-            //         foreach ($purdet as $pudet) {
-            //             $purchase       = $PurchaseModel->find($pudet['purchaseid']);
-
-            //             $historydata[$purchase['date']]['date']         = $purchase['date'];
-            //             $historydata[$purchase['date']]['status']       = 6;
-            //             // $historydata[$purchase['date']]['status']       = 'Pembelian';
-            //             $historydata[$purchase['date']]['qty']          = $pudet['qty'];
-            //         }
-            //     }
-            // }
-
-            // $historydata[0]['date']         = date('Y/m/d H:i:s');
-            // $historydata[0]['status']       = 0;
-            // $historydata[0]['qty']          = $stocknow;
             array_multisort(array_column($historydata, 'date'), SORT_DESC, $historydata);
 
             $page       = (int) ($this->request->getGet('page') ?? 1);
             $perPage    = 20;
             $total      = count($historydata);
-            // dd($historydata);
 
             // Parsing Data to View
             $data                   = $this->data;
