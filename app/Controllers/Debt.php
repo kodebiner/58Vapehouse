@@ -541,7 +541,7 @@ class Debt extends BaseController
                 $DebtModel->save($datadebt);
             }
 
-            // Input Value to cash
+            // Refund Cash
             $payment            = $PaymentModel->find($debtinst['paymentid']);
             if (!empty($payment)) {
                 $cash           = $CashModel->find($payment['cashid']);
