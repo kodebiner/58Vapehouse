@@ -464,24 +464,15 @@ class Debt extends BaseController
 
     public function paydebt($id)
     {
-        // Validate Data
-        $validation = \Config\Services::validation();
-
         // Calling Models
         $DebtModel              = new DebtModel();
         $DebtInsModel           = new DebtInsModel();
         $CashModel              = new CashModel();
-        $TrxotherModel          = new TrxotherModel();
         $PaymentModel           = new PaymentModel();
-        $MemberModel            = new MemberModel();
-        $DailyReportModel       = new DailyReportModel();
-
-        // Initialize
-        $input = $this->request->getPost();
 
         // Populating Data
+        $input                  = $this->request->getPost();
         $debts                  = $DebtModel->find($id);
-        // $customers              = $MemberModel->where('id', $debts['memberid'])->first();
 
         // Date Time Stamp
         $date                   = date_create();
@@ -524,43 +515,143 @@ class Debt extends BaseController
         ];
         $CashModel->save($wallet);
 
-        // // Image Capture
-        // $img                    = $input['image'];
-        // $folderPath             = "img/tfproof/";
-        // $image_parts            = explode(";base64,", $img);
-        // $image_type_aux         = explode("image/", $image_parts[0]);
-        // $image_type             = $image_type_aux[1];
-        // $image_base64           = base64_decode($image_parts[1]);
-        // $fileName               = uniqid() . '.png';
-        // $file                   = $folderPath . $fileName;
-        // file_put_contents($file, $image_base64);
+        // Return
+        return redirect()->back()->with('massage', lang('global.saved'));
+    }
 
-        // // Trx Other Cash In
-        // $cashin = [
-        //     'userid'        => $this->data['uid'],
-        //     'outletid'      => $this->data['outletPick'],
-        //     'cashid'        => $payments['cashid'],
-        //     'description'   => "Debt - " . $customers['name'] . '/' . $customers['phone'],
-        //     'type'          => "0",
-        //     'date'          => $tanggal,
-        //     'qty'           => $input['value'],
-        //     // 'photo'         => $fileName,
-        // ];
-        // $TrxotherModel->save($cashin);
+    public function refundins($id)
+    {
+        // Calling Models
+        $DebtModel              = new DebtModel();
+        $DebtInsModel           = new DebtInsModel();
+        $CashModel              = new CashModel();
+        $PaymentModel           = new PaymentModel();
 
-        // // Find Data for Daily Report
-        // $today                  = date('Y-m-d') . ' 00:00:01';
-        // $dailyreports           = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->find();
-        // foreach ($dailyreports as $dayrep) {
-        //     $tcashin = [
-        //         'id'            => $dayrep['id'],
-        //         'totalcashin'   => (int)$dayrep['totalcashin'] + (int)$input['value'],
-        //     ];
-        //     $DailyReportModel->save($tcashin);
-        // }
+        // Populating Data
+        $debtinst               = $DebtInsModel->find($id);
+
+        if (!empty($debtinst)) {
+            // Refund Debt
+            $debt               = $DebtModel->find($debtinst['debtid']);
+            if (!empty($debt)) {
+                $datadebt       = [
+                    'id'        => $debtinst['debtid'],
+                    'value'     => (Int)$debt['value'] + (Int)$debtinst['qty'],
+                ];
+                $DebtModel->save($datadebt);
+            }
+
+            // Input Value to cash
+            $payment            = $PaymentModel->find($debtinst['paymentid']);
+            if (!empty($payment)) {
+                $cash           = $CashModel->find($payment['cashid']);
+                if (!empty($cash)) {
+                    $datawallet = [
+                        'id'    => $cash['id'],
+                        'qty'   => (int)$cash['qty'] - (int)$debtinst['qty'],
+                    ];
+                    $CashModel->save($datawallet);
+                }
+            }
+        }
+
+        // Delete Debt Installment Data
+        $DebtInsModel->delete($id);
 
         // Return
         return redirect()->back()->with('massage', lang('global.saved'));
+    }
+
+    public function indexdebtins()
+    {
+        $pager      = \Config\Services::pager();
+
+        // Calling Model
+        $TrxotherModel      = new TrxotherModel();
+        $TransactionModel   = new TransactionModel();
+        $MemberModel        = new MemberModel();
+        $DebtInsModel       = new DebtInsModel();
+        $OutletModel        = new OutletModel();
+
+        // Find Data
+        $input = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange = explode(' - ', $input);
+            $startdate = $daterange[0];
+            $enddate = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-1' . ' 00:00:00');
+            $enddate    = date('Y-m-t' . ' 23:59:59');
+        }
+
+        // $outlets            = $OutletModel->findAll();
+        if ($this->data['outletPick'] === null) {
+            // $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
+
+            // if (!empty($input)) {
+            //     if ($startdate === $enddate) {
+                    $trxothers          = $TrxotherModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->like('description', 'Debt')->find();
+                    $debtinstallments   = $DebtInsModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            //     } else {
+            //         $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
+            //     }
+            // }
+        } else {
+            // $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'debtpay');
+
+            // if (!empty($input)) {
+            //     if ($startdate === $enddate) {
+                    $trxothers          = $TrxotherModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->like('description', 'Debt')->find();
+                    $debtinstallments   = $DebtInsModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            //     } else {
+            //         $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'debtpay');
+            //     }
+            // }
+        }
+        $debtinsdata    = [];
+        foreach ($trxothers as $trxot) {
+            $outlet                                         = $OutletModel->find($trxot['outletid']);
+            $debtinsdata[$trxot['date']]['id']              = $trxot['id'];
+            $debtinsdata[$trxot['date']]['date']            = $trxot['date'];
+            $debtinsdata[$trxot['date']]['outlet']          = $outlet['name'];
+            $debtinsdata[$trxot['date']]['description']     = $trxot['description'];
+            $debtinsdata[$trxot['date']]['qty']             = $trxot['qty'];
+        }
+
+        foreach ($debtinstallments as $debt) {
+            $transaction    = $TransactionModel->find($debt['transactionid']);
+            $members        = $MemberModel->find($transaction['memberid']);
+
+            if (!empty($transaction)) {
+                $outlets                                        = $OutletModel->find($debt['outletid']);
+                $debtinsdata[$debt['date']]['id']               = $debt['id'];
+                $debtinsdata[$debt['date']]['date']             = $debt['date'];
+                $debtinsdata[$debt['date']]['description']      = 'Debt - '.$members['name'].' / '.$members['phone'];
+                $debtinsdata[$debt['date']]['outlet']           = $outlets['name'];
+                $debtinsdata[$debt['date']]['qty']              = $debt['qty'];
+            }
+        }
+        array_multisort(array_column($debtinsdata, 'date'), SORT_DESC, $debtinsdata);
+
+        $page       = (int) ($this->request->getGet('page') ?? 1);
+        $perPage    = 20;
+        $total      = count($debtinsdata);
+
+        // Parsing data to view
+        $data                       = $this->data;
+        $data['title']              = lang('Global.debtInstallments');
+        $data['description']        = lang('Global.debtInstallmentsListDesc');
+        $data['trxothers']          = array_slice($debtinsdata, ($page*20)-20, $page*20);
+        // $data['trxothers']          = $debtinsdata;
+        // $data['trxothers']          = $trxothers;
+        // $data['outlets']            = $outlets;
+        $data['pager_links']        = $pager->makeLinks($page, $perPage, $total, 'front_full');
+        $data['startdate']          = strtotime($startdate);
+        $data['enddate']            = strtotime($enddate);
+        // $data['pager']              = $TrxotherModel->pager;
+
+        return view('Views/debtpay', $data);
     }
 
     public function indextopup()
@@ -617,96 +708,6 @@ class Debt extends BaseController
         $data['pager']          = $TrxotherModel->pager;
 
         return view('Views/topup', $data);
-    }
-
-    public function indexdebtins()
-    {
-        $pager      = \Config\Services::pager();
-
-        // Calling Model
-        $TrxotherModel      = new TrxotherModel();
-        $TransactionModel   = new TransactionModel();
-        $MemberModel        = new MemberModel();
-        $DebtInsModel       = new DebtInsModel();
-        $OutletModel        = new OutletModel();
-
-        // Find Data
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate  = date('Y-m-1' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
-        }
-
-        // $outlets            = $OutletModel->findAll();
-        if ($this->data['outletPick'] === null) {
-            // $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
-
-            // if (!empty($input)) {
-            //     if ($startdate === $enddate) {
-                    $trxothers          = $TrxotherModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->like('description', 'Debt')->find();
-                    $debtinstallments   = $DebtInsModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-            //     } else {
-            //         $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->paginate(20, 'debtpay');
-            //     }
-            // }
-        } else {
-            // $trxothers      = $TrxotherModel->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'debtpay');
-
-            // if (!empty($input)) {
-            //     if ($startdate === $enddate) {
-                    $trxothers          = $TrxotherModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->like('description', 'Debt')->find();
-                    $debtinstallments   = $DebtInsModel->where('outletid', $this->data['outletPick'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-            //     } else {
-            //         $trxothers      = $TrxotherModel->where('date >=', $startdate)->where('date <=', $enddate)->orderBy('id', 'DESC')->like('description', 'Debt')->where('outletid', $this->data['outletPick'])->paginate(20, 'debtpay');
-            //     }
-            // }
-        }
-        $debtinsdata    = [];
-        foreach ($trxothers as $trxot) {
-            $outlet                         = $OutletModel->find($trxot['outletid']);
-            $debtinsdata[$trxot['date']]['date']          = $trxot['date'];
-            $debtinsdata[$trxot['date']]['outlet']        = $outlet['name'];
-            $debtinsdata[$trxot['date']]['description']   = $trxot['description'];
-            $debtinsdata[$trxot['date']]['qty']           = $trxot['qty'];
-        }
-
-        foreach ($debtinstallments as $debt) {
-            $transaction    = $TransactionModel->find($debt['transactionid']);
-            $members        = $MemberModel->find($transaction['memberid']);
-
-            if (!empty($transaction)) {
-                $outlets                                        = $OutletModel->find($debt['outletid']);
-                $debtinsdata[$debt['date']]['date']             = $debt['date'];
-                $debtinsdata[$debt['date']]['description']      = 'Debt - '.$members['name'].' / '.$members['phone'];
-                $debtinsdata[$debt['date']]['outlet']           = $outlets['name'];
-                $debtinsdata[$debt['date']]['qty']              = $debt['qty'];
-            }
-        }
-        array_multisort(array_column($debtinsdata, 'date'), SORT_DESC, $debtinsdata);
-
-        $page       = (int) ($this->request->getGet('page') ?? 1);
-        $perPage    = 20;
-        $total      = count($debtinsdata);
-
-        // Parsing data to view
-        $data                       = $this->data;
-        $data['title']              = lang('Global.debtInstallments');
-        $data['description']        = lang('Global.debtInstallmentsListDesc');
-        $data['trxothers']          = array_slice($debtinsdata, ($page*20)-20, $page*20);
-        // $data['trxothers']          = $debtinsdata;
-        // $data['trxothers']          = $trxothers;
-        // $data['outlets']            = $outlets;
-        $data['pager_links']        = $pager->makeLinks($page, $perPage, $total, 'front_full');
-        $data['startdate']          = strtotime($startdate);
-        $data['enddate']            = strtotime($enddate);
-        // $data['pager']              = $TrxotherModel->pager;
-
-        return view('Views/debtpay', $data);
     }
 
     public function refund($id)

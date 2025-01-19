@@ -48,6 +48,7 @@
                 <th class=""><?=lang('Global.outlet')?></th>
                 <th class=""><?=lang('Global.description')?></th>
                 <th class="uk-text-center"><?=lang('Global.quantity')?></th>
+                <th class="uk-text-center"></th>
             </tr>
         </thead>
         <tbody>
@@ -55,15 +56,15 @@
                 <tr>
                     <td class=""><?= date('l, d M Y, H:i:s', strtotime($trx['date'])); ?></td>
                     <td><?= $trx['outlet'] ?></td>
-                    <!-- <td>
-                        </?php foreach ($outlets as $outlet) {
-                            if ($outlet['id'] === $trx['outletid']) {
-                                echo $outlet['name'];
-                            }
-                        } ?>
-                    </td> -->
                     <td class=""><?= $trx['description'];?></td>
                     <td class="uk-text-center">Rp <?= number_format($trx['qty'],2,',','.');?></td>
+                    <td class="uk-text-center">
+                        <?php if ((in_groups('owner')) && ($outletPick != null)) { ?>
+                            <div class="uk-text-success" id="refund" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')" style="border-style: solid; border-color: red;">
+                                <a href="debt/refund/<?= $trx['id'] ?>" class="uk-link-heading">Refund</a>
+                            </div>
+                        <?php } ?>
+                    </td>
                 </tr>
             <?php } ?>
         </tbody>
