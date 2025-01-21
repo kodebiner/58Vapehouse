@@ -883,6 +883,8 @@ class Product extends BaseController
         $TrxdetailModel         = new TrxdetailModel();
         $PurchaseModel          = new PurchaseModel();
         $PurchasedetailModel    = new PurchasedetailModel();
+        $OutletModel            = new OutletModel();
+        $UserModel              = new UserModel();
 
         // Populating Data
         $input          = $this->request->getGet();
@@ -924,16 +926,59 @@ class Product extends BaseController
             
             if (!empty($stockadj)) {
                 foreach ($stockadj as $stockad) {
+                    $stockadjoutlet = $OutletModel->find($stockad['outletid']);
+                    $stockadjuser   = $UserModel->find($stockad['userid']);
+
+                    if (!empty($stockadjoutlet)) {
+                        $saoutlet   = $stockadjoutlet['name'];
+                    } else {
+                        $saoutlet   = '-';
+                    }
+
+                    if (!empty($stockadjuser)) {
+                        $sauser     = $stockadjuser->firstname.' '.$stockadjuser->lastname;
+                    } else {
+                        $sauser     = '-';
+                    }
+
                     if ($stockad['type'] == '0') {
+                        $stockadjvar1     = $VariantModel->find($stockad['variantid']);
+
                         $historydata[$stockad['date']]['date']      = $stockad['date'];
+                        $historydata[$stockad['date']]['outlet']    = $saoutlet;
+                        $historydata[$stockad['date']]['user']      = $sauser;
                         $historydata[$stockad['date']]['status']    = 'Penyesuaian Stok '.$stockad['note'];
                         $historydata[$stockad['date']]['qty']       = '<div style="color: green">+'.$stockad['qty'].'</div>';
                         $historydata[$stockad['date']]['type']      = '1';
+
+                        if (!empty($stockadjvar1)) {
+                            $stockadjprod1    = $ProductModel->find($stockadjvar1['productid']);
+                            
+                            if (!empty($stockadjprod1)) {
+                                $historydata[$stockad['date']]['detail'][$stockad['id']]['sku']     = $stockadjvar1['sku'];
+                                $historydata[$stockad['date']]['detail'][$stockad['id']]['name']    = $stockadjprod1['name'].' - '.$stockadjvar1['name'];
+                                $historydata[$stockad['date']]['detail'][$stockad['id']]['qty']     = $stockad['qty'];
+                            }
+                        }
                     } else {
+                        $stockadjvar2     = $VariantModel->find($stockad['variantid']);
+                        
                         $historydata[$stockad['date']]['date']      = $stockad['date'];
+                        $historydata[$stockad['date']]['outlet']    = $saoutlet;
+                        $historydata[$stockad['date']]['user']      = $sauser;
                         $historydata[$stockad['date']]['status']    = 'Penyesuaian Stok '.$stockad['note'];
                         $historydata[$stockad['date']]['qty']       = '<div style="color: red">-'.$stockad['qty'].'</div>';
                         $historydata[$stockad['date']]['type']      = '1';
+
+                        if (!empty($stockadjvar2)) {
+                            $stockadjprod2    = $ProductModel->find($stockadjvar2['productid']);
+                            
+                            if (!empty($stockadjprod2)) {
+                                $historydata[$stockad['date']]['detail'][$stockad['id']]['sku']     = $stockadjvar2['sku'];
+                                $historydata[$stockad['date']]['detail'][$stockad['id']]['name']    = $stockadjprod2['name'].' - '.$stockadjvar2['name'];
+                                $historydata[$stockad['date']]['detail'][$stockad['id']]['qty']     = $stockad['qty'];
+                            }
+                        }
                     }
                 }
             }
@@ -942,12 +987,62 @@ class Product extends BaseController
             $stockmovementin    = $StockmovementModel->where('status', '3')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('destination', $this->data['outletPick'])->find();
             if (!empty($stockmovementin)) {
                 foreach ($stockmovementin as $smovein) {
-                    $stockmovedetin   = $StockMoveDetailModel->where('stockmoveid', $smovein['id'])->where('variantid', $id)->first();
-                    if (!empty($stockmovedetin)) {
-                        $historydata[$smovein['date']]['date']          = $smovein['date'];
-                        $historydata[$smovein['date']]['status']        = 'Pemindahan Stok Masuk';
-                        $historydata[$smovein['date']]['qty']           = '<div style="color: green">+'.$stockmovedetin['qty'].'</div>';
-                        $historydata[$smovein['date']]['type']          = '2';
+                    $stockmovedetins        = $StockMoveDetailModel->where('stockmoveid', $smovein['id'])->where('variantid', $id)->find();
+                    $stockmoveindetaileds   = $StockMoveDetailModel->where('stockmoveid', $smovein['id'])->find();
+                    $inorigin               = $OutletModel->find($smovein['origin']);
+                    $indestination          = $OutletModel->find($smovein['destination']);
+                    $insender               = $UserModel->find($smovein['sender']);
+                    $inreceiver             = $UserModel->find($smovein['receiver']);
+
+                    if (!empty($inorigin)) {
+                        $sminorigin         = $inorigin['name'];
+                    } else {
+                        $sminorigin         = '-';
+                    }
+
+                    if (!empty($indestination)) {
+                        $smindestination    = $indestination['name'];
+                    } else {
+                        $smindestination    = '-';
+                    }
+
+                    if (!empty($insender)) {
+                        $sminsender         = $insender->firstname.' '.$insender->lastname;
+                    } else {
+                        $sminsender         = '-';
+                    }
+
+                    if (!empty($inreceiver)) {
+                        $sminreceiver       = $inreceiver->firstname.' '.$inreceiver->lastname;
+                    } else {
+                        $sminreceiver       = '-';
+                    }
+
+                    if (!empty($stockmovedetins)) {
+                        foreach ($stockmovedetins as $stockmovedetin) {
+                            $historydata[$smovein['date']]['date']          = $smovein['date'];
+                            $historydata[$smovein['date']]['outlet']        = 'Asal '.$sminorigin.'</br>Tujuan '.$smindestination;
+                            $historydata[$smovein['date']]['user']          = 'Dikirim '.$sminsender.'</br>Diterima '.$sminreceiver;
+                            $historydata[$smovein['date']]['status']        = 'Pemindahan Stok Masuk';
+                            $historydata[$smovein['date']]['qty']           = '<div style="color: green">+'.$stockmovedetin['qty'].'</div>';
+                            $historydata[$smovein['date']]['type']          = '2';
+                        }
+
+                        if (!empty($stockmoveindetaileds)) {
+                            foreach ($stockmoveindetaileds as $stockmoveindetailed) {
+                                $stockmoveindetailedvar     = $VariantModel->find($stockmoveindetailed['variantid']);
+    
+                                if (!empty($stockmoveindetailedvar)) {
+                                    $stockmoveindetailedprod    = $ProductModel->find($stockmoveindetailedvar['productid']);
+                                    
+                                    if (!empty($stockmoveindetailedprod)) {
+                                        $historydata[$smovein['date']]['detail'][$stockmoveindetailed['id']]['sku']     = $stockmoveindetailedvar['sku'];
+                                        $historydata[$smovein['date']]['detail'][$stockmoveindetailed['id']]['name']    = $stockmoveindetailedprod['name'].' - '.$stockmoveindetailedvar['name'];
+                                        $historydata[$smovein['date']]['detail'][$stockmoveindetailed['id']]['qty']     = $stockmoveindetailed['qty'];
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -956,12 +1051,62 @@ class Product extends BaseController
             $stockmovementout   = $StockmovementModel->where('status', '3')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('origin', $this->data['outletPick'])->find();
             if (!empty($stockmovementout)) {
                 foreach ($stockmovementout as $smoveout) {
-                    $stockmovedetout   = $StockMoveDetailModel->where('stockmoveid', $smoveout['id'])->where('variantid', $id)->first();
-                    if (!empty($stockmovedetout)) {
-                        $historydata[$smoveout['date']]['date']     = $smoveout['date'];
-                        $historydata[$smoveout['date']]['status']   = 'Pemindahan Stok Keluar';
-                        $historydata[$smoveout['date']]['qty']      = '<div style="color: red">-'.$stockmovedetout['qty'].'</div>';
-                        $historydata[$smoveout['date']]['type']     = '3';
+                    $stockmovedetouts       = $StockMoveDetailModel->where('stockmoveid', $smoveout['id'])->where('variantid', $id)->find();
+                    $stockmoveoutdetaileds  = $StockMoveDetailModel->where('stockmoveid', $smoveout['id'])->find();
+                    $outorigin              = $OutletModel->find($smoveout['origin']);
+                    $outdestination         = $OutletModel->find($smoveout['destination']);
+                    $outsender              = $UserModel->find($smoveout['sender']);
+                    $outreceiver            = $UserModel->find($smoveout['receiver']);
+
+                    if (!empty($outorigin)) {
+                        $smoutorigin         = $outorigin['name'];
+                    } else {
+                        $smoutorigin         = '-';
+                    }
+
+                    if (!empty($outdestination)) {
+                        $smoutdestination    = $outdestination['name'];
+                    } else {
+                        $smoutdestination    = '-';
+                    }
+
+                    if (!empty($outsender)) {
+                        $smoutsender         = $outsender->firstname.' '.$outsender->lastname;
+                    } else {
+                        $smoutsender         = '-';
+                    }
+
+                    if (!empty($outreceiver)) {
+                        $smoutreceiver       = $outreceiver->firstname.' '.$outreceiver->lastname;
+                    } else {
+                        $smoutreceiver       = '-';
+                    }
+                    
+                    if (!empty($stockmovedetouts)) {
+                        foreach ($stockmovedetouts as $stockmovedetout) {
+                            $historydata[$smoveout['date']]['date']     = $smoveout['date'];
+                            $historydata[$smoveout['date']]['outlet']   = 'Dari '.$smoutorigin.'</br> Tujuan '.$smoutdestination;
+                            $historydata[$smoveout['date']]['user']     = 'Dikirim '.$smoutsender.'</br> Diterima '.$smoutreceiver;
+                            $historydata[$smoveout['date']]['status']   = 'Pemindahan Stok Keluar';
+                            $historydata[$smoveout['date']]['qty']      = '<div style="color: red">-'.$stockmovedetout['qty'].'</div>';
+                            $historydata[$smoveout['date']]['type']     = '3';
+                        }
+
+                        if (!empty($stockmoveoutdetaileds)) {
+                            foreach ($stockmoveoutdetaileds as $stockmoveoutdetailed) {
+                                $stockmoveoutdetailedvar     = $VariantModel->find($stockmoveoutdetailed['variantid']);
+    
+                                if (!empty($stockmoveoutdetailedvar)) {
+                                    $stockmoveoutdetailedprod    = $ProductModel->find($stockmoveoutdetailedvar['productid']);
+                                    
+                                    if (!empty($stockmoveoutdetailedprod)) {
+                                        $historydata[$smoveout['date']]['detail'][$stockmoveoutdetailed['id']]['sku']     = $stockmoveoutdetailedvar['sku'];
+                                        $historydata[$smoveout['date']]['detail'][$stockmoveoutdetailed['id']]['name']    = $stockmoveoutdetailedprod['name'].' - '.$stockmoveoutdetailedvar['name'];
+                                        $historydata[$smoveout['date']]['detail'][$stockmoveoutdetailed['id']]['qty']     = $stockmoveoutdetailed['qty'];
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -970,13 +1115,46 @@ class Product extends BaseController
             $transactions   = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             if (!empty($transactions)) {
                 foreach ($transactions as $trx) {
-                    $trxdetail      = $TrxdetailModel->where('transactionid', $trx['id'])->where('variantid', $id)->first();
+                    $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->where('variantid', $id)->find();
+                    $trxdetaileds   = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+                    $trxoutlet      = $OutletModel->find($trx['outletid']);
+                    $trxuser        = $UserModel->find($trx['userid']);
 
-                    if (!empty($trxdetail)) {
-                        $historydata[$trx['date']]['date']      = $trx['date'];
-                        $historydata[$trx['date']]['status']    = 'Penjualan';
-                        $historydata[$trx['date']]['qty']       = '<div style="color: red">-'.$trxdetail['qty'].'</div>';
-                        $historydata[$trx['date']]['type']      = '4';
+                    if (!empty($trxoutlet)) {
+                        $toutlet    = $trxoutlet['name'];
+                    } else {
+                        $toutlet    = '-';
+                    }
+
+                    if (!empty($trxuser)) {
+                        $tuser      = $trxuser->firstname.' '.$trxuser->lastname;
+                    } else {
+                        $tuser      = '-';
+                    }
+
+                    if (!empty($trxdetails)) {
+                        foreach ($trxdetails as $trxdetail) {
+                            $historydata[$trx['date']]['date']      = $trx['date'];
+                            $historydata[$trx['date']]['outlet']    = $toutlet;
+                            $historydata[$trx['date']]['user']      = $tuser;
+                            $historydata[$trx['date']]['status']    = 'Penjualan';
+                            $historydata[$trx['date']]['qty']       = '<div style="color: red">-'.$trxdetail['qty'].'</div>';
+                            $historydata[$trx['date']]['type']      = '4';
+                        }
+
+                        if (!empty($trxdetaileds)) {
+                            foreach ($trxdetaileds as $trxdetailed) {
+                                $trxdetailedvar     = $VariantModel->find($trxdetailed['variantid']);
+                                if (!empty($trxdetailedvar)) {
+                                    $trxdetailedprod    = $ProductModel->find($trxdetailedvar['productid']);
+                                    if (!empty($trxdetailedprod)) {
+                                        $historydata[$trx['date']]['detail'][$trxdetailed['id']]['sku']     = $trxdetailedvar['sku'];
+                                        $historydata[$trx['date']]['detail'][$trxdetailed['id']]['name']    = $trxdetailedprod['name'].' - '.$trxdetailedvar['name'];
+                                        $historydata[$trx['date']]['detail'][$trxdetailed['id']]['qty']     = $trxdetailed['qty'];
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -985,13 +1163,45 @@ class Product extends BaseController
             $purchases      = $PurchaseModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             if (!empty($purchases)) {
                 foreach ($purchases as $purchase) {
-                    $purdet         = $PurchasedetailModel->where('purchaseid', $purchase['id'])->where('variantid', $id)->first();
+                    $purdets        = $PurchasedetailModel->where('purchaseid', $purchase['id'])->where('variantid', $id)->find();
+                    $purdetaileds   = $PurchasedetailModel->where('purchaseid', $purchase['id'])->find();
+                    $purchaseoutlet = $OutletModel->find($purchase['outletid']);
+                    $purchaseuser   = $UserModel->find($purchase['userid']);
 
-                    if (!empty($purdet)) {
-                        $historydata[$purchase['date']]['date']         = $purchase['date'];
-                        $historydata[$purchase['date']]['status']       = 'Pembelian';
-                        $historydata[$purchase['date']]['qty']          = '<div style="color: green">+'.$purdet['qty'].'</div>';
-                        $historydata[$purchase['date']]['type']         = '5';
+                    if (!empty($purchaseoutlet)) {
+                        $poutlet    = $purchaseoutlet['name'];
+                    } else {
+                        $poutlet    = '-';
+                    }
+
+                    if (!empty($purchaseuser)) {
+                        $puser      = $purchaseuser->firstname.' '.$purchaseuser->lastname;
+                    } else {
+                        $puser      = '-';
+                    }
+                    if (!empty($purdets)) {
+                        foreach ($purdets as $purdet) {
+                            $historydata[$purchase['date']]['date']         = $purchase['date'];
+                            $historydata[$purchase['date']]['outlet']       = $poutlet;
+                            $historydata[$purchase['date']]['user']         = $puser;
+                            $historydata[$purchase['date']]['status']       = 'Pembelian';
+                            $historydata[$purchase['date']]['qty']          = '<div style="color: green">+'.$purdet['qty'].'</div>';
+                            $historydata[$purchase['date']]['type']         = '5';
+                        }
+
+                        if (!empty($purdetaileds)) {
+                            foreach ($purdetaileds as $purdetailed) {
+                                $purdetailedvar     = $VariantModel->find($purdetailed['variantid']);
+                                if (!empty($purdetailedvar)) {
+                                    $purdetailedprod    = $ProductModel->find($purdetailedvar['productid']);
+                                    if (!empty($purdetailedprod)) {
+                                        $historydata[$purchase['date']]['detail'][$purdetailed['id']]['sku']     = $purdetailedvar['sku'];
+                                        $historydata[$purchase['date']]['detail'][$purdetailed['id']]['name']    = $purdetailedprod['name'].' - '.$purdetailedvar['name'];
+                                        $historydata[$purchase['date']]['detail'][$purdetailed['id']]['qty']     = $purdetailed['qty'];
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -101,34 +101,23 @@
                 <div class="uk-modal-body">
                     <div class="uk-form-horizontal">
                         <div class="uk-margin">
-                            <div class="tm-h2 uk-h4"><?=lang('Global.movementInfo')?></div>
+                            <label class="uk-form-label"><?=lang('Global.date')?></label>
+                            <div class="uk-form-controls"><?= date('l, d M Y, H:i:s', strtotime($stock['date'])); ?></div>
                         </div>
 
                         <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.status')?></label>
-                            <div class="uk-form-controls">
-                                <!-- </?php if ($stockmove['status'] === "0") {
-                                    echo '<span class="uk-text-primary" style="padding: 5px; border-style: solid; border-color: #1e87f0;">'.$created.$stockmove['origin'].'</span>';
-                                } elseif ($stockmove['status'] === "1") {
-                                    if ($outletPick == $stockmove['destinationid']) {
-                                        echo '<span style="padding: 5px; border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['destination'].'</span>';
-                                    } elseif ($outletPick == $stockmove['originid']) {
-                                        echo '<span style="padding: 5px; border-style: solid; border-color: #faa05a;">'.$sent.$stockmove['origin'].'</span>';
-                                    } else {
-                                        echo '<span style="padding: 5px; border-style: solid; border-color: #faa05a;">'.$pending.$stockmove['origin'].' / '.$stockmove['destination'].'</span>';
-                                    }
-                                } elseif ($stockmove['status'] === "2") {
-                                    echo '<span class="uk-text-danger uk-width-auto" style="padding: 5px; border-style: solid; border-color: #f0506e;">'.$cancel.'</span>';
-                                } elseif ($stockmove['status'] === "3") {
-                                    echo '<span class="uk-text-success uk-width-auto" style="padding: 5px; border-style: solid; border-color: #32d296;">'.$success.$stockmove['destination'].'</span>';
-                                }
-                                ?> -->
-                            </div>
+                            <div class="uk-form-controls"><?= $stock['status'] ?></div>
                         </div>
-                        
+
                         <div class="uk-margin">
-                            <label class="uk-form-label"><?=lang('Global.date')?></label>
-                            <div class="uk-form-controls"><?= date('l, d M Y, H:i:s', strtotime($stock['date'])); ?></div>
+                            <label class="uk-form-label"><?=lang('Global.outlet')?></label>
+                            <div class="uk-form-controls"><?= $stock['outlet'] ?></div>
+                        </div>
+
+                        <div class="uk-margin">
+                            <label class="uk-form-label"><?=lang('Global.employee')?></label>
+                            <div class="uk-form-controls"><?= $stock['user'] ?></div>
                         </div>
                     </div>
 
@@ -137,34 +126,20 @@
                     <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-table-small" style="background-color: #fff; color: #000;">
                         <thead>
                             <tr>
+                                <th class="uk-text-emphasis">SKU</th>
                                 <th class="uk-text-emphasis"><?=lang('Global.product')?></th>
-                                <th class="uk-text-emphasis"><?=lang('Global.variant')?></th>
-                                <th class="uk-text-emphasis"><?=lang('Global.quantity').' '.lang('Global.stock')?></th>
-                                <th class="uk-text-emphasis"><?=lang('Global.capitalPrice')?></th>
-                                <th class="uk-text-emphasis"><?=lang('Global.total').' '.lang('Global.capitalPrice')?></th>
+                                <th class="uk-text-emphasis"><?=lang('Global.quantity')?></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- </?php foreach ($stockmovedata[$stockmove['id']]['detail'] as $detail) { ?>
+                            <?php foreach ($stock['detail'] as $detail) { ?>
                                 <tr>
-                                    <td></?= $detail['productname']; ?></td>
-                                    <td></?= $detail['variantname']; ?></td>
-                                    <td></?= $detail['inputqty']; ?></td>
-                                    <td></?= $detail['wholesale']; ?></td>
-                                    <td></?= (Int)$detail['wholesale'] * (Int)$detail['inputqty']; ?></td>
+                                    <td><?= $detail['sku']; ?></td>
+                                    <td><?= $detail['name']; ?></td>
+                                    <td><?= $detail['qty']; ?></td>
                                 </tr>
-                            </?php } ?> -->
+                            <?php } ?>
                         </tbody>
-                        <tfoot>
-                            <!-- <tr>
-                                <td></?= lang('Global.totalMovement'); ?></td>
-                                <td></td>
-                                <td></td>
-                                <td></?= $stockmove['totalqty'] ?></td>
-                                <td></td>
-                                <td></?= "Rp ".number_format($stockmove['totalwholesale'],0,',','.'); ?></td>
-                            </tr> -->
-                        </tfoot>
                     </table>
                 </div>
             </div>

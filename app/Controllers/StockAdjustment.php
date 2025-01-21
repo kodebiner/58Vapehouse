@@ -41,25 +41,9 @@ class StockAdjustment extends BaseController
         }
 
         if ($this->data['outletPick'] === null) {
-            // $stockadjust     = $StockAdjustmentModel->orderBy('id', 'DESC')->paginate(20, 'stockadjustment');
-
-            // if (!empty($input)) {
-            //     if ($startdate === $enddate) {
-                    $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'stockadjustment');
-            //     } else {
-            //         $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->paginate(20, 'stockadjustment');
-            //     }
-            // }
+            $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->paginate(20, 'stockadjustment');
         } else {
-            // $stockadjust     = $StockAdjustmentModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockadjustment');
-
-            // if (!empty($input)) {
-            //     if ($startdate === $enddate) {
-                    $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockadjustment');
-            //     } else {
-            //         $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate . '00:00:00')->where('date <=', $enddate . '23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockadjustment');
-            //     }
-            // }
+            $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockadjustment');
         }
         $outlets        = $OutletModel->findAll();
         $productlist    = $ProductModel->findAll();
@@ -166,6 +150,7 @@ class StockAdjustment extends BaseController
             $adj = [
                 'variantid' => $varid,
                 'outletid'  => $input['outlet'],
+                'userid'    => $this->data['uid'],
                 'stockid'   => $Stocks['id'],
                 'type'      => $input['type'],
                 'date'      => $tanggal,

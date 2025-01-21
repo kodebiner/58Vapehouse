@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class StockAdjustmentModel extends Model
 {
     protected $allowedFields = [
-        'outletid','variantid','stockid','type','date','qty','note',
+        'outletid','variantid', 'userid','stockid','type','date','qty','note',
 
     ];
 
