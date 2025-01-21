@@ -9,6 +9,7 @@ use App\Models\StockModel;
 use App\Models\OldStockModel;
 use App\Models\StockmovementModel;
 use App\Models\StockMoveDetailModel;
+use App\Models\UserModel;
 
 class StockMovement extends BaseController
 {
@@ -26,6 +27,7 @@ class StockMovement extends BaseController
         $StockModel                 = new StockModel();
         $StockmovementModel         = new StockmovementModel();
         $StockMoveDetailModel       = new StockMoveDetailModel();
+        $UserModel                  = new UserModel();
 
         // Populating Data
         $data                       = $this->data;
@@ -57,6 +59,9 @@ class StockMovement extends BaseController
                 $stockmovedetails   = $StockMoveDetailModel->where('stockmoveid', $stockmove['id'])->find();
                 $dataorigin         = $OutletModel->find($stockmove['origin']);
                 $datadestination    = $OutletModel->find($stockmove['destination']);
+                $creator            = $UserModel->find($stockmove['creator']);
+                $sender             = $UserModel->find($stockmove['sender']);
+                $receiver           = $UserModel->find($stockmove['receiver']);
 
                 if (!empty($dataorigin)) {
                     $origin         = $dataorigin['name'];
@@ -74,11 +79,32 @@ class StockMovement extends BaseController
                     $destinationid  = '';
                 }
 
+                if (!empty($creator)) {
+                    $creator         = $creator->firstname.' '.$creator->lastname;
+                } else {
+                    $creator         = '-';
+                }
+
+                if (!empty($sender)) {
+                    $sender         = $sender->firstname.' '.$sender->lastname;
+                } else {
+                    $sender         = '-';
+                }
+
+                if (!empty($receiver)) {
+                    $receiver       = $receiver->firstname.' '.$receiver->lastname;
+                } else {
+                    $receiver       = '-';
+                }
+
                 $stockmovedata[$stockmove['id']]['id']              = $stockmove['id'];
                 $stockmovedata[$stockmove['id']]['origin']          = $origin;
                 $stockmovedata[$stockmove['id']]['originid']        = $originid;
                 $stockmovedata[$stockmove['id']]['destination']     = $destination;
                 $stockmovedata[$stockmove['id']]['destinationid']   = $destinationid;
+                $stockmovedata[$stockmove['id']]['creator']         = $creator;
+                $stockmovedata[$stockmove['id']]['sender']          = $sender;
+                $stockmovedata[$stockmove['id']]['receiver']        = $receiver;
                 $stockmovedata[$stockmove['id']]['date']            = $stockmove['date'];
                 $stockmovedata[$stockmove['id']]['status']          = $stockmove['status'];
 
@@ -219,6 +245,7 @@ class StockMovement extends BaseController
         $data = [
             'origin'                => $input['origin'],
             'destination'           => $input['destination'],
+            'creator'               => $this->data['uid'],
             'date'                  => $tanggal,
             'status'                => "0",
         ];
@@ -294,14 +321,14 @@ class StockMovement extends BaseController
         $StockmovementModel->save($data);
 
         // Stock Movement Detail
-        foreach ($input['totalpcs'] as $varid => $value) {
-            $datadetail   = [
-                'id'            => $varid,
+        foreach ($input['totalpcs'] as $smdetid => $value) {
+            $datadetail     = [
+                'id'            => $smdetid,
                 'qty'           => $value,
             ];
 
             if ($datadetail['qty'] == "0") {
-                $StockMoveDetailModel->delete($varid);
+                $StockMoveDetailModel->delete($smdetid);
             }
 
             // Save Data Stock Movement Detail
@@ -330,7 +357,7 @@ class StockMovement extends BaseController
         // Calling Model
         $StockmovementModel         = new StockmovementModel();
         $StockMoveDetailModel       = new StockMoveDetailModel();
-        $StockModel                 = new StockModel;
+        $StockModel                 = new StockModel();
 
         // initialize
         $input                      = $this->request->getPost();
@@ -343,26 +370,41 @@ class StockMovement extends BaseController
         $stockmovements             = $StockmovementModel->find($id);
 
         if ($input['outletpick'] == $stockmovements['origin']) {
-            $status                 = 1;
+            // $status                 = 1;
+
+            $data = [
+                'id'                    => $id,
+                'date'                  => $tanggal,
+                'sender'                => $this->data['uid'],
+                'status'                => 1,
+            ];
+    
+            $StockmovementModel->save($data);
         } else {
-            $status                 = 3;
+            // $status                 = 3;
+
+            $data = [
+                'id'                    => $id,
+                'date'                  => $tanggal,
+                'receiver'              => $this->data['uid'],
+                'status'                => 3,
+            ];
+    
+            $StockmovementModel->save($data);
         }
 
-        $data = [
-            'id'                    => $id,
-            'date'                  => $tanggal,
-            'status'                => $status,
-        ];
-
-        $StockmovementModel->save($data);
-
         foreach ($input['ctotalpcs'][$id] as $key => $value) {
-            // Update Purchase Detail
+            // Update Movement Detail
             $movedet                = $StockMoveDetailModel->where('stockmoveid', $id)->where('variantid', $key)->first();
             $movedetdata            = [
                 'id'                => $movedet['id'],
                 'qty'               => $value,
             ];
+    
+            if ($movedetdata['qty'] == "0") {
+                $StockMoveDetailModel->delete($movedet['id']);
+            }
+            
             $StockMoveDetailModel->save($movedetdata);
 
             if ($input['outletpick'] == $stockmovements['destination']) {
@@ -421,6 +463,7 @@ class StockMovement extends BaseController
         $StockModel                 = new StockModel();
         $StockmovementModel         = new StockmovementModel();
         $StockMoveDetailModel       = new StockMoveDetailModel();
+        $UserModel                  = new UserModel();
 
         // Populating Data
         $data                       = $this->data;
@@ -432,6 +475,9 @@ class StockMovement extends BaseController
             $stockmovedetails   = $StockMoveDetailModel->where('stockmoveid', $stockmovements['id'])->find();
             $dataorigin         = $OutletModel->find($stockmovements['origin']);
             $datadestination    = $OutletModel->find($stockmovements['destination']);
+            $creator            = $UserModel->find($stockmovements['creator']);
+            $sender             = $UserModel->find($stockmovements['sender']);
+            $receiver           = $UserModel->find($stockmovements['receiver']);
 
             if (!empty($dataorigin)) {
                 $origin         = $dataorigin['name'];
@@ -453,6 +499,24 @@ class StockMovement extends BaseController
                 $destinationphone   = '';
             }
 
+            if (!empty($creator)) {
+                $creator         = $creator->firstname.' '.$creator->lastname;
+            } else {
+                $creator         = '-';
+            }
+
+            if (!empty($sender)) {
+                $sender         = $sender->firstname.' '.$sender->lastname;
+            } else {
+                $sender         = '-';
+            }
+
+            if (!empty($receiver)) {
+                $receiver       = $receiver->firstname.' '.$receiver->lastname;
+            } else {
+                $receiver       = '-';
+            }
+
             $stockmovedata['id']                    = $stockmovements['id'];
             $stockmovedata['origin']                = $origin;
             $stockmovedata['originaddress']         = $originaddress;
@@ -460,6 +524,9 @@ class StockMovement extends BaseController
             $stockmovedata['destination']           = $destination;
             $stockmovedata['destinationaddress']    = $destinationaddress;
             $stockmovedata['destinationphone']      = $destinationphone;
+            $stockmovedata['creator']               = $creator;
+            $stockmovedata['sender']                = $sender;
+            $stockmovedata['receiver']              = $receiver;
             $stockmovedata['date']                  = $stockmovements['date'];
             $stockmovedata['status']                = $stockmovements['status'];
 

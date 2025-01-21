@@ -742,6 +742,11 @@ foreach ($stockmovedata as $stockmove) { ?>
                         </div>
                         
                         <div class="uk-margin">
+                            <label class="uk-form-label">Dibuat Oleh</label>
+                            <div class="uk-form-controls"><?= $stockmove['creator'] ?></div>
+                        </div>
+                        
+                        <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.date')?></label>
                             <div class="uk-form-controls"><?= date('l, d M Y, H:i:s', strtotime($stockmove['date'])); ?></div>
                         </div>
@@ -757,8 +762,18 @@ foreach ($stockmovedata as $stockmove) { ?>
                         </div>
 
                         <div class="uk-margin">
+                            <label class="uk-form-label">Dikirim Oleh</label>
+                            <div class="uk-form-controls"><?= $stockmove['sender'] ?></div>
+                        </div>
+
+                        <div class="uk-margin">
                             <label class="uk-form-label"><?=lang('Global.destination')?></label>
                             <div class="uk-form-controls"><?= $stockmovedata[$stockmove['id']]['destination'] ?></div>
+                        </div>
+
+                        <div class="uk-margin">
+                            <label class="uk-form-label">Diterima Oleh</label>
+                            <div class="uk-form-controls"><?= $stockmove['receiver'] ?></div>
                         </div>
                     </div>
 
@@ -794,7 +809,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                             <tfoot>
                                 <tr>
                                     <td><?= lang('Global.totalMovement'); ?></td>
-                                    <td></td>
+                                    <!-- <td></td> -->
                                     <td></td>
                                     <td>
                                         <?= $stockmove['totalqty'] ?>
@@ -1034,7 +1049,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 // evsku.innerHTML = variantarray</?=$stockmove['id']?>[x]['sku'];
 
                                                 var evcontainer = document.createElement('div');
-                                                evcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-5');
+                                                evcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
                                                                                 
                                                 var evname = document.createElement('div');
                                                 evname.setAttribute('id','var'+variantarray<?=$stockmove['id']?>[x]['id']);
@@ -1042,7 +1057,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 evname.innerHTML = variantarray<?=$stockmove['id']?>[x]['name'];
 
                                                 var etcontainer = document.createElement('div');
-                                                etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
+                                                etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
 
                                                 var etot = document.createElement('input');
                                                 etot.setAttribute('type', 'number');
@@ -1058,7 +1073,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 // epieces.innerHTML = 'Pcs';
 
                                                 var epricecontainer = document.createElement('div');
-                                                epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-5');
+                                                epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
 
                                                 var eprice = document.createElement('input');
                                                 eprice.setAttribute('type', 'number');
@@ -1073,7 +1088,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 epricediv.innerHTML = variantarray<?=$stockmove['id']?>[x]['price'];
 
                                                 var esubtotcontainer = document.createElement('div');
-                                                esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-5');
+                                                esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
 
                                                 var esubtotal = document.createElement('div');
                                                 esubtotal.setAttribute('id', "esubtotal"+variantarray<?=$stockmove['id']?>[x]['id']+"");
@@ -1130,7 +1145,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                         <div class=""><?= $detail['name'] ?></div>
                                     </div>
                                     <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                                        <input class="uk-input" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="1" max="<?= $detail['qty'] ?>" required />
+                                        <input class="uk-input" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="0" max="<?= $detail['qty'] ?>" required />
                                         <!-- <div class="uk-margin-small-left">Pcs</div> -->
                                     </div>
                                     <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">

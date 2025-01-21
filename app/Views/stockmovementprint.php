@@ -213,9 +213,9 @@
             <td></td>
         </tr>
         <tr>
+            <td><?= $stockmovedata['sender'] ?></td>
             <td></td>
-            <td></td>
-            <td></td>
+            <td><?= $stockmovedata['receiver'] ?></td>
             <td></td>
             <td></td>
             <td></td>

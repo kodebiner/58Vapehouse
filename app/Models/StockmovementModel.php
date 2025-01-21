@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class StockmovementModel extends Model
 {
     protected $allowedFields = [
-        'origin','destination','date','status',
+        'origin','destination', 'creator','sender','receiver','date','status',
 
     ];
 
