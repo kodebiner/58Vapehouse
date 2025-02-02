@@ -92,25 +92,35 @@
                     <!-- Navbar Center End -->
                     
                     <!-- Navbar Right -->
-                    <?php if ($ismobile === false) { ?>
+                    <div class="uk-navbar-right">
+                        <div class="uk-child-width-1-2 uk-child-width-auto@m uk-flex uk-flex-middle uk-grid-divider" uk-grid>
+                            <div>
+                                <a class="uk-button uk-button-text" uk-toggle="#modal-sections"><?=lang('Global.topup')?></a>
+                            </div>
+                            <div>
+                                <a uk-icon="cart" uk-toggle="target: #tambahdata"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- </?php if ($ismobile === false) { ?>
                         <div class="uk-navbar-right">
-                            <div class="uk-child-width-1-3 uk-flex uk-flex-middle" uk-grid>
+                            <div class="uk-child-width-1-2 uk-flex uk-flex-middle" uk-grid>
                                 <div>
-                                    <a class="uk-button uk-button-text" uk-toggle="#modal-sections"><?=lang('Global.topup')?></a>
+                                    <a class="uk-button uk-button-text" uk-toggle="#modal-sections"></?=lang('Global.topup')?></a>
                                 </div>
                                 <div>
                                     <button type="button" class="uk-button" uk-toggle="target: #bookinglist" uk-icon="folder" width="35" height="35" style="color: #fff;"></button>
                                 </div>
                                 <div>
-                                    <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="35" height="35" style="color: #fff;"></button>
+                                    <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="50" height="50" style="color: #fff;"></button>
                                 </div>
                             </div>
                         </div>
-                    <?php } else { ?>
+                    </?php } else { ?>
                         <div class="uk-navbar-right">
-                            <div class="uk-child-width-1-3 uk-flex uk-flex-middle" uk-grid>
+                            <div class="uk-child-width-1-2 uk-flex uk-flex-middle" uk-grid>
                                 <div class="uk-padding-small uk-padding-remove-right uk-flex uk-flex-center">
-                                    <a class="uk-button uk-button-text uk-padding-remove" uk-toggle="#modal-sections"><?=lang('Global.topup')?></a>
+                                    <a class="uk-button uk-button-text uk-padding-remove" uk-toggle="#modal-sections"></?=lang('Global.topup')?></a>
                                 </div>
                                 <div class="uk-padding-small uk-padding-remove-right uk-flex uk-flex-center">
                                     <button type="button" class="uk-button uk-padding-remove" uk-toggle="target: #bookinglist" uk-icon="folder" width="30" height="30" style="color: #fff;"></button>
@@ -120,7 +130,7 @@
                                 </div>
                             </div>
                         </div>
-                    <?php } ?>
+                    </?php } ?> -->
                     <!-- Navbar Right End -->
 
                     <!-- Modal Top Up Point -->
@@ -1670,7 +1680,7 @@
                             </div>
                             <div class="uk-margin uk-flex uk-flex-center">
                                 <button type="submit" id="pay" class="uk-button uk-button-primary uk-button-large uk-text-center" style="border-radius: 8px; width: 260px;" disabled><?=lang('Global.pay')?></button>
-                                <button type="submit" id="save" class="uk-button uk-button-danger uk-button-large uk-text-center uk-margin-small-left" style="border-radius: 8px; width: 260px;" disabled><span uk-icon="icon:  pull"></span><?=lang('Global.book')?></button>
+                                <!-- <button type="submit" id="save" class="uk-button uk-button-danger uk-button-large uk-text-center uk-margin-small-left" style="border-radius: 8px; width: 260px;" disabled><span uk-icon="icon:  pull"></span></?=lang('Global.book')?></button> -->
                             </div>
                         </div>
                     </form>
@@ -3046,13 +3056,13 @@
                         $('#order').submit();
                     });
                     
-                    $('#save').click(function(){
-                        $('#order').attr('action', "/pay/save");
-                        $("#order").validate({
-                            required: true,
-                        });
-                        $('#order').submit();
-                    });
+                    // $('#save').click(function(){
+                    //     $('#order').attr('action', "/pay/save");
+                    //     $("#order").validate({
+                    //         required: true,
+                    //     });
+                    //     $('#order').submit();
+                    // });
                     console.log( "ready!" );
                    
                 });
@@ -3145,14 +3155,14 @@
 
                 // Pay button
                 var buttonpay = document.getElementById('pay');
-                var buttonsave = document.getElementById('save');
+                // var buttonsave = document.getElementById('save');
                 if (paidprice >= 0) {
                     buttonpay.removeAttribute('disabled');
-                    buttonsave.removeAttribute('disabled', '');
+                    // buttonsave.removeAttribute('disabled', '');
                     var printprice = paidprice;
                 } else {
                     buttonpay.setAttribute('disabled', '');
-                    buttonsave.setAttribute('disabled', '');
+                    // buttonsave.setAttribute('disabled', '');
                     var printprice = "Sorry Price To Low!";
                 }
 
