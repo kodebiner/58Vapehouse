@@ -835,13 +835,13 @@ class Pay extends BaseController
         }
 
         $value = (int)$subtotal - (int)$memberdisc - (int)$discount - (int)$poin;
-        foreach ($input['varprice'] as $variantprice) {
-            $varprice = $variantprice;
-        }
+        // foreach ($input['varprice'] as $variantprice) {
+        //     $varprice = $variantprice;
+        // }
 
-        foreach ($input['varbargain'] as $bargain) {
-            $varbargain = $bargain;
-        }
+        // foreach ($input['varbargain'] as $bargain) {
+        //     $varbargain = $bargain;
+        // }
         $book = [
             'outletid'      => $this->data['outletPick'],
             'userid'        => $this->data['uid'],
