@@ -33,9 +33,9 @@
                     <!-- Button Trigger Modal Close End -->
 
                     <!-- Button Trigger Modal Withdraw -->
-                    <div>
+                    <!-- <div>
                         <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #withdraw"><?= lang('Global.withdraw') ?></button>
-                    </div>
+                    </div> -->
                     <!-- Button Trigger Modal Withdraw End -->
 
                     <!-- Button Trigger Modal CashInOut -->
