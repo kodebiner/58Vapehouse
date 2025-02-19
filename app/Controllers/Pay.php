@@ -591,8 +591,8 @@ class Pay extends BaseController
         $stocks             = $StockModel->findAll();
         $transactions       = $TransactionModel->find($trxId);
         $trxpayments        = $TrxpaymentModel->where('transactionid', $trxId)->find();
-        $member             = $MemberModel->find($transactions['memberid']);
-        $debt               = $DebtModel->where('memberid', $transactions['memberid'])->first();
+        // $member             = $MemberModel->find($transactions['memberid']);
+        // $debt               = $DebtModel->where('memberid', $transactions['memberid'])->first();
         $user               = $UserModel->where('id', $transactions['userid'])->first();
 
         $bundleBuilder      = $db->table('bundledetail');
@@ -622,10 +622,10 @@ class Pay extends BaseController
         $data['bundleVariants'] = $bundleVariants->getResult();
 
         if (empty($input['phone'])) {
-            $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+            $actual_link            = "https://$_SERVER[HTTP_HOST]/pay/copyprint/$trxId";
             $data['link']           =  urlencode($actual_link);
         } elseif (!empty($input['phone'])) {
-            $actual_link            = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+            $actual_link            = "https://$_SERVER[HTTP_HOST]/pay/copyprint/$trxId";
             $data['link']           = "https://wa.me/62" . $input['phone'] . "?text=" . urlencode($actual_link) . "";
         }
 
@@ -704,17 +704,17 @@ class Pay extends BaseController
 
         if (!empty($input['debt'])) {
             $data['debt']       = $input['debt'];
-            $data['totaldebt']  = $member['kasbon'];
+            // $data['totaldebt']  = $member['kasbon'];
         } else {
             $data['debt']       = "0";
-            $data['totaldebt']  = "0";
+            // $data['totaldebt']  = "0";
         }
 
         $data['user']           = $user->username;
         $data['date']           = $transactions['date'];
         $data['transactionid']  = $trxId;
         $data['subtotal']       = $subtotal;
-        $data['members']        = $MemberModel->findAll();
+        // $data['members']        = $MemberModel->findAll();
         $data['total']          = $total;
 
         return view('Views/print', $data);
