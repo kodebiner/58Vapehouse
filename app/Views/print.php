@@ -43,21 +43,75 @@
     <body style="background-color:#000;">
         <div class="uk-flex uk-flex-center uk-background-secondary">
             <div class="uk-child-width-1-3 uk-flex uk-flex-center" id="btn" uk-grid>
-                <div class="uk-text-center uk-margin-top">
-                    <a class="uk-icon-button" uk-icon="arrow-left" href="<?= base_url('transaction') ?>"></a>
-                </div>
-                <div class="uk-text-center uk-margin">
-                    <a class="uk-icon-button" uk-icon="print" onclick="printOut()"></a>
-                </div>
-                <div class="uk-text-center uk-margin">
-                    <?php if(!empty($transactions['id']) && empty($bookings['id'])){?>
-                        <!-- for transaction -->
-                        <a class='uk-icon-button' uk-icon='whatsapp' href="pay/invoice/<?=$transactions['id']?>"></a>
-                    <?php } elseif (!empty($bookings['id']) && (empty($transactions['id']))){ ?>
-                        <!-- for bookings -->
-                        <a class='uk-icon-button' uk-icon='whatsapp' href="pay/invoicebook/<?=$bookings['id']?>"></a>
-                    <?php } ?>
-                </div>
+                <?php if (!empty($logedin)) { ?>
+                    <div class="uk-text-center uk-margin-top">
+                        <a class="uk-icon-button" uk-icon="arrow-left" href="<?= base_url('transaction') ?>"></a>
+                    </div>
+                    <div class="uk-text-center uk-margin">
+                        <a class="uk-icon-button" uk-icon="print" onclick="printOut()"></a>
+                    </div>
+                    <div class="uk-text-center uk-margin">
+                        <?php if(!empty($transactions['id']) && empty($bookings['id'])){?>
+                            <!-- for transaction -->
+                            <!-- <a class='uk-icon-button' uk-icon='whatsapp' href="pay/invoice/</?=$transactions['id']?>"></a> -->
+                            <?php if ($transactions['memberid'] != '0'){
+                                foreach ($customers as $member){
+                                    if ($transactions['memberid'] == $member['id']){
+                                        $memphone = $member['phone'];
+                                        echo "<a class='uk-icon-button' uk-icon='whatsapp' target='_blank' href='https://wa.me/62$memphone?text=Terimakasih%20telah%20berbelanja%20di%2058%20Vapehouse%2C%20untuk%20detail%20struk%20pembelian%20bisa%20cek%20link%20dibawah%20lur.%20%E2%9C%A8%E2%9C%A8%0A%0A$link%0A%0AJika%20menemukan%20kendala%2C%20kerusakan%20produk%2C%20atau%20ingin%20memberi%20kritik%20%26%20saran%20hubungu%2058%20Customer%20Solution%20kami%20di%20wa.me%2F6288983741558%20'></a>";
+                                    }
+                                }
+                                // transactions non member
+                            } else {
+                                echo'<a class="uk-icon-button" uk-icon="whatsapp" id="phonenumber" uk-toggle="target: #phonenumber" href="" uk-toggle></a>';
+                                // bookings member
+                            } ?>
+                            <div class="uk-flex-top" id="phonenumber" uk-modal>
+                                <div class="uk-modal-dialog uk-margin-auto-vertical">
+                                    <div class="uk-modal-header">
+                                        <div class="uk-child-width-1-2" uk-grid>
+                                            <div>
+                                                <h2 class="uk-modal-title"><?=lang('Global.phonenumber')?></h2>
+                                            </div>
+                                            <div class="uk-text-right">
+                                                <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="uk-modal-body">
+                                        <form class="uk-form-horizontal uk-margin-large">
+                                            <div class="uk-margin">
+                                                <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.phonenumber')?></label>
+                                                <div class="uk-form-controls">
+                                                    <div class="uk-inline uk-width-1-1">
+                                                        <span class="uk-form-icon">+62</span>
+                                                        <input class="uk-input" min="1" id="phoneinput" name="phoneinput" type="number" placeholder="phone" aria-label="Not clickable icon">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="uk-modal-footer uk-text-right">
+                                                <a class='uk-button uk-button-primary' id='phone' href='' target='_blank'>submit</a>
+                                            </div>
+                                            <script>
+                                                $(document).ready(function(){
+                                                    $("#phoneinput").keyup(function(){
+                                                        let phone = $("#phoneinput").val();
+                                                        $("#phone").attr("href", "https://wa.me/62"+phone+"?text=Terimakasih%20telah%20berbelanja%20di%2058%20Vapehouse%2C%20untuk%20detail%20struk%20pembelian%20bisa%20cek%20link%20dibawah%20lur.%20%E2%9C%A8%E2%9C%A8%0A%0A<?=$link?>%0A%0AJika%20menemukan%20kendala%2C%20kerusakan%20produk%2C%20atau%20ingin%20memberi%20kritik%20%26%20saran%20hubungu%2058%20Customer%20Solution%20kami%20di%20wa.me%2F6288983741558%20");
+                                                        console.log(phone);
+                                                    });
+                                                });
+                                            </script>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } elseif (!empty($bookings['id']) && (empty($transactions['id']))){ ?>
+                            <!-- for bookings -->
+                            <a class='uk-icon-button' uk-icon='whatsapp' href="pay/invoicebook/<?=$bookings['id']?>"></a>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
             </div>
         </div>
         <div class="uk-flex uk-flex-center">
@@ -481,13 +535,13 @@
                                 echo "<div class='uk-width-1-2 uk-text-bold uk-text-right'>$debt</div>";
                             }?> 
                         </div>
-                        <div class="uk-grid-collapse" uk-grid>
-                            <?php if (!empty($totaldebt)) {
+                        <!-- <div class="uk-grid-collapse" uk-grid>
+                            </?php if (!empty($totaldebt)) {
                                 $totdebt = lang('Global.totaldebt');
                                 echo " <div class='uk-width-1-2 uk-text-bold'>$totdebt</div>";
                                 echo "<div class='uk-width-1-2 uk-text-right'>$totaldebt</div>";
                             }?> 
-                        </div>
+                        </div> -->
                     </div>
                     <!-- end total booking -->
                     <!-- total transaction -->

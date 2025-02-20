@@ -41,6 +41,11 @@ $routes->get('ownership', 'Home::ownership');
 // $routes->get('stockmovemigrate', 'Home::stockmove');
 // $routes->get('createsku', 'Home::sku');
 
+//Invoice 
+$routes->get('pay/copyprint/(:num)', 'Pay::copyprint/$1');
+$routes->get('pay/invoicebook/(:num)', 'Pay::invoicebook/$1');
+$routes->get('debt/invoice/(:num)', 'Debt::invoice/$1');
+
 // Myth/Auth Routes
 $routes->group('/', static function ($routes) {
     $config         = config(AuthConfig::class);
@@ -267,11 +272,6 @@ $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->get('bookprint/(:num)','Pay::bookprint/$1',['filter'=>'role:owner,supervisor,operator']);
     $routes->post('topup', 'Pay::topup',['filter' =>'role:owner,supervisor,operator']);
 });
-
-//Invoice 
-$routes->get('pay/invoice/(:num)', 'Pay::invoice/$1');
-$routes->get('pay/invoicebook/(:num)', 'Pay::invoicebook/$1');
-$routes->get('debt/invoice/(:num)', 'Debt::invoice/$1');
 
 // Report Routes
 $routes->group('report', ['filter'=>'login'], function($routes){

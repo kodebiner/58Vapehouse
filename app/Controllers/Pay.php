@@ -1249,6 +1249,13 @@ class Pay extends BaseController
         $data['members']        = $MemberModel->findall();
         $data['total']          = $transactions['value'];
 
+        if ($this->data['uid'] != null) {
+            $uid    = $this->data['uid'];
+        } else {
+            $uid    = '0';
+        }
+        $data['logedin']        = $UserModel->find($uid);
+
         return view('Views/print', $data);
     }
 
