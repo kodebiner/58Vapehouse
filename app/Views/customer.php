@@ -94,12 +94,12 @@
                         </div>
                     </div>
 
-                    <div class="uk-margin">
-                        <label class="uk-form-label" for="email"><?= lang('Auth.email') ?></label>
+                    <!-- <div class="uk-margin">
+                        <label class="uk-form-label" for="email"></?= lang('Auth.email') ?></label>
                         <div class="uk-form-controls">
-                            <input type="email" class="uk-input <?php if (session('errors.email')) : ?>tm-form-invalid<?php endif ?>" name="email" id="email" placeholder="<?= lang('Auth.email') ?>" />
+                            <input type="email" class="uk-input </?php if (session('errors.email')) : ?>tm-form-invalid</?php endif ?>" name="email" id="email" placeholder="</?= lang('Auth.email') ?>" />
                         </div>
-                    </div>
+                    </div> -->
 
                     <hr>
 
@@ -128,7 +128,7 @@
             <tr>
                 <th class="uk-text-center">No</th>
                 <th><?= lang('Global.name') ?></th>
-                <th><?= lang('Auth.email') ?></th>
+                <!-- <th></?= lang('Auth.email') ?></th> -->
                 <th class="uk-text-center"><?= lang('Global.phone') ?></th>
                 <th class="uk-text-center"><?= lang('Global.transaction') ?></th>
                 <th class="uk-text-center"><?= lang('Global.debt') ?></th>
@@ -142,7 +142,7 @@
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td><?= $customer['name']; ?></td>
-                    <td><?= $customer['email']; ?></td>
+                    <!-- <td></?= $customer['email']; ?></td> -->
                     <td class="uk-text-center">+62<?= $customer['phone']; ?></td>
                     <td class="uk-text-center">
                         <?php
@@ -220,12 +220,12 @@
                             </div>
                         </div>
 
-                        <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="email"><?= lang('Auth.email') ?></label>
+                        <!-- <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="email"></?= lang('Auth.email') ?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="email" name="email" value="<?= $customer['email']; ?>" />
+                                <input type="text" class="uk-input" id="email" name="email" value="</?= $customer['email']; ?>" />
                             </div>
-                        </div>
+                        </div> -->
 
                         <?php if (in_groups('owner')) { ?>
                             <div class="uk-margin-bottom">

@@ -109,14 +109,14 @@ class Customer extends BaseController
         $data = [
             'name'      => $input['name'],
             'phone'     => $input['phone'],
-            'email'     => $input['email'],
+            // 'email'     => $input['email'],
             'poin'      => '0',
         ];
 
         if (!$this->validate([
             'name'      => "required|max_length[255]|is_unique[member.name]",
             'phone'     => 'required|is_unique[member.phone]',
-            'email'     => 'max_length[255]',
+            // 'email'     => 'max_length[255]',
         ])) {
 
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -143,7 +143,7 @@ class Customer extends BaseController
             'id'        => $id,
             'name'      => $input['name'],
             'phone'     => $input['phone'],
-            'email'     => $input['email'],
+            // 'email'     => $input['email'],
             'poin'      => $input['poin'],
         ];
 
@@ -151,7 +151,7 @@ class Customer extends BaseController
         if (!$this->validate([
             'name'      => "max_length[255]",
             'phone'     => "max_length[255]",
-            'email'     => "max_length[255]",
+            // 'email'     => "max_length[255]",
             'poin'      => "max_length[255]",
         ])) {
 
