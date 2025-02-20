@@ -46,7 +46,7 @@ class StockAdjustment extends BaseController
             $stockadjust = $StockAdjustmentModel->orderBy('id', 'DESC')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->paginate(20, 'stockadjustment');
         }
         $outlets        = $OutletModel->findAll();
-        $productlist    = $ProductModel->findAll();
+        $productlist    = $ProductModel->where('status', '1')->find();
 
         if (!empty($stockadjust)) {
             $stockid    = array();
