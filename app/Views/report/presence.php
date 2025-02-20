@@ -67,11 +67,13 @@
                 if ($presence['shift'] == '0') {
                     $waktu  = 'Pagi (09:00)';
                 } elseif ($presence['shift'] == '1') {
-                    $waktu  = 'Siang (12:00 - 16:00)';
+                    $waktu  = 'Siang (12:00)';
                 } elseif ($presence['shift'] == '2') {
                     $waktu  = 'Sore (16:00)';
                 } elseif ($presence['shift'] == '3') {
                     $waktu  = 'UGM (10:00)';
+                } elseif ($presence['shift'] == '4') {
+                    $waktu  = 'Malam (0:00)';
                 } ?>
                 <tr>
                     <td style="color:white;"><?= date('l, d M Y', strtotime($presence['date'])) ?></td>
@@ -84,11 +86,13 @@
                             if ($presence['shift'] == '0') {
                                 $kompensasi  = '09:15';
                             } elseif ($presence['shift'] == '1') {
-                                $kompensasi  = '16:15';
+                                $kompensasi  = '12:15';
                             } elseif ($presence['shift'] == '2') {
                                 $kompensasi  = '16:15';
                             } elseif ($presence['shift'] == '3') {
                                 $kompensasi  = '10:15';
+                            } elseif ($presence['shift'] == '4') {
+                                $kompensasi  = '00:15';
                             }
                             
                             if (str_replace(":","", $detail['time']) > str_replace(":","", $kompensasi)) { ?>

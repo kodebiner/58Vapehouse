@@ -36,8 +36,9 @@
             <div class="uk-form-controls">
                 <select class="uk-select" name="shift">
                     <option value="0">Pagi (09:00)</option>
-                    <option value="1">Siang (12:00 - 16:00)</option>
+                    <option value="1">Siang (12:00)</option>
                     <option value="2">Sore (16:00)</option>
+                    <option value="4">Malam (00:00)</option>
                     <option value="3">UGM (10:00)</option>
                 </select>
             </div>
