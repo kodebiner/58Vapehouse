@@ -62,9 +62,12 @@
 <div class="uk-card uk-card-default uk-card-body uk-width-1-1@m uk-margin">
     <h3 class="uk-card-title uk-text-center">- <?= lang('Global.productreport') ?> -</h3>
     <hr class="uk-divider-icon">
-    <div class="uk-child-width-1-4 uk-grid-small uk-grid-match" uk-grid>
+    <div class="uk-child-width-1-5 uk-grid-small uk-grid-match" uk-grid>
         <div>
             <p class="tm-h6"><?= lang('Global.category') ?></p>
+        </div>
+        <div>
+            <p class="tm-h6"><?= lang('Global.stock') ?></p>
         </div>
         <div>
             <p class="tm-h6"><?= lang('Global.basePrice') ?></p>
@@ -113,7 +116,7 @@
                 var rp = parseInt(input).toLocaleString();
                 var binput = obj.bqty;
                 var brp = parseInt(binput).toLocaleString();
-                $('#list').append("<div class='uk-child-width-1-4 uk-margin-small-top' uk-grid><div> <p class='uk-h6'>" + obj.name + " </p> </div> <div> <p class='uk-h6'>Rp." + brp + " </p></div> <div> <p class='uk-h6'>Rp." + rp + " </p></div>  <div> <p class='uk-h6 uk-text-center'>(" + obj.persen + "%)</p> </div></div>");
+                $('#list').append("<div class='uk-child-width-1-5 uk-margin-small-top' uk-grid><div> <p class='uk-h6'>" + obj.name + " </p> </div>  <div> <p class='uk-h6'>" + obj.stock + "</p> </div> <div> <p class='uk-h6'>Rp." + brp + " </p></div> <div> <p class='uk-h6'>Rp." + rp + " </p></div>  <div> <p class='uk-h6 uk-text-center'>(" + obj.persen + "%)</p> </div></div>");
             });
         }
 
@@ -773,7 +776,13 @@
                             <input class="uk-checkbox" type="checkbox" name="favorite" id="favorite-<?= $product['id'] ?>" <?= $checked ?>>
                         </form>
                     </td>
-                    <td><?= $product['name']; ?></td>
+                    <td>
+                        <?php if ($product['status'] != '0') { ?>
+                            <div><?= $product['name']; ?></div>
+                        <?php } else { ?>
+                            <div style="text-decoration: line-through"><?= $product['name'] ?></div>
+                        <?php } ?>
+                    </td>
                     <td>
                         <?php foreach ($category as $cat) {
                             if ($cat['id'] === $product['catid']) {

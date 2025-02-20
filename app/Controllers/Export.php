@@ -58,7 +58,7 @@ class export extends BaseController
             $outletname = $outlet['name'];
 
             $exported   = $db->table('stock');
-            $stockexp   = $exported->select('stock.qty as qty, variant.hargamodal as hargamodal, variant.hargadasar as hargadasar, variant.hargajual as hargajual, variant.hargarekomendasi as hargarekomendasi, variant.name as varname, product.name as prodname, category.name as catname, brand.name as brandname, variant.sku as sku');
+            $stockexp   = $exported->select('stock.qty as qty, variant.hargamodal as hargamodal, variant.hargadasar as hargadasar, variant.hargajual as hargajual, variant.hargarekomendasi as hargarekomendasi, variant.name as varname, product.name as prodname, product.status as status, category.name as catname, brand.name as brandname, variant.sku as sku');
             $stockexp   = $exported->join('variant', 'stock.variantid = variant.id', 'left');
             $stockexp   = $exported->join('product', 'variant.productid = product.id', 'left');
             $stockexp   = $exported->join('category', 'product.catid = category.id', 'left');
@@ -78,6 +78,7 @@ class export extends BaseController
             echo '<thead>';
             echo '<tr>';
             echo '<th>SKU</th>';
+            echo '<th>Status</th>';
             echo '<th>Nama</th>';
             echo '<th>Merek</th>';
             echo '<th>Kategori</th>';
@@ -93,6 +94,11 @@ class export extends BaseController
                 $hargajual = (int)$product['hargamodal'] + (int)$product['hargajual'];
                 echo '<tr>';
                 echo '<td>' . $product['sku'] . '</td>';
+                if ($product['status'] == '1') {
+                    echo '<td>Aktif</td>';
+                } else {
+                    echo '<td>Tidak Aktif</td>';
+                }
                 echo '<td>' . $product['prodname'] . '-' . $product['varname'] . '</td>';
                 echo '<td>' . $product['brandname'] . '</td>';
                 echo '<td>' . $product['catname'] . '</td>';

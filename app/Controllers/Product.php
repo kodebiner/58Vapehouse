@@ -193,14 +193,17 @@ class Product extends BaseController
             $stockqty = $stockchartbuilder->getResult();
             $stkqty = array();
             $stkbp  = array();
+            $stkrem = array();
             foreach ($stockqty as $qty) {
                 $stkqty[]   = (int)$qty->qty * (int)$qty->price;
                 $stkbp[]    = (int)$qty->qty * (int)$qty->bprice;
+                $stkrem[]   = (int)$qty->qty;
             }
             $stockchart[] = [
                 'name'  => $cat['name'],
                 'qty'   => array_sum($stkqty),
-                'bqty'  => array_sum($stkbp)
+                'bqty'  => array_sum($stkbp),
+                'stock' => array_sum($stkrem)
             ];
         }
 
@@ -212,6 +215,7 @@ class Product extends BaseController
                 'name'      => $srkchrt['name'],
                 'qty'       => $srkchrt['qty'],
                 'bqty'      => $srkchrt['bqty'],
+                'stock'     => $srkchrt['stock'],
                 'persen'    => ceil($srkchrt['qty'] / $percentage * 100),
             ];
         }
