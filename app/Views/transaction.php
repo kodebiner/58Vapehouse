@@ -1658,15 +1658,15 @@
                                 </div>
                             </div>
 
-                            <div class="uk-margin">
+                            <!-- <div class="uk-margin">
                                 <div class="uk-width-1-1">
-                                    <a class="uk-button uk-button-primary" uk-toggle="#trxproof"><?= lang('Global.trxproof') ?></a>
+                                    <a class="uk-button uk-button-primary" uk-toggle="#trxproof"></?= lang('Global.trxproof') ?></a>
                                 </div>
                             </div>
 
                             <div class="uk-margin" hidden>
                                 <input class="image-tag" name="image">
-                            </div>
+                            </div> -->
 
                         </div>
                         <div class="uk-modal-footer" style="border-top: 0;">
@@ -1690,7 +1690,7 @@
         <!-- Modal Detail Transaction End -->
 
         <!-- Modal Transaction Proof -->
-        <div uk-modal class="uk-flex-top" id="trxproof">
+        <!-- <div uk-modal class="uk-flex-top" id="trxproof">
             <div class="uk-modal-dialog uk-margin-auto-vertical">
                 <div class="uk-modal-content">
                     <div class="uk-modal-header">
@@ -1710,10 +1710,10 @@
                                 <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="take_snapshot()">
                             </div>
                             <div class="uk-text-center" id="results"></div>
-                        </div>
+                        </div> -->
 
                         <!-- Script Webcam Trx Proof -->
-                        <script type="text/javascript">
+                        <!-- <script type="text/javascript">
                             Webcam.set({
                                 width: 490,
                                 height: 390,
@@ -1735,12 +1735,12 @@
                                     document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
                                 } );
                             }
-                        </script>
+                        </script> -->
                         <!-- Script Webcam Trx Proof End -->
-                    </div>
+                    <!-- </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Modal Transaction Proof End -->
 
         <!-- Main Section -->
