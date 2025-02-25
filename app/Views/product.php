@@ -161,6 +161,13 @@
                     </div>
 
                     <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="link">Link Tokopedia</label>
+                        <div class="uk-form-controls">
+                            <input type="text" class="uk-input <?php if (session('errors.link')) : ?>tm-form-invalid<?php endif ?>" id="link" name="link" placeholder="Link Tokopedia" />
+                        </div>
+                    </div>
+
+                    <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="description"><?= lang('Global.description') ?></label>
                         <div class="uk-form-controls">
                             <input type="text" class="uk-input <?php if (session('errors.description')) : ?>tm-form-invalid<?php endif ?>" id="description" name="description" placeholder="<?= lang('Global.description') ?>" />
@@ -924,7 +931,14 @@
                         </div>
 
                         <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="name"><?= lang('Global.description') ?></label>
+                            <label class="uk-form-label" for="link">Link Tokopedia</label>
+                            <div class="uk-form-controls">
+                                <input type="text" class="uk-input" id="link" name="link" value="<?= $product['link']; ?>" />
+                            </div>
+                        </div>
+
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="description"><?= lang('Global.description') ?></label>
                             <div class="uk-form-controls">
                                 <input type="text" class="uk-input" id="description" name="description" value="<?= $product['description']; ?>" />
                             </div>

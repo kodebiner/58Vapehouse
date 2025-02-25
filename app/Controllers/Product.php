@@ -314,6 +314,7 @@ class Product extends BaseController
         // rules
         $rule = [
             'name'          => 'required|max_length[255]|is_unique[product.name]',
+            'link'          => 'max_length[255]',
             'description'   => 'max_length[255]',
             'category'      => 'required',
             'brand'         => 'required',
@@ -327,6 +328,7 @@ class Product extends BaseController
         // get data
         $data = [
             'name'          => $input['name'],
+            'link'          => $input['link'],
             'description'   => $input['description'],
             'catid'         => $input['catid'],
             'brandid'       => $input['brandid'],
@@ -531,6 +533,7 @@ class Product extends BaseController
         // rules validation
         $rule = [
             'name'          => 'required|max_length[255]',
+            'link'          => 'max_length[255]',
             'description'   => 'max_length[255]',
             //'category'      => 'required',
             // 'brand'         => 'required',
@@ -572,6 +575,7 @@ class Product extends BaseController
         $data = [
             'id'            => $id,
             'name'          => $input['name'],
+            'link'          => $input['link'],
             'description'   => $input['description'],
             'brandid'       => $input['brandid' . $id],
             'catid'         => $catid,
