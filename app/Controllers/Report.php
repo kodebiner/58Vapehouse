@@ -2315,4 +2315,88 @@ class Report extends BaseController
 
         return view('Views/report/sop', $data);
     }
+
+    public function dailysell()
+    {
+        // Calling Models
+        $TransactionModel       = new TransactionModel;
+        $TrxdetailModel         = new TrxdetailModel;
+
+        $transactions       = array();
+        $transactionarr     = array();
+        $memberdisc         = array();
+        $discounttrx        = array();
+        $discountvariant    = array();
+        $discountpoin       = array();
+        $discountglobal     = array();
+
+        if ($this->data['outletPick'] === null) {
+            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00'))->where('date <=', date('Y-m-d 23:59:59'))->find();
+        } else {
+            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00'))->where('date <=', date('Y-m-d 23:59:59'))->where('outletid', $this->data['outletPick'])->find();
+        }
+        // $summary = array_sum(array_column($transaction, 'value'));
+
+        if (!empty($transaction)) {
+            foreach ($transaction as $trx) {
+                $time                               = date('H', strtotime($trx['date']));
+                $transactions[$time]['date']        = date('H', strtotime($trx['date']));
+                $transactions[$time]['val'][]       = $trx['value'];
+
+                // Transaction Discount
+                if (!empty($trx['discvalue'])) {
+                    $discounttrx[]  = $trx['discvalue'];
+                }
+    
+                // Point Used
+                $discountpoin[]             = $trx['pointused'];
+
+                // Member Discount
+                $memberdisc[]               = $trx['memberdisc'];
+
+                // Discount Variant
+                $trxdetails  = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+                if (!empty($trxdetails)) {
+                    foreach ($trxdetails as $trxdetail) {
+                        // Transaction Detail Discount Variant
+                        if ($trxdetail['discvar'] != 0) {
+                            $discountvariant[]      = $trxdetail['discvar'];
+                        }
+        
+                        // Transaction Detail Discount Global
+                        if ($trxdetail['globaldisc'] != '0') {
+                            $discountglobal[]       = $trxdetail['globaldisc'];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Data Chart
+        if (!empty($transactions)) {
+            foreach ($transactions as $trxdat) {
+                $transactionarr[]  = [
+                    'waktu' => $trxdat['date'],
+                    'value' => array_sum($trxdat['val']),
+                ];
+            }
+        }
+
+        $transactiondisc    = (int)(array_sum($discounttrx)) + (int)(array_sum($memberdisc));
+        $variantdisc        = array_sum($discountvariant);
+        $globaldisc         = array_sum($discountglobal);
+        $poindisc           = array_sum($discountpoin);
+        $salesresult        = array_sum(array_column($transactionarr, 'value'));
+        $grossales          = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = 'Laporan Penjualan Harian';
+        $data['description']    = 'Developed by PT. Kodebiner Teknologi Indonesia';
+        $data['transactions']   = $transactionarr;
+        $data['result']         = $salesresult;
+        $data['gross']          = $grossales;
+
+        return view('Views/report/dailysell', $data);
+    }
 }

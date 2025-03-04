@@ -177,6 +177,7 @@ $routes->group('export', ['filter'=>'login'], function($routes){
     $routes->get('customerlist', 'Export::customerlist', ['filter' => 'role:owner,supervisor,']);
     $routes->get('sop', 'Export::sop', ['filter' => 'role:owner,supervisor']);
     $routes->get('dayrep', 'Export::dayrep', ['filter' => 'role:owner,supervisor']);
+    $routes->get('dailysell', 'Export::dailysell', ['filter' => 'role:owner,supervisor']);
 });
 
 // Customer Routes
@@ -291,6 +292,7 @@ $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('customerdetail/(:num)', 'Report::customerdetail/$1', ['filter' => 'role:owner,supervisor']);
     $routes->get('category', 'Report::category', ['filter' => 'role:owner,supervisor']);
     $routes->get('sop', 'Report::sop', ['filter' => 'role:owner,supervisor']);
+    $routes->get('dailysell', 'Report::dailysell', ['filter' => 'role:owner,supervisor']);
     // $routes->get('stockcategory', 'Report::stockcategory', ['filter' => 'role:owner,supervisor']);
 
 });

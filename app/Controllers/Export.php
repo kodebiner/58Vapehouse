@@ -2598,4 +2598,138 @@ class export extends BaseController
             echo '</tbody>';
         echo '</table>';
     }
+
+    public function dailysell()
+    {
+        // Calling Models
+        $TransactionModel       = new TransactionModel;
+        $TrxdetailModel         = new TrxdetailModel;
+        $OutletModel            = new OutletModel();
+
+        $transactions       = array();
+        $transactionarr     = array();
+        $memberdisc         = array();
+        $discounttrx        = array();
+        $discountvariant    = array();
+        $discountpoin       = array();
+        $discountglobal     = array();
+
+        if ($this->data['outletPick'] === null) {
+            $transaction    = $TransactionModel->where('date >=', date('Y-m-d 00:00:00'))->where('date <=', date('Y-m-d 23:59:59'))->find();
+            $address        = "58vapehouse";
+            $outletname     = "All Outlets";
+        } else {
+            $transaction    = $TransactionModel->where('date >=', date('Y-m-d 00:00:00'))->where('date <=', date('Y-m-d 23:59:59'))->where('outletid', $this->data['outletPick'])->find();
+            $outlets        = $OutletModel->find($this->data['outletPick']);
+            $address        = $outlets['address'];
+            $outletname     = $outlets['name'];
+        }
+
+        if (!empty($transaction)) {
+            foreach ($transaction as $trx) {
+                $time                               = date('H', strtotime($trx['date']));
+                $transactions[$time]['date']        = date('H', strtotime($trx['date']));
+                $transactions[$time]['val'][]       = $trx['value'];
+
+                // Transaction Discount
+                if (!empty($trx['discvalue'])) {
+                    $discounttrx[]  = $trx['discvalue'];
+                }
+    
+                // Point Used
+                $discountpoin[]             = $trx['pointused'];
+
+                // Member Discount
+                $memberdisc[]               = $trx['memberdisc'];
+
+                // Discount Variant
+                $trxdetails  = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+                if (!empty($trxdetails)) {
+                    foreach ($trxdetails as $trxdetail) {
+                        // Transaction Detail Discount Variant
+                        if ($trxdetail['discvar'] != 0) {
+                            $discountvariant[]      = $trxdetail['discvar'];
+                        }
+        
+                        // Transaction Detail Discount Global
+                        if ($trxdetail['globaldisc'] != '0') {
+                            $discountglobal[]       = $trxdetail['globaldisc'];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Data Chart
+        if (!empty($transactions)) {
+            foreach ($transactions as $trxdat) {
+                $transactionarr[]  = [
+                    'waktu' => $trxdat['date'],
+                    'value' => array_sum($trxdat['val']),
+                ];
+            }
+        }
+
+        $transactiondisc    = (int)(array_sum($discounttrx)) + (int)(array_sum($memberdisc));
+        $variantdisc        = array_sum($discountvariant);
+        $globaldisc         = array_sum($discountglobal);
+        $poindisc           = array_sum($discountpoin);
+        $salesresult        = array_sum(array_column($transactionarr, 'value'));
+        $grossales          = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
+
+        // Total Discount
+        $alldisc            = (Int)$globaldisc + (Int)$variantdisc + (Int)$transactiondisc;
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=Laporan Penjualan Harian $outletname (".date('d-m-Y').").xls");
+
+        echo '<style type="text/css">
+
+        </style>';
+        echo '<table  style="width: 30%;">';
+            echo '<tr>';
+                echo '<th colspan="2" style="align-text:center;">Ringkasan Penjualan Harian</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="2" style="align-text:center;">' . $outletname . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="2" style="align-text:center;">' . $address . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="2" style="align-text:center;">' . date('d-m-Y') . '</th>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th colspan="2" style="align-text:center;"></th>';
+            echo '</tr>';
+
+            echo '<tr>';
+                echo '<th>Jam</th>';
+                echo '<th>Nominal</th>';
+            echo '</tr>';
+            
+            foreach ($transactionarr as $trxdat) {
+                echo '<tr>';
+                    echo '<td style="text-align: center;">'.$trxdat['waktu'].'</td>';
+                    echo '<td style="text-align: center;">'.$trxdat['value'].'</td>';
+                echo '</tr>';
+            }
+
+            echo '<tr>';
+            echo '</tr>';
+
+            echo '<tr >';
+                echo '<th style="text-align: left;">Penjualan</th>';
+                echo '<td style="text-align: right;">' . $salesresult . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th style="text-align: left;">Diskon</th>';
+                echo '<td style="text-align: right;">' . $alldisc . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th style="text-align: left;">Total Omset</th>';
+                echo '<td style="text-align: right;">' . $grossales . '</td>';
+            echo '</tr>';
+        echo '</table>';
+    }
 }

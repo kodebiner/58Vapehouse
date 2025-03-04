@@ -1326,6 +1326,9 @@
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?>">
                                     <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
                                 </li>
+                                <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='dailysell')?'uk-active':''?>">
+                                    <a href="<?= base_url('report/dailysell') ?>">Laporan Penjualan Harian</a>
+                                </li>
                             </ul>
                         </li>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='dayrep')?'uk-active':''?>">
