@@ -269,9 +269,9 @@
         for (k in variantarray) {
             if (variantarray[k]['id'] == id) {
                 if (variantarray[k]['qty'] != "0") {
-                    document.getElementById('variantlist').remove();
+                    // document.getElementById('variantlist').remove();
                     var elemexist = document.getElementById('product'+variantarray[k]['id']);
-                    document.getElementById('tablevariant').setAttribute('hidden', '');
+                    // document.getElementById('tablevariant').setAttribute('hidden', '');
                     var count = 1;
                     if ( $( "#product"+variantarray[k]['id'] ).length ) {
                         alert('<?=lang('Global.readyAdd');?>');
@@ -1025,9 +1025,9 @@ foreach ($stockmovedata as $stockmove) { ?>
                                 function createVare<?=$stockmove['id']?>(id) {
                                     for (x in variantarray<?=$stockmove['id']?>) {
                                         if (variantarray<?=$stockmove['id']?>[x]['id'] == id) {
-                                            document.getElementById('variantliste').remove();
+                                            // document.getElementById('variantliste').remove();
                                             var eelemexist = document.getElementById('eproduct<?=$stockmove['id']?>'+variantarray<?=$stockmove['id']?>[x]['id']);
-                                            document.getElementById('tabvar<?= $stockmove['id'] ?>').setAttribute('hidden', '');
+                                            // document.getElementById('tabvar</?= $stockmove['id'] ?>').setAttribute('hidden', '');
                                             var count = 1;
                                             if ( $( "#eproduct<?=$stockmove['id']?>"+variantarray<?=$stockmove['id']?>[x]['id'] ).length ) {
                                                 alert('<?=lang('Global.readyAdd');?>');

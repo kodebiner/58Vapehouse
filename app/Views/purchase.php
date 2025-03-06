@@ -201,9 +201,9 @@
     function createVar(id) {
         for (k in variantarray) {
             if (variantarray[k]['id'] == id) {
-                document.getElementById('variantlist').remove();
+                // document.getElementById('variantlist').remove();
                 var elemexist = document.getElementById('product'+variantarray[k]['id']);
-                document.getElementById('tablevariant').setAttribute('hidden', '');
+                // document.getElementById('tablevariant').setAttribute('hidden', '');
                 var count = 1;
                 if ( $( "#product"+variantarray[k]['id'] ).length ) {
                     alert('<?=lang('Global.readyAdd');?>');
@@ -826,9 +826,9 @@ foreach ($purchases as $purchase) { ?>
                                 function createVare<?=$purchase['id']?>(id) {
                                     for (x in variantarray<?=$purchase['id']?>) {
                                         if (variantarray<?=$purchase['id']?>[x]['id'] == id) {
-                                            document.getElementById('variantliste').remove();
+                                            // document.getElementById('variantliste').remove();
                                             var eelemexist = document.getElementById('eproduct<?=$purchase['id']?>'+variantarray<?=$purchase['id']?>[x]['id']);
-                                            document.getElementById('tabvar<?= $purchase['id'] ?>').setAttribute('hidden', '');
+                                            // document.getElementById('tabvar</?= $purchase['id'] ?>').setAttribute('hidden', '');
                                             var count = 1;
                                             if ( $( "#eproduct<?=$purchase['id']?>"+variantarray<?=$purchase['id']?>[x]['id'] ).length ) {
                                                 alert('<?=lang('Global.readyAdd');?>');

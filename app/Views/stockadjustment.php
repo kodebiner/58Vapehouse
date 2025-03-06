@@ -227,9 +227,9 @@
     function createVar(id) {
         for (k in variantarray) {
             if (variantarray[k]['id'] == id) {
-                document.getElementById('prodvar').remove();
+                // document.getElementById('prodvar').remove();
                 var elemexist = document.getElementById('product'+variantarray[k]['id']);
-                document.getElementById('tablevariant').setAttribute('hidden', '');
+                // document.getElementById('tablevariant').setAttribute('hidden', '');
                 var count = 1;
                 if ( $( "#product"+variantarray[k]['id'] ).length ) {
                     alert('<?=lang('Global.readyAdd');?>');
