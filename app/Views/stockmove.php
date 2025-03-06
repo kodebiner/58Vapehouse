@@ -123,18 +123,18 @@
 
                     <div id="tablevariant"></div>
 
-                    <div class="uk-margin-small" uk-grid>
-                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                            <div class=""><?= lang('Global.variant') ?></div>
+                    <div class="uk-margin-small uk-flex-middle uk-flex-center" uk-grid>
+                        <div class="uk-width-1-6 uk-text-center">
+                            <div><?= lang('Global.variant') ?></div>
                         </div>
-                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                            <div class=""><?= lang('Global.quantity') ?></div>
+                        <div class="uk-width-1-2 uk-text-center">
+                            <div><?= lang('Global.quantity') ?></div>
                         </div>
-                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                            <div class=""><?= lang('Global.capitalPrice') ?></div>
+                        <div class="uk-width-1-6 uk-text-center">
+                            <div><?= lang('Global.capitalPrice') ?></div>
                         </div>
-                        <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                            <div class=""><?= lang('Global.total') ?></div>
+                        <div class="uk-width-1-6 uk-text-center">
+                            <div><?= lang('Global.total') ?></div>
                         </div>
                         <!-- <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                             <div class="">SKU</div>
@@ -281,7 +281,7 @@
                                                     
                         var pgrid = document.createElement('div');
                         pgrid.setAttribute('id', 'product'+variantarray[k]['id']);
-                        pgrid.setAttribute('class', 'uk-margin-small');
+                        pgrid.setAttribute('class', 'uk-margin-small uk-flex-middle uk-flex-center');
                         pgrid.setAttribute('uk-grid', '');
 
                         // var skucontainer = document.createElement('div');
@@ -293,7 +293,7 @@
                         // sku.innerHTML = variantarray[k]['sku'];
 
                         var vcontainer = document.createElement('div');
-                        vcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4');
+                        vcontainer.setAttribute('class', 'uk-width-1-6');
                                                         
                         var vname = document.createElement('div');
                         vname.setAttribute('id','var'+variantarray[k]['id']);
@@ -301,14 +301,26 @@
                         vname.innerHTML = variantarray[k]['name'];
 
                         var tcontainer = document.createElement('div');
-                        tcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                        tcontainer.setAttribute('class', 'uk-width-1-2 uk-text-center');
+                        
+                        var productqtyinputadd = document.createElement('div');
+                        productqtyinputadd.setAttribute('id','addqty'+variantarray[k]['id']);
+                        productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
+                        productqtyinputadd.setAttribute('onclick','handleCount('+variantarray[k]['id']+', 1)');
+                        productqtyinputadd.innerHTML = '+';
+                        
+                        var productqtyinputdel = document.createElement('div');
+                        productqtyinputdel.setAttribute('id','delqty'+variantarray[k]['id']);
+                        productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
+                        productqtyinputdel.setAttribute('onclick','handleCount('+variantarray[k]['id']+', 0)');
+                        productqtyinputdel.innerHTML = '-';
 
                         var tot = document.createElement('input');
                         tot.setAttribute('type', 'number');
                         tot.setAttribute('id', "totalpcs["+variantarray[k]['id']+"]");
                         tot.setAttribute('name', "totalpcs["+variantarray[k]['id']+"]");
                         tot.setAttribute('max', variantarray[k]['qty']);
-                        tot.setAttribute('class', 'uk-input');
+                        tot.setAttribute('class', 'uk-input uk-width-1-3');
                         tot.setAttribute('value', '1');
                         tot.setAttribute('required', '');
 
@@ -317,7 +329,7 @@
                         // pieces.innerHTML = 'Pcs';
 
                         var pricecontainer = document.createElement('div');
-                        pricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                        pricecontainer.setAttribute('class', 'uk-width-1-6 uk-text-center');
 
                         var price = document.createElement('input');
                         price.setAttribute('type', 'number');
@@ -332,7 +344,7 @@
                         pricediv.innerHTML = variantarray[k]['wholesale'];
 
                         var subtotcontainer = document.createElement('div');
-                        subtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+                        subtotcontainer.setAttribute('class', 'uk-width-1-6 uk-text-center');
 
                         var subtotal = document.createElement('div');
                         subtotal.setAttribute('id', "subtotal"+variantarray[k]['id']+"");
@@ -340,6 +352,7 @@
 
                         totalprice();
                         tot.addEventListener('change', totalprice);
+                        tot.onchange = function() {handleChangeCount(variantarray[k]['id'])};
                         price.addEventListener('change', totalprice);
 
                         function totalprice() {
@@ -352,7 +365,9 @@
 
                         // skucontainer.appendChild(sku);
                         vcontainer.appendChild(vname);
+                        tcontainer.appendChild(productqtyinputadd);
                         tcontainer.appendChild(tot);
+                        tcontainer.appendChild(productqtyinputdel);
                         // tcontainer.appendChild(pieces);
                         pricecontainer.appendChild(price);
                         pricecontainer.appendChild(pricediv);
@@ -376,6 +391,65 @@
                     alert('<?=lang('Global.alertstock');?>');
                 }
             }
+        }
+    };
+
+    function handleCount(id, type) {
+        var inputqty        = document.getElementById('totalpcs['+id+']');
+        var sellprice       = document.getElementById('bprice['+id+']');
+        var productprice    = document.getElementById('subtotal'+id);
+        var productgrid     = document.getElementById('product'+id);
+        var count           = inputqty.value;
+        if (type == 1) {
+            count++;
+            if (inputqty.value == inputqty.getAttribute('max')) {
+                inputqty.value = inputqty.getAttribute('max');
+                count = inputqty.getAttribute('max');
+                alert('<?=lang('Global.alertstock')?>');
+            } else {
+                inputqty.value      = count;
+                var price           = count * sellprice.value;
+
+                productprice.innerHTML = price;
+                productprice.value = price;
+            }
+        } else if (type == 0) {
+            count--;
+            if (inputqty.value == '1') {
+                inputqty.value = '0';
+                inputqty.remove();                                                                                                
+                productgrid.remove();
+            } else {
+                inputqty.value  = count;
+                var price       = count * sellprice.value;
+                
+                productprice.innerHTML = price;
+                productprice.value = price;
+            }
+        }
+    };
+
+    function handleChangeCount(id) {
+        var inputqty        = document.getElementById('totalpcs['+id+']');
+        var sellprice       = document.getElementById('bprice['+id+']');
+        var productprice    = document.getElementById('subtotal'+id);
+        var productgrid     = document.getElementById('product'+id);
+
+        if (inputqty.value > inputqty.getAttribute('max')) {
+            inputqty.value = inputqty.getAttribute('max');
+            alert('<?=lang('Global.alertstock')?>');
+
+            var price               = count * sellprice.value;
+            productprice.innerHTML  = price;
+            productprice.value      = price;
+        } else if (inputqty.value < 1) {
+            inputqty.value = '0';
+            inputqty.remove();
+            productgrid.remove();
+        } else {
+            var price               = count * sellprice.value;
+            productprice.innerHTML  = price;
+            productprice.value      = price;
         }
     };
 
@@ -922,20 +996,20 @@ foreach ($stockmovedata as $stockmove) { ?>
 
                             <div id="tabvar<?= $stockmove['id'] ?>"></div>
 
-                            <div class="uk-margin-small" uk-grid>
+                            <div class="uk-margin-small uk-flex-middle uk-flex-center" uk-grid>
                                 <!-- <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5 uk-text-center">
                                     <div class="">SKU</div>
                                 </div> -->
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class="uk-width-1-6 uk-text-center">
                                     <div class=""><?= lang('Global.product') ?></div>
                                 </div>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class="uk-width-1-2 uk-text-center">
                                     <div class=""><?= lang('Global.quantity') ?></div>
                                 </div>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class="uk-width-1-6 uk-text-center">
                                     <div class=""><?= lang('Global.capitalPrice') ?></div>
                                 </div>
-                                <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                <div class="uk-width-1-6 uk-text-center">
                                     <div class=""><?= lang('Global.total') ?></div>
                                 </div>
                             </div>
@@ -1022,6 +1096,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                         minLength: 2
                                     });
                                 });
+
                                 function createVare<?=$stockmove['id']?>(id) {
                                     for (x in variantarray<?=$stockmove['id']?>) {
                                         if (variantarray<?=$stockmove['id']?>[x]['id'] == id) {
@@ -1037,7 +1112,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                                             
                                                 var epgrid = document.createElement('div');
                                                 epgrid.setAttribute('id', 'eproduct<?=$stockmove['id']?>'+variantarray<?=$stockmove['id']?>[x]['id']);
-                                                epgrid.setAttribute('class', 'uk-margin-small');
+                                                epgrid.setAttribute('class', 'uk-margin-small uk-flex-middle uk-flex-center');
                                                 epgrid.setAttribute('uk-grid', '');
 
                                                 // var evskucontainer = document.createElement('div');
@@ -1049,7 +1124,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 // evsku.innerHTML = variantarray</?=$stockmove['id']?>[x]['sku'];
 
                                                 var evcontainer = document.createElement('div');
-                                                evcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                                                evcontainer.setAttribute('class', 'uk-width-1-6');
                                                                                 
                                                 var evname = document.createElement('div');
                                                 evname.setAttribute('id','var'+variantarray<?=$stockmove['id']?>[x]['id']);
@@ -1057,14 +1132,26 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 evname.innerHTML = variantarray<?=$stockmove['id']?>[x]['name'];
 
                                                 var etcontainer = document.createElement('div');
-                                                etcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                                                etcontainer.setAttribute('class', 'uk-width-1-2 uk-text-center');
+                        
+                                                var eproductqtyinputadd = document.createElement('div');
+                                                eproductqtyinputadd.setAttribute('id','eaddqty'+variantarray<?=$stockmove['id']?>[x]['id']);
+                                                eproductqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
+                                                eproductqtyinputadd.setAttribute('onclick','ehandleCount('+variantarray<?=$stockmove['id']?>[x]['id']+', 1)');
+                                                eproductqtyinputadd.innerHTML = '+';
+                                                
+                                                var eproductqtyinputdel = document.createElement('div');
+                                                eproductqtyinputdel.setAttribute('id','edelqty'+variantarray<?=$stockmove['id']?>[x]['id']);
+                                                eproductqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
+                                                eproductqtyinputdel.setAttribute('onclick','ehandleCount('+variantarray<?=$stockmove['id']?>[x]['id']+', 0)');
+                                                eproductqtyinputdel.innerHTML = '-';
 
                                                 var etot = document.createElement('input');
                                                 etot.setAttribute('type', 'number');
                                                 etot.setAttribute('id', "addtotalpcs["+variantarray<?=$stockmove['id']?>[x]['id']+"]");
                                                 etot.setAttribute('name', "addtotalpcs["+variantarray<?=$stockmove['id']?>[x]['id']+"]");
                                                 etot.setAttribute('max', variantarray<?=$stockmove['id']?>[x]['qty']);
-                                                etot.setAttribute('class', 'uk-input');
+                                                etot.setAttribute('class', 'uk-input uk-width-1-3');
                                                 etot.setAttribute('value', '1');
                                                 etot.setAttribute('required', '');
 
@@ -1073,7 +1160,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 // epieces.innerHTML = 'Pcs';
 
                                                 var epricecontainer = document.createElement('div');
-                                                epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4');
+                                                epricecontainer.setAttribute('class', 'uk-width-1-6 uk-text-center');
 
                                                 var eprice = document.createElement('input');
                                                 eprice.setAttribute('type', 'number');
@@ -1088,7 +1175,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                 epricediv.innerHTML = variantarray<?=$stockmove['id']?>[x]['price'];
 
                                                 var esubtotcontainer = document.createElement('div');
-                                                esubtotcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-text-center uk-flex-middle uk-width-1-4');
+                                                esubtotcontainer.setAttribute('class', 'uk-width-1-6 uk-text-center');
 
                                                 var esubtotal = document.createElement('div');
                                                 esubtotal.setAttribute('id', "esubtotal"+variantarray<?=$stockmove['id']?>[x]['id']+"");
@@ -1096,6 +1183,7 @@ foreach ($stockmovedata as $stockmove) { ?>
 
                                                 etotalprice();
                                                 etot.addEventListener('change', etotalprice);
+                                                etot.onchange = function() {ehandleChangeCount(variantarray<?=$stockmove['id']?>[x]['id'])};
                                                 eprice.addEventListener('change', etotalprice);
 
                                                 function etotalprice() {
@@ -1108,7 +1196,9 @@ foreach ($stockmovedata as $stockmove) { ?>
 
                                                 // evskucontainer.appendChild(evsku);
                                                 evcontainer.appendChild(evname);
+                                                etcontainer.appendChild(eproductqtyinputadd);
                                                 etcontainer.appendChild(etot);
+                                                etcontainer.appendChild(eproductqtyinputdel);
                                                 // etcontainer.appendChild(epieces);
                                                 epricecontainer.appendChild(eprice);
                                                 epricecontainer.appendChild(epricediv);
@@ -1131,33 +1221,148 @@ foreach ($stockmovedata as $stockmove) { ?>
                                         }
                                     }
                                 };
+
+                                function ehandleCount(id, type) {
+                                    var einputqty           = document.getElementById('addtotalpcs['+id+']');
+                                    var esellprice          = document.getElementById('addbprice['+id+']');
+                                    var eproductprice       = document.getElementById('esubtotal'+id);
+                                    var eproductgrid        = document.getElementById('eproduct<?=$stockmove['id']?>'+id);
+                                    var count               = einputqty.value;
+                                    if (type == 1) {
+                                        count++;
+                                        if (einputqty.value == einputqty.getAttribute('max')) {
+                                            einputqty.value = einputqty.getAttribute('max');
+                                            count = einputqty.getAttribute('max');
+                                            alert('<?=lang('Global.alertstock')?>');
+                                        } else {
+                                            einputqty.value         = count;
+                                            var eprice              = count * esellprice.value;
+                                            eproductprice.innerHTML = eprice;
+                                            eproductprice.value     = eprice;
+                                        }
+                                    } else if (type == 0) {
+                                        count--;
+                                        if (einputqty.value == '1') {
+                                            einputqty.value = '0';
+                                            einputqty.remove();                                                                                                
+                                            eproductgrid.remove();
+                                        } else {
+                                            einputqty.value         = count;
+                                            var eprice              = count * esellprice.value;
+                                            eproductprice.innerHTML = eprice;
+                                            eproductprice.value     = eprice;
+                                        }
+                                    }
+                                };
+
+                                function ehandleChangeCount(id) {
+                                    var einputqty        = document.getElementById('addtotalpcs['+id+']');
+                                    var esellprice       = document.getElementById('addbprice['+id+']');
+                                    var eproductprice    = document.getElementById('esubtotal'+id);
+                                    var eproductgrid     = document.getElementById('eproduct<?=$stockmove['id']?>'+id);
+
+                                    if (einputqty.value > einputqty.getAttribute('max')) {
+                                        einputqty.value = einputqty.getAttribute('max');
+                                        alert('<?=lang('Global.alertstock')?>');
+
+                                        var eprice               = count * esellprice.value;
+                                        eproductprice.innerHTML  = eprice;
+                                        eproductprice.value      = eprice;
+                                    } else if (einputqty.value < 1) {
+                                        einputqty.value = '0';
+                                        einputqty.remove();
+                                        eproductgrid.remove();
+                                    } else {
+                                        var eprice               = count * esellprice.value;
+                                        eproductprice.innerHTML  = eprice;
+                                        eproductprice.value      = eprice;
+                                    }
+                                };
                             </script>
                             <!-- Autocomplete Product Edit Purchase End -->
 
                             <?php
                             $tot[$stockmove['id']] = array();
                             foreach ($stockmovedata[$stockmove['id']]['detail'] as $detailid => $detail) { ?>
-                                <div id="eproduct<?=$stockmove['id'].$detail['varid']?>" class="uk-margin-small" uk-grid>
+                                <div id="eproduct<?=$detailid?>" class="uk-margin-small uk-flex-middle uk-flex-center" uk-grid>
                                     <!-- <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-5">
                                         <div class=""></?= $detail['sku'] ?></div>
                                     </div> -->
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4">
+                                    <div class="uk-width-1-6">
                                         <div class=""><?= $detail['name'] ?></div>
                                     </div>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
-                                        <input class="uk-input" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="0" max="<?= $detail['qty'] ?>" required />
+                                    <div class="uk-width-1-2 uk-text-center">
+                                        <div id="eaddqtye<?=$detailid?>" class="tm-h2 pointerbutton uk-button uk-button-small uk-button-primary" onclick="ehandleCounte('<?=$detailid?>', 1)">+</div>
+                                        <input class="uk-input uk-width-1-3" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="0" max="<?= $detail['qty'] ?>" onchange="ehandleCounte(<?=$detailid?>)" required />
+                                        <div id="edelqtye<?=$detailid?>" class="tm-h2 pointerbutton uk-button uk-button-small uk-button-danger" onclick="ehandleCounte('<?=$detailid?>', 0)">-</div>
                                         <!-- <div class="uk-margin-small-left">Pcs</div> -->
                                     </div>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center">
+                                    <div class="uk-width-1-6 uk-text-center">
                                         <input hidden class="uk-input" type="number" id="bprice[<?=$detailid?>]" name="bprice[<?=$detailid?>]" value="<?= $detail['wholesale'] ?>" required />
                                         <div><?= $detail['wholesale'] ?></div>
                                     </div>
-                                    <div class="uk-flex uk-flex-middle uk-flex-center uk-width-1-4 uk-text-center subvariant<?= $stockmove['id'] ?>" id="subtotal<?= $detailid ?>">
+                                    <div class="uk-width-1-6 uk-text-center subvariant<?= $stockmove['id'] ?>" id="subtotal<?= $detailid ?>">
                                         <?= (Int)$detail['wholesale'] * (Int)$detail['inputqty'] ?>
                                     </div>
                                 </div>
 
                                 <script type="text/javascript">
+                                    function ehandleCounte(id, type) {
+                                        var einputqty           = document.getElementById('totalpcs['+id+']');
+                                        var esellprice          = document.getElementById('bprice['+id+']');
+                                        var eproductprice       = document.getElementById('subtotal'+id);
+                                        var eproductgrid        = document.getElementById('eproduct'+id);
+                                        var count               = einputqty.value;
+                                        if (type == 1) {
+                                            count++;
+                                            if (einputqty.value == einputqty.getAttribute('max')) {
+                                                einputqty.value = einputqty.getAttribute('max');
+                                                count = einputqty.getAttribute('max');
+                                                alert('<?=lang('Global.alertstock')?>');
+                                            } else {
+                                                einputqty.value         = count;
+                                                var eprice              = count * esellprice.value;
+                                                eproductprice.innerHTML = eprice;
+                                                eproductprice.value     = eprice;
+                                            }
+                                        } else if (type == 0) {
+                                            count--;
+                                            if (einputqty.value == '1') {
+                                                einputqty.value = '0';
+                                                einputqty.remove();                                                                                                
+                                                eproductgrid.remove();
+                                            } else {
+                                                einputqty.value         = count;
+                                                var eprice              = count * esellprice.value;
+                                                eproductprice.innerHTML = eprice;
+                                                eproductprice.value     = eprice;
+                                            }
+                                        }
+                                    };
+
+                                    function ehandleChangeCounte(id) {
+                                        var einputqty        = document.getElementById('totalpcs['+id+']');
+                                        var esellprice       = document.getElementById('bprice['+id+']');
+                                        var eproductprice    = document.getElementById('subtotal'+id);
+                                        var eproductgrid     = document.getElementById('eproduct'+id);
+
+                                        if (einputqty.value > einputqty.getAttribute('max')) {
+                                            einputqty.value = einputqty.getAttribute('max');
+                                            alert('<?=lang('Global.alertstock')?>');
+
+                                            var eprice               = count * esellprice.value;
+                                            eproductprice.innerHTML  = eprice;
+                                            eproductprice.value      = eprice;
+                                        } else if (einputqty.value < 1) {
+                                            einputqty.value = '0';
+                                            einputqty.remove();
+                                            eproductgrid.remove();
+                                        } else {
+                                            var eprice               = count * esellprice.value;
+                                            eproductprice.innerHTML  = eprice;
+                                            eproductprice.value      = eprice;
+                                        }
+                                    };
 
                                     var total<?= $detailid ?> = document.getElementById('totalpcs[<?=$detailid?>]');
                                     var price<?= $detailid ?> = document.getElementById('bprice[<?=$detailid?>]');
