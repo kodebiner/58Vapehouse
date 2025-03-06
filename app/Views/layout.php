@@ -325,9 +325,9 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
-                                <a class="tm-h3" href="<?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg><?=lang('Global.topup');?></a>
-                            </li>
+                            <!-- <li class="tm-main-navbar </?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
+                                <a class="tm-h3" href="</?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg></?=lang('Global.topup');?></a>
+                            </li> -->
                             <?php if(in_groups('owner')) : ?>
                                 <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
                                     <a class="tm-h3" href="<?= base_url('sop') ?>"><img src="img/layout/sop.svg" uk-svg><?=lang('Global.sop');?></a>
@@ -491,9 +491,9 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="tm-main-navbar <?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
-                        <a class="tm-h3" href="<?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg><?=lang('Global.topup');?></a>
-                    </li>
+                    <!-- <li class="tm-main-navbar </?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
+                        <a class="tm-h3" href="</?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg></?=lang('Global.topup');?></a>
+                    </li> -->
                     <?php if(in_groups('owner')) : ?>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
                             <a class="tm-h3" href="<?= base_url('sop') ?>"><img src="img/layout/sop.svg" uk-svg><?=lang('Global.sop');?></a>

@@ -219,8 +219,8 @@ class Trxother extends BaseController
 
             // Cash Flow
             $trxother   = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->notLike('description', 'Debt')->notLike('description', 'Top Up')->find();
-            $topups     = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->Like('description', 'Top Up')->find();
-            $withdraws  = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->Like('description', 'Cash Withdraw')->find();
+            // $topups     = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->Like('description', 'Top Up')->find();
+            // $withdraws  = $TrxotherModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->Like('description', 'Cash Withdraw')->find();
 
             if (!empty($trxother)) {
                 foreach ($trxother as $trxot) {
@@ -286,51 +286,51 @@ class Trxother extends BaseController
                 $dailyreportdata['debtins'] = [];
             }
 
-            if (!empty($topups)) {
-                foreach ($topups as $topup) {
-                    // User Cashier
-                    $usercashcier   = $UserModel->find($topup['userid']);
+            // if (!empty($topups)) {
+            //     foreach ($topups as $topup) {
+            //         // User Cashier
+            //         $usercashcier   = $UserModel->find($topup['userid']);
 
-                    // Top Up Data
-                    $cashtopup      = $CashModel->find($topup['cashid']);
-                    $dailyreportdata['topup'][$cashtopup['id']]['name']                              = $cashtopup['name'];
+            //         // Top Up Data
+            //         $cashtopup      = $CashModel->find($topup['cashid']);
+            //         $dailyreportdata['topup'][$cashtopup['id']]['name']                              = $cashtopup['name'];
 
-                    // Detail Top Up
-                    $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['value']     = $topup['qty'];
-                    $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['cashier']   = $usercashcier->firstname.' '.$usercashcier->lastname;
-                    $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['type']      = $topup['type'];
-                    $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['desc']      = $topup['description'];
-                    $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['date']      = date('H:i:s', strtotime($topup['date']));
-                    $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['qty']       = $topup['qty'];
-                    $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['proof']     = $topup['photo'];
-                }
-            } else {
-                $usercashcier   = [];
-                $dailyreportdata['topup'] = [];
-            }
+            //         // Detail Top Up
+            //         $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['value']     = $topup['qty'];
+            //         $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['cashier']   = $usercashcier->firstname.' '.$usercashcier->lastname;
+            //         $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['type']      = $topup['type'];
+            //         $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['desc']      = $topup['description'];
+            //         $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['date']      = date('H:i:s', strtotime($topup['date']));
+            //         $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['qty']       = $topup['qty'];
+            //         $dailyreportdata['topup'][$cashtopup['id']]['detail'][$topup['id']]['proof']     = $topup['photo'];
+            //     }
+            // } else {
+            //     $usercashcier   = [];
+            //     $dailyreportdata['topup'] = [];
+            // }
 
-            if (!empty($withdraws)) {
-                foreach ($withdraws as $withdraw) {
-                    // User Cashier
-                    $usercashcier   = $UserModel->find($withdraw['userid']);
+            // if (!empty($withdraws)) {
+            //     foreach ($withdraws as $withdraw) {
+            //         // User Cashier
+            //         $usercashcier   = $UserModel->find($withdraw['userid']);
 
-                    // Withdraw Data
-                    $cashwithdraw   = $CashModel->find($withdraw['cashid']);
-                    $dailyreportdata['withdraw'][$cashwithdraw['id']]['name']                                = $cashwithdraw['name'];
+            //         // Withdraw Data
+            //         $cashwithdraw   = $CashModel->find($withdraw['cashid']);
+            //         $dailyreportdata['withdraw'][$cashwithdraw['id']]['name']                                = $cashwithdraw['name'];
 
-                    // Detail Withdraw
-                    $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['value']    = $withdraw['qty'];
-                    $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['cashier']  = $usercashcier->firstname.' '.$usercashcier->lastname;
-                    $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['type']     = $withdraw['type'];
-                    $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['desc']     = $withdraw['description'];
-                    $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['date']     = date('H:i:s', strtotime($withdraw['date']));
-                    $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['qty']      = $withdraw['qty'];
-                    $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['proof']    = $withdraw['photo'];
-                }
-            } else {
-                $usercashcier   = [];
-                $dailyreportdata['withdraw'] = [];
-            }
+            //         // Detail Withdraw
+            //         $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['value']    = $withdraw['qty'];
+            //         $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['cashier']  = $usercashcier->firstname.' '.$usercashcier->lastname;
+            //         $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['type']     = $withdraw['type'];
+            //         $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['desc']     = $withdraw['description'];
+            //         $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['date']     = date('H:i:s', strtotime($withdraw['date']));
+            //         $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['qty']      = $withdraw['qty'];
+            //         $dailyreportdata['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['proof']    = $withdraw['photo'];
+            //     }
+            // } else {
+            //     $usercashcier   = [];
+            //     $dailyreportdata['withdraw'] = [];
+            // }
 
             // Initial Cash
             $dailyreportdata['initialcash']      = $dailyreport['initialcash'];

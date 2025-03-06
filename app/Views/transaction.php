@@ -93,14 +93,14 @@
                     
                     <!-- Navbar Right -->
                     <div class="uk-navbar-right">
-                        <div class="uk-child-width-1-2 uk-child-width-auto@m uk-flex uk-flex-middle uk-grid-divider" uk-grid>
-                            <div>
-                                <a class="uk-button uk-button-text" uk-toggle="#modal-sections"><?=lang('Global.topup')?></a>
-                            </div>
+                        <!-- <div class="uk-child-width-1-2 uk-child-width-auto@m uk-flex uk-flex-middle uk-grid-divider" uk-grid> -->
+                            <!-- <div>
+                                <a class="uk-button uk-button-text" uk-toggle="#modal-sections"></?=lang('Global.topup')?></a>
+                            </div> -->
                             <div>
                                 <a uk-icon="cart" uk-toggle="target: #tambahdata"></a>
                             </div>
-                        </div>
+                        <!-- </div> -->
                     </div>
                     <!-- </?php if ($ismobile === false) { ?>
                         <div class="uk-navbar-right">
@@ -134,12 +134,12 @@
                     <!-- Navbar Right End -->
 
                     <!-- Modal Top Up Point -->
-                    <div class="uk-flex-top" id="modal-sections" uk-modal>
+                    <!-- <div class="uk-flex-top" id="modal-sections" uk-modal>
                         <div class="uk-modal-dialog uk-margin-auto-vertical">
                             <div class="uk-modal-header">
                                 <div class="uk-child-width-1-2" uk-grid>
                                     <div>
-                                        <h2 class="uk-modal-title"><?=lang('Global.topup')?></h2>
+                                        <h2 class="uk-modal-title"></?=lang('Global.topup')?></h2>
                                     </div>
                                     <div class="uk-text-right">
                                         <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
@@ -163,7 +163,7 @@
                                         $(function() {
                                             var customerList = [
                                                 {label: "Non Member", idx:0},
-                                                <?php
+                                                </?php
                                                     foreach ($customers as $customer) {
                                                         echo '{label:"'.$customer['name'].' / '.$customer['phone'].'",idx:'.$customer['id'].'},';
                                                     }
@@ -180,13 +180,13 @@
                                     </script>
 
                                     <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-horizontal-text"><?=lang('Global.payment')?></label>
+                                        <label class="uk-form-label" for="form-horizontal-text"></?=lang('Global.payment')?></label>
                                         <div class="uk-form-controls">
                                             <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
                                                 <select class="uk-select uk-input" id="payment" name="payment" required >
-                                                    <option value="" selected disabled hidden><?=lang('Global.payment')?></option>
-                                                    <?php
+                                                    <option value="" selected disabled hidden></?=lang('Global.payment')?></option>
+                                                    </?php
                                                     foreach ($payments as $pay) {
                                                         if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
                                                             echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
@@ -199,7 +199,7 @@
                                     </div>
 
                                     <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-horizontal-text"><?=lang('global.value')?></label>
+                                        <label class="uk-form-label" for="form-horizontal-text"></?=lang('global.value')?></label>
                                         <div class="uk-form-controls">
                                             <div class="uk-inline uk-width-1-1">
                                                 <span class="uk-form-icon" uk-icon="icon: database"></span>
@@ -208,7 +208,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- <div class="uk-margin">
+                                    <div class="uk-margin">
                                         <div class="uk-form-controls">
                                             <a class="uk-button uk-button-default" uk-toggle="#topupproof"></?= lang('Global.topupproof') ?></a>
                                         </div>
@@ -216,15 +216,15 @@
 
                                     <div class="uk-margin" hidden>
                                         <input class="image-tag" name="image">
-                                    </div> -->
+                                    </div>
 
                                     <div class="uk-modal-footer uk-text-right">
-                                        <button class="uk-button uk-button-primary" type="submit" value="submit"><?= lang('Global.save') ?></button>
+                                        <button class="uk-button uk-button-primary" type="submit" value="submit"></?= lang('Global.save') ?></button>
                                     </div>
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- Modal Top Up Point End -->
 
                     <!-- Modal Top Up Proof -->
@@ -1351,9 +1351,9 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
-                            <a class="tm-h3" href="<?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg><?=lang('Global.topup');?></a>
-                        </li>
+                        <!-- <li class="tm-main-navbar </?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
+                            <a class="tm-h3" href="</?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg></?=lang('Global.topup');?></a>
+                        </li> -->
                         <?php if(in_groups('owner')) : ?>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
                                 <a class="tm-h3" href="<?= base_url('sop') ?>"><img src="img/layout/sop.svg" uk-svg><?=lang('Global.sop');?></a>

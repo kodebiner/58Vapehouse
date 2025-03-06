@@ -2298,8 +2298,8 @@ class export extends BaseController
             // Cash Flow
             $trxothers  = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->notLike('description', 'Debt')->notLike('description', 'Top Up')->find();
             $debtins    = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Debt')->find();
-            $topups     = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Top Up')->find();
-            $withdraws  = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Cash Withdraw')->find();
+            // $topups     = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Top Up')->find();
+            // $withdraws  = $TrxotherModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->Like('description', 'Cash Withdraw')->find();
 
             if (!empty($trxothers)) {
                 foreach ($trxothers as $trxother) {
@@ -2353,39 +2353,39 @@ class export extends BaseController
                 }
             }
 
-            if (!empty($topups)) {
-                foreach ($topups as $topup) {
-                    // Top Up Data
-                    $cashtopup      = $CashModel->find($topup['cashid']);
+            // if (!empty($topups)) {
+            //     foreach ($topups as $topup) {
+            //         // Top Up Data
+            //         $cashtopup      = $CashModel->find($topup['cashid']);
 
-                    if (strcmp($cashtopup['name'], 'Petty Cash ' . $outlets['name']) == 0) {
-                        // Transaction Summary
-                        $dailyreportdata[$dayrep['id']]['topup'][0]['name']                             = 'Tunai';
-                        $dailyreportdata[$dayrep['id']]['topup'][0]['detail'][$topup['id']]['type']     = '0';
-                        $dailyreportdata[$dayrep['id']]['topup'][0]['detail'][$topup['id']]['value']    = $topup['qty'];
-                    } else {
-                        // Transaction Summary
-                        $dailyreportdata[$dayrep['id']]['topup'][1]['name']                             = 'Non-Tunai';
-                        $dailyreportdata[$dayrep['id']]['topup'][1]['detail'][$topup['id']]['type']     = '1';
-                        $dailyreportdata[$dayrep['id']]['topup'][1]['detail'][$topup['id']]['value']    = $topup['qty'];
-                    }
-                }
-            } else {
-                $dailyreportdata[$dayrep['id']]['topup'] = [];
-            }
+            //         if (strcmp($cashtopup['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+            //             // Transaction Summary
+            //             $dailyreportdata[$dayrep['id']]['topup'][0]['name']                             = 'Tunai';
+            //             $dailyreportdata[$dayrep['id']]['topup'][0]['detail'][$topup['id']]['type']     = '0';
+            //             $dailyreportdata[$dayrep['id']]['topup'][0]['detail'][$topup['id']]['value']    = $topup['qty'];
+            //         } else {
+            //             // Transaction Summary
+            //             $dailyreportdata[$dayrep['id']]['topup'][1]['name']                             = 'Non-Tunai';
+            //             $dailyreportdata[$dayrep['id']]['topup'][1]['detail'][$topup['id']]['type']     = '1';
+            //             $dailyreportdata[$dayrep['id']]['topup'][1]['detail'][$topup['id']]['value']    = $topup['qty'];
+            //         }
+            //     }
+            // } else {
+            //     $dailyreportdata[$dayrep['id']]['topup'] = [];
+            // }
 
-            if (!empty($withdraws)) {
-                foreach ($withdraws as $withdraw) {
-                    // Withdraw Data
-                    $cashwithdraw   = $CashModel->find($withdraw['cashid']);
-                    $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['name']                                = $cashwithdraw['name'];
+            // if (!empty($withdraws)) {
+            //     foreach ($withdraws as $withdraw) {
+            //         // Withdraw Data
+            //         $cashwithdraw   = $CashModel->find($withdraw['cashid']);
+            //         $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['name']                                = $cashwithdraw['name'];
 
-                    // Detail Withdraw
-                    $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['value']    = $withdraw['qty'];
-                }
-            } else {
-                $dailyreportdata[$dayrep['id']]['withdraw'] = [];
-            }
+            //         // Detail Withdraw
+            //         $dailyreportdata[$dayrep['id']]['withdraw'][$cashwithdraw['id']]['detail'][$withdraw['id']]['value']    = $withdraw['qty'];
+            //     }
+            // } else {
+            //     $dailyreportdata[$dayrep['id']]['withdraw'] = [];
+            // }
 
             // Initial Cash
             $dailyreportdata[$dayrep['id']]['initialcash']      = $dayrep['initialcash'];
@@ -2422,8 +2422,8 @@ class export extends BaseController
                     echo '<th colspan="3">Arus Kas</th>';
                     echo '<th colspan="4">Penjualan</th>';
                     echo '<th colspan="2">Angsuran Hutang</th>';
-                    echo '<th colspan="2">Top Up</th>';
-                    echo '<th rowspan="2">Tarik Tunai</th>';
+                    // echo '<th colspan="2">Top Up</th>';
+                    // echo '<th rowspan="2">Tarik Tunai</th>';
                     echo '<th colspan="2">Penerimaan Sistem</th>';
                     echo '<th colspan="2">Penerimaan Aktual</th>';
                     echo '<th rowspan="2">Selisih</th>';
@@ -2438,8 +2438,8 @@ class export extends BaseController
                     echo '<th>Tukar Poin</th>';
                     echo '<th>Tunai</th>';
                     echo '<th>Non-Tunai</th>';
-                    echo '<th>Tunai</th>';
-                    echo '<th>Non-Tunai</th>';
+                    // echo '<th>Tunai</th>';
+                    // echo '<th>Non-Tunai</th>';
                     echo '<th>Tunai</th>';
                     echo '<th>Non-Tunai</th>';
                     echo '<th>Tunai</th>';
@@ -2539,46 +2539,48 @@ class export extends BaseController
                         // Debt Installment End
                         
                         // Top Up
-                        $totaltopupcash      = [];
-                        $totaltopupnoncash   = [];
-                        foreach ($dayrep['topup'] as $topup) {
-                            $topupcash       = [];
-                            $topupnoncash    = [];
-                            foreach ($topup['detail'] as $topupdetail) {
-                                if ($topupdetail['type'] == '0') {
-                                    $topupcash[]    = $topupdetail['value'];
-                                } else {
-                                    $topupnoncash[] = $topupdetail['value'];
-                                }
-                            }
-                            $arraytopupcash      = array_sum($topupcash);
-                            $totaltopupcash[]    = $arraytopupcash;
-                            $arraytopupnoncash   = array_sum($topupnoncash);
-                            $totaltopupnoncash[] = $arraytopupnoncash;
-                        }
-                        $totaltopupcashvalue     = array_sum($totaltopupcash);
-                        $totaltopupnoncashvalue  = array_sum($totaltopupnoncash);
-                        echo '<td>' . $totaltopupcashvalue . '</td>';
-                        echo '<td>' . $totaltopupnoncashvalue . '</td>';
+                        // $totaltopupcash      = [];
+                        // $totaltopupnoncash   = [];
+                        // foreach ($dayrep['topup'] as $topup) {
+                        //     $topupcash       = [];
+                        //     $topupnoncash    = [];
+                        //     foreach ($topup['detail'] as $topupdetail) {
+                        //         if ($topupdetail['type'] == '0') {
+                        //             $topupcash[]    = $topupdetail['value'];
+                        //         } else {
+                        //             $topupnoncash[] = $topupdetail['value'];
+                        //         }
+                        //     }
+                        //     $arraytopupcash      = array_sum($topupcash);
+                        //     $totaltopupcash[]    = $arraytopupcash;
+                        //     $arraytopupnoncash   = array_sum($topupnoncash);
+                        //     $totaltopupnoncash[] = $arraytopupnoncash;
+                        // }
+                        // $totaltopupcashvalue     = array_sum($totaltopupcash);
+                        // $totaltopupnoncashvalue  = array_sum($totaltopupnoncash);
+                        // echo '<td>' . $totaltopupcashvalue . '</td>';
+                        // echo '<td>' . $totaltopupnoncashvalue . '</td>';
                         // Top Up End
 
                         // Cash Withdraw
-                        $totalwithdraw      = [];
-                        foreach ($dayrep['withdraw'] as $withdraw) {
-                            $datawithdraw       = [];
-                            foreach ($withdraw['detail'] as $withdrawdetail) {
-                                $datawithdraw[]    = $withdrawdetail['value'];
-                            }
-                            $arraydatawithdraw      = array_sum($datawithdraw);
-                            $totalwithdraw[]    = $arraydatawithdraw;
-                        }
-                        $totalwithdrawvalue     = array_sum($totalwithdraw);
-                        echo '<td>' . $totalwithdrawvalue . '</td>';
+                        // $totalwithdraw      = [];
+                        // foreach ($dayrep['withdraw'] as $withdraw) {
+                        //     $datawithdraw       = [];
+                        //     foreach ($withdraw['detail'] as $withdrawdetail) {
+                        //         $datawithdraw[]    = $withdrawdetail['value'];
+                        //     }
+                        //     $arraydatawithdraw      = array_sum($datawithdraw);
+                        //     $totalwithdraw[]    = $arraydatawithdraw;
+                        // }
+                        // $totalwithdrawvalue     = array_sum($totalwithdraw);
+                        // echo '<td>' . $totalwithdrawvalue . '</td>';
                         // Cash Withdraw End
 
                         // System Receive
-                        $systemreceivecash      = (Int)$totalcash + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)) + (Int)$totaldebtcashvalue + (Int)$totaltopupcashvalue;
-                        $systemreceivenoncash   = (Int)$totalnoncash + (Int)$totaldebtnoncashvalue + (Int)$totaltopupnoncashvalue + (Int)$totalwithdrawvalue;
+                        // $systemreceivecash      = (Int)$totalcash + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)) + (Int)$totaldebtcashvalue + (Int)$totaltopupcashvalue;
+                        // $systemreceivenoncash   = (Int)$totalnoncash + (Int)$totaldebtnoncashvalue + (Int)$totaltopupnoncashvalue + (Int)$totalwithdrawvalue;
+                        $systemreceivecash      = (Int)$totalcash + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)) + (Int)$totaldebtcashvalue;
+                        $systemreceivenoncash   = (Int)$totalnoncash + (Int)$totaldebtnoncashvalue;
                         $systemreceivetotal     = (Int)$systemreceivecash + (Int)$systemreceivenoncash;
                         echo '<td>' . $systemreceivecash . '</td>';
                         echo '<td>' . $systemreceivenoncash . '</td>';
