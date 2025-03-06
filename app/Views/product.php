@@ -758,6 +758,7 @@
                 <th class="uk-text-center"><?= lang('Global.detail') ?></th>
                 <th class="uk-text-center"><?= lang('Global.favorite') ?></th>
                 <th><?= lang('Global.name') ?></th>
+                <th><?= lang('Global.status') ?></th>
                 <th><?= lang('Global.category') ?></th>
                 <th><?= lang('Global.price') ?></th>
                 <th><?= lang('Global.stock') ?></th>
@@ -788,6 +789,13 @@
                             <div><?= $product['name']; ?></div>
                         <?php } else { ?>
                             <div style="text-decoration: line-through"><?= $product['name'] ?></div>
+                        <?php } ?>
+                    </td>
+                    <td>
+                        <?php if ($product['photo'] == null) { ?>
+                            <div style="color: red;">Belum Ada Foto</div>
+                        <?php } if ($product['link'] == null) { ?>
+                            <div style="color: red;">Belum Ada Link Tokopedia</div>
                         <?php } ?>
                     </td>
                     <td>
