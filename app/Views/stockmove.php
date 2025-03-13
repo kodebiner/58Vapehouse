@@ -365,9 +365,9 @@
 
                         // skucontainer.appendChild(sku);
                         vcontainer.appendChild(vname);
-                        tcontainer.appendChild(productqtyinputadd);
-                        tcontainer.appendChild(tot);
                         tcontainer.appendChild(productqtyinputdel);
+                        tcontainer.appendChild(tot);
+                        tcontainer.appendChild(productqtyinputadd);
                         // tcontainer.appendChild(pieces);
                         pricecontainer.appendChild(price);
                         pricecontainer.appendChild(pricediv);
@@ -1196,9 +1196,9 @@ foreach ($stockmovedata as $stockmove) { ?>
 
                                                 // evskucontainer.appendChild(evsku);
                                                 evcontainer.appendChild(evname);
-                                                etcontainer.appendChild(eproductqtyinputadd);
-                                                etcontainer.appendChild(etot);
                                                 etcontainer.appendChild(eproductqtyinputdel);
+                                                etcontainer.appendChild(etot);
+                                                etcontainer.appendChild(eproductqtyinputadd);
                                                 // etcontainer.appendChild(epieces);
                                                 epricecontainer.appendChild(eprice);
                                                 epricecontainer.appendChild(epricediv);
@@ -1292,9 +1292,9 @@ foreach ($stockmovedata as $stockmove) { ?>
                                         <div class=""><?= $detail['name'] ?></div>
                                     </div>
                                     <div class="uk-width-1-2 uk-text-center">
-                                        <div id="eaddqtye<?=$detailid?>" class="tm-h2 pointerbutton uk-button uk-button-small uk-button-primary" onclick="ehandleCounte('<?=$detailid?>', 1)">+</div>
-                                        <input class="uk-input uk-width-1-3" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="0" max="<?= $detail['qty'] ?>" onchange="ehandleCounte(<?=$detailid?>)" required />
                                         <div id="edelqtye<?=$detailid?>" class="tm-h2 pointerbutton uk-button uk-button-small uk-button-danger" onclick="ehandleCounte('<?=$detailid?>', 0)">-</div>
+                                        <input class="uk-input uk-width-1-3" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="0" max="<?= $detail['qty'] ?>" onchange="ehandleCounte(<?=$detailid?>)" required />
+                                        <div id="eaddqtye<?=$detailid?>" class="tm-h2 pointerbutton uk-button uk-button-small uk-button-primary" onclick="ehandleCounte('<?=$detailid?>', 1)">+</div>
                                         <!-- <div class="uk-margin-small-left">Pcs</div> -->
                                     </div>
                                     <div class="uk-width-1-6 uk-text-center">
