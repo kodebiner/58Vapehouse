@@ -93,15 +93,71 @@
                     
                     <!-- Navbar Right -->
                     <div class="uk-navbar-right">
-                        <!-- <div class="uk-child-width-1-2 uk-child-width-auto@m uk-flex uk-flex-middle uk-grid-divider" uk-grid> -->
-                            <!-- <div>
-                                <a class="uk-button uk-button-text" uk-toggle="#modal-sections"></?=lang('Global.topup')?></a>
-                            </div> -->
+                        <div class="uk-child-width-auto uk-grid-divider" uk-grid>
+                            <div>
+                                <!-- <a class="uk-button uk-button-text" uk-toggle="#modal-sections"></?=lang('Global.topup')?></a> -->
+                                <a uk-icon="user" uk-toggle="target: #tambahmember"></a>
+                            </div>
                             <div>
                                 <a uk-icon="cart" uk-toggle="target: #tambahdata"></a>
                             </div>
-                        <!-- </div> -->
+                        </div>
                     </div>
+
+                    <!-- Modal Add Member -->
+                    <div uk-modal class="uk-flex-top" id="tambahmember">
+                        <div class="uk-modal-dialog uk-margin-auto-vertical">
+                            <div class="uk-modal-content">
+                                <div class="uk-modal-header">
+                                    <div class="uk-child-width-1-2" uk-grid>
+                                        <div>
+                                            <h5 class="uk-modal-title" id="tambahmember"><?= lang('Global.addCustomer') ?></h5>
+                                        </div>
+                                        <div class="uk-text-right">
+                                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-modal-body">
+                                    <form class="uk-form-stacked" role="form" action="/customer/create" method="post">
+                                        <?= csrf_field() ?>
+
+                                        <div class="uk-margin-bottom">
+                                            <label class="uk-form-label" for="name"><?= lang('Global.name') ?></label>
+                                            <div class="uk-form-controls">
+                                                <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?= lang('Global.name') ?>" required />
+                                            </div>
+                                        </div>
+
+                                        <div class="uk-margin-bottom">
+                                            <label class="uk-form-label" for="phone"><?= lang('Global.phone') ?></label>
+                                            <div class="uk-form-controls">
+                                                <div class="uk-inline uk-width-1-1">
+                                                    <span class="uk-form-icon">+62</span>
+                                                    <input class="uk-input <?php if (session('errors.phone')) : ?>tm-form-invalid<?php endif ?>" min="1" id="phone" name="phone" type="number" placeholder="<?= lang('Global.phone') ?>" aria-label="Not clickable icon" required />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="uk-margin">
+                                            <label class="uk-form-label" for="email"></?= lang('Auth.email') ?></label>
+                                            <div class="uk-form-controls">
+                                                <input type="email" class="uk-input </?php if (session('errors.email')) : ?>tm-form-invalid</?php endif ?>" name="email" id="email" placeholder="</?= lang('Auth.email') ?>" />
+                                            </div>
+                                        </div> -->
+
+                                        <hr>
+
+                                        <div class="uk-margin">
+                                            <button type="submit" class="uk-button uk-button-primary"><?= lang('Global.save') ?></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Add Member End -->
+
                     <!-- </?php if ($ismobile === false) { ?>
                         <div class="uk-navbar-right">
                             <div class="uk-child-width-1-2 uk-flex uk-flex-middle" uk-grid>
@@ -2665,6 +2721,8 @@
                                                                 $("#CreateOrder<?=$product['id']?>").prop('hidden',false);
                                                             <?php } ?>
                                                         }
+                                                        $("#prods").val('');
+                                                        return false;
                                                     },
                                                     minLength: 1
                                                 });
