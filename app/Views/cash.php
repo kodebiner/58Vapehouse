@@ -377,16 +377,25 @@
                     <?= csrf_field() ?>
 
                     <div class="uk-margin-bottom">
-                        <div uk-form-custom="target: > * > span:first-child">
+                        <!-- <div uk-form-custom="target: > * > span:first-child">
                             <select aria-label="Custom controls" name="cash">
                                 <option selected hidden disabled>Choose Type</option>
-                                <option value="0"><?= lang('Global.cashin') ?></option>
-                                <option value="1"><?= lang('Global.cashout') ?></option>
+                                <option value="0"></?= lang('Global.cashin') ?></option>
+                                <option value="1"></?= lang('Global.cashout') ?></option>
                             </select>
                             <button class="uk-button uk-button-default" type="button" tabindex="-1">
                                 <span></span>
                                 <span uk-icon="icon: chevron-down"></span>
                             </button>
+                        </div> -->
+
+                        <div class="uk-child-width-auto" uk-grid>
+                            <div>
+                                <label><input class="uk-radio" type="radio" name="cash" value="1"> <?= lang('Global.cashout') ?></label>
+                            </div>
+                            <div>
+                                <label><input class="uk-radio" type="radio" name="cash" value="0"> <?= lang('Global.cashin') ?></label>
+                            </div>
                         </div>
                     </div>
 

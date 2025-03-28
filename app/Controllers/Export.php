@@ -519,7 +519,8 @@ class export extends BaseController
         $grossales          = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
 
         // Profit Calculation
-        $profitvalue        = (Int)$marginmodalsum - (Int)$transactiondisc;
+        $profitmodal        = (Int)$marginmodalsum - (Int)$transactiondisc - (Int)$poindisc;
+        $profitdasar        = (Int)$margindasarsum - (Int)$transactiondisc - (Int)$poindisc;
 
         // Cashin and Cash Out
         $cashin     = [];
@@ -586,8 +587,12 @@ class export extends BaseController
                 echo '<td style="text-align: right;">' . $casout . '</td>';
             echo '</tr>';
             echo '<tr>';
-                echo '<th style="text-align: left;">Keuntungan</th>';
-                echo '<td style="text-align: right; font-family: arial, sans-serif; font-weight: bold;">' . $profitvalue . '</td>';
+                echo '<th style="text-align: left;">Keuntungan Modal</th>';
+                echo '<td style="text-align: right; font-family: arial, sans-serif; font-weight: bold;">' . $profitmodal . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th style="text-align: left;">Keuntungan Dasar</th>';
+                echo '<td style="text-align: right; font-family: arial, sans-serif; font-weight: bold;">' . $profitdasar . '</td>';
             echo '</tr>';
         echo '</table>';
     }
@@ -633,6 +638,12 @@ class export extends BaseController
 
                 if ($trx['memberdisc'] != '0') {
                     $discount[]   = (int)$trx['memberdisc'];
+                } else {
+                    $discount[]   = 0;
+                }
+
+                if ($trx['pointused'] != '0') {
+                    $discount[]   = (int)$trx['pointused'];
                 } else {
                     $discount[]   = 0;
                 }
@@ -2615,6 +2626,8 @@ class export extends BaseController
         $discountvariant    = array();
         $discountpoin       = array();
         $discountglobal     = array();
+        $marginmodals       = array();
+        $margindasars       = array();
 
         if ($this->data['outletPick'] === null) {
             $transaction    = $TransactionModel->where('date >=', date('Y-m-d 00:00:00'))->where('date <=', date('Y-m-d 23:59:59'))->find();
@@ -2657,6 +2670,14 @@ class export extends BaseController
                         if ($trxdetail['globaldisc'] != '0') {
                             $discountglobal[]       = $trxdetail['globaldisc'];
                         }
+
+                        // Transaction Detail Margin Modal
+                        $marginmodals[]                         = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+                        $transactions[$time]['profitmodal'][]   = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+
+                        // Transaction Detail Margin Dasar
+                        $margindasars[]                         = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                        $transactions[$time]['profitdasar'][]   = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
                     }
                 }
             }
@@ -2666,8 +2687,10 @@ class export extends BaseController
         if (!empty($transactions)) {
             foreach ($transactions as $trxdat) {
                 $transactionarr[]  = [
-                    'waktu' => $trxdat['date'],
-                    'value' => array_sum($trxdat['val']),
+                    'waktu'         => $trxdat['date'],
+                    'value'         => array_sum($trxdat['val']),
+                    'profitmodal'   => array_sum($trxdat['profitmodal']),
+                    'profitdasar'   => array_sum($trxdat['profitdasar']),
                 ];
             }
         }
@@ -2676,8 +2699,12 @@ class export extends BaseController
         $variantdisc        = array_sum($discountvariant);
         $globaldisc         = array_sum($discountglobal);
         $poindisc           = array_sum($discountpoin);
+        $marginmodalsum     = array_sum($marginmodals);
+        $margindasarsum     = array_sum($margindasars);
         $salesresult        = array_sum(array_column($transactionarr, 'value'));
         $grossales          = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
+        $profitmodal        = (Int)$marginmodalsum - (Int)$transactiondisc - (Int)$poindisc;
+        $profitdasar        = (Int)$margindasarsum - (Int)$transactiondisc - (Int)$poindisc;
 
         // Total Discount
         $alldisc            = (Int)$globaldisc + (Int)$variantdisc + (Int)$transactiondisc;
@@ -2707,7 +2734,7 @@ class export extends BaseController
 
             echo '<tr>';
                 echo '<th>Jam</th>';
-                echo '<th>Nominal</th>';
+                echo '<th>Penjualan</th>';
             echo '</tr>';
             
             foreach ($transactionarr as $trxdat) {
@@ -2731,6 +2758,14 @@ class export extends BaseController
             echo '<tr>';
                 echo '<th style="text-align: left;">Total Omset</th>';
                 echo '<td style="text-align: right;">' . $grossales . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th style="text-align: left;">Keuntungan Modal</th>';
+                echo '<td style="text-align: right;">' . $profitmodal . '</td>';
+            echo '</tr>';
+            echo '<tr>';
+                echo '<th style="text-align: left;">Keuntungan Dasar</th>';
+                echo '<td style="text-align: right;">' . $profitdasar . '</td>';
             echo '</tr>';
         echo '</table>';
     }

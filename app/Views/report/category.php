@@ -23,7 +23,7 @@
                 $sold           = array_sum($product['qty']);
                 $sales          = array_sum($product['grossvalue']);
                 $net            = array_sum($product['netvalue']);
-                echo "['$category',$sold,$sales,$net],";
+                echo "['$category',$net,$sold,$sales],";
             }?>
         ]);
 

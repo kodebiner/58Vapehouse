@@ -18,12 +18,14 @@
         data.addColumn('string', 'category');
         data.addColumn('number', 'value');
         data.addRows([
-            <?php foreach ($products as $product) {
-                $produk     = $product['name'];
-                $category   = $product['category'];
-                $sold       = array_sum($product['qty']);
-                $value      = array_sum($product['netvalue']);
-                echo "[ '$produk',$sold,'$category',$value],";
+            <?php foreach ($products as $key => $product) {
+                if ($key < 12) {
+                    $produk     = $product['name'];
+                    $category   = $product['category'];
+                    $sold       = array_sum($product['qty']);
+                    $value      = array_sum($product['netvalue']);
+                    echo "[ '$produk',$value,'$category',$sold],";
+                }
             } ?>
         ]);
 

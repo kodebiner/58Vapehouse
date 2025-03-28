@@ -364,52 +364,18 @@ class Report extends BaseController
                     $discount[]   = 0;
                 }
 
+                if ($trx['pointused'] != '0') {
+                    $discount[]   = (int)$trx['pointused'];
+                } else {
+                    $discount[]   = 0;
+                }
+
                 foreach ($trxdetails as $trxdetail) {
                     // Transaction Detail Margin Modal
                     $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
 
                     // Transaction Detail Margin Dasar
                     $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-
-                    // Data Variant
-                    $variantsdata       = $VariantModel->find($trxdetail['variantid']);
-
-                    if (!empty($variantsdata)) {
-                        $productsdata   = $ProductModel->find($variantsdata['productid']);
-
-                        // if (!empty($productsdata)) {
-                        //     // Transaction Detail Margin Modal
-                        //     $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
-
-                        //     // Transaction Detail Margin Dasar
-                        //     $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                        // } else {
-                        //     // Transaction Detail Margin Modal
-                        //     $marginmodals[] = 0;
-
-                        //     // Transaction Detail Margin Dasar
-                        //     $margindasars[] = 0;
-                        // }
-                    } else {
-                        $productsdata   = '';
-                    }
-
-                    // Data Bundle
-                    $bundlesdata    = $BundleModel->find($trxdetail['bundleid']);
-
-                    // if (!empty($bundlesdata)) {
-                    //     // Transaction Detail Margin Modal
-                    //     $marginmodals[] = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
-
-                    //     // Transaction Detail Margin Dasar
-                    //     $margindasars[] = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                    // } else {
-                    //     // Transaction Detail Margin Modal
-                    //     $marginmodals[] = 0;
-
-                    //     // Transaction Detail Margin Dasar
-                    //     $margindasars[] = 0;
-                    // }
                 }
             }
 
@@ -1006,14 +972,14 @@ class Report extends BaseController
         
         foreach ($transactiondata as $trxdata) {
             $productsales[] = array_sum($trxdata['qty']);
-            $netval[] = array_sum($trxdata['netvalue']);
-            $grossval[] = array_sum($trxdata['grossvalue']);
+            $netval[]       = array_sum($trxdata['netvalue']);
+            $grossval[]     = array_sum($trxdata['grossvalue']);
         }
         
         $totalsalesitem = array_sum($productsales);
         $totalnetsales  = array_sum($netval);
         $totalcatgross  = array_sum($grossval);
-        array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
+        array_multisort(array_column($transactiondata, 'netvalue'), SORT_DESC, $transactiondata);
         
         // dd($transactiondata);
         // Parsing Data to View
@@ -1479,7 +1445,7 @@ class Report extends BaseController
         $totalsalesitem     = array_sum($productsales);
         $totalnetsales      = array_sum($netval);
         $totalcatgross      = array_sum($grossval);
-        array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
+        array_multisort(array_column($transactiondata, 'netvalue'), SORT_DESC, $transactiondata);
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -2329,6 +2295,8 @@ class Report extends BaseController
         $discountvariant    = array();
         $discountpoin       = array();
         $discountglobal     = array();
+        $marginmodals       = array();
+        $margindasars       = array();
 
         if ($this->data['outletPick'] === null) {
             $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00'))->where('date <=', date('Y-m-d 23:59:59'))->find();
@@ -2360,13 +2328,21 @@ class Report extends BaseController
                     foreach ($trxdetails as $trxdetail) {
                         // Transaction Detail Discount Variant
                         if ($trxdetail['discvar'] != 0) {
-                            $discountvariant[]      = $trxdetail['discvar'];
+                            $discountvariant[]                  = $trxdetail['discvar'];
                         }
         
                         // Transaction Detail Discount Global
                         if ($trxdetail['globaldisc'] != '0') {
-                            $discountglobal[]       = $trxdetail['globaldisc'];
+                            $discountglobal[]                   = $trxdetail['globaldisc'];
                         }
+
+                        // Transaction Detail Margin Modal
+                        $marginmodals[]                         = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+                        $transactions[$time]['profitmodal'][]   = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+
+                        // Transaction Detail Margin Dasar
+                        $margindasars[]                         = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                        $transactions[$time]['profitdasar'][]   = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
                     }
                 }
             }
@@ -2376,8 +2352,10 @@ class Report extends BaseController
         if (!empty($transactions)) {
             foreach ($transactions as $trxdat) {
                 $transactionarr[]  = [
-                    'waktu' => $trxdat['date'],
-                    'value' => array_sum($trxdat['val']),
+                    'waktu'         => $trxdat['date'],
+                    'value'         => array_sum($trxdat['val']),
+                    'profitmodal'   => array_sum($trxdat['profitmodal']),
+                    'profitdasar'   => array_sum($trxdat['profitdasar']),
                 ];
             }
         }
@@ -2386,9 +2364,13 @@ class Report extends BaseController
         $variantdisc        = array_sum($discountvariant);
         $globaldisc         = array_sum($discountglobal);
         $poindisc           = array_sum($discountpoin);
+        $marginmodalsum     = array_sum($marginmodals);
+        $margindasarsum     = array_sum($margindasars);
         $salesresult        = array_sum(array_column($transactionarr, 'value'));
         $grossales          = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
-
+        $profitmodal        = (Int)$marginmodalsum - (Int)$transactiondisc - (Int)$poindisc;
+        $profitdasar        = (Int)$margindasarsum - (Int)$transactiondisc - (Int)$poindisc;
+        
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = 'Laporan Penjualan Harian';
@@ -2396,6 +2378,8 @@ class Report extends BaseController
         $data['transactions']   = $transactionarr;
         $data['result']         = $salesresult;
         $data['gross']          = $grossales;
+        $data['profitmodal']    = $profitmodal;
+        $data['profitdasar']    = $profitdasar;
 
         return view('Views/report/dailysell', $data);
     }

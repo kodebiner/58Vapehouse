@@ -1344,7 +1344,8 @@
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='dashboard')?'uk-active':''?>">
                             <a class="tm-h3" href="<?= base_url('dashboard') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                         </li>
-                        <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
+                        <!-- <li class="tm-main-navbar uk-parent </?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>"> -->
+                        <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
                             <a class="tm-h3" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">
                                 <?php if ((in_groups('owner')) || (in_groups('supervisor'))) : ?>
@@ -1366,9 +1367,9 @@
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?>">
                                         <a href="<?= base_url('report/category') ?>"><?=lang('Global.categoryreport');?></a>
                                     </li>
-                                    <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?>">
-                                        <a href="<?= base_url('report/bundle') ?>"><?=lang('Global.bundlereport');?></a>
-                                    </li>
+                                    <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?>">
+                                        <a href="</?= base_url('report/bundle') ?>"></?=lang('Global.bundlereport');?></a>
+                                    </li> -->
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?>">
                                         <a href="<?= base_url('report/diskon') ?>"><?=lang('Global.discountreport');?></a>
                                     </li>
@@ -1414,16 +1415,19 @@
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
                                 <a class="tm-h3" href="<?= base_url('sop') ?>"><img src="img/layout/sop.svg" uk-svg><?=lang('Global.sop');?></a>
                             </li>
-                            <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
-                                <a class="tm-h3" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
+                            <!-- <li class="tm-main-navbar uk-parent </?=($uri->getSegment(1)==='product')?'uk-active':''?></?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
+                                <a class="tm-h3" href=""><img src="img/layout/product.svg" uk-svg></?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
-                                    <li class="tm-h4 <?=($uri->getSegment(1)==='product')?'uk-active':''?>">
-                                        <a href="<?= base_url('product') ?>"><?=lang('Global.product');?></a>
+                                    <li class="tm-h4 </?=($uri->getSegment(1)==='product')?'uk-active':''?>">
+                                        <a href="</?= base_url('product') ?>"></?=lang('Global.product');?></a>
                                     </li>
-                                    <li class="tm-h4 <?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
-                                        <a href="<?= base_url('bundle') ?>"><?=lang('Global.bundle');?></a>
+                                    <li class="tm-h4 </?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
+                                        <a href="</?= base_url('bundle') ?>"></?=lang('Global.bundle');?></a>
                                     </li>
                                 </ul>
+                            </li> -->
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='product')?'uk-active':''?>">
+                                <a class="tm-h3" href="<?= base_url('product') ?>"><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?></a>
                             </li>
                         <?php endif ?>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='reminder')?'uk-active':''?>">
@@ -3023,7 +3027,7 @@
                         </a>
                     </li>
                     <li>
-                        <a uk-switcher-item="0">
+                        <a uk-switcher-item="0" disabled>
                             <div width="30" height="30" uk-icon="file-edit"></div>
                             <div class="uk-h4 uk-margin-small"><?=lang('Global.bundle');?></div>
                         </a>
