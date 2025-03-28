@@ -68,8 +68,8 @@ class Product extends BaseController
             // $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
         // }
 
-        if ((!empty($input['search'])) && (!empty($input['category'])) && (!empty($input['brand']))) {
-            $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        if ((!empty($input['search'])) && (!empty($input['category'])) && (!empty($input['brand'])) && (isset($input['status']))) {
+            $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->where('status', $input['status'])->orderBy('id', 'DESC')->paginate(20, 'product');
         }
         elseif ((!empty($input['search'])) && (!empty($input['category']))) {
             $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
@@ -77,8 +77,17 @@ class Product extends BaseController
         elseif ((!empty($input['search'])) && (!empty($input['brand']))) {
             $products   = $ProductModel->like('name', $input['search'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
         }
+        elseif ((!empty($input['search'])) && (isset($input['status']))) {
+            $products   = $ProductModel->like('name', $input['search'])->where('status', $input['status'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
         elseif ((!empty($input['category'])) && (!empty($input['brand']))) {
             $products   = $ProductModel->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        elseif ((!empty($input['category'])) && (isset($input['status']))) {
+            $products   = $ProductModel->where('catid', $input['category'])->where('status', $input['status'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        elseif ((!empty($input['brand'])) && (isset($input['status']))) {
+            $products   = $ProductModel->where('brandid', $input['brand'])->where('status', $input['status'])->orderBy('id', 'DESC')->paginate(20, 'product');
         }
         elseif (!empty($input['search'])) {
             $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
@@ -88,6 +97,9 @@ class Product extends BaseController
         }
         elseif (!empty($input['brand'])) {
             $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
+        }
+        elseif (isset($input['status'])) {
+            $products   = $ProductModel->where('status', $input['status'])->orderBy('id', 'DESC')->paginate(20, 'product');
         }
         else {
             $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');

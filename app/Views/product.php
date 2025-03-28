@@ -691,7 +691,7 @@
     <!-- Search Engine -->
     <div class="uk-margin-medium-bottom">
         <form action="product" method="GET">
-            <div class="uk-child-width-1-1 uk-child-width-1-4@m uk-flex-middle" uk-grid>
+            <div class="uk-child-width-1-1 uk-child-width-1-5@m uk-flex-middle" uk-grid>
                 <div class="uk-text-right@l uk-margin-small-top">
                     <div class="uk-search uk-search-default uk-width-1-1">
                         <span class="uk-form-icon" uk-icon="icon: search" style="color: #000;"></span>
@@ -712,6 +712,13 @@
                         <?php foreach ($brand as $bran) { ?>
                             <option value="<?= $bran['id'] ?>" <?= ((isset($input['brand'])) && ($input['brand'] == $bran['id'])) ? 'selected' : '' ?>><?= $bran['name'] ?></option>
                         <?php } ?>
+                    </select>
+                </div>
+                <div class="uk-margin-small-top">
+                    <select class="uk-select" id="filterstatus" name="status" style="border-radius: 5px; border-style: solid;">
+                        <option value="" <?= ((isset($input['status'])) && ($input['status'] == '')) ? 'selected' : '' ?>>Status</option>
+                        <option value="0" <?= ((isset($input['status'])) && ($input['status'] == '0')) ? 'selected' : '' ?>>Tidak Aktif</option>
+                        <option value="1" <?= ((isset($input['status'])) && ($input['status'] == '1')) ? 'selected' : '' ?>>Aktif</option>
                     </select>
                 </div>
                 <div class="uk-text-center">
