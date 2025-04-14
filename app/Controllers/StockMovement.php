@@ -110,6 +110,7 @@ class StockMovement extends BaseController
 
                 $arrayqty       = array();
                 $arrayprice     = array();
+                $arraybuyprice  = array();
                 if (!empty($stockmovedetails)) {
                     foreach ($stockmovedetails as $movedet) {
                         $movementvariants           = $VariantModel->find($movedet['variantid']);
@@ -134,6 +135,7 @@ class StockMovement extends BaseController
                             $variants   = $movementvariants['name'];
                             $sku        = $movementvariants['sku'];
                             $wholesale  = $movementvariants['hargamodal'];
+                            $hargabeli  = $movementvariants['hargadasar'];
                         } else {
                             $varid      = '';
                             $variants   = '';
@@ -141,6 +143,7 @@ class StockMovement extends BaseController
                             $product    = '';
                             $qty        = '';
                             $wholesale  = '';
+                            $hargabeli  = '';
                         }
                         
                         $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['name']          = $product.' - '.$variants;
@@ -150,10 +153,12 @@ class StockMovement extends BaseController
                         $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['varid']         = $varid;
                         $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['qty']           = $qty;
                         $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['wholesale']     = $wholesale;
+                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['hargabeli']     = $hargabeli;
                         $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['inputqty']      = $movedet['qty'];
                         
-                        $arrayqty[]     = $movedet['qty'];
-                        $arrayprice[]   = (Int)$wholesale * (Int)$movedet['qty'];
+                        $arrayqty[]         = $movedet['qty'];
+                        $arrayprice[]       = (Int)$wholesale * (Int)$movedet['qty'];
+                        $arraybuyprice[]    = (Int)$hargabeli * (Int)$movedet['qty'];
                     }
                 } else {
                     $stockmovedata[$stockmove['id']]['detail']      = array();
@@ -161,6 +166,7 @@ class StockMovement extends BaseController
                     
                 $stockmovedata[$stockmove['id']]['totalqty']        = array_sum($arrayqty);
                 $stockmovedata[$stockmove['id']]['totalwholesale']  = array_sum($arrayprice);
+                $stockmovedata[$stockmove['id']]['totalhargabeli']  = array_sum($arraybuyprice);
             }
         }
 

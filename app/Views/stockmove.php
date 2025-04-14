@@ -488,7 +488,8 @@
                 <th class="uk-width-small"><?=lang('Global.origin')?></th>
                 <th class="uk-width-small"><?=lang('Global.destination')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.totalMovement')?></th>
-                <th class="uk-width-small"><?=lang('Global.total').' '.lang('Global.capitalPrice')?></th>
+                <!-- <th class="uk-width-small"></?=lang('Global.total').' '.lang('Global.capitalPrice')?></th> -->
+                <th class="uk-width-small"><?=lang('Global.total').' Harga Beli'?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.status')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
             </tr>
@@ -525,7 +526,7 @@
                     </td>
 
                     <td class="uk-width-small">
-                        <?= "Rp " . number_format($stockmove['totalwholesale'],2,',','.') ?>
+                        <?= "Rp " . number_format($stockmove['totalhargabeli'],2,',','.') ?>
                     </td>
 
                     <td class="uk-text-center uk-width-small">
