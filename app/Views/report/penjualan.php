@@ -144,7 +144,7 @@
     <!-- Discount Section -->
     <section class="uk-margin">
         <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.discountreport')?></h1>
-        <div class="uk-child-width-1-4@m uk-grid-match uk-margin-top" uk-grid>
+        <div class="uk-child-width-1-2@m uk-grid-match uk-margin-top" uk-grid>
             <div>
                 <div class="uk-card uk-card-default uk-card-hover uk-card-body">
                     <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discpoint')?></h3>
