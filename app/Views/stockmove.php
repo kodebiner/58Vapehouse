@@ -1058,21 +1058,28 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                         // skuvar.innerHTML = variantarray</?=$stockmove['id']?>[x]['sku'];
 
                                                         var varcontainer = document.createElement('div');
-                                                        varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3 uk-margin-small');
+                                                        varcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-4 uk-margin-small');
                                                                                         
                                                         var varname = document.createElement('div');
                                                         varname.setAttribute('class','');
                                                         varname.innerHTML = variantarray<?=$stockmove['id']?>[x]['name'];
 
                                                         var stockcontainer = document.createElement('div');
-                                                        stockcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-3 uk-margin-small');
+                                                        stockcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
                                                                                         
                                                         var stock = document.createElement('div');
                                                         stock.setAttribute('class','');
                                                         stock.innerHTML = variantarray<?=$stockmove['id']?>[x]['qty'];
 
+                                                        var epricecontainer = document.createElement('div');
+                                                        epricecontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
+
+                                                        var epricediv = document.createElement('div');
+                                                        epricediv.setAttribute('class','');
+                                                        epricediv.innerHTML = variantarray<?=$stockmove['id']?>[x]['wholesale'];
+
                                                         var cartcontainer = document.createElement('div');
-                                                        cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-3 uk-margin-small');
+                                                        cartcontainer.setAttribute('class', 'uk-flex uk-flex-center uk-flex-middle uk-width-1-4 uk-margin-small');
 
                                                         var cart = document.createElement('a');
                                                         cart.setAttribute('class', 'uk-icon-button');
@@ -1082,10 +1089,12 @@ foreach ($stockmovedata as $stockmove) { ?>
                                                         // skucontainer.appendChild(skuvar);
                                                         varcontainer.appendChild(varname);
                                                         stockcontainer.appendChild(stock);
+                                                        epricecontainer.appendChild(epricediv);
                                                         cartcontainer.appendChild(cart);
                                                         // productgrid.appendChild(skucontainer);
                                                         productgrid.appendChild(varcontainer);
                                                         productgrid.appendChild(stockcontainer);
+                                                        productgrid.appendChild(epricecontainer);
                                                         productgrid.appendChild(cartcontainer);
                                                     };
                                                     

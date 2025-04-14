@@ -53,6 +53,7 @@
                 <th class=""><?= lang('Global.employee') ?></th>
                 <th class=""><?= lang('Global.paymethod') ?></th>
                 <th class=""><?= lang('Global.total') ?></th>
+                <th class="">Keterangan</th>
                 <th class="uk-text-center"></th>
             </tr>
         </thead>
@@ -67,6 +68,33 @@
                     <td><?= $transaction['cashier'] ?></td>
                     <td><?= $transaction['payment'] ?></td>
                     <td><?= "Rp " . number_format($transaction['value'], 2, ',', '.'); ?></td>
+                    <td>
+                        <?php
+                        if (!empty($transaction['pointused'])) {
+                            echo '<div>Tukar Poin</div>';
+                        }
+                        if (!empty($transaction['memberdisc'])) {
+                            echo '<div>Diskon Member</div>';
+                        }
+                        if (!empty($transaction['trxdiscount'])) {
+                            echo '<div>Diskon Transaksi</div>';
+                        }
+                        $discvararray       = [];
+                        $globaldiscarray    = [];
+                        foreach ($transaction['detail'] as $detail) {
+                            $discvararray[]     = $detail['discvar'];
+                            $globaldiscarray[]  = $detail['globaldisc'];
+                        }
+                        $totaldiscvar       = array_sum($discvararray);
+                        $totalglobaldisc    = array_sum($globaldiscarray);
+                        if (!empty($totaldiscvar)) {
+                            echo '<div>Diskon Variant</div>';
+                        }
+                        if (!empty($totalglobaldisc)) {
+                            echo '<div>Diskon Global</div>';
+                        }
+                        ?>
+                    </td>
                     <td class="uk-text-center uk-column-1-2">
                         <?= $transaction['paidstatus'] ?>
                         <?php if ((in_groups('owner')) && ($outletPick != null)) { ?>

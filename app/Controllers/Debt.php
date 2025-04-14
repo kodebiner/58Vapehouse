@@ -249,6 +249,7 @@ class Debt extends BaseController
 
             $transactiondata[$trx['id']]['totaldetailvalue']    = array_sum($subtotal);
         }
+        // dd($transactiondata);
 
         // $trxid = array();
         // $memberid = array();

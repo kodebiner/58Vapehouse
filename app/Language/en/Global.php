@@ -314,6 +314,7 @@ return [
     'discountreport'    => 'Discount Report',
     'productreport'     => 'Product Report',
     'categoryreport'    => 'Category Report',
+    'brandreport'       => 'Brand Report',
     'presencereport'    => 'Presence Report',
     'employereport'     => 'Employe Report',
     'customerreport'    => 'Customer Report',

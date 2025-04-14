@@ -314,6 +314,7 @@ return [
     'discountreport'    => 'Laporan Diskon',
     'productreport'     => 'Laporan Produk',
     'categoryreport'    => 'Laporan Kategori',
+    'brandreport'       => 'Laporan Merek',
     'presencereport'    => 'Laporan Presensi',
     'employereport'     => 'Laporan Karyawan',
     'customerreport'    => 'Laporan Pelanggan',

@@ -724,7 +724,19 @@ class Pay extends BaseController
         }
         $data['logedin']        = $UserModel->find($uid);
 
-        return view('Views/print', $data);
+        if (!empty($input['customerid'])) {
+            $memberdata         = $MemberModel->find($transactions['memberid']);
+            $memberphone        = $memberdata['phone'];
+
+            // Create the WhatsApp link
+            $whatsappLink = "https://wa.me/+62{$memberphone}?text=Terimakasih%20telah%20berbelanja%20di%2058%20Vapehouse%2C%20untuk%20detail%20struk%20pembelian%20bisa%20cek%20link%20dibawah%20lur.%20%E2%9C%A8%E2%9C%A8%0A%0A$actual_link%0A%0AJika%20menemukan%20kendala%2C%20kerusakan%20produk%2C%20atau%20ingin%20memberi%20kritik%20%26%20saran%20hubungu%2058%20Customer%20Solution%20kami%20di%20wa.me%2F6288983741558%20";
+            
+            // Redirect to the WhatsApp link
+            // return redirect()->to('');
+            return redirect()->to($whatsappLink);
+        }
+
+        return redirect()->to('');
     }
 
     public function save()

@@ -770,6 +770,7 @@
                 <th><?= lang('Global.price') ?></th>
                 <th><?= lang('Global.stock') ?></th>
                 <th><?= lang('Global.brand') ?></th>
+                <th class="uk-width-small">Umur Produk</th>
                 <?php if (in_groups('owner')) : ?>
                     <th class="uk-text-center"><?= lang('Global.action') ?></th>
                 <?php endif ?>
@@ -857,6 +858,33 @@
                                 echo $merek['name'];
                             }
                         } ?>
+                    </td>
+                    <td>
+                        <?php
+                        $formatday  = [];
+                        foreach ($stocks as $stock) {
+                            foreach ($variants as $variant) {
+                                if ($outletPick == null) {
+                                    if (($variant['productid'] == $product['id']) && ($stock['variantid'] == $variant['id'])) {
+                                        $origin         = new DateTime($stock['restock']);
+                                        $target         = new DateTime('now');
+                                        $interval       = $origin->diff($target);
+                                        $formatday[]    = substr($interval->format('%R%a'), 1);
+                                    }
+                                } else {
+                                    if (($variant['productid'] == $product['id']) && ($stock['variantid'] == $variant['id']) && ($stock['outletid'] == $outletPick)) {
+                                        $origin         = new DateTime($stock['restock']);
+                                        $target         = new DateTime('now');
+                                        $interval       = $origin->diff($target);
+                                        $formatday[]    = substr($interval->format('%R%a'), 1);
+                                    }
+                                }
+                            }
+                        }
+
+                        // echo max($formatday).' '.lang('Global.day');
+                        echo min($formatday).' '.lang('Global.day');
+                        ?>
                     </td>
                     <?php if (in_groups('owner')) : ?>
                         <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>

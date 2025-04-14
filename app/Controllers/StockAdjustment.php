@@ -171,7 +171,7 @@ class StockAdjustment extends BaseController
             $stok = [
                 'id'        => $Stocks['id'],
                 'qty'       => $totalstock,
-                'restock'   => $tanggal,
+                // 'restock'   => $tanggal,
             ];
             $StockModel->save($stok);
         }
