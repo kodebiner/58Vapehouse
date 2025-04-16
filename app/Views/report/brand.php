@@ -101,8 +101,18 @@
         <div class="uk-width-1-4@m uk-text-left@m">
             <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.soldItem')?> : <?php echo $qty;?></p>
         </div>
-            
     </div>
+
+    <!-- Sorting Data Based On Net Value -->
+    <?php
+    foreach ($branddata as &$cat) {
+        $cat['totalnetvalue'] = array_sum($cat['netvalue']);
+    }
+    usort($branddata, function($a, $b) {
+        return $b['totalnetvalue'] <=> $a['totalnetvalue'];
+    });
+    ?>
+    <!-- Sorting Data Based On Net Value End -->
 
     <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top">
@@ -115,12 +125,15 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($branddata as $cat ){ ?>
+                <?php foreach ($branddata as $cat ) {
+                    $totalqty           = array_sum($cat['qty']);
+                    $totalnetvalue      = array_sum($cat['netvalue']);
+                    $totalgrossvalue    = array_sum($cat['grossvalue']); ?>
                     <tr>
                         <td style="color:white;"><?=$cat['name']?></td>
-                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format(array_sum($cat['netvalue']),0,',','.');" ";?></td>
-                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format(array_sum($cat['grossvalue']),0,',','.');" ";?></td>
-                        <td style="color:white;" class="uk-text-center"><?= array_sum($cat['qty']) ?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($totalnetvalue,0,',','.');" ";?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($totalgrossvalue,0,',','.');" ";?></td>
+                        <td style="color:white;" class="uk-text-center"><?= $totalqty ?></td>
                     </tr>
                 <?php } ?>
             </tbody>

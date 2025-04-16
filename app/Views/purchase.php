@@ -379,25 +379,27 @@
                                 </div>
                                 <!-- End Of Button Trigger Modal Detail -->
 
-                                <!-- Button Trigger Modal Edit -->
-                                <div class="">
-                                    <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $purchase['id'] ?>"></a>
-                                </div>
-                                <!-- End Of Button Trigger Edit Detail -->
+                                <?php if ($outletPick != null) { ?>
+                                    <!-- Button Trigger Modal Edit -->
+                                    <div class="">
+                                        <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $purchase['id'] ?>"></a>
+                                    </div>
+                                    <!-- End Of Button Trigger Edit Detail -->
 
-                                <!-- Button Confirmation -->
-                                <div>
-                                    <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $purchase['id'] ?>"></a>
-                                </div>
-                                <!-- End Of Button Confirmation -->
+                                    <!-- Button Confirmation -->
+                                    <div>
+                                        <a class="uk-icon-button-success" uk-icon="check" uk-toggle="target: #savedata<?= $purchase['id'] ?>"></a>
+                                    </div>
+                                    <!-- End Of Button Confirmation -->
 
-                                <!-- Button Cancel -->
-                                <div>
-                                    <form class="uk-form-stacked" role="form" action="stock/cancelpur/<?= $purchase['id'] ?>" method="post">
-                                        <button type="submit" uk-icon="close" class="uk-icon-button-delete" onclick="return confirm('<?=lang('Global.cancelConfirm')?>')"></button>
-                                    </form>
-                                </div>
-                                <!-- End Of Button Cancel -->
+                                    <!-- Button Cancel -->
+                                    <div>
+                                        <form class="uk-form-stacked" role="form" action="stock/cancelpur/<?= $purchase['id'] ?>" method="post">
+                                            <button type="submit" uk-icon="close" class="uk-icon-button-delete" onclick="return confirm('<?=lang('Global.cancelConfirm')?>')"></button>
+                                        </form>
+                                    </div>
+                                    <!-- End Of Button Cancel -->
+                                <?php } ?>
                             </div>
                         </td>
                     <?php } else { ?>

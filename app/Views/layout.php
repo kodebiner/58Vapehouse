@@ -266,6 +266,9 @@
                             <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='brand')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
                                 <a class="tm-h3" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
+                                    <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='dailysell')?'uk-active':''?>">
+                                        <a href="<?= base_url('report/dailysell') ?>">Laporan Penjualan Harian</a>
+                                    </li>
                                     <?php if ((in_groups('owner')) || (in_groups('supervisor'))) : ?>
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?>">
                                             <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
@@ -303,9 +306,6 @@
                                     <?php endif ?>
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?>">
                                         <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
-                                    </li>
-                                    <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='dailysell')?'uk-active':''?>">
-                                        <a href="<?= base_url('report/dailysell') ?>">Laporan Penjualan Harian</a>
                                     </li>
                                 </ul>
                             </li>
@@ -440,6 +440,9 @@
                     <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='brand')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
                         <a class="tm-h3" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                         <ul class="uk-nav-sub">
+                            <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='dailysell')?'uk-active':''?>">
+                                <a href="<?= base_url('report/dailysell') ?>">Laporan Penjualan Harian</a>
+                            </li>
                             <?php if ((in_groups('owner')) || (in_groups('supervisor'))) : ?>
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?>">
                                     <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
@@ -477,9 +480,6 @@
                             <?php endif ?>
                             <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?>">
                                 <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
-                            </li>
-                            <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='dailysell')?'uk-active':''?>">
-                                <a href="<?= base_url('report/dailysell') ?>">Laporan Penjualan Harian</a>
                             </li>
                         </ul>
                     </li>

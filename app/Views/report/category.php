@@ -101,8 +101,18 @@
         <div class="uk-width-1-4@m uk-text-left@m">
             <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.soldItem')?> : <?php echo $qty;?></p>
         </div>
-            
     </div>
+
+    <!-- Sorting Data Based On Net Value -->
+    <?php
+    foreach ($catedata as &$cat) {
+        $cat['totalnetvalue'] = array_sum($cat['netvalue']);
+    }
+    usort($catedata, function($a, $b) {
+        return $b['totalnetvalue'] <=> $a['totalnetvalue'];
+    });
+    ?>
+    <!-- Sorting Data Based On Net Value End -->
 
     <div class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top">

@@ -262,6 +262,8 @@ class export extends BaseController
         $MemberModel            = new MemberModel();
         $PaymentModel           = new PaymentModel();
         $ProductModel           = new ProductModel();
+        $BrandModel             = new BrandModel();
+        $CategoryModel          = new CategoryModel();
         $VariantModel           = new VariantModel();
         $TransactionModel       = new TransactionModel();
         $TrxdetailModel         = new TrxdetailModel();
@@ -383,8 +385,25 @@ class export extends BaseController
                                 $products   = $ProductModel->find($variants['productid']);
         
                                 if (!empty($products)) {
+                                    $brands     = $BrandModel->find($products['brandid']);
+                                    $category   = $CategoryModel->find($products['catid']);
+
+                                    if (!empty($brands)) {
+                                        $brandname  = $brands['name'];
+                                    } else {
+                                        $brandname  = 'Merek Terhapus';
+                                    }
+
+                                    if (!empty($category)) {
+                                        $catname    = $category['name'];
+                                    } else {
+                                        $catname    = 'Kategori Terhapus';
+                                    }
+                                    
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['sku']            = $variants['sku'];
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']           = $products['name'].' - '.$variants['name'];
+                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['brand']          = $brandname;
+                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['category']       = $catname;
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']            = $trxdet['qty'];
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
@@ -396,6 +415,8 @@ class export extends BaseController
                                 } else {
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['sku']            = '-';
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']           = 'Kategori / Produk / Variant Terhapus';
+                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['brand']          = 'Merek Terhapus';
+                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['category']       = 'Kategori Terhapus';
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']            = $trxdet['qty'];
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
@@ -410,6 +431,8 @@ class export extends BaseController
     
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['sku']                = '-';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']               = 'Kategori / Produk / Variant Terhapus';
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['brand']              = 'Merek Terhapus';
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['category']           = 'Kategori Terhapus';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
@@ -428,6 +451,8 @@ class export extends BaseController
                             if (!empty($bundles)) {
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['sku']                = '-';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']               = $bundles['name'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['brand']              = 'Merek Terhapus';
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['category']           = 'Kategori Terhapus';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
@@ -439,6 +464,8 @@ class export extends BaseController
                             } else {
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['sku']                = '-';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']               = 'Bundle Terhapus';
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['brand']              = 'Merek Terhapus';
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['category']           = 'Kategori Terhapus';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']);
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
@@ -518,6 +545,8 @@ class export extends BaseController
                     echo '<th class="thd">Nama Pelanggan</th>';
                     echo '<th class="thd">SKU</th>';
                     echo '<th class="thd">Produk</th>';
+                    echo '<th class="thd">Merek</th>';
+                    echo '<th class="thd">Kategori</th>';
                     echo '<th class="thd">Jumlah Produk</th>';
                     echo '<th class="thd">Harga Produk</th>';
                     echo '<th class="thd">Diskon Varian Dari Transaksi</th>';
@@ -543,6 +572,8 @@ class export extends BaseController
                                 echo '<tr>';
                                     echo '<td class="middle">' . $detail['sku'] . '</td>';
                                     echo '<td class="middle">' . $detail['name'] . '</td>';
+                                    echo '<td class="middle">' . $detail['brand'] . '</td>';
+                                    echo '<td class="middle">' . $detail['category'] . '</td>';
                                     echo '<td class="cntr">' . $detail['qty'] . '</td>';
                                     echo '<td class="middle">' . $detail['value'] . '</td>';
                                     echo '<td class="middle">' . $detail['discitem'] . '</td>';
@@ -552,6 +583,8 @@ class export extends BaseController
                             } else {
                                 echo '<td class="middle">' . $detail['sku'] . '</td>';
                                 echo '<td class="middle">' . $detail['name'] . '</td>';
+                                echo '<td class="middle">' . $detail['brand'] . '</td>';
+                                echo '<td class="middle">' . $detail['category'] . '</td>';
                                 echo '<td class="cntr">' . $detail['qty'] . '</td>';
                                 echo '<td class="middle">' . $detail['value'] . '</td>';
                                 echo '<td class="middle">' . $detail['discitem'] . '</td>';
