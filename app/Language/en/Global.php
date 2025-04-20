@@ -356,6 +356,7 @@ return [
     'dailyreportList'           => 'Daily Report List',
     'promoList'                 => 'Promo List',
     'inventoryList'             => 'Inventory List',
+    'billhistoryList'           => 'Bill History',
     'dosop'                     => 'Do SOP',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
@@ -386,6 +387,7 @@ return [
     'dailyreportListDesc'       => 'List of all your Daily Report',
     'promoListDesc'             => 'List of all your promo',
     'inventoryListDesc'         => 'List of all your inventory',
+    'billhistoryListDesc'       => 'List of all your bill history',
     'userProfileDesc'           => 'Information about your profile',
     'businessInfoDesc'          => 'Information about your business',
 ];

@@ -21,7 +21,7 @@
                 <!-- Date Range Filter -->
                 <div>
                     <div class="uk-margin uk-text-right">
-                        <form id="short" action="home/index" method="get">
+                        <form id="short" action="dashboard" method="get">
                             <div class="uk-inline">
                                 <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
                                 <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
@@ -133,6 +133,9 @@
                             </div>
                             <div class="uk-margin-small-top">
                                 <div class="tm-h4" style="color: #000;">Rp <?= number_format($transactiondata['bills'],0,',','.') ?></div>
+                            </div>
+                            <div class="uk-text-right uk-margin-small-top">
+                                <a class="uk-link-reset" href="<?= base_url('billhistory') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
                             </div>
                         </div>
                     </div>

@@ -6,7 +6,9 @@ use App\Models\BundledetailModel;
 use App\Models\BundleModel;
 use App\Models\CategoryModel;
 use App\Models\CashModel;
+use App\Models\CashmovementModel;
 use App\Models\DebtModel;
+use App\Models\DebtInsModel;
 use App\Models\GconfigModel;
 use App\Models\OutletModel;
 use App\Models\UserModel;
@@ -743,6 +745,188 @@ class Home extends BaseController
 
         // Return
         return redirect()->to('stockmove');
+    }
+
+    public function billhistory()
+    {
+        // Calling Services
+        $pager      = \Config\Services::pager();
+
+        // Calling Models
+        $TransactionModel   = new TransactionModel();
+        $TrxpaymentModel    = new TrxpaymentModel();
+        $TrxotherModel      = new TrxotherModel();
+        $PaymentModel       = new PaymentModel();
+        $DebtInsModel       = new DebtInsModel();
+        $CashModel          = new CashModel();
+        $OutletModel        = new OutletModel();
+        $CashmovementModel  = new CashmovementModel();
+
+        // Populating Data
+        $input              = $this->request->getGet();
+        if (!empty($input['daterange'])) {
+            $daterange      = explode(' - ', $input['daterange']);
+            $startdate      = $daterange[0];
+            $enddate        = $daterange[1];
+        } else {
+            $startdate      = date('Y-m-1' . ' 00:00:00');
+            $enddate        = date('Y-m-t' . ' 23:59:59');
+        }
+
+        $transactiondata        = [];
+        if ($this->data['outletPick'] === null) {
+            $transactions       = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            $trxothers          = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            $debtinst           = $DebtInsModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+            $cashes             = $CashModel->findAll();
+            $outletname         = 'All Outlet';
+        } else {
+            $transactions       = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            $trxothers          = $TrxotherModel->notLike('description', 'Top Up')->notLike('description', 'Debt')->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            $debtinst           = $DebtInsModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+            $cashes             = $CashModel->where('outletid', $this->data['outletPick'])->find();
+            $outlets            = $OutletModel->find($this->data['outletPick']);
+            $outletname         = $outlets['name'];
+        }
+
+        // Transaction History
+        $trxhistory         = [];
+        if (!empty($transactions)) {
+            foreach ($transactions as $trx) {
+                $trxpayments    = $TrxpaymentModel->where('transactionid', $trx['id'])->where('paymentid !=', '0')->find();
+                $trxoutlet      = $OutletModel->find($trx['outletid']);
+
+                if (!empty($trxpayments)) {
+                    $trxpayvalue    = [];
+                    foreach ($trxpayments as $trxpay) {
+                        $payments       = $PaymentModel->find($trxpay['paymentid']);
+                        $trxpayvalue[]  = $trxpay['value'];
+
+                        if (!empty($payments)) {
+                            $paymentname    = $payments['name'];
+                        }
+                    }
+                    $payvalue       = array_sum($trxpayvalue);
+                    $trxhistory[]   = $payvalue;
+
+                    $transactiondata[$trx['date']]['date']      = $trx['date'];
+                    $transactiondata[$trx['date']]['type']      = 'Riwayat Transaksi';
+                    $transactiondata[$trx['date']]['outlet']    = $trxoutlet['name'];
+                    $transactiondata[$trx['date']]['payment']   = $paymentname;
+                    $transactiondata[$trx['date']]['payvalue']  = $payvalue;
+                }
+            }
+        }
+
+        // Cash Management
+        $cashinhistory      = [];
+        $cashouthistory     = [];
+        if (!empty($trxothers)) {
+            foreach ($trxothers as $trxother) {
+                $outletcashflow = $OutletModel->find($trxother['outletid']);
+
+                if ($trxother['type'] == '0') {
+                    $cashinhistory[]    = $trxother['qty'];
+
+                    $transactiondata[$trxother['date']]['date']     = $trxother['date'];
+                    $transactiondata[$trxother['date']]['type']     = 'Uang Masuk / Cash In';
+                    $transactiondata[$trxother['date']]['outlet']   = $outletcashflow['name'];
+                    $transactiondata[$trxother['date']]['payment']  = 'Tunai';
+                    $transactiondata[$trxother['date']]['payvalue'] = $trxother['qty'];
+                } else {
+                    $cashouthistory[]   = $trxother['qty'];
+
+                    $transactiondata[$trxother['date']]['date']     = $trxother['date'];
+                    $transactiondata[$trxother['date']]['type']     = 'Uang Keluar / Cash Out';
+                    $transactiondata[$trxother['date']]['outlet']   = $outletcashflow['name'];
+                    $transactiondata[$trxother['date']]['payment']  = 'Tunai';
+                    $transactiondata[$trxother['date']]['payvalue'] = '- '.$trxother['qty'];
+                }
+            }
+        }
+
+        // Debt Installment
+        $installmenthistory = [];
+        if (!empty($debtinst)) {
+            foreach ($debtinst as $debtinstall) {
+                $paymentins             = $PaymentModel->find($debtinstall['paymentid']);
+                $outletinst             = $OutletModel->find($debtinstall['outletid']);
+                $installmenthistory[]   = $debtinstall['qty'];
+
+                $transactiondata[$debtinstall['date']]['date']     = $debtinstall['date'];
+                $transactiondata[$debtinstall['date']]['type']     = 'Angsuran Hutang';
+                $transactiondata[$debtinstall['date']]['outlet']   = $outletinst['name'];
+                $transactiondata[$debtinstall['date']]['payment']  = $paymentins['name'];
+                $transactiondata[$debtinstall['date']]['payvalue'] = $debtinstall['qty'];
+            }
+        }
+
+        // Cash Movement
+        $moveinhistory      = [];
+        $moveouthistory     = [];
+        if (!empty($cashes)) {
+            foreach ($cashes as $cash) {
+                $cashmovementorigin = $CashmovementModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('origin', $cash['id'])->find();
+                $cashmovementdesti  = $CashmovementModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('destination', $cash['id'])->find();
+
+                // Cash Movement Origin
+                if (!empty($cashmovementorigin)) {
+                    foreach ($cashmovementorigin as $originmove) {
+                        $oricashorigin      = $CashModel->find($originmove['origin']);
+                        $oricashdesti       = $CashModel->find($originmove['destination']);
+                        $moveouthistory[]   = $originmove['qty'];
+
+                        $transactiondata[$originmove['date']]['date']     = $originmove['date'];
+                        $transactiondata[$originmove['date']]['type']     = 'Pemindahan Dana Keluar';
+                        $transactiondata[$originmove['date']]['outlet']   = $oricashorigin['name'].' ->';
+                        $transactiondata[$originmove['date']]['payment']  = $oricashdesti['name'];
+                        $transactiondata[$originmove['date']]['payvalue'] = '- '.$originmove['qty'];
+                    }
+                }
+
+                // Cash Movement Destination
+                if (!empty($cashmovementdesti)) {
+                    foreach ($cashmovementdesti as $destinationmove) {
+                        $descashorigin      = $CashModel->find($originmove['origin']);
+                        $descashdesti       = $CashModel->find($originmove['destination']);
+                        $moveinhistory[]    = $destinationmove['qty'];
+
+                        $transactiondata[$destinationmove['date']]['date']     = $destinationmove['date'];
+                        $transactiondata[$destinationmove['date']]['type']     = 'Pemindahan Dana Masuk';
+                        $transactiondata[$destinationmove['date']]['outlet']   = $descashdesti['name'].' ->';
+                        $transactiondata[$destinationmove['date']]['payment']  = $descashorigin['name'];
+                        $transactiondata[$destinationmove['date']]['payvalue'] = $destinationmove['qty'];
+                    }
+                }
+            }
+        }
+        array_multisort(array_column($transactiondata, 'date'), SORT_DESC, $transactiondata);
+
+        $page       = (int) ($this->request->getGet('page') ?? 1);
+        $perPage    = 20;
+        $total      = count($transactiondata);
+
+        $sumtrxhistory          = array_sum($trxhistory);
+        $sumcashinhistory       = array_sum($cashinhistory);
+        $sumcashouthistory      = array_sum($cashouthistory);
+        $suminstallmenthistory  = array_sum($installmenthistory);
+        $summoveinhistory       = array_sum($moveinhistory);
+        $summoveouthistory      = array_sum($moveouthistory);
+        $totalbill              = (Int)$sumtrxhistory + (Int)$sumcashinhistory + (Int)$suminstallmenthistory + (Int)$summoveinhistory - (Int)$sumcashouthistory - (Int)$summoveouthistory;
+
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = lang('Global.billhistoryList');
+        $data['description']    = lang('Global.billhistoryListDesc');
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
+        $data['bills']          = array_slice($transactiondata, ($page*20)-20, $page*20);
+        $data['pager_links']    = $pager->makeLinks($page, $perPage, $total, 'front_full');
+        $data['totalbill']      = $totalbill;
+        $data['name']           = $outletname;
+
+        // Return
+        return view('billhistory', $data);
     }
 
     public function phpinfo()

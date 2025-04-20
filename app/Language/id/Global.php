@@ -356,6 +356,7 @@ return [
     'dailyreportList'           => 'Daftar Laporan Harian',
     'promoList'                 => 'Daftar Promo',
     'inventoryList'             => 'Daftar Inventaris',
+    'billhistoryList'           => 'Riwayat Tagihan',
     'dosop'                     => 'Lakukan SOP',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
@@ -386,6 +387,7 @@ return [
     'dailyreportListDesc'       => 'Daftar laporan harian yang anda miliki',
     'promoListDesc'             => 'Daftar promo yang anda miliki',
     'inventoryListDesc'         => 'Daftar inventaris yang anda miliki',
+    'billhistoryListDesc'       => 'Riwayat tagihan yang anda miliki',
     'userProfileDesc'           => 'Informasi mengenai profil anda',
     'businessInfoDesc'          => 'Informasi mengenai bisnis anda',
 ];
