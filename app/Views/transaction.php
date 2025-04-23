@@ -1400,6 +1400,9 @@
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
                             <a class="tm-h3" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
                         </li>
+                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='billhistory')?'uk-active':''?>">
+                            <a class="tm-h3" href="<?= base_url('billhistory') ?>"><img src="img/layout/topup.svg" uk-svg><?=lang('Global.billhistory');?></a>
+                        </li>
                         <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
                             <a class="tm-h3" href=""><img src="img/layout/debt.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">

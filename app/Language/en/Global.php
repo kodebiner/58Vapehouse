@@ -323,6 +323,7 @@ return [
     'stockproduct'      => 'Product Stock',
     'promo'             => 'Promo',
     'store'             => 'Store',
+    'billhistory'       => 'Bill History',
 
     // Title
     'employeeList'              => 'Employee List',

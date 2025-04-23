@@ -323,6 +323,7 @@ return [
     'stockproduct'      => 'Stok Produk',
     'promo'             => 'Promo',
     'store'             => 'Toko',
+    'billhistory'       => 'Riwayat Tagihan',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',
