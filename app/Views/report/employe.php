@@ -44,8 +44,26 @@
     </div>
 </div>
 
+<!-- Sorting Data Based On Net Value -->
+<!-- </?php
+usort($employetrx, function($a, $b) {
+    return $b['value'] <=> $a['value'];
+});
+?> -->
+<!-- Sorting Data Based On Net Value End -->
 
-<table class="uk-table uk-table-divider uk-table-responsive uk-margin-top" id="example">
+<div uk-grid class="uk-flex-middle uk-margin-bottom">
+    <!-- Search Filter -->
+    <div class="uk-width-1-4@m">
+        <form class="uk-search uk-search-default" method="GET" action="report/employe" style="background-color: #fff; border-radius: 7px;">
+            <span uk-search-icon style="color: #000;"></span>
+            <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
+        </form>
+    </div>
+    <!-- End Search Filter -->
+</div>
+
+<table class="uk-table uk-table-divider uk-table-responsive uk-margin-top">
     <thead>
         <tr>
             <th class="uk-text-large uk-text-bold"><?=lang('Global.name')?></th>

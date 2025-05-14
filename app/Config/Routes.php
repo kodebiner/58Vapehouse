@@ -394,6 +394,7 @@ $routes->group('dayrep', ['filter'=>'login'], function($routes){
     $routes->get('', 'DailyReport::index', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('open', 'DailyReport::open', ['filter' => 'role:owner,supervisor,operator']);
     $routes->post('close', 'DailyReport::close', ['filter' => 'role:owner,supervisor,operator']);
+    $routes->post('checkpoint', 'Trxother::checkpoint', ['filter' => 'role:owner,supervisor,operator']);
 });
 
 // Promo

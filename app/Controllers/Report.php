@@ -123,6 +123,127 @@ class Report extends BaseController
         $data['gross']          = $grossales;
     }
 
+    public function dailysell()
+    {
+        // Calling Models
+        $TransactionModel       = new TransactionModel;
+        $TrxdetailModel         = new TrxdetailModel;
+
+        $transactions       = array();
+        $transactionarr     = array();
+        $memberdisc         = array();
+        $discounttrx        = array();
+        $discountvariant    = array();
+        $discountpoin       = array();
+        $discountglobal     = array();
+        $marginmodals       = array();
+        $margindasars       = array();
+
+        if ($this->data['outletPick'] === null) {
+            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00'))->where('date <=', date('Y-m-d 23:59:59'))->find();
+        } else {
+            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00'))->where('date <=', date('Y-m-d 23:59:59'))->where('outletid', $this->data['outletPick'])->find();
+        }
+        // $summary = array_sum(array_column($transaction, 'value'));
+
+        if (!empty($transaction)) {
+            foreach ($transaction as $trx) {
+                $time                               = date('H', strtotime($trx['date']));
+                $transactions[$time]['date']        = date('H', strtotime($trx['date']));
+                $transactions[$time]['val'][]       = $trx['value'];
+
+                // Transaction Discount
+                if (!empty($trx['discvalue'])) {
+                    $discounttrx[]                      = $trx['discvalue'];
+                    $transactions[$time]['trxdisc'][]   = $trx['discvalue'];
+                } else {
+                    $transactions[$time]['trxdisc'][]   = [];
+                }
+    
+                // Point Used
+                $discountpoin[]                     = $trx['pointused'];
+                $transactions[$time]['pointdisc'][] = $trx['pointused'];
+
+                // Member Discount
+                $memberdisc[]                           = $trx['memberdisc'];
+                $transactions[$time]['memberdisc'][]    = $trx['memberdisc'];
+
+                // Discount Variant
+                $trxdetails  = $TrxdetailModel->where('transactionid', $trx['id'])->find();
+                if (!empty($trxdetails)) {
+                    foreach ($trxdetails as $trxdetail) {
+                        // Transaction Detail Discount Variant
+                        if ($trxdetail['discvar'] != '0') {
+                            $discountvariant[]                  = $trxdetail['discvar'];
+                            $transactions[$time]['vardisc'][]   = $trxdetail['discvar'];
+                        } else {
+                            $transactions[$time]['vardisc'][]   = [];
+                        }
+        
+                        // Transaction Detail Discount Global
+                        if ($trxdetail['globaldisc'] != '0') {
+                            $discountglobal[]                   = $trxdetail['globaldisc'];
+                            $transactions[$time]['globdisc'][]  = $trxdetail['globdisc'];
+                        } else {
+                            $transactions[$time]['globdisc'][]  = [];
+                        }
+
+                        // Transaction Detail Margin Modal
+                        $marginmodals[]                         = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+                        $transactions[$time]['profitmodal'][]   = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
+
+                        // Transaction Detail Margin Dasar
+                        $margindasars[]                         = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                        $transactions[$time]['profitdasar'][]   = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
+                    }
+                }
+            }
+        }
+
+        // Data Chart
+        if (!empty($transactions)) {
+            foreach ($transactions as $trxdat) {
+                $transactionarr[]  = [
+                    'waktu'             => $trxdat['date'],
+                    'value'             => array_sum($trxdat['val']),
+                    'profitmodal'       => array_sum($trxdat['profitmodal']),
+                    'profitdasar'       => array_sum($trxdat['profitdasar']),
+                    'trxdisc'           => array_sum($trxdat['trxdisc']),
+                    'vardisc'           => array_sum($trxdat['vardisc']),
+                    'globdisc'          => array_sum($trxdat['globdisc']),
+                    'pointdisc'         => array_sum($trxdat['pointdisc']),
+                ];
+            }
+        }
+
+        $transactiondisc    = (int)(array_sum($discounttrx)) + (int)(array_sum($memberdisc));
+        $variantdisc        = array_sum($discountvariant);
+        $globaldisc         = array_sum($discountglobal);
+        $poindisc           = array_sum($discountpoin);
+        $marginmodalsum     = array_sum($marginmodals);
+        $margindasarsum     = array_sum($margindasars);
+        $salesresult        = array_sum(array_column($transactionarr, 'value'));
+        $grossales          = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
+        $profitmodal        = (Int)$marginmodalsum - (Int)$transactiondisc - (Int)$poindisc;
+        $profitdasar        = (Int)$margindasarsum - (Int)$transactiondisc - (Int)$poindisc;
+        
+        // Parsing Data to View
+        $data                   = $this->data;
+        $data['title']          = 'Laporan Penjualan Harian';
+        $data['description']    = 'Developed by PT. Kodebiner Teknologi Indonesia';
+        $data['transactions']   = $transactionarr;
+        $data['result']         = $salesresult;
+        $data['gross']          = $grossales;
+        $data['profitmodal']    = $profitmodal;
+        $data['profitdasar']    = $profitdasar;
+        $data['trxvardis']      = $variantdisc;
+        $data['trxglodis']      = $globaldisc;
+        $data['trxdisc']        = $transactiondisc;
+        $data['poindisc']       = $poindisc;
+
+        return view('Views/report/dailysell', $data);
+    }
+
     public function penjualan()
     {
         // Calling Models
@@ -457,12 +578,12 @@ class Report extends BaseController
 
     public function payment()
     {
-        $db                     = \Config\Database::connect();
-        $PaymentModel           = new PaymentModel;
-        $TrxpaymentModel        = new TrxpaymentModel;
-        $TransactionModel       = new TransactionModel;
+        // $db                     = \Config\Database::connect();
+        $PaymentModel           = new PaymentModel();
+        $TrxpaymentModel        = new TrxpaymentModel();
+        $TransactionModel       = new TransactionModel();
 
-        if ($this->data['outletPick'] != null) {
+        // if ($this->data['outletPick'] != null) {
             $input = $this->request->getGet('daterange');
 
             if (!empty($input) || $input != null) {
@@ -474,12 +595,12 @@ class Report extends BaseController
                 $enddate    = date('Y-m-t' . ' 23:59:59');
             }
 
-            $this->db       = \Config\Database::connect();
-            $validation     = \Config\Services::validation();
-            $this->builder  = $this->db->table('payment');
-            $this->config   = config('Auth');
-            $this->auth     = service('authentication');
-            $pager          = \Config\Services::pager();
+            // $this->db       = \Config\Database::connect();
+            // $validation     = \Config\Services::validation();
+            // $this->builder  = $this->db->table('payment');
+            // $this->config   = config('Auth');
+            // $this->auth     = service('authentication');
+            // $pager          = \Config\Services::pager();
 
             $inputsearch    = $this->request->getGet('search');
 
@@ -634,20 +755,20 @@ class Report extends BaseController
             // $data['pager']          = $PaymentModel->pager;
 
             return view('Views/report/payment', $data);
-        } else {
-            return redirect()->to('');
-        }
+        // } else {
+        //     return redirect()->to('cashinout')->with('error', lang('Global.chooseoutlet'));
+        // }
     }
 
     public function employe()
     {
         // Calling Model
-        $db                 = \Config\Database::connect();
-        $TransactionModel   = new TransactionModel;
-        $UserModel          = new UserModel;
-        $UserGroupModel     = new GroupUserModel;
-        $GroupModel         = new GroupModel;
-        $OutletModel        = new OutletModel;
+        // $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel();
+        $UserModel          = new UserModel();
+        $UserGroupModel     = new GroupUserModel();
+        $GroupModel         = new GroupModel();
+        $OutletModel        = new OutletModel();
 
         // Populating Data 
         $admin          = $UserModel->findAll();
@@ -719,7 +840,14 @@ class Report extends BaseController
         // }
         // $produk = array_values($produk);
 
-        $admins                 = $UserModel->findAll();
+        $inputsearch    = $this->request->getGet('search');
+
+        if (!empty($inputsearch)) {
+            $admins                 = $UserModel->like('username', $inputsearch)->find();
+        } else {
+            $admins                 = $UserModel->findAll();
+        }
+        
         $employeedata           = [];
         foreach ($admins as $admin) {
             $employeedata[$admin->id]['name']  = $admin->username;
@@ -758,13 +886,13 @@ class Report extends BaseController
 
     public function product()
     {
-        $db             = \Config\Database::connect();
-        $this->db       = \Config\Database::connect();
-        $validation     = \Config\Services::validation();
-        $this->builder  = $this->db->table('transaction');
-        $this->config   = config('Auth');
-        $this->auth     = service('authentication');
-        $pager          = \Config\Services::pager();
+        // $db             = \Config\Database::connect();
+        // $this->db       = \Config\Database::connect();
+        // $validation     = \Config\Services::validation();
+        // $this->builder  = $this->db->table('transaction');
+        // $this->config   = config('Auth');
+        // $this->auth     = service('authentication');
+        // $pager          = \Config\Services::pager();
 
         // Calling Models
         $OutletModel        = new OutletModel();
@@ -1952,14 +2080,14 @@ class Report extends BaseController
     public function customer()
     {
         // Calling Models
-        $db                 = \Config\Database::connect();
-        $TransactionModel   = new TransactionModel;
-        $MemberModel        = new MemberModel;
-        $DebtModel          = new DebtModel;
-        $OutletModel        = new OutletModel;
-        $TrxdetailModel     = new TrxdetailModel;
-        $ProductModel       = new ProductModel;
-        $VariantModel       = new VariantModel;
+        // $db                 = \Config\Database::connect();
+        $TransactionModel   = new TransactionModel();
+        $MemberModel        = new MemberModel();
+        $DebtModel          = new DebtModel();
+        // $OutletModel        = new OutletModel();
+        $TrxdetailModel     = new TrxdetailModel();
+        $ProductModel       = new ProductModel();
+        $VariantModel       = new VariantModel();
 
         // Populating Data
         // Search Filter
@@ -1982,16 +2110,16 @@ class Report extends BaseController
         }
 
         $addres = '';
-        if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-            $addres = "All Outlets";
-            $outletname = "58vapehouse";
-        } else {
-            $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
-            $outletname = $outlets['name'];
-        }
+        // if ($this->data['outletPick'] === null) {
+        //     $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
+        //     $addres = "All Outlets";
+        //     $outletname = "58vapehouse";
+        // } else {
+        //     $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
+        //     $outlets = $OutletModel->find($this->data['outletPick']);
+        //     $addres = $outlets['address'];
+        //     $outletname = $outlets['name'];
+        // }
 
         $customerdata   = [];
         foreach ($members as $member) {
@@ -2004,14 +2132,9 @@ class Report extends BaseController
             }
             
             if ($this->data['outletPick'] === null) {
-                $transactions = $TransactionModel->where('memberid', $member['id'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-                $addres = "All Outlets";
-                $outletname = "58vapehouse";
+                $transactions   = $TransactionModel->where('memberid', $member['id'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
             } else {
-                $transactions = $TransactionModel->where('memberid', $member['id'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $outlets = $OutletModel->find($this->data['outletPick']);
-                $addres = $outlets['address'];
-                $outletname = $outlets['name'];
+                $transactions   = $TransactionModel->where('memberid', $member['id'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
             }
             
             $trxvalue   = [];
@@ -2034,7 +2157,6 @@ class Report extends BaseController
                             } else {
                                 $products   = [];
                                 $customerdata[$member['id']]['product'][0]['name']             = 'Kategori / Produk / Variant Terhapus';
-                                $customerdata[$member['id']]['product'][0]['category']         = 'Kategori / Produk / Variant Terhapus';
                                 $customerdata[$member['id']]['product'][0]['qty'][]            = $trxdet['qty'];
                             }
                         }
@@ -2231,107 +2353,5 @@ class Report extends BaseController
         // $data['pager']          = $SopDetailModel->pager;
 
         return view('Views/report/sop', $data);
-    }
-
-    public function dailysell()
-    {
-        // Calling Models
-        $TransactionModel       = new TransactionModel;
-        $TrxdetailModel         = new TrxdetailModel;
-
-        $transactions       = array();
-        $transactionarr     = array();
-        $memberdisc         = array();
-        $discounttrx        = array();
-        $discountvariant    = array();
-        $discountpoin       = array();
-        $discountglobal     = array();
-        $marginmodals       = array();
-        $margindasars       = array();
-
-        if ($this->data['outletPick'] === null) {
-            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00'))->where('date <=', date('Y-m-d 23:59:59'))->find();
-        } else {
-            $transaction = $TransactionModel->where('date >=', date('Y-m-d 00:00:00'))->where('date <=', date('Y-m-d 23:59:59'))->where('outletid', $this->data['outletPick'])->find();
-        }
-        // $summary = array_sum(array_column($transaction, 'value'));
-
-        if (!empty($transaction)) {
-            foreach ($transaction as $trx) {
-                $time                               = date('H', strtotime($trx['date']));
-                $transactions[$time]['date']        = date('H', strtotime($trx['date']));
-                $transactions[$time]['val'][]       = $trx['value'];
-
-                // Transaction Discount
-                if (!empty($trx['discvalue'])) {
-                    $discounttrx[]  = $trx['discvalue'];
-                }
-    
-                // Point Used
-                $discountpoin[]             = $trx['pointused'];
-
-                // Member Discount
-                $memberdisc[]               = $trx['memberdisc'];
-
-                // Discount Variant
-                $trxdetails  = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-                if (!empty($trxdetails)) {
-                    foreach ($trxdetails as $trxdetail) {
-                        // Transaction Detail Discount Variant
-                        if ($trxdetail['discvar'] != 0) {
-                            $discountvariant[]                  = $trxdetail['discvar'];
-                        }
-        
-                        // Transaction Detail Discount Global
-                        if ($trxdetail['globaldisc'] != '0') {
-                            $discountglobal[]                   = $trxdetail['globaldisc'];
-                        }
-
-                        // Transaction Detail Margin Modal
-                        $marginmodals[]                         = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
-                        $transactions[$time]['profitmodal'][]   = ((int)$trxdetail['marginmodal'] * (int)$trxdetail['qty']);
-
-                        // Transaction Detail Margin Dasar
-                        $margindasars[]                         = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                        $transactions[$time]['profitdasar'][]   = ((int)$trxdetail['margindasar'] * (int)$trxdetail['qty']);
-                    }
-                }
-            }
-        }
-
-        // Data Chart
-        if (!empty($transactions)) {
-            foreach ($transactions as $trxdat) {
-                $transactionarr[]  = [
-                    'waktu'         => $trxdat['date'],
-                    'value'         => array_sum($trxdat['val']),
-                    'profitmodal'   => array_sum($trxdat['profitmodal']),
-                    'profitdasar'   => array_sum($trxdat['profitdasar']),
-                ];
-            }
-        }
-
-        $transactiondisc    = (int)(array_sum($discounttrx)) + (int)(array_sum($memberdisc));
-        $variantdisc        = array_sum($discountvariant);
-        $globaldisc         = array_sum($discountglobal);
-        $poindisc           = array_sum($discountpoin);
-        $marginmodalsum     = array_sum($marginmodals);
-        $margindasarsum     = array_sum($margindasars);
-        $salesresult        = array_sum(array_column($transactionarr, 'value'));
-        $grossales          = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$transactiondisc + (Int)$poindisc;
-        $profitmodal        = (Int)$marginmodalsum - (Int)$transactiondisc - (Int)$poindisc;
-        $profitdasar        = (Int)$margindasarsum - (Int)$transactiondisc - (Int)$poindisc;
-        
-        // Parsing Data to View
-        $data                   = $this->data;
-        $data['title']          = 'Laporan Penjualan Harian';
-        $data['description']    = 'Developed by PT. Kodebiner Teknologi Indonesia';
-        $data['transactions']   = $transactionarr;
-        $data['result']         = $salesresult;
-        $data['gross']          = $grossales;
-        $data['profitmodal']    = $profitmodal;
-        $data['profitdasar']    = $profitdasar;
-
-        return view('Views/report/dailysell', $data);
     }
 }

@@ -813,7 +813,7 @@ class Home extends BaseController
                     $transactiondata[$trx['date']]['type']      = 'Riwayat Transaksi';
                     $transactiondata[$trx['date']]['outlet']    = $trxoutlet['name'];
                     $transactiondata[$trx['date']]['payment']   = $paymentname;
-                    $transactiondata[$trx['date']]['payvalue']  = $payvalue;
+                    $transactiondata[$trx['date']]['payvalue']  = '<div>Rp '.number_format((Int)$payvalue,0,',','.').'</div>';
                 }
             }
         }
@@ -832,7 +832,7 @@ class Home extends BaseController
                     $transactiondata[$trxother['date']]['type']     = 'Uang Masuk / Cash In';
                     $transactiondata[$trxother['date']]['outlet']   = $outletcashflow['name'];
                     $transactiondata[$trxother['date']]['payment']  = 'Tunai';
-                    $transactiondata[$trxother['date']]['payvalue'] = $trxother['qty'];
+                    $transactiondata[$trxother['date']]['payvalue'] = '<div>Rp '.number_format((Int)$trxother['qty'],0,',','.').'</div>';
                 } else {
                     $cashouthistory[]   = $trxother['qty'];
 
@@ -840,7 +840,7 @@ class Home extends BaseController
                     $transactiondata[$trxother['date']]['type']     = 'Uang Keluar / Cash Out';
                     $transactiondata[$trxother['date']]['outlet']   = $outletcashflow['name'];
                     $transactiondata[$trxother['date']]['payment']  = 'Tunai';
-                    $transactiondata[$trxother['date']]['payvalue'] = '- '.$trxother['qty'];
+                    $transactiondata[$trxother['date']]['payvalue'] = '<div style="color: red;">- Rp '.number_format((Int)$trxother['qty'],0,',','.').'</div>';
                 }
             }
         }
@@ -857,7 +857,7 @@ class Home extends BaseController
                 $transactiondata[$debtinstall['date']]['type']     = 'Angsuran Hutang';
                 $transactiondata[$debtinstall['date']]['outlet']   = $outletinst['name'];
                 $transactiondata[$debtinstall['date']]['payment']  = $paymentins['name'];
-                $transactiondata[$debtinstall['date']]['payvalue'] = $debtinstall['qty'];
+                $transactiondata[$debtinstall['date']]['payvalue'] = '<div>Rp '.number_format((Int)$debtinstall['qty'],0,',','.').'</div>';
             }
         }
 
@@ -880,7 +880,7 @@ class Home extends BaseController
                         $transactiondata[$originmove['date']]['type']     = 'Pemindahan Dana Keluar';
                         $transactiondata[$originmove['date']]['outlet']   = $oricashorigin['name'].' ->';
                         $transactiondata[$originmove['date']]['payment']  = $oricashdesti['name'];
-                        $transactiondata[$originmove['date']]['payvalue'] = '- '.$originmove['qty'];
+                        $transactiondata[$originmove['date']]['payvalue'] = '<div style="color: red;">- Rp '.number_format((Int)$originmove['qty'],0,',','.').'</div>';
                     }
                 }
 
@@ -895,7 +895,7 @@ class Home extends BaseController
                         $transactiondata[$destinationmove['date']]['type']     = 'Pemindahan Dana Masuk';
                         $transactiondata[$destinationmove['date']]['outlet']   = $descashdesti['name'].' ->';
                         $transactiondata[$destinationmove['date']]['payment']  = $descashorigin['name'];
-                        $transactiondata[$destinationmove['date']]['payvalue'] = $destinationmove['qty'];
+                        $transactiondata[$destinationmove['date']]['payvalue'] = '<div>Rp '.number_format((Int)$destinationmove['qty'],0,',','.').'</div>';
                     }
                 }
             }
@@ -905,6 +905,7 @@ class Home extends BaseController
         $page       = (int) ($this->request->getGet('page') ?? 1);
         $perPage    = 20;
         $total      = count($transactiondata);
+        $offset     = ($page - 1) * $perPage;
 
         $sumtrxhistory          = array_sum($trxhistory);
         $sumcashinhistory       = array_sum($cashinhistory);
@@ -920,7 +921,8 @@ class Home extends BaseController
         $data['description']    = lang('Global.billhistoryListDesc');
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
-        $data['bills']          = array_slice($transactiondata, ($page*20)-20, $page*20);
+        // $data['bills']          = array_slice($transactiondata, ($page*20)-20, $page*20);
+        $data['bills']          = array_slice($transactiondata, $offset, $perPage);
         $data['pager_links']    = $pager->makeLinks($page, $perPage, $total, 'front_full');
         $data['totalbill']      = $totalbill;
         $data['name']           = $outletname;

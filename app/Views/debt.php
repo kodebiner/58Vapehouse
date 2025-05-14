@@ -219,11 +219,16 @@
 
                             <hr>
 
-                            <div class="uk-margin">
-                                <div class="uk-width-5-6">
-                                    <button type="submit" class="uk-button uk-button-primary" style="border-radius: 8px; width: 540px;"><?= lang('Global.pay') ?></button>
-                                </div>
-                            </div>
+
+                            <?php if ($outletPick != null) {
+                                if ($dailyreport['dateclose'] == '0000-00-00 00:00:00') { ?>
+                                    <div class="uk-margin">
+                                        <div class="uk-width-5-6">
+                                            <button type="submit" class="uk-button uk-button-primary" style="border-radius: 8px; width: 540px;"><?= lang('Global.pay') ?></button>
+                                        </div>
+                                    </div>
+                                <?php }
+                            } ?>
                         </form>
                     </div>
                 </div>

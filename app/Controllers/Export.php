@@ -34,6 +34,7 @@ use App\Models\PresenceModel;
 use App\Models\SopModel;
 use App\Models\SopDetailModel;
 use App\Models\DailyReportModel;
+use App\Models\CheckpointModel;
 use DateTime;
 
 class export extends BaseController
@@ -58,7 +59,7 @@ class export extends BaseController
 
         if ($this->data['outletPick'] === null) {
             $bizzadd        = "All Outlets";
-            $bizzname       = "58 Vapehouse AOt";
+            $bizzname       = "58 Vapehouse AOT";
         } else {
             $outletpick     = $OutletModel->find($this->data['outletPick']);
             $bizzadd        = $outletpick['address'];
@@ -172,11 +173,29 @@ class export extends BaseController
                         echo '<td>' . $prods['msrp'] . '</td>';
                         echo '<td>' . $prods['qty'] . '</td>';
                         echo '<td>';
-                            $origin         = new DateTime($prods['restock']);
-                            $target         = new DateTime('now');
-                            $interval       = $origin->diff($target);
-                            $formatday      = substr($interval->format('%R%a'), 1);
-                            echo $formatday.' '.lang('Global.day');
+                            if ($prods['qty'] == 0) {
+                                echo '-';
+                            } else {
+                                // Check if restock is null or empty or zero-date string
+                                if (empty($prods['restock']) || $prods['restock'] == '0000-00-00 00:00:00') {
+                                    echo '-';
+                                } else {
+                                    $origin         = new DateTime($prods['restock']);
+                                    $target         = new DateTime('now');
+                                    $interval       = $origin->diff($target);
+                                    $formatday      = substr($interval->format('%R%a'), 1);
+                                    echo $formatday . ' ' . lang('Global.day');
+                                }
+                            }
+                            // if ($prods['qty'] == 0) {
+                            //     echo '-';
+                            // } else {
+                            //     $origin         = new DateTime($prods['restock']);
+                            //     $target         = new DateTime('now');
+                            //     $interval       = $origin->diff($target);
+                            //     $formatday      = substr($interval->format('%R%a'), 1);
+                            //     echo $formatday . ' ' . lang('Global.day');
+                            // }
                         echo '</td>';
                     echo '</tr>';
                 }
@@ -1492,8 +1511,8 @@ class export extends BaseController
         echo '<tr>';
         echo '<th>Nama</th>';
         echo '<th>Jumlah Penjualan</th>';
+        echo '<th>Penjualan Bersih</th>';
         echo '<th>Penjualan Kotor</th>';
-        echo '<th>Total</th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
@@ -2588,6 +2607,7 @@ class export extends BaseController
         $DailyReportModel   = new DailyReportModel();
         $MemberModel        = new MemberModel();
         $DebtInsModel       = new DebtInsModel();
+        $CheckpointModel    = new CheckpointModel();
 
         // Populating Data
         $input = $this->request->getGet('daterange');
@@ -2612,6 +2632,7 @@ class export extends BaseController
         $address        = $outlets['address'];
 
         $dailyreportdata    = [];
+        $count              = '0';
         foreach ($dailyreports as $dayrep) {
             // Id
             $dailyreportdata[$dayrep['id']]['id']               = $dayrep['id'];
@@ -2684,6 +2705,26 @@ class export extends BaseController
                     }
                 }
 
+                // Checkpoint
+                $checkpoints  = $CheckpointModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();
+
+                if (!empty($checkpoints)) {
+                    foreach ($checkpoints as $checkpoint) {
+                        // User Cashier
+                        $checkpointcashier   = $UserModel->find($checkpoint['userid']);
+
+                        // Checkpoint Data
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cashier'] = $checkpointcashier->firstname.' '.$checkpointcashier->lastname;
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['date']    = $checkpoint['date'];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cash']    = $checkpoint['cash'];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['noncash'] = $checkpoint['noncash'];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['type']    = $count++;
+                    }
+                } else {
+                    $checkpointcashier   = [];
+                    $dailyreportdata[$dayrep['id']]['checkpoint'] = [];
+                }
+
                 // Actual Cash Close
                 $dailyreportdata[$dayrep['id']]['cashclose']        = $dayrep['cashclose'];
 
@@ -2701,6 +2742,28 @@ class export extends BaseController
                 // Payment Methods
                 $dailyreportdata[$dayrep['id']]['payments']     = [];
                 $dailyreportdata[$dayrep['id']]['trxpayments']  = [];
+
+                // Checkpoint
+                $datenow        = date('Y-m-d H:i:s');
+                $checkpoints    = $CheckpointModel->where('date >=', $dayrep['dateopen'])->where('date <=', $datenow)->where('outletid', $this->data['outletPick'])->find();
+
+                if (!empty($checkpoints)) {
+                    foreach ($checkpoints as $checkpoint) {
+                        // User Cashier
+                        $checkpointcashier   = $UserModel->find($checkpoint['userid']);
+
+                        // Checkpoint Data
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['id']      = $checkpoint['id'];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cashier'] = $checkpointcashier->firstname.' '.$checkpointcashier->lastname;
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['date']    = $checkpoint['date'];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cash']    = $checkpoint['cash'];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['noncash'] = $checkpoint['noncash'];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['type']    = $count++;
+                    }
+                } else {
+                    $checkpointcashier   = [];
+                    $dailyreportdata[$dayrep['id']]['checkpoint'] = [];
+                }
 
                 // Actual Cash Close
                 $dailyreportdata[$dayrep['id']]['cashclose']        = '0';
@@ -2820,6 +2883,7 @@ class export extends BaseController
             // Total Cash Out
             $dailyreportdata[$dayrep['id']]['totalcashout']     = $dayrep['totalcashout'];
         }
+        // dd($dailyreportdata);
         
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=Laporan Harian $date1-$date2.xls");
@@ -2851,6 +2915,7 @@ class export extends BaseController
                     echo '<th colspan="2">Penerimaan Sistem</th>';
                     echo '<th colspan="2">Penerimaan Aktual</th>';
                     echo '<th rowspan="2">Selisih</th>';
+                    echo '<th colspan="4">Checkpoint</th>';
                 echo '</tr>';
                 echo '<tr>';
                     echo '<th>Modal</th>';
@@ -2868,17 +2933,22 @@ class export extends BaseController
                     echo '<th>Non-Tunai</th>';
                     echo '<th>Tunai</th>';
                     echo '<th>Non-Tunai</th>';
+                    echo '<th>Jam</th>';
+                    echo '<th>Kasir</th>';
+                    echo '<th>Tunai</th>';
+                    echo '<th>Non-Tunai</th>';
                 echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
                 foreach ($dailyreportdata as $dayrep) {
+                    $totalcheckpoint    = count($dayrep['checkpoint']);
                     echo '<tr>';
                         // Date
-                        echo '<td>' . date('l, d M Y', strtotime($dayrep['date'])) . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . date('l, d M Y', strtotime($dayrep['date'])) . '</td>';
                         // Date End
 
                         // Cashflow
-                        echo '<td>' . $dayrep['initialcash'] . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;" style="vertical-align:middle;">' . $dayrep['initialcash'] . '</td>';
                         $totalcashin    = [];
                         $totalcashout   = [];
                         foreach ($dayrep['cashflow'] as $cashflow) {
@@ -2890,8 +2960,8 @@ class export extends BaseController
                         }
                         $summarycashin  = array_sum($totalcashin);
                         $summarycashout = array_sum($totalcashout);
-                        echo '<td>' . $summarycashin . '</td>';
-                        echo '<td>' . $summarycashout . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $summarycashin . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $summarycashout . '</td>';
                         // Cashflow End
 
                         // Transaction Data
@@ -2932,10 +3002,10 @@ class export extends BaseController
                         $totalnoncash   = array_sum($totaltrxnoncash);
                         $totaldebt      = array_sum($totaltrxdebt);
                         $totalpoin      = array_sum($totaltrxpoin);
-                        echo '<td>' . $totalcash . '</td>';
-                        echo '<td>' . $totalnoncash . '</td>';
-                        echo '<td>' . $totaldebt . '</td>';
-                        echo '<td>' . $totalpoin . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $totalcash . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $totalnoncash . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $totaldebt . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $totalpoin . '</td>';
                         // Transaction Data End
 
                         // Debt Installment
@@ -2958,8 +3028,8 @@ class export extends BaseController
                         }
                         $totaldebtcashvalue     = array_sum($totaldebtcash);
                         $totaldebtnoncashvalue  = array_sum($totaldebtnoncash);
-                        echo '<td>' . $totaldebtcashvalue . '</td>';
-                        echo '<td>' . $totaldebtnoncashvalue . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $totaldebtcashvalue . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $totaldebtnoncashvalue . '</td>';
                         // Debt Installment End
                         
                         // Top Up
@@ -3006,19 +3076,37 @@ class export extends BaseController
                         $systemreceivecash      = (Int)$totalcash + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)) + (Int)$totaldebtcashvalue;
                         $systemreceivenoncash   = (Int)$totalnoncash + (Int)$totaldebtnoncashvalue;
                         $systemreceivetotal     = (Int)$systemreceivecash + (Int)$systemreceivenoncash;
-                        echo '<td>' . $systemreceivecash . '</td>';
-                        echo '<td>' . $systemreceivenoncash . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $systemreceivecash . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $systemreceivenoncash . '</td>';
                         // System Receive End
 
                         // Actual Receive
-                        echo '<td>' . $dayrep['cashclose'] . '</td>';
-                        echo '<td>' . $dayrep['noncashclose'] . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $dayrep['cashclose'] . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $dayrep['noncashclose'] . '</td>';
                         // Actual Receive End
 
                         // Difference
                         $totaldifference    = (Int)$dayrep['actualsummary'] - (Int)$systemreceivetotal;
-                        echo '<td>' . $totaldifference . '</td>';
+                        echo '<td rowspan="'.$totalcheckpoint.'" style="vertical-align:middle;">' . $totaldifference . '</td>';
                         // Difference End
+
+                        // Checkpoint
+                        foreach ($dayrep['checkpoint'] as $checkpoint) {
+                            if ($checkpoint['type'] > '0') {
+                                echo '<tr>';
+                                    echo '<td style="vertical-align:middle;">' . date('H:i', strtotime($checkpoint['date'])) . '</td>';
+                                    echo '<td style="vertical-align:middle;">' . $checkpoint['cashier'] . '</td>';
+                                    echo '<td style="vertical-align:middle;">' . $checkpoint['cash'] . '</td>';
+                                    echo '<td style="vertical-align:middle;">' . $checkpoint['noncash'] . '</td>';
+                                echo '</tr>';
+                            } else {
+                                echo '<td style="vertical-align:middle;">' . date('H:i', strtotime($checkpoint['date'])) . '</td>';
+                                echo '<td style="vertical-align:middle;">' . $checkpoint['cashier'] . '</td>';
+                                echo '<td style="vertical-align:middle;">' . $checkpoint['cash'] . '</td>';
+                                echo '<td style="vertical-align:middle;">' . $checkpoint['noncash'] . '</td>';
+                            }
+                        }
+                        // Checkpoint End
                     echo '</tr>';
                 }
             echo '</tbody>';

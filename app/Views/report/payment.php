@@ -37,6 +37,12 @@
 
 <?= $this->section('main') ?>
 
+<?php if ($outletPick === null) { ?>
+    <div class="uk-alert-danger" uk-alert>
+        <p><?=lang('Global.chooseoutlet')?></p>
+    </div>
+<?php } else { ?>
+
     <!-- Page Heading -->
     <div class="tm-card-header uk-light">
         <div uk-grid class="uk-flex-middle">
@@ -118,8 +124,5 @@
             </?= $pager->links('reportpayment', 'front_full') ?>
         </div> -->
     </div>
-
-
-<?= view('Views/Auth/_message_block') ?>
-
+<?php } ?>
 <?= $this->endSection() ?>

@@ -23,6 +23,7 @@
         var options = {
           title: 'Sales Performance',
           hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          lineWidth: 5,
           vAxis: {minValue: 0}
         };
 
@@ -79,7 +80,7 @@
         <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.salesreport')?></h1>
         <div class="uk-child-width-1-2@m uk-grid-match uk-margin-top" uk-grid>
             <div>
-                <div class="uk-card uk-card-default uk-card-secondary uk-card-hover uk-card-body">
+                <div class="uk-card uk-card-default  uk-card-primary uk-card-hover uk-card-body">
                     <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.net')?></h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.salestotal')?></p>
                     <hr>
@@ -113,24 +114,24 @@
         <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.profitreport')?></h1>
         <div class="uk-child-width-1-2@m uk-grid-match uk-margin-top" uk-grid>
             <div>
-                <div class="uk-card uk-card-default uk-card-secondary uk-card-hover uk-card-body">
-                    <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.capitalgains')?></h3>
+                <div class="uk-card uk-card-default uk-card-default uk-card-hover uk-card-body" style="background-color: #dc3912; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: white;"><?=lang('Global.capitalgains')?></h3>
                     <hr>
                     <div>
                         <div class="uk-margin-remove-top" uk-grid>
-                            <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right"><?php echo "Rp. ".number_format($modals,2,',','.');" ";?></div>
+                            <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right" style="color: white;"><?php echo "Rp. ".number_format($modals,2,',','.');" ";?></div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div>
-                <div class="uk-card uk-card-default uk-card-body">
-                    <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.basicprofit')?></h3>
+                <div class="uk-card uk-card-default uk-card-body" style="background-color: #ff9900; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: white;"><?=lang('Global.basicprofit')?></h3>
                     <hr>
                     <div>
                         <div class="uk-margin-remove-top" uk-grid>
-                            <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right"><?php echo "Rp. ".number_format($dasars,2,',','.');" ";?></div>
+                            <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right" style="color: white;"><?php echo "Rp. ".number_format($dasars,2,',','.');" ";?></div>
                         </div>
                         
                     </div>
@@ -146,8 +147,8 @@
         <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.discountreport')?></h1>
         <div class="uk-child-width-1-2@m uk-grid-match uk-margin-top" uk-grid>
             <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body">
-                    <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discpoint')?></h3>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #109618; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discpoint')?></h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.totaldiscpoint')?></p>
                     <hr>
                     <div>
@@ -159,8 +160,8 @@
             </div>
 
             <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body">
-                    <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discount')?> <?=lang('Global.variant')?></h3>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #990099; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discount')?> <?=lang('Global.variant')?></h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.totaldiscvar')?></p>
                     <hr>
                     <div>
@@ -172,8 +173,8 @@
             </div>
 
             <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body">
-                    <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discount')?> Global</h3>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #0099c6; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discount')?> Global</h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.discount')?> yang diatur melalui "Informasi Usaha"</p>
                     <hr>
                     <div>
@@ -185,8 +186,8 @@
             </div>
 
             <div>
-                <div class="uk-card uk-card-default uk-card-secondary uk-card-hover uk-card-body">
-                    <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discount')?> <?=lang('Global.transaction')?></h3>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #dd4477; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discount')?> <?=lang('Global.transaction')?></h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.totaldisctrx')?></p>
                     <hr>
                     <div>

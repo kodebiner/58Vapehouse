@@ -300,7 +300,7 @@ class Product extends BaseController
                 'qty'       => $srkchrt['qty'],
                 'bqty'      => $srkchrt['bqty'],
                 'stock'     => $srkchrt['stock'],
-                'persen'    => round($srkchrt['qty'] / $percentage * 100),
+                'persen'    => number_format(($srkchrt['qty'] / $percentage * 100), 2),
             ];
         }
 

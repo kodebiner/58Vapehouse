@@ -3,6 +3,8 @@
 <?= $this->section('extraScript') ?>
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
 <script src="js/cdnjs.cloudflare.com_ajax_libs_webcamjs_1.0.25_webcam.min.js"></script>
+<script src="js/code.jquery.com_jquery-3.6.0.js"></script>
+<script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
 <script type="text/javascript" src="js/moment.min.js"></script>
 <script type="text/javascript" src="js/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
@@ -250,6 +252,91 @@
                     <hr class="uk-divider-icon">
 
                     <div class="uk-margin">
+                        <h5 class="tm-h3">Checkpoint</h5>
+                        <div class="uk-margin-remove-top">
+                            <div class="uk-margin-small uk-child-width-1-5 uk-flex-middle" uk-grid>
+                                <div>
+                                    <div>Tanggal</div>
+                                </div>
+                                <div>
+                                    <div>Jam</div>
+                                </div>
+                                <div>
+                                    <div>Kasir</div>
+                                </div>
+                                <div>
+                                    <div>Jumlah Tunai</div>
+                                </div>
+                                <div>
+                                    <div>Jumlah Non-Tunai</div>
+                                </div>
+                            </div>
+                            <?php
+                            foreach ($dailyreport['checkpoint'] as $checkpoint) {
+                                $checkdate  = strtotime($checkpoint['date']);
+                                $checktime  = date('H:i', $checkdate);
+                            ?>
+                                <hr>
+                                <div class="uk-margin-small uk-child-width-1-5 uk-flex-middle" uk-grid>
+                                    <div>
+                                        <div id="datecheckpoint-<?= $checkpoint['id'] ?>"></div>
+                                    </div>
+                                    <div>
+                                        <div><?= $checktime ?></div>
+                                    </div>
+                                    <div>
+                                        <div><?= $checkpoint['cashier'] ?></div>
+                                    </div>
+                                    <div>
+                                        <div><?= $checkpoint['cash'] ?></div>
+                                    </div>
+                                    <div>
+                                        <div><?= $checkpoint['noncash'] ?></div>
+                                    </div>
+                                    
+                                    <script>
+                                        // Date In Indonesia
+                                        var publishupdate   = "<?= $checkpoint['date'] ?>";
+                                        var thatdate        = publishupdate.split( /[- :]/ );
+                                        thatdate[1]--;
+                                        var publishthatdate = new Date( ...thatdate );
+                                        var publishyear     = publishthatdate.getFullYear();
+                                        var publishmonth    = publishthatdate.getMonth();
+                                        var publishdate     = publishthatdate.getDate();
+                                        
+                                        switch(publishmonth) {
+                                            case 0: publishmonth   = "Januari"; break;
+                                            case 1: publishmonth   = "Februari"; break;
+                                            case 2: publishmonth   = "Maret"; break;
+                                            case 3: publishmonth   = "April"; break;
+                                            case 4: publishmonth   = "Mei"; break;
+                                            case 5: publishmonth   = "Juni"; break;
+                                            case 6: publishmonth   = "Juli"; break;
+                                            case 7: publishmonth   = "Agustus"; break;
+                                            case 8: publishmonth   = "September"; break;
+                                            case 9: publishmonth   = "Oktober"; break;
+                                            case 10: publishmonth  = "November"; break;
+                                            case 11: publishmonth  = "Desember"; break;
+                                        }
+
+                                        var publishfulldate         = publishdate + " " + publishmonth + " " + publishyear;
+                                        document.getElementById("datecheckpoint-<?= $checkpoint['id'] ?>").innerHTML = publishfulldate;
+                                    </script>
+                                </div>
+                            <?php } ?>
+                            <hr id="dividercheckpoint" hidden>
+                            <div id="newCheckpointGrid" class="uk-margin-small uk-child-width-1-5 uk-flex-middle" uk-grid>
+                                <div id="datecp"></div>
+                                <div id="timecp"></div>
+                                <div id="cashiercp"></div>
+                                <div id="cashcp"></div>
+                                <div id="noncashcp"></div>
+                            </div>
+                            <hr class="uk-divider-icon">
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
                         <h5 class="tm-h3"><?= lang('Global.actualreceipts') ?></h5>
                         <form class="uk-form-stacked" role="form" action="dayrep/close" method="post">
                             <?= csrf_field() ?>
@@ -280,6 +367,13 @@
                                 <button type="submit" class="uk-button uk-button-primary uk-width-1-1" style="border-radius: 10px;"><?= lang('Global.close') ?></button>
                             </div>
                         </form>
+
+                        <div class="uk-margin">
+                            <form class="uk-form-stacked" role="form" id="checkpointForm">
+                                <?= csrf_field() ?>
+                                <button type="button" class="uk-button uk-button-success uk-width-1-1" style="border-radius: 10px;" id="checkpointButton">Checkpoint</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -287,9 +381,9 @@
     </div>
 
     <script>
-        var cash = document.getElementById('actualcash');
+        var cash    = document.getElementById('actualcash');
         var noncash = document.getElementById('actualnoncash');
-        var fprice = document.getElementById('fprice');
+        var fprice  = document.getElementById('fprice');
 
         totalprice();
         cash.addEventListener('change', totalprice);
@@ -320,6 +414,72 @@
                 });
             }
         }
+
+        // Checkpoint AJAX Function
+        $('#checkpointButton').click(function() {
+            var actualCash          = $('#actualcash').val();
+            var actualNonCash       = $('#actualnoncash').val();
+            
+            $.ajax({
+                url: 'dayrep/checkpoint',
+                method: 'POST',
+                data: {
+                    actualcash: actualCash,
+                    actualnoncash: actualNonCash,
+                },
+                success: function(response) {
+                    alert('Checkpoint berhasil dengan data: ' + response);
+                    
+                    $('#actualcash').val('');
+                    $('#actualnoncash').val('');
+                },
+                error: function(xhr, status, error) {
+                    alert('Terjadi kesalahan saat pengiriman data: ' + error);
+                }
+            });
+            
+            // Creating New Checkpoint Grid
+            var datecheckpoints     = "<?= date('Y-m-d') ?>";
+            var cpdate              = datecheckpoints.split( /[- :]/ );
+            cpdate[1]--;
+            var cpdates             = new Date( ...cpdate );
+            var publishyearcpdates  = cpdates.getFullYear();
+            var publishmonthcpdates = cpdates.getMonth();
+            var publishdatecpdates  = cpdates.getDate();
+            
+            switch(publishmonthcpdates) {
+                case 0: publishmonthcpdates   = "Januari"; break;
+                case 1: publishmonthcpdates   = "Februari"; break;
+                case 2: publishmonthcpdates   = "Maret"; break;
+                case 3: publishmonthcpdates   = "April"; break;
+                case 4: publishmonthcpdates   = "Mei"; break;
+                case 5: publishmonthcpdates   = "Juni"; break;
+                case 6: publishmonthcpdates   = "Juli"; break;
+                case 7: publishmonthcpdates   = "Agustus"; break;
+                case 8: publishmonthcpdates   = "September"; break;
+                case 9: publishmonthcpdates   = "Oktober"; break;
+                case 10: publishmonthcpdates  = "November"; break;
+                case 11: publishmonthcpdates  = "Desember"; break;
+            }
+
+            var dividercheckpoint = document.getElementById('dividercheckpoint');
+            dividercheckpoint.removeAttribute('hidden', '');
+            
+            var datecp = document.getElementById('datecp');
+            datecp.innerHTML = publishdatecpdates + " " + publishmonthcpdates + " " + publishyearcpdates;
+            
+            var timecp = document.getElementById('timecp');
+            timecp.innerHTML = '<?= date('H:i') ?>';
+            
+            var cashiercp = document.getElementById('cashiercp');
+            cashiercp.innerHTML = '<?= $fullname ?>';
+            
+            var cashcp = document.getElementById('cashcp');
+            cashcp.innerHTML = 'Rp '+actualCash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            
+            var noncashcp = document.getElementById('noncashcp');
+            noncashcp.innerHTML = 'Rp '+actualNonCash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        });
     </script>
 <?php } ?>
 <!-- Modal Close End -->

@@ -336,10 +336,13 @@ class Debt extends BaseController
         $TransactionModel       = new TransactionModel();
         $TrxpaymentModel        = new TrxpaymentModel();
         $DebtModel              = new DebtModel();
+        $DailyReportModel       = new DailyReportModel();
 
         // Populating Data
         // $outlets                = $OutletModel->findAll();
         $payments               = $PaymentModel->findAll();
+        $today                  = date('Y-m-d') . ' 00:00:01';
+        $dailyreport            = $DailyReportModel->where('dateopen >', $today)->where('outletid', $this->data['outletPick'])->first();
 
         // $input = $this->request->getGet('daterange');
         // if (!empty($input)) {
@@ -452,6 +455,7 @@ class Debt extends BaseController
         // $data['outlets']        = $outlets;
         // $data['customers']      = $customers;
         // $data['debts']          = $debts;
+        $data['dailyreport']    = $dailyreport;
         $data['debts']          = array_slice($debtdata, ($page*20)-20, $page*20);
         $data['payments']       = $payments;
         $data['totaldebt']      = $totaldebt;

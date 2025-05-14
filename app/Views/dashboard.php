@@ -525,24 +525,24 @@
                     <!-- Outlook End -->
 
                     <!-- Stock Cycle -->
-                    <div>
+                    <!-- <div>
                         <div class="uk-card uk-card-default uk-card-body">
                             <div class="uk-child-width-1-1" uk-grid>
                                 <div>
                                     <div class="uk-child-width-1-2" uk-grid id="descstockcycle">
                                         <div>
-                                            <div class="tm-h3" style="color: #000;"><?= lang('Global.stockCycle') ?></div>
+                                            <div class="tm-h3" style="color: #000;"></?= lang('Global.stockCycle') ?></div>
                                         </div>
                                         <div class="uk-padding-remove uk-inline uk-text-right">
                                             <button uk-icon="question"></button>
-                                            <div class="uk-background-secondary uk-light uk-text-center" uk-drop="pos: top-right; stretch: false; target: !#descstockcycle;" style="border-radius: 10px;"><?= lang('Global.descstockcycle') ?></div>
+                                            <div class="uk-background-secondary uk-light uk-text-center" uk-drop="pos: top-right; stretch: false; target: !#descstockcycle;" style="border-radius: 10px;"></?= lang('Global.descstockcycle') ?></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="uk-margin-small-top">
                                     <table class="uk-table uk-table-divider" style="background-color: #fff;">
                                         <tbody>
-                                            <?php foreach ($stocks as $stock) {
+                                            </?php foreach ($stocks as $stock) {
                                                 // $today      = $stock['sale'];
                                                 // $date       = date_create($today);
                                                 // $now        = date_create();
@@ -563,21 +563,21 @@
                                                 // if ($stock['sale'] > $newdate) {
                                                     if ($formatday >= 0) { ?>
                                                         <tr>
-                                                            <td><?= $stock['name'] ?></td>
-                                                            <td><?= $formatday.' '.lang('Global.pastday') ?></td>
+                                                            <td></?= $stock['name'] ?></td>
+                                                            <td></?= $formatday.' '.lang('Global.pastday') ?></td>
                                                         </tr>
-                                                    <?php }
+                                                    </?php }
                                                 // }
                                             } ?>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="uk-text-right uk-margin-top">
-                                    <a class="uk-link-reset" href="<?= base_url('stock/stockcycle') ?>" style="color: #f0506e !important;"><?= lang('Global.seedetails') ?></a>
+                                    <a class="uk-link-reset" href="</?= base_url('stock/stockcycle') ?>" style="color: #f0506e !important;"></?= lang('Global.seedetails') ?></a>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- Stock Cycle End -->
                 </div>
             </div>

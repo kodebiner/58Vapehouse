@@ -20,6 +20,7 @@ use App\Models\TrxpaymentModel;
 use App\Models\DebtModel;
 use App\Models\DebtInsModel;
 use App\Models\DailyReportModel;
+use App\Models\CheckpointModel;
 
 class Trxother extends BaseController
 {
@@ -51,6 +52,7 @@ class Trxother extends BaseController
         $OutletModel        = new OutletModel();
         $DailyReportModel   = new DailyReportModel();
         $DebtInsModel       = new DebtInsModel();
+        $CheckpointModel    = new CheckpointModel();
 
         // Find Data
         $auth               = service('authentication');
@@ -332,6 +334,25 @@ class Trxother extends BaseController
             //     $dailyreportdata['withdraw'] = [];
             // }
 
+            // Checkpoint Shift
+            $checkpoints    = $CheckpointModel->where('date >', $dailyreport['dateopen'])->where('outletid', $this->data['outletPick'])->find();
+            if (!empty($checkpoints)) {
+                foreach ($checkpoints as $checkpoint) {
+                    // User Cashier
+                    $checkpointcashier  = $UserModel->find($checkpoint['userid']);
+
+                    // Checkpoint Data
+                    $dailyreportdata['checkpoint'][$checkpoint['id']]['id']         = $checkpoint['id'];
+                    $dailyreportdata['checkpoint'][$checkpoint['id']]['cashier']    = $checkpointcashier->firstname.' '.$checkpointcashier->lastname;
+                    $dailyreportdata['checkpoint'][$checkpoint['id']]['date']       = $checkpoint['date'];
+                    $dailyreportdata['checkpoint'][$checkpoint['id']]['cash']       = 'Rp '.number_format($checkpoint['cash'], 0, ',', '.');
+                    $dailyreportdata['checkpoint'][$checkpoint['id']]['noncash']    = 'Rp '.number_format($checkpoint['noncash'], 0, ',', '.');
+                }
+            } else {
+                $checkpointcashier   = [];
+                $dailyreportdata['checkpoint'] = [];
+            }
+
             // Initial Cash
             $dailyreportdata['initialcash']      = $dailyreport['initialcash'];
 
@@ -434,6 +455,26 @@ class Trxother extends BaseController
         // }
 
         return view('Views/cash', $data);
+    }
+
+    public function checkpoint()
+    {
+        // Calling Model
+        $CheckpointModel    = new CheckpointModel();
+
+        // Initialize
+        $input              = $this->request->getPost();
+
+        $data = [
+            'userid'        => $this->data['uid'],
+            'outletid'      => $this->data['outletPick'],
+            'cash'          => $input['actualcash'],
+            'noncash'       => $input['actualnoncash'],
+            'date'          => date_format(date_create(), 'Y-m-d H:i:s'),
+        ];
+
+        $CheckpointModel->insert($data);
+        die(json_encode(array($input)));
     }
 
     public function create()

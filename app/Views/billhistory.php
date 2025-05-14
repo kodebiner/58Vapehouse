@@ -73,7 +73,8 @@
                     <td><?= $bill['type'] ?></td>
                     <td><?= $bill['outlet'] ?></td>
                     <td><?= $bill['payment'] ?></td>
-                    <td>Rp <?= number_format((Int)$bill['payvalue'],0,',','.');?></td>
+                    <!-- <td>Rp </?= number_format((Int)$bill['payvalue'],0,',','.');?></td> -->
+                    <td><?= $bill['payvalue'] ?></td>
                 </tr>
             <?php } ?>
         </tbody>

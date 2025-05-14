@@ -20,6 +20,7 @@ use App\Models\TrxpaymentModel;
 use App\Models\DebtModel;
 use App\Models\DebtInsModel;
 use App\Models\DailyReportModel;
+use App\Models\CheckpointModel;
 
 class DailyReport extends BaseController
 {
@@ -30,7 +31,7 @@ class DailyReport extends BaseController
     
     public function index()
     {
-        if ($this->data['outletPick'] != null) {
+        // if ($this->data['outletPick'] != null) {
             $pager      = \Config\Services::pager();
 
             // Calling Models
@@ -50,6 +51,7 @@ class DailyReport extends BaseController
             $OutletModel        = new OutletModel();
             $DailyReportModel   = new DailyReportModel();
             $MemberModel        = new MemberModel();
+            $CheckpointModel    = new CheckpointModel();
 
             // Populating Data
             $input = $this->request->getGet('daterange');
@@ -444,6 +446,25 @@ class DailyReport extends BaseController
                         }
                     }
 
+                    // Checkpoint
+                    $checkpoints  = $CheckpointModel->where('date >=', $dayrep['dateopen'])->where('date <=', $dayrep['dateclose'])->where('outletid', $this->data['outletPick'])->find();
+
+                    if (!empty($checkpoints)) {
+                        foreach ($checkpoints as $checkpoint) {
+                            // User Cashier
+                            $checkpointcashier   = $UserModel->find($checkpoint['userid']);
+
+                            // Checkpoint Data
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cashier'] = $checkpointcashier->firstname.' '.$checkpointcashier->lastname;
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['date']    = $checkpoint['date'];
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cash']    = 'Rp '.number_format($checkpoint['cash'], 0, ',', '.');
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['noncash'] = 'Rp '.number_format($checkpoint['noncash'], 0, ',', '.');
+                        }
+                    } else {
+                        $checkpointcashier   = [];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'] = [];
+                    }
+
                     // Actual Cash Close
                     $dailyreportdata[$dayrep['id']]['cashclose']        = $dayrep['cashclose'];
     
@@ -468,6 +489,27 @@ class DailyReport extends BaseController
                     // Payment Methods
                     $dailyreportdata[$dayrep['id']]['payments']     = [];
                     $dailyreportdata[$dayrep['id']]['trxpayments']  = [];
+
+                    // Checkpoint
+                    $datenow        = date('Y-m-d H:i:s');
+                    $checkpoints    = $CheckpointModel->where('date >=', $dayrep['dateopen'])->where('date <=', $datenow)->where('outletid', $this->data['outletPick'])->find();
+
+                    if (!empty($checkpoints)) {
+                        foreach ($checkpoints as $checkpoint) {
+                            // User Cashier
+                            $checkpointcashier   = $UserModel->find($checkpoint['userid']);
+
+                            // Checkpoint Data
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['id']      = $checkpoint['id'];
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cashier'] = $checkpointcashier->firstname.' '.$checkpointcashier->lastname;
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['date']    = $checkpoint['date'];
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cash']    = 'Rp '.number_format($checkpoint['cash'], 0, ',', '.');
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['noncash'] = 'Rp '.number_format($checkpoint['noncash'], 0, ',', '.');
+                        }
+                    } else {
+                        $checkpointcashier   = [];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'] = [];
+                    }
 
                     // Actual Cash Close
                     $dailyreportdata[$dayrep['id']]['cashclose']        = '0';
@@ -769,9 +811,9 @@ class DailyReport extends BaseController
             $data['enddate']            = strtotime($enddate);
 
             return view('Views/dailyreport', $data);
-        } else {
-            return redirect()->to('');
-        }
+        // } else {
+        //     return redirect()->to('');
+        // }
     }
 
     public function open()
