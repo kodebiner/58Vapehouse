@@ -455,6 +455,7 @@ class DailyReport extends BaseController
                             $checkpointcashier   = $UserModel->find($checkpoint['userid']);
 
                             // Checkpoint Data
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['id']      = $checkpoint['id'];
                             $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cashier'] = $checkpointcashier->firstname.' '.$checkpointcashier->lastname;
                             $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['date']    = $checkpoint['date'];
                             $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cash']    = 'Rp '.number_format($checkpoint['cash'], 0, ',', '.');
