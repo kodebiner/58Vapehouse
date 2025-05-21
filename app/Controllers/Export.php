@@ -102,7 +102,7 @@ class export extends BaseController
 
                     $productdata[$variant['id']]['name']            = $product['name'].' '.$variant['name'];
                     $productdata[$variant['id']]['sku']             = $variant['sku'];
-                    $productdata[$variant['id']]['sellprice']       = $variant['hargamodal'] + $variant['hargajual'];
+                    $productdata[$variant['id']]['sellprice']       = (Int)$variant['hargamodal'] + (Int)$variant['hargajual'];
                     $productdata[$variant['id']]['baseprice']       = $variant['hargadasar'];
                     $productdata[$variant['id']]['capitalprice']    = $variant['hargamodal'];
                     $productdata[$variant['id']]['msrp']            = $variant['hargarekomendasi'];
@@ -1812,7 +1812,7 @@ class export extends BaseController
                                     'hargajual'         => $variant['hargajual'],
                                     'hargarekomendasi'  => $variant['hargarekomendasi'],
                                     'stock'             => $stock['qty'],
-                                    'whole'             => $variant['hargamodal'] * $stock['qty'],
+                                    'whole'             => (Int)$variant['hargamodal'] * (Int)$stock['qty'],
                                 ];
                             }
                         }
