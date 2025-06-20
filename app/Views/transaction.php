@@ -2158,7 +2158,7 @@
                                                             varprice.setAttribute('id', 'varprice'+variant);
                                                             varprice.setAttribute('placeholder', '0');
                                                             varprice.setAttribute('name', 'varprice['+variant+']');
-                                                            varprice.setAttribute('value', '0');
+                                                            // varprice.setAttribute('value', '0');
                                                             varprice.setAttribute('type', 'number');
                                                             varprice.setAttribute('min', '0');
 

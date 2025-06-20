@@ -9,6 +9,6 @@ class CheckpointModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType     = 'array';
     protected $allowedFields = [
-        'userid','outletid','cash','noncash','date',
+        'userid','outletid','cash','noncash','diff','date',
     ];
 }

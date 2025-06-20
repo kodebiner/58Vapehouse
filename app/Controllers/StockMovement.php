@@ -427,7 +427,7 @@ class StockMovement extends BaseController
                 $destinationdata    = [
                     'id'        => $destinationstock['id'],
                     'qty'       => (Int)$destinationstock['qty'] += (Int)$value,
-                    // 'restock'   => $tanggal,
+                    'restock'   => $tanggal,
                 ];
                 $StockModel->save($destinationdata);
             }

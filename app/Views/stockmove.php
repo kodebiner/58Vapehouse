@@ -1303,7 +1303,7 @@ foreach ($stockmovedata as $stockmove) { ?>
                                     </div>
                                     <div class="uk-width-1-2 uk-text-center">
                                         <div id="edelqtye<?=$detailid?>" class="tm-h2 pointerbutton uk-button uk-button-small uk-button-danger" onclick="ehandleCounte('<?=$detailid?>', 0)">-</div>
-                                        <input class="uk-input uk-width-1-3" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="0" max="<?= $detail['qty'] ?>" onchange="ehandleCounte(<?=$detailid?>)" required />
+                                        <input class="uk-input uk-width-1-3" type="number" id="totalpcs[<?=$detailid?>]" name="totalpcs[<?=$detailid?>]" value="<?= $detail['inputqty'] ?>" min="0" max="<?= $detail['qty'] ?>" oninput="handleManualInput(<?=$detailid?>, <?= $detail['inputqty'] ?>)" onchange="ehandleCounte(<?=$detailid?>)" required />
                                         <div id="eaddqtye<?=$detailid?>" class="tm-h2 pointerbutton uk-button uk-button-small uk-button-primary" onclick="ehandleCounte('<?=$detailid?>', 1)">+</div>
                                         <!-- <div class="uk-margin-small-left">Pcs</div> -->
                                     </div>
@@ -1373,6 +1373,37 @@ foreach ($stockmovedata as $stockmove) { ?>
                                             eproductprice.value      = eprice;
                                         }
                                     };
+
+                                    function handleManualInput(id, defaultQty) {
+                                        let input = document.getElementById('totalpcs['+id+']');
+                                        let max = parseInt(input.getAttribute('max'));
+                                        let min = parseInt(input.getAttribute('min')) || 0;
+                                        let val = parseInt(input.value);
+
+                                        if (isNaN(val)) {
+                                            input.value = min;
+                                            val = min;
+                                        }
+
+                                        if (val > max) {
+                                            alert('<?= lang('Global.alertstock') ?>');
+                                            input.value = defaultQty;
+                                            val = defaultQty;
+                                        }
+
+                                        if (val < min) {
+                                            input.value = min;
+                                            val = min;
+                                        }
+
+                                        // Hitung ulang subtotal
+                                        let price = document.getElementById('bprice['+id+']').value;
+                                        let subtotal = document.getElementById('subtotal'+id);
+                                        let total = price * val;
+
+                                        subtotal.innerHTML = total;
+                                        subtotal.setAttribute('value', total);
+                                    }
 
                                     var total<?= $detailid ?> = document.getElementById('totalpcs[<?=$detailid?>]');
                                     var price<?= $detailid ?> = document.getElementById('bprice[<?=$detailid?>]');

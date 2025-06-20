@@ -61,8 +61,10 @@ class DailyReport extends BaseController
                 $startdate = $daterange[0];
                 $enddate = $daterange[1];
             } else {
-                $startdate  = date('Y-m-1' . ' 00:00:00');
-                $enddate    = date('Y-m-t' . ' 23:59:59');
+                // $startdate  = date('Y-m-1' . ' 00:00:00');
+                // $enddate    = date('Y-m-t' . ' 23:59:59');
+                $startdate  = date('Y-m-d' . ' 00:00:00');
+                $enddate    = date('Y-m-d' . ' 23:59:59');
             }
 
             $cashdata       = $CashModel->where('outletid', $this->data['outletPick'])->find();
@@ -460,6 +462,7 @@ class DailyReport extends BaseController
                             $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['date']    = $checkpoint['date'];
                             $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cash']    = 'Rp '.number_format($checkpoint['cash'], 0, ',', '.');
                             $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['noncash'] = 'Rp '.number_format($checkpoint['noncash'], 0, ',', '.');
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['diff']    = 'Rp '.number_format($checkpoint['diff'], 0, ',', '.');
                         }
                     } else {
                         $checkpointcashier   = [];
@@ -506,6 +509,7 @@ class DailyReport extends BaseController
                             $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['date']    = $checkpoint['date'];
                             $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cash']    = 'Rp '.number_format($checkpoint['cash'], 0, ',', '.');
                             $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['noncash'] = 'Rp '.number_format($checkpoint['noncash'], 0, ',', '.');
+                            $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['diff']    = 'Rp '.number_format($checkpoint['diff'], 0, ',', '.');
                         }
                     } else {
                         $checkpointcashier   = [];

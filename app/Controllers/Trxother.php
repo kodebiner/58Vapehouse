@@ -347,6 +347,7 @@ class Trxother extends BaseController
                     $dailyreportdata['checkpoint'][$checkpoint['id']]['date']       = $checkpoint['date'];
                     $dailyreportdata['checkpoint'][$checkpoint['id']]['cash']       = 'Rp '.number_format($checkpoint['cash'], 0, ',', '.');
                     $dailyreportdata['checkpoint'][$checkpoint['id']]['noncash']    = 'Rp '.number_format($checkpoint['noncash'], 0, ',', '.');
+                    $dailyreportdata['checkpoint'][$checkpoint['id']]['diff']       = 'Rp '.number_format($checkpoint['diff'], 0, ',', '.');
                 }
             } else {
                 $checkpointcashier   = [];
@@ -470,6 +471,7 @@ class Trxother extends BaseController
             'outletid'      => $this->data['outletPick'],
             'cash'          => $input['actualcash'],
             'noncash'       => $input['actualnoncash'],
+            'diff'          => $input['diff'],
             'date'          => date_format(date_create(), 'Y-m-d H:i:s'),
         ];
 

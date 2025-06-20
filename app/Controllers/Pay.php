@@ -280,7 +280,6 @@ class Pay extends BaseController
                 $marginmodal    = (int)$varPrice - (int)$variant['hargamodal'];
                 $margindasar    = (int)$varPrice - (int)$variant['hargadasar'];
 
-
                 $trxvar = [
                     'transactionid' => $trxId,
                     'variantid'     => $varid,

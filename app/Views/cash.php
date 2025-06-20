@@ -254,7 +254,7 @@
                     <div class="uk-margin">
                         <h5 class="tm-h3">Checkpoint</h5>
                         <div class="uk-margin-remove-top">
-                            <div class="uk-margin-small uk-child-width-1-5 uk-flex-middle" uk-grid>
+                            <div class="uk-margin-small uk-child-width-1-6 uk-flex-middle" uk-grid>
                                 <div>
                                     <div>Tanggal</div>
                                 </div>
@@ -270,6 +270,9 @@
                                 <div>
                                     <div>Jumlah Non-Tunai</div>
                                 </div>
+                                <div>
+                                    <div>Selisih</div>
+                                </div>
                             </div>
                             <?php
                             foreach ($dailyreport['checkpoint'] as $checkpoint) {
@@ -277,7 +280,7 @@
                                 $checktime  = date('H:i', $checkdate);
                             ?>
                                 <hr>
-                                <div class="uk-margin-small uk-child-width-1-5 uk-flex-middle" uk-grid>
+                                <div class="uk-margin-small uk-child-width-1-6 uk-flex-middle" uk-grid>
                                     <div>
                                         <div id="datecheckpoint-<?= $checkpoint['id'] ?>"></div>
                                     </div>
@@ -292,6 +295,9 @@
                                     </div>
                                     <div>
                                         <div><?= $checkpoint['noncash'] ?></div>
+                                    </div>
+                                    <div>
+                                        <div><?= $checkpoint['diff'] ?></div>
                                     </div>
                                     
                                     <script>
@@ -325,12 +331,13 @@
                                 </div>
                             <?php } ?>
                             <hr id="dividercheckpoint" hidden>
-                            <div id="newCheckpointGrid" class="uk-margin-small uk-child-width-1-5 uk-flex-middle" uk-grid>
+                            <div id="newCheckpointGrid" class="uk-margin-small uk-child-width-1-6 uk-flex-middle" uk-grid>
                                 <div id="datecp"></div>
                                 <div id="timecp"></div>
                                 <div id="cashiercp"></div>
                                 <div id="cashcp"></div>
                                 <div id="noncashcp"></div>
+                                <div id="diffcp"></div>
                             </div>
                             <hr class="uk-divider-icon">
                         </div>
@@ -419,6 +426,10 @@
         $('#checkpointButton').click(function() {
             var actualCash          = $('#actualcash').val();
             var actualNonCash       = $('#actualnoncash').val();
+            var actualCashInt       = parseInt(actualCash) || 0;
+            var actualNonCashInt    = parseInt(actualNonCash) || 0;
+            var diff                = actualCashInt + actualNonCashInt - <?= (int)$totalvalue + (int)$totaldebtinstallment + (int)$totalcashflow ?>;
+            var finalDiff           = diff < 0 ? '-' + Math.abs(diff) : diff.toString();
             
             $.ajax({
                 url: 'dayrep/checkpoint',
@@ -426,6 +437,7 @@
                 data: {
                     actualcash: actualCash,
                     actualnoncash: actualNonCash,
+                    diff: finalDiff,
                 },
                 success: function(response) {
                     alert('Checkpoint berhasil dengan data: ' + response);
@@ -479,6 +491,9 @@
             
             var noncashcp = document.getElementById('noncashcp');
             noncashcp.innerHTML = 'Rp '+actualNonCash.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            
+            var diffcp = document.getElementById('diffcp');
+            diffcp.innerHTML = 'Rp '+diff.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         });
     </script>
 <?php } ?>

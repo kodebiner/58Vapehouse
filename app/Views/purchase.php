@@ -296,6 +296,8 @@
                         }
                     });
                 }
+                $('#productname').val('');
+                return false;
             }
         }
     };
@@ -923,6 +925,8 @@ foreach ($purchases as $purchase) { ?>
                                                     }
                                                 });
                                             }
+                                            $('#prodname<?= $purchase['id'] ?>').val('');
+                                            return false;
                                         }
                                     }
                                 };

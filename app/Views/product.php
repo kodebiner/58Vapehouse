@@ -862,6 +862,36 @@
                     <td>
                         <?php
                         $formatday  = [];
+                        foreach ($stocks as $stock) {
+                            foreach ($variants as $variant) {
+                                // Check if this stock item matches the product and variant and outlet conditions
+                                $matchesProduct = ($variant['productid'] == $product['id']);
+                                $matchesVariant = ($stock['variantid'] == $variant['id']);
+                                $matchesOutlet  = ($outletPick === null) ? true: ($stock['outletid'] == $outletPick);
+                                if ($matchesProduct && $matchesVariant && $matchesOutlet) {
+                                    if ($stock['qty'] > 0) {
+                                        // Check if restock date is valid
+                                        $restockDate = $stock['restock'];
+                                        if ($restockDate !== null && $restockDate !== '0000-00-00 00:00:00' && $restockDate !== '') {
+                                            $origin      = new DateTime($restockDate);
+                                            $target      = new DateTime('now');
+                                            $interval    = $origin->diff($target); // Store the absolute day difference as string
+                                            $formatday[] = substr($interval->format('%R%a'), 1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Show minimum day difference if available
+                        if (!empty($formatday)) {
+                            echo min($formatday) . ' ' . lang('Global.day');
+                        }
+                        ?>
+                    </td>
+                    <!-- <td>
+                        </?php
+                        $formatday  = [];
                         $hasQtyZero = false; // track if any matching stock has qty=0
                         foreach ($stocks as $stock) {
                             foreach ($variants as $variant) {
@@ -907,78 +937,7 @@
                         }
 
                         ?>
-                        
-                        <!-- </?php
-                        $formatday = [];
-
-                        foreach ($stocks as $stock) {
-                            foreach ($variants as $variant) {
-                                // Check if this stock item matches the product and variant and outlet conditions
-                                $matchesProduct = ($variant['productid'] == $product['id']);
-                                $matchesVariant = ($stock['variantid'] == $variant['id']);
-                                $matchesOutlet  = ($outletPick === null) ? true : ($stock['outletid'] == $outletPick);
-
-                                if ($matchesProduct && $matchesVariant && $matchesOutlet) {
-                                    if ($stock['qty'] == 0) {
-                                        // Stock qty is zero for this variant/product/outlet
-                                        $formatday[] = '-';
-                                    } else {
-                                        $origin = new DateTime($stock['restock']);
-                                        $target = new DateTime('now');
-                                        $interval = $origin->diff($target);
-                                        // Store the absolute day difference as string
-                                        $formatday[] = substr($interval->format('%R%a'), 1);
-                                    }
-                                }
-                            }
-                        }
-
-                        // Now decide what to display
-                        if (empty($formatday)) {
-                            // No matching stock found at all
-                            echo '-';
-                        } else {
-                            // Filter only numeric values (which represent days)
-                            $numericDays = array_filter($formatday, function($value) {
-                                return is_numeric($value);
-                            });
-
-                            if (!empty($numericDays)) {
-                                // There is at least one numeric day value, display minimum + label
-                                echo min($numericDays) . ' ' . lang('Global.day');
-                            } else {
-                                // All values are '-' so display '-'
-                                echo '-';
-                            }
-                        }
-                        ?> -->
-
-                        <!-- </?php
-                        $formatday  = [];
-                        foreach ($stocks as $stock) {
-                            foreach ($variants as $variant) {
-                                if ($outletPick == null) {
-                                    if (($variant['productid'] == $product['id']) && ($stock['variantid'] == $variant['id'])) {
-                                        $origin         = new DateTime($stock['restock']);
-                                        $target         = new DateTime('now');
-                                        $interval       = $origin->diff($target);
-                                        $formatday[]    = substr($interval->format('%R%a'), 1);
-                                    }
-                                } else {
-                                    if (($variant['productid'] == $product['id']) && ($stock['variantid'] == $variant['id']) && ($stock['outletid'] == $outletPick)) {
-                                        $origin         = new DateTime($stock['restock']);
-                                        $target         = new DateTime('now');
-                                        $interval       = $origin->diff($target);
-                                        $formatday[]    = substr($interval->format('%R%a'), 1);
-                                    }
-                                }
-                            }
-                        }
-
-                        // echo max($formatday).' '.lang('Global.day');
-                        echo min($formatday).' '.lang('Global.day');
-                        ?> -->
-                    </td>
+                    </td> -->
                     <?php if (in_groups('owner')) : ?>
                         <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                             <!-- Button Trigger Modal Edit -->

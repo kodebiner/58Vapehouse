@@ -2718,6 +2718,7 @@ class export extends BaseController
                         $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['date']    = $checkpoint['date'];
                         $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cash']    = $checkpoint['cash'];
                         $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['noncash'] = $checkpoint['noncash'];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['diff']    = $checkpoint['diff'];
                         $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['type']    = $count++;
                     }
                 } else {
@@ -2758,6 +2759,7 @@ class export extends BaseController
                         $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['date']    = $checkpoint['date'];
                         $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['cash']    = $checkpoint['cash'];
                         $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['noncash'] = $checkpoint['noncash'];
+                        $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['diff']    = $checkpoint['diff'];
                         $dailyreportdata[$dayrep['id']]['checkpoint'][$checkpoint['id']]['type']    = $count++;
                     }
                 } else {
@@ -2915,7 +2917,7 @@ class export extends BaseController
                     echo '<th colspan="2">Penerimaan Sistem</th>';
                     echo '<th colspan="2">Penerimaan Aktual</th>';
                     echo '<th rowspan="2">Selisih</th>';
-                    echo '<th colspan="4">Checkpoint</th>';
+                    echo '<th colspan="5">Checkpoint</th>';
                 echo '</tr>';
                 echo '<tr>';
                     echo '<th>Modal</th>';
@@ -2937,6 +2939,7 @@ class export extends BaseController
                     echo '<th>Kasir</th>';
                     echo '<th>Tunai</th>';
                     echo '<th>Non-Tunai</th>';
+                    echo '<th>Selisih Checkpoint</th>';
                 echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
@@ -3098,12 +3101,14 @@ class export extends BaseController
                                     echo '<td style="vertical-align:middle;">' . $checkpoint['cashier'] . '</td>';
                                     echo '<td style="vertical-align:middle;">' . $checkpoint['cash'] . '</td>';
                                     echo '<td style="vertical-align:middle;">' . $checkpoint['noncash'] . '</td>';
+                                    echo '<td style="vertical-align:middle;">' . $checkpoint['diff'] . '</td>';
                                 echo '</tr>';
                             } else {
                                 echo '<td style="vertical-align:middle;">' . date('H:i', strtotime($checkpoint['date'])) . '</td>';
                                 echo '<td style="vertical-align:middle;">' . $checkpoint['cashier'] . '</td>';
                                 echo '<td style="vertical-align:middle;">' . $checkpoint['cash'] . '</td>';
                                 echo '<td style="vertical-align:middle;">' . $checkpoint['noncash'] . '</td>';
+                                echo '<td style="vertical-align:middle;">' . $checkpoint['diff'] . '</td>';
                             }
                         }
                         // Checkpoint End
