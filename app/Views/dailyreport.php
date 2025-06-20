@@ -521,7 +521,7 @@
                         <div class="uk-margin">
                             <h5 class="tm-h3 uk-margin-remove">Checkpoint</h5>
                             <div class="uk-margin-small">
-                                <div class="uk-margin-small uk-child-width-1-5 uk-flex-middle" uk-grid>
+                                <div class="uk-margin-small uk-child-width-1-6 uk-flex-middle" uk-grid>
                                     <div>
                                         <div>Tanggal</div>
                                     </div>
@@ -537,6 +537,9 @@
                                     <div>
                                         <div>Jumlah Non-Tunai</div>
                                     </div>
+                                    <div>
+                                        <div>Selisih</div>
+                                    </div>
                                 </div>
                                 <?php
                                 foreach ($dayrep['checkpoint'] as $checkpoint) {
@@ -544,7 +547,7 @@
                                     $checktime  = date('H:i', $checkdate);
                                 ?>
                                     <hr>
-                                    <div class="uk-margin-small uk-child-width-1-5 uk-flex-middle" uk-grid>
+                                    <div class="uk-margin-small uk-child-width-1-6 uk-flex-middle" uk-grid>
                                         <div>
                                             <div id="datecheckpoint-<?= $checkpoint['id'] ?>"></div>
                                         </div>
@@ -559,6 +562,9 @@
                                         </div>
                                         <div>
                                             <div><?= $checkpoint['noncash'] ?></div>
+                                        </div>
+                                        <div>
+                                            <div><?= $checkpoint['diff'] ?></div>
                                         </div>
                                         
                                         <script>
