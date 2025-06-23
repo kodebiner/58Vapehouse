@@ -300,6 +300,7 @@ class Report extends BaseController
             $trxdisc            = [];
             $vardisc            = [];
             $globdisc           = [];
+            $membdisc           = [];
             $pointdisc          = [];
             $marginmodals       = [];
             $margindasars       = [];
