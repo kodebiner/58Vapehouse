@@ -250,8 +250,14 @@
                                             $globaldisc = 0;
                                         }
 
+                                        if ($gconfig['memberdisc'] != "0") {
+                                            $memberdisc = (Int)$trxdet['memberdisc'];
+                                        } else {
+                                            $memberdisc = 0;
+                                        }
+
                                         // $variantval      = (Int)$trxdet['value'] + (Int)$trxdet['discvar'];
-                                        $variantval      = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$globaldisc / (Int)$trxdet['qty']);
+                                        $variantval      = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$globaldisc / (Int)$trxdet['qty']) + ((Int)$memberdisc / (Int)$trxdet['qty']);
                                         ?>
                                         <div class="uk-margin-small uk-text-xsmall">
                                             <div class="uk-text-bold">
@@ -270,6 +276,10 @@
                                                 if ($gconfig['globaldisc'] != "0") {
                                                     echo "<div class='uk-width-1-2'>(".$globaldisc.")</div>";
                                                     echo "<div class='uk-width-1-2 uk-text-right'>-" .$globaldisc. "</div>";
+                                                }
+                                                if ($gconfig['memberdisc'] != "0") {
+                                                    echo "<div class='uk-width-1-2'>(".$memberdisc.")</div>";
+                                                    echo "<div class='uk-width-1-2 uk-text-right'>-" .$memberdisc. "</div>";
                                                 }
                                                 ?>
                                             </div>
@@ -299,7 +309,13 @@
                                         $globaldisc = 0;
                                     }
 
-                                    $variantval      = (Int)$trxdet['value'] + ((Int)$globaldisc / (Int)$trxdet['qty']);
+                                    if ($gconfig['memberdisc'] != "0") {
+                                        $memberdisc = (Int)$trxdet['memberdisc'];
+                                    } else {
+                                        $memberdisc = 0;
+                                    }
+
+                                    $variantval      = (Int)$trxdet['value'] + ((Int)$globaldisc / (Int)$trxdet['qty']) + ((Int)$memberdisc / (Int)$trxdet['qty']);
                                     ?>
                                     <div class="uk-margin-small uk-text-xsmall">
                                         <div>
@@ -311,6 +327,10 @@
                                                 if ($gconfig['globaldisc'] != "0") {
                                                     echo "<div class='uk-width-1-2'>(".$globaldisc.")</div>";
                                                     echo "<div class='uk-width-1-2 uk-text-right'>-" .$globaldisc. "</div>";
+                                                }
+                                                if ($gconfig['memberdisc'] != "0") {
+                                                    echo "<div class='uk-width-1-2'>(".$memberdisc.")</div>";
+                                                    echo "<div class='uk-width-1-2 uk-text-right'>-" .$memberdisc. "</div>";
                                                 }
                                                 ?>
                                             </div>

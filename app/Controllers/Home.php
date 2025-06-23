@@ -236,7 +236,12 @@ class Home extends BaseController
 
                 // Transaction Detail Discount Global
                 if ($trxdet['globaldisc'] != '0') {
-                    $discountglobal[]       = $trxdet['globaldisc'];
+                    $discount[]       = $trxdet['globaldisc'];
+                }
+
+                // Transaction Detail Discount Member
+                if ($trxdet['memberdisc'] != '0') {
+                    $discount[]       = $trxdet['memberdisc'];
                 }
 
                 // Data Variant

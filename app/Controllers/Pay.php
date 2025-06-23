@@ -84,11 +84,11 @@ class Pay extends BaseController
                 $variant        = $VariantModel->find($varid);
                 $discvar        = (int)$input['varprice'][$varid] * (int)$varqty;
 
-                if (!empty($input['varprice'][$varid])) {
-                    $varval  = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar;
-                } else {
-                    $varval = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
-                }
+                // if (!empty($input['varprice'][$varid])) {
+                //     $varval  = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar;
+                // } else {
+                //     $varval = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
+                // }
 
                 // $discvar        = (int)$input['varprice'][$varid] * (int)$varqty;
                 // $discbargain    = (int)$input['varbargain'][$varid] * (int)$varqty;
@@ -111,13 +111,34 @@ class Pay extends BaseController
                     if ($this->data['gconfig']['globaldisctype'] === '0') {
                         $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
                     } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$varval);
+                        // $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$varval);
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) * (int)$varqty;
                     }
                 } else {
                     $globaldisc = 0;
                 }
 
-                $varvalues[]    = (Int)$varval - (Int)$globaldisc;
+                // ===================== Member Discount GConfig =============================== //
+                if ($input['customerid'] != '0') {
+                    $memberid = $input['customerid'];
+                    if ($this->data['gconfig']['memberdisctype'] === '0') {
+                        $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$varqty;
+                    } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+                        $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
+                    }
+
+                    if ($memberdisc > $this->data['gconfig']['maxmemberdisc']) {
+                        $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
+                    } else {
+                        $memberdisc = $memberdisc;
+                    }
+                } else {
+                    $memberid   = '';
+                    $memberdisc = 0;
+                }
+
+                // $varvalues[]    = (Int)$varval - (Int)$globaldisc - (Int)$memberdisc;
+                $varvalues[]    = ((int)$variant['hargamodal'] + (int)$variant['hargajual']) - (int)$discvar - (Int)$globaldisc - (Int)$memberdisc;
             }
         } else {
             $varvalues[] = '0';
@@ -138,7 +159,26 @@ class Pay extends BaseController
                     $globaldisc = 0;
                 }
 
-                $bundvalues[]    = (Int)$bundleval - (Int)$globaldisc;
+                // ===================== Member Discount GConfig =============================== //
+                if ($input['customerid'] != '0') {
+                    $memberid = $input['customerid'];
+                    if ($this->data['gconfig']['memberdisctype'] === '0') {
+                        $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$bundqty;
+                    } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+                        $memberdisc = (((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price']) * (int)$bundqty;
+                    }
+
+                    if ($memberdisc > $this->data['gconfig']['maxmemberdisc']) {
+                        $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bundqty;
+                    } else {
+                        $memberdisc = $memberdisc;
+                    }
+                } else {
+                    $memberid   = '';
+                    $memberdisc = 0;
+                }
+
+                $bundvalues[]    = (Int)$bundleval - (Int)$globaldisc - (Int)$memberdisc;
             }
         } else {
             $bundvalues[] = '0';
@@ -149,19 +189,20 @@ class Pay extends BaseController
 
         $subtotal = $varvalue + $bundvalue;
 
-        // ===================== Member Discount GConfig =============================== //
-        if ($input['customerid'] != '0') {
-            $memberid = $input['customerid'];
-            if ($this->data['gconfig']['memberdisctype'] === '0') {
-                $memberdisc = $this->data['gconfig']['memberdisc'];
-            } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$subtotal;
-            }
-        } else {
-            $memberid = '';
-            $memberdisc = 0;
-        }
+        // // ===================== Member Discount GConfig =============================== //
+        // if ($input['customerid'] != '0') {
+        //     $memberid = $input['customerid'];
+        //     if ($this->data['gconfig']['memberdisctype'] === '0') {
+        //         $memberdisc = $this->data['gconfig']['memberdisc'];
+        //     } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+        //         $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$subtotal;
+        //     }
+        // } else {
+        //     $memberid = '';
+        //     $memberdisc = 0;
+        // }
 
+        // ===================== Transaction Discount GConfig =============================== //
         if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
             $discount = $input['discvalue'];
         } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
@@ -177,7 +218,8 @@ class Pay extends BaseController
         }
 
         // When Discount Member In Transaction and not dicount member per item
-        $value = (int)$subtotal - (int)$memberdisc - (int)$discount - (int)$poin;
+        // $value = (int)$subtotal - (int)$memberdisc - (int)$discount - (int)$poin;
+        $value = (int)$subtotal - (int)$discount - (int)$poin;
 
         // Single Payment
         if (!empty($input['payment']) && empty($input['duedate'])) {
@@ -188,7 +230,7 @@ class Pay extends BaseController
                 'paymentid'     => $input['payment'],
                 'value'         => $value,
                 'disctype'      => $input['disctype'],
-                'memberdisc'    => $memberdisc,
+                // 'memberdisc'    => $memberdisc,
                 'discvalue'     => $discount,
                 'date'          => $date,
                 'pointused'     => $poin,
@@ -206,7 +248,7 @@ class Pay extends BaseController
                 'paymentid'     => '0',
                 'value'         => $value,
                 'disctype'      => $input['disctype'],
-                'memberdisc'    => $memberdisc,
+                // 'memberdisc'    => $memberdisc,
                 'discvalue'     => $discount,
                 'date'          => $date,
                 'pointused'     => $poin,
@@ -224,7 +266,7 @@ class Pay extends BaseController
                 'paymentid'     => '0',
                 'value'         => $value,
                 'disctype'      => $input['disctype'],
-                'memberdisc'    => $memberdisc,
+                // 'memberdisc'    => $memberdisc,
                 'discvalue'     => $discount,
                 'date'          => $date,
                 'pointused'     => $poin,
@@ -241,11 +283,11 @@ class Pay extends BaseController
                 $variant        = $VariantModel->find($varid);
                 $discvar        = (int)$input['varprice'][$varid] * $varqty;
                 
-                if (!empty($input['varprice'][$varid])) {
-                    $varPrices  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
-                } else {
-                    $varPrices  = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
-                }
+                // if (!empty($input['varprice'][$varid])) {
+                //     $varPrices  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
+                // } else {
+                //     $varPrices  = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
+                // }
 
                 // $discvar        = (int)$input['varprice'][$varid] * $varqty;
                 // $discbargain    = (int)$input['varbargain'][$varid] * $varqty;
@@ -270,13 +312,32 @@ class Pay extends BaseController
                     if ($this->data['gconfig']['globaldisctype'] === '0') {
                         $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
                     } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$varPrices) * (int)$varqty;
+                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) * (int)$varqty;
                     }
                 } else {
                     $globaldisc = 0;
                 }
 
-                $varPrice       = (Int)$varPrices - ((Int)$globaldisc / (Int)$varqty);
+                // ===================== Member Discount GConfig =============================== //
+                if ($input['customerid'] != '0') {
+                    $memberid = $input['customerid'];
+                    if ($this->data['gconfig']['memberdisctype'] === '0') {
+                        $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$varqty;
+                    } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+                        $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
+                    }
+
+                    if ($memberdisc > $this->data['gconfig']['maxmemberdisc']) {
+                        $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
+                    } else {
+                        $memberdisc = $memberdisc;
+                    }
+                } else {
+                    $memberid   = '';
+                    $memberdisc = 0;
+                }
+
+                $varPrice       = ((int)$variant['hargamodal'] + (int)$variant['hargajual']) - ((int)$discvar / (int)$varqty) - ((Int)$globaldisc / (Int)$varqty) - ((Int)$memberdisc / (Int)$varqty);
                 $marginmodal    = (int)$varPrice - (int)$variant['hargamodal'];
                 $margindasar    = (int)$varPrice - (int)$variant['hargadasar'];
 
@@ -287,6 +348,7 @@ class Pay extends BaseController
                     'value'         => $varPrice,
                     'discvar'       => $discvar,
                     'globaldisc'    => $globaldisc,
+                    'memberdisc'    => $memberdisc,
                     'margindasar'   => $margindasar,
                     'marginmodal'   => $marginmodal,
                 ];
@@ -318,13 +380,33 @@ class Pay extends BaseController
                     $globaldisc = 0;
                 }
 
-                $bundlefinprice = (Int)$bundleprice - ((Int)$globaldisc / (int)$bunqty);
+                // ===================== Member Discount GConfig =============================== //
+                if ($input['customerid'] != '0') {
+                    $memberid = $input['customerid'];
+                    if ($this->data['gconfig']['memberdisctype'] === '0') {
+                        $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$bundqty;
+                    } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+                        $memberdisc = (((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price']) * (int)$bundqty;
+                    }
+
+                    if ($memberdisc > $this->data['gconfig']['maxmemberdisc']) {
+                        $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bundqty;
+                    } else {
+                        $memberdisc = $memberdisc;
+                    }
+                } else {
+                    $memberid   = '';
+                    $memberdisc = 0;
+                }
+
+                $bundlefinprice = (Int)$bundleprice - ((Int)$globaldisc / (int)$bunqty) - ((Int)$memberdisc / (int)$bunqty);
 
                 $trxbun = [
                     'transactionid' => $trxId,
                     'bundleid'      => $bunid,
                     'qty'           => $bunqty,
                     'globaldisc'    => $globaldisc,
+                    'memberdisc'    => $memberdisc,
                     'value'         => $bundlefinprice
                 ];
                 $TrxdetailModel->save($trxbun);

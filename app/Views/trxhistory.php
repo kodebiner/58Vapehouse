@@ -81,17 +81,23 @@
                         }
                         $discvararray       = [];
                         $globaldiscarray    = [];
+                        $memberdiscarray    = [];
                         foreach ($transaction['detail'] as $detail) {
                             $discvararray[]     = $detail['discvar'];
                             $globaldiscarray[]  = $detail['globaldisc'];
+                            $memberdiscarray[]  = $detail['memberdisc'];
                         }
                         $totaldiscvar       = array_sum($discvararray);
                         $totalglobaldisc    = array_sum($globaldiscarray);
+                        $totalmemberdisc    = array_sum($memberdiscarray);
                         if (!empty($totaldiscvar)) {
                             echo '<div>Diskon Variant</div>';
                         }
                         if (!empty($totalglobaldisc)) {
                             echo '<div>Diskon Global</div>';
+                        }
+                        if (!empty($totalmemberdisc)) {
+                            echo '<div>Diskon Member Per Item</div>';
                         }
                         ?>
                     </td>
@@ -244,6 +250,17 @@
                                             </div>
                                             <div class="uk-text-right">
                                                 <div>- <?= $detail['globaldisc'] ?></div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                    
+                                    <?php if ($detail['memberdisc'] != '0') { ?>
+                                        <div class="uk-child-width-1-2 uk-margin-remove-top" uk-grid>
+                                            <div>
+                                                <div>(<?= (Int)$detail['memberdisc'] / (Int)$detail['qty'] ?>)</div>
+                                            </div>
+                                            <div class="uk-text-right">
+                                                <div>- <?= $detail['memberdisc'] ?></div>
                                             </div>
                                         </div>
                                     <?php } ?>

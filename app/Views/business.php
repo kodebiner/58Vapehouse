@@ -62,6 +62,12 @@
                     </div>
                 </div>
                 <div class="uk-margin">
+                    <label class="uk-form-label" for="maxmemberdisc">Batas Nominal Diskon Member</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input uk-form-width-small" id="maxmemberdisc" name="maxmemberdisc" type="number" value="<?=$gconfig['maxmemberdisc']?>" required>
+                    </div>
+                </div>
+                <div class="uk-margin">
                     <label class="uk-form-label" for="globaldisctype">Promo Discount Type</label>
                     <div class="uk-form-controls">
                         <div class="uk-margin-small">

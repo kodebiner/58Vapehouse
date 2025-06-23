@@ -116,6 +116,10 @@
                                     echo "<div class='uk-width-1-2'>(".$detailvar['globaldisc'].")</div>";
                                     echo "<div class='uk-width-1-2 uk-text-right'>-" .$detailvar['globaldisc']. "</div>";
                                 }
+                                if ($detailvar['memberdisc'] != "0") {
+                                    echo "<div class='uk-width-1-2'>(".$detailvar['memberdisc'].")</div>";
+                                    echo "<div class='uk-width-1-2 uk-text-right'>-" .$detailvar['memberdisc']. "</div>";
+                                }
                                 ?>
                             </div>
                         </div>
@@ -134,6 +138,10 @@
                                     if ($detailbun['globaldisc'] != "0") {
                                         echo "<div class='uk-width-1-2'>(".$detailbun['globaldisc'].")</div>";
                                         echo "<div class='uk-width-1-2 uk-text-right'>-" .$detailbun['globaldisc']. "</div>";
+                                    }
+                                    if ($detailbun['memberdisc'] != "0") {
+                                        echo "<div class='uk-width-1-2'>(".$detailbun['memberdisc'].")</div>";
+                                        echo "<div class='uk-width-1-2 uk-text-right'>-" .$detailbun['memberdisc']. "</div>";
                                     }
                                     ?>
                                 </div>

@@ -16,6 +16,7 @@
             ['Task', 'Hours per Day'],
             ['<?=lang('Global.discount')?> <?=lang('Global.variant')?>', <?php echo ' '.$trxvardis.'';?>],
             ['<?=lang('Global.discount')?> Global', <?php echo ' '.$trxglodis.'';?>],
+            ['<?=lang('Global.discount')?> Member', <?php echo ' '.$trxmemdis.'';?>],
             ['<?=lang('Global.discount')?> <?=lang('Global.transaction')?>', <?php echo ' '.$trxdisc.'';?>],
             ['<?=lang('Global.discount')?> <?=lang('Global.point')?>',  <?php echo ' '.$poindisc.'';?>],
         ]);       
@@ -107,6 +108,19 @@
                 <div>
                     <div uk-grid>
                         <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxglodis,2,',','.');" ";?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="uk-card uk-card-default uk-card-hover uk-card-body">
+                <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.discount')?> Member</h3>
+                <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.discount')?> Member yang diatur melalui "Informasi Usaha"</p>
+                <hr>
+                <div>
+                    <div uk-grid>
+                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxmemdis,2,',','.');" ";?></div>
                     </div>
                 </div>
             </div>
