@@ -127,7 +127,7 @@ class Pay extends BaseController
                         $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
                     }
 
-                    if ($memberdisc > $this->data['gconfig']['maxmemberdisc']) {
+                    if ($memberdisc > ($this->data['gconfig']['maxmemberdisc'] * (int)$varqty)) {
                         $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
                     } else {
                         $memberdisc = $memberdisc;
@@ -138,7 +138,7 @@ class Pay extends BaseController
                 }
 
                 // $varvalues[]    = (Int)$varval - (Int)$globaldisc - (Int)$memberdisc;
-                $varvalues[]    = ((int)$variant['hargamodal'] + (int)$variant['hargajual']) - (int)$discvar - (Int)$globaldisc - (Int)$memberdisc;
+                $varvalues[]    = (((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (Int)$varqty) - (int)$discvar - (Int)$globaldisc - (Int)$memberdisc;
             }
         } else {
             $varvalues[] = '0';
@@ -168,7 +168,7 @@ class Pay extends BaseController
                         $memberdisc = (((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price']) * (int)$bundqty;
                     }
 
-                    if ($memberdisc > $this->data['gconfig']['maxmemberdisc']) {
+                    if ($memberdisc > ($this->data['gconfig']['maxmemberdisc'] * (int)$bundqty)) {
                         $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bundqty;
                     } else {
                         $memberdisc = $memberdisc;
@@ -327,7 +327,7 @@ class Pay extends BaseController
                         $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
                     }
 
-                    if ($memberdisc > $this->data['gconfig']['maxmemberdisc']) {
+                    if ($memberdisc > ($this->data['gconfig']['maxmemberdisc'] * (int)$varqty)) {
                         $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
                     } else {
                         $memberdisc = $memberdisc;
@@ -389,7 +389,7 @@ class Pay extends BaseController
                         $memberdisc = (((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price']) * (int)$bundqty;
                     }
 
-                    if ($memberdisc > $this->data['gconfig']['maxmemberdisc']) {
+                    if ($memberdisc > ($this->data['gconfig']['maxmemberdisc'] * (int)$bundqty)) {
                         $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bundqty;
                     } else {
                         $memberdisc = $memberdisc;
