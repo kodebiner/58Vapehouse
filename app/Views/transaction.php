@@ -3362,159 +3362,49 @@
 
             let subtotalobserve = new MutationObserver(mutationRecords => {
                 var prices = document.querySelectorAll("div[name='price[]']");
-                // var discvars = document.querySelectorAll(".varprice");
                 
                 var subarr = [];
-                // var discarr = [];
 
                 for (i = 0; i < prices.length; i++) {
                     price = Number(prices[i].innerText);
                     subarr.push(price);
                 }
-                
-                // if (discvars.length !== 0){
-                //     for (i = 0; i < discvars.length; i++) {
-                //         var index = discvars[i].getAttribute('data-index');
-                //         var varqty = document.getElementById('qty['+index+']').value;
-                //         var vardisc = document.getElementById('varprice'+index).value;
-                //         var discountvar = Number(varqty) * Number(vardisc);
-                //         discarr.push(discountvar);
-                //     }
-                // }
                 if (subarr.length === 0) {
                     document.getElementById('subtotal').innerHTML = 0;
                 } else {
                     var subtotal = subarr.reduce(function(a, b){ return a + b; });
-                    // if (discvars.length !== 0){
-                    // var discountvar = discarr.reduce(function(a, b){ return a + b; });
-                    // document.getElementById('subtotal').innerHTML = subtotal - discountvar;
-                    // }else{
-                        document.getElementById('subtotal').innerHTML = subtotal;
-                    // }
+                    document.getElementById('subtotal').innerHTML = subtotal;
                 }
                 
-                $(document).ready(function() {
-                    $("#pay").click(function () {
-                        $('#order').attr('action', "/pay/create");
-                        $('#order').trigger('submit');
-                    });
+                // $(document).ready(function() {
+                //     $("#pay").click(function () {
+                //         $('#order').attr('action', "/pay/create");
+                //         $('#order').trigger('submit');
+                //     });
 
-                    $("#order").on("submit", function (e) {
-                        const isValid = $("#customerid").attr("data-valid");
+                //     $("#order").on("submit", function (e) {
+                //         const isValid = $("#customerid").attr("data-valid");
 
-                        if (isValid !== "1") {
-                            e.preventDefault();
-                            alert("Silakan pilih pelanggan dari daftar yang muncul.");
-                            $("#customername").addClass("uk-form-danger");
-                            return false;
-                        }
+                //         if (isValid !== "1") {
+                //             e.preventDefault();
+                //             alert("Silakan pilih pelanggan dari daftar yang muncul.");
+                //             $("#customername").addClass("uk-form-danger");
+                //             return false;
+                //         }
 
-                        $("#customername").removeClass("uk-form-danger");
-                    });
+                //         const debt      = parseFloat(document.getElementById('debt').value) || 0;
+                //         const duedate   = document.getElementById('duedate').value;
 
-                    // $(".varprice").keyup(function(){
-                    //     var prices = document.querySelectorAll("div[name='price[]']");
-                    //     var discvars = document.querySelectorAll(".varprice");
-                        
-                    //     var subarr = [];
-                    //     var discarr = [];
+                //         if (debt > 0 && duedate.trim() === '') {
+                //             e.preventDefault();
+                //             alert("Karena pembayaran belum lunas, silakan isi tanggal jatuh tempo.");
+                //             document.getElementById('duedate').focus();
+                //             return false;
+                //         }
 
-                    //     if (discvars.length !== 0){
-                    //         for (i = 0; i < prices.length; i++) {
-                    //             price = Number(prices[i].innerText);
-                    //             subarr.push(price);
-                    //         }
-                            
-                    //         for (i = 0; i < discvars.length; i++) {
-                    //             var index = discvars[i].getAttribute('data-index');
-                    //             var varqty = document.getElementById('qty['+index+']').value;
-                    //             var vardisc = document.getElementById('varprice'+index).value;
-                    //             var discountvar = Number(varqty) * Number(vardisc);
-                    //             discarr.push(discountvar);
-                    //         }
-                    //         if (subarr.length === 0) {
-                    //             document.getElementById('subtotal').innerHTML = 0;
-                    //         } else {
-                    //             var subtotal = subarr.reduce(function(a, b){ return a + b; });
-                    //             var discountvar = discarr.reduce(function(a, b){ return a + b; });
-                    //             document.getElementById('subtotal').innerHTML = subtotal - discountvar;
-                    //         }  
-                            
-                    //         if (document.getElementById('subtotal').innerHTML < min ){
-                    //         document.getElementById('subtotal').innerHTML = "Sorry Price To Low!"; 
-                    //         }
-                    //     }
-                    // });
-
-                    // let isSubmitted = false;
-
-                    // $("#order").on("submit", function (e) {
-                    //     if (isSubmitted) return true;
-
-                    //     const customerId    = $("#customerid").val();
-                    //     const isValid       = $("#customerid").attr("data-valid");
-
-                    //     if (isValid !== "1") {
-                    //         e.preventDefault();
-                    //         alert("Silakan pilih pelanggan dari daftar yang muncul.");
-                    //         $("#customername").addClass("uk-form-danger");
-                    //         return false;
-                    //     }
-
-                    //     $("#customername").removeClass("uk-form-danger");
-
-                    //     // Set flag
-                    //     isSubmitted = true;
-                    // });
-
-                    // $("#pay").click(function () {
-                    //     $('#order').attr('action', "/pay/create");
-
-                    //     // Trigger event submit supaya validasi tetap berjalan
-                    //     $('#order').trigger('submit');
-                    //     document.getElementById("order").reset();
-                    // });
-
-                    // $("#order").on('submit', function(e) {
-                    //     var customerId  = $("#customerid").val();
-                    //     var isValid     = $("#customerid").attr('data-valid');
-
-                    //     if (isValid !== '1') {
-                    //         e.preventDefault();
-                    //         alert("Silakan pilih pelanggan dari daftar yang muncul.");
-                            
-                    //         // Tampilkan border merah
-                    //         $("#customername").addClass("uk-form-danger");
-                    //         return false;
-                    //     }
-
-                    //     // Bersihkan jika valid
-                    //     $("#customername").removeClass("uk-form-danger");
-                    // });
-
-                    // $('#pay').click(function(){
-                    //     $('#order').attr('action', "/pay/create");
-                    //     $("#order").validate({
-                    //         required: true,
-                    //     });
-                    //     $('#order').submit();
-                    //     document.getElementById("order").reset();
-                    //     // var custphone   = document.getElementById('customerphone').value;
-                    //     // if (custphone) {
-                    //     //     window.open(`https://wa.me/+62`+custphone+`?text=Terimakasih%20telah%20berbelanja%20di%2058%20Vapehouse%2C%20untuk%20detail%20struk%20pembelian%20bisa%20cek%20link%20dibawah%20lur.%20%E2%9C%A8%E2%9C%A8%0A%0A$link%0A%0AJika%20menemukan%20kendala%2C%20kerusakan%20produk%2C%20atau%20ingin%20memberi%20kritik%20%26%20saran%20hubungu%2058%20Customer%20Solution%20kami%20di%20wa.me%2F6288983741558%20`, '_blank');
-                    //     // }
-                    // });
-                    
-                    // // $('#save').click(function(){
-                    // //     $('#order').attr('action', "/pay/save");
-                    // //     $("#order").validate({
-                    // //         required: true,
-                    // //     });
-                    // //     $('#order').submit();
-                    // // });
-                    // console.log( "ready!" );
-                   
-                });
+                //         $("#customername").removeClass("uk-form-danger");
+                //     });
+                // });
             });
 
             let totalobserve = new MutationObserver(totalcount);
@@ -3574,22 +3464,6 @@
                 // Member Discount
                 var member = document.getElementById('customerid');
 
-                // if (member && member.value) {
-                //     if (member.value != 0) {
-                //         </?php
-                //         if ($gconfig['memberdisctype'] === '0') {
-                //             echo 'var memberdisc = '.(int)$gconfig['memberdisc'].';';
-                //         } elseif ($gconfig['memberdisctype'] === '1') {
-                //             echo 'var memberdisc = ('.(int)$gconfig['memberdisc'].'/100)*subtotal;';
-                //         }
-                //         ?>
-                //     } else {
-                //         var memberdisc = 0;
-                //     }
-                // } else {
-                //     var memberdisc = 0;
-                // }
-
                 // Tax
                 var tax = (<?=(int)$gconfig['ppn']?>/100)*subtotal;
                 
@@ -3619,7 +3493,6 @@
                 var pay = document.getElementById('value').value;
                 var firstpay = document.getElementById('firstpay').value;
                 var secondpay = document.getElementById('secondpay').value;
-
 
                 var pay = document.getElementById('value').value;
                 var firstpay = document.getElementById('firstpay').value;
@@ -3725,6 +3598,40 @@
                 document.getElementById('secondpay').value = null;
                 totalcount();
             }
+            
+            let isSubmitted = false;
+            $(document).ready(function () {
+                $("#order").on("submit", function (e) {
+                    if (isSubmitted) return true;
+
+                    const isValid = $("#customerid").attr("data-valid");
+                    if (isValid !== "1") {
+                        e.preventDefault();
+                        alert("Silakan pilih pelanggan dari daftar yang muncul.");
+                        $("#customername").addClass("uk-form-danger");
+                        return false;
+                    }
+
+                    const debt = parseFloat(document.getElementById('debt').value) || 0;
+                    const duedate = document.getElementById('duedate').value;
+
+                    if (debt > 0 && duedate.trim() === '') {
+                        e.preventDefault();
+                        alert("Karena pembayaran belum lunas, silakan isi tanggal jatuh tempo.");
+                        document.getElementById('duedate').focus();
+                        return false;
+                    }
+
+                    $("#customername").removeClass("uk-form-danger");
+
+                    isSubmitted = true;
+                });
+
+                $("#pay").click(function () {
+                    $('#order').attr('action', "/pay/create");
+                    $('#order').trigger('submit');
+                });
+            });
         </script>
     </body>
 </html>
