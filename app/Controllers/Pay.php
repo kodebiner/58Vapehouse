@@ -31,317 +31,167 @@ class Pay extends BaseController
     
     public function create()
     {
-        // Calling Models
-        $db                     = \Config\Database::connect();
-        $BundleModel            = new BundleModel();
-        $BundledetModel         = new BundledetailModel();
-        $BookingModel           = new BookingModel();
-        $BookingdetailModel     = new BookingdetailModel();
-        $CashModel              = new CashModel();
-        $DebtModel              = new DebtModel();
-        $GconfigModel           = new GconfigModel();
-        $OutletModel            = new OutletModel();
-        $UserModel              = new UserModel();
-        $MemberModel            = new MemberModel();
-        $PaymentModel           = new PaymentModel();
-        $ProductModel           = new ProductModel();
-        $VariantModel           = new VariantModel();
-        $StockModel             = new StockModel();
-        $TransactionModel       = new TransactionModel();
-        $TrxdetailModel         = new TrxdetailModel();
-        $TrxpaymentModel        = new TrxpaymentModel();
+        // Load Models
+        $db                 = \Config\Database::connect();
+        $BundleModel        = new BundleModel();
+        $BundledetModel     = new BundledetailModel();
+        $BookingModel       = new BookingModel();
+        $BookingdetailModel = new BookingdetailModel();
+        $CashModel          = new CashModel();
+        $DebtModel          = new DebtModel();
+        $GconfigModel       = new GconfigModel();
+        $OutletModel        = new OutletModel();
+        $UserModel          = new UserModel();
+        $MemberModel        = new MemberModel();
+        $PaymentModel       = new PaymentModel();
+        $ProductModel       = new ProductModel();
+        $VariantModel       = new VariantModel();
+        $StockModel         = new StockModel();
+        $TransactionModel   = new TransactionModel();
+        $TrxdetailModel     = new TrxdetailModel();
+        $TrxpaymentModel    = new TrxpaymentModel();
 
-        // Getting Inputs
         $input = $this->request->getPost();
-        
-        // Image Capture
-        if (!empty($input['image'])) {
+        $date  = date('Y-m-d H:i:s');
+        $Gconfig = $GconfigModel->first();
 
-            $img            = $input['image'];
-            $folderPath     = "img/tfproof/";
-            $image_parts    = explode(";base64,", $img);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type     = $image_type_aux[1];
-            $image_base64   = base64_decode($image_parts[1]);
-            $fileName       = uniqid() . '.png';
-            $file           = $folderPath . $fileName;
-            file_put_contents($file, $image_base64);
-        } else {
-            $fileName = "NULL";
+        // Handle image upload
+        $fileName = null;
+        if (!empty($input['image'])) {
+            $img = $input['image'];
+            $folderPath = "img/tfproof/";
+            $image_parts = explode(";base64,", $img);
+            if (count($image_parts) === 2) {
+                $image_base64 = base64_decode($image_parts[1]);
+                $fileName = uniqid() . '.png';
+                $file = $folderPath . $fileName;
+                file_put_contents($file, $image_base64);
+            }
         }
 
-        // Populating Data
-        $date           = date('Y-m-d H:i:s');
-        $Gconfig        = $GconfigModel->first();
-        // $customers      = $MemberModel->findAll();
+        // Calculate item and bundle values
+        $varvalues = [];
+        $bundvalues = [];
+        $memberid = !empty($input['customerid']) ? $input['customerid'] : '';
+        $memberdisc = 0;
 
-        // Inserting Transaction
-        $varvalues      = array();
-        $bundvalues     = array();
-
+        // Calculate variant values
         if (!empty($input['qty'])) {
             foreach ($input['qty'] as $varid => $varqty) {
-                $variant        = $VariantModel->find($varid);
-                $discvar        = (int)$input['varprice'][$varid] * (int)$varqty;
-
-                // if (!empty($input['varprice'][$varid])) {
-                //     $varval  = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar;
-                // } else {
-                //     $varval = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
-                // }
-
-                // $discvar        = (int)$input['varprice'][$varid] * (int)$varqty;
-                // $discbargain    = (int)$input['varbargain'][$varid] * (int)$varqty;
-
-                // // Bargain And Varprice Added
-                // if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
-                //     $varval  = (int)$discbargain - (int)$discvar;
-                //     // Vaprice Added And Null Bargain
-                // } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
-                //     $varval  = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar;
-                //     // Bargain Added And Null Varprice
-                // } elseif ((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)) {
-                //     $varval  = (int)$discbargain;
-                //     // Null Bargain & Varprice
-                // } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
-                //     $varval = (int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual']);
-                // }
-
-                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                $variant = $VariantModel->find($varid);
+                $discvar = isset($input['varprice'][$varid]) ? (int)$input['varprice'][$varid] * (int)$varqty : 0;
+                $globaldisc = 0;
+                if (!empty($this->data['gconfig']['globaldisc'])) {
                     if ($this->data['gconfig']['globaldisctype'] === '0') {
-                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
+                        $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
                     } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        // $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$varval);
-                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) * (int)$varqty;
+                        $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
                     }
-                } else {
-                    $globaldisc = 0;
                 }
-
-                // ===================== Member Discount GConfig =============================== //
-                if ($input['customerid'] != '0') {
-                    $memberid = $input['customerid'];
+                $memberdisc = 0;
+                if ($memberid) {
                     if ($this->data['gconfig']['memberdisctype'] === '0') {
                         $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$varqty;
                     } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
                         $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
                     }
-
-                    if ($memberdisc > ($this->data['gconfig']['maxmemberdisc'] * (int)$varqty)) {
-                        $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
-                    } else {
-                        $memberdisc = $memberdisc;
-                    }
-                } else {
-                    $memberid   = '';
-                    $memberdisc = 0;
+                    $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
+                    if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
                 }
-
-                // $varvalues[]    = (Int)$varval - (Int)$globaldisc - (Int)$memberdisc;
-                $varvalues[]    = (((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (Int)$varqty) - (int)$discvar - (Int)$globaldisc - (Int)$memberdisc;
+                $varvalues[] = (((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty) - $discvar - $globaldisc - $memberdisc;
             }
         } else {
-            $varvalues[] = '0';
+            $varvalues[] = 0;
         }
 
+        // Calculate bundle values
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bundqty) {
-                $bundle         = $BundleModel->find($bunid);
-                $bundleval      = (Int)$bundqty * (Int)$bundle['price'];
-
-                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                $bundle = $BundleModel->find($bunid);
+                $bundleval = (int)$bundqty * (int)$bundle['price'];
+                $globaldisc = 0;
+                if (!empty($this->data['gconfig']['globaldisc'])) {
                     if ($this->data['gconfig']['globaldisctype'] === '0') {
-                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$bundqty;
+                        $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$bundqty;
                     } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundle['price']) * (int)$bundqty;
+                        $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundle['price'] * (int)$bundqty;
                     }
-                } else {
-                    $globaldisc = 0;
                 }
-
-                // ===================== Member Discount GConfig =============================== //
-                if ($input['customerid'] != '0') {
-                    $memberid = $input['customerid'];
+                $memberdisc = 0;
+                if ($memberid) {
                     if ($this->data['gconfig']['memberdisctype'] === '0') {
                         $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$bundqty;
                     } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                        $memberdisc = (((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price']) * (int)$bundqty;
+                        $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price'] * (int)$bundqty;
                     }
-
-                    if ($memberdisc > ($this->data['gconfig']['maxmemberdisc'] * (int)$bundqty)) {
-                        $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bundqty;
-                    } else {
-                        $memberdisc = $memberdisc;
-                    }
-                } else {
-                    $memberid   = '';
-                    $memberdisc = 0;
+                    $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bundqty;
+                    if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
                 }
-
-                $bundvalues[]    = (Int)$bundleval - (Int)$globaldisc - (Int)$memberdisc;
+                $bundvalues[] = $bundleval - $globaldisc - $memberdisc;
             }
         } else {
-            $bundvalues[] = '0';
+            $bundvalues[] = 0;
         }
 
-        $varvalue   = array_sum($varvalues);
-        $bundvalue  = array_sum($bundvalues);
+        $subtotal = array_sum($varvalues) + array_sum($bundvalues);
 
-        $subtotal = $varvalue + $bundvalue;
-
-        // // ===================== Member Discount GConfig =============================== //
-        // if ($input['customerid'] != '0') {
-        //     $memberid = $input['customerid'];
-        //     if ($this->data['gconfig']['memberdisctype'] === '0') {
-        //         $memberdisc = $this->data['gconfig']['memberdisc'];
-        //     } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-        //         $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$subtotal;
-        //     }
-        // } else {
-        //     $memberid = '';
-        //     $memberdisc = 0;
-        // }
-
-        // ===================== Transaction Discount GConfig =============================== //
-        if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
-            $discount = $input['discvalue'];
-        } elseif ((!empty($input['discvalue'])) && ($input['disctype'] === '1')) {
-            $discount = ((int)$input['discvalue'] / 100) * (int)$subtotal;
-        } elseif (empty($input['discvalue'])) {
-            $discount   = 0;
+        // Transaction discount
+        $discount = 0;
+        if (!empty($input['discvalue'])) {
+            if ($input['disctype'] === '0') {
+                $discount = $input['discvalue'];
+            } elseif ($input['disctype'] === '1') {
+                $discount = ((int)$input['discvalue'] / 100) * (int)$subtotal;
+            }
         }
 
-        if (!empty($input['poin'])) {
-            $poin = $input['poin'];
-        } else {
-            $poin = 0;
-        }
-
-        // When Discount Member In Transaction and not dicount member per item
-        // $value = (int)$subtotal - (int)$memberdisc - (int)$discount - (int)$poin;
+        $poin = !empty($input['poin']) ? (int)$input['poin'] : 0;
         $value = (int)$subtotal - (int)$discount - (int)$poin;
 
-        // Single Payment
-        if (!empty($input['payment']) && empty($input['duedate'])) {
-            $trx = [
-                'outletid'      => $this->data['outletPick'],
-                'userid'        => $this->data['uid'],
-                'memberid'      => $memberid,
-                'paymentid'     => $input['payment'],
-                'value'         => $value,
-                'disctype'      => $input['disctype'],
-                // 'memberdisc'    => $memberdisc,
-                'discvalue'     => $discount,
-                'date'          => $date,
-                'pointused'     => $poin,
-                'amountpaid'    => $input['value'],
-                'photo'         => $fileName,
-            ];
-            $TransactionModel->insert($trx);
-        }
-        // Splitbill Payment
-        elseif (!empty($input['firstpayment']) && !empty($input['secpayment']) && empty($input['duedate'])) {
-            $trx = [
-                'outletid'      => $this->data['outletPick'],
-                'userid'        => $this->data['uid'],
-                'memberid'      => $memberid,
-                'paymentid'     => '0',
-                'value'         => $value,
-                'disctype'      => $input['disctype'],
-                // 'memberdisc'    => $memberdisc,
-                'discvalue'     => $discount,
-                'date'          => $date,
-                'pointused'     => $poin,
-                'amountpaid'    => (int)$input['firstpay'] + (int)$input['secondpay'],
-                'photo'         => $fileName,
-            ];
-            $TransactionModel->insert($trx);
-        }
-        // Debt
-        elseif (!empty($input['duedate'])) {
-            $trx = [
-                'outletid'      => $this->data['outletPick'],
-                'userid'        => $this->data['uid'],
-                'memberid'      => $memberid,
-                'paymentid'     => '0',
-                'value'         => $value,
-                'disctype'      => $input['disctype'],
-                // 'memberdisc'    => $memberdisc,
-                'discvalue'     => $discount,
-                'date'          => $date,
-                'pointused'     => $poin,
-                'amountpaid'    => $input['value'],
-                'photo'         => $fileName,
-            ];
-            $TransactionModel->insert($trx);
-        }
+        // Insert Transaction
+        $trxData = [
+            'outletid'    => $this->data['outletPick'],
+            'userid'      => $this->data['uid'],
+            'memberid'    => $memberid,
+            'paymentid'   => $input['payment'] ?? '0',
+            'value'       => $value,
+            'disctype'    => $input['disctype'] ?? '0',
+            'discvalue'   => $discount,
+            'date'        => $date,
+            'pointused'   => $poin,
+            'amountpaid'  => $input['value'] ?? 0,
+            'photo'       => $fileName,
+        ];
+        $TransactionModel->insert($trxData);
         $trxId = $TransactionModel->getInsertID();
 
-        // Transaction Detail & Stock
+        // Insert Transaction Details and update stock
         if (!empty($input['qty'])) {
             foreach ($input['qty'] as $varid => $varqty) {
-                $variant        = $VariantModel->find($varid);
-                $discvar        = (int)$input['varprice'][$varid] * $varqty;
-                
-                // if (!empty($input['varprice'][$varid])) {
-                //     $varPrices  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
-                // } else {
-                //     $varPrices  = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
-                // }
-
-                // $discvar        = (int)$input['varprice'][$varid] * $varqty;
-                // $discbargain    = (int)$input['varbargain'][$varid] * $varqty;
-
-                // // Bargain And Varprice Added
-                // if (!empty($input['varprice'][$varid]) && !empty($input['varbargain'][$varid]) && $discbargain !== 0) {
-                //     $varPrices  = ((int)$discbargain - (int)$discvar) / (int)$varqty;
-                //     // Vaprice Added And Null Bargain
-                // } elseif (isset($input['varprice'][$varid]) && !isset($input['varbargain'][$varid]) || $discbargain === 0) {
-                //     $varPrices  = (((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) - (int)$discvar) / (int)$varqty;
-                //     // Bargain Added And Null Varprice
-                // } elseif ((empty($input['varprice'][$varid])) && (isset($input['varbargain'][$varid])) && ($discbargain !== 0)) {
-                //     $varPrices  = (int)$discbargain / (int)$varqty;
-                //     // Null Bargain & Varprice
-                // } elseif (empty($input['varprice'][$varid]) && empty($input['varbargain'][$varid])) {
-                //     $varPrices = ((int)$varqty * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) / (int)$varqty;
-                // } else {
-                //     $varPrices = 0;
-                // }
-
-                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                $variant = $VariantModel->find($varid);
+                $discvar = isset($input['varprice'][$varid]) ? (int)$input['varprice'][$varid] * $varqty : 0;
+                $globaldisc = 0;
+                if (!empty($this->data['gconfig']['globaldisc'])) {
                     if ($this->data['gconfig']['globaldisctype'] === '0') {
-                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
+                        $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
                     } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual'])) * (int)$varqty;
+                        $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
                     }
-                } else {
-                    $globaldisc = 0;
                 }
-
-                // ===================== Member Discount GConfig =============================== //
-                if ($input['customerid'] != '0') {
-                    $memberid = $input['customerid'];
+                $memberdisc = 0;
+                if ($memberid) {
                     if ($this->data['gconfig']['memberdisctype'] === '0') {
                         $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$varqty;
                     } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
                         $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
                     }
-
-                    if ($memberdisc > ($this->data['gconfig']['maxmemberdisc'] * (int)$varqty)) {
-                        $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
-                    } else {
-                        $memberdisc = $memberdisc;
-                    }
-                } else {
-                    $memberid   = '';
-                    $memberdisc = 0;
+                    $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
+                    if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
                 }
-
-                $varPrice       = ((int)$variant['hargamodal'] + (int)$variant['hargajual']) - ((int)$discvar / (int)$varqty) - ((Int)$globaldisc / (Int)$varqty) - ((Int)$memberdisc / (Int)$varqty);
-                $marginmodal    = (int)$varPrice - (int)$variant['hargamodal'];
-                $margindasar    = (int)$varPrice - (int)$variant['hargadasar'];
-
-                $trxvar = [
+                $varPrice = ((int)$variant['hargamodal'] + (int)$variant['hargajual']) - ($discvar / max(1, (int)$varqty)) - ($globaldisc / max(1, (int)$varqty)) - ($memberdisc / max(1, (int)$varqty));
+                $marginmodal = (int)$varPrice - (int)$variant['hargamodal'];
+                $margindasar = (int)$varPrice - (int)$variant['hargadasar'];
+                $TrxdetailModel->save([
                     'transactionid' => $trxId,
                     'variantid'     => $varid,
                     'qty'           => $varqty,
@@ -351,470 +201,201 @@ class Pay extends BaseController
                     'memberdisc'    => $memberdisc,
                     'margindasar'   => $margindasar,
                     'marginmodal'   => $marginmodal,
-                ];
-                $TrxdetailModel->save($trxvar);
-
+                ]);
+                // Update stock
                 $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
-                $saleVarStock = [
-                    'id'        => $stock['id'],
-                    'sale'      => $date,
-                    'qty'       => (int)$stock['qty'] - (int)$varqty
-                ];
-                $StockModel->save($saleVarStock);
+                if ($stock) {
+                    $StockModel->save([
+                        'id'  => $stock['id'],
+                        'sale'=> $date,
+                        'qty' => max(0, (int)$stock['qty'] - (int)$varqty)
+                    ]);
+                }
             }
         }
 
+        // Insert bundle details and update stock
         if (!empty($input['bqty'])) {
             foreach ($input['bqty'] as $bunid => $bunqty) {
-                $bundle         = $BundleModel->find($bunid);
-                $bundleprice    = (int)$bundle['price'];
-
-                // When member discount applied per item
-                if (($this->data['gconfig']['globaldisc'] != '0') || ($this->data['gconfig']['globaldisc'] != null)) {
+                $bundle = $BundleModel->find($bunid);
+                $bundleprice = (int)$bundle['price'];
+                $globaldisc = 0;
+                if (!empty($this->data['gconfig']['globaldisc'])) {
                     if ($this->data['gconfig']['globaldisctype'] === '0') {
-                        $globaldisc = (Int)$this->data['gconfig']['globaldisc'] * (int)$bunqty;
+                        $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$bunqty;
                     } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = (((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleprice) * (int)$bunqty;
+                        $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleprice * (int)$bunqty;
                     }
-                } else {
-                    $globaldisc = 0;
                 }
-
-                // ===================== Member Discount GConfig =============================== //
-                if ($input['customerid'] != '0') {
-                    $memberid = $input['customerid'];
+                $memberdisc = 0;
+                if ($memberid) {
                     if ($this->data['gconfig']['memberdisctype'] === '0') {
-                        $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$bundqty;
+                        $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$bunqty;
                     } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                        $memberdisc = (((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price']) * (int)$bundqty;
+                        $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price'] * (int)$bunqty;
                     }
-
-                    if ($memberdisc > ($this->data['gconfig']['maxmemberdisc'] * (int)$bundqty)) {
-                        $memberdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bundqty;
-                    } else {
-                        $memberdisc = $memberdisc;
-                    }
-                } else {
-                    $memberid   = '';
-                    $memberdisc = 0;
+                    $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bunqty;
+                    if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
                 }
-
-                $bundlefinprice = (Int)$bundleprice - ((Int)$globaldisc / (int)$bunqty) - ((Int)$memberdisc / (int)$bunqty);
-
-                $trxbun = [
+                $bundlefinprice = (int)$bundleprice - ($globaldisc / max(1, (int)$bunqty)) - ($memberdisc / max(1, (int)$bunqty));
+                $TrxdetailModel->save([
                     'transactionid' => $trxId,
                     'bundleid'      => $bunid,
                     'qty'           => $bunqty,
                     'globaldisc'    => $globaldisc,
                     'memberdisc'    => $memberdisc,
                     'value'         => $bundlefinprice
-                ];
-                $TrxdetailModel->save($trxbun);
-
-                $bundledetail   = $BundledetModel->where('bundleid', $bunid)->find();
+                ]);
+                // Update stock for each variant in bundle
+                $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
                 foreach ($bundledetail as $BundleDetail) {
                     $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
-                    $saleBunStock = [
-                        'id'        => $bunstock['id'],
-                        'sale'      => $date,
-                        'qty'       => (int)$bunstock['qty'] - (int)$bunqty
-                    ];
-                    $StockModel->save($saleBunStock);
+                    if ($bunstock) {
+                        $StockModel->save([
+                            'id'  => $bunstock['id'],
+                            'sale'=> $date,
+                            'qty' => max(0, (int)$bunstock['qty'] - (int)$bunqty)
+                        ]);
+                    }
                 }
             }
         }
 
-        // Poin Minus
-        $cust       = $MemberModel->find($input['customerid']);
-        if (!empty($cust)) {
-            $point      = [
-                'id'    => $cust['id'],
-                'poin'  => (int)$cust['poin'] - (int)$poin,
-            ];
-            $MemberModel->save($point);
+        // Deduct member points
+        if ($memberid) {
+            $cust = $MemberModel->find($memberid);
+            if ($cust) {
+                $MemberModel->save([
+                    'id'   => $cust['id'],
+                    'poin' => max(0, (int)$cust['poin'] - $poin),
+                ]);
+            }
         }
 
-        // PPN Value
+        // PPN
         $ppn = (int)$value * ((int)$Gconfig['ppn'] / 100);
+        $total = (int)$subtotal - (int)$discount - $poin + (int)$ppn;
 
-        // Insert Trx Payment 
-        $total = (int)$subtotal - (int)$discount - (int)$input['poin'] - (int)$memberdisc + (int)$ppn;
-
-        // if (($totalvalue == '0') && ($input['payment'] == '-1')) {
-        //     $total  = $input['poin'];
-        // } else {
-        //     $total  = $totalvalue;
-        // }
-
-        // Normal Transaction
-        if (empty($input['firstpayment']) && empty($input['secpayment']) && isset($input['payment']) && empty($input['duedate'])) {
-            $paymethod = [
-                'paymentid'     => $input['payment'],
-                'transactionid' => $trxId,
-                'value'         => $total,
-            ];
-            $TrxpaymentModel->insert($paymethod);
-
-            // Save Cash
-            $payment    = $PaymentModel->find($input['payment']);
-            if (!empty($payment)) {
-                $cashPlus   = $CashModel->find($payment['cashid']);
-    
-                $cash = [
-                    'id'    => $cashPlus['id'],
-                    'qty'   => (int)$cashPlus['qty'] + (int)$total,
-                ];
-                $CashModel->save($cash);
-            }
-        }
-        
-        // Splitbill
-        elseif (!empty($input['firstpayment']) && !empty($input['secpayment']) && empty($input['duedate'])) {
-            // Insert Transaction First Payment
-            $splitpayment1  = $PaymentModel->find($input['firstpayment']);
-            if (!empty($splitpayment1)) {
-                $paymet = [
-                    'paymentid'     => $input['firstpayment'],
+        // Payment handling
+        if (!empty($input['firstpayment']) && !empty($input['secpayment']) && empty($input['duedate'])) {
+            // Split bill
+            foreach (['firstpayment' => 'firstpay', 'secpayment' => 'secondpay'] as $payKey => $valKey) {
+                $payId = $input[$payKey];
+                $payVal = $input[$valKey];
+                $TrxpaymentModel->insert([
+                    'paymentid'     => $payId,
                     'transactionid' => $trxId,
-                    'value'         => $input['firstpay'],
-                ];
-                $TrxpaymentModel->insert($paymet);
-                
-                // Save Cash First Payment
-                $cashPlus       = $CashModel->find($splitpayment1['cashid']);
-                $cashUp         = (int)$cashPlus['qty'] + (int)$input['firstpay'];
-                $cash           = [
-                    'id'    => $cashPlus['id'],
-                    'qty'   => $cashUp
-                ];
-                $CashModel->save($cash);
+                    'value'         => $payVal,
+                ]);
+                $payment = $PaymentModel->find($payId);
+                if ($payment) {
+                    $cash = $CashModel->find($payment['cashid']);
+                    if ($cash) {
+                        $CashModel->save([
+                            'id'  => $cash['id'],
+                            'qty' => (int)$cash['qty'] + (int)$payVal,
+                        ]);
+                    }
+                }
             }
-
-            // Insert Transaction Second Payment
-            $splitpayment2  = $PaymentModel->find($input['secpayment']);
-            if (!empty($splitpayment2)) {
-                $pay = [
-                    'paymentid'     => $input['secpayment'],
-                    'transactionid' => $trxId,
-                    'value'         => $input['secondpay'],
-                ];
-                $TrxpaymentModel->insert($pay);
-    
-                // Save Cash Second Payment
-                $cashPlus2      = $CashModel->find($splitpayment2['cashid']);
-                $cashUp2        = (int)$cashPlus2['qty'] + (int)$input['secondpay'];
-                $cash2          = [
-                    'id'    => $cashPlus2['id'],
-                    'qty'   => $cashUp2,
-                ];
-                $CashModel->save($cash2);
-            }
-        }
-
-        // Single Debt Method
-        elseif (empty($input['firstpayment']) && empty($input['secpayment']) && $input['value'] == '0' && !empty($input['duedate'])) {
-            // Insert Debt
-            $debt = [
-                'memberid'      => $input['customerid'],
+        } elseif (!empty($input['duedate'])) {
+            // Debt
+            $DebtModel->insert([
+                'memberid'      => $memberid,
                 'transactionid' => $trxId,
-                'value'         => $input['debt'],
+                'value'         => $input['debt'] ?? $total,
                 'deadline'      => $input['duedate'],
-            ];
-            $DebtModel->insert($debt);
-
-            // Debt Payment Method
-            $paymentmethod = [
+            ]);
+            $TrxpaymentModel->insert([
                 'paymentid'     => '0',
                 'transactionid' => $trxId,
-                'value'         => $total,
-            ];
-            $TrxpaymentModel->insert($paymentmethod);
-        }
-        
-        // Debt With Down Payment
-        elseif (empty($input['firstpayment']) && empty($input['secpayment']) && $input['value'] != '0' && !empty($input['duedate'])) {
-            // Insert Debt
-            $debt = [
-                'memberid'      => $input['customerid'],
-                'transactionid' => $trxId,
-                'value'         => $input['debt'],
-                'deadline'      => $input['duedate'],
-            ];
-            $DebtModel->insert($debt);
-
-            // Debt With Down Payment Method
-            $debtmethod = [
-                'paymentid'     => '0',
-                'transactionid' => $trxId,
-                'value'         => $input['debt'],
-            ];
-            $TrxpaymentModel->insert($debtmethod);
-
-            $payment    = $PaymentModel->find($input['payment']);
-            if (!empty($payment)) {
-                $paymentmethod = [
+                'value'         => $input['debt'] ?? $total,
+            ]);
+            if (!empty($input['payment']) && !empty($input['value'])) {
+                $TrxpaymentModel->insert([
                     'paymentid'     => $input['payment'],
                     'transactionid' => $trxId,
                     'value'         => $input['value'],
-                ];
-                $TrxpaymentModel->insert($paymentmethod);
-    
-                // Insert Cash
-                $cashPlus   = $CashModel->find($payment['cashid']);
-                $cash = [
-                    'id'    => $cashPlus['id'],
-                    'qty'   => (int)$cashPlus['qty'] + (int)$total,
-                ];
-                $CashModel->save($cash);
-            }
-        }
-        
-        // Debt With Splitbill Payment
-        elseif (isset($input['firstpayment']) && isset($input['secpayment']) && isset($input['duedate'])) {
-            // Insert Debt
-            $debt = [
-                'memberid'      => $input['customerid'],
-                'transactionid' => $trxId,
-                'value'         => $input['debt'],
-                'deadline'      => $input['duedate'],
-            ];
-            $DebtModel->insert($debt);
-            
-            // Insert Debt Payment Method
-            $paymentmethod = [
-                'paymentid'     => "0",
-                'transactionid' => $trxId,
-                'value'         => ((int)$total - ((int)$input['firstpay'] + (int)$input['secondpay'])),
-            ];
-            $TrxpaymentModel->insert($paymentmethod);
-
-            // Insert Debt First Payment
-            $splitpayment1  = $PaymentModel->find($input['firstpayment']);
-            if (!empty($splitpayment1)) {
-                $paymet = [
-                    'paymentid'     => $input['firstpayment'],
-                    'transactionid' => $trxId,
-                    'value'         => $input['firstpay'],
-                ];
-                $TrxpaymentModel->insert($paymet);
-    
-                // Save Cash Debt First Payment
-                $cashPlus       = $CashModel->find($splitpayment1['cashid']);
-                $cashUp         = (int)$cashPlus['qty'] + (int)$input['firstpay'];
-                $cash           = [
-                    'id'    => $cashPlus['id'],
-                    'qty'   => $cashUp
-                ];
-                $CashModel->save($cash);
-            }
-
-            // Insert Debt Second Payment
-            $splitpayment2  = $PaymentModel->find($input['secpayment']);
-            if (!empty($splitpayment2)) {
-                $pay = [
-                    'paymentid'     => $input['secpayment'],
-                    'transactionid' => $trxId,
-                    'value'         => $input['secondpay'],
-                ];
-                $TrxpaymentModel->insert($pay);
-    
-                // Save Cash Debt Second Payment
-                $cashPlus2      = $CashModel->find($splitpayment2['cashid']);
-                $cashUp2        = (int)$cashPlus2['qty'] + (int)$input['secondpay'];
-                $cash2          = [
-                    'id'    => $cashPlus2['id'],
-                    'qty'   => $cashUp2,
-                ];
-                $CashModel->save($cash2);
-            }
-        }
-
-        // Gconfig poin setup
-        $minimTrx    = $Gconfig['poinorder'];
-        $poinval     = $Gconfig['poinvalue'];
-
-        // Update Point Member
-        $member         = $MemberModel->find($input['customerid']);
-        if (!empty($member)) {
-            if ($total >= $minimTrx) {
-                if ($minimTrx != "0") {
-                    $value      = (int)$total / (int)$minimTrx;
-                } else {
-                    $value      = 0;
+                ]);
+                $payment = $PaymentModel->find($input['payment']);
+                if ($payment) {
+                    $cash = $CashModel->find($payment['cashid']);
+                    if ($cash) {
+                        $CashModel->save([
+                            'id'  => $cash['id'],
+                            'qty' => (int)$cash['qty'] + (int)$input['value'],
+                        ]);
+                    }
                 }
-                $result         = floor($value);
-                $poinresult     = (int)$result * (int)$poinval;
-            } else {
+            }
+        } else {
+            // Normal payment
+            if (!empty($input['payment'])) {
+                $TrxpaymentModel->insert([
+                    'paymentid'     => $input['payment'],
+                    'transactionid' => $trxId,
+                    'value'         => $total,
+                ]);
+                $payment = $PaymentModel->find($input['payment']);
+                if ($payment) {
+                    $cash = $CashModel->find($payment['cashid']);
+                    if ($cash) {
+                        $CashModel->save([
+                            'id'  => $cash['id'],
+                            'qty' => (int)$cash['qty'] + (int)$total,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        // Update member points (earn)
+        if ($memberid) {
+            $member = $MemberModel->find($memberid);
+            if ($member) {
+                $minimTrx = $Gconfig['poinorder'];
+                $poinval = $Gconfig['poinvalue'];
                 $poinresult = 0;
-            }
-
-            $trx            = $member['trx'] + 1;
-            $memberPoint    = $member['poin'];
-            $poinPlus       = (int)$memberPoint + (int)$poinresult;
-            $pointvalue = [
-                'id'    => $member['id'],
-                'poin'  => $poinPlus,
-                'trx'   => $trx,
-            ];
-            $MemberModel->save($pointvalue);
-        }
-
-        // Print Function
-        $db                 = \Config\Database::connect();
-        $bundles            = $BundleModel->findAll();
-        $bundets            = $BundledetModel->findAll();
-        $Cash               = $CashModel->findAll();
-        $outlets            = $OutletModel->findAll();
-        $customers          = $MemberModel->findAll();
-        $payments           = $PaymentModel->findAll();
-        $products           = $ProductModel->findAll();
-        $variants           = $VariantModel->findAll();
-        $stocks             = $StockModel->findAll();
-        $transactions       = $TransactionModel->find($trxId);
-        $trxpayments        = $TrxpaymentModel->where('transactionid', $trxId)->find();
-        // $member             = $MemberModel->find($transactions['memberid']);
-        // $debt               = $DebtModel->where('memberid', $transactions['memberid'])->first();
-        $user               = $UserModel->where('id', $transactions['userid'])->first();
-
-        $bundleBuilder      = $db->table('bundledetail');
-        $bundleVariants     = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
-        $bundleVariants     = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
-        $bundleVariants     = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
-        $bundleVariants     = $bundleBuilder->orderBy('stock.qty', 'ASC');
-        $bundleVariants     = $bundleBuilder->get();
-
-        $data                   = $this->data;
-        $data['title']          = lang('Global.transaction');
-        $data['description']    = lang('Global.transactionListDesc');
-        $data['bundles']        = $bundles;
-        $data['bundets']        = $bundets;
-        $data['cash']           = $Cash;
-        $data['transactions']   = $transactions;
-        $data['outlets']        = $outlets;
-        $data['payments']       = $payments;
-        $data['customers']      = $customers;
-        $data['products']       = $products;
-        $data['variants']       = $variants;
-        $data['stocks']         = $stocks;
-        $data['trxdetails']     = $TrxdetailModel->where('transactionid', $trxId)->find();
-        $data['trxpayments']    = $trxpayments;
-        $data['outid']          = $OutletModel->where('id', $this->data['outletPick'])->first();
-        $data['bookings']       = $BookingModel->findAll();
-        $data['bundleVariants'] = $bundleVariants->getResult();
-
-        if (empty($input['phone'])) {
-            $actual_link            = "https://$_SERVER[HTTP_HOST]/pay/copyprint/$trxId";
-            $data['link']           =  urlencode($actual_link);
-        } elseif (!empty($input['phone'])) {
-            $actual_link            = "https://$_SERVER[HTTP_HOST]/pay/copyprint/$trxId";
-            $data['link']           = "https://wa.me/62" . $input['phone'] . "?text=" . urlencode($actual_link) . "";
-        }
-
-        // Gconfig poin setup
-        $minimTrx    = $Gconfig['poinorder'];
-        $poinval     = $Gconfig['poinvalue'];
-
-        if (!empty($input['customerid'])) {
-
-            if ($total >= $minimTrx) {
-                if ($minimTrx != "0") {
-                    $value          = (int)$total / (int)$minimTrx;
-                } else {
-                    $value          = 0;
+                if ($minimTrx && $total >= $minimTrx) {
+                    $poinresult = floor($total / $minimTrx) * $poinval;
                 }
-                $result             = floor($value);
-                $poinresult         = (int)$result * (int)$poinval;
-            } else {
-                $poinresult = "0";
+                $MemberModel->save([
+                    'id'   => $member['id'],
+                    'poin' => (int)$member['poin'] + (int)$poinresult,
+                    'trx'  => (int)$member['trx'] + 1,
+                ]);
             }
-
-            $data['cust']           = $MemberModel->where('id', $transactions['memberid'])->first();
-            $data['mempoin']        = $member['poin'];
-            $data['poinused']       = $input['poin'];
-            $data['poinearn']       = $poinresult;
-        } else {
-            $data['cust']           = "0";
-            $data['mempoin']        = "0";
-            $data['poinused']       = "0";
-            $data['poinearn']       = "0";
         }
 
-        if (!empty($input['value'])) {
-            $change             = (int)$input['value'] - (int)$total;
+        // Prepare data for print/redirect
+        $transactions = $TransactionModel->find($trxId);
+        $user = $UserModel->where('id', $transactions['userid'])->first();
+        $actual_link = "https://{$_SERVER['HTTP_HOST']}/pay/copyprint/$trxId";
+        $data = $this->data;
+        $data['title'] = lang('Global.transaction');
+        $data['description'] = lang('Global.transactionListDesc');
+        $data['transactions'] = $transactions;
+        $data['user'] = $user ? $user->username : '';
+        $data['date'] = $transactions['date'];
+        $data['transactionid'] = $trxId;
+        $data['subtotal'] = $subtotal;
+        $data['total'] = $total;
+        $data['discount'] = $discount;
+        $data['change'] = (!empty($input['value']) && $input['value'] > $total) ? ((int)$input['value'] - (int)$total) : 0;
+        $data['pay'] = $input['value'] ?? 0;
+        $data['poinused'] = $poin;
+        $data['poinearn'] = isset($poinresult) ? $poinresult : 0;
+        $data['link'] = $actual_link;
 
-            if ($change > '0') {
-                $data['change']     = $change;
-            } else {
-                $data['change']     = '0';
-            }
-        } else {
-            $data['change']     = "0";
-        }
-
-        if (!empty($input['varprice'])) {
-            $data['vardiscval']     = $input['varprice'];
-        } else {
-            $data['vardiscval']     = "0";
-        }
-
-        if (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
-            $data['pay']            = (int)$input['firstpay'] + (int)$input['secondpay'];
-        } elseif (!empty($input['duedate']) && empty($input['value'])) {
-            $data['pay']            = "0";
-        } else {
-            $data['pay']            = $input['value'];
-        }
-
-        // if (!empty($input['value'])) {
-        //     $data['pay']            = $input['value'];
-        // } elseif (!empty($input['firstpay']) && (!empty($input['secondpay']))) {
-        //     $data['pay']            = (int)$input['firstpay'] + (int)$input['secondpay'];
-        // } elseif (!empty($input['duedate']) && empty($input['value'])) {
-        //     $data['pay']            = "0";
-        // }
-
-        $data['discount'] = "0";
-
-        if ((!empty($input['discvalue'])) && ($input['disctype'] === '0')) {
-            $data['discount'] += $input['discvalue'];
-        } elseif ((isset($input['discvalue'])) && ($input['disctype'] === '1')) {
-            $data['discount'] += ((int)$input['discvalue'] / 100) * (int)$subtotal;
-        } else {
-            $data['discount'] += 0;
-        }
-
-        if (!empty($input['debt'])) {
-            $data['debt']       = $input['debt'];
-            // $data['totaldebt']  = $member['kasbon'];
-        } else {
-            $data['debt']       = "0";
-            // $data['totaldebt']  = "0";
-        }
-
-        $data['user']           = $user->username;
-        $data['date']           = $transactions['date'];
-        $data['transactionid']  = $trxId;
-        $data['subtotal']       = $subtotal;
-        // $data['members']        = $MemberModel->findAll();
-        $data['total']          = $total;
-
-        if ($this->data['uid'] != null) {
-            $uid    = $this->data['uid'];
-        } else {
-            $uid    = '0';
-        }
-        $data['logedin']        = $UserModel->find($uid);
-
+        // WhatsApp redirect if phone provided
         if (!empty($input['customerid'])) {
-            $memberdata         = $MemberModel->find($transactions['memberid']);
-            $memberphone        = $memberdata['phone'];
-
-            // Create the WhatsApp link
-            $whatsappLink = "https://wa.me/+62{$memberphone}?text=Terimakasih%20telah%20berbelanja%20di%2058%20Vapehouse%2C%20untuk%20detail%20struk%20pembelian%20bisa%20cek%20link%20dibawah%20lur.%20%E2%9C%A8%E2%9C%A8%0A%0A$actual_link%0A%0AJika%20menemukan%20kendala%2C%20kerusakan%20produk%2C%20atau%20ingin%20memberi%20kritik%20%26%20saran%20hubungu%2058%20Customer%20Solution%20kami%20di%20wa.me%2F6288983741558%20";
-            
-            // Redirect to the WhatsApp link
-            // return redirect()->to('');
-            return redirect()->to($whatsappLink);
+            $memberdata = $MemberModel->find($transactions['memberid']);
+            if ($memberdata && !empty($memberdata['phone'])) {
+                $waLink = "https://wa.me/+62{$memberdata['phone']}?text=" . urlencode(
+                    "Terimakasih telah berbelanja di 58 Vapehouse, untuk detail struk pembelian bisa cek link dibawah lur. ✨✨\n\n$actual_link\n\nJika menemukan kendala, kerusakan produk, atau ingin memberi kritik & saran hubungi 58 Customer Solution kami di wa.me/6288983741558"
+                );
+                return redirect()->to($waLink);
+            }
         }
 
         return redirect()->to('');

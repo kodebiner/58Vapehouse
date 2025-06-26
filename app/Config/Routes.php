@@ -279,6 +279,11 @@ $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->post('topup', 'Pay::topup',['filter' =>'role:owner,supervisor,operator']);
 });
 
+$routes->group('api/member', function($routes) {
+    $routes->get('search', 'Api\MemberApiController::search');
+    $routes->get('detail', 'Api\MemberApiController::detail');
+});
+
 // Report Routes
 $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('', 'Report::index', ['filter' => 'role:owner,supervisor']);

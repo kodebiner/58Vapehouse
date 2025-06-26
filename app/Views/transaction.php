@@ -1544,63 +1544,76 @@
                                     <div class="uk-width-1-1">
                                         <input class="uk-input" id="customername" name="customername" required />
                                         <input id="customerid" name="customerid" hidden data-valid="0" />
+                                        <input type="text" id="customerphone" name="customerphone" hidden />
                                     </div>
                                 </div>
 
-                                <script type="text/javascript">
-                                    $(function() {
-                                        var customerList = [
-                                            {label: "Non Member", idx:0},
-                                            <?php
-                                                foreach ($customers as $customer) {
-                                                    echo '{label:"'.$customer['name'].' / '.$customer['phone'].'",idx:'.$customer['id'].'},';
-                                                }
-                                            ?>
-                                        ];
+                                <script>
+                                    $(function () {
                                         $("#customername").autocomplete({
-                                            source: customerList,
-                                            select: function(e, i) {
-                                                $("#customerid").val(i.item.idx).attr('data-valid', '1');
+                                            source: function (request, response) {
+                                                $.get("/api/member/search", { q: request.term }, function (data) {
+                                                    const query = request.term.trim().toLowerCase();
+                                                    const results = [];
+
+                                                    // Tambahkan "Non Member" jika user ketik "non" atau mirip
+                                                    if (query === 'non' || query.includes('non member')) {
+                                                        results.push({
+                                                            id: 0,
+                                                            label: "Non Member",
+                                                            value: "Non Member"
+                                                        });
+                                                    }
+
+                                                    // Gabungkan dengan hasil dari server
+                                                    results.push(...data);
+
+                                                    response(results);
+                                                });
+                                            },
+
+                                            select: function (event, ui) {
+                                                $("#customerid").val(ui.item.id).attr("data-valid", "1");
                                                 $("#customername").removeClass("uk-form-danger");
 
-                                                // Trigger Discount
-                                                // document.querySelectorAll('.cart-item').forEach(function(el) {
-                                                //     var id = el.getAttribute('id').replace('product', '');
-                                                //     applyMemberDiscountToAll(id);
-                                                // });
-                                                setTimeout(() => {
-                                                    document.dispatchEvent(new Event("MemberSelected"));
-                                                }, 100);
-
-                                                if (i.item.idx != 0) {
-                                                    var customers = <?php echo json_encode($customers); ?>;
-                                                    for (var x = 0; x < customers.length; x++) {
-                                                        if (customers[x]['id'] == i.item.idx) {
-                                                            document.getElementById('custpoin').removeAttribute('hidden');
-                                                            document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> ' + customers[x]['poin'];
-                                                            document.getElementById('poin').setAttribute('max', customers[x]['poin']);
-                                                            document.getElementById('customerphone').value = customers[x]['phone'];
-                                                            totalcount();
-                                                        }
-                                                    }
-                                                } else {
-                                                    document.getElementById('custpoin').setAttribute('hidden', '');
-                                                    document.getElementById('curpoin').innerHTML = '<?=lang('Global.yourpoint')?> 0' ;
-                                                    document.getElementById('poin').setAttribute('max', '0');
-                                                    document.getElementById('poin').value = '0';
+                                                if (ui.item.id === 0) {
+                                                    // Non Member: reset poin & phone
+                                                    $('#custpoin').attr('hidden', '');
+                                                    $('#curpoin').text('Poin Anda: 0');
+                                                    $('#poin').attr('max', 0).val(0);
+                                                    $('#customerphone').val('');
                                                     totalcount();
+                                                    return;
                                                 }
+
+                                                // Member: ambil detail
+                                                $.get("/api/member/detail", { id: ui.item.id }, function (data) {
+                                                    if (data.poin !== undefined) {
+                                                        $('#custpoin').removeAttr('hidden');
+                                                        $('#curpoin').text('Poin Anda: ' + data.poin);
+                                                        $('#poin').attr('max', data.poin);
+                                                        $('#customerphone').val(data.phone);
+                                                    } else {
+                                                        $('#custpoin').attr('hidden', '');
+                                                        $('#curpoin').text('Poin Anda: 0');
+                                                        $('#poin').attr('max', 0).val(0);
+                                                    }
+                                                    totalcount();
+                                                });
+
+                                                setTimeout(() => document.dispatchEvent(new Event("MemberSelected")), 100);
                                             },
+
                                             minLength: 2
                                         });
 
-                                        // Reset data-valid
-                                        $("#customername").on('input', function() {
+                                        $("#customername").on('input', function () {
                                             $("#customerid").val('').attr('data-valid', '0');
                                             $(this).addClass("uk-form-danger");
                                         });
                                     });
                                 </script>
+
                             </div>
 
                             <input class="uk-input" id="customerphone" name="customerphone" hidden/>
@@ -3604,6 +3617,7 @@
                 $("#order").on("submit", function (e) {
                     if (isSubmitted) return true;
 
+                    // Customer Validation
                     const isValid = $("#customerid").attr("data-valid");
                     if (isValid !== "1") {
                         e.preventDefault();
@@ -3612,26 +3626,88 @@
                         return false;
                     }
 
+                    // Inputed Data
                     const debt = parseFloat(document.getElementById('debt').value) || 0;
-                    const duedate = document.getElementById('duedate').value;
+                    const duedate = document.getElementById('duedate').value.trim();
+                    const value = parseFloat(document.getElementById('value').value) || 0;
 
-                    if (debt > 0 && duedate.trim() === '') {
+                    // Duedate and Debt Validation
+                    if (debt > 0 && duedate === '') {
                         e.preventDefault();
                         alert("Karena pembayaran belum lunas, silakan isi tanggal jatuh tempo.");
                         document.getElementById('duedate').focus();
                         return false;
                     }
 
-                    $("#customername").removeClass("uk-form-danger");
+                    // Splitbill Validation
+                    const isSplitBill = $("#bills").is(":visible");
 
+                    if (isSplitBill) {
+                        const firstPayment = document.getElementById('firstpayment').value;
+                        const secondPayment = document.getElementById('secpayment').value;
+
+                        if (!firstPayment || firstPayment.trim() === '') {
+                            e.preventDefault();
+                            alert("Silakan pilih metode pembayaran pertama.");
+                            document.getElementById('firstpayment').focus();
+                            return false;
+                        }
+
+                        if (!secondPayment || secondPayment.trim() === '') {
+                            e.preventDefault();
+                            alert("Silakan pilih metode pembayaran kedua.");
+                            document.getElementById('secpayment').focus();
+                            return false;
+                        }
+                    } else {
+                        // If Not Splitbill
+                        const paymentMethod = document.getElementById('payment').value;
+
+                        // Debt
+                        if (debt > 0) {
+                            if (value > 0) {
+                                // Down Payment
+                                if (!paymentMethod || paymentMethod.trim() === '') {
+                                    e.preventDefault();
+                                    alert("Silakan pilih metode pembayaran untuk uang muka.");
+                                    document.getElementById('payment').focus();
+                                    return false;
+                                }
+                            }
+                        } else {
+                            // Normal Payment
+                            if (!paymentMethod || paymentMethod.trim() === '') {
+                                e.preventDefault();
+                                alert("Silakan pilih metode pembayaran.");
+                                document.getElementById('payment').focus();
+                                return false;
+                            }
+                        }
+                    }
+
+                    // Validated
+                    $("#customername").removeClass("uk-form-danger");
                     isSubmitted = true;
                 });
 
                 $("#pay").click(function () {
-                    $('#order').attr('action', "/pay/create");
-                    $('#order').trigger('submit');
+                    validateAndSubmit("order", "/pay/create");
                 });
             });
+
+            function validateAndSubmit(order, actionUrl) {
+                const form = document.getElementById(order);
+
+                // Cek validasi HTML bawaan browser
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                // Set action dan trigger submit via event (agar handler tetap dipanggil)
+                $(form).attr('action', actionUrl);
+                form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+            }
         </script>
     </body>
 </html>
