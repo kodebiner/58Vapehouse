@@ -3571,13 +3571,25 @@
 
                 // Payment Requirement
                 if (document.getElementById('bills').hasAttribute('hidden')) {
-                    document.getElementById('payment').setAttribute('required', '');
-                    document.getElementById('value').setAttribute('required', '');
+                    const debtValue = parseFloat(document.getElementById('debt').value) || 0;
+                    const downPayment = parseFloat(document.getElementById('value').value) || 0;
+
+                    if (debtValue > 0 && downPayment === 0) {
+                        // Kasbon tanpa uang muka → payment TIDAK wajib
+                        document.getElementById('payment').removeAttribute('required');
+                        document.getElementById('value').removeAttribute('required');
+                    } else {
+                        // Bukan hutang, atau hutang dengan uang muka → payment wajib
+                        document.getElementById('payment').setAttribute('required', '');
+                        document.getElementById('value').setAttribute('required', '');
+                    }
+
                     document.getElementById('firstpayment').removeAttribute('required');
                     document.getElementById('firstpay').removeAttribute('required');
                     document.getElementById('secpayment').removeAttribute('required');
                     document.getElementById('secondpay').removeAttribute('required');
                 } else {
+                    // Split Bill
                     document.getElementById('payment').removeAttribute('required');
                     document.getElementById('value').removeAttribute('required');
                     document.getElementById('firstpayment').setAttribute('required', '');
@@ -3585,6 +3597,7 @@
                     document.getElementById('secpayment').setAttribute('required', '');
                     document.getElementById('secondpay').setAttribute('required', '');
                 }
+
             }
 
 
@@ -3617,7 +3630,7 @@
                 $("#order").on("submit", function (e) {
                     if (isSubmitted) return true;
 
-                    // Customer Validation
+                    // 1. Customer Validation
                     const isValid = $("#customerid").attr("data-valid");
                     if (isValid !== "1") {
                         e.preventDefault();
@@ -3626,22 +3639,14 @@
                         return false;
                     }
 
-                    // Inputed Data
+                    // 2. Input Data
                     const debt = parseFloat(document.getElementById('debt').value) || 0;
                     const duedate = document.getElementById('duedate').value.trim();
                     const value = parseFloat(document.getElementById('value').value) || 0;
-
-                    // Duedate and Debt Validation
-                    if (debt > 0 && duedate === '') {
-                        e.preventDefault();
-                        alert("Karena pembayaran belum lunas, silakan isi tanggal jatuh tempo.");
-                        document.getElementById('duedate').focus();
-                        return false;
-                    }
-
-                    // Splitbill Validation
+                    const paymentMethod = document.getElementById('payment').value;
                     const isSplitBill = $("#bills").is(":visible");
 
+                    // 3. Split Bill
                     if (isSplitBill) {
                         const firstPayment = document.getElementById('firstpayment').value;
                         const secondPayment = document.getElementById('secpayment').value;
@@ -3659,23 +3664,30 @@
                             document.getElementById('secpayment').focus();
                             return false;
                         }
-                    } else {
-                        // If Not Splitbill
-                        const paymentMethod = document.getElementById('payment').value;
 
-                        // Debt
                         if (debt > 0) {
-                            if (value > 0) {
-                                // Down Payment
-                                if (!paymentMethod || paymentMethod.trim() === '') {
-                                    e.preventDefault();
-                                    alert("Silakan pilih metode pembayaran untuk uang muka.");
-                                    document.getElementById('payment').focus();
-                                    return false;
-                                }
+                            e.preventDefault();
+                            alert("Split bill tidak dapat digunakan bersamaan dengan transaksi hutang.");
+                            return false;
+                        }
+                    } else {
+                        // 4. Hutang (kasbon)
+                        if (debt > 0) {
+                            if (duedate === '') {
+                                e.preventDefault();
+                                alert("Karena pembayaran belum lunas, silakan isi tanggal jatuh tempo.");
+                                document.getElementById('duedate').focus();
+                                return false;
+                            }
+
+                            if (value > 0 && (!paymentMethod || paymentMethod.trim() === '')) {
+                                e.preventDefault();
+                                alert("Silakan pilih metode pembayaran untuk uang muka.");
+                                document.getElementById('payment').focus();
+                                return false;
                             }
                         } else {
-                            // Normal Payment
+                            // 5. Normal Payment (tanpa hutang & tanpa split)
                             if (!paymentMethod || paymentMethod.trim() === '') {
                                 e.preventDefault();
                                 alert("Silakan pilih metode pembayaran.");
@@ -3685,11 +3697,12 @@
                         }
                     }
 
-                    // Validated
+                    // 6. Final validation pass
                     $("#customername").removeClass("uk-form-danger");
                     isSubmitted = true;
                 });
 
+                // Tombol Bayar
                 $("#pay").click(function () {
                     validateAndSubmit("order", "/pay/create");
                 });

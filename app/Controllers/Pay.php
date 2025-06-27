@@ -276,17 +276,22 @@ class Pay extends BaseController
         $ppn = (int)$value * ((int)$Gconfig['ppn'] / 100);
         $total = (int)$subtotal - (int)$discount - $poin + (int)$ppn;
 
-        // Payment handling
-        if (!empty($input['firstpayment']) && !empty($input['secpayment']) && empty($input['duedate'])) {
-            // Split bill
+        // 1. Handle split payment (jika tidak hutang dan bukan kombinasi)
+        if (
+            !empty($input['firstpayment']) &&
+            !empty($input['secpayment']) &&
+            empty($input['duedate']) // split tidak dipakai bersama hutang
+        ) {
             foreach (['firstpayment' => 'firstpay', 'secpayment' => 'secondpay'] as $payKey => $valKey) {
-                $payId = $input[$payKey];
+                $payId  = $input[$payKey];
                 $payVal = $input[$valKey];
+
                 $TrxpaymentModel->insert([
                     'paymentid'     => $payId,
                     'transactionid' => $trxId,
                     'value'         => $payVal,
                 ]);
+
                 $payment = $PaymentModel->find($payId);
                 if ($payment) {
                     $cash = $CashModel->find($payment['cashid']);
@@ -298,25 +303,35 @@ class Pay extends BaseController
                     }
                 }
             }
-        } elseif (!empty($input['duedate'])) {
-            // Debt
+        }
+
+        // 2. Handle debt (termasuk kombinasi dengan down payment)
+        if (!empty($input['duedate'])) {
+            $debtValue = $input['debt'] ?? ($total - ((int)$input['value'] ?? 0));
+
+            // Simpan ke tabel hutang
             $DebtModel->insert([
                 'memberid'      => $memberid,
                 'transactionid' => $trxId,
-                'value'         => $input['debt'] ?? $total,
+                'value'         => $debtValue,
                 'deadline'      => $input['duedate'],
             ]);
+
+            // Catat transaksi hutang (dengan paymentid = 0)
             $TrxpaymentModel->insert([
                 'paymentid'     => '0',
                 'transactionid' => $trxId,
-                'value'         => $input['debt'] ?? $total,
+                'value'         => $debtValue,
             ]);
+
+            // Jika ada down payment, catat juga
             if (!empty($input['payment']) && !empty($input['value'])) {
                 $TrxpaymentModel->insert([
                     'paymentid'     => $input['payment'],
                     'transactionid' => $trxId,
                     'value'         => $input['value'],
                 ]);
+
                 $payment = $PaymentModel->find($input['payment']);
                 if ($payment) {
                     $cash = $CashModel->find($payment['cashid']);
@@ -328,23 +343,30 @@ class Pay extends BaseController
                     }
                 }
             }
-        } else {
-            // Normal payment
-            if (!empty($input['payment'])) {
-                $TrxpaymentModel->insert([
-                    'paymentid'     => $input['payment'],
-                    'transactionid' => $trxId,
-                    'value'         => $total,
-                ]);
-                $payment = $PaymentModel->find($input['payment']);
-                if ($payment) {
-                    $cash = $CashModel->find($payment['cashid']);
-                    if ($cash) {
-                        $CashModel->save([
-                            'id'  => $cash['id'],
-                            'qty' => (int)$cash['qty'] + (int)$total,
-                        ]);
-                    }
+        }
+
+        // 3. Handle pembayaran normal (bukan split, bukan hutang)
+        if (
+            empty($input['firstpayment']) &&
+            empty($input['secpayment']) &&
+            empty($input['duedate']) &&
+            !empty($input['payment']) &&
+            !empty($input['value'])
+        ) {
+            $TrxpaymentModel->insert([
+                'paymentid'     => $input['payment'],
+                'transactionid' => $trxId,
+                'value'         => $input['value'],
+            ]);
+
+            $payment = $PaymentModel->find($input['payment']);
+            if ($payment) {
+                $cash = $CashModel->find($payment['cashid']);
+                if ($cash) {
+                    $CashModel->save([
+                        'id'  => $cash['id'],
+                        'qty' => (int)$cash['qty'] + (int)$input['value'],
+                    ]);
                 }
             }
         }
