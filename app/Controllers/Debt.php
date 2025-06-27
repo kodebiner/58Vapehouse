@@ -173,7 +173,7 @@ class Debt extends BaseController
             $trxdetails = $TrxdetailModel->where('transactionid', $trx['id'])->find();
             if (!empty($trxdetails)) {
                 foreach ($trxdetails as $trxdet) {
-                    $subtotal[] = ((int)$trxdet['qty'] * (int)$trxdet['value']);
+                    $subtotal[] = ((int)$trxdet['qty'] * (float)$trxdet['value']);
 
                     // Variant Data
                     if (($trxdet['variantid'] != '0') && ($trxdet['bundleid'] == '0')) {
@@ -185,8 +185,8 @@ class Debt extends BaseController
                             if (!empty($products)) {
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']           = $products['name'].' - '.$variants['name'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']            = $trxdet['qty'];
-                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
-                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']       = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']        = $trxdet['discvar'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem'] = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
@@ -196,8 +196,8 @@ class Debt extends BaseController
                             } else {
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']           = 'Kategori / Produk / Variant Terhapus';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']            = $trxdet['qty'];
-                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
-                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']       = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']        = $trxdet['discvar'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem'] = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
@@ -210,8 +210,8 @@ class Debt extends BaseController
 
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']               = 'Kategori / Produk / Variant Terhapus';
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
-                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
-                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']           = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']            = $trxdet['discvar'];
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem']     = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
@@ -228,8 +228,8 @@ class Debt extends BaseController
                         if (!empty($bundles)) {
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']               = $bundles['name'];
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
-                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
-                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (float)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((float)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']           = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']            = $trxdet['discvar'];
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem']     = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
@@ -239,8 +239,8 @@ class Debt extends BaseController
                         } else {
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['name']               = 'Bundle Terhapus';
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
-                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
-                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (float)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                            $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((float)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']           = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']            = $trxdet['discvar'];
                             $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem']     = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
@@ -1145,7 +1145,7 @@ class Debt extends BaseController
                                 $debtdata[$transaction['id']]['detailvar'][$variants['id']]['discvar']         = $trxdet['discvar'];
                                 $debtdata[$transaction['id']]['detailvar'][$variants['id']]['globaldisc']      = $trxdet['globaldisc'];
                                 $debtdata[$transaction['id']]['detailvar'][$variants['id']]['memberdisc']      = $trxdet['memberdisc'];
-                                $debtdata[$transaction['id']]['detailvar'][$variants['id']]['value']           = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                                $debtdata[$transaction['id']]['detailvar'][$variants['id']]['value']           = (float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
                             }
                         } else {
                             $products   = [];
@@ -1154,7 +1154,7 @@ class Debt extends BaseController
                             $debtdata[$transaction['id']]['detailvar'][0]['discvar']                           = $trxdet['discvar'];
                             $debtdata[$transaction['id']]['detailvar'][0]['globaldisc']                        = $trxdet['globaldisc'];
                             $debtdata[$transaction['id']]['detailvar'][0]['memberdisc']                        = $trxdet['memberdisc'];
-                            $debtdata[$transaction['id']]['detailvar'][0]['value']                             = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                            $debtdata[$transaction['id']]['detailvar'][0]['value']                             = (float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
                         }
                     } else {
                         $debtdata[$transaction['id']]['detailvar']  = [];
@@ -1168,18 +1168,18 @@ class Debt extends BaseController
                             $debtdata[$transaction['id']]['detailbun'][$bundles['id']]['qty']           = $trxdet['qty'];
                             $debtdata[$transaction['id']]['detailbun'][$bundles['id']]['globaldisc']    = $trxdet['globaldisc'];
                             $debtdata[$transaction['id']]['detailbun'][$bundles['id']]['memberdisc']    = $trxdet['memberdisc'];
-                            $debtdata[$transaction['id']]['detailbun'][$bundles['id']]['value']         = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                            $debtdata[$transaction['id']]['detailbun'][$bundles['id']]['value']         = (float)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
                         } else {
                             $debtdata[$transaction['id']]['detailbun'][0]['name']                       = 'Bundle Terhapus';
                             $debtdata[$transaction['id']]['detailbun'][0]['qty']                        = $trxdet['qty'];
                             $debtdata[$transaction['id']]['detailbun'][0]['globaldisc']                 = $trxdet['globaldisc'];
                             $debtdata[$transaction['id']]['detailbun'][0]['memberdisc']                 = $trxdet['memberdisc'];
-                            $debtdata[$transaction['id']]['detailbun'][0]['value']                      = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                            $debtdata[$transaction['id']]['detailbun'][0]['value']                      = (float)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
                         }
                     } else {
                         $debtdata[$transaction['id']]['detailbun']  = [];
                     }
-                    $total[]    = (Int)$trxdet['value'] * (Int)$trxdet['qty'];
+                    $total[]    = (float)$trxdet['value'] * (Int)$trxdet['qty'];
                 }
             }
             $debtdata[$transaction['id']]['subtotal']   = array_sum($total);

@@ -394,7 +394,7 @@ class export extends BaseController
                 $count  = '0';
                 if (!empty($trxdetails)) {
                     foreach ($trxdetails as $trxdet) {
-                        $subtotal[] = ((int)$trxdet['qty'] * (int)$trxdet['value']);
+                        $subtotal[] = ((int)$trxdet['qty'] * (float)$trxdet['value']);
     
                         // Variant Data
                         if (($trxdet['variantid'] != '0') && ($trxdet['bundleid'] == '0')) {
@@ -424,8 +424,8 @@ class export extends BaseController
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['brand']          = $brandname;
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['category']       = $catname;
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']            = $trxdet['qty'];
-                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
-                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']       = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']        = $trxdet['discvar'];
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem'] = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
@@ -439,8 +439,8 @@ class export extends BaseController
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['brand']          = 'Merek Terhapus';
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['category']       = 'Kategori Terhapus';
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']            = $trxdet['qty'];
-                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
-                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']          = (float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                                    $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']          = ((float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']       = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']        = $trxdet['discvar'];
                                     $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem'] = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
@@ -457,8 +457,8 @@ class export extends BaseController
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['brand']              = 'Merek Terhapus';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['category']           = 'Kategori Terhapus';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
-                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
-                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((float)$trxdet['value'] + ((Int)$trxdet['discvar'] / (Int)$trxdet['qty']) + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']           = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']            = $trxdet['discvar'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem']     = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
@@ -479,8 +479,8 @@ class export extends BaseController
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['brand']              = 'Merek Terhapus';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['category']           = 'Kategori Terhapus';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
-                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
-                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (float)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((float)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']           = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']            = $trxdet['discvar'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem']     = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
@@ -494,8 +494,8 @@ class export extends BaseController
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['brand']              = 'Merek Terhapus';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['category']           = 'Kategori Terhapus';
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['qty']                = $trxdet['qty'];
-                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
-                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((Int)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['value']              = (float)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty']);
+                                $transactiondata[$trx['id']]['detail'][$trxdet['id']]['total']              = ((float)$trxdet['value'] + ((Int)$trxdet['globaldisc'] / (Int)$trxdet['qty']) + ((Int)$trxdet['memberdisc'] / (Int)$trxdet['qty'])) * (Int)$trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discitem']           = (Int)$trxdet['discvar'] / (Int)$trxdet['qty'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['discvar']            = $trxdet['discvar'];
                                 $transactiondata[$trx['id']]['detail'][$trxdet['id']]['globaldiscitem']     = (Int)$trxdet['globaldisc'] / (Int)$trxdet['qty'];
@@ -1255,8 +1255,8 @@ class export extends BaseController
                             }
 
                             $transactiondata[$products['id']]['qty'][]           = $trxdet['qty'];
-                            $transactiondata[$products['id']]['netvalue'][]      = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                            $transactiondata[$products['id']]['grossvalue'][]    = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'] + (Int)$trxdet['memberdisc'];
+                            $transactiondata[$products['id']]['netvalue'][]      = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                            $transactiondata[$products['id']]['grossvalue'][]    = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'] + (Int)$trxdet['memberdisc'];
                         } else {
                             $category   = [];
                         }
@@ -1266,8 +1266,8 @@ class export extends BaseController
                         $transactiondata[0]['name']         = 'Kategori / Produk / Variant Terhapus';
                         $transactiondata[0]['category']     = 'Kategori / Produk / Variant Terhapus';
                         $transactiondata[0]['qty'][]        = $trxdet['qty'];
-                        $transactiondata[0]['netvalue'][]   = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                        $transactiondata[0]['grossvalue'][] = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'] + (Int)$trxdet['memberdisc'];
+                        $transactiondata[0]['netvalue'][]   = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                        $transactiondata[0]['grossvalue'][] = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'] + (Int)$trxdet['memberdisc'];
                     }
                 }
             } else {
@@ -1421,8 +1421,8 @@ class export extends BaseController
                                 if (!empty($category)) {
                                     $transactiondata[$category['id']]['name']               = $category['name'];
                                     $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
-                                    $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                                    $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                    $transactiondata[$category['id']]['netvalue'][]         = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                                    $transactiondata[$category['id']]['grossvalue'][]       = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
 
                                 }
                             } else {
@@ -1434,8 +1434,8 @@ class export extends BaseController
 
                             $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
                             $transactiondata[0]['qty'][]                            = $trxdet['qty'];
-                            $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                            $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                            $transactiondata[0]['netvalue'][]                       = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                            $transactiondata[0]['grossvalue'][]                     = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
                         }
                     }
 
@@ -1466,8 +1466,8 @@ class export extends BaseController
                                             if (!empty($category)) {
                                                 $transactiondata[$category['id']]['name']               = $category['name'];
                                                 $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
-                                                $transactiondata[$category['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                                                $transactiondata[$category['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                                $transactiondata[$category['id']]['netvalue'][]         = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                                                $transactiondata[$category['id']]['grossvalue'][]       = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
             
                                             }
                                         } else {
@@ -1479,8 +1479,8 @@ class export extends BaseController
             
                                         $transactiondata[0]['name']                             = 'Kategori / Produk / Variant Terhapus';
                                         $transactiondata[0]['qty'][]                            = $trxdet['qty'];
-                                        $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                                        $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                        $transactiondata[0]['netvalue'][]                       = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                                        $transactiondata[0]['grossvalue'][]                     = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
                                     }
                                 }
                             }
@@ -1644,8 +1644,8 @@ class export extends BaseController
                                 if (!empty($brand)) {
                                     $transactiondata[$brand['id']]['name']               = $brand['name'];
                                     $transactiondata[$brand['id']]['qty'][]              = $trxdet['qty'];
-                                    $transactiondata[$brand['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                                    $transactiondata[$brand['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                    $transactiondata[$brand['id']]['netvalue'][]         = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                                    $transactiondata[$brand['id']]['grossvalue'][]       = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
 
                                 }
                             } else {
@@ -1657,8 +1657,8 @@ class export extends BaseController
 
                             $transactiondata[0]['name']                             = 'Merek / Produk / Variant Terhapus';
                             $transactiondata[0]['qty'][]                            = $trxdet['qty'];
-                            $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                            $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                            $transactiondata[0]['netvalue'][]                       = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                            $transactiondata[0]['grossvalue'][]                     = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
                         }
                     }
 
@@ -1689,8 +1689,8 @@ class export extends BaseController
                                             if (!empty($brand)) {
                                                 $transactiondata[$brand['id']]['name']               = $brand['name'];
                                                 $transactiondata[$brand['id']]['qty'][]              = $trxdet['qty'];
-                                                $transactiondata[$brand['id']]['netvalue'][]         = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                                                $transactiondata[$brand['id']]['grossvalue'][]       = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                                $transactiondata[$brand['id']]['netvalue'][]         = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                                                $transactiondata[$brand['id']]['grossvalue'][]       = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
             
                                             }
                                         } else {
@@ -1702,8 +1702,8 @@ class export extends BaseController
             
                                         $transactiondata[0]['name']                             = 'Merek / Produk / Variant Terhapus';
                                         $transactiondata[0]['qty'][]                            = $trxdet['qty'];
-                                        $transactiondata[0]['netvalue'][]                       = (((Int)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                                        $transactiondata[0]['grossvalue'][]                     = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
+                                        $transactiondata[0]['netvalue'][]                       = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                                        $transactiondata[0]['grossvalue'][]                     = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
                                     }
                                 }
                             }
@@ -1973,7 +1973,7 @@ class export extends BaseController
                     if (!empty($bundles)) {
                         $transactiondata[$bundles['id']]['name']                = $bundles['name'];
                         $transactiondata[$bundles['id']]['qty'][]               = $trxdet['qty'];
-                        $transactiondata[$bundles['id']]['value'][]             = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                        $transactiondata[$bundles['id']]['value'][]             = (((float)$trxdet['value'] * (Int)$trxdet['qty']));
 
                         // Data Bundle Detail
                         $bundledets     = $BundledetailModel->find($bundles['id']);
@@ -1990,7 +1990,7 @@ class export extends BaseController
                         
                         $transactiondata[0]['name']                             = 'Bundle Terhapus';
                         $transactiondata[0]['qty'][]                            = $trxdet['qty'];
-                        $transactiondata[0]['value'][]                          = (((Int)$trxdet['value'] * (Int)$trxdet['qty']));
+                        $transactiondata[0]['value'][]                          = (((float)$trxdet['value'] * (Int)$trxdet['qty']));
                     }
                 }
             } else {
