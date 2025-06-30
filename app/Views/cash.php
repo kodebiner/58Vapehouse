@@ -371,7 +371,7 @@
                             <hr>
 
                             <div class="uk-margin">
-                                <button type="submit" class="uk-button uk-button-primary uk-width-1-1" style="border-radius: 10px;"><?= lang('Global.close') ?></button>
+                                <button type="submit" class="uk-button uk-button-primary uk-width-1-1" style="border-radius: 10px;" onclick="return confirm('Anda yakin akan menutup toko?')"><?= lang('Global.close') ?></button>
                             </div>
                         </form>
 
