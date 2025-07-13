@@ -92,17 +92,19 @@
                     <!-- Navbar Center End -->
                     
                     <!-- Navbar Right -->
-                    <div class="uk-navbar-right">
-                        <div class="uk-child-width-auto uk-grid-divider" uk-grid>
-                            <div>
-                                <!-- <a class="uk-button uk-button-text" uk-toggle="#modal-sections"></?=lang('Global.topup')?></a> -->
-                                <a uk-icon="user" uk-toggle="target: #tambahmember"></a>
-                            </div>
-                            <div>
-                                <a uk-icon="cart" uk-toggle="target: #tambahdata"></a>
+                    <?php if (!in_groups('investor')) : ?>
+                        <div class="uk-navbar-right">
+                            <div class="uk-child-width-auto uk-grid-divider" uk-grid>
+                                <div>
+                                    <!-- <a class="uk-button uk-button-text" uk-toggle="#modal-sections"></?=lang('Global.topup')?></a> -->
+                                    <a uk-icon="user" uk-toggle="target: #tambahmember"></a>
+                                </div>
+                                <div>
+                                    <a uk-icon="cart" uk-toggle="target: #tambahdata"></a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endif ?>
 
                     <!-- Modal Add Member -->
                     <div uk-modal class="uk-flex-top" id="tambahmember">
@@ -1351,7 +1353,7 @@
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='dailysell')?'uk-active':''?>">
                                     <a href="<?= base_url('report/dailysell') ?>">Laporan Penjualan Harian</a>
                                 </li>
-                                <?php if ((in_groups('owner')) || (in_groups('supervisor'))) : ?>
+                                <?php if ((in_groups('owner')) || (in_groups('supervisor')) || (in_groups('investor'))) : ?>
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?>">
                                         <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
                                     </li>
@@ -1394,26 +1396,28 @@
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='dayrep')?'uk-active':''?>">
                             <a class="tm-h3" href="<?= base_url('dayrep') ?>"><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.dailyreport');?></a>
                         </li>
-                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
-                            <a class="tm-h3" href="<?= base_url('') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
-                        </li>
-                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
-                            <a class="tm-h3" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
-                        </li>
-                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='billhistory')?'uk-active':''?>">
-                            <a class="tm-h3" href="<?= base_url('billhistory') ?>"><img src="img/layout/topup.svg" uk-svg><?=lang('Global.billhistory');?></a>
-                        </li>
-                        <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
-                            <a class="tm-h3" href=""><img src="img/layout/debt.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
-                            <ul class="uk-nav-sub">
-                                <li class="tm-h4 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?>">
-                                    <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
-                                </li>
-                                <li class="tm-h4 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
-                                    <a href="<?= base_url('debt/debtpay') ?>"><?=lang('Global.debtInstallments');?></a>
-                                </li>
-                            </ul>
-                        </li>
+                        <?php if (!in_groups('investor')) : ?>
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='')?'uk-active':''?>">
+                                <a class="tm-h3" href="<?= base_url('') ?>"><img src="img/layout/chart.svg" uk-svg><?=lang('Global.transaction');?></a>
+                            </li>
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='trxhistory')?'uk-active':''?>">
+                                <a class="tm-h3" href="<?= base_url('trxhistory') ?>"><img src="img/layout/riwayat.svg" uk-svg><?=lang('Global.trxHistory');?></a>
+                            </li>
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='billhistory')?'uk-active':''?>">
+                                <a class="tm-h3" href="<?= base_url('billhistory') ?>"><img src="img/layout/topup.svg" uk-svg><?=lang('Global.billhistory');?></a>
+                            </li>
+                            <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
+                                <a class="tm-h3" href=""><img src="img/layout/debt.svg" uk-svg><?=lang('Global.debt');?><span uk-nav-parent-icon></span></a>
+                                <ul class="uk-nav-sub">
+                                    <li class="tm-h4 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='')?'uk-active':''?>">
+                                        <a href="<?= base_url('debt') ?>"><?=lang('Global.debtList');?></a>
+                                    </li>
+                                    <li class="tm-h4 <?=($uri->getSegment(1)==='debt')&&($uri->getSegment(2)==='debtpay')?'uk-active':''?>">
+                                        <a href="<?= base_url('debt/debtpay') ?>"><?=lang('Global.debtInstallments');?></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        <?php endif ?>
                         <!-- <li class="tm-main-navbar </?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
                             <a class="tm-h3" href="</?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg></?=lang('Global.topup');?></a>
                         </li> -->
@@ -1436,54 +1440,60 @@
                                 <a class="tm-h3" href="<?= base_url('product') ?>"><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?></a>
                             </li>
                         <?php endif ?>
-                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='reminder')?'uk-active':''?>">
-                            <a class="tm-h3" href="<?= base_url('reminder') ?>"><img src="img/layout/calendar.svg" uk-svg><?=lang('Global.reminder');?></a>
-                        </li>
-                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='presence')?'uk-active':''?>">
-                            <a class="tm-h3" href="<?= base_url('presence') ?>"><img src="img/layout/presensi.svg" uk-svg><?=lang('Global.presence');?></a>
-                        </li>
+                        <?php if (!in_groups('investor')) : ?>
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='reminder')?'uk-active':''?>">
+                                <a class="tm-h3" href="<?= base_url('reminder') ?>"><img src="img/layout/calendar.svg" uk-svg><?=lang('Global.reminder');?></a>
+                            </li>
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='presence')?'uk-active':''?>">
+                                <a class="tm-h3" href="<?= base_url('presence') ?>"><img src="img/layout/presensi.svg" uk-svg><?=lang('Global.presence');?></a>
+                            </li>
+                        <?php endif ?>
                         <?php if (in_groups((['owner','supervisor']))) : ?>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='user')?'uk-active':''?>">
                                 <a class="tm-h3" href="<?= base_url('user') ?>"><img src="img/layout/pegawai.svg" uk-svg><?=lang('Global.employee');?></a>
                             </li>
                         <?php endif ?>
-                        <!-- <li class="tm-main-navbar uk-parent </?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?></?=($uri->getSegment(1)==='stockmove')?'uk-active':''?></?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>"> -->
-                        <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?><?=($uri->getSegment(1)==='stockmove')?'uk-active':''?><?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?>">
-                            <a class="tm-h3" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
-                            <ul class="uk-nav-sub">
-                                <?php if (in_groups('owner')) : ?>
-                                    <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='inventory')?'uk-active':''?>">
-                                        <a href="<?= base_url('stock/inventory') ?>"><?=lang('Global.store');?></a>
+                        <?php if (!in_groups('investor')) : ?>
+                            <!-- <li class="tm-main-navbar uk-parent </?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?></?=($uri->getSegment(1)==='stockmove')?'uk-active':''?></?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>"> -->
+                            <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?><?=($uri->getSegment(1)==='stockmove')?'uk-active':''?><?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?>">
+                                <a class="tm-h3" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
+                                <ul class="uk-nav-sub">
+                                    <?php if (in_groups('owner')) : ?>
+                                        <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='inventory')?'uk-active':''?>">
+                                            <a href="<?= base_url('stock/inventory') ?>"><?=lang('Global.store');?></a>
+                                        </li>
+                                        <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
+                                            <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
+                                        </li>
+                                        <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
+                                            <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
+                                        </li>
+                                        <li class="tm-h4 <?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?>">
+                                            <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
+                                        </li>
+                                        <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>">
+                                            <a href="</?= base_url('stock/stockcycle') ?>"></?=lang('Global.stockCycle');?></a>
+                                        </li> -->
+                                    <?php endif ?>
+                                    <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
+                                        <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
                                     </li>
-                                    <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
-                                        <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
+                                    <li class="tm-h4 <?=($uri->getSegment(1)==='stockmove')?'uk-active':''?>">
+                                        <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
                                     </li>
-                                    <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
-                                        <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
-                                    </li>
-                                    <li class="tm-h4 <?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?>">
-                                        <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
-                                    </li>
-                                    <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>">
-                                        <a href="</?= base_url('stock/stockcycle') ?>"></?=lang('Global.stockCycle');?></a>
-                                    </li> -->
-                                <?php endif ?>
-                                <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
-                                    <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
-                                </li>
-                                <li class="tm-h4 <?=($uri->getSegment(1)==='stockmove')?'uk-active':''?>">
-                                    <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
-                                </li>
-                            </ul>
-                        </li>
+                                </ul>
+                            </li>
+                        <?php endif ?>
                         <?php if (in_groups(['owner','supervisor'])) : ?>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='outlet')?'uk-active':''?>">
                                 <a class="tm-h3" href="<?= base_url('outlet') ?>"><img src="img/layout/outlet.svg" uk-svg><?=lang('Global.outlet');?></a>
                             </li>
                         <?php endif ?>
-                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='cashinout')?'uk-active':''?>">
-                            <a class="tm-h3" href="<?= base_url('cashinout') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashinout');?></a>
-                        </li>
+                        <?php if (!in_groups('investor')) : ?>
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='cashinout')?'uk-active':''?>">
+                                <a class="tm-h3" href="<?= base_url('cashinout') ?>"><img src="img/layout/cash.svg" uk-svg><?=lang('Global.cashinout');?></a>
+                            </li>
+                        <?php endif ?>
                         <?php if (in_groups('owner')) : ?>
                             <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='walletman')?'uk-active':''?><?=($uri->getSegment(1)==='walletmove')?'uk-active':''?><?=($uri->getSegment(1)==='payment')?'uk-active':''?>">
                                 <a class="tm-h3" href=""><img src="img/layout/payment.svg" uk-svg><?=lang('Global.wallet');?><span uk-nav-parent-icon></span></a>
@@ -1500,9 +1510,11 @@
                                 </ul>
                             </li>
                         <?php endif ?>
-                        <li class="tm-main-navbar <?=($uri->getSegment(1)==='customer')?'uk-active':''?>">
-                            <a class="tm-h3" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
-                        </li>
+                        <?php if (!in_groups('investor')) : ?>
+                            <li class="tm-main-navbar <?=($uri->getSegment(1)==='customer')?'uk-active':''?>">
+                                <a class="tm-h3" href="<?= base_url('customer') ?>"><img src="img/layout/pelanggan.svg" uk-svg><?=lang('Global.customer');?></a>
+                            </li>
+                        <?php endif ?>
                         <?php if (in_groups(['owner','supervisor'])) : ?>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='promo')?'uk-active':''?>">
                                 <a class="tm-h3" href="<?= base_url('promo') ?>"><img src="img/layout/union.svg" uk-svg><?=lang('Global.website');?></a>
@@ -1990,540 +2002,766 @@
                                 </div>
                             </div>
 
-                            <ul id="pageload" class="uk-switcher switcher-class" hidden>
+                            <?php if (!in_groups('investor')) { ?>
+                                <ul id="pageload" class="uk-switcher switcher-class" hidden>
 
-                                <!-- Catalog List -->
-                                <li>
-                                    <script>
-                                        function showVariant(id) {
-                                            var modal = document.getElementById('modalVar');
-                                            var data = { 'id' : id };
-                                            $.ajax({
-                                                url:"stock/product",
-                                                method:"POST",
-                                                data: data,
-                                                dataType: "json",                                                
-                                                error:function() {
-                                                    console.log('error', arguments);
-                                                },
-                                                success:function() {
-                                                    console.log('success', arguments);
-                                                    var variantList = document.getElementById('modalVarList');
-                                                    var productName = document.getElementById('modalVarProduct');
-                                                    productName.innerHTML = arguments[0][0]['product'];
-                                                    while (variantList.firstElementChild) {
-                                                        variantList.removeChild(variantList.firstElementChild);
-                                                    }
-                                                    variantarray = arguments[0];
-                                                    for (k in variantarray) {
-                                                        var variantContainer = document.createElement('div');
-                                                        variantContainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle');
-                                                        variantContainer.setAttribute('uk-grid', '');
+                                    <!-- Catalog List -->
+                                    <li>
+                                        <script>
+                                            function showVariant(id) {
+                                                var modal = document.getElementById('modalVar');
+                                                var data = { 'id' : id };
+                                                $.ajax({
+                                                    url:"stock/product",
+                                                    method:"POST",
+                                                    data: data,
+                                                    dataType: "json",                                                
+                                                    error:function() {
+                                                        console.log('error', arguments);
+                                                    },
+                                                    success:function() {
+                                                        console.log('success', arguments);
+                                                        var variantList = document.getElementById('modalVarList');
+                                                        var productName = document.getElementById('modalVarProduct');
+                                                        productName.innerHTML = arguments[0][0]['product'];
+                                                        while (variantList.firstElementChild) {
+                                                            variantList.removeChild(variantList.firstElementChild);
+                                                        }
+                                                        variantarray = arguments[0];
+                                                        for (k in variantarray) {
+                                                            var variantContainer = document.createElement('div');
+                                                            variantContainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle');
+                                                            variantContainer.setAttribute('uk-grid', '');
 
-                                                        var variantName = document.createElement('div');
-                                                        variantName.setAttribute('class', 'uk-width-1-5');
+                                                            var variantName = document.createElement('div');
+                                                            variantName.setAttribute('class', 'uk-width-1-5');
 
-                                                        var variantNameText = document.createElement('div');
-                                                        variantNameText.setAttribute('class', 'uk-text-meta');
-                                                        variantNameText.innerHTML = variantarray[k]['variant'];
+                                                            var variantNameText = document.createElement('div');
+                                                            variantNameText.setAttribute('class', 'uk-text-meta');
+                                                            variantNameText.innerHTML = variantarray[k]['variant'];
 
-                                                        var sellPrice = document.createElement('div');
-                                                        sellPrice.setAttribute('class', 'uk-width-1-5');
+                                                            var sellPrice = document.createElement('div');
+                                                            sellPrice.setAttribute('class', 'uk-width-1-5');
 
-                                                        var sellText = document.createElement('div');
-                                                        sellText.setAttribute('class', 'uk-text-meta');
-                                                        sellText.innerHTML = variantarray[k]['sellprice'];
+                                                            var sellText = document.createElement('div');
+                                                            sellText.setAttribute('class', 'uk-text-meta');
+                                                            sellText.innerHTML = variantarray[k]['sellprice'];
 
-                                                        var msrp = document.createElement('div');
-                                                        msrp.setAttribute('class', 'uk-width-1-5');
+                                                            var msrp = document.createElement('div');
+                                                            msrp.setAttribute('class', 'uk-width-1-5');
 
-                                                        var msrpText = document.createElement('div');
-                                                        msrpText.setAttribute('class', 'uk-text-meta');
-                                                        msrpText.innerHTML = variantarray[k]['msrp'];
+                                                            var msrpText = document.createElement('div');
+                                                            msrpText.setAttribute('class', 'uk-text-meta');
+                                                            msrpText.innerHTML = variantarray[k]['msrp'];
 
-                                                        var stock = document.createElement('div');
-                                                        stock.setAttribute('class', 'uk-width-1-5');
+                                                            var stock = document.createElement('div');
+                                                            stock.setAttribute('class', 'uk-width-1-5');
 
-                                                        var stockText = document.createElement('div');
-                                                        stockText.setAttribute('class', 'uk-text-meta');
-                                                        stockText.innerHTML = variantarray[k]['qty'];
+                                                            var stockText = document.createElement('div');
+                                                            stockText.setAttribute('class', 'uk-text-meta');
+                                                            stockText.innerHTML = variantarray[k]['qty'];
 
-                                                        var buttonContainer = document.createElement('div');
-                                                        buttonContainer.setAttribute('class', 'uk-width-1-5 uk-text-center');
+                                                            var buttonContainer = document.createElement('div');
+                                                            buttonContainer.setAttribute('class', 'uk-width-1-5 uk-text-center');
 
-                                                        var button = document.createElement('a');
-                                                        button.setAttribute('class', 'uk-icon-button');
-                                                        button.setAttribute('uk-icon', 'cart');
-                                                        button.setAttribute('onclick', 'createNewOrder('+variantarray[k]['id']+')');
+                                                            var button = document.createElement('a');
+                                                            button.setAttribute('class', 'uk-icon-button');
+                                                            button.setAttribute('uk-icon', 'cart');
+                                                            button.setAttribute('onclick', 'createNewOrder('+variantarray[k]['id']+')');
 
-                                                        variantName.appendChild(variantNameText);
-                                                        variantContainer.appendChild(variantName);
-                                                        sellPrice.appendChild(sellText);
-                                                        variantContainer.appendChild(sellPrice);
-                                                        msrp.appendChild(msrpText);
-                                                        variantContainer.appendChild(msrp);
-                                                        stock.appendChild(stockText);
-                                                        variantContainer.appendChild(stock);
-                                                        buttonContainer.appendChild(button);
-                                                        variantContainer.appendChild(buttonContainer);
-                                                        variantList.appendChild(variantContainer);
-                                                    }
-                                                    UIkit.modal(modal).show();
-                                                },
-                                            });
-                                        };
+                                                            variantName.appendChild(variantNameText);
+                                                            variantContainer.appendChild(variantName);
+                                                            sellPrice.appendChild(sellText);
+                                                            variantContainer.appendChild(sellPrice);
+                                                            msrp.appendChild(msrpText);
+                                                            variantContainer.appendChild(msrp);
+                                                            stock.appendChild(stockText);
+                                                            variantContainer.appendChild(stock);
+                                                            buttonContainer.appendChild(button);
+                                                            variantContainer.appendChild(buttonContainer);
+                                                            variantList.appendChild(variantContainer);
+                                                        }
+                                                        UIkit.modal(modal).show();
+                                                    },
+                                                });
+                                            };
 
-                                        function createNewOrder(variant) {
-                                            var elemexist   = document.getElementById('product'+variant);
-                                            var ItsMember   = document.getElementById('customerid');
-                                            for (x in variantarray) {
-                                                if (variantarray[x]['id'] == variant) {
-                                                    var count = 1;
-                                                    var modalhide = document.getElementById('modalVar');
-                                                        UIkit.modal(modalhide).hide();
-                                                    if ( $( "#product"+variant ).length ) {
-                                                        alert('<?=lang('Global.readyAdd');?>');
-                                                    } else {
-                                                        if (variantarray[x]['qty'] == '0') {
-                                                            alert("<?=lang('Global.alertstock')?>");
+                                            function createNewOrder(variant) {
+                                                var elemexist   = document.getElementById('product'+variant);
+                                                var ItsMember   = document.getElementById('customerid');
+                                                for (x in variantarray) {
+                                                    if (variantarray[x]['id'] == variant) {
+                                                        var count = 1;
+                                                        var modalhide = document.getElementById('modalVar');
+                                                            UIkit.modal(modalhide).hide();
+                                                        if ( $( "#product"+variant ).length ) {
+                                                            alert('<?=lang('Global.readyAdd');?>');
                                                         } else {
-                                                            let minstock = 1;
-                                                            let minval = count;
+                                                            if (variantarray[x]['qty'] == '0') {
+                                                                alert("<?=lang('Global.alertstock')?>");
+                                                            } else {
+                                                                let minstock = 1;
+                                                                let minval = count;
 
-                                                            const products = document.getElementById('products');
-                                                            
-                                                            const productgrid = document.createElement('div');
-                                                            productgrid.setAttribute('id', 'product'+variant);
-                                                            productgrid.setAttribute('class', 'uk-margin-small uk-flex-middle cart-item');
-                                                            productgrid.setAttribute('uk-grid', '');
+                                                                const products = document.getElementById('products');
+                                                                
+                                                                const productgrid = document.createElement('div');
+                                                                productgrid.setAttribute('id', 'product'+variant);
+                                                                productgrid.setAttribute('class', 'uk-margin-small uk-flex-middle cart-item');
+                                                                productgrid.setAttribute('uk-grid', '');
 
-                                                            const addcontainer = document.createElement('div');
-                                                            addcontainer.setAttribute('class', 'uk-width-1-6');
-                                                            
-                                                            const productqtyinputadd = document.createElement('div');
-                                                            productqtyinputadd.setAttribute('id','addqty'+variant);
-                                                            productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
-                                                            productqtyinputadd.setAttribute('onclick','handleCount('+variant+', 1)');
-                                                            productqtyinputadd.innerHTML = '+';
+                                                                const addcontainer = document.createElement('div');
+                                                                addcontainer.setAttribute('class', 'uk-width-1-6');
+                                                                
+                                                                const productqtyinputadd = document.createElement('div');
+                                                                productqtyinputadd.setAttribute('id','addqty'+variant);
+                                                                productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
+                                                                productqtyinputadd.setAttribute('onclick','handleCount('+variant+', 1)');
+                                                                productqtyinputadd.innerHTML = '+';
 
-                                                            const delcontainer = document.createElement('div');
-                                                            delcontainer.setAttribute('class', 'uk-width-1-6');
-                                                            
-                                                            const productqtyinputdel = document.createElement('div');
-                                                            productqtyinputdel.setAttribute('id','delqty'+variant);
-                                                            productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
-                                                            productqtyinputdel.setAttribute('onclick','handleCount('+variant+', 0)');
-                                                            productqtyinputdel.innerHTML = '-';
+                                                                const delcontainer = document.createElement('div');
+                                                                delcontainer.setAttribute('class', 'uk-width-1-6');
+                                                                
+                                                                const productqtyinputdel = document.createElement('div');
+                                                                productqtyinputdel.setAttribute('id','delqty'+variant);
+                                                                productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
+                                                                productqtyinputdel.setAttribute('onclick','handleCount('+variant+', 0)');
+                                                                productqtyinputdel.innerHTML = '-';
 
-                                                            const quantitycontainer = document.createElement('div');
-                                                            quantitycontainer.setAttribute('class', 'tm-h2 uk-width-1-6@m uk-width-1-3');
+                                                                const quantitycontainer = document.createElement('div');
+                                                                quantitycontainer.setAttribute('class', 'tm-h2 uk-width-1-6@m uk-width-1-3');
 
-                                                            const productqty = document.createElement('div');                                               
+                                                                const productqty = document.createElement('div');                                               
 
-                                                            const inputqty = document.createElement('input');
-                                                            inputqty.setAttribute('type', 'number');
-                                                            inputqty.setAttribute('id', "qty["+variant+"]");
-                                                            inputqty.setAttribute('name', "qty["+variant+"]");
-                                                            inputqty.setAttribute('class', 'uk-input uk-form-width-small');
-                                                            inputqty.setAttribute('min', minstock);
-                                                            inputqty.setAttribute('max', variantarray[x]['qty']);
-                                                            inputqty.setAttribute('value', '1');
+                                                                const inputqty = document.createElement('input');
+                                                                inputqty.setAttribute('type', 'number');
+                                                                inputqty.setAttribute('id', "qty["+variant+"]");
+                                                                inputqty.setAttribute('name', "qty["+variant+"]");
+                                                                inputqty.setAttribute('class', 'uk-input uk-form-width-small');
+                                                                inputqty.setAttribute('min', minstock);
+                                                                inputqty.setAttribute('max', variantarray[x]['qty']);
+                                                                inputqty.setAttribute('value', '1');
 
-                                                            const namecontainer = document.createElement('div');
-                                                            namecontainer.setAttribute('class', 'uk-width-1-3@m uk-width-1-2');
+                                                                const namecontainer = document.createElement('div');
+                                                                namecontainer.setAttribute('class', 'uk-width-1-3@m uk-width-1-2');
 
-                                                            const productname = document.createElement('div');
-                                                            productname.setAttribute('id', 'name'+variant);
-                                                            productname.setAttribute('class', 'tm-h5');
-                                                            productname.innerHTML = variantarray[x]['name'];
+                                                                const productname = document.createElement('div');
+                                                                productname.setAttribute('id', 'name'+variant);
+                                                                productname.setAttribute('class', 'tm-h5');
+                                                                productname.innerHTML = variantarray[x]['name'];
 
-                                                            const pricecontainer = document.createElement('div');
-                                                            pricecontainer.setAttribute('class', 'uk-width-1-6@m uk-width-1-2');
-                                                            
-                                                            const productprice = document.createElement('div');
-                                                            productprice.setAttribute('id', 'price'+variant);
-                                                            productprice.setAttribute('class', 'tm-h5');
-                                                            productprice.setAttribute('name', 'price[]');
-                                                            productprice.setAttribute('value', showprice());
-                                                            productprice.innerHTML = showprice();
+                                                                const pricecontainer = document.createElement('div');
+                                                                pricecontainer.setAttribute('class', 'uk-width-1-6@m uk-width-1-2');
+                                                                
+                                                                const productprice = document.createElement('div');
+                                                                productprice.setAttribute('id', 'price'+variant);
+                                                                productprice.setAttribute('class', 'tm-h5');
+                                                                productprice.setAttribute('name', 'price[]');
+                                                                productprice.setAttribute('value', showprice());
+                                                                productprice.innerHTML = showprice();
 
-                                                            // const varpricecontainer = document.createElement('div');
-                                                            // varpricecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
+                                                                // const varpricecontainer = document.createElement('div');
+                                                                // varpricecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
 
-                                                            // const varbardiv = document.createElement('div');
-                                                            // varbardiv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
+                                                                // const varbardiv = document.createElement('div');
+                                                                // varbardiv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
 
-                                                            // const varbarlab = document.createElement('label');
-                                                            // varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
+                                                                // const varbarlab = document.createElement('label');
+                                                                // varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
 
-                                                            // const varbartext = document.createTextNode("Variant Bargain");
+                                                                // const varbartext = document.createTextNode("Variant Bargain");
 
-                                                            // const varbarform = document.createElement('div');
-                                                            // varbarform.setAttribute('class','uk-form-controls');
+                                                                // const varbarform = document.createElement('div');
+                                                                // varbarform.setAttribute('class','uk-form-controls');
 
-                                                            // const varbargain = document.createElement('input');
-                                                            // varbargain.setAttribute('class', 'uk-input uk-form-width-small');
-                                                            // varbargain.setAttribute('id', 'varbargain'+variant);
-                                                            // varbargain.setAttribute('placeholder', '0');
-                                                            // varbargain.setAttribute('name', 'varbargain['+variant+']');
-                                                            // varbargain.setAttribute('min', "0");
-                                                            // varbargain.setAttribute('type', 'number');
+                                                                // const varbargain = document.createElement('input');
+                                                                // varbargain.setAttribute('class', 'uk-input uk-form-width-small');
+                                                                // varbargain.setAttribute('id', 'varbargain'+variant);
+                                                                // varbargain.setAttribute('placeholder', '0');
+                                                                // varbargain.setAttribute('name', 'varbargain['+variant+']');
+                                                                // varbargain.setAttribute('min', "0");
+                                                                // varbargain.setAttribute('type', 'number');
 
-                                                            const varvaluecontainer = document.createElement('div');
-                                                            varvaluecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
+                                                                const varvaluecontainer = document.createElement('div');
+                                                                varvaluecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
 
-                                                            const varpricediv = document.createElement('div');
-                                                            varpricediv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
+                                                                const varpricediv = document.createElement('div');
+                                                                varpricediv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
 
-                                                            const varpricelab = document.createElement('label');
-                                                            varpricelab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4' );
+                                                                const varpricelab = document.createElement('label');
+                                                                varpricelab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4' );
 
-                                                            const varpricetext = document.createTextNode("Discount Variant");
+                                                                const varpricetext = document.createTextNode("Discount Variant");
 
-                                                            const varpriceform = document.createElement('div');
-                                                            varpriceform.setAttribute('class','uk-form-controls');
-                                                            
-                                                            const varprice = document.createElement('input');
-                                                            varprice.setAttribute('class', 'uk-input uk-form-width-small varprice');
-                                                            varprice.setAttribute('data-index', variant);
-                                                            varprice.setAttribute('id', 'varprice'+variant);
-                                                            varprice.setAttribute('placeholder', '0');
-                                                            varprice.setAttribute('name', 'varprice['+variant+']');
-                                                            // varprice.setAttribute('value', '0');
-                                                            varprice.setAttribute('type', 'number');
-                                                            varprice.setAttribute('min', '0');
+                                                                const varpriceform = document.createElement('div');
+                                                                varpriceform.setAttribute('class','uk-form-controls');
+                                                                
+                                                                const varprice = document.createElement('input');
+                                                                varprice.setAttribute('class', 'uk-input uk-form-width-small varprice');
+                                                                varprice.setAttribute('data-index', variant);
+                                                                varprice.setAttribute('id', 'varprice'+variant);
+                                                                varprice.setAttribute('placeholder', '0');
+                                                                varprice.setAttribute('name', 'varprice['+variant+']');
+                                                                // varprice.setAttribute('value', '0');
+                                                                varprice.setAttribute('type', 'number');
+                                                                varprice.setAttribute('min', '0');
 
-                                                            function showprice() {
-                                                                var qty = inputqty.value;
-                                                                var sellPrice = variantarray[x]['sellprice'];
+                                                                function showprice() {
+                                                                    var qty = inputqty.value;
+                                                                    var sellPrice = variantarray[x]['sellprice'];
 
-                                                                // Difine Discount
-                                                                var globaldisc = 0;
-                                                                var memberdisc = 0;
+                                                                    // Difine Discount
+                                                                    var globaldisc = 0;
+                                                                    var memberdisc = 0;
 
-                                                                // Global Discount
-                                                                <?php if ($gconfig['globaldisc'] != '0') {
-                                                                    if ($gconfig['globaldisctype'] == '0') { ?>
-                                                                        globaldisc = <?= $gconfig['globaldisc'] ?>;
-                                                                    <?php } else { ?>
-                                                                        globaldisc = sellPrice * <?= ((int)$gconfig['globaldisc'] / 100) ?>;
-                                                                    <?php }
-                                                                } ?>
-
-                                                                // Member Discount
-                                                                if (ItsMember && ItsMember.dataset.valid === '1' && ItsMember.value != '0') {
-                                                                    <?php if ($gconfig['memberdisc'] != '0') {
-                                                                        if ($gconfig['memberdisctype'] == '0') { ?>
-                                                                            memberdisc = <?= $gconfig['memberdisc'] ?>;
+                                                                    // Global Discount
+                                                                    <?php if ($gconfig['globaldisc'] != '0') {
+                                                                        if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                            globaldisc = <?= $gconfig['globaldisc'] ?>;
                                                                         <?php } else { ?>
-                                                                            memberdisc = sellPrice * <?= ((int)$gconfig['memberdisc'] / 100) ?>;
-                                                                        <?php } ?>
+                                                                            globaldisc = sellPrice * <?= ((int)$gconfig['globaldisc'] / 100) ?>;
+                                                                        <?php }
+                                                                    } ?>
 
-                                                                        if (memberdisc > <?= $gconfig['maxmemberdisc'] ?>) {
-                                                                            memberdisc = <?= $gconfig['maxmemberdisc'] ?>;
-                                                                        }
-                                                                    <?php } ?>
+                                                                    // Member Discount
+                                                                    if (ItsMember && ItsMember.dataset.valid === '1' && ItsMember.value != '0') {
+                                                                        <?php if ($gconfig['memberdisc'] != '0') {
+                                                                            if ($gconfig['memberdisctype'] == '0') { ?>
+                                                                                memberdisc = <?= $gconfig['memberdisc'] ?>;
+                                                                            <?php } else { ?>
+                                                                                memberdisc = sellPrice * <?= ((int)$gconfig['memberdisc'] / 100) ?>;
+                                                                            <?php } ?>
+
+                                                                            if (memberdisc > <?= $gconfig['maxmemberdisc'] ?>) {
+                                                                                memberdisc = <?= $gconfig['maxmemberdisc'] ?>;
+                                                                            }
+                                                                        <?php } ?>
+                                                                    }
+
+                                                                    var price = qty * (sellPrice - globaldisc - memberdisc);
+
+                                                                    productprice.innerHTML = price;
+                                                                    return price;
                                                                 }
 
-                                                                var price = qty * (sellPrice - globaldisc - memberdisc);
+                                                                inputqty.onchange = function() {showprice()};
+                                                                inputqty.onchange = function() {handleChangeCount(variant)};
 
-                                                                productprice.innerHTML = price;
-                                                                return price;
-                                                            }
+                                                                // varbargain.onchange = function() {VarBargain(variant)};
+                                                                varprice.onchange = function() {VarDisc(variant)};
 
-                                                            inputqty.onchange = function() {showprice()};
-                                                            inputqty.onchange = function() {handleChangeCount(variant)};
+                                                                // varbargain.onchange = function() {
+                                                                //     var discvar = varprice.value;
+                                                                //     var bargain = varbargain.value;
 
-                                                            // varbargain.onchange = function() {VarBargain(variant)};
-                                                            varprice.onchange = function() {VarDisc(variant)};
+                                                                //     if (varprice.value) {
+                                                                //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                                //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                                //             </?php } else { ?>
+                                                                //                 var globaldisc  = (bargain - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                //             </?php } ?>
 
-                                                            // varbargain.onchange = function() {
-                                                            //     var discvar = varprice.value;
-                                                            //     var bargain = varbargain.value;
+                                                                //             var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
+                                                                //         </?php } else { ?>
+                                                                //             var bargainprice = bargain * inputqty.value;
+                                                                //         </?php } ?>
+                                                                //     } else {
+                                                                //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                                //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                                //             </?php } else { ?>
+                                                                //                 var globaldisc  = bargain * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                //             </?php } ?>
 
-                                                            //     if (varprice.value) {
-                                                            //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                            //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                            //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                            //             </?php } else { ?>
-                                                            //                 var globaldisc  = (bargain - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                            //             </?php } ?>
+                                                                //             var bargainprice = (bargain - globaldisc) * inputqty.value;
+                                                                //         </?php } else { ?>
+                                                                //             var bargainprice = bargain * inputqty.value;
+                                                                //         </?php } ?>
+                                                                //     }
 
-                                                            //             var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
-                                                            //         </?php } else { ?>
-                                                            //             var bargainprice = bargain * inputqty.value;
-                                                            //         </?php } ?>
-                                                            //     } else {
-                                                            //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                            //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                            //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                            //             </?php } else { ?>
-                                                            //                 var globaldisc  = bargain * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                            //             </?php } ?>
+                                                                //     if (bargainprice) {
+                                                                //         document.getElementById('price'+variant).innerHTML = bargainprice;
+                                                                //     } else {
+                                                                //         document.getElementById('price'+variant).innerHTML = showprice();
+                                                                //     }
+                                                                // }
 
-                                                            //             var bargainprice = (bargain - globaldisc) * inputqty.value;
-                                                            //         </?php } else { ?>
-                                                            //             var bargainprice = bargain * inputqty.value;
-                                                            //         </?php } ?>
-                                                            //     }
+                                                                // varprice.onchange = function() {
+                                                                //     if (varbargain.value) {
+                                                                //         var subvalue    = (varbargain.value - varprice.value);
 
-                                                            //     if (bargainprice) {
-                                                            //         document.getElementById('price'+variant).innerHTML = bargainprice;
-                                                            //     } else {
-                                                            //         document.getElementById('price'+variant).innerHTML = showprice();
-                                                            //     }
-                                                            // }
+                                                                //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                                //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                                //             </?php } else { ?>
+                                                                //                 var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                //             </?php } ?>
 
-                                                            // varprice.onchange = function() {
-                                                            //     if (varbargain.value) {
-                                                            //         var subvalue    = (varbargain.value - varprice.value);
+                                                                //             document.getElementById('price'+variant).innerHTML = (subvalue - globaldisc) * inputqty.value;
+                                                                //         </?php } else { ?>
+                                                                //             document.getElementById('price'+variant).innerHTML = subvalue * inputqty.value;
+                                                                //         </?php } ?>
+                                                                //     } else {
+                                                                //         var subvalue    = (variantarray[x]['sellprice'] - varprice.value);
 
-                                                            //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                            //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                            //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                            //             </?php } else { ?>
-                                                            //                 var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                            //             </?php } ?>
+                                                                //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                                //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                                //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                                //             </?php } else { ?>
+                                                                //                 var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                                //             </?php } ?>
 
-                                                            //             document.getElementById('price'+variant).innerHTML = (subvalue - globaldisc) * inputqty.value;
-                                                            //         </?php } else { ?>
-                                                            //             document.getElementById('price'+variant).innerHTML = subvalue * inputqty.value;
-                                                            //         </?php } ?>
-                                                            //     } else {
-                                                            //         var subvalue    = (variantarray[x]['sellprice'] - varprice.value);
+                                                                //             document.getElementById('price'+variant).innerHTML = (subvalue - globaldisc) * inputqty.value;
+                                                                //         </?php } else { ?>
+                                                                //             document.getElementById('price'+variant).innerHTML = subvalue * inputqty.value;
+                                                                //         </?php } ?>
+                                                                //     }
+                                                                // }
 
-                                                            //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                            //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                            //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                            //             </?php } else { ?>
-                                                            //                 var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                            //             </?php } ?>
+                                                                var sellprice = document.createElement('input');
+                                                                sellprice.setAttribute('id', 'sellprice'+variant);
+                                                                sellprice.setAttribute('hidden', '');
+                                                                sellprice.value = variantarray[x]['sellprice'];
 
-                                                            //             document.getElementById('price'+variant).innerHTML = (subvalue - globaldisc) * inputqty.value;
-                                                            //         </?php } else { ?>
-                                                            //             document.getElementById('price'+variant).innerHTML = subvalue * inputqty.value;
-                                                            //         </?php } ?>
-                                                            //     }
-                                                            // }
-
-                                                            var sellprice = document.createElement('input');
-                                                            sellprice.setAttribute('id', 'sellprice'+variant);
-                                                            sellprice.setAttribute('hidden', '');
-                                                            sellprice.value = variantarray[x]['sellprice'];
-
-                                                            addcontainer.appendChild(productqtyinputadd);
-                                                            productqty.appendChild(inputqty);
-                                                            quantitycontainer.appendChild(productqty);
-                                                            delcontainer.appendChild(productqtyinputdel);
-                                                            pricecontainer.appendChild(productprice);
-                                                            namecontainer.appendChild(productname);
-                                                            // varpricecontainer.appendChild(varbardiv);
-                                                            // varbardiv.appendChild(varbarlab);
-                                                            // varbarlab.appendChild(varbartext);
-                                                            // varbarlab.appendChild(varbarform);
-                                                            // varbarform.appendChild(varbargain);
-                                                            varvaluecontainer.appendChild(varpricediv);
-                                                            varpricediv.appendChild(varpricelab);
-                                                            varpricelab.appendChild(varpricetext);
-                                                            varpricelab.appendChild(varpriceform);
-                                                            varpriceform.appendChild(varprice);                                                                                        
-                                                            productgrid.appendChild(delcontainer);
-                                                            productgrid.appendChild(quantitycontainer);
-                                                            productgrid.appendChild(addcontainer);
-                                                            productgrid.appendChild(namecontainer);
-                                                            productgrid.appendChild(pricecontainer);
-                                                            productgrid.appendChild(pricecontainer);
-                                                            // productgrid.appendChild(varpricecontainer);
-                                                            productgrid.appendChild(varvaluecontainer);
-                                                            products.appendChild(sellprice);
-                                                            products.appendChild(productgrid);
-                                                            
-                                                            const MemberUse = document.getElementById('customerid');
-                                                            if (MemberUse && MemberUse.dataset.valid === '1' && MemberUse.value !== '0') {
-                                                                applyMemberDiscountToAll(variant);
+                                                                addcontainer.appendChild(productqtyinputadd);
+                                                                productqty.appendChild(inputqty);
+                                                                quantitycontainer.appendChild(productqty);
+                                                                delcontainer.appendChild(productqtyinputdel);
+                                                                pricecontainer.appendChild(productprice);
+                                                                namecontainer.appendChild(productname);
+                                                                // varpricecontainer.appendChild(varbardiv);
+                                                                // varbardiv.appendChild(varbarlab);
+                                                                // varbarlab.appendChild(varbartext);
+                                                                // varbarlab.appendChild(varbarform);
+                                                                // varbarform.appendChild(varbargain);
+                                                                varvaluecontainer.appendChild(varpricediv);
+                                                                varpricediv.appendChild(varpricelab);
+                                                                varpricelab.appendChild(varpricetext);
+                                                                varpricelab.appendChild(varpriceform);
+                                                                varpriceform.appendChild(varprice);                                                                                        
+                                                                productgrid.appendChild(delcontainer);
+                                                                productgrid.appendChild(quantitycontainer);
+                                                                productgrid.appendChild(addcontainer);
+                                                                productgrid.appendChild(namecontainer);
+                                                                productgrid.appendChild(pricecontainer);
+                                                                productgrid.appendChild(pricecontainer);
+                                                                // productgrid.appendChild(varpricecontainer);
+                                                                productgrid.appendChild(varvaluecontainer);
+                                                                products.appendChild(sellprice);
+                                                                products.appendChild(productgrid);
+                                                                
+                                                                const MemberUse = document.getElementById('customerid');
+                                                                if (MemberUse && MemberUse.dataset.valid === '1' && MemberUse.value !== '0') {
+                                                                    applyMemberDiscountToAll(variant);
+                                                                }
                                                             }
                                                         }
                                                     }
                                                 }
-                                            }
-                                        };
+                                            };
 
-                                        // function VarBargain(id) {
-                                        //     var inputqty        = document.getElementById('qty['+id+']');
-                                        //     var varbargain      = document.getElementById('varbargain'+id);
-                                        //     var varprice        = document.getElementById('varprice'+id);
-                                        //     var sellprice       = document.getElementById('sellprice'+id);
-                                        //     var productprice    = document.getElementById('price'+id);
-                                        //     var productgrid     = document.getElementById('product'+id);
+                                            // function VarBargain(id) {
+                                            //     var inputqty        = document.getElementById('qty['+id+']');
+                                            //     var varbargain      = document.getElementById('varbargain'+id);
+                                            //     var varprice        = document.getElementById('varprice'+id);
+                                            //     var sellprice       = document.getElementById('sellprice'+id);
+                                            //     var productprice    = document.getElementById('price'+id);
+                                            //     var productgrid     = document.getElementById('product'+id);
 
-                                        //     if (varprice.value) {
-                                        //         </?php if ($gconfig['globaldisc'] != '0') {
-                                        //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                        //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                        //             </?php } else { ?>
-                                        //                 var globaldisc  = (bargain - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                        //             </?php } ?>
+                                            //     if (varprice.value) {
+                                            //         </?php if ($gconfig['globaldisc'] != '0') {
+                                            //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                            //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                            //             </?php } else { ?>
+                                            //                 var globaldisc  = (bargain - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                            //             </?php } ?>
 
-                                        //             var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
-                                        //         </?php } else { ?>
-                                        //             var bargainprice = bargain * inputqty.value;
-                                        //         </?php } ?>
-                                        //     } else {
-                                        //         </?php if ($gconfig['globaldisc'] != '0') {
-                                        //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                        //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                        //             </?php } else { ?>
-                                        //                 var globaldisc  = bargain * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                        //             </?php } ?>
-
-                                        //             var bargainprice = (bargain - globaldisc) * inputqty.value;
-                                        //         </?php } else { ?>
-                                        //             var bargainprice = bargain * inputqty.value;
-                                        //         </?php } ?>
-                                        //     }
-
-                                        //     if (bargainprice) {
-                                        //         productprice.innerHTML = bargainprice;
-                                        //     } else {
-                                        //         productprice.innerHTML = showprice();
-                                        //     }
-                                        // }
-
-                                        function VarDisc(id) {
-                                            var inputqty        = document.getElementById('qty['+id+']');
-                                            var varprice        = document.getElementById('varprice'+id);
-                                            var sellprice       = document.getElementById('sellprice'+id);
-                                            var productprice    = document.getElementById('price'+id);
-                                            var productgrid     = document.getElementById('product'+id);
-                                            var inputMember     = document.getElementById('customerid');
-
-                                            var globaldisc      = 0;
-                                            var memberdisc      = 0;
-
-                                            // Global Discount
-                                            <?php if ($gconfig['globaldisc'] != '0') {
-                                                if ($gconfig['globaldisctype'] == '0') { ?>
-                                                    globaldisc = <?= $gconfig['globaldisc'] ?>;
-                                                <?php } else { ?>
-                                                    globaldisc = sellprice.value * <?= ((int)$gconfig['globaldisc'] / 100) ?>;
-                                                <?php }
-                                            } ?>
-
-                                            // Member Discount
-                                            if (inputMember && inputMember.dataset.valid === '1' && inputMember.value != '0') {
-                                                <?php if ($gconfig['memberdisc'] != '0') {
-                                                    if ($gconfig['memberdisctype'] == '0') { ?>
-                                                        memberdisc = <?= $gconfig['memberdisc'] ?>;
-                                                    <?php } else { ?>
-                                                        memberdisc = sellprice.value * <?= ((int)$gconfig['memberdisc'] / 100) ?>;
-                                                    <?php } ?>
-
-                                                    // Validate Max Member Discount
-                                                    if (memberdisc > <?= $gconfig['maxmemberdisc'] ?>) {
-                                                        memberdisc = <?= $gconfig['maxmemberdisc'] ?>;
-                                                    }
-                                                <?php } ?>
-                                            }
-
-                                            var subvalue    = sellprice.value - globaldisc - memberdisc - varprice.value;
-                                            var totalprice  = subvalue * inputqty.value;
-                                            // var totaldisc   = globaldisc + memberdisc;
-                                            // var totalprice  = (subvalue - totaldisc) * inputqty.value;
-
-                                            productprice.innerHTML = totalprice;
-                                            // var inputqty        = document.getElementById('qty['+id+']');
-                                            // // var varbargain      = document.getElementById('varbargain'+id);
-                                            // var varprice        = document.getElementById('varprice'+id);
-                                            // var sellprice       = document.getElementById('sellprice'+id);
-                                            // var productprice    = document.getElementById('price'+id);
-                                            // var productgrid     = document.getElementById('product'+id);
-
-                                            // // if (varbargain.value) {
-                                            // //     var subvalue    = (varbargain.value - varprice.value);
-
-                                            // //     </?php if ($gconfig['globaldisc'] != '0') {
-                                            // //         if ($gconfig['globaldisctype'] == '0') { ?>
-                                            // //             var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            // //         </?php } else { ?>
-                                            // //             var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            // //         </?php } ?>
-
-                                            // //         productprice.innerHTML = (subvalue - globaldisc) * inputqty.value;
-                                            // //     </?php } else { ?>
-                                            // //         productprice.innerHTML = subvalue * inputqty.value;
-                                            // //     </?php } ?>
-                                            // // } else {
-                                            //     var subvalue    = (sellprice.value - varprice.value);
-
-                                            //     </?php if ($gconfig['globaldisc'] != '0') {
-                                            //         if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //             var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                            //             var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
                                             //         </?php } else { ?>
-                                            //             var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                            //             var bargainprice = bargain * inputqty.value;
                                             //         </?php } ?>
+                                            //     } else {
+                                            //         </?php if ($gconfig['globaldisc'] != '0') {
+                                            //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                            //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                            //             </?php } else { ?>
+                                            //                 var globaldisc  = bargain * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                            //             </?php } ?>
 
-                                            //         productprice.innerHTML = (subvalue - globaldisc) * inputqty.value;
-                                            //     </?php } else { ?>
-                                            //         productprice.innerHTML = subvalue * inputqty.value;
-                                            //     </?php } ?>
-                                            // // }
-                                        };
+                                            //             var bargainprice = (bargain - globaldisc) * inputqty.value;
+                                            //         </?php } else { ?>
+                                            //             var bargainprice = bargain * inputqty.value;
+                                            //         </?php } ?>
+                                            //     }
 
-                                        function handleCount(id, type) {
-                                            var inputqty        = document.getElementById('qty[' + id + ']');
-                                            var varprice        = document.getElementById('varprice' + id);
-                                            var sellprice       = document.getElementById('sellprice' + id);
-                                            var productprice    = document.getElementById('price' + id);
-                                            var productgrid     = document.getElementById('product' + id);
-                                            var count           = parseInt(inputqty.value);
-                                            var discvar         = parseFloat(varprice.value) || 0;
-                                            var basePrice       = parseFloat(sellprice.value) || 0;
-                                            var UsingMember     = document.getElementById('customerid');
+                                            //     if (bargainprice) {
+                                            //         productprice.innerHTML = bargainprice;
+                                            //     } else {
+                                            //         productprice.innerHTML = showprice();
+                                            //     }
+                                            // }
 
-                                            // Count Subvalue before Global Discount and Member Discount
-                                            var subvalue = basePrice - discvar;
+                                            function VarDisc(id) {
+                                                var inputqty        = document.getElementById('qty['+id+']');
+                                                var varprice        = document.getElementById('varprice'+id);
+                                                var sellprice       = document.getElementById('sellprice'+id);
+                                                var productprice    = document.getElementById('price'+id);
+                                                var productgrid     = document.getElementById('product'+id);
+                                                var inputMember     = document.getElementById('customerid');
 
-                                            // Count Global Discount
-                                            var globaldisc = 0;
-                                            <?php if ($gconfig['globaldisc'] != '0') {
-                                                if ($gconfig['globaldisctype'] == '0') { ?>
-                                                    globaldisc = <?= $gconfig['globaldisc'] ?>;
-                                                <?php } else { ?>
-                                                    globaldisc = subvalue * <?= ((int)$gconfig['globaldisc'] / 100) ?>;
-                                                <?php }
-                                            } ?>
+                                                var globaldisc      = 0;
+                                                var memberdisc      = 0;
 
-                                            // Count Member Discount
-                                            var memberdisc = 0;
-                                            if (UsingMember && UsingMember.dataset.valid === '1' && UsingMember.value != '0') {
-                                                <?php if ($gconfig['memberdisc'] != '0') {
-                                                    if ($gconfig['memberdisctype'] == '0') { ?>
-                                                        memberdisc = <?= $gconfig['memberdisc'] ?>;
+                                                // Global Discount
+                                                <?php if ($gconfig['globaldisc'] != '0') {
+                                                    if ($gconfig['globaldisctype'] == '0') { ?>
+                                                        globaldisc = <?= $gconfig['globaldisc'] ?>;
                                                     <?php } else { ?>
-                                                        memberdisc = subvalue * <?= ((int)$gconfig['memberdisc'] / 100) ?>;
+                                                        globaldisc = sellprice.value * <?= ((int)$gconfig['globaldisc'] / 100) ?>;
+                                                    <?php }
+                                                } ?>
+
+                                                // Member Discount
+                                                if (inputMember && inputMember.dataset.valid === '1' && inputMember.value != '0') {
+                                                    <?php if ($gconfig['memberdisc'] != '0') {
+                                                        if ($gconfig['memberdisctype'] == '0') { ?>
+                                                            memberdisc = <?= $gconfig['memberdisc'] ?>;
+                                                        <?php } else { ?>
+                                                            memberdisc = sellprice.value * <?= ((int)$gconfig['memberdisc'] / 100) ?>;
+                                                        <?php } ?>
+
+                                                        // Validate Max Member Discount
+                                                        if (memberdisc > <?= $gconfig['maxmemberdisc'] ?>) {
+                                                            memberdisc = <?= $gconfig['maxmemberdisc'] ?>;
+                                                        }
                                                     <?php } ?>
-
-                                                    if (memberdisc > <?= $gconfig['maxmemberdisc'] ?>) {
-                                                        memberdisc = <?= $gconfig['maxmemberdisc'] ?>;
-                                                    }
-                                                <?php } ?>
-                                            }
-
-                                            var totaldisc   = globaldisc + memberdisc;
-                                            var finalprice  = (subvalue - totaldisc);
-
-                                            if (type === 1) {
-                                                count++;
-                                                if (count > parseInt(inputqty.getAttribute('max'))) {
-                                                    count = parseInt(inputqty.getAttribute('max'));
-                                                    inputqty.value = count;
-                                                    alert('<?= lang('Global.alertstock') ?>');
-                                                } else {
-                                                    inputqty.value = count;
                                                 }
-                                            } else if (type === 0) {
-                                                count--;
-                                                if (count <= 0) {
+
+                                                var subvalue    = sellprice.value - globaldisc - memberdisc - varprice.value;
+                                                var totalprice  = subvalue * inputqty.value;
+                                                // var totaldisc   = globaldisc + memberdisc;
+                                                // var totalprice  = (subvalue - totaldisc) * inputqty.value;
+
+                                                productprice.innerHTML = totalprice;
+                                                // var inputqty        = document.getElementById('qty['+id+']');
+                                                // // var varbargain      = document.getElementById('varbargain'+id);
+                                                // var varprice        = document.getElementById('varprice'+id);
+                                                // var sellprice       = document.getElementById('sellprice'+id);
+                                                // var productprice    = document.getElementById('price'+id);
+                                                // var productgrid     = document.getElementById('product'+id);
+
+                                                // // if (varbargain.value) {
+                                                // //     var subvalue    = (varbargain.value - varprice.value);
+
+                                                // //     </?php if ($gconfig['globaldisc'] != '0') {
+                                                // //         if ($gconfig['globaldisctype'] == '0') { ?>
+                                                // //             var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                // //         </?php } else { ?>
+                                                // //             var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                // //         </?php } ?>
+
+                                                // //         productprice.innerHTML = (subvalue - globaldisc) * inputqty.value;
+                                                // //     </?php } else { ?>
+                                                // //         productprice.innerHTML = subvalue * inputqty.value;
+                                                // //     </?php } ?>
+                                                // // } else {
+                                                //     var subvalue    = (sellprice.value - varprice.value);
+
+                                                //     </?php if ($gconfig['globaldisc'] != '0') {
+                                                //         if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //             var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //         </?php } else { ?>
+                                                //             var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //         </?php } ?>
+
+                                                //         productprice.innerHTML = (subvalue - globaldisc) * inputqty.value;
+                                                //     </?php } else { ?>
+                                                //         productprice.innerHTML = subvalue * inputqty.value;
+                                                //     </?php } ?>
+                                                // // }
+                                            };
+
+                                            function handleCount(id, type) {
+                                                var inputqty        = document.getElementById('qty[' + id + ']');
+                                                var varprice        = document.getElementById('varprice' + id);
+                                                var sellprice       = document.getElementById('sellprice' + id);
+                                                var productprice    = document.getElementById('price' + id);
+                                                var productgrid     = document.getElementById('product' + id);
+                                                var count           = parseInt(inputqty.value);
+                                                var discvar         = parseFloat(varprice.value) || 0;
+                                                var basePrice       = parseFloat(sellprice.value) || 0;
+                                                var UsingMember     = document.getElementById('customerid');
+
+                                                // Count Subvalue before Global Discount and Member Discount
+                                                var subvalue = basePrice - discvar;
+
+                                                // Count Global Discount
+                                                var globaldisc = 0;
+                                                <?php if ($gconfig['globaldisc'] != '0') {
+                                                    if ($gconfig['globaldisctype'] == '0') { ?>
+                                                        globaldisc = <?= $gconfig['globaldisc'] ?>;
+                                                    <?php } else { ?>
+                                                        globaldisc = subvalue * <?= ((int)$gconfig['globaldisc'] / 100) ?>;
+                                                    <?php }
+                                                } ?>
+
+                                                // Count Member Discount
+                                                var memberdisc = 0;
+                                                if (UsingMember && UsingMember.dataset.valid === '1' && UsingMember.value != '0') {
+                                                    <?php if ($gconfig['memberdisc'] != '0') {
+                                                        if ($gconfig['memberdisctype'] == '0') { ?>
+                                                            memberdisc = <?= $gconfig['memberdisc'] ?>;
+                                                        <?php } else { ?>
+                                                            memberdisc = subvalue * <?= ((int)$gconfig['memberdisc'] / 100) ?>;
+                                                        <?php } ?>
+
+                                                        if (memberdisc > <?= $gconfig['maxmemberdisc'] ?>) {
+                                                            memberdisc = <?= $gconfig['maxmemberdisc'] ?>;
+                                                        }
+                                                    <?php } ?>
+                                                }
+
+                                                var totaldisc   = globaldisc + memberdisc;
+                                                var finalprice  = (subvalue - totaldisc);
+
+                                                if (type === 1) {
+                                                    count++;
+                                                    if (count > parseInt(inputqty.getAttribute('max'))) {
+                                                        count = parseInt(inputqty.getAttribute('max'));
+                                                        inputqty.value = count;
+                                                        alert('<?= lang('Global.alertstock') ?>');
+                                                    } else {
+                                                        inputqty.value = count;
+                                                    }
+                                                } else if (type === 0) {
+                                                    count--;
+                                                    if (count <= 0) {
+                                                        inputqty.value = '0';
+                                                        inputqty.remove();
+                                                        productgrid.remove();
+                                                        return;
+                                                    } else {
+                                                        inputqty.value = count;
+                                                    }
+                                                }
+
+                                                var total = finalprice * count;
+                                                productprice.innerHTML  = total;
+                                                productprice.value      = total;
+                                                // var inputqty        = document.getElementById('qty['+id+']');
+                                                // // var varbargain      = document.getElementById('varbargain'+id);
+                                                // var varprice        = document.getElementById('varprice'+id);
+                                                // var sellprice       = document.getElementById('sellprice'+id);
+                                                // var productprice    = document.getElementById('price'+id);
+                                                // var productgrid     = document.getElementById('product'+id);
+                                                // var count           = inputqty.value;
+                                                // var discvar         = varprice.value;
+                                                // if (type == 1) {
+                                                //     count++;
+                                                //     if (inputqty.value == inputqty.getAttribute('max')) {
+                                                //         inputqty.value = inputqty.getAttribute('max');
+                                                //         count = inputqty.getAttribute('max');
+                                                //         alert('</?=lang('Global.alertstock')?>');
+                                                //     } else {
+                                                //         inputqty.value      = count;
+                                                //         // var price           = count * sellprice.value;
+
+                                                //         // var price           = count * sellprice.value;
+                                                //         // var bargainprice    = varbargain.value * inputqty.value;
+
+                                                //         // if (varbargain.value) {
+                                                //         //     if (varprice.value) {
+                                                //         //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                //         //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //         //             </?php } else { ?>
+                                                //         //                 var globaldisc  = (varbargain.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //         //             </?php } ?>
+
+                                                //         //             var bargainprice    = ((varbargain.value - discvar) - globaldisc) * inputqty.value;
+                                                //         //         </?php } else { ?>
+                                                //         //             var bargainprice    = (varbargain.value - discvar) * inputqty.value;
+                                                //         //         </?php } ?>
+                                                //         //     } else {
+                                                //         //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                //         //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //         //             </?php } else { ?>
+                                                //         //                 var globaldisc  = varbargain.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //         //             </?php } ?>
+
+                                                //         //             var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                //         //         </?php } else { ?>
+                                                //         //             var bargainprice    = varbargain.value * inputqty.value;
+                                                //         //         </?php } ?>
+                                                //         //     }
+
+                                                //         //     document.getElementById('price'+id).innerHTML = bargainprice;
+                                                //         // } else {
+                                                //             if (varprice.value) {
+                                                //                 </?php if ($gconfig['globaldisc'] != '0') {
+                                                //                     if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //                     </?php } else { ?>
+                                                //                         var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //                     </?php } ?>
+
+                                                //                     var price           = count * ((sellprice.value - discvar) - globaldisc);
+                                                //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                //                 </?php } else { ?>
+                                                //                     // var bargainprice    = varbargain.value * inputqty.value;
+                                                //                     var price           = count * (sellprice.value - discvar);
+                                                //                 </?php } ?>
+                                                //             } else {
+                                                //                 </?php if ($gconfig['globaldisc'] != '0') {
+                                                //                     if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //                     </?php } else { ?>
+                                                //                         var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //                     </?php } ?>
+
+                                                //                     var price           = count * (sellprice.value - globaldisc);
+                                                //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                //                 </?php } else { ?>
+                                                //                     // var bargainprice    = varbargain.value * inputqty.value;
+                                                //                     var price           = count * sellprice.value;
+                                                //                 </?php } ?>
+                                                //             }
+
+                                                //             productprice.innerHTML = price;
+                                                //             productprice.value = price;
+                                                //         // }
+                                                //     }
+                                                // } else if (type == 0) {
+                                                //     count--;
+                                                //     if (inputqty.value == '1') {
+                                                //         inputqty.value = '0';
+                                                //         inputqty.remove();                                                                                                
+                                                //         productgrid.remove();
+                                                //     } else {
+                                                //         inputqty.value  = count;
+                                                //         // var price       = count * sellprice.value;
+
+                                                //         // var price = count * sellprice.value;
+                                                //         // var bargainprice = varbargain.value * inputqty.value;
+
+                                                //         // if (varbargain.value) {
+                                                //         //     if (varprice.value) {
+                                                //         //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                //         //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //         //             </?php } else { ?>
+                                                //         //                 var globaldisc  = (varbargain.value - discvar) * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
+                                                //         //             </?php } ?>
+
+                                                //         //             // var price           = count * (sellprice.value - globaldisc);
+                                                //         //             var bargainprice    = (varbargain.value - discvar) * inputqty.value;
+                                                //         //         </?php } else { ?>
+                                                //         //             var bargainprice    = (varbargain.value - discvar) * inputqty.value;
+                                                //         //             // var price           = count * sellprice.value;
+                                                //         //         </?php } ?>
+                                                //         //     } else {
+                                                //         //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                //         //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //         //             </?php } else { ?>
+                                                //         //                 var globaldisc  = varbargain.value * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
+                                                //         //             </?php } ?>
+
+                                                //         //             // var price           = count * (sellprice.value - globaldisc);
+                                                //         //             var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                //         //         </?php } else { ?>
+                                                //         //             var bargainprice    = varbargain.value * inputqty.value;
+                                                //         //             // var price           = count * sellprice.value;
+                                                //         //         </?php } ?>
+                                                //         //     }
+                                                //         //     document.getElementById('price'+id).innerHTML = bargainprice;
+                                                //         // }
+                                                //         // else {
+                                                //             if (varprice.value) {
+                                                //                 </?php if ($gconfig['globaldisc'] != '0') {
+                                                //                     if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //                     </?php } else { ?>
+                                                //                         var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
+                                                //                     </?php } ?>
+
+                                                //                     var price           = count * ((sellprice.value - discvar) - globaldisc);
+                                                //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                //                 </?php } else { ?>
+                                                //                     // var bargainprice    = varbargain.value * inputqty.value;
+                                                //                     var price           = count * (sellprice.value - discvar);
+                                                //                 </?php } ?>
+                                                //             } else {
+                                                //                 </?php if ($gconfig['globaldisc'] != '0') {
+                                                //                     if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //                     </?php } else { ?>
+                                                //                         var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
+                                                //                     </?php } ?>
+
+                                                //                     var price           = count * (sellprice.value - globaldisc);
+                                                //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                //                 </?php } else { ?>
+                                                //                     // var bargainprice    = varbargain.value * inputqty.value;
+                                                //                     var price           = count * sellprice.value;
+                                                //                 </?php } ?>
+                                                //             }
+                                                            
+                                                //             productprice.innerHTML = price;
+                                                //             productprice.value = price;
+                                                //         // }
+                                                //     }
+                                                // }
+                                            };
+
+                                            function handleChangeCount(id) {
+                                                var inputqty        = document.getElementById('qty[' + id + ']');
+                                                var varprice        = document.getElementById('varprice' + id);
+                                                var sellprice       = document.getElementById('sellprice' + id);
+                                                var productprice    = document.getElementById('price' + id);
+                                                var productgrid     = document.getElementById('product' + id);
+                                                var count           = parseInt(inputqty.value);
+                                                var discvar         = parseFloat(varprice.value) || 0;
+                                                var basePrice       = parseFloat(sellprice.value) || 0;
+                                                var subvalue        = basePrice - discvar;
+                                                var MemberUse       = document.getElementById('customerid');
+
+                                                // Global Discount
+                                                var globaldisc = 0;
+                                                <?php if ($gconfig['globaldisc'] != '0') {
+                                                    if ($gconfig['globaldisctype'] == '0') { ?>
+                                                        globaldisc = <?= $gconfig['globaldisc'] ?>;
+                                                    <?php } else { ?>
+                                                        globaldisc = subvalue * <?= ((int)$gconfig['globaldisc'] / 100) ?>;
+                                                    <?php }
+                                                } ?>
+
+                                                // Member Discount
+                                                var memberdisc = 0;
+                                                if (MemberUse && MemberUse.dataset.valid === '1' && MemberUse.value != '0') {
+                                                    <?php if ($gconfig['memberdisc'] != '0') {
+                                                        if ($gconfig['memberdisctype'] == '0') { ?>
+                                                            memberdisc = <?= $gconfig['memberdisc'] ?>;
+                                                        <?php } else { ?>
+                                                            memberdisc = subvalue * <?= ((int)$gconfig['memberdisc'] / 100) ?>;
+                                                        <?php } ?>
+
+                                                        if (memberdisc > <?= $gconfig['maxmemberdisc'] ?>) {
+                                                            memberdisc = <?= $gconfig['maxmemberdisc'] ?>;
+                                                        }
+                                                    <?php } ?>
+                                                }
+
+                                                var totaldisc = globaldisc + memberdisc;
+                                                var finalprice = (subvalue - totaldisc);
+
+                                                if (count > parseInt(inputqty.getAttribute('max'))) {
+                                                    inputqty.value = inputqty.getAttribute('max');
+                                                    count = parseInt(inputqty.getAttribute('max'));
+                                                    alert('<?= lang('Global.alertstock') ?>');
+                                                } else if (count < 1) {
                                                     inputqty.value = '0';
                                                     inputqty.remove();
                                                     productgrid.remove();
@@ -2531,805 +2769,581 @@
                                                 } else {
                                                     inputqty.value = count;
                                                 }
-                                            }
 
-                                            var total = finalprice * count;
-                                            productprice.innerHTML  = total;
-                                            productprice.value      = total;
-                                            // var inputqty        = document.getElementById('qty['+id+']');
-                                            // // var varbargain      = document.getElementById('varbargain'+id);
-                                            // var varprice        = document.getElementById('varprice'+id);
-                                            // var sellprice       = document.getElementById('sellprice'+id);
-                                            // var productprice    = document.getElementById('price'+id);
-                                            // var productgrid     = document.getElementById('product'+id);
-                                            // var count           = inputqty.value;
-                                            // var discvar         = varprice.value;
-                                            // if (type == 1) {
-                                            //     count++;
-                                            //     if (inputqty.value == inputqty.getAttribute('max')) {
-                                            //         inputqty.value = inputqty.getAttribute('max');
-                                            //         count = inputqty.getAttribute('max');
-                                            //         alert('</?=lang('Global.alertstock')?>');
-                                            //     } else {
-                                            //         inputqty.value      = count;
-                                            //         // var price           = count * sellprice.value;
+                                                var total = finalprice * count;
+                                                productprice.innerHTML = total;
+                                                productprice.value = total;
+                                                // var inputqty        = document.getElementById('qty['+id+']');
+                                                // // var varbargain      = document.getElementById('varbargain'+id);
+                                                // var varprice        = document.getElementById('varprice'+id);
+                                                // var sellprice       = document.getElementById('sellprice'+id);
+                                                // var productprice    = document.getElementById('price'+id);
+                                                // var productgrid     = document.getElementById('product'+id);
+                                                // // var bargain         = varbargain.value;
+                                                // var discvar         = varprice.value;
 
-                                            //         // var price           = count * sellprice.value;
-                                            //         // var bargainprice    = varbargain.value * inputqty.value;
+                                                // if (inputqty.value > inputqty.getAttribute('max')) {
+                                                //     inputqty.value = inputqty.getAttribute('max');
+                                                //     alert('</?=lang('Global.alertstock')?>');
 
-                                            //         // if (varbargain.value) {
-                                            //         //     if (varprice.value) {
-                                            //         //         </?php if ($gconfig['globaldisc'] != '0') {
-                                            //         //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //         //             </?php } else { ?>
-                                            //         //                 var globaldisc  = (varbargain.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //         //             </?php } ?>
+                                                //     // var bargainprice = varbargain.value * inputqty.value;
 
-                                            //         //             var bargainprice    = ((varbargain.value - discvar) - globaldisc) * inputqty.value;
-                                            //         //         </?php } else { ?>
-                                            //         //             var bargainprice    = (varbargain.value - discvar) * inputqty.value;
-                                            //         //         </?php } ?>
-                                            //         //     } else {
-                                            //         //         </?php if ($gconfig['globaldisc'] != '0') {
-                                            //         //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //         //             </?php } else { ?>
-                                            //         //                 var globaldisc  = varbargain.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //         //             </?php } ?>
+                                                //     // if (varbargain.value) {
+                                                //     //     if (varprice.value) {
+                                                //     //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                //     //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //     //             </?php } else { ?>
+                                                //     //                 var globaldisc  = (bargain - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //     //             </?php } ?>
 
-                                            //         //             var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                            //         //         </?php } else { ?>
-                                            //         //             var bargainprice    = varbargain.value * inputqty.value;
-                                            //         //         </?php } ?>
-                                            //         //     }
+                                                //     //             var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
+                                                //     //         </?php } else { ?>
+                                                //     //             var bargainprice = (bargain - discvar) * inputqty.value;
+                                                //     //         </?php } ?>
+                                                //     //     } else {
+                                                //     //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                //     //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //     //             </?php } else { ?>
+                                                //     //                 var globaldisc  = bargain * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //     //             </?php } ?>
 
-                                            //         //     document.getElementById('price'+id).innerHTML = bargainprice;
-                                            //         // } else {
-                                            //             if (varprice.value) {
-                                            //                 </?php if ($gconfig['globaldisc'] != '0') {
-                                            //                     if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //                     </?php } else { ?>
-                                            //                         var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //                     </?php } ?>
+                                                //     //             var bargainprice = (bargain - globaldisc) * inputqty.value;
+                                                //     //         </?php } else { ?>
+                                                //     //             var bargainprice = bargain * inputqty.value;
+                                                //     //         </?php } ?>
+                                                //     //     }
+                                                //     //     document.getElementById('price'+id).innerHTML = bargainprice;
+                                                //     // } else {
+                                                //         if (varprice.value) {
+                                                //             </?php if ($gconfig['globaldisc'] != '0') {
+                                                //                 if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //                 </?php } else { ?>
+                                                //                     var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
+                                                //                 </?php } ?>
 
-                                            //                     var price           = count * ((sellprice.value - discvar) - globaldisc);
-                                            //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                            //                 </?php } else { ?>
-                                            //                     // var bargainprice    = varbargain.value * inputqty.value;
-                                            //                     var price           = count * (sellprice.value - discvar);
-                                            //                 </?php } ?>
-                                            //             } else {
-                                            //                 </?php if ($gconfig['globaldisc'] != '0') {
-                                            //                     if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //                     </?php } else { ?>
-                                            //                         var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //                     </?php } ?>
+                                                //                 var price           = count * ((sellprice.value - discvar) - globaldisc);
+                                                //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                //             </?php } else { ?>
+                                                //                 // var bargainprice    = varbargain.value * inputqty.value;
+                                                //                 var price           = count * (sellprice.value - discvar);
+                                                //             </?php } ?>
+                                                //         } else {
+                                                //             </?php if ($gconfig['globaldisc'] != '0') {
+                                                //                 if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //                 </?php } else { ?>
+                                                //                     var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
+                                                //                 </?php } ?>
 
-                                            //                     var price           = count * (sellprice.value - globaldisc);
-                                            //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                            //                 </?php } else { ?>
-                                            //                     // var bargainprice    = varbargain.value * inputqty.value;
-                                            //                     var price           = count * sellprice.value;
-                                            //                 </?php } ?>
-                                            //             }
-
-                                            //             productprice.innerHTML = price;
-                                            //             productprice.value = price;
-                                            //         // }
-                                            //     }
-                                            // } else if (type == 0) {
-                                            //     count--;
-                                            //     if (inputqty.value == '1') {
-                                            //         inputqty.value = '0';
-                                            //         inputqty.remove();                                                                                                
-                                            //         productgrid.remove();
-                                            //     } else {
-                                            //         inputqty.value  = count;
-                                            //         // var price       = count * sellprice.value;
-
-                                            //         // var price = count * sellprice.value;
-                                            //         // var bargainprice = varbargain.value * inputqty.value;
-
-                                            //         // if (varbargain.value) {
-                                            //         //     if (varprice.value) {
-                                            //         //         </?php if ($gconfig['globaldisc'] != '0') {
-                                            //         //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //         //             </?php } else { ?>
-                                            //         //                 var globaldisc  = (varbargain.value - discvar) * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                            //         //             </?php } ?>
-
-                                            //         //             // var price           = count * (sellprice.value - globaldisc);
-                                            //         //             var bargainprice    = (varbargain.value - discvar) * inputqty.value;
-                                            //         //         </?php } else { ?>
-                                            //         //             var bargainprice    = (varbargain.value - discvar) * inputqty.value;
-                                            //         //             // var price           = count * sellprice.value;
-                                            //         //         </?php } ?>
-                                            //         //     } else {
-                                            //         //         </?php if ($gconfig['globaldisc'] != '0') {
-                                            //         //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //         //             </?php } else { ?>
-                                            //         //                 var globaldisc  = varbargain.value * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                            //         //             </?php } ?>
-
-                                            //         //             // var price           = count * (sellprice.value - globaldisc);
-                                            //         //             var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                            //         //         </?php } else { ?>
-                                            //         //             var bargainprice    = varbargain.value * inputqty.value;
-                                            //         //             // var price           = count * sellprice.value;
-                                            //         //         </?php } ?>
-                                            //         //     }
-                                            //         //     document.getElementById('price'+id).innerHTML = bargainprice;
-                                            //         // }
-                                            //         // else {
-                                            //             if (varprice.value) {
-                                            //                 </?php if ($gconfig['globaldisc'] != '0') {
-                                            //                     if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //                     </?php } else { ?>
-                                            //                         var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                            //                     </?php } ?>
-
-                                            //                     var price           = count * ((sellprice.value - discvar) - globaldisc);
-                                            //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                            //                 </?php } else { ?>
-                                            //                     // var bargainprice    = varbargain.value * inputqty.value;
-                                            //                     var price           = count * (sellprice.value - discvar);
-                                            //                 </?php } ?>
-                                            //             } else {
-                                            //                 </?php if ($gconfig['globaldisc'] != '0') {
-                                            //                     if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //                     </?php } else { ?>
-                                            //                         var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                            //                     </?php } ?>
-
-                                            //                     var price           = count * (sellprice.value - globaldisc);
-                                            //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                            //                 </?php } else { ?>
-                                            //                     // var bargainprice    = varbargain.value * inputqty.value;
-                                            //                     var price           = count * sellprice.value;
-                                            //                 </?php } ?>
-                                            //             }
+                                                //                 var price           = count * (sellprice.value - globaldisc);
+                                                //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                //             </?php } else { ?>
+                                                //                 // var bargainprice    = varbargain.value * inputqty.value;
+                                                //                 var price           = count * sellprice.value;
+                                                //             </?php } ?>
+                                                //         }
                                                         
-                                            //             productprice.innerHTML = price;
-                                            //             productprice.value = price;
-                                            //         // }
-                                            //     }
-                                            // }
-                                        };
+                                                //         productprice.innerHTML = price;
+                                                //         productprice.value = price;
+                                                        
+                                                //         // if (varprice.value) {
+                                                //         //     productprice.innerHTML = price - discvar;
+                                                //         //     productprice.value = price - discvar;
+                                                //         // } else {
+                                                //         //     productprice.innerHTML = price;
+                                                //         //     productprice.value = price;
+                                                //         // }
+                                                //     // }
+                                                // } else if (inputqty.value < 1) {
+                                                //     inputqty.value = '0';
+                                                //     inputqty.remove();
+                                                //     productgrid.remove();
+                                                // } else {
+                                                //     // var price = count * sellprice.value;
+                                                //     // var bargainprice = varbargain.value * inputqty.value;
 
-                                        function handleChangeCount(id) {
-                                            var inputqty        = document.getElementById('qty[' + id + ']');
-                                            var varprice        = document.getElementById('varprice' + id);
-                                            var sellprice       = document.getElementById('sellprice' + id);
-                                            var productprice    = document.getElementById('price' + id);
-                                            var productgrid     = document.getElementById('product' + id);
-                                            var count           = parseInt(inputqty.value);
-                                            var discvar         = parseFloat(varprice.value) || 0;
-                                            var basePrice       = parseFloat(sellprice.value) || 0;
-                                            var subvalue        = basePrice - discvar;
-                                            var MemberUse       = document.getElementById('customerid');
+                                                //     // if(varbargain.value) {
+                                                //     //     if (varprice.value) {
+                                                //     //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                //     //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //     //             </?php } else { ?>
+                                                //     //                 var globaldisc  = (varbargain.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //     //             </?php } ?>
 
-                                            // Global Discount
-                                            var globaldisc = 0;
-                                            <?php if ($gconfig['globaldisc'] != '0') {
-                                                if ($gconfig['globaldisctype'] == '0') { ?>
-                                                    globaldisc = <?= $gconfig['globaldisc'] ?>;
-                                                <?php } else { ?>
-                                                    globaldisc = subvalue * <?= ((int)$gconfig['globaldisc'] / 100) ?>;
-                                                <?php }
-                                            } ?>
+                                                //     //             var bargainprice = ((varbargain.value - discvar) - globaldisc) * inputqty.value;
+                                                //     //         </?php } else { ?>
+                                                //     //             var bargainprice = (varbargain.value - discvar) * inputqty.value;
+                                                //     //         </?php } ?>
+                                                //     //     } else {
+                                                //     //         </?php if ($gconfig['globaldisc'] != '0') {
+                                                //     //             if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //     //             </?php } else { ?>
+                                                //     //                 var globaldisc  = varbargain.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //     //             </?php } ?>
 
-                                            // Member Discount
-                                            var memberdisc = 0;
-                                            if (MemberUse && MemberUse.dataset.valid === '1' && MemberUse.value != '0') {
-                                                <?php if ($gconfig['memberdisc'] != '0') {
-                                                    if ($gconfig['memberdisctype'] == '0') { ?>
-                                                        memberdisc = <?= $gconfig['memberdisc'] ?>;
+                                                //     //             var bargainprice = (varbargain.value - globaldisc) * inputqty.value;
+                                                //     //         </?php } else { ?>
+                                                //     //             var bargainprice = varbargain.value * inputqty.value;
+                                                //     //         </?php } ?>
+                                                //     //     }
+                                                //     //     document.getElementById('price'+id).innerHTML = bargainprice;
+                                                //     // } else {
+                                                //         if (varprice.value) {
+                                                //             </?php if ($gconfig['globaldisc'] != '0') {
+                                                //                 if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //                 </?php } else { ?>
+                                                //                     var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //                 </?php } ?>
+
+                                                //                 var price           = count * ((sellprice.value - discvar) - globaldisc);
+                                                //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                //             </?php } else { ?>
+                                                //                 var price           = count * (sellprice.value - discvar);
+                                                //                 // var bargainprice    = varbargain.value * inputqty.value;
+                                                //             </?php } ?>
+                                                //         } else {
+                                                //             </?php if ($gconfig['globaldisc'] != '0') {
+                                                //                 if ($gconfig['globaldisctype'] == '0') { ?>
+                                                //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
+                                                //                 </?php } else { ?>
+                                                //                     var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
+                                                //                 </?php } ?>
+
+                                                //                 var price           = count * (sellprice.value - globaldisc);
+                                                //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
+                                                //             </?php } else { ?>
+                                                //                 var price           = count * sellprice.value;
+                                                //                 // var bargainprice    = varbargain.value * inputqty.value;
+                                                //             </?php } ?>
+                                                //         }
+
+                                                //         productprice.innerHTML = price;
+                                                //         productprice.value = price;
+
+                                                //         // if (varprice.value) {
+                                                //         //     productprice.innerHTML = (price - discavr);
+                                                //         //     productprice.value = (price - discavr);
+                                                //         // } else {
+                                                //         //     productprice.innerHTML = price;
+                                                //         //     productprice.value = price;
+                                                //         // }
+                                                //     // }
+                                                // }
+                                            };
+
+                                            function applyMemberDiscountToAll(id) {
+                                                var inputqty        = document.getElementById('qty[' + id + ']');
+                                                var varprice        = document.getElementById('varprice' + id);
+                                                var sellprice       = document.getElementById('sellprice' + id);
+                                                var productprice    = document.getElementById('price' + id);
+                                                var productgrid     = document.getElementById('product' + id);
+                                                var count           = parseInt(inputqty.value);
+                                                var discvar         = parseFloat(varprice.value) || 0;
+                                                var basePrice       = parseFloat(sellprice.value) || 0;
+                                                var subvalue        = basePrice - discvar;
+                                                var MemberUse       = document.getElementById('customerid');
+
+                                                // Global Discount
+                                                var globaldisc = 0;
+                                                <?php if ($gconfig['globaldisc'] != '0') {
+                                                    if ($gconfig['globaldisctype'] == '0') { ?>
+                                                        globaldisc = <?= $gconfig['globaldisc'] ?>;
                                                     <?php } else { ?>
-                                                        memberdisc = subvalue * <?= ((int)$gconfig['memberdisc'] / 100) ?>;
-                                                    <?php } ?>
+                                                        globaldisc = subvalue * <?= ((int)$gconfig['globaldisc'] / 100) ?>;
+                                                    <?php }
+                                                } ?>
 
-                                                    if (memberdisc > <?= $gconfig['maxmemberdisc'] ?>) {
-                                                        memberdisc = <?= $gconfig['maxmemberdisc'] ?>;
-                                                    }
-                                                <?php } ?>
-                                            }
+                                                // Member Discount
+                                                var memberdisc = 0;
+                                                if (MemberUse && MemberUse.dataset.valid === '1' && MemberUse.value != '0') {
+                                                    <?php if ($gconfig['memberdisc'] != '0') {
+                                                        if ($gconfig['memberdisctype'] == '0') { ?>
+                                                            memberdisc = <?= $gconfig['memberdisc'] ?>;
+                                                        <?php } else { ?>
+                                                            memberdisc = subvalue * <?= ((int)$gconfig['memberdisc'] / 100) ?>;
+                                                        <?php } ?>
 
-                                            var totaldisc = globaldisc + memberdisc;
-                                            var finalprice = (subvalue - totaldisc);
-
-                                            if (count > parseInt(inputqty.getAttribute('max'))) {
-                                                inputqty.value = inputqty.getAttribute('max');
-                                                count = parseInt(inputqty.getAttribute('max'));
-                                                alert('<?= lang('Global.alertstock') ?>');
-                                            } else if (count < 1) {
-                                                inputqty.value = '0';
-                                                inputqty.remove();
-                                                productgrid.remove();
-                                                return;
-                                            } else {
-                                                inputqty.value = count;
-                                            }
-
-                                            var total = finalprice * count;
-                                            productprice.innerHTML = total;
-                                            productprice.value = total;
-                                            // var inputqty        = document.getElementById('qty['+id+']');
-                                            // // var varbargain      = document.getElementById('varbargain'+id);
-                                            // var varprice        = document.getElementById('varprice'+id);
-                                            // var sellprice       = document.getElementById('sellprice'+id);
-                                            // var productprice    = document.getElementById('price'+id);
-                                            // var productgrid     = document.getElementById('product'+id);
-                                            // // var bargain         = varbargain.value;
-                                            // var discvar         = varprice.value;
-
-                                            // if (inputqty.value > inputqty.getAttribute('max')) {
-                                            //     inputqty.value = inputqty.getAttribute('max');
-                                            //     alert('</?=lang('Global.alertstock')?>');
-
-                                            //     // var bargainprice = varbargain.value * inputqty.value;
-
-                                            //     // if (varbargain.value) {
-                                            //     //     if (varprice.value) {
-                                            //     //         </?php if ($gconfig['globaldisc'] != '0') {
-                                            //     //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //     //             </?php } else { ?>
-                                            //     //                 var globaldisc  = (bargain - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //     //             </?php } ?>
-
-                                            //     //             var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
-                                            //     //         </?php } else { ?>
-                                            //     //             var bargainprice = (bargain - discvar) * inputqty.value;
-                                            //     //         </?php } ?>
-                                            //     //     } else {
-                                            //     //         </?php if ($gconfig['globaldisc'] != '0') {
-                                            //     //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //     //             </?php } else { ?>
-                                            //     //                 var globaldisc  = bargain * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //     //             </?php } ?>
-
-                                            //     //             var bargainprice = (bargain - globaldisc) * inputqty.value;
-                                            //     //         </?php } else { ?>
-                                            //     //             var bargainprice = bargain * inputqty.value;
-                                            //     //         </?php } ?>
-                                            //     //     }
-                                            //     //     document.getElementById('price'+id).innerHTML = bargainprice;
-                                            //     // } else {
-                                            //         if (varprice.value) {
-                                            //             </?php if ($gconfig['globaldisc'] != '0') {
-                                            //                 if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //                 </?php } else { ?>
-                                            //                     var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                            //                 </?php } ?>
-
-                                            //                 var price           = count * ((sellprice.value - discvar) - globaldisc);
-                                            //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                            //             </?php } else { ?>
-                                            //                 // var bargainprice    = varbargain.value * inputqty.value;
-                                            //                 var price           = count * (sellprice.value - discvar);
-                                            //             </?php } ?>
-                                            //         } else {
-                                            //             </?php if ($gconfig['globaldisc'] != '0') {
-                                            //                 if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //                 </?php } else { ?>
-                                            //                     var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                            //                 </?php } ?>
-
-                                            //                 var price           = count * (sellprice.value - globaldisc);
-                                            //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                            //             </?php } else { ?>
-                                            //                 // var bargainprice    = varbargain.value * inputqty.value;
-                                            //                 var price           = count * sellprice.value;
-                                            //             </?php } ?>
-                                            //         }
-                                                    
-                                            //         productprice.innerHTML = price;
-                                            //         productprice.value = price;
-                                                    
-                                            //         // if (varprice.value) {
-                                            //         //     productprice.innerHTML = price - discvar;
-                                            //         //     productprice.value = price - discvar;
-                                            //         // } else {
-                                            //         //     productprice.innerHTML = price;
-                                            //         //     productprice.value = price;
-                                            //         // }
-                                            //     // }
-                                            // } else if (inputqty.value < 1) {
-                                            //     inputqty.value = '0';
-                                            //     inputqty.remove();
-                                            //     productgrid.remove();
-                                            // } else {
-                                            //     // var price = count * sellprice.value;
-                                            //     // var bargainprice = varbargain.value * inputqty.value;
-
-                                            //     // if(varbargain.value) {
-                                            //     //     if (varprice.value) {
-                                            //     //         </?php if ($gconfig['globaldisc'] != '0') {
-                                            //     //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //     //             </?php } else { ?>
-                                            //     //                 var globaldisc  = (varbargain.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //     //             </?php } ?>
-
-                                            //     //             var bargainprice = ((varbargain.value - discvar) - globaldisc) * inputqty.value;
-                                            //     //         </?php } else { ?>
-                                            //     //             var bargainprice = (varbargain.value - discvar) * inputqty.value;
-                                            //     //         </?php } ?>
-                                            //     //     } else {
-                                            //     //         </?php if ($gconfig['globaldisc'] != '0') {
-                                            //     //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //     //             </?php } else { ?>
-                                            //     //                 var globaldisc  = varbargain.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //     //             </?php } ?>
-
-                                            //     //             var bargainprice = (varbargain.value - globaldisc) * inputqty.value;
-                                            //     //         </?php } else { ?>
-                                            //     //             var bargainprice = varbargain.value * inputqty.value;
-                                            //     //         </?php } ?>
-                                            //     //     }
-                                            //     //     document.getElementById('price'+id).innerHTML = bargainprice;
-                                            //     // } else {
-                                            //         if (varprice.value) {
-                                            //             </?php if ($gconfig['globaldisc'] != '0') {
-                                            //                 if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //                 </?php } else { ?>
-                                            //                     var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //                 </?php } ?>
-
-                                            //                 var price           = count * ((sellprice.value - discvar) - globaldisc);
-                                            //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                            //             </?php } else { ?>
-                                            //                 var price           = count * (sellprice.value - discvar);
-                                            //                 // var bargainprice    = varbargain.value * inputqty.value;
-                                            //             </?php } ?>
-                                            //         } else {
-                                            //             </?php if ($gconfig['globaldisc'] != '0') {
-                                            //                 if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //                 </?php } else { ?>
-                                            //                     var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //                 </?php } ?>
-
-                                            //                 var price           = count * (sellprice.value - globaldisc);
-                                            //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                            //             </?php } else { ?>
-                                            //                 var price           = count * sellprice.value;
-                                            //                 // var bargainprice    = varbargain.value * inputqty.value;
-                                            //             </?php } ?>
-                                            //         }
-
-                                            //         productprice.innerHTML = price;
-                                            //         productprice.value = price;
-
-                                            //         // if (varprice.value) {
-                                            //         //     productprice.innerHTML = (price - discavr);
-                                            //         //     productprice.value = (price - discavr);
-                                            //         // } else {
-                                            //         //     productprice.innerHTML = price;
-                                            //         //     productprice.value = price;
-                                            //         // }
-                                            //     // }
-                                            // }
-                                        };
-
-                                        function applyMemberDiscountToAll(id) {
-                                            var inputqty        = document.getElementById('qty[' + id + ']');
-                                            var varprice        = document.getElementById('varprice' + id);
-                                            var sellprice       = document.getElementById('sellprice' + id);
-                                            var productprice    = document.getElementById('price' + id);
-                                            var productgrid     = document.getElementById('product' + id);
-                                            var count           = parseInt(inputqty.value);
-                                            var discvar         = parseFloat(varprice.value) || 0;
-                                            var basePrice       = parseFloat(sellprice.value) || 0;
-                                            var subvalue        = basePrice - discvar;
-                                            var MemberUse       = document.getElementById('customerid');
-
-                                            // Global Discount
-                                            var globaldisc = 0;
-                                            <?php if ($gconfig['globaldisc'] != '0') {
-                                                if ($gconfig['globaldisctype'] == '0') { ?>
-                                                    globaldisc = <?= $gconfig['globaldisc'] ?>;
-                                                <?php } else { ?>
-                                                    globaldisc = subvalue * <?= ((int)$gconfig['globaldisc'] / 100) ?>;
-                                                <?php }
-                                            } ?>
-
-                                            // Member Discount
-                                            var memberdisc = 0;
-                                            if (MemberUse && MemberUse.dataset.valid === '1' && MemberUse.value != '0') {
-                                                <?php if ($gconfig['memberdisc'] != '0') {
-                                                    if ($gconfig['memberdisctype'] == '0') { ?>
-                                                        memberdisc = <?= $gconfig['memberdisc'] ?>;
-                                                    <?php } else { ?>
-                                                        memberdisc = subvalue * <?= ((int)$gconfig['memberdisc'] / 100) ?>;
-                                                    <?php } ?>
-
-                                                    if (memberdisc > <?= $gconfig['maxmemberdisc'] ?>) {
-                                                        memberdisc = <?= $gconfig['maxmemberdisc'] ?>;
-                                                    }
-                                                <?php } ?>
-                                            }
-
-                                            var totaldisc = globaldisc + memberdisc;
-                                            var finalprice = (subvalue - totaldisc);
-
-                                            if (count > parseInt(inputqty.getAttribute('max'))) {
-                                                inputqty.value = inputqty.getAttribute('max');
-                                                count = parseInt(inputqty.getAttribute('max'));
-                                                alert('<?= lang('Global.alertstock') ?>');
-                                            } else if (count < 1) {
-                                                inputqty.value = '0';
-                                                inputqty.remove();
-                                                productgrid.remove();
-                                                return;
-                                            } else {
-                                                inputqty.value = count;
-                                            }
-
-                                            var total = finalprice * count;
-                                            productprice.innerHTML = total;
-                                            productprice.value = total;
-                                        };
-                                    </script>
-                                    
-                                    <div class="uk-margin uk-text-center">
-                                        <div class="uk-search uk-search-default uk-width-1-5@l uk-width-1-1">
-                                            <span class="uk-form-icon" uk-icon="icon: search"></span>
-                                            <input class="uk-input" type="text" placeholder="Search Item ..." id="prods" name="prods" aria-label="Not clickable icon" style="border-radius: 5px;">
-                                        </div>
-                                        <script type="text/javascript">
-                                            $(function() {
-                                                var prodsList = [
-                                                    {label: 'All Product', idx: '0'},
-                                                    <?php
-                                                        foreach ($products as $product) {
-                                                            echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
+                                                        if (memberdisc > <?= $gconfig['maxmemberdisc'] ?>) {
+                                                            memberdisc = <?= $gconfig['maxmemberdisc'] ?>;
                                                         }
-                                                    ?>
-                                                ];
-                                                $("#prods").autocomplete({
-                                                    maxShowItems: 30,
-                                                    source: prodsList,
-                                                    select: function(e, i) {
-                                                        if (i.item.idx != '0') {
-                                                            <?php foreach ($products as $product) { ?>
-                                                                $("#CreateOrder<?=$product['id']?>").prop('hidden',true);
-                                                            <?php } ?>
-                                                                $("#CreateOrder"+i.item.idx).prop('hidden',false);
-                                                        } else {
-                                                            <?php foreach ($products as $product) { ?>
-                                                                $("#CreateOrder<?=$product['id']?>").prop('hidden',false);
-                                                            <?php } ?>
-                                                        }
-                                                        $("#prods").val('');
-                                                        return false;
-                                                    },
-                                                    minLength: 1
-                                                });
-                                            });
+                                                    <?php } ?>
+                                                }
+
+                                                var totaldisc = globaldisc + memberdisc;
+                                                var finalprice = (subvalue - totaldisc);
+
+                                                if (count > parseInt(inputqty.getAttribute('max'))) {
+                                                    inputqty.value = inputqty.getAttribute('max');
+                                                    count = parseInt(inputqty.getAttribute('max'));
+                                                    alert('<?= lang('Global.alertstock') ?>');
+                                                } else if (count < 1) {
+                                                    inputqty.value = '0';
+                                                    inputqty.remove();
+                                                    productgrid.remove();
+                                                    return;
+                                                } else {
+                                                    inputqty.value = count;
+                                                }
+
+                                                var total = finalprice * count;
+                                                productprice.innerHTML = total;
+                                                productprice.value = total;
+                                            };
                                         </script>
-                                    </div>
+                                        
+                                        <div class="uk-margin uk-text-center">
+                                            <div class="uk-search uk-search-default uk-width-1-5@l uk-width-1-1">
+                                                <span class="uk-form-icon" uk-icon="icon: search"></span>
+                                                <input class="uk-input" type="text" placeholder="Search Item ..." id="prods" name="prods" aria-label="Not clickable icon" style="border-radius: 5px;">
+                                            </div>
+                                            <script type="text/javascript">
+                                                $(function() {
+                                                    var prodsList = [
+                                                        {label: 'All Product', idx: '0'},
+                                                        <?php
+                                                            foreach ($products as $product) {
+                                                                echo '{label:"'.$product['name'].'",idx:'.$product['id'].'},';
+                                                            }
+                                                        ?>
+                                                    ];
+                                                    $("#prods").autocomplete({
+                                                        maxShowItems: 30,
+                                                        source: prodsList,
+                                                        select: function(e, i) {
+                                                            if (i.item.idx != '0') {
+                                                                <?php foreach ($products as $product) { ?>
+                                                                    $("#CreateOrder<?=$product['id']?>").prop('hidden',true);
+                                                                <?php } ?>
+                                                                    $("#CreateOrder"+i.item.idx).prop('hidden',false);
+                                                            } else {
+                                                                <?php foreach ($products as $product) { ?>
+                                                                    $("#CreateOrder<?=$product['id']?>").prop('hidden',false);
+                                                                <?php } ?>
+                                                            }
+                                                            $("#prods").val('');
+                                                            return false;
+                                                        },
+                                                        minLength: 1
+                                                    });
+                                                });
+                                            </script>
+                                        </div>
 
-                                    <div uk-modal class="uk-flex-top" id="modalVar">
-                                        <div class="uk-modal-dialog uk-margin-auto-vertical">
-                                            <div class="uk-modal-container">
-                                                <div class="uk-modal-header">
-                                                    <div uk-grid>
-                                                        <div class="uk-width-5-6">
-                                                            <div id="modalVarProduct" class="uk-modal-title tm-h2 uk-text-center">NAME</div>
-                                                        </div>
-                                                        <div class="uk-width-1-6 uk-text-right">
-                                                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                        <div uk-modal class="uk-flex-top" id="modalVar">
+                                            <div class="uk-modal-dialog uk-margin-auto-vertical">
+                                                <div class="uk-modal-container">
+                                                    <div class="uk-modal-header">
+                                                        <div uk-grid>
+                                                            <div class="uk-width-5-6">
+                                                                <div id="modalVarProduct" class="uk-modal-title tm-h2 uk-text-center">NAME</div>
+                                                            </div>
+                                                            <div class="uk-width-1-6 uk-text-right">
+                                                                <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="uk-modal-body">
-                                                    <div class="uk-child-width-1-1" uk-grid>
-                                                        <div id="">
-                                                            <div class="uk-margin">
-                                                                <div class="uk-flex uk-flex-middle" uk-grid>
-                                                                    <div class="uk-width-1-5">
-                                                                        <h5 style="text-transform: uppercase;"><?= lang('Global.variant'); ?></h5>
-                                                                    </div>
-                                                                    <div class="uk-width-1-5">
-                                                                        <h5 style="text-transform: uppercase;"><?= lang('Global.price'); ?></h5>
-                                                                    </div>
-                                                                    <div class="uk-width-1-5">
-                                                                        <h5 style="text-transform: uppercase;"><?= lang('Global.suggestPrice'); ?></h5>
-                                                                    </div>
-                                                                    <div class="uk-width-1-5">
-                                                                        <h5 style="text-transform: uppercase;"><?= lang('Global.stock'); ?></h5>
+                                                    <div class="uk-modal-body">
+                                                        <div class="uk-child-width-1-1" uk-grid>
+                                                            <div id="">
+                                                                <div class="uk-margin">
+                                                                    <div class="uk-flex uk-flex-middle" uk-grid>
+                                                                        <div class="uk-width-1-5">
+                                                                            <h5 style="text-transform: uppercase;"><?= lang('Global.variant'); ?></h5>
+                                                                        </div>
+                                                                        <div class="uk-width-1-5">
+                                                                            <h5 style="text-transform: uppercase;"><?= lang('Global.price'); ?></h5>
+                                                                        </div>
+                                                                        <div class="uk-width-1-5">
+                                                                            <h5 style="text-transform: uppercase;"><?= lang('Global.suggestPrice'); ?></h5>
+                                                                        </div>
+                                                                        <div class="uk-width-1-5">
+                                                                            <h5 style="text-transform: uppercase;"><?= lang('Global.stock'); ?></h5>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
+                                                            </div>                                                        
+                                                            <div id="modalVarList" class="uk-margin">
                                                             </div>
-                                                        </div>                                                        
-                                                        <div id="modalVarList" class="uk-margin">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-body">
-                                        <?php foreach ($products as $product) {
-                                            $productName    = $product['name']; ?>
+                                        <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-body">
+                                            <?php foreach ($products as $product) {
+                                                $productName    = $product['name']; ?>
 
-                                            <div id="CreateOrder<?= $product['id'] ?>">
-                                                <div class="uk-card uk-card-hover uk-card-default" onclick="showVariant(<?= $product['id'] ?>)">
-                                                    <div class="uk-card-body uk-flex uk-flex-center uk-flex-middle">
-                                                        <div class="tm-h4 uk-text-center uk-text-bolder"><?= $productName ?></div>
+                                                <div id="CreateOrder<?= $product['id'] ?>">
+                                                    <div class="uk-card uk-card-hover uk-card-default" onclick="showVariant(<?= $product['id'] ?>)">
+                                                        <div class="uk-card-body uk-flex uk-flex-center uk-flex-middle">
+                                                            <div class="tm-h4 uk-text-center uk-text-bolder"><?= $productName ?></div>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                            <?php } ?>
+                                        </div>                                    
+                                    </li>
+                                    <!-- End Catalog List -->
+
+                                    <!-- Bundle List -->
+                                    <li>
+                                        <div class="uk-margin uk-text-center">
+                                            <div class="uk-search uk-search-default uk-width-1-5@l uk-width-1-1">
+                                                <span class="uk-form-icon" uk-icon="icon: search"></span>
+                                                <input class="uk-input" type="text" placeholder="Search Item ..." id="bunds" name="bunds" aria-label="Not clickable icon" style="border-radius: 5px;">
+                                                <input id="bundso" name="productid" hidden />
                                             </div>
-                                        <?php } ?>
-                                    </div>                                    
-                                </li>
-                                <!-- End Catalog List -->
-
-                                <!-- Bundle List -->
-                                <li>
-                                    <div class="uk-margin uk-text-center">
-                                        <div class="uk-search uk-search-default uk-width-1-5@l uk-width-1-1">
-                                            <span class="uk-form-icon" uk-icon="icon: search"></span>
-                                            <input class="uk-input" type="text" placeholder="Search Item ..." id="bunds" name="bunds" aria-label="Not clickable icon" style="border-radius: 5px;">
-                                            <input id="bundso" name="productid" hidden />
-                                        </div>
-                                        <script type="text/javascript">
-                                            $(function() {
-                                                var bundsList = [
-                                                    {label: 'All Bundle', idx: '0'},
-                                                    <?php
-                                                        foreach ($bundles as $bundle) {
-                                                            echo '{label:"'.$bundle['name'].'",idx:'.$bundle['id'].'},';
-                                                        }
-                                                    ?>
-                                                ];
-                                                $("#bunds").autocomplete({
-                                                    source: bundsList,
-                                                    select: function(e, i) {
-                                                        if (i.item.idx != '0') {
-                                                            <?php foreach ($bundles as $bundle) { ?>
-                                                                $("#CreateOrder<?=$bundle['id']?>").prop('hidden',true);
-                                                            <?php } ?>
-                                                            $("#CreateOrder"+i.item.idx).prop('hidden',false);
-                                                        } else {
-                                                            <?php foreach ($bundles as $bundle) { ?>
-                                                                $("#CreateOrder<?=$bundle['id']?>").prop('hidden',false);
-                                                            <?php } ?>
-                                                        }
-                                                    },
-                                                    minLength: 1
+                                            <script type="text/javascript">
+                                                $(function() {
+                                                    var bundsList = [
+                                                        {label: 'All Bundle', idx: '0'},
+                                                        <?php
+                                                            foreach ($bundles as $bundle) {
+                                                                echo '{label:"'.$bundle['name'].'",idx:'.$bundle['id'].'},';
+                                                            }
+                                                        ?>
+                                                    ];
+                                                    $("#bunds").autocomplete({
+                                                        source: bundsList,
+                                                        select: function(e, i) {
+                                                            if (i.item.idx != '0') {
+                                                                <?php foreach ($bundles as $bundle) { ?>
+                                                                    $("#CreateOrder<?=$bundle['id']?>").prop('hidden',true);
+                                                                <?php } ?>
+                                                                $("#CreateOrder"+i.item.idx).prop('hidden',false);
+                                                            } else {
+                                                                <?php foreach ($bundles as $bundle) { ?>
+                                                                    $("#CreateOrder<?=$bundle['id']?>").prop('hidden',false);
+                                                                <?php } ?>
+                                                            }
+                                                        },
+                                                        minLength: 1
+                                                    });
                                                 });
-                                            });
-                                        </script>
-                                    </div>
-                                    <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
-                                        <?php foreach ($bundles as $bundle) {
-                                            // $BunName        = $bundle['name'];
-                                            // $originalPrice  = (int)$bundle['price'];
+                                            </script>
+                                        </div>
+                                        <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
+                                            <?php foreach ($bundles as $bundle) {
+                                                // $BunName        = $bundle['name'];
+                                                // $originalPrice  = (int)$bundle['price'];
 
-                                            // // Global Discount
-                                            // if ($gconfig['globaldisc'] != '0') {
-                                            //     if ($gconfig['globaldisctype'] == '0') {
-                                            //         $globaldisc = (int)$gconfig['globaldisc'];
-                                            //     } else {
-                                            //         $globaldisc = $originalPrice * ((int)$gconfig['globaldisc'] / 100);
-                                            //     }
-                                            // } else {
-                                            //     $globaldisc = 0;
-                                            // }
+                                                // // Global Discount
+                                                // if ($gconfig['globaldisc'] != '0') {
+                                                //     if ($gconfig['globaldisctype'] == '0') {
+                                                //         $globaldisc = (int)$gconfig['globaldisc'];
+                                                //     } else {
+                                                //         $globaldisc = $originalPrice * ((int)$gconfig['globaldisc'] / 100);
+                                                //     }
+                                                // } else {
+                                                //     $globaldisc = 0;
+                                                // }
 
-                                            // // Member Discount
-                                            // if ($gconfig['memberdisc'] != '0') {
-                                            //     if ($gconfig['memberdisctype'] == '0') {
-                                            //         $memberdisc = (int)$gconfig['memberdisc'];
-                                            //     } else {
-                                            //         $memberdisc = $originalPrice * ((int)$gconfig['memberdisc'] / 100);
-                                            //     }
+                                                // // Member Discount
+                                                // if ($gconfig['memberdisc'] != '0') {
+                                                //     if ($gconfig['memberdisctype'] == '0') {
+                                                //         $memberdisc = (int)$gconfig['memberdisc'];
+                                                //     } else {
+                                                //         $memberdisc = $originalPrice * ((int)$gconfig['memberdisc'] / 100);
+                                                //     }
 
-                                            //     // Validate Max Member Discount
-                                            //     if ($memberdisc > (int)$gconfig['maxmemberdisc']) {
-                                            //         $memberdisc = (int)$gconfig['maxmemberdisc'];
-                                            //     }
-                                            // } else {
-                                            //     $memberdisc = 0;
-                                            // }
+                                                //     // Validate Max Member Discount
+                                                //     if ($memberdisc > (int)$gconfig['maxmemberdisc']) {
+                                                //         $memberdisc = (int)$gconfig['maxmemberdisc'];
+                                                //     }
+                                                // } else {
+                                                //     $memberdisc = 0;
+                                                // }
 
-                                            // // Final Price Bundle
-                                            // $BunPrice = $originalPrice - $globaldisc - $memberdisc;
+                                                // // Final Price Bundle
+                                                // $BunPrice = $originalPrice - $globaldisc - $memberdisc;
 
-                                            $BunName = $bundle['name'];
-                                            if ($gconfig['globaldisc'] != '0') {
-                                                if ($gconfig['globaldisctype'] == '0') {
-                                                    $BunPrice  = (Int)$bundle['price'] - (Int)$gconfig['globaldisc'];
+                                                $BunName = $bundle['name'];
+                                                if ($gconfig['globaldisc'] != '0') {
+                                                    if ($gconfig['globaldisctype'] == '0') {
+                                                        $BunPrice  = (Int)$bundle['price'] - (Int)$gconfig['globaldisc'];
+                                                    } else {
+                                                        $BunPrice  = (Int)$bundle['price'] - ((Int)$bundle['price'] * ((Int)$gconfig['globaldisc'] / 100));
+                                                    }
                                                 } else {
-                                                    $BunPrice  = (Int)$bundle['price'] - ((Int)$bundle['price'] * ((Int)$gconfig['globaldisc'] / 100));
+                                                    $BunPrice = $bundle['price'];
                                                 }
-                                            } else {
-                                                $BunPrice = $bundle['price'];
-                                            }
-                                        ?>
-                                            <div id="CreateOrder<?= $bundle['id'] ?>">
-                                                <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrderBundle<?= $bundle['id'] ?>()">
-                                                    <div class="uk-card-header">
-                                                        <div class="tm-h1 uk-text-bolder uk-text-center"><?= $BunName; ?></div>
-                                                    </div>
-                                                    <div class="uk-card-body">
-                                                        <div class="uk-height-small uk-flex uk-flex-middle uk-flex-center">
-                                                            <div>
-                                                                <?php
-                                                                    $i = 0;
-                                                                    foreach ($bundleVariants as $variant) {
-                                                                        if (($variant->bundleid === $bundle['id']) && ($variant->outletid === $outletPick)) {
-                                                                            $i++;
-                                                                            foreach ($products as $product) {
-                                                                                if ($product['id'] === $variant->productid) {
-                                                                                    $CombName = $product['name'].' - '.$variant->name;
-                                                                                    echo '<div class="tm-h5 uk-text-center uk-margin-small" id="combname">'.$CombName.'</div>';
+                                            ?>
+                                                <div id="CreateOrder<?= $bundle['id'] ?>">
+                                                    <div class="uk-card uk-card-hover uk-card-default" onclick="createNewOrderBundle<?= $bundle['id'] ?>()">
+                                                        <div class="uk-card-header">
+                                                            <div class="tm-h1 uk-text-bolder uk-text-center"><?= $BunName; ?></div>
+                                                        </div>
+                                                        <div class="uk-card-body">
+                                                            <div class="uk-height-small uk-flex uk-flex-middle uk-flex-center">
+                                                                <div>
+                                                                    <?php
+                                                                        $i = 0;
+                                                                        foreach ($bundleVariants as $variant) {
+                                                                            if (($variant->bundleid === $bundle['id']) && ($variant->outletid === $outletPick)) {
+                                                                                $i++;
+                                                                                foreach ($products as $product) {
+                                                                                    if ($product['id'] === $variant->productid) {
+                                                                                        $CombName = $product['name'].' - '.$variant->name;
+                                                                                        echo '<div class="tm-h5 uk-text-center uk-margin-small" id="combname">'.$CombName.'</div>';
+                                                                                    }
+                                                                                }
+                                                                                if ($i === 1) {
+                                                                                    $bundlestock = $variant->qty;
                                                                                 }
                                                                             }
-                                                                            if ($i === 1) {
-                                                                                $bundlestock = $variant->qty;
-                                                                            }
                                                                         }
-                                                                    }
-                                                                ?>
+                                                                    ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="uk-card-footer">
+                                                            <div class="tm-h3 uk-text-center">
+                                                                <div>Rp <?= $bundle['price']; ?>,-</div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="uk-card-footer">
-                                                        <div class="tm-h3 uk-text-center">
-                                                            <div>Rp <?= $bundle['price']; ?>,-</div>
-                                                        </div>
-                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <script type="text/javascript">
-                                                var elemexist = document.getElementById('bundle<?= $bundle['id'] ?>');
-                                                function createNewOrderBundle<?= $bundle['id'] ?>() {
-                                                    var count = 1;
-                                                    if ( $( "#bundle<?= $bundle['id'] ?>" ).length ) {
-                                                        alert('<?=lang('Global.readyAdd');?>');
-                                                    } else {
-                                                        <?php
-                                                        if ($bundlestock === '0') {
-                                                            echo 'alert("'.lang('Global.alertstock').'");';
+                                                <script type="text/javascript">
+                                                    var elemexist = document.getElementById('bundle<?= $bundle['id'] ?>');
+                                                    function createNewOrderBundle<?= $bundle['id'] ?>() {
+                                                        var count = 1;
+                                                        if ( $( "#bundle<?= $bundle['id'] ?>" ).length ) {
+                                                            alert('<?=lang('Global.readyAdd');?>');
                                                         } else {
-                                                            echo 'let bstock = '.$bundlestock.';';
-                                                        }
-                                                        ?>
-                                                        let minbstock = 1;
-                                                        let minbval = count;
-
-                                                        const products = document.getElementById('products');
-                                                        
-                                                        const bundlegrid = document.createElement('div');
-                                                        bundlegrid.setAttribute('id', 'bundle<?= $bundle['id'] ?>');
-                                                        bundlegrid.setAttribute('class', 'uk-margin-small');
-                                                        bundlegrid.setAttribute('uk-grid', '');
-
-                                                        const addbundlecontainer = document.createElement('div');
-                                                        addbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                        
-                                                        const bunldeqtyinputadd = document.createElement('div');
-                                                        bunldeqtyinputadd.setAttribute('id','addbqty<?= $bundle['id'] ?>');
-                                                        bunldeqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
-                                                        bunldeqtyinputadd.innerHTML = '+';
-
-                                                        const delbundlecontainer = document.createElement('div');
-                                                        delbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                        
-                                                        const bundleqtyinputdel = document.createElement('div');
-                                                        bundleqtyinputdel.setAttribute('id','delbqty<?= $bundle['id'] ?>');
-                                                        bundleqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
-                                                        bundleqtyinputdel.innerHTML = '-';
-
-                                                        const bundleqtycontainer = document.createElement('div');
-                                                        bundleqtycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle uk-width-1-6');
-
-                                                        const bundleqty = document.createElement('div');                                               
-
-                                                        const bundleinputqty = document.createElement('input');
-                                                        bundleinputqty.setAttribute('type', 'number');
-                                                        bundleinputqty.setAttribute('id', "bqty[<?= $bundle['id'] ?>]");
-                                                        bundleinputqty.setAttribute('name', "bqty[<?= $bundle['id'] ?>]");
-                                                        bundleinputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
-                                                        bundleinputqty.setAttribute('min', minbstock);
-                                                        bundleinputqty.setAttribute('max', bstock);
-                                                        bundleinputqty.setAttribute('value', '1');
-                                                        bundleinputqty.setAttribute('onchange', 'showbprice()');
-                                                        
-                                                        const handleIncrements = () => {
-                                                            count++;
-                                                            if (bundleinputqty.value == bstock) {
-                                                                bundleinputqty.value = bstock;
-                                                                count = bstock;
-                                                                alert('<?=lang('Global.alertstock')?>');
+                                                            <?php
+                                                            if ($bundlestock === '0') {
+                                                                echo 'alert("'.lang('Global.alertstock').'");';
                                                             } else {
-                                                                bundleinputqty.value = count;
-                                                                var bprice = count * <?= $BunPrice ?>;
-                                                                bundleprice.innerHTML = bprice;
-                                                                bundleprice.value = bprice;
+                                                                echo 'let bstock = '.$bundlestock.';';
                                                             }
-                                                        };
-                                                        
-                                                        const handleDecrements = () => {
-                                                            count--;
-                                                            if (bundleinputqty.value == '1') {
-                                                                bundleinputqty.value = '0';
-                                                                bundleinputqty.remove();
-                                                                bundlegrid.remove();
-                                                            } else {
-                                                                bundleinputqty.value = count;
-                                                                var bprice = count * <?= $BunPrice ?>;
+                                                            ?>
+                                                            let minbstock = 1;
+                                                            let minbval = count;
+
+                                                            const products = document.getElementById('products');
+                                                            
+                                                            const bundlegrid = document.createElement('div');
+                                                            bundlegrid.setAttribute('id', 'bundle<?= $bundle['id'] ?>');
+                                                            bundlegrid.setAttribute('class', 'uk-margin-small');
+                                                            bundlegrid.setAttribute('uk-grid', '');
+
+                                                            const addbundlecontainer = document.createElement('div');
+                                                            addbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
+                                                            
+                                                            const bunldeqtyinputadd = document.createElement('div');
+                                                            bunldeqtyinputadd.setAttribute('id','addbqty<?= $bundle['id'] ?>');
+                                                            bunldeqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
+                                                            bunldeqtyinputadd.innerHTML = '+';
+
+                                                            const delbundlecontainer = document.createElement('div');
+                                                            delbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
+                                                            
+                                                            const bundleqtyinputdel = document.createElement('div');
+                                                            bundleqtyinputdel.setAttribute('id','delbqty<?= $bundle['id'] ?>');
+                                                            bundleqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
+                                                            bundleqtyinputdel.innerHTML = '-';
+
+                                                            const bundleqtycontainer = document.createElement('div');
+                                                            bundleqtycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle uk-width-1-6');
+
+                                                            const bundleqty = document.createElement('div');                                               
+
+                                                            const bundleinputqty = document.createElement('input');
+                                                            bundleinputqty.setAttribute('type', 'number');
+                                                            bundleinputqty.setAttribute('id', "bqty[<?= $bundle['id'] ?>]");
+                                                            bundleinputqty.setAttribute('name', "bqty[<?= $bundle['id'] ?>]");
+                                                            bundleinputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
+                                                            bundleinputqty.setAttribute('min', minbstock);
+                                                            bundleinputqty.setAttribute('max', bstock);
+                                                            bundleinputqty.setAttribute('value', '1');
+                                                            bundleinputqty.setAttribute('onchange', 'showbprice()');
+                                                            
+                                                            const handleIncrements = () => {
+                                                                count++;
+                                                                if (bundleinputqty.value == bstock) {
+                                                                    bundleinputqty.value = bstock;
+                                                                    count = bstock;
+                                                                    alert('<?=lang('Global.alertstock')?>');
+                                                                } else {
+                                                                    bundleinputqty.value = count;
+                                                                    var bprice = count * <?= $BunPrice ?>;
+                                                                    bundleprice.innerHTML = bprice;
+                                                                    bundleprice.value = bprice;
+                                                                }
+                                                            };
+                                                            
+                                                            const handleDecrements = () => {
+                                                                count--;
+                                                                if (bundleinputqty.value == '1') {
+                                                                    bundleinputqty.value = '0';
+                                                                    bundleinputqty.remove();
+                                                                    bundlegrid.remove();
+                                                                } else {
+                                                                    bundleinputqty.value = count;
+                                                                    var bprice = count * <?= $BunPrice ?>;
+                                                                    bundleprice.innerHTML = bprice;
+                                                                }
+                                                            };
+
+                                                            bunldeqtyinputadd.addEventListener("click", handleIncrements);
+                                                            bundleqtyinputdel.addEventListener("click", handleDecrements);
+
+                                                            const bundlenamecontainer = document.createElement('div');
+                                                            bundlenamecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
+
+                                                            const bundlename = document.createElement('div');
+                                                            bundlename.setAttribute('id', 'name<?= $bundle['id'] ?>');
+                                                            bundlename.setAttribute('class', 'tm-h2');
+                                                            bundlename.innerHTML = '<?= $BunName ?>';
+
+                                                            const bpricecontainer = document.createElement('div');
+                                                            bpricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
+                                                            
+                                                            const bundleprice = document.createElement('div');
+                                                            bundleprice.setAttribute('id', 'bprice<?= $bundle['id'] ?>');
+                                                            bundleprice.setAttribute('class', 'tm-h2');
+                                                            bundleprice.setAttribute('name', 'price[]');
+                                                            bundleprice.setAttribute('value', showbprice());
+                                                            bundleprice.innerHTML = showbprice();
+
+                                                            function showbprice() {
+                                                                var bqty = bundleinputqty.value;
+                                                                var bprice = bqty * <?= $BunPrice ?>;
+                                                                return bprice;
                                                                 bundleprice.innerHTML = bprice;
                                                             }
-                                                        };
 
-                                                        bunldeqtyinputadd.addEventListener("click", handleIncrements);
-                                                        bundleqtyinputdel.addEventListener("click", handleDecrements);
+                                                            bundleinputqty.onchange = function() {showbprice()};
 
-                                                        const bundlenamecontainer = document.createElement('div');
-                                                        bundlenamecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
-
-                                                        const bundlename = document.createElement('div');
-                                                        bundlename.setAttribute('id', 'name<?= $bundle['id'] ?>');
-                                                        bundlename.setAttribute('class', 'tm-h2');
-                                                        bundlename.innerHTML = '<?= $BunName ?>';
-
-                                                        const bpricecontainer = document.createElement('div');
-                                                        bpricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                        
-                                                        const bundleprice = document.createElement('div');
-                                                        bundleprice.setAttribute('id', 'bprice<?= $bundle['id'] ?>');
-                                                        bundleprice.setAttribute('class', 'tm-h2');
-                                                        bundleprice.setAttribute('name', 'price[]');
-                                                        bundleprice.setAttribute('value', showbprice());
-                                                        bundleprice.innerHTML = showbprice();
-
-                                                        function showbprice() {
-                                                            var bqty = bundleinputqty.value;
-                                                            var bprice = bqty * <?= $BunPrice ?>;
-                                                            return bprice;
-                                                            bundleprice.innerHTML = bprice;
+                                                            addbundlecontainer.appendChild(bunldeqtyinputadd);
+                                                            bundleqty.appendChild(bundleinputqty);
+                                                            bundleqtycontainer.appendChild(bundleqty);
+                                                            delbundlecontainer.appendChild(bundleqtyinputdel);
+                                                            bundlegrid.appendChild(delbundlecontainer);
+                                                            bundlegrid.appendChild(bundleqtycontainer);
+                                                            bundlegrid.appendChild(addbundlecontainer);
+                                                            bundlenamecontainer.appendChild(bundlename);
+                                                            bundlegrid.appendChild(bundlenamecontainer);
+                                                            bpricecontainer.appendChild(bundleprice);
+                                                            bundlegrid.appendChild(bpricecontainer);
+                                                            products.appendChild(bundlegrid);
                                                         }
-
-                                                        bundleinputqty.onchange = function() {showbprice()};
-
-                                                        addbundlecontainer.appendChild(bunldeqtyinputadd);
-                                                        bundleqty.appendChild(bundleinputqty);
-                                                        bundleqtycontainer.appendChild(bundleqty);
-                                                        delbundlecontainer.appendChild(bundleqtyinputdel);
-                                                        bundlegrid.appendChild(delbundlecontainer);
-                                                        bundlegrid.appendChild(bundleqtycontainer);
-                                                        bundlegrid.appendChild(addbundlecontainer);
-                                                        bundlenamecontainer.appendChild(bundlename);
-                                                        bundlegrid.appendChild(bundlenamecontainer);
-                                                        bpricecontainer.appendChild(bundleprice);
-                                                        bundlegrid.appendChild(bpricecontainer);
-                                                        products.appendChild(bundlegrid);
                                                     }
-                                                }
-                                            </script>
-                                        <?php } ?> 
-                                    </div>            
-                                </li>
-                                <!-- End Bundle List -->
-                            </ul>
+                                                </script>
+                                            <?php } ?> 
+                                        </div>            
+                                    </li>
+                                    <!-- End Bundle List -->
+                                </ul>
+                            <?php } ?>
                         <?php } ?>
                     </div>
                 </div>
