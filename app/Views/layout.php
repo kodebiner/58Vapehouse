@@ -381,7 +381,7 @@
                                             <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
                                                 <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
                                             </li>
-                                            <?php if (in_groups('investor')) : ?>
+                                            <?php if (in_groups('logistik')) : ?>
                                                 <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
                                                     <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
                                                 </li>
@@ -570,7 +570,7 @@
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
                                         <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
                                     </li>
-                                    <?php if (in_groups('investor')) : ?>
+                                    <?php if (in_groups('logistik')) : ?>
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
                                             <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
                                         </li>
