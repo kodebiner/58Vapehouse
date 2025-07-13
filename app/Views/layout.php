@@ -337,10 +337,11 @@
                             <!-- <li class="tm-main-navbar </?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
                                 <a class="tm-h3" href="</?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg></?=lang('Global.topup');?></a>
                             </li> -->
-                            <?php if(in_groups('owner')) : ?>
+                            <?php if (in_groups('owner')) : ?>
                                 <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
                                     <a class="tm-h3" href="<?= base_url('sop') ?>"><img src="img/layout/sop.svg" uk-svg><?=lang('Global.sop');?></a>
                                 </li>
+                            <?php endif ?>
                                 <!-- <li class="tm-main-navbar uk-parent </?=($uri->getSegment(1)==='product')?'uk-active':''?></?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
                                     <a class="tm-h3" href=""><img src="img/layout/product.svg" uk-svg></?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
                                     <ul class="uk-nav-sub">
@@ -352,6 +353,7 @@
                                         </li>
                                     </ul>
                                 </li> -->
+                            <?php if ((in_groups('owner')) || (in_groups('logistik'))) : ?>
                                 <li class="tm-main-navbar <?=($uri->getSegment(1)==='product')?'uk-active':''?>">
                                     <a class="tm-h3" href="<?= base_url('product') ?>"><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?></a>
                                 </li>
@@ -381,18 +383,20 @@
                                             <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
                                                 <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
                                             </li>
-                                            <?php if (in_groups('logistik')) : ?>
-                                                <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
-                                                    <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
-                                                </li>
-                                            <?php endif ?>
+                                        <?php endif ?>
+                                        <?php if ((in_groups('owner')) || (in_groups('logistik'))) : ?>
+                                            <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
+                                                <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
+                                            </li>
+                                        <?php endif ?>
+                                        <?php if (in_groups('owner')) : ?>
                                             <li class="tm-h4 <?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?>">
                                                 <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
                                             </li>
+                                        <?php endif ?>
                                             <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>">
                                                 <a href="</?= base_url('stock/stockcycle') ?>"></?=lang('Global.stockCycle');?></a>
                                             </li> -->
-                                        <?php endif ?>
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                             <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
                                         </li>
@@ -530,6 +534,7 @@
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
                             <a class="tm-h3" href="<?= base_url('sop') ?>"><img src="img/layout/sop.svg" uk-svg><?=lang('Global.sop');?></a>
                         </li>
+                    <?php endif ?>
                         <!-- <li class="tm-main-navbar uk-parent </?=($uri->getSegment(1)==='product')?'uk-active':''?></?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
                             <a class="tm-h3" href=""><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">
@@ -541,6 +546,7 @@
                                 </li>
                             </ul>
                         </li> -->
+                    <?php if ((in_groups('owner')) || (in_groups('logistik'))) : ?>
                         <li class="tm-main-navbar <?=($uri->getSegment(1)==='product')?'uk-active':''?>">
                             <a class="tm-h3" href="<?= base_url('product') ?>"><img src="img/layout/product.svg" uk-svg><?=lang('Global.product');?></a>
                         </li>
@@ -570,18 +576,20 @@
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
                                         <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
                                     </li>
-                                    <?php if (in_groups('logistik')) : ?>
-                                        <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
-                                            <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
-                                        </li>
-                                    <?php endif ?>
+                                <?php endif ?>
+                                <?php if ((in_groups('owner')) || (in_groups('logistik'))) : ?>
+                                    <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
+                                        <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
+                                    </li>
+                                <?php endif ?>
+                                <?php if (in_groups('owner')) : ?>
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?>">
                                         <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
                                     </li>
+                                <?php endif ?>
                                     <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>">
                                         <a href="</?= base_url('stock/stockcycle') ?>"></?=lang('Global.stockCycle');?></a>
                                     </li> -->
-                                <?php endif ?>
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                     <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
                                 </li>
