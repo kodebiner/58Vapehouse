@@ -1465,9 +1465,11 @@
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?>">
                                             <a href="<?= base_url('stock/supplier') ?>"><?=lang('Global.supplier');?></a>
                                         </li>
-                                        <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
-                                            <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
-                                        </li>
+                                        <?php if (in_groups('investor')) : ?>
+                                            <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?>">
+                                                <a href="<?= base_url('stock/purchase') ?>"><?=lang('Global.purchase');?></a>
+                                            </li>
+                                        <?php endif ?>
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?>">
                                             <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
                                         </li>
