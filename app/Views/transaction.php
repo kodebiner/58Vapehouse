@@ -1457,7 +1457,7 @@
                         <?php endif ?>
                         <?php if (!in_groups('investor')) : ?>
                             <!-- <li class="tm-main-navbar uk-parent </?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?></?=($uri->getSegment(1)==='stockmove')?'uk-active':''?></?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>"> -->
-                            <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?><?=($uri->getSegment(1)==='stockmove')?'uk-active':''?><?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?>">
+                            <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?><?=($uri->getSegment(1)==='stockmove')?'uk-active':''?><?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?><?=($uri->getSegment(1)==='stockopname')?'uk-active':''?>">
                                 <a class="tm-h3" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
                                     <?php if (in_groups('owner')) : ?>
@@ -1487,6 +1487,11 @@
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='stockmove')?'uk-active':''?>">
                                         <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
                                     </li>
+                                    <?php if ((in_groups('owner')) || (in_groups('logistik')) || (in_groups('supervisor'))) : ?>
+                                        <li class="tm-h4 <?=($uri->getSegment(1)==='stockopname')?'uk-active':''?>">
+                                            <a href="<?= base_url('stockopname') ?>">Stock Opname</a>
+                                        </li>
+                                    <?php endif ?>
                                 </ul>
                             </li>
                         <?php endif ?>

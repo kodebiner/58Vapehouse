@@ -336,6 +336,12 @@ $routes->group('stockadjustment', ['filter'=>'login'], function($routes){
     $routes->post('product', 'StockAdjustment::product', ['filter' => 'role:owner']);
 });
 
+// Stock Opname
+$routes->group('stockopname', ['filter'=>'login'], function($routes){
+    $routes->get('', 'StockOpname::index', ['filter' => 'role:owner,supervisor,logistik']);
+    $routes->get('stockopnameprint', 'StockOpname::print', ['filter' => 'role:owner,supervisor,logistik']);
+});
+
 // Wallet Management
 $routes->group('walletman', ['filter'=>'login'], function($routes){
     $routes->get('', 'CashMan::index', ['filter' => 'role:owner']);
