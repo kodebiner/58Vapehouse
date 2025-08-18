@@ -4,10 +4,13 @@ namespace App\Controllers;
 
 use App\Models\OutletModel;
 use App\Models\ProductModel;
+use App\Models\CategoryModel;
 use App\Models\VariantModel;
 use App\Models\StockModel;
 use App\Models\StockOpnameModel;
 use App\Models\UserModel;
+use DateTime;
+use Exception;
 
 class StockOpname extends BaseController
 {
@@ -40,7 +43,7 @@ class StockOpname extends BaseController
         if ($this->data['outletPick'] === null) {
             $stockopnames         = $StockOpnameModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('date', 'DESC')->paginate(20, 'stockopname');
         } else {
-            $stockopnames         = $StockOpnameModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('origin', $this->data['outletPick'])->orWhere('destination', $this->data['outletPick'])->orderBy('date', 'DESC')->paginate(20, 'stockopname');
+            $stockopnames         = $StockOpnameModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->orderBy('date', 'DESC')->paginate(20, 'stockopname');
         }
 
         $stockopnamedata              = array();
@@ -56,7 +59,7 @@ class StockOpname extends BaseController
                 }
 
                 if (!empty($outlet)) {
-                    $outletName = $outlet->name;
+                    $outletName = $outlet['name'];
                 } else {
                     $outletName = 'All Outlets';
                 }
@@ -83,6 +86,7 @@ class StockOpname extends BaseController
     {
         // Calling Model
         $ProductModel               = new ProductModel();
+        $CategoryModel              = new CategoryModel();
         $VariantModel               = new VariantModel();
         $OutletModel                = new OutletModel();
         $StockModel                 = new StockModel();
@@ -91,147 +95,136 @@ class StockOpname extends BaseController
 
         // Insert Stock Opname Data
         $inputstockopname = [
-            'outletid'      => $this->data['outletPick'],
+            'outletid'      => $this->data['outletPick'] === null ? 0 : $this->data['outletPick'],
             'userid'        => $this->data['uid'],
             'date'          => date('Y-m-d H:i:s'),
         ];
         $StockOpnameModel->insert($inputstockopname);
 
         // Populating Data
-        $data                       = $this->data;
-        $
+        if ($this->data['outletPick'] === null) {
+            $stocks     = $StockModel->where('qty !=', '0')->find();
+            $outletcode = 'AOT';
+            $outletname = 'All Outlets';
+        } else {
+            $stocks     = $StockModel->where('qty !=', '0')->where('outletid', $this->data['outletPick'])->find();
+            $outlets    = $OutletModel->find($this->data['outletPick']);
+            $outletname = $outlets['name'];
 
-        // $stockmovements             = $StockmovementModel->find($id);
+            if ($this->data['outletPick'] === '1') {
+                $outletcode = 'PST';
+            }
 
-        // $stockmovedata              = array();
-        // if (!empty($stockmovements)) {
-        //     $stockmovedetails   = $StockMoveDetailModel->where('stockmoveid', $stockmovements['id'])->find();
-        //     $dataorigin         = $OutletModel->find($stockmovements['origin']);
-        //     $datadestination    = $OutletModel->find($stockmovements['destination']);
-        //     $creator            = $UserModel->find($stockmovements['creator']);
-        //     $sender             = $UserModel->find($stockmovements['sender']);
-        //     $receiver           = $UserModel->find($stockmovements['receiver']);
+            if ($this->data['outletPick'] === '2') {
+                $outletcode = 'SLM';
+            }
 
-        //     if (!empty($dataorigin)) {
-        //         $origin         = $dataorigin['name'];
-        //         $originaddress  = $dataorigin['address'];
-        //         $originphone    = $dataorigin['phone'];
-        //     } else {
-        //         $origin         = '';
-        //         $originaddress  = '';
-        //         $originphone    = '';
-        //     }
+            if ($this->data['outletPick'] === '3') {
+                $outletcode = 'UGM';
+            }
 
-        //     if (!empty($datadestination)) {
-        //         $destination        = $datadestination['name'];
-        //         $destinationaddress = $datadestination['address'];
-        //         $destinationphone   = $datadestination['phone'];
-        //     } else {
-        //         $destination        = '';
-        //         $destinationaddress = '';
-        //         $destinationphone   = '';
-        //     }
+            if ($this->data['outletPick'] === '4') {
+                $outletcode = 'FEP';
+            }
+        }
 
-        //     if (!empty($creator)) {
-        //         $creator         = $creator->firstname.' '.$creator->lastname;
-        //     } else {
-        //         $creator         = '-';
-        //     }
+        $stockopnamedata    = [];
 
-        //     if (!empty($sender)) {
-        //         $sender         = $sender->firstname.' '.$sender->lastname;
-        //     } else {
-        //         $sender         = '-';
-        //     }
+        if (!empty($stocks)) {
+            foreach ($stocks as $stock) {
+                $variant = $VariantModel->find($stock['variantid']);
 
-        //     if (!empty($receiver)) {
-        //         $receiver       = $receiver->firstname.' '.$receiver->lastname;
-        //     } else {
-        //         $receiver       = '-';
-        //     }
+                if (!empty($variant)) {
+                    $product = $ProductModel->find($variant['productid']);
 
-        //     $stockmovedata['id']                    = $stockmovements['id'];
-        //     $stockmovedata['origin']                = $origin;
-        //     $stockmovedata['originaddress']         = $originaddress;
-        //     $stockmovedata['originphone']           = $originphone;
-        //     $stockmovedata['destination']           = $destination;
-        //     $stockmovedata['destinationaddress']    = $destinationaddress;
-        //     $stockmovedata['destinationphone']      = $destinationphone;
-        //     $stockmovedata['creator']               = $creator;
-        //     $stockmovedata['sender']                = $sender;
-        //     $stockmovedata['receiver']              = $receiver;
-        //     $stockmovedata['date']                  = $stockmovements['date'];
-        //     $stockmovedata['status']                = $stockmovements['status'];
+                    if (!empty($product)) {
+                        $category   = $CategoryModel->find($product['catid']);
+                        if (!empty($category)) {
+                            $categoryName = $category['name'];
+                        } else {
+                            $categoryName = 'Kategori Tidak Ditemukan';
+                        }
 
-        //     $arrayqty       = array();
-        //     $arrayprice     = array();
-        //     if (!empty($stockmovedetails)) {
-        //         foreach ($stockmovedetails as $movedet) {
-        //             $movementvariants           = $VariantModel->find($movedet['variantid']);
+                        $umurProduk = null;
+                        if (!empty($stock['restock']) && $stock['restock'] !== '0000-00-00 00:00:00') {
+                            try {
+                                $origin   = new \DateTime($stock['restock']);
+                                $target   = new \DateTime('now');
+                                $interval = $origin->diff($target);
+                                $umurProduk = (int) $interval->format('%a');
+                            } catch (\Exception $e) {
+                                $umurProduk = null;
+                            }
+                        }
 
-        //             if (!empty($movementvariants)) {
-        //                 $movementproducts       = $ProductModel->find($movementvariants['productid']);
+                        $key = $product['id'].'-'.$variant['id'];
 
-        //                 if (!empty($movementproducts)) {
-        //                     $product = $movementproducts['name'];
-        //                 } else {
-        //                     $product = '';
-        //                 }
+                        if (!isset($stockopnamedata[$key])) {
+                            $stockopnamedata[$key] = [
+                                'product'       => $product['name'].' - '.$variant['name'],
+                                'category'      => $categoryName,
+                                'sku'           => $variant['sku'],
+                                'stock'         => $stock['qty'],
+                                'productage'    => $umurProduk,
+                            ];
+                        } else {
+                            $stockopnamedata[$key]['stock'] += $stock['qty'];
+                            if ($umurProduk !== null) {
+                                if ($stockopnamedata[$key]['productage'] === null) {
+                                    $stockopnamedata[$key]['productage'] = $umurProduk;
+                                } else {
+                                    $stockopnamedata[$key]['productage'] = min($stockopnamedata[$key]['productage'], $umurProduk);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        array_multisort(array_column($stockopnamedata, 'category'), SORT_ASC, $stockopnamedata);
 
-        //                 $variants   = $movementvariants['name'];
-        //                 $sku        = $movementvariants['sku'];
-        //                 $wholesale  = $movementvariants['hargamodal'];
-        //             } else {
-        //                 $variants   = '';
-        //                 $sku        = '';
-        //                 $product    = '';
-        //                 $wholesale  = '';
-        //             }
-                    
-        //             $stockmovedata['detail'][$movedet['id']]['name']            = $product.' - '.$variants;
-        //             $stockmovedata['detail'][$movedet['id']]['productname']     = $product;
-        //             $stockmovedata['detail'][$movedet['id']]['variantname']     = $variants;
-        //             $stockmovedata['detail'][$movedet['id']]['sku']             = $sku;
-        //             $stockmovedata['detail'][$movedet['id']]['wholesale']       = $wholesale;
-        //             $stockmovedata['detail'][$movedet['id']]['qty']             = $movedet['qty'];
-                    
-        //             $arrayqty[]     = $movedet['qty'];
-        //             $arrayprice[]   = (Int)$wholesale * (Int)$movedet['qty'];
-        //         }
-        //     } else {
-        //         $stockmovedata['detail']      = array();
-        //     }
-                
-        //     $stockmovedata['totalqty']        = array_sum($arrayqty);
-        //     $stockmovedata['totalwholesale']  = array_sum($arrayprice);
-        // }
+        $dateexport     = date('d-m-Y');
+        $timeapproval   = date('H:i');
+        $dateapproval   = date('j F Y');
 
         // Parsing data to view
-        // $data['stockmovedata']  = $stockmovedata;
+        $data                   = $this->data;
+        $data['stockopnames']   = $stockopnamedata;
+        $data['outletcode']     = $outletcode;
+        $data['outlet']         = $outletname;
+        $data['timeapproval']   = $timeapproval;
+        $data['dateexport']     = $dateexport;
+        $data['dateapproval']   = $dateapproval;
         
-        $mpdf   = new \Mpdf\Mpdf([
-            'default_font_size' => 7,
+        $mpdf = new \Mpdf\Mpdf([
+            'default_font_size' => 10,
+            'margin_top'    => 30,
+            'margin_bottom' => 20,
+            'margin_left'   => 10,
+            'margin_right'  => 10,
         ]);
-        
-        // // --- Header ---
-        // $mpdf->SetHTMLHeader('
-        //     <div style="text-align: right; font-size: 10px; border-bottom: 1px solid #ccc; padding-bottom: 3px;">Data Stok Opname</div>
-        // ');
 
-        // // --- Footer --- (auto page number)
-        // $mpdf->SetHTMLFooter('
-        //     <div style="text-align: center; font-size: 10px; border-top: 1px solid #ccc; padding-top: 3px;">
-        //         Page {PAGENO} of {nb}
-        //     </div>
-        // ');
-        $mpdf->Image('./img/logo.png', 80, 0, 210, 297, 'png', '', true, false);
-        $mpdf->showImageErrors = true;
-        $mpdf->AddPage("P", "", "", "", "", "15", "15", "2", "15", "", "", "", "", "", "", "", "", "", "", "", "A4-P");
+        $headerHtml = '
+        <table width="100%" style="font-size:10pt; padding-bottom:5px;">
+        <tr>
+            <td width="60%" style="text-align:center; font-weight:bold;">
+            Data Stok Opname - '.$outletcode.' - '.$dateexport.'
+            </td>
+        </tr>
+        </table>';
 
-        // $date       = date_create($stockmovedata['date']);
-        $filename   = "Data Stok Opname " . date('d-m-Y') . ".pdf";
-        $html       = view('Views/stockopnameprint', $data);
+        $footerHtml = '
+        <div style="text-align:center; font-size:9pt; padding-top:3px;">
+        Halaman {PAGENO} dari {nb}
+        </div>';
+
+        $mpdf->SetHTMLHeader($headerHtml);
+        $mpdf->SetHTMLFooter($footerHtml);
+
+        $html       = view('stockopnameprint', $data);
         $mpdf->WriteHTML($html);
+
+        $filename   = "Data Stok Opname - " . $outletcode . ' - ' . date('d-m-Y') . ".pdf";
         $mpdf->Output($filename, 'D');
     }
 }

@@ -4,20 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stok Opname</title>
-    <!-- <title>Stok Opname </?= $stockopname['outlet'] ?></title> -->
+    <title>Stok Opname <?= $outlet ?></title>
     <link rel="stylesheet" href="css/theme.css">
     <script src="js/uikit.min.js"></script>
     <script src="js/uikit-icons.min.js"></script>
-    <!-- <style>
-        html {
-            font-size: 8pt
-        }
-
-        hr {
-            margin: 0;
-        }
-
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 10pt; }
         table,
         th,
         td {
@@ -25,153 +17,631 @@
             border-collapse: collapse;
             padding: 3px;
         }
-    </style> -->
-    <style>
-        html { font-size: 9pt; }
-        body { margin: 0; font-family: Arial, sans-serif; }
-
-        .page {
-            margin: 100px 40px;
-        }
-
-        header {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            right: 0;
-            height: 50px;
-            text-align: center;
-            font-size: 12px;
-        }
-
-        footer {
-            position: fixed;
-            bottom: 60px;
-            left: 0;
-            right: 0;
-            height: 40px;
-            text-align: center;
-            font-size: 10px;
-        }
-
-        table, th, td {
-            border-collapse: collapse;
-            padding: 4px;
-            font-size: 9pt;
-        }
-
-        th, td {
-            border: 1px solid black;
-        }
-
+        thead { display: table-header-group; }
+        tfoot { display: table-footer-group; }
         .page-break { page-break-before: always; }
-        .page { page-break-inside: avoid; }
     </style>
 </head>
 
 <body>
-    <header>
-        <h3>Data Stok Opname</h3>
-        <!-- <h3>Data Stok Opname - </?= $outletcode ?> - </?= $dateexport ?></h3> -->
-    </header>
-
-    <main>
-        <!-- Data Stock Page -->
-        <div class="page">
-            <table style="width:100%">
+    <!-- Data Stock Page -->
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <th style="border:1px solid black">Nama</th>
+                <th style="border:1px solid black">Kategori</th>
+                <th style="border:1px solid black">Stok</th>
+                <th style="border:1px solid black">Umur Produk</th>
+                <th style="border:1px solid black">Selisih</th>
+                <th style="border:1px solid black">Selisih POS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($stockopnames as $stockopname) { ?>
                 <tr>
-                    <th>Nama</th>
-                    <th>Kategori</th>
-                    <th>Stok</th>
-                    <th>Umur Produk</th>
-                    <th>Selisih</th>
+                    <td style="border:1px solid black"><?= $stockopname['product'] ?></td>
+                    <td style="border:1px solid black"><?= $stockopname['category'] ?></td>
+                    <td style="border:1px solid black"><?= $stockopname['stock'] ?></td>
+                    <td style="border:1px solid black"><?= $stockopname['productage'] ?></td>
+                    <td style="border:1px solid black"></td>
+                    <td style="border:1px solid black"></td>
                 </tr>
-                <!-- </?php foreach ($stockopnames as $stockopname): ?>
-                    <tr>
-                        <td></?= $stockopname['product'] ?></td>
-                        <td></?= $stockopname['category'] ?></td>
-                        <td></?= $stockopname['stock'] ?></td>
-                        <td></?= $stockopname['productage'] ?></td>
-                        <td></td>
-                    </tr>
-                </?php endforeach ?> -->
-            </table>
-        </div>
+            <?php } ?>
+        </tbody>
+    </table>
 
-        <div class="page-break"></div>
+    <div class="page-break"></div>
 
-        <!-- Notes Page -->
-        <div class="page">
-            <h3 style="margin-bottom:80px">Catatan Stok Opname</h3>
-        </div>
+    <!-- Notes Page -->
+    <div style="margin-bottom:80px;text-align:center;font-weight:bold;">Catatan Stok Opname</div>
 
-        <div class="page-break"></div>
+    <div class="page-break"></div>
 
-        <!-- SOP Page -->
-        <div class="page">
-            <h3 style="margin-bottom:10px">Prosedur Stok Opname</h3>
-            <ol>
-                <li>Semua barang dihitung sesuai dengan kondisi aktual stok berada.</li>
-                <li>Barang yang tidak memiliki selisih atau sesuai dengan keberadaan stok aktual maka diberikan tanda “-“ (minus) pada stok kolom selisih.</li>
-                <li>Barang yang memiliki selisih dengan stok yang diberikan maka diberikan catatan sesuai dengan jumlah aktual barang di outlet berlaku</li>
-                <li>
-                    Barang yang memiliki jumlah selisih di dalam data stok dan stok POS maka di cek secara real-time/langsung dengan data POS untuk proses penghitungan ulang,
-                    <ol style="list-style-type: lower-alpha; margin-left: 20px;">
-                        <li>Jika barang memiliki selisih melebihi dari stok POS maka berikan nilai selisih dengan “+” (plus) dengan nilai selisih yang berlaku,</li>
-                        <li>Jika barang memiliki selisih kurang dari dari stok POS maka berikan nilai selisih dengan “-” (minus) dengan nilai selisih yang berlaku.</li>
-                    </ol>
-                </li>
-                <li>Data akan dikerjakan dengan waktu maksimal 1x24 jam untuk menjaga stok tepat dan akurat.</li>
-                <li>Data selisih barang akan dibuatkan nilai total sebagai input barang selisih melalui excel dengan format .xls</li>
-                <li>Data selisih barang harus di-input oleh tim logistik yang berlaku.</li>
-                <li>Jika masih ada selisih yang terjadi maka akan menjadi tugas di proses stok opname yang selanjutnya.</li>
+    <!-- SOP Page -->
+    <div style="margin-bottom:10px;font-weight:bold;">Prosedur Stok Opname</div>
+    <ol>
+        <li>Semua barang dihitung sesuai dengan kondisi aktual stok berada.</li>
+        <li>Barang yang tidak memiliki selisih atau sesuai dengan keberadaan stok aktual maka diberikan tanda “-“ (minus) pada stok kolom selisih.</li>
+        <li>Barang yang memiliki selisih dengan stok yang diberikan maka diberikan catatan sesuai dengan jumlah aktual barang di outlet berlaku</li>
+        <li>
+            Barang yang memiliki jumlah selisih di dalam data stok dan stok POS maka di cek secara real-time/langsung dengan data POS untuk proses penghitungan ulang,
+            <ol style="list-style-type: lower-alpha; margin-left: 20px;">
+                <li>Jika barang memiliki selisih melebihi dari stok POS maka berikan nilai selisih dengan “+” (plus) dengan nilai selisih yang berlaku,</li>
+                <li>Jika barang memiliki selisih kurang dari dari stok POS maka berikan nilai selisih dengan “-” (minus) dengan nilai selisih yang berlaku.</li>
             </ol>
+        </li>
+        <li>Data akan dikerjakan dengan waktu maksimal 1x24 jam untuk menjaga stok tepat dan akurat.</li>
+        <li>Data selisih barang akan dibuatkan nilai total sebagai input barang selisih melalui excel dengan format .xls</li>
+        <li>Data selisih barang harus di-input oleh tim logistik yang berlaku.</li>
+        <li>Jika masih ada selisih yang terjadi maka akan menjadi tugas di proses stok opname yang selanjutnya.</li>
+    </ol>
+
+    <div class="page-break"></div>
+
+    <!-- Approval Page -->
+    <div style="margin-bottom:20px;font-weight:bold;">Pernyataan Hasil Stok Opname - Tim Logistik & Tim Retail</div>
+    <div>Dengan ini dinyatakan bahwa proses stok opname yang dilakukan pada:</div>
+    <table>
+        <tr>
+            <td style="width: 150px;border-collapse: collapse;">Waktu Ekspor</td>
+            <td style="width: 10px;border-collapse: collapse;">:</td>
+            <td style="border-collapse: collapse;"><?= $timeapproval ?></td>
+        </tr>
+        <tr>
+            <td style="width: 150px;border-collapse: collapse;">Tanggal</td>
+            <td style="width: 10px;border-collapse: collapse;">:</td>
+            <td style="border-collapse: collapse;"><?= $dateapproval ?></td>
+        </tr>
+        <tr>
+            <td style="width: 150px;border-collapse: collapse;">Lokasi</td>
+            <td style="width: 10px;border-collapse: collapse;">:</td>
+            <td style="border-collapse: collapse;"><?= $outlet ?></td>
+        </tr>
+        <tr>
+            <td style="width: 150px;border-collapse: collapse;">Waktu Selesai</td>
+            <td style="width: 10px;border-collapse: collapse;">:</td>
+            <td style="border-collapse: collapse;"></td>
+        </tr>
+    </table>
+    <div>Telah selesai dilaksanakan dengan seksama sesuai dengan prosedur yang berlaku. Hasil dari stok opname menunjukkan bahwa seluruh data fisik barang yang ada telah diperiksa dan selaras dengan catatan administrasi.</div>
+    <div>Menyatakan bahwa:</div>
+    <ol>
+        <li>Tidak terdapat selisih antara stok fisik dan stok administrasi.</li>
+        <li>Seluruh barang telah dihitung secara akurat dan dikonfirmasi keabsahannya.</li>
+        <li>Data hasil stok opname telah diverifikasi dan disepakati bersama oleh pihak yang bertanggung jawab.</li>
+        <li>Jika terdapat satu saja transaksi yang terjadi sewaktu stok opname maka pengecekan barang dilakukan via POS.</li>
+        <li>Semua rekonsiliasi keuangan telah disesuaikan dari tagihan yang ada di dashboard office.58vapehouse.com.</li>
+    </ol>
+    <div>Demikian pernyataan ini dibuat dengan sebenar-benarnya untuk menjadi arsip dan rujukan dalam pengelolaan inventaris.</div>
+    <table style="margin-top:50px;">
+        <tr>
+            <th style="border-top:1px solid black; border-left:1px solid black;border-right:1px solid black;text-align:left; font-weight:normal;">Diperiksa Oleh</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th style="border-top:1px solid black; border-left:1px solid black;border-right:1px solid black; font-weight:normal;">Diperiksa Oleh</th>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+        </tr>
+        <tr>
+            <td style="border-bottom:1px solid black;border-left:1px solid black;border-right:1px solid black;">Frontline</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-bottom:1px solid black;border-left:1px solid black;border-right:1px solid black;">Frontline</td>
+        </tr>
+    </table>
+    <!-- <table>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th style="border-top:1px solid black;border-left:1px solid black;border-right:1px solid black; font-weight:normal;">Disetujui Oleh</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="border-bottom:1px solid black;border-left:1px solid black;border-right:1px solid black;">Headstore</td>
+        </tr>
+    </table> -->
+    <!-- <div class="uk-child-width-1-2" uk-grid>
+        <div style="margin-top: 50px; border: 1px solid black;">
+            <div style="margin-bottom: 50px;">Diperiksa Oleh</div>
+            <div>Frontline</div>
         </div>
-
-        <div class="page-break"></div>
-
-        <!-- Approval Page -->
-        <div class="page">
-            <h3 style="margin-bottom:100px">Pernyataan Hasil Stok Opname - Tim Logistik & Tim Retail</h3>
-            <h4>Dengan ini dinyatakan bahwa proses stok opname yang dilakukan pada:</h4>
-            <h4>Waktu Eksport   :   </h4>
-            <h4>Tanggal         :   </h4>
-            <h4>Lokasi          :   </h4>
-            <!-- <h4>Waktu Eksport   :   </?= $timeapproval ?></h4>
-            <h4>Tanggal         :   </?= $dateapproval ?></h4>
-            <h4>Lokasi          :   </?= $outlet ?></h4> -->
-            <h4>Waktu Selesai   :   </h4>
-            <h4>Telah selesai dilaksanakan dengan seksama sesuai dengan prosedur yang berlaku. Hasil dari stok opname menunjukkan bahwa seluruh data fisik barang yang ada telah diperiksa dan selaras dengan catatan administrasi.</h4>
-            <h4>Menyatakan bahwa:</h4>
-            <ol>
-                <li>Tidak terdapat selisih antara stok fisik dan stok administrasi.</li>
-                <li>Seluruh barang telah dihitung secara akurat dan dikonfirmasi keabsahannya.</li>
-                <li>Data hasil stok opname telah diverifikasi dan disepakati bersama oleh pihak yang bertanggung jawab.</li>
-                <li>Jika terdapat satu saja transaksi yang terjadi sewaktu stok opname maka pengecekan barang dilakukan via POS.</li>
-                <li>Semua rekonsiliasi keuangan telah disesuaikan dari tagihan yang ada di dashboard office.58vapehouse.com.</li>
-            </ol>
-            <h4>Demikian pernyataan ini dibuat dengan sebenar-benarnya untuk menjadi arsip dan rujukan dalam pengelolaan inventaris.</h4>
-            <div class="uk-child-width-1-2" uk-grid>
-                <div style="margin-top: 50px; border: 1px solid black;">
-                    <h3 style="margin-bottom: 50px;">Diperiksa Oleh</h3>
-                    <h3>Frontline</h3>
-                </div>
-                <div style="margin-top: 50px; border: 1px solid black;">
-                    <h3 style="margin-bottom: 50px;">Diperiksa Oleh</h3>
-                    <h3>Frontline</h3>
-                </div>
-            </div>
-            <div style="margin-top: 50px; border: 1px solid black;">
-                <h3 style="margin-bottom: 50px;">Disetujui Oleh</h3>
-                <h3>Headstore</h3>
-            </div>
+        <div style="margin-top: 50px; border: 1px solid black;">
+            <div style="margin-bottom: 50px;">Diperiksa Oleh</div>
+            <div>Frontline</div>
         </div>
-    </main>
-
-    <footer>
-        <h3>Page 1 of 10</h3>
-        <!-- <h3>Page </?= $currentpage ?> of </?= $totalpage ?></h3> -->
-    </footer>
+    </div> -->
+    <!-- <div style="margin-top: 50px; border: 1px solid black;">
+        <div style="margin-bottom: 50px;">Disetujui Oleh</div>
+        <div>Headstore</div>
+    </div> -->
 </body>
 
 </html>
