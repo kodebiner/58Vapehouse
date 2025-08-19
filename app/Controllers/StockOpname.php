@@ -195,7 +195,10 @@ class StockOpname extends BaseController
         $data['timeapproval']   = $timeapproval;
         $data['dateexport']     = $dateexport;
         $data['dateapproval']   = $dateapproval;
-        
+
+        header("Content-type: application/pdf");
+        header("Content-Disposition: attachment; filename=Data Stok Opname - ".$outletcode." - ".$dateexport.".pdf");
+
         $mpdf = new \Mpdf\Mpdf([
             'default_font_size' => 10,
             'margin_top'    => 30,

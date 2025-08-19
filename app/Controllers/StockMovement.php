@@ -581,6 +581,9 @@ class StockMovement extends BaseController
 
         // Parsing data to view
         $data['stockmovedata']  = $stockmovedata;
+
+        header("Content-type: application/pdf");
+        header("Content-Disposition: attachment; filename=SM" . date_format($date, 'Ymd') . $stockmovedata['id'] . ".pdf");
         
         $mpdf   = new \Mpdf\Mpdf([
             'default_font_size' => 7,
