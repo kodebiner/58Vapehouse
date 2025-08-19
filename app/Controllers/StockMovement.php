@@ -581,10 +581,12 @@ class StockMovement extends BaseController
 
         // Parsing data to view
         $data['stockmovedata']  = $stockmovedata;
+        $date       = date_create($stockmovedata['date']);
+        $filename   = "SM" . date_format($date, 'Ymd') . $stockmovedata['id'] . ".pdf";
 
         header("Content-type: application/pdf");
-        header("Content-Disposition: attachment; filename=SM" . date_format($date, 'Ymd') . $stockmovedata['id'] . ".pdf");
-        
+        header("Content-Disposition: attachment; filename=$filename");
+
         $mpdf   = new \Mpdf\Mpdf([
             'default_font_size' => 7,
         ]);
@@ -592,8 +594,6 @@ class StockMovement extends BaseController
         $mpdf->showImageErrors = true;
         $mpdf->AddPage("P", "", "", "", "", "15", "15", "2", "15", "", "", "", "", "", "", "", "", "", "", "", "A4-P");
 
-        $date       = date_create($stockmovedata['date']);
-        $filename   = "SM" . date_format($date, 'Ymd') . $stockmovedata['id'] . ".pdf";
         $html       = view('Views/stockmovementprint', $data);
         $mpdf->WriteHTML($html);
         $mpdf->Output($filename, 'D');
