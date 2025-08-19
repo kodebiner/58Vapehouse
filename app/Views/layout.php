@@ -403,11 +403,11 @@
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='stockmove')?'uk-active':''?>">
                                             <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
                                         </li>
-                                        <?php if ((in_groups('owner')) || (in_groups('logistik')) || (in_groups('supervisor'))) : ?>
+                                        <!-- </?php if ((in_groups('owner')) || (in_groups('logistik')) || (in_groups('supervisor'))) : ?> -->
                                             <li class="tm-h4 <?=($uri->getSegment(1)==='stockopname')?'uk-active':''?>">
                                                 <a href="<?= base_url('stockopname') ?>">Stock Opname</a>
                                             </li>
-                                        <?php endif ?>
+                                        <!-- </?php endif ?> -->
                                     </ul>
                                 </li>
                             <?php endif ?>
@@ -601,11 +601,11 @@
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='stockmove')?'uk-active':''?>">
                                     <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
                                 </li>
-                                <?php if ((in_groups('owner')) || (in_groups('logistik')) || (in_groups('supervisor'))) : ?>
+                                <!-- </?php if ((in_groups('owner')) || (in_groups('logistik')) || (in_groups('supervisor'))) : ?> -->
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='stockopname')?'uk-active':''?>">
                                         <a href="<?= base_url('stockopname') ?>">Stock Opname</a>
                                     </li>
-                                <?php endif ?>
+                                <!-- </?php endif ?> -->
                             </ul>
                         </li>
                     <?php endif ?>
