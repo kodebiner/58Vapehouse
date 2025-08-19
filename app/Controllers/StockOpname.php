@@ -195,11 +195,7 @@ class StockOpname extends BaseController
         $data['timeapproval']   = $timeapproval;
         $data['dateexport']     = $dateexport;
         $data['dateapproval']   = $dateapproval;
-
-        $filename   = "Data Stok Opname - " . $outletcode . ' - ' . date('d-m-Y') . ".pdf";
-        header("Content-type: application/pdf");
-        header("Content-Disposition: attachment; filename=$filename");
-
+        
         $mpdf = new \Mpdf\Mpdf([
             'default_font_size' => 10,
             'margin_top'    => 30,
@@ -227,6 +223,8 @@ class StockOpname extends BaseController
 
         $html       = view('stockopnameprint', $data);
         $mpdf->WriteHTML($html);
+
+        $filename   = "Data Stok Opname - " . $outletcode . ' - ' . date('d-m-Y') . ".pdf";
         $mpdf->Output($filename, 'D');
 
         // // Return
