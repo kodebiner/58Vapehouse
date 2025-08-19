@@ -338,8 +338,8 @@ $routes->group('stockadjustment', ['filter'=>'login'], function($routes){
 
 // Stock Opname
 $routes->group('stockopname', ['filter'=>'login'], function($routes){
-    $routes->get('', 'StockOpname::index', ['filter' => 'role:owner,supervisor,logistik']);
-    $routes->get('stockopnameprint', 'StockOpname::print', ['filter' => 'role:owner,supervisor,logistik']);
+    $routes->get('', 'StockOpname::index', ['filter' => 'role:owner,supervisor,logistik,operator']);
+    $routes->get('stockopnameprint', 'StockOpname::print', ['filter' => 'role:owner,supervisor,logistik,operator']);
 });
 
 // Wallet Management
