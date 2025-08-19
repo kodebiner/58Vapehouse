@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stok Opname <?= $outlet ?></title>
-    <link rel="stylesheet" href="css/theme.css">
-    <script src="js/uikit.min.js"></script>
-    <script src="js/uikit-icons.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; font-size: 10pt; }
         table,
@@ -17,8 +14,8 @@
             border-collapse: collapse;
             padding: 3px;
         }
-        thead { display: table-header-group; }
-        tfoot { display: table-footer-group; }
+        /* thead { display: table-header-group; }
+        tfoot { display: table-footer-group; } */
         .page-break { page-break-before: always; }
     </style>
 </head>
@@ -113,535 +110,53 @@
         <li>Semua rekonsiliasi keuangan telah disesuaikan dari tagihan yang ada di dashboard office.58vapehouse.com.</li>
     </ol>
     <div>Demikian pernyataan ini dibuat dengan sebenar-benarnya untuk menjadi arsip dan rujukan dalam pengelolaan inventaris.</div>
-    <table style="margin-top:50px;">
+    <table style="width:100%; margin-top:50px; text-align:center; border:0; border-collapse:collapse;">
         <tr>
-            <th style="border-top:1px solid black; border-left:1px solid black;border-right:1px solid black;text-align:left; font-weight:normal;">Diperiksa Oleh</th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th style="border-top:1px solid black; border-left:1px solid black;border-right:1px solid black; font-weight:normal;">Diperiksa Oleh</th>
+            <td style="width:40%; text-align:left; border:1px solid black; padding:10px;">
+                Diperiksa oleh,<br><br><br><br>
+                Frontline
+            </td>
+
+            <td style="width:20%; padding:10px;">
+                <br>
+                
+            </td>
+
+            <td style="width:40%; text-align:left; border:1px solid black; padding:10px;">
+                Diperiksa oleh,<br><br><br><br>
+                Frontline
+            </td>
         </tr>
+
         <tr>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+            <td> </td>
         </tr>
+
         <tr>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+            <td> </td>
         </tr>
+
         <tr>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
+            <td> </td>
         </tr>
+
         <tr>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-        </tr>
-        <tr>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-        </tr>
-        <tr>
-            <td style="border-bottom:1px solid black;border-left:1px solid black;border-right:1px solid black;">Frontline</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-bottom:1px solid black;border-left:1px solid black;border-right:1px solid black;">Frontline</td>
+            <td style="width:40%; padding:10px;">
+                <br>
+                
+            </td>
+
+            <td style="width:20%; padding:10px;">
+                <br>
+                
+            </td>
+            
+            <td style="width:40%; text-align:left; padding-top:50px; border:1px solid black; padding:10px;">
+                Disetujui oleh,<br><br><br><br>
+                Headstore
+            </td>
         </tr>
     </table>
-    <!-- <table>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th style="border-top:1px solid black;border-left:1px solid black;border-right:1px solid black; font-weight:normal;">Disetujui Oleh</th>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-left:1px solid black;border-right:1px solid black;"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-bottom:1px solid black;border-left:1px solid black;border-right:1px solid black;">Headstore</td>
-        </tr>
-    </table> -->
-    <!-- <div class="uk-child-width-1-2" uk-grid>
-        <div style="margin-top: 50px; border: 1px solid black;">
-            <div style="margin-bottom: 50px;">Diperiksa Oleh</div>
-            <div>Frontline</div>
-        </div>
-        <div style="margin-top: 50px; border: 1px solid black;">
-            <div style="margin-bottom: 50px;">Diperiksa Oleh</div>
-            <div>Frontline</div>
-        </div>
-    </div> -->
-    <!-- <div style="margin-top: 50px; border: 1px solid black;">
-        <div style="margin-bottom: 50px;">Disetujui Oleh</div>
-        <div>Headstore</div>
-    </div> -->
 </body>
 
 </html>

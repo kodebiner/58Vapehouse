@@ -457,7 +457,7 @@ class StockMovement extends BaseController
         ];
         $StockmovementModel->save($data);
 
-        return redirect()->back()->with('massage', lang('global.saved'));
+        return redirect()->back()->with('message', lang('global.saved'));
     }
 
     public function print($id)

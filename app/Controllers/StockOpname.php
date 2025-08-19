@@ -215,7 +215,7 @@ class StockOpname extends BaseController
 
         $footerHtml = '
         <div style="text-align:center; font-size:9pt; padding-top:3px;">
-        Halaman {PAGENO} dari {nb}
+        Page {PAGENO} of {nb}
         </div>';
 
         $mpdf->SetHTMLHeader($headerHtml);
@@ -226,5 +226,8 @@ class StockOpname extends BaseController
 
         $filename   = "Data Stok Opname - " . $outletcode . ' - ' . date('d-m-Y') . ".pdf";
         $mpdf->Output($filename, 'D');
+
+        // // Return
+        // return redirect()->back()->with('message', 'Data Tersimpan dan Export Berhasil');
     }
 }

@@ -43,8 +43,14 @@
 
         <!-- Button Trigger Modal export -->
         <div class="uk-width-1-3@m uk-width-1-2 uk-text-right">
-            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" target="_blank" href="stockopname/stockopnameprint"><?=lang('Global.export')?></a>
+            <a id="btnExport" type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" target="_blank" href="stockopname/stockopnameprint"><?=lang('Global.export')?></a>
         </div>
+
+        <script>
+            document.getElementById('btnExport').addEventListener('click', function() {
+                setTimeout(() => location.reload(), 1000);
+            });
+        </script>
         <!-- End Of Button Trigger Modal export-->
     </div>
 </div>
