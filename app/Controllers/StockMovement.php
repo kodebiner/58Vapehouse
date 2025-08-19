@@ -593,6 +593,12 @@ class StockMovement extends BaseController
         $filename   = "SM" . date_format($date, 'Ymd') . $stockmovedata['id'] . ".pdf";
         $html       = view('Views/stockmovementprint', $data);
         $mpdf->WriteHTML($html);
-        $mpdf->Output($filename, 'D');
+        // $mpdf->Output($filename, 'D');
+        
+        ob_clean();
+        return $this->response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Content-Disposition', 'attachment; filename="'.$filename.'"')
+            ->setBody($mpdf->Output($filename, 'S'));
     }
 }

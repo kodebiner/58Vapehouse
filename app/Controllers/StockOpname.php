@@ -225,7 +225,13 @@ class StockOpname extends BaseController
         $mpdf->WriteHTML($html);
 
         $filename   = "Data Stok Opname - " . $outletcode . ' - ' . date('d-m-Y') . ".pdf";
-        $mpdf->Output($filename, 'D');
+        // $mpdf->Output($filename, 'D');
+        
+        ob_clean();
+        return $this->response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Content-Disposition', 'attachment; filename="'.$filename.'"')
+            ->setBody($mpdf->Output($filename, 'S'));
 
         // // Return
         // return redirect()->back()->with('message', 'Data Tersimpan dan Export Berhasil');
