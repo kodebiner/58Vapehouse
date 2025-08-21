@@ -34,7 +34,7 @@ $routes->set404Override();
 
 $routes->get('/', 'Transaction::index', ['filter' => ['login', 'role:owner,supervisor,investor,logistik,operator,guests']]);
 $routes->get('home/index', 'Transaction::index', ['filter' => ['login', 'role:owner,supervisor,investor,logistik,operator,guests']]);
-$routes->get('dashboard', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,investor,logistik,operator,guests']]);
+$routes->get('dashboard', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,investor,logistik,operator']]);
 $routes->get('billhistory', 'Home::billhistory', ['filter' => ['login', 'role:owner,supervisor,logistik,operator']]);
 // $routes->get('home/dashboard', 'Home::index', ['filter' => ['login', 'role:owner,supervisor,operator,guests']]);
 $routes->get('trial', 'Home::trial');

@@ -258,19 +258,30 @@
                             <label class="uk-form-label" for="role"><?=lang('Global.accessLevel')?></label>
                             <div class="uk-form-controls">
                                 <select class="uk-select" name="role">
-                                    <option value="" selected disabled>Role</option>
+                                    <option value="" disabled>Role</option>
                                     <?php foreach ($roles as $rl) {
-                                        if ($rl->name != 'guests') {
+                                        if ($rl->id == $user->group_id) {
+                                            $selected = 'selected';
+                                        } else {
+                                            $selected = '';
+                                        }
+                                        // if ($rl->name != 'guests') {
                                             if ($authorize->inGroup('owner', $uid) === true) {
-                                                if (($rl->name != 'owner') && ($rl->name != 'guests')) {
-                                                    echo '<option value="'.$rl->id.'">'.$rl->name.'</option>';
+                                                // if (($rl->name != 'owner') && ($rl->name != 'guests')) {
+                                                //     echo '<option value="'.$rl->id.'">'.$rl->name.'</option>';
+                                                // }
+                                                if ($rl->name != 'owner') {
+                                                    echo '<option value="'.$rl->id.'"'.$selected.'>'.$rl->name.'</option>';
                                                 }
                                             } elseif ($authorize->inGroup('supervisor', $uid) === true) {
-                                                if (($rl->name != 'owner') && ($rl->name != 'guests') && ($rl->name != 'supervisor')) {
-                                                    echo '<option value="'.$rl->id.'">'.$rl->name.'</option>';
+                                                // if (($rl->name != 'owner') && ($rl->name != 'guests') && ($rl->name != 'supervisor')) {
+                                                //     echo '<option value="'.$rl->id.'">'.$rl->name.'</option>';
+                                                // }
+                                                if (($rl->name != 'owner') && ($rl->name != 'supervisor')) {
+                                                    echo '<option value="'.$rl->id.'"'.$selected.'>'.$rl->name.'</option>';
                                                 }
                                             }
-                                        }
+                                        // }
                                     } ?>
                                 </select>
                             </div>

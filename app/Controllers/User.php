@@ -224,27 +224,65 @@ class User extends BaseController
 
         // Deleting Old Outlet Access
         $oldAcc = $OutletAccessModel->where('userid',$id)->find();
-        foreach ($oldAcc as $acc ){
-            foreach ($input['outlet'] as $newAcc){
-                if ($acc['outletid'] != $newAcc){
-                    $oldOut = $acc['outletid'];
+        if (!empty($oldAcc)) {
+            foreach ($oldAcc as $acc ){
+                if (!empty($input['outlet'])) {
+                    foreach ($input['outlet'] as $newAcc){
+                        if ($acc['outletid'] != $newAcc){
+                            $oldOut = $acc['outletid'];
+                            $data = [
+                                'id'        => $acc['id'],
+                                'outletid'  => $oldOut,
+                                'userid'    => $id,
+                            ];
+                            $OutletAccessModel->delete($data);
+                        }
+
+                        $outAccess = [
+                            'userid' => $id,
+                            'outletid' => $newAcc,
+                        ];
+                        $OutletAccessModel->save($outAccess);
+                    }
+                } else {
                     $data = [
                         'id'        => $acc['id'],
-                        'outletid'  => $oldOut,
+                        'outletid'  => $acc['outletid'],
                         'userid'    => $id,
                     ];
                     $OutletAccessModel->delete($data);
                 }
             }
+        } else {
+            foreach ($input['outlet'] as $out){
+                $outAccess = [
+                    'userid' => $id,
+                    'outletid' => $out,
+                ];
+                $OutletAccessModel->save($outAccess);
+            }
         }
-        foreach ($input['outlet'] as $out){
-            $outAccess = [
-                'userid' => $id,
-                'outletid' => $out,
-            ];
-            $OutletAccessModel->save($outAccess);
-        }
-       
+
+        // foreach ($oldAcc as $acc ){
+        //     foreach ($input['outlet'] as $newAcc){
+        //         if ($acc['outletid'] != $newAcc){
+        //             $oldOut = $acc['outletid'];
+        //             $data = [
+        //                 'id'        => $acc['id'],
+        //                 'outletid'  => $oldOut,
+        //                 'userid'    => $id,
+        //             ];
+        //             $OutletAccessModel->delete($data);
+        //         }
+        //     }
+        // }
+        // foreach ($input['outlet'] as $out){
+        //     $outAccess = [
+        //         'userid' => $id,
+        //         'outletid' => $out,
+        //     ];
+        //     $OutletAccessModel->save($outAccess);
+        // }
         
         // Redirect to user management
         return redirect()->to('user')->with('message', lang('Global.saved'));
