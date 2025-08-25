@@ -367,7 +367,7 @@ class DailyReport extends BaseController
                                     $products   = [];
 
                                     $dailyreportdata[$dayrep['id']]['productsell'][0]['name']                           = 'Produk / Variant Terhapus';
-                                    $dailyreportdata[$dayrep['id']]['productsell'][0]['name'][]                         = $trxdet['qty'];
+                                    $dailyreportdata[$dayrep['id']]['productsell'][0]['qty'][]                         = $trxdet['qty'];
                                 }
 
                                 $totalproductsell[]                                                                     = $trxdet['qty'];
