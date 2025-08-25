@@ -943,12 +943,12 @@ class Pay extends BaseController
 
         if (!empty($transactions['amountpaid'])) {
             $data['pay']            = $transactions['amountpaid'];
-        } elseif (empty($transactions['amountpaid'])) {
-            foreach ($trxdetails as $trxdetail) {
-                if ($trxdetail['transactionid'] == $id) {
-                    $data['pay']    = $trxdetail['value'];
-                }
-            }
+        // } elseif (empty($transactions['amountpaid'])) {
+        //     foreach ($trxdetails as $trxdetail) {
+        //         if ($trxdetail['transactionid'] == $id) {
+        //             $data['pay']    = $trxdetail['value'];
+        //         }
+        //     }
         } else {
             $data['pay']            = '0';
         }
