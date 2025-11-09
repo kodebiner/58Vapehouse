@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\OutletModel;
 
 class Accountancy extends BaseController
 {
@@ -475,23 +476,13 @@ class Accountancy extends BaseController
     public function company()
     {
         // Calling Model
+        $OutletModel    = new OutletModel();
 
         // Populating data
-        if (!empty($input)) {
-            $daterange  = explode(' - ', $input);
-            $startdate  = $daterange[0];
-            $enddate    = $daterange[1];
-        } else {
-            // $startdate  = date('Y-m-1' . ' 00:00:00');
-            // $enddate    = date('Y-m-t' . ' 23:59:59');
-            $startdate  = date('Y-m-d') . ' 00:00:00';
-            $enddate    = date('Y-m-d') . ' 23:59:59';
-        }
+        $outlets    = $OutletModel->orderBy('id', 'ASC')->findAll();
         
         // Parsing data to view
         $data                   = $this->data;
-        $data['startdate']      = strtotime($startdate);
-        $data['enddate']        = strtotime($enddate);
         $data['title']          = 'Perusahaan - '.lang('Global.accountancyList');
         $data['description']    = 'Perusahaan '.lang('Global.accountancyListDesc');
 
