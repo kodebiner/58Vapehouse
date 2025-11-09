@@ -324,6 +324,7 @@ return [
     'promo'             => 'Promo',
     'store'             => 'Store',
     'billhistory'       => 'Bill History',
+    'accountancy'       => 'Accountancy',
 
     // Title
     'employeeList'              => 'Employee List',
@@ -361,6 +362,7 @@ return [
     'dosop'                     => 'Do SOP',
     'businessInfo'              => 'Business Information',
     'bizLogo'                   => 'Business Logo',
+    'accountancyList'           => 'Accountancy',
 
     // Page Description
     'dashdesc'                  => 'Global information about your business',
@@ -391,4 +393,5 @@ return [
     'billhistoryListDesc'       => 'List of all your bill history',
     'userProfileDesc'           => 'Information about your profile',
     'businessInfoDesc'          => 'Information about your business',
+    'accountancyDesc'           => 'Your business accounting management',
 ];

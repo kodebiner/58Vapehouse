@@ -324,6 +324,7 @@ return [
     'promo'             => 'Promo',
     'store'             => 'Toko',
     'billhistory'       => 'Riwayat Tagihan',
+    'accountancy'       => 'Akuntansi',
 
     // Page Title
     'employeeList'              => 'Daftar Pegawai',
@@ -361,6 +362,7 @@ return [
     'dosop'                     => 'Lakukan SOP',
     'businessInfo'              => 'Informasi Usaha',
     'bizLogo'                   => 'Logo Usaha',
+    'accountancyList'           => 'Akuntansi',
     
     // Page Description
     'dashdesc'                  => 'Informasi global mengenai bisnis anda',
@@ -391,4 +393,5 @@ return [
     'billhistoryListDesc'       => 'Riwayat tagihan yang anda miliki',
     'userProfileDesc'           => 'Informasi mengenai profil anda',
     'businessInfoDesc'          => 'Informasi mengenai bisnis anda',
+    'accountancyDesc'           => 'Manajemen akuntansi bisnis anda',
 ];

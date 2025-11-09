@@ -305,7 +305,32 @@ $routes->group('report', ['filter'=>'login'], function($routes){
     $routes->get('sop', 'Report::sop', ['filter' => 'role:owner,supervisor,investor']);
     $routes->get('dailysell', 'Report::dailysell', ['filter' => 'role:owner,supervisor,investor']);
     // $routes->get('stockcategory', 'Report::stockcategory', ['filter' => 'role:owner,supervisor,investor']);
+});
 
+// Accountancy Routes
+$routes->group('accountancy', ['filter'=>'login'], function($routes){
+    $routes->get('dashboard', 'Accountancy::dashboard', ['filter' => 'role:owner,supervisor']);
+    $routes->get('transaction', 'Accountancy::transaction', ['filter' => 'role:owner,supervisor']);
+    $routes->get('akuncoa', 'Accountancy::akuncoa', ['filter' => 'role:owner,supervisor']);
+    $routes->get('asset', 'Accountancy::asset', ['filter' => 'role:owner,supervisor']);
+    $routes->get('closing-entries', 'Accountancy::closingEntries', ['filter' => 'role:owner,supervisor']);
+    $routes->get('contact', 'Accountancy::contact', ['filter' => 'role:owner,supervisor']);
+    $routes->get('manual-accounting-reconciliation', 'Accountancy::manualAccountingReconciliation', ['filter' => 'role:owner,supervisor']);
+    $routes->get('budgetting', 'Accountancy::budgetting', ['filter' => 'role:owner,supervisor']);
+    $routes->get('transaction-report', 'Accountancy::transactionReport', ['filter' => 'role:owner,supervisor']);
+    $routes->get('general-journal', 'Accountancy::generalJournal', ['filter' => 'role:owner,supervisor']);
+    $routes->get('ledger', 'Accountancy::ledger', ['filter' => 'role:owner,supervisor']);
+    $routes->get('trial-balance', 'Accountancy::trialBalance', ['filter' => 'role:owner,supervisor']);
+    $routes->get('profit-loss-statement', 'Accountancy::profitLossStatement', ['filter' => 'role:owner,supervisor']);
+    $routes->get('changes-equity', 'Accountancy::changesEquity', ['filter' => 'role:owner,supervisor']);
+    $routes->get('balance-sheet', 'Accountancy::balanceSheet', ['filter' => 'role:owner,supervisor']);
+    $routes->get('cash-flow', 'Accountancy::cashFlow', ['filter' => 'role:owner,supervisor']);
+    $routes->get('receiveable-payable-account', 'Accountancy::receiveablePayableAccount', ['filter' => 'role:owner,supervisor']);
+    $routes->get('operating-expenses', 'Accountancy::operatingExpenses', ['filter' => 'role:owner,supervisor']);
+    $routes->get('financial-report', 'Accountancy::financialReport', ['filter' => 'role:owner,supervisor']);
+    $routes->get('profile', 'Accountancy::profile', ['filter' => 'role:owner,supervisor']);
+    $routes->get('company', 'Accountancy::company', ['filter' => 'role:owner,supervisor']);
+    $routes->get('employee', 'Accountancy::employee', ['filter' => 'role:owner,supervisor']);
 });
 
 // Sop Routes
