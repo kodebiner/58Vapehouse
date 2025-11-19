@@ -305,15 +305,42 @@ class Stock extends BaseController
 
         // initialize
         $input              = $this->request->getpost();
-        $suppliers          = $SupplierModel->findAll();
+        $suppliers          = $SupplierModel->find($id);
+
+        if ($input['name'] != $suppliers['name']) {
+            $name = $input['name'];
+        } else {
+            $name = $suppliers['name'];
+        }
+        if ($input['phone'] != $suppliers['phone']) {
+            $phone = $input['phone'];
+        } else {
+            $phone = $suppliers['phone'];
+        }
+        if ($input['address'] != $suppliers['address']) {
+            $address = $input['address'];
+        } else {
+            $address = $suppliers['address'];
+        }
+        if (!empty($input['email'])) {
+            $email = $input['email'];
+        } else {
+            $email = $suppliers['email'];
+        }
+        if (!empty($input['city'])) {
+            $city = $input['city'];
+        } else {
+            $city = $suppliers['city'];
+        }
 
         // validation
         $data = [
             'id'            => $id,
-            'name'          => $input['name'],
-            'phone'         => $input['phone'],
-            'address'       => $input['address'],
-            'city'          => $input['city'],
+            'name'          => $name,
+            'phone'         => $phone,
+            'email'         => $email,
+            'address'       => $address,
+            'city'          => $city,
         ];
         $SupplierModel->save($data);
 

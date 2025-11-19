@@ -61,7 +61,6 @@ class User extends BaseController
     }
 
     public function create()
-
     {
         $authorize = service('authorization');
 
@@ -127,7 +126,7 @@ class User extends BaseController
         }
 
         // Return back to index
-        return redirect()->to('user');   
+        return redirect()->to('user');
     }
 
     public function update($id)
@@ -149,6 +148,12 @@ class User extends BaseController
         // Finding user
         $user = $UserModel->find($id);
 
+        if (empty($input['role'])) {
+            $input['role'] = $user->role;
+        } else {
+            $input['role'] = $user->role;
+        }
+
         // Validation basic form
         if (!empty($input['username'])) {
             $rules['username']  = 'alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]';
@@ -159,7 +164,7 @@ class User extends BaseController
         if (!empty($input['phone'])) {
             $rules['phone']     = 'numeric|is_unique[users.phone]';
         }
-        $rules['role'] = 'required';
+        // $rules['role'] = 'required';
         
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -285,7 +290,7 @@ class User extends BaseController
         // }
         
         // Redirect to user management
-        return redirect()->to('user')->with('message', lang('Global.saved'));
+        return redirect()->back()->with('message', lang('Global.saved'));
 
             // $user = $usersModel->where('username', $input['username'])->first();
             // //$authorize->inGroup($user->role, $user->Id);

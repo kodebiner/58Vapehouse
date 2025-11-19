@@ -262,14 +262,13 @@
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='dashboard')?'uk-active':''?>">
                                 <a class="tm-h3" href="<?= base_url('dashboard') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                             </li>
-                            <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='dashboard')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='transaction')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='akuncoa')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='asset')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='closing-entries')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='contact')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='manual-accounting-reconciliation')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='budgetting')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='transaction-report')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='general-journal')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='ledger')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='trial-balance')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='profit-loss-statement')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='changes-equity')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='balance-sheet')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='cash-flow')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='receiveable-payable-account')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='operating-expenses')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='financial-report')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='profile')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='company')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='employee')?'uk-active':''?>">
-                                <a class="tm-h3" href=""><span uk-icon="database"></span><?=lang('Global.accountancy');?><span uk-nav-parent-icon></span></a>
+                            <li class="tm-main-navbar uk-parent <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2), ['dashboard','transaction','akuncoa','asset','closing-entries','contact','manual-accounting-reconciliation','budgetting','transaction-report','general-journal','ledger','trial-balance','profit-loss-statement','changes-equity','balance-sheet','cash-flow','receiveable-payable-account','operating-expenses','financial-report','profile','company','employee'])) ? 'uk-active' : '' ?>">                                <a class="tm-h3" href=""><span uk-icon="database"></span><?=lang('Global.accountancy');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
                                     <?php if ((in_groups('owner')) || (in_groups('supervisor'))) : ?>
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='dashboard')?'uk-active':''?>">
                                             <a href="<?= base_url('accountancy/dashboard') ?>">Dashbaord</a>
                                         </li>
-                                        <li class="tm-h4">
+                                        <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['transaction'])) ? 'uk-active' : '' ?>">
                                             <a href="#" uk-toggle="target: #dropdown-transaction">Transaksi</a>
                                             <div id="dropdown-transaction" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background:#000; color:#fff;" hidden>
                                                 <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -279,7 +278,7 @@
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li class="tm-h4">
+                                        <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['akuncoa','asset','closing-entries','contact','manual-accounting-reconciliation','budgetting'])) ? 'uk-active' : '' ?>">
                                             <a href="#" uk-toggle="target: #dropdown-master-data">Master Data</a>
                                             <div id="dropdown-master-data" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background:#000; color:#fff;" hidden>
                                                 <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -304,7 +303,7 @@
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li class="tm-h4">
+                                        <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['transaction-report','general-journal','ledger','trial-balance','profit-loss-statement','changes-equity','balance-sheet','cash-flow','receiveable-payable-account','operating-expenses','financial-report'])) ? 'uk-active' : '' ?>">
                                             <a href="#" uk-toggle="target: #dropdown-report">Laporan</a>
                                             <div id="dropdown-report" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background:#000; color:#fff;" hidden>
                                                 <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -344,7 +343,7 @@
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li class="tm-h4">
+                                        <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['profile','company','employee'])) ? 'uk-active' : '' ?>">
                                             <a href="#" uk-toggle="target: #dropdown-setting">Pengaturan</a>
                                             <div id="dropdown-setting" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background:#000; color:#fff;" hidden>
                                                 <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -561,14 +560,14 @@
                     <li class="tm-main-navbar <?=($uri->getSegment(1)==='dashboard')?'uk-active':''?>">
                         <a class="tm-h3" href="<?= base_url('dashboard') ?>"><img src="img/layout/dashboard.svg" uk-svg><?=lang('Global.dashboard');?></a>
                     </li>
-                    <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='dashboard')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='transaction')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='akuncoa')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='asset')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='closing-entries')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='contact')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='manual-accounting-reconciliation')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='budgetting')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='transaction-report')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='general-journal')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='ledger')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='trial-balance')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='profit-loss-statement')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='changes-equity')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='balance-sheet')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='cash-flow')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='receiveable-payable-account')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='operating-expenses')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='financial-report')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='profile')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='company')?'uk-active':''?><?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='employee')?'uk-active':''?>">
+                    <li class="tm-main-navbar uk-parent <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2), ['dashboard','transaction','akuncoa','asset','closing-entries','contact','manual-accounting-reconciliation','budgetting','transaction-report','general-journal','ledger','trial-balance','profit-loss-statement','changes-equity','balance-sheet','cash-flow','receiveable-payable-account','operating-expenses','financial-report','profile','company','employee'])) ? 'uk-active' : '' ?>">
                         <a class="tm-h3"><span uk-icon="database"></span><?=lang('Global.accountancy');?><span uk-nav-parent-icon></span></a>
                         <ul class="uk-nav-sub">
                             <?php if ((in_groups('owner')) || (in_groups('supervisor'))) : ?>
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='dashboard')?'uk-active':''?>">
-                                    <a href="<?= base_url('accountancy/dashboard') ?>">Dashbaord</a>
+                                    <a href="<?= base_url('accountancy/dashboard') ?>">Dashboard</a>
                                 </li>
-                                <li class="tm-h4">
+                                <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['transaction'])) ? 'uk-active' : '' ?>">
                                     <a href="#" uk-toggle="target: #dropdown-transaction">Transaksi</a>
                                     <div id="dropdown-transaction" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background:#000; color:#fff;" hidden>
                                         <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -578,7 +577,7 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="tm-h4">
+                                <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['akuncoa','asset','closing-entries','contact','manual-accounting-reconciliation','budgetting'])) ? 'uk-active' : '' ?>">
                                     <a href="#" uk-toggle="target: #dropdown-master-data">Master Data</a>
                                     <div id="dropdown-master-data" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background:#000; color:#fff;" hidden>
                                         <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -603,7 +602,7 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="tm-h4">
+                                <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['transaction-report','general-journal','ledger','trial-balance','profit-loss-statement','changes-equity','balance-sheet','cash-flow','receiveable-payable-account','operating-expenses','financial-report'])) ? 'uk-active' : '' ?>">
                                     <a href="#" uk-toggle="target: #dropdown-report">Laporan</a>
                                     <div id="dropdown-report" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background:#000; color:#fff;" hidden>
                                         <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -643,7 +642,7 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="tm-h4">
+                                <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['profile','company','employee'])) ? 'uk-active' : '' ?>">
                                     <a href="#" uk-toggle="target: #dropdown-setting">Pengaturan</a>
                                     <div id="dropdown-setting" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background:#000; color:#fff;" hidden>
                                         <ul class="uk-nav uk-navbar-dropdown-nav">

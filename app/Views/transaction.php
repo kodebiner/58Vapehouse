@@ -1353,7 +1353,7 @@
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='dashboard')?'uk-active':''?>">
                                         <a href="<?= base_url('accountancy/dashboard') ?>">Dashbaord</a>
                                     </li>
-                                    <li class="tm-h4">
+                                    <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['transaction'])) ? 'uk-active' : '' ?>">
                                         <a href="#" uk-toggle="target: #dropdown-transaction"><?=lang('Global.transaction');?></a>
                                         <div id="dropdown-transaction" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background: #000; color: #fff;" hidden>
                                             <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -1363,7 +1363,7 @@
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="tm-h4">
+                                    <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['akuncoa','asset','closing-entries','contact','manual-accounting-reconciliation','budgetting'])) ? 'uk-active' : '' ?>">
                                         <a href="#" uk-toggle="target: #dropdown-master-data">Master Data</a>
                                         <div id="dropdown-master-data" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background: #000; color: #fff;" hidden>
                                             <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -1388,7 +1388,7 @@
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="tm-h4">
+                                    <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['transaction-report','general-journal','ledger','trial-balance','profit-loss-statement','changes-equity','balance-sheet','cash-flow','receiveable-payable-account','operating-expenses','financial-report'])) ? 'uk-active' : '' ?>">
                                         <a href="#" uk-toggle="target: #dropdown-report">Laporan</a>
                                         <div id="dropdown-report" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background: #000; color: #fff;" hidden>
                                             <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -1428,7 +1428,7 @@
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="tm-h4">
+                                    <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['profile','company','employee'])) ? 'uk-active' : '' ?>">
                                         <a href="#" uk-toggle="target: #dropdown-setting">Pengaturan</a>
                                         <div id="dropdown-setting" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background: #000; color: #fff;" hidden>
                                             <ul class="uk-nav uk-navbar-dropdown-nav">

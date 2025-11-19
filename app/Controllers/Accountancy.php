@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 use App\Models\OutletModel;
+use App\Models\UserModel;
+use App\Models\SupplierModel;
+use App\Models\AccountancyContactModel;
 
 class Accountancy extends BaseController
 {
@@ -138,8 +141,53 @@ class Accountancy extends BaseController
     public function contact()
     {
         // Calling Model
+        $UserModel      = new UserModel();
+        $SupplierModel  = new SupplierModel();
+        $ContactModel   = new AccountancyContactModel();
 
         // Populating data
+        $contacts               = [];
+        $suppliers              = $SupplierModel->findAll();
+        $users                  = $UserModel->findAll();
+        $accountancycontacts    = $ContactModel->findAll();
+
+        foreach ($suppliers as $supplier) {
+            $contacts[]  = [
+                'id'        => '10'.$supplier['id'],
+                'realid'    => $supplier['id'],
+                'name'      => $supplier['name'],
+                'email'     => $supplier['email'],
+                'phone'     => $supplier['phone'],
+                'address'   => $supplier['address'],
+                'status'    => 1,
+            ];
+        }
+
+        foreach ($users as $user) {
+            $contacts[]  = [
+                'id'        => '20'.$user->id,
+                'realid'    => $user->id,
+                'name'      => $user->firstname.' '.$user->lastname,
+                'firstname' => $user->firstname,
+                'lastname'  => $user->lastname,
+                'email'     => $user->email,
+                'phone'     => $user->phone,
+                'address'   => '',
+                'status'    => 2,
+            ];
+        }
+
+        foreach ($accountancycontacts as $accountancycontact) {
+            $contacts[]  = [
+                'id'        => '30'.$accountancycontact['id'],
+                'realid'    => $accountancycontact['id'],
+                'name'      => $accountancycontact['name'],
+                'email'     => $accountancycontact['email'],
+                'phone'     => $accountancycontact['phone'],
+                'address'   => $accountancycontact['address'],
+                'status'    => 3,
+            ];
+        }
         if (!empty($input)) {
             $daterange  = explode(' - ', $input);
             $startdate  = $daterange[0];
@@ -150,15 +198,95 @@ class Accountancy extends BaseController
             $startdate  = date('Y-m-d') . ' 00:00:00';
             $enddate    = date('Y-m-d') . ' 23:59:59';
         }
+        array_multisort(array_column($contacts, 'name'), SORT_ASC, $contacts);
         
         // Parsing data to view
         $data                   = $this->data;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
+        $data['contacts']       = $contacts;
         $data['title']          = 'Kontak - '.lang('Global.accountancyList');
         $data['description']    = 'Kontak '.lang('Global.accountancyListDesc');
 
         return view('Views/accountancy/contact', $data);
+    }
+
+    public function createContact()
+    {
+        // Calling Model
+        $ContactModel   = new AccountancyContactModel();
+        
+        // Defining input
+        $input = $this->request->getPost();
+
+        $data = [
+            'name'      => $input['name'],
+            'phone'     => $input['phone'],
+            'email'     => $input['email'],
+            'address'   => $input['address'],
+        ];
+
+        if (!$this->validate([
+            'name'      => "required|max_length[255]",
+            'phone'     => 'numeric',
+            'email'     => 'valid_email',
+            'address'   => 'max_length[255]',
+        ])) { return redirect()->back()->withInput()->with('errors', $this->validator->getErrors()); }
+
+        // Inserting Customer
+        $ContactModel->insert($data);
+
+        return redirect()->back()->with('message', lang('Global.saved'));
+    }
+
+    public function updateContact($id)
+    {
+        // Calling Model
+        $ContactModel = new AccountancyContactModel();
+
+        // Populating Data
+        $input = $this->request->getPost();
+
+        // Validating
+        if (!$this->validate([
+            'name'    => "required|max_length[255]",
+            'phone'   => "permit_empty|numeric",
+            'email'   => "permit_empty|valid_email",
+            'address' => "permit_empty|max_length[255]",
+        ])) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Update
+        $data = [
+            'id'      => $id,
+            'name'    => $input['name']    ?: '-',
+            'phone'   => $input['phone']   ?: '-',
+            'email'   => $input['email']   ?: '-',
+            'address' => $input['address'] ?: '-',
+        ];
+        $ContactModel->save($data);
+
+        return redirect()->back()->with('message', lang('Global.saved'));
+    }
+
+    public function deleteContact($id)
+    {
+        // Calling Model
+        $ContactModel = new AccountancyContactModel();
+
+        // Populating Data
+        $contact = $ContactModel->find($id);
+
+        // Validating
+        if (!$contact) {
+            return redirect()->back()->with('errors', ['Data tidak ditemukan']);
+        }
+
+        // Delete
+        $ContactModel->delete($id);
+
+        return redirect()->back()->with('message', lang('Global.deleted'));
     }
 
     public function manualAccountingReconciliation()

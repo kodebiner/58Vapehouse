@@ -2,14 +2,14 @@
 
 use CodeIgniter\Model;
 
-class SupplierModel extends Model
+class AccountancyContactModel extends Model
 {
     protected $allowedFields = [
-        'name','phone','email','address','city',
+        'name','email','phone','address',
 
     ];
 
-    protected $table      = 'supplier';
+    protected $table      = 'accountancy_contact';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType     = 'array';
