@@ -50,7 +50,7 @@
                 </div>
 
                 <!-- Button Export -->
-                <div class="uk-flex-right uk-child-width-1-1 uk-child-width-1-6@m" uk-grid>
+                <div class="uk-flex-right uk-child-width-1-1 uk-child-width-1-4@m" uk-grid>
                     <div>
                         <a type="button" class="uk-button uk-button-default" target="_blank" href="export/excelcontact">Excel</a>
                     </div>
