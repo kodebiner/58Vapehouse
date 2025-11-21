@@ -5,6 +5,7 @@ use App\Models\OutletModel;
 use App\Models\UserModel;
 use App\Models\SupplierModel;
 use App\Models\AccountancyContactModel;
+use App\Models\AccountancyCOAModel;
 
 class Accountancy extends BaseController
 {
@@ -63,6 +64,7 @@ class Accountancy extends BaseController
     public function akuncoa()
     {
         // Calling Model
+        $AccountancyCOAModel   = new AccountancyCOAModel();
 
         // Populating data
         if (!empty($input)) {
@@ -75,9 +77,11 @@ class Accountancy extends BaseController
             $startdate  = date('Y-m-d') . ' 00:00:00';
             $enddate    = date('Y-m-d') . ' 23:59:59';
         }
+        $coas   = $AccountancyCOAModel->orderBy('name', 'ASC')->findAll();
         
         // Parsing data to view
         $data                   = $this->data;
+        $data['coas']           = $coas;
         $data['startdate']      = strtotime($startdate);
         $data['enddate']        = strtotime($enddate);
         $data['title']          = 'Akun (COA) - '.lang('Global.accountancyList');
