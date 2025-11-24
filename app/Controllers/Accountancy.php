@@ -6,6 +6,7 @@ use App\Models\UserModel;
 use App\Models\SupplierModel;
 use App\Models\AccountancyContactModel;
 use App\Models\AccountancyCOAModel;
+use App\Models\AccountancyCategoryModel;
 
 class Accountancy extends BaseController
 {
@@ -64,30 +65,63 @@ class Accountancy extends BaseController
     public function akuncoa()
     {
         // Calling Model
-        $AccountancyCOAModel   = new AccountancyCOAModel();
+        $AccountancyCOAModel        = new AccountancyCOAModel();
+        $AccountancyCategoryModel   = new AccountancyCategoryModel();
 
         // Populating data
-        if (!empty($input)) {
-            $daterange  = explode(' - ', $input);
-            $startdate  = $daterange[0];
-            $enddate    = $daterange[1];
-        } else {
-            // $startdate  = date('Y-m-1' . ' 00:00:00');
-            // $enddate    = date('Y-m-t' . ' 23:59:59');
-            $startdate  = date('Y-m-d') . ' 00:00:00';
-            $enddate    = date('Y-m-d') . ' 23:59:59';
+        $coas           = [];
+        $akuncoa        = $AccountancyCOAModel->orderBy('name', 'ASC')->findAll();
+        $categories     = $AccountancyCategoryModel->orderBy('id', 'ASC')->findAll();
+        foreach ($akuncoa as $coa) {
+            $category       = $AccountancyCategoryModel->find($coa['cat_a_id']);
+            $coas[]  = [
+                'id'            => $coa['id'],
+                'kode'          => $category['cat_code'].$coa['id'],
+                'cat_a_id'      => $category['id'],
+                'category'      => $category['name'],
+                'coa_type'      => $category['cat_type'],
+                'name'          => $coa['name'],
+                'description'   => $coa['description'],
+                'status_lock'   => $coa['status_lock'],
+                'status_active' => $coa['status_active'],
+            ];
         }
-        $coas   = $AccountancyCOAModel->orderBy('name', 'ASC')->findAll();
+        array_multisort(array_column($coas, 'cat_a_id'), SORT_ASC, $coas);
         
         // Parsing data to view
         $data                   = $this->data;
         $data['coas']           = $coas;
-        $data['startdate']      = strtotime($startdate);
-        $data['enddate']        = strtotime($enddate);
+        $data['categories']     = $categories;
         $data['title']          = 'Akun (COA) - '.lang('Global.accountancyList');
         $data['description']    = 'Akun (COA) '.lang('Global.accountancyListDesc');
 
         return view('Views/accountancy/akuncoa', $data);
+    }
+
+    public function createAkunCOA()
+    {
+        // Calling Model
+        $AccountancyCOAModel   = new AccountancyCOAModel();
+        
+        // Defining input
+        $input = $this->request->getPost();
+
+        $data = [
+            'name'          => $input['name'],
+            'cat_a_id'      => $input['category'],
+            'description'   => $input['description'],
+            'status_lock'   => isset($input['status_lock']) ? 1 : 0,
+            'status_active' => 1,
+        ];
+
+        if (!$this->validate([
+            'name'      => "required|max_length[255]",
+        ])) { return redirect()->back()->withInput()->with('errors', $this->validator->getErrors()); }
+
+        // Inserting COA
+        $AccountancyCOAModel->insert($data);
+
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function asset()
