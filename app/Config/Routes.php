@@ -313,6 +313,9 @@ $routes->group('accountancy', ['filter'=>'login'], function($routes){
     $routes->get('transaction', 'Accountancy::transaction', ['filter' => 'role:owner,supervisor']);
     $routes->get('akuncoa', 'Accountancy::akuncoa', ['filter' => 'role:owner,supervisor']);
     $routes->post('akuncoa/create', 'Accountancy::createAkunCOA', ['filter' => 'role:owner,supervisor']);
+    $routes->post('akuncoa/import', 'Accountancy::importExcel', ['filter' => 'role:owner,supervisor']);
+    $routes->post('akuncoa/update/(:num)', 'Accountancy::updateAkunCOA/$1');
+    $routes->get('akuncoa/delete/(:num)', 'Accountancy::deleteAkunCOA/$1');
     $routes->get('asset', 'Accountancy::asset', ['filter' => 'role:owner,supervisor']);
     $routes->get('closing-entries', 'Accountancy::closingEntries', ['filter' => 'role:owner,supervisor']);
     $routes->get('contact', 'Accountancy::contact', ['filter' => 'role:owner,supervisor']);

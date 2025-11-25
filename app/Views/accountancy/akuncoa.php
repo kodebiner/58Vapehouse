@@ -1,6 +1,7 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('extraScript') ?>
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -18,14 +19,15 @@
                 <h3 class="tm-h3"><?=lang('Global.accountancy').' - Akun (COA)'?></h3>
             </div>
 
-            <!-- Button Trigger Modal Add -->
             <div class="uk-text-right@m">
+                <!-- Button Trigger Modal Add -->
                 <div class="uk-margin">
                     <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata">Tambah Akun</button>
                 </div>
 
+                <!-- Button Trigger Modal Atur Saldo -->
                 <div class="uk-margin">
-                    <button type="button" class="uk-button uk-button-secondary uk-preserve-color" uk-toggle="target: #tambahdata">Atur Saldo Awal</button>
+                    <a href="accountancy/akuncoa/" class="uk-button uk-button-secondary uk-preserve-color">Atur Saldo Awal</a>
                 </div>
             </div>
         </div>
@@ -61,11 +63,28 @@
                                 <select class="uk-select" id="category" name="category" required>
                                     <option value="" disabled selected>Pilih Kategori</option>
                                     <?php foreach ($categories as $category) { ?>
-                                        <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                                        <option value="<?= $category['id'] ?>" data-code="<?= $category['cat_code'] ?>">
+                                            <?= $category['name'] ?>
+                                        </option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
+
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="cat_code">Kode</label>
+                            <div class="uk-form-controls">
+                                <input type="text" class="uk-input" id="cat_code" name="cat_code" readonly />
+                            </div>
+                        </div>
+
+                        <script>
+                            document.getElementById('category').addEventListener('change', function () {
+                                const selectedOption = this.options[this.selectedIndex];
+                                const code = selectedOption.getAttribute('data-code');
+                                document.getElementById('cat_code').value = code ?? '';
+                            });
+                        </script>
 
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="description">Deskripsi</label>
@@ -135,9 +154,20 @@
                 <?php foreach ($coas as $coa) { ?>
                     <tr>
                         <td class="uk-text-center"><?= $coa['kode'] ?></td>
-                        <td class=""><?= $coa['name']; ?></td>
+                        <td class="">
+                            <?= $coa['name']; ?>
+                            <?php if ($coa['status_lock'] == 1) { ?>
+                                <span uk-icon="lock" class="uk-margin-small-right"></span>
+                            <?php } ?>
+                        </td>
                         <td class=""><?= $coa['category']; ?></td>
-                        <td class=""><?= $coa['coa_type']; ?></td>
+                        <td class="">
+                            <?php if ($coa['coa_type'] == 0) {
+                                echo 'Debit';
+                            } else {
+                                echo 'Kredit';
+                            } ?>
+                        </td>
                         <td class=""><?= $coa['description']; ?></td>
                         <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                             <!-- Button Trigger Modal Edit -->
@@ -147,9 +177,83 @@
                             <!-- End Of Button Trigger Modal Edit -->
 
                             <!-- Button Delete -->
+                            <div>
+                                <?php if ($coa['status_lock'] == 0) { ?>
+                                    <a uk-icon="trash" class="uk-icon-button-delete" href="accountancy/akuncoa/delete/<?= $coa['id'] ?>" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')"></a>
+                                <?php } ?>
+                            </div>
                             <!-- End Of Button Delete -->
                         </td>
                     </tr>
+
+                    <!-- Modal Edit -->
+                    <div uk-modal class="uk-flex-top" id="editdata<?= $coa['id'] ?>">
+                        <div class="uk-modal-dialog uk-margin-auto-vertical">
+                            <div class="uk-modal-content">
+                                <div class="uk-modal-header">
+                                    <div class="uk-child-width-1-2" uk-grid>
+                                        <div><h5 class="uk-modal-title">Edit Akun</h5></div>
+                                        <div class="uk-text-right">
+                                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close" type="button"></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="uk-modal-body">
+                                    <form class="uk-form-stacked" role="form" action="/accountancy/akuncoa/update/<?= $coa['id'] ?>" method="post">
+                                        <?= csrf_field() ?>
+
+                                        <div class="uk-margin-bottom">
+                                            <label class="uk-form-label">Nama</label>
+                                            <input type="text" class="uk-input" name="name" value="<?= $coa['name'] ?>" required>
+                                        </div>
+
+                                        <div class="uk-margin-bottom">
+                                            <label class="uk-form-label">Kategori</label>
+                                            <select class="uk-select" name="category" id="category_edit_<?= $coa['id'] ?>" required>
+                                                <?php foreach ($categories as $category) { ?>
+                                                    <option value="<?= $category['id'] ?>" 
+                                                            data-code="<?= $category['cat_code'] ?>"
+                                                            <?= ($coa['cat_a_id'] == $category['id']) ? 'selected' : '' ?>>
+                                                        <?= $category['name'] ?>
+                                                    </option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="uk-margin-bottom">
+                                            <label class="uk-form-label">Kode</label>
+                                            <input type="text" class="uk-input" name="cat_code" id="cat_code_edit_<?= $coa['id'] ?>" value="<?= $coa['kode'] ?>" readonly>
+                                        </div>
+
+                                        <script>
+                                            document.getElementById('category_edit_<?= $coa['id'] ?>').addEventListener('change', function () {
+                                                const selected = this.options[this.selectedIndex];
+                                                document.getElementById('cat_code_edit_<?= $coa['id'] ?>').value = selected.getAttribute('data-code');
+                                            });
+                                        </script>
+
+                                        <div class="uk-margin-bottom">
+                                            <label class="uk-form-label">Deskripsi</label>
+                                            <textarea class="uk-textarea" name="description" rows="4"><?= $coa['description'] ?></textarea>
+                                        </div>
+
+                                        <div class="uk-margin-bottom">
+                                            <label class="uk-form-label">Arsipkan Akun</label>
+                                            <label>
+                                                <input type="checkbox" name="status_active" value="0" <?= ($coa['status_active'] == 0 ? 'checked' : '') ?>>
+                                                <span class="uk-margin-small-left">Tandai sebagai arsip</span>
+                                            </label>
+                                        </div>
+
+                                        <hr>
+
+                                        <button type="submit" class="uk-button uk-button-primary">Simpan Perubahan</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 <?php } ?>
             </tbody>
         </table>

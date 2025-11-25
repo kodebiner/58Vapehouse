@@ -124,6 +124,28 @@ class Accountancy extends BaseController
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
+    public function updateAkunCOA($id)
+    {
+        $coaModel = new \App\Models\AccountancyCOAModel();
+
+        $coaModel->update($id, [
+            'cat_a_id'      => $this->request->getPost('category'),
+            'name'          => $this->request->getPost('name'),
+            'description'   => $this->request->getPost('description'),
+            'status_active' => $this->request->getPost('status_active') == "0" ? 0 : 1,
+        ]);
+
+        return redirect()->back()->with('success', 'Data berhasil diperbarui');
+    }
+
+    public function deleteAkunCOA($id)
+    {
+        $coaModel = new \App\Models\AccountancyCOAModel();
+        $coaModel->delete($id);
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus');
+    }
+
     public function asset()
     {
         // Calling Model
