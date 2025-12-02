@@ -7,6 +7,8 @@ use App\Models\SupplierModel;
 use App\Models\AccountancyContactModel;
 use App\Models\AccountancyCOAModel;
 use App\Models\AccountancyCategoryModel;
+use App\Models\AccountancyTaxModel;
+use App\Models\AccountancyEarlyFundsModel;
 
 class Accountancy extends BaseController
 {
@@ -110,7 +112,7 @@ class Accountancy extends BaseController
             'name'          => $input['name'],
             'cat_a_id'      => $input['category'],
             'description'   => $input['description'],
-            'status_lock'   => isset($input['status_lock']) ? 1 : 0,
+            'status_lock'   => isset($input['status_lock']) ? 0 : 1,
             'status_active' => 1,
         ];
 
@@ -144,6 +146,80 @@ class Accountancy extends BaseController
         $coaModel->delete($id);
 
         return redirect()->back()->with('success', 'Data berhasil dihapus');
+    }
+
+    public function earlyFunds()
+    {
+        // Calling Model
+        $AccountancyCOAModel        = new AccountancyCOAModel();
+        $AccountancyCategoryModel   = new AccountancyCategoryModel();
+
+        // Populating data
+        if (!empty($input)) {
+            $daterange  = explode(' - ', $input);
+            $startdate  = $daterange[0];
+            $enddate    = $daterange[1];
+        } else {
+            // $startdate  = date('Y-m-1' . ' 00:00:00');
+            // $enddate    = date('Y-m-t' . ' 23:59:59');
+            $startdate  = date('Y-m-d') . ' 00:00:00';
+            $enddate    = date('Y-m-d') . ' 23:59:59';
+        }
+        $coa = $AccountancyCOAModel
+            ->select("
+                accountancy_coa.*,
+                accountancy_categories.cat_code,
+                accountancy_categories.name as category_name,
+                accountancy_categories.cat_type,
+                CONCAT(accountancy_categories.cat_code, accountancy_coa.id) AS full_code
+            ")
+            ->join('accountancy_categories', 'accountancy_categories.id = accountancy_coa.cat_a_id')
+            ->orderBy('accountancy_categories.cat_code')
+            ->findAll();
+        
+        // Parsing data to view
+        $data                   = $this->data;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
+        $data['title']          = 'Saldo Awal - '.lang('Global.accountancyList');
+        $data['description']    = 'Saldo Awal '.lang('Global.accountancyListDesc');
+        $data['coa_list']       = $coa;
+
+        return view('Views/accountancy/early-funds', $data);
+    }
+
+    public function saveEarlyFunds()
+    {
+        $AccountancyEarlyFundsModel = new AccountancyEarlyFundsModel();
+
+        $convertDate = $this->request->getPost('convert_date');
+        $debits      = $this->request->getPost('debit_value');
+        $credits     = $this->request->getPost('credit_value');
+
+        if (!$convertDate) {
+            return redirect()->back()->with('error', 'Tanggal konversi wajib diisi.');
+        }
+
+        if (!is_array($debits)) {
+            return redirect()->back()->with('error', 'Data COA tidak ditemukan.');
+        }
+
+        foreach ($debits as $coaId => $debitValue) {
+            $debit  = floatval($debitValue);
+            $credit = floatval($credits[$coaId] ?? 0);
+
+            if ($debit == 0 && $credit == 0) {
+                continue;
+            }
+
+            $AccountancyEarlyFundsModel->insert([
+                'coa_a_id'     => $coaId,
+                'debit_value'  => $debit,
+                'credit_value' => $credit,
+            ]);
+        }
+
+        return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function asset()
@@ -349,6 +425,32 @@ class Accountancy extends BaseController
         return redirect()->back()->with('message', lang('Global.deleted'));
     }
 
+    public function tax()
+    {
+        // Calling Model
+
+        // Populating data
+        if (!empty($input)) {
+            $daterange  = explode(' - ', $input);
+            $startdate  = $daterange[0];
+            $enddate    = $daterange[1];
+        } else {
+            // $startdate  = date('Y-m-1' . ' 00:00:00');
+            // $enddate    = date('Y-m-t' . ' 23:59:59');
+            $startdate  = date('Y-m-d') . ' 00:00:00';
+            $enddate    = date('Y-m-d') . ' 23:59:59';
+        }
+        
+        // Parsing data to view
+        $data                   = $this->data;
+        $data['startdate']      = strtotime($startdate);
+        $data['enddate']        = strtotime($enddate);
+        $data['title']          = 'Pajak - '.lang('Global.accountancyList');
+        $data['description']    = 'Pajak '.lang('Global.accountancyListDesc');
+
+        return view('Views/accountancy/tax', $data);
+    }
+
     public function manualAccountingReconciliation()
     {
         // Calling Model
@@ -375,7 +477,7 @@ class Accountancy extends BaseController
         return view('Views/accountancy/manual-accounting-reconciliation', $data);
     }
 
-    public function budgetting()
+    public function budgeting()
     {
         // Calling Model
 
@@ -398,7 +500,7 @@ class Accountancy extends BaseController
         $data['title']          = 'Budgetting - '.lang('Global.accountancyList');
         $data['description']    = 'Budgetting '.lang('Global.accountancyListDesc');
 
-        return view('Views/accountancy/budegetting', $data);
+        return view('Views/accountancy/budegeting', $data);
     }
 
     public function transactionReport()

@@ -1363,7 +1363,7 @@
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['akuncoa','asset','closing-entries','contact','manual-accounting-reconciliation','budgetting'])) ? 'uk-active' : '' ?>">
+                                    <li class="tm-h4 <?= ($uri->getSegment(1)==='accountancy' && in_array($uri->getSegment(2),['akuncoa','asset','closing-entries','contact','tax','manual-accounting-reconciliation','budgetting'])) ? 'uk-active' : '' ?>">
                                         <a href="#" uk-toggle="target: #dropdown-master-data">Master Data</a>
                                         <div id="dropdown-master-data" class="uk-dropdown uk-dropdown-right uk-padding-small" style="background: #000; color: #fff;" hidden>
                                             <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -1378,6 +1378,9 @@
                                                 </li>
                                                 <li class="tm-h4 <?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='contact')?'uk-active':''?>">
                                                     <a href="<?= base_url('accountancy/contact') ?>">Kontak</a>
+                                                </li>
+                                                <li class="tm-h4 <?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='tax')?'uk-active':''?>">
+                                                    <a href="<?= base_url('accountancy/tax') ?>">Pajak</a>
                                                 </li>
                                                 <li class="tm-h4 <?=($uri->getSegment(1)==='accountancy')&&($uri->getSegment(2)==='manual-accounting-reconciliation')?'uk-active':''?>">
                                                     <a href="<?= base_url('accountancy/manual-accounting-reconciliation') ?>">Rekonsiliasi Transaksi Manual</a>

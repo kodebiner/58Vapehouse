@@ -27,7 +27,7 @@
 
                 <!-- Button Trigger Modal Atur Saldo -->
                 <div class="uk-margin">
-                    <a href="accountancy/akuncoa/" class="uk-button uk-button-secondary uk-preserve-color">Atur Saldo Awal</a>
+                    <a href="accountancy/akuncoa/early-funds" class="uk-button uk-button-secondary uk-preserve-color">Atur Saldo Awal</a>
                 </div>
             </div>
         </div>
@@ -114,7 +114,7 @@
 
                                 $("#status_lock").change(function() {
                                     const checked = $(this).is(':checked');
-                                    $("#status_lock_val").val(checked ? "1" : "0");
+                                    $("#status_lock_val").val(checked ? "0" : "1");
 
                                     if (checked) {
                                         $("#icon_lock").css("color", "#39f");

@@ -1343,9 +1343,7 @@ class Product extends BaseController
 
     public function history($id)
     {
-        // buat safety: kalau kamu mau debug sementara, bisa naikkan max exec time
-        // ini opsional: ini_set('max_execution_time', 300);
-
+        // Services
         $pager = \Config\Services::pager();
 
         // Models
@@ -1378,14 +1376,12 @@ class Product extends BaseController
         $product = $ProductModel->find($variant['productid'] ?? null);
         $name = !empty($product) ? ($product['name'].' - '.$variant['name']) : ('Produk Terhapus - '.$variant['name']);
         $sku = $variant['sku'] ?? '';
-
-        // date range (default 7 hari supaya tidak overload)
+        
         if (!empty($input['daterange'])) {
             $daterange = explode(' - ', $input['daterange']);
             $startdate = $daterange[0];
             $enddate   = $daterange[1];
         } else {
-            // default 7 hari terakhir — kamu bisa ubah sesuai kebutuhan
             $startdate = date('Y-m-l 00:00:00');
             $enddate   = date('Y-m-d 23:59:59');
         }
@@ -1394,17 +1390,7 @@ class Product extends BaseController
         $stock = $StockModel->where('variantid', $id)->where('outletid', $this->data['outletPick'])->first();
         $stocknow = !empty($stock) ? ($stock['qty'] ?? 0) : 0;
 
-        //
-        // STRATEGI:
-        // Untuk setiap kategori (adjustment, movement in/out, trx, purchase)
-        // 1) ambil event yang MELIBATKAN variant ini (join ke detail table / where variantid = $id)
-        // 2) kumpulkan ID event (mis. transaction.id, stockmove.id, purchase.id, stockadjust.id)
-        // 3) ambil semua detail untuk event-event itu dengan 1 query (join variant+product) -> build detail map
-        // 4) push per-event ke $historydata[] (bukan keyed by date)
-        //
-
         // ---------- 1) STOCK ADJUSTMENTS ----------
-        // Adjustment biasanya per variant, jadi kita join variant/product langsung
         $stockAdjRows = $StockAdjustmentModel
             ->select('stockadjustment.* , variant.sku as variant_sku, variant.name as variant_name, product.name as product_name')
             ->join('variant', 'variant.id = stockadjustment.variantid', 'left')
@@ -1418,7 +1404,6 @@ class Product extends BaseController
 
         if (!empty($stockAdjRows)) {
             foreach ($stockAdjRows as $sa) {
-                // safe user/outlet
                 $outletName = '-';
                 $userName = '-';
                 if (!empty($sa['outletid'])) {
@@ -1437,7 +1422,6 @@ class Product extends BaseController
                 $qtyHtml = ($sa['type'] == '0') ? ('<div style="color: green">+' . $sa['qty'] . '</div>') : ('<div style="color: red">-' . $sa['qty'] . '</div>');
 
                 $detail = [];
-                // because we joined variant/product above, we can fill detail from row
                 $detail[$sa['id']] = [
                     'sku' => $sa['variant_sku'] ?? ($variant['sku'] ?? ''),
                     'name'=> !empty($sa['product_name']) ? ($sa['product_name'].' - '.($sa['variant_name'] ?? '')) : ($name),
@@ -1457,7 +1441,6 @@ class Product extends BaseController
         }
 
         // ---------- 2) STOCK MOVEMENTS IN ----------
-        // Ambil stockmove yang MELIBATKAN variant ini dan destination = outletPick
         $stockMoveInRows = $StockMoveDetailModel
             ->select('stockmovedetail.*, stockmovement.date as sm_date, stockmovement.origin as sm_origin, stockmovement.destination as sm_destination, stockmovement.sender as sm_sender, stockmovement.receiver as sm_receiver, stockmovement.id as sm_id')
             ->join('stockmovement', 'stockmovement.id = stockmovedetail.stockmoveid', 'left')
@@ -1469,12 +1452,10 @@ class Product extends BaseController
             ->orderBy('stockmovement.date', 'DESC')
             ->findAll();
 
-        // collect stockmove ids
         $smInIds = [];
         foreach ($stockMoveInRows as $r) {
             $smInIds[$r['sm_id']] = $r['sm_id'];
         }
-        // build detail map for these stockmove ids (all items in the movement)
         $smInDetailsMap = [];
         if (!empty($smInIds)) {
             $allSmDetails = $StockMoveDetailModel
@@ -1493,10 +1474,8 @@ class Product extends BaseController
             }
         }
 
-        // now push each filtered row as event (each row corresponds to variant-specific qty inside movement)
         if (!empty($stockMoveInRows)) {
             foreach ($stockMoveInRows as $r) {
-                // fetch origin/destination/user names safely
                 $originName = '-';
                 $destName = '-';
                 $senderName = '-';
@@ -1609,7 +1588,6 @@ class Product extends BaseController
         }
 
         // ---------- 4) TRANSACTIONS (Sales) ----------
-        // 1) ambil transaction ids yang ada variant ini
         $trxWithVariant = $TrxdetailModel
             ->select('trxdetail.transactionid')
             ->join('transaction', 'transaction.id = trxdetail.transactionid', 'left')
@@ -1626,7 +1604,6 @@ class Product extends BaseController
             $trxIds[] = $r['transactionid'];
         }
 
-        // ambil semua trxdetail untuk trxIds (detail semua item di transaksi itu)
         $trxDetailsMap = [];
         if (!empty($trxIds)) {
             $allTrxDetails = $TrxdetailModel
@@ -1646,17 +1623,13 @@ class Product extends BaseController
                     'qty' => $d['qty'],
                 ];
             }
-
-            // buat event per transaction but only for those where variant appears: we need qty of the variant per transaction
-            // fetch transaction rows for necessary ids to get date/outlet/user
+            
             $trxRows = $TransactionModel
                 ->whereIn('id', $trxIds)
                 ->orderBy('date', 'DESC')
                 ->findAll();
 
             foreach ($trxRows as $trx) {
-                // find the qty of THIS variant in this trx (search in trxdetail table)
-                // since we previously selected trxdetail rows where variantid = $id we can query that quickly
                 $variantDetailRows = $TrxdetailModel->where('transactionid', $trx['id'])->where('variantid', $id)->findAll();
                 if (empty($variantDetailRows)) continue;
                 foreach ($variantDetailRows as $vd) {
@@ -1685,7 +1658,6 @@ class Product extends BaseController
         }
 
         // ---------- 5) PURCHASES ----------
-        // Mirip transaksi: ambil purchase ids yang ada variant ini
         $purWithVariant = $PurchasedetailModel
             ->select('purchasedetail.purchaseid')
             ->join('purchase', 'purchase.id = purchasedetail.purchaseid', 'left')
@@ -1721,7 +1693,6 @@ class Product extends BaseController
                 ];
             }
 
-            // events per purchase (only for purchases that include our variant)
             $purRows = $PurchaseModel->whereIn('id', $purIds)->orderBy('date', 'DESC')->findAll();
             foreach ($purRows as $pur) {
                 $pdRows = $PurchasedetailModel->where('purchaseid', $pur['id'])->where('variantid', $id)->findAll();
@@ -1763,7 +1734,7 @@ class Product extends BaseController
         $total = count($historydata);
         $slice = array_slice($historydata, ($page - 1) * $perPage, $perPage);
 
-        // prepare view data
+        // Parsing Data to View
         $data = $this->data;
         $data['title'] = lang('Global.productList');
         $data['description'] = lang('Global.productListDesc');
