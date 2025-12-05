@@ -213,8 +213,8 @@
                                             <select class="uk-select" name="category" id="category_edit_<?= $coa['id'] ?>" required>
                                                 <?php foreach ($categories as $category) { ?>
                                                     <option value="<?= $category['id'] ?>" 
-                                                            data-code="<?= $category['cat_code'] ?>"
-                                                            <?= ($coa['cat_a_id'] == $category['id']) ? 'selected' : '' ?>>
+                                                        data-code="<?= $category['cat_code'] ?>"
+                                                        <?= ($coa['cat_a_id'] == $category['id']) ? 'selected' : '' ?>>
                                                         <?= $category['name'] ?>
                                                     </option>
                                                 <?php } ?>

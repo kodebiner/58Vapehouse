@@ -67,39 +67,15 @@
                             </div>
                         </div>
 
-                        <script>
-                            $(document).ready(function() {
-                                $("#tax_cut_status").change(function() {
-                                    $("#tax_cut_status_val").val($(this).is(":checked") ? "1" : "0");
-                                });
-                            });
-
-                            $(document).ready(function() {
-                                const wrapper = $("#tax-cut-wrapper");
-                                const sellDiv = wrapper.find(".tax-sell");
-                                const buyDiv  = wrapper.find(".tax-buy");
-
-                                function reorderFields() {
-                                    const status = $("#tax_cut_status_val").val();
-                                    if (status === "1") {
-                                        buyDiv.insertBefore(sellDiv);
-                                    } else {
-                                        sellDiv.insertBefore(buyDiv);
-                                    }
-                                }
-                                $("#tax_cut_status").change(function() {
-                                    $("#tax_cut_status_val").val($(this).is(":checked") ? "1" : "0");
-                                    reorderFields();
-                                });
-                                reorderFields();
-                            });
-                        </script>
-
                         <div id="tax-cut-wrapper">
                             <div class="uk-margin-bottom tax-sell">
                                 <label class="uk-form-label" for="tax_cut_sell">Akun Pajak Saat Penjualan</label>
                                 <div class="uk-form-controls">
-                                    <select class="uk-select" id="tax_cut_sell" name="tax_cut_sell" required>
+                                    <select class="uk-select" 
+                                        id="tax_cut_sell" 
+                                        name="tax_cut_sell"
+                                        data-options='<?= json_encode($coas1) ?>'
+                                        required>
                                         <?php foreach ($coas1 as $coa1) { ?>
                                             <option value="<?= $coa1['id'] ?>" data-code="<?= $coa1['cat_a_id'] ?>">
                                                 <?= $coa1['name'] ?>
@@ -111,7 +87,11 @@
                             <div class="uk-margin-bottom tax-buy">
                                 <label class="uk-form-label" for="tax_cut_buy">Akun Pajak Saat Pembelian</label>
                                 <div class="uk-form-controls">
-                                    <select class="uk-select" id="tax_cut_buy" name="tax_cut_buy" required>
+                                    <select class="uk-select" 
+                                        id="tax_cut_buy" 
+                                        name="tax_cut_buy"
+                                        data-options='<?= json_encode($coas2) ?>'
+                                        required>
                                         <?php foreach ($coas2 as $coa2) { ?>
                                             <option value="<?= $coa2['id'] ?>" data-code="<?= $coa2['cat_a_id'] ?>">
                                                 <?= $coa2['name'] ?>
@@ -121,6 +101,69 @@
                                 </div>
                             </div>
                         </div>
+
+                        <script>
+                            $(document).ready(function () {
+
+                                const sellWrapper = $(".tax-sell");
+                                const buyWrapper  = $(".tax-buy");
+
+                                const sellLabel  = sellWrapper.find("label[for='tax_cut_sell']");
+                                const buyLabel   = buyWrapper.find("label[for='tax_cut_buy']");
+
+                                const sellSelect = $("#tax_cut_sell");
+                                const buySelect  = $("#tax_cut_buy");
+
+                                const coas1 = JSON.parse(sellSelect.attr("data-options"));
+                                const coas2 = JSON.parse(buySelect.attr("data-options"));
+
+                                function fillOptions(select, list) {
+                                    select.empty();
+                                    list.forEach(item => {
+                                        select.append(
+                                            `<option value="${item.id}" data-code="${item.cat_a_id}">${item.name}</option>`
+                                        );
+                                    });
+                                }
+
+                                function applyMode() {
+                                    const isCut = $("#tax_cut_status").is(":checked");
+
+                                    if (!isCut) {
+                                        // Urutan: SELL → BUY
+                                        $("#tax-cut-wrapper").append(sellWrapper);
+                                        $("#tax-cut-wrapper").append(buyWrapper);
+
+                                        sellLabel.text("Akun Pajak Saat Penjualan");
+                                        buyLabel.text("Akun Pajak Saat Pembelian");
+
+                                        fillOptions(sellSelect, coas1);
+                                        fillOptions(buySelect, coas2);
+
+                                    } else {
+                                        // === MODE PEMOTONGAN ===
+                                        // Urutan: BUY → SELL
+                                        $("#tax-cut-wrapper").append(buyWrapper);
+                                        $("#tax-cut-wrapper").append(sellWrapper);
+
+                                        // Label ikut berubah posisi
+                                        buyLabel.text("Akun Pajak Saat Pembelian");
+                                        sellLabel.text("Akun Pajak Saat Penjualan");
+
+                                        // Swap isi sesuai posisi barunya:
+                                        fillOptions(buySelect, coas1);
+                                        fillOptions(sellSelect, coas2);
+                                    }
+                                }
+
+                                $("#tax_cut_status").on("change", function () {
+                                    applyMode();
+                                });
+
+                                // initial load
+                                applyMode();
+                            });
+                        </script>
 
                         <hr>
 

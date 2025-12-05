@@ -246,11 +246,17 @@ class Accountancy extends BaseController
         $AccountancyCOAModel        = new AccountancyCOAModel();
 
         // Populating data
+        $assets                 = $AccountancyAssetModel->findAll();
+        $coas1                  = $AccountancyCOAModel->findAll();
+        $coas2                  = $AccountancyCOAModel->findAll();
         
         // Parsing data to view
         $data                   = $this->data;
         $data['title']          = 'Asset - '.lang('Global.accountancyList');
         $data['description']    = 'Asset '.lang('Global.accountancyListDesc');
+        $data['assets']         = $assets;
+        $data['coas1']          = $coas1;
+        $data['coas2']          = $coas2;
 
         return view('Views/accountancy/asset', $data);
     }
