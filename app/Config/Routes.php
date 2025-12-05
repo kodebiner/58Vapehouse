@@ -339,6 +339,8 @@ $routes->group('accountancy', ['filter'=>'login'], function($routes){
 
     // Tax
     $routes->get('tax', 'Accountancy::tax', ['filter' => 'role:owner,supervisor']);
+    $routes->post('tax/create', 'Accountancy::taxCreate', ['filter' => 'role:owner,supervisor']);
+    $routes->get('tax/delete/(:num)', 'Accountancy::taxDelete/$1', ['filter' => 'role:owner,supervisor']);
 
     // Manual Accounting Reconciliation
     $routes->get('manual-accounting-reconciliation', 'Accountancy::manualAccountingReconciliation', ['filter' => 'role:owner,supervisor']);
