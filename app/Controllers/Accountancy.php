@@ -3,15 +3,32 @@
 namespace App\Controllers;
 use App\Models\OutletModel;
 use App\Models\UserModel;
+use App\Models\GroupUserModel;
+use Myth\Auth\Models\GroupModel;
+use App\Models\OutletaccessModel;
 use App\Models\SupplierModel;
 use App\Models\AccountancyContactModel;
 use App\Models\AccountancyCOAModel;
 use App\Models\AccountancyCategoryModel;
 use App\Models\AccountancyTaxModel;
 use App\Models\AccountancyEarlyFundsModel;
+use App\Models\AccountancyAssetModel;
 
 class Accountancy extends BaseController
 {
+    protected $data;
+    protected $db, $builder;
+    protected $auth;
+    protected $config;
+
+    public function __construct()
+    {
+        $this->db       = \Config\Database::connect();
+        $validation     = \Config\Services::validation();
+        $this->builder  = $this->db->table('users');
+        $this->config   = config('Auth');
+        $this->auth     = service('authentication');
+    }
     public function dashboard()
     {
         // Calling Model
@@ -225,23 +242,13 @@ class Accountancy extends BaseController
     public function asset()
     {
         // Calling Model
+        $AccountancyAssetModel      = new AccountancyAssetModel();
+        $AccountancyCOAModel        = new AccountancyCOAModel();
 
         // Populating data
-        if (!empty($input)) {
-            $daterange  = explode(' - ', $input);
-            $startdate  = $daterange[0];
-            $enddate    = $daterange[1];
-        } else {
-            // $startdate  = date('Y-m-1' . ' 00:00:00');
-            // $enddate    = date('Y-m-t' . ' 23:59:59');
-            $startdate  = date('Y-m-d') . ' 00:00:00';
-            $enddate    = date('Y-m-d') . ' 23:59:59';
-        }
         
         // Parsing data to view
         $data                   = $this->data;
-        $data['startdate']      = strtotime($startdate);
-        $data['enddate']        = strtotime($enddate);
         $data['title']          = 'Asset - '.lang('Global.accountancyList');
         $data['description']    = 'Asset '.lang('Global.accountancyListDesc');
 
@@ -428,28 +435,53 @@ class Accountancy extends BaseController
     public function tax()
     {
         // Calling Model
+        $AccountancyTaxModel       = new AccountancyTaxModel();
+        $AccountancyCOAModel       = new AccountancyCOAModel();
 
         // Populating data
-        if (!empty($input)) {
-            $daterange  = explode(' - ', $input);
-            $startdate  = $daterange[0];
-            $enddate    = $daterange[1];
-        } else {
-            // $startdate  = date('Y-m-1' . ' 00:00:00');
-            // $enddate    = date('Y-m-t' . ' 23:59:59');
-            $startdate  = date('Y-m-d') . ' 00:00:00';
-            $enddate    = date('Y-m-d') . ' 23:59:59';
-        }
+        $coas1 = $AccountancyCOAModel->findAll();
+        $coas2 = $AccountancyCOAModel->findAll();
+        // $coas = $AccountancyCOAModel->findAll();
+        $taxes = $AccountancyTaxModel->orderBy('name', 'ASC')->findAll();
         
         // Parsing data to view
         $data                   = $this->data;
-        $data['startdate']      = strtotime($startdate);
-        $data['enddate']        = strtotime($enddate);
         $data['title']          = 'Pajak - '.lang('Global.accountancyList');
         $data['description']    = 'Pajak '.lang('Global.accountancyListDesc');
+        // $data['coas']           = $coas;
+        $data['coas1']          = $coas1;
+        $data['coas2']          = $coas2;
+        $data['taxes']          = $taxes;
 
         return view('Views/accountancy/tax', $data);
     }
+
+    public function taxCreate()
+    {
+        $AccountancyTaxModel = new AccountancyTaxModel();
+
+        $data = [
+            'name'            => $this->request->getPost('name'),
+            'value'           => $this->request->getPost('value'),
+            'tax_cut_status'  => $this->request->getPost('tax_cut_status'),
+            'tax_cat_sell'    => $this->request->getPost('tax_cut_sell'),
+            'tax_cat_buy'     => $this->request->getPost('tax_cut_buy'),
+        ];
+
+        $AccountancyTaxModel->insert($data);
+
+        return redirect()->back()->with('success', 'Data pajak berhasil ditambahkan.');
+    }
+
+    public function taxDelete($id)
+    {
+        $AccountancyTaxModel = new AccountancyTaxModel();
+
+        $AccountancyTaxModel->delete($id);
+
+        return redirect()->back()->with('success', 'Data pajak berhasil dihapus.');
+    }
+
 
     public function manualAccountingReconciliation()
     {
@@ -782,25 +814,31 @@ class Accountancy extends BaseController
     public function employee()
     {
         // Calling Model
+        $GroupModel             = new GroupModel();
+        $OutletModel            = new OutletModel();
+        $OutletAccessModel      = new OutletaccessModel();
+        $GroupUserModel         = new GroupUserModel();
 
         // Populating data
-        if (!empty($input)) {
-            $daterange  = explode(' - ', $input);
-            $startdate  = $daterange[0];
-            $enddate    = $daterange[1];
-        } else {
-            // $startdate  = date('Y-m-1' . ' 00:00:00');
-            // $enddate    = date('Y-m-t' . ' 23:59:59');
-            $startdate  = date('Y-m-d') . ' 00:00:00';
-            $enddate    = date('Y-m-d') . ' 23:59:59';
+        $this->builder->where('deleted_at', null);
+        $this->builder->join('auth_groups_users', 'auth_groups_users.user_id = users.id');
+        $this->builder->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id');
+        if ($this->data['role'] === 'supervisor') {
+            $this->builder->where('auth_groups.name', 'operator');
         }
+        $this->builder->where('users.id !=', $this->data['uid']);
+        $this->builder->select('users.id as id, users.username as username, users.firstname as firstname, users.lastname as lastname, users.email as email, users.phone as phone, auth_groups.id as group_id, auth_groups.name as role');
+        $query =   $this->builder->get();
         
         // Parsing data to view
         $data                   = $this->data;
-        $data['startdate']      = strtotime($startdate);
-        $data['enddate']        = strtotime($enddate);
         $data['title']          = 'Karyawan - '.lang('Global.accountancyList');
         $data['description']    = 'Karyawan '.lang('Global.accountancyListDesc');
+        $data['roles']          = $GroupModel->findAll();
+        $data['users']          = $query->getResult();
+        $data['outlets']        = $OutletModel->findAll();
+        $data['outletAccess']   = $OutletAccessModel->findAll();
+        $data['groups']         = $GroupUserModel->findAll();
 
         return view('Views/accountancy/employee', $data);
     }
