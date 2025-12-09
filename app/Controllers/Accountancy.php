@@ -59,12 +59,14 @@ class Accountancy extends BaseController
     {
         // Calling Model
         $AccountancyCOAModel        = new AccountancyCOAModel();
-        $AccountancyContact         = new AccountancyContactModel();
+        $AccountancyContactModel    = new AccountancyContactModel();
+        $AccountancyTaxModel        = new AccountancyTaxModel();
 
         // Populating data
         $debitCoas  = $AccountancyCOAModel->findAll();
         $creditCoas = $AccountancyCOAModel->findAll();
-        $contacts   = $AccountancyContact->findAll();
+        $contacts   = $AccountancyContactModel->findAll();
+        $taxes      = $AccountancyTaxModel->findAll();
         
         // Parsing data to view
         $data                   = $this->data;
@@ -73,6 +75,7 @@ class Accountancy extends BaseController
         $data['debitCoas']      = $debitCoas;
         $data['creditCoas']     = $creditCoas;
         $data['contacts']       = $contacts;
+        $data['taxes']          = $taxes;
 
         return view('Views/accountancy/transaction', $data);
     }
