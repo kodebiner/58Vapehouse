@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class AccountancyCOAModel extends Model
 {
     protected $allowedFields = [
-        'cat_a_id','name','description','status_lock','status_active'
+        'cat_a_id','outletid','name','description','status_lock','status_active'
 
     ];
 

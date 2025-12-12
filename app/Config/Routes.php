@@ -328,6 +328,8 @@ $routes->group('accountancy', ['filter'=>'login'], function($routes){
     // Asset
     $routes->get('asset', 'Accountancy::asset', ['filter' => 'role:owner,supervisor']);
     $routes->post('asset/create', 'Accountancy::assetCreate', ['filter' => 'role:owner,supervisor']);
+    $routes->post('asset/update/(:num)', 'Accountancy::assetUpdate/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->get('asset/delete/(:num)', 'Accountancy::assetDelete/$1', ['filter' => 'role:owner,supervisor']);
 
     // Closing Entries
     $routes->get('closing-entries', 'Accountancy::closingEntries', ['filter' => 'role:owner,supervisor']);

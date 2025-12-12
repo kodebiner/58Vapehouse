@@ -82,36 +82,51 @@ class Accountancy extends BaseController
 
     public function akuncoa()
     {
-        // Calling Model
-        $AccountancyCOAModel        = new AccountancyCOAModel();
-        $AccountancyCategoryModel   = new AccountancyCategoryModel();
+        // Services
+        $db = \Config\Database::connect();
+        
+        // Populating Data
+        $query = $db->table('accountancy_coa AS c')
+            ->select('
+                c.id,
+                c.name,
+                c.description,
+                c.status_lock,
+                c.status_active,
+                c.cat_a_id,
+                cat.cat_code,
+                cat.name AS category_name,
+                cat.cat_type,
+                o.name AS outlet_name
+            ')
+            ->join('accountancy_categories AS cat', 'cat.id = c.cat_a_id')
+            ->join('outlet AS o', 'o.id = c.outletid')
+            ->orderBy('c.cat_a_id', 'ASC')
+            ->orderBy('c.name', 'ASC')
+            ->get()
+            ->getResultArray();
 
-        // Populating data
-        $coas           = [];
-        $akuncoa        = $AccountancyCOAModel->orderBy('name', 'ASC')->findAll();
-        $categories     = $AccountancyCategoryModel->orderBy('id', 'ASC')->findAll();
-        foreach ($akuncoa as $coa) {
-            $category       = $AccountancyCategoryModel->find($coa['cat_a_id']);
-            $coas[]  = [
-                'id'            => $coa['id'],
-                'kode'          => $category['cat_code'].$coa['id'],
-                'cat_a_id'      => $category['id'],
-                'category'      => $category['name'],
-                'coa_type'      => $category['cat_type'],
-                'name'          => $coa['name'],
-                'description'   => $coa['description'],
-                'status_lock'   => $coa['status_lock'],
-                'status_active' => $coa['status_active'],
+        $coas = [];
+        foreach ($query as $row) {
+            $coas[] = [
+                'id'            => $row['id'],
+                'kode'          => $row['cat_code'].$row['id'],
+                'cat_a_id'      => $row['cat_a_id'],
+                'category'      => $row['category_name'],
+                'coa_type'      => $row['cat_type'],
+                'name'          => $row['name'].' - '.str_replace('58 Vapehouse ','',$row['outlet_name']),
+                'description'   => $row['description'],
+                'status_lock'   => $row['status_lock'],
+                'status_active' => $row['status_active'],
             ];
         }
-        array_multisort(array_column($coas, 'cat_a_id'), SORT_ASC, $coas);
         
         // Parsing data to view
-        $data                   = $this->data;
-        $data['coas']           = $coas;
-        $data['categories']     = $categories;
-        $data['title']          = 'Akun (COA) - '.lang('Global.accountancyList');
-        $data['description']    = 'Akun (COA) '.lang('Global.accountancyListDesc');
+        $data                = $this->data;
+        $data['coas']        = $coas;
+        $data['categories']  = (new AccountancyCategoryModel())->orderBy('id','ASC')->findAll();
+        $data['title']       = 'Akun (COA) - '.lang('Global.accountancyList');
+        $data['description'] = 'Akun (COA) '.lang('Global.accountancyListDesc');
 
         return view('Views/accountancy/akuncoa', $data);
     }
@@ -119,32 +134,52 @@ class Accountancy extends BaseController
     public function createAkunCOA()
     {
         // Calling Model
-        $AccountancyCOAModel   = new AccountancyCOAModel();
-        
-        // Defining input
-        $input = $this->request->getPost();
+        $AccountancyCOAModel    = new AccountancyCOAModel();
+        $OutletModel            = new OutletModel();
 
-        $data = [
-            'name'          => $input['name'],
-            'cat_a_id'      => $input['category'],
-            'description'   => $input['description'],
-            'status_lock'   => isset($input['status_lock']) ? 0 : 1,
-            'status_active' => 1,
-        ];
+        // Populating Data
+        $input                  = $this->request->getPost();
+        $outlets                = $OutletModel->findAll();
 
+        // Validation
         if (!$this->validate([
-            'name'      => "required|max_length[255]",
-        ])) { return redirect()->back()->withInput()->with('errors', $this->validator->getErrors()); }
+            'name' => "required|max_length[255]",
+        ])) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
 
-        // Inserting COA
-        $AccountancyCOAModel->insert($data);
+        if ($this->data['outletPick'] === null) {
+            foreach ($outlets as $outlet) {
+                $data = [
+                    'name'          => $input['name'],
+                    'cat_a_id'      => $input['category'],
+                    'outletid'      => $outlet['id'],
+                    'description'   => $input['description'],
+                    'status_lock'   => isset($input['status_lock']) ? 0 : 1,
+                    'status_active' => 1,
+                ];
+
+                $AccountancyCOAModel->insert($data);
+            }
+        } else {
+            $data = [
+                'name'          => $input['name'],
+                'cat_a_id'      => $input['category'],
+                'outletid'      => $this->data['outletPick'],
+                'description'   => $input['description'],
+                'status_lock'   => isset($input['status_lock']) ? 0 : 1,
+                'status_active' => 1,
+            ];
+
+            $AccountancyCOAModel->insert($data);
+        }
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }
 
     public function updateAkunCOA($id)
     {
-        $coaModel = new \App\Models\AccountancyCOAModel();
+        $coaModel = new AccountancyCOAModel();
 
         $coaModel->update($id, [
             'cat_a_id'      => $this->request->getPost('category'),
@@ -241,23 +276,226 @@ class Accountancy extends BaseController
     public function asset()
     {
         // Calling Model
-        $AccountancyAssetModel      = new AccountancyAssetModel();
-        $AccountancyCOAModel        = new AccountancyCOAModel();
+        $AccountancyAssetModel    = new AccountancyAssetModel();
+        $AccountancyCOAModel      = new AccountancyCOAModel();
+        $AccountancyTaxModel      = new AccountancyTaxModel();
+        $AccountancyCategoryModel = new AccountancyCategoryModel();
 
         // Populating data
-        $assets                 = $AccountancyAssetModel->findAll();
-        $coas1                  = $AccountancyCOAModel->findAll();
-        $coas2                  = $AccountancyCOAModel->findAll();
+        $cleanOutlet = function($name) {
+            return preg_replace('/^58 Vapehouse\s*/i', '', $name);
+        };
+        $outlets = [];
+        foreach ((new OutletModel())->findAll() as $o) {
+            $outlets[$o['id']] = $cleanOutlet($o['name']);
+        }
+        $coas = $AccountancyCOAModel->findAll();
+        $filterCoaByCat = function($catId) use ($coas, $outlets) {
+            $result = [];
+            foreach ($coas as $c) {
+                if ($c['cat_a_id'] == $catId) {
+                    $result[] = [
+                        'id'       => $c['id'],
+                        'name'     => $c['name'] . ' - ' . ($outlets[$c['outletid']] ?? ''),
+                        'cat_a_id' => $c['cat_a_id'],
+                        'cat_type' => $c['cat_type'] ?? null,
+                    ];
+                }
+            }
+            return $result;
+        };
+        $katHartap       = 5;
+        $katPenyusutan   = 14;
+        $katDepresiasi   = 6;
         
         // Parsing data to view
         $data                   = $this->data;
-        $data['title']          = 'Asset - '.lang('Global.accountancyList');
-        $data['description']    = 'Asset '.lang('Global.accountancyListDesc');
-        $data['assets']         = $assets;
-        $data['coas1']          = $coas1;
-        $data['coas2']          = $coas2;
+        $data['title']          = 'Asset - ' . lang('Global.accountancyList');
+        $data['description']    = 'Asset ' . lang('Global.accountancyListDesc');
+        $data['assets']         = $AccountancyAssetModel->findAll();
+        $data['coahartaps']     = $filterCoaByCat($katHartap);
+        $data['allcoas']        = array_map(function($c) use ($outlets) {
+            return [
+                'id'       => $c['id'],
+                'name'     => $c['name'] . ' - ' . ($outlets[$c['outletid']] ?? ''),
+                'cat_a_id' => $c['cat_a_id'],
+            ];
+        }, $coas);
+        $data['weights']        = $filterCoaByCat($katPenyusutan);
+        $data['coadepreciation']= $filterCoaByCat($katDepresiasi);
+        $data['taxes']          = $AccountancyTaxModel->findAll();
 
         return view('Views/accountancy/asset', $data);
+    }
+    
+    public function createAsset()
+    {
+        // Calling Model
+        $AssetModel = new \App\Models\AccountancyAssetModel();
+        // Model yang mungkin dibutuhkan lainnya (seperti untuk validasi outlet atau transaksi jurnal)
+        // $OutletModel = new \App\Models\OutletModel(); 
+
+        // Mengambil Data dari POST
+        $input = $this->request->getPost();
+        
+        // Asumsi: Jika ada logika yang memerlukan loop per outlet, ini perlu dipertimbangkan.
+        // Untuk saat ini, saya fokus pada data aset itu sendiri.
+
+        // Menangani File Upload
+        $imageFile = $this->request->getFile('image_asset');
+        $imageName = null;
+
+        if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
+            $imageName = $imageFile->getRandomName();
+            $imageFile->move(ROOTPATH . 'public/uploads/assets', $imageName); // Sesuaikan path jika perlu
+        }
+
+        // Validasi Sederhana
+        if (!$this->validate([
+            'date'                  => 'required|valid_date',
+            'code_asset'            => 'required|max_length[255]',
+            'name'                  => 'required|max_length[255]',
+            'cat_asset_tetap'       => 'required|integer',
+            'value_asset_tetap'     => 'required|numeric|greater_than_equal_to[0]',
+            'cat_asset_credit'      => 'required|integer',
+            // Tambahkan validasi lain sesuai kebutuhan
+        ])) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Menyiapkan data aset
+        $depreciation_status = isset($input['depreciation_status']);
+
+        $data = [
+            'date'                      => $input['date'],
+            'code_asset'                => $input['code_asset'],
+            'name'                      => $input['name'],
+            'description'               => $input['description'] ?? null,
+            'cat_asset_tetap'           => $input['cat_asset_tetap'],
+            'value_asset_tetap'         => $input['value_asset_tetap'],
+            'cat_tax'                   => $input['cat_tax'] ?? null,
+            'value_tax'                 => $input['value_tax'] ?? 0,
+            'cat_asset_credit'          => $input['cat_asset_credit'],
+            'image'                     => $imageName, // Nama file gambar
+            'depreciation_status'       => $depreciation_status ? 1 : 0,
+            
+            // Data Penyusutan (hanya diisi jika depreciation_status dicentang)
+            'depreciation_method'       => $depreciation_status ? ($input['depreciation_method'] ?? 'straight_line') : null,
+            'depreciation_residu'       => $depreciation_status ? ($input['depreciation_residu'] ?? 0) : 0,
+            'depreciation_benefit_era'  => $depreciation_status ? ($input['depreciation_benefit_era'] ?? 0) : 0,
+            'depreciation_cat_penyusutan' => $depreciation_status ? ($input['depreciation_cat_penyusutan'] ?? null) : null,
+            'depreciation_sum_cat_penyusutan' => $depreciation_status ? ($input['depreciation_sum_cat_penyusutan'] ?? null) : null,
+            
+            // Asumsi nilai-nilai default/wajib lainnya
+            'outletid'                  => $this->data['outletPick'] ?? null, // Sesuaikan dengan logika otentikasi/pemilihan outlet Anda
+            'status_active'             => 1, 
+            'status_lock'               => 1, // Asumsi aset baru defaultnya aktif/terkunci
+        ];
+
+        // Simpan data ke database
+        $AssetModel->insert($data);
+        
+        // Logika Jurnal Akuntansi (Penting, tapi tidak termasuk di sini)
+        // Setelah insert, biasanya Anda akan memproses jurnal akuntansi:
+        // Debet: Akun Asset Tetap ($data['cat_asset_tetap']) - Sebesar $data['value_asset_tetap']
+        // Debet: Akun Pajak ($data['cat_tax']) - Sebesar $data['value_tax'] (jika ada)
+        // Kredit: Akun Dikreditkan ($data['cat_asset_credit']) - Sebesar total (value_asset_tetap + value_tax)
+
+        return redirect()->back()->with('message', lang('Global.saved'));
+    }
+    
+    public function updateAsset($id)
+    {
+        $AssetModel = new \App\Models\AccountancyAssetModel();
+        $input = $this->request->getPost();
+        
+        // Ambil data aset lama untuk cek gambar
+        $oldAsset = $AssetModel->find($id);
+
+        if (!$oldAsset) {
+            return redirect()->back()->with('error', 'Aset tidak ditemukan.');
+        }
+
+        // Menangani File Upload
+        $imageFile = $this->request->getFile('image_asset');
+        $imageName = $oldAsset['image']; // Tetap gunakan nama lama jika tidak ada upload baru
+
+        if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
+            // Hapus file lama jika ada dan berbeda
+            if (!empty($oldAsset['image'])) {
+                @unlink(ROOTPATH . 'public/uploads/assets/' . $oldAsset['image']);
+            }
+            $imageName = $imageFile->getRandomName();
+            $imageFile->move(ROOTPATH . 'public/uploads/assets', $imageName); // Sesuaikan path jika perlu
+        }
+
+        // Validasi
+        if (!$this->validate([
+            'date'                  => 'required|valid_date',
+            'name'                  => 'required|max_length[255]',
+            'cat_asset_tetap'       => 'required|integer',
+            'value_asset_tetap'     => 'required|numeric|greater_than_equal_to[0]',
+            'cat_asset_credit'      => 'required|integer',
+            // Tambahkan validasi lain sesuai kebutuhan
+        ])) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Menyiapkan data update
+        $depreciation_status = isset($input['depreciation_status']);
+
+        $updateData = [
+            'date'                      => $input['date'],
+            'name'                      => $input['name'],
+            'description'               => $input['description'] ?? null,
+            'cat_asset_tetap'           => $input['cat_asset_tetap'],
+            'value_asset_tetap'         => $input['value_asset_tetap'],
+            'cat_tax'                   => $input['cat_tax'] ?? null,
+            'value_tax'                 => $input['value_tax'] ?? 0,
+            'cat_asset_credit'          => $input['cat_asset_credit'],
+            'image'                     => $imageName,
+            'depreciation_status'       => $depreciation_status ? 1 : 0,
+            
+            // Data Penyusutan (hanya diisi jika depreciation_status dicentang)
+            'depreciation_method'       => $depreciation_status ? ($input['depreciation_method'] ?? 'straight_line') : null,
+            'depreciation_residu'       => $depreciation_status ? ($input['depreciation_residu'] ?? 0) : 0,
+            'depreciation_benefit_era'  => $depreciation_status ? ($input['depreciation_benefit_era'] ?? 0) : 0,
+            'depreciation_cat_penyusutan' => $depreciation_status ? ($input['depreciation_cat_penyusutan'] ?? null) : null,
+            'depreciation_sum_cat_penyusutan' => $depreciation_status ? ($input['depreciation_sum_cat_penyusutan'] ?? null) : null,
+            
+            // Catatan: 'code_asset' dan 'outletid' biasanya tidak diizinkan diubah
+            // 'status_lock' mungkin diubah di form lain atau dihapus dari update jika tidak dimaksudkan untuk diubah di sini
+        ];
+
+        $AssetModel->update($id, $updateData);
+
+        // Logika Jurnal Akuntansi: Jika nilai perolehan/akun berubah, 
+        // perlu dilakukan penyesuaian jurnal (terlalu kompleks untuk disertakan di sini).
+
+        return redirect()->back()->with('success', 'Data berhasil diperbarui');
+    }
+
+    public function deleteAsset($id)
+    {
+        $AssetModel = new \App\Models\AccountancyAssetModel();
+        $asset = $AssetModel->find($id);
+
+        if (!$asset) {
+            return redirect()->back()->with('error', 'Aset tidak ditemukan.');
+        }
+
+        // Hapus file gambar terkait
+        if (!empty($asset['image'])) {
+            @unlink(ROOTPATH . 'public/uploads/assets/' . $asset['image']);
+        }
+
+        // Catatan: Dalam akuntansi, aset tetap jarang dihapus langsung (hard delete).
+        // Biasanya menggunakan 'soft delete' (menandai status_active=0 atau status_deleted=1) 
+        // dan mencatat jurnal pelepasan aset.
+
+        $AssetModel->delete($id);
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus');
     }
 
     public function closingEntries()
