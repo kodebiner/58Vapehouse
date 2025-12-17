@@ -74,7 +74,14 @@
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="cat_code">Kode</label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="cat_code" name="cat_code" readonly />
+                                <div uk-grid>
+                                    <div class="uk-width-expand">
+                                        <input type="text" class="uk-input" id="cat_code" name="cat_code" readonly />
+                                    </div>
+                                    <div class="uk-width-auto uk-padding-remove-left">
+                                        <input type="text" class="uk-input" id="coa_code" name="coa_code" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -223,13 +230,20 @@
 
                                         <div class="uk-margin-bottom">
                                             <label class="uk-form-label">Kode</label>
-                                            <input type="text" class="uk-input" name="cat_code" id="cat_code_edit_<?= $coa['id'] ?>" value="<?= $coa['kode'] ?>" readonly>
+                                            <div uk-grid>
+                                                <div class="uk-width-expand">
+                                                    <input type="text" class="uk-input" name="cat_code" id="cat_code_edit-<?= $coa['id'] ?>" value="<?= $coa['kode'] ?>" readonly>
+                                                </div>
+                                                <div class="uk-width-auto uk-padding-remove-left">
+                                                    <input type="text" class="uk-input" name="coa_code" id="coa_code-<?= $coa['id'] ?>" value="<?= $coa['coa_code'] ?>" />
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <script>
                                             document.getElementById('category_edit_<?= $coa['id'] ?>').addEventListener('change', function () {
                                                 const selected = this.options[this.selectedIndex];
-                                                document.getElementById('cat_code_edit_<?= $coa['id'] ?>').value = selected.getAttribute('data-code');
+                                                document.getElementById('cat_code_edit-<?= $coa['id'] ?>').value = selected.getAttribute('data-code');
                                             });
                                         </script>
 

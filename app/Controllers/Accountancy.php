@@ -84,6 +84,9 @@ class Accountancy extends BaseController
     {
         // Services
         $db = \Config\Database::connect();
+
+        // Calling Model
+        $AccountancyCategoryModel   = new AccountancyCategoryModel();
         
         // Populating Data
         $query = $db->table('accountancy_coa AS c')
@@ -110,7 +113,7 @@ class Accountancy extends BaseController
         foreach ($query as $row) {
             $coas[] = [
                 'id'            => $row['id'],
-                'kode'          => $row['cat_code'].$row['id'],
+                'kode'          => $row['cat_code'].$row['coa_code'],
                 'cat_a_id'      => $row['cat_a_id'],
                 'category'      => $row['category_name'],
                 'coa_type'      => $row['cat_type'],
@@ -120,7 +123,20 @@ class Accountancy extends BaseController
                 'status_active' => $row['status_active'],
             ];
         }
+        $categorydata   = [];
         
+        $categories = $AccountancyCategoryModel->orderBy('id','ASC')->findAll();
+        foreach ($categories as $category) {
+            $coaadata = $query->where('cat_a_id', $category['id'])->find();
+            $categorydata[] = [
+                'id' => $category['id'],
+                'name' => $category['name'],
+                'cat_code' => $category['cat_code'],
+                'cat_type' => $category['cat_type'],
+                'coa_code' => $coaadata['coa_code']
+            ];
+        }
+
         // Parsing data to view
         $data                = $this->data;
         $data['coas']        = $coas;
