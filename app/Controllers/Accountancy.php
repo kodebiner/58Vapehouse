@@ -91,21 +91,14 @@ class Accountancy extends BaseController
         // Populating Data
         $query = $db->table('accountancy_coa AS c')
             ->select('
-                c.id,
-                c.name,
-                c.description,
-                c.status_lock,
-                c.status_active,
-                c.cat_a_id,
-                cat.cat_code,
-                cat.name AS category_name,
-                cat.cat_type,
+                c.id, c.name, c.coa_code, c.description, c.status_lock, c.status_active, c.cat_a_id,
+                cat.cat_code, cat.name AS category_name, cat.cat_type,
                 o.name AS outlet_name
             ')
             ->join('accountancy_categories AS cat', 'cat.id = c.cat_a_id')
             ->join('outlet AS o', 'o.id = c.outletid')
-            ->orderBy('c.cat_a_id', 'ASC')
-            ->orderBy('c.name', 'ASC')
+            ->orderBy('cat.cat_code', 'ASC')
+            ->orderBy('c.coa_code', 'ASC')
             ->get()
             ->getResultArray();
 
@@ -113,34 +106,42 @@ class Accountancy extends BaseController
         foreach ($query as $row) {
             $coas[] = [
                 'id'            => $row['id'],
-                'kode'          => $row['cat_code'].$row['coa_code'],
+                'kode'          => $row['coa_code'],
+                'cat_code'      => $row['cat_code'],
+                'full_kode'     => $row['cat_code'] . $row['coa_code'],
                 'cat_a_id'      => $row['cat_a_id'],
                 'category'      => $row['category_name'],
                 'coa_type'      => $row['cat_type'],
-                'name'          => $row['name'].' - '.str_replace('58 Vapehouse ','',$row['outlet_name']),
+                'name'          => $row['name'] . ' - ' . str_replace('58 Vapehouse ', '', $row['outlet_name']),
                 'description'   => $row['description'],
                 'status_lock'   => $row['status_lock'],
                 'status_active' => $row['status_active'],
             ];
         }
+
+        $lastCoaMap = [];
+        foreach ($query as $row) {
+            $lastCoaMap[$row['cat_a_id']] = $row['coa_code'];
+        }
+
         $categorydata   = [];
-        
         $categories = $AccountancyCategoryModel->orderBy('id','ASC')->findAll();
         foreach ($categories as $category) {
-            $coaadata = $query->where('cat_a_id', $category['id'])->find();
+            $catId = $category['id'];
+            
             $categorydata[] = [
-                'id' => $category['id'],
-                'name' => $category['name'],
+                'id'       => $catId,
+                'name'     => $category['name'],
                 'cat_code' => $category['cat_code'],
                 'cat_type' => $category['cat_type'],
-                'coa_code' => $coaadata['coa_code']
+                'coa_code' => $lastCoaMap[$catId] ?? ''
             ];
         }
 
         // Parsing data to view
         $data                = $this->data;
         $data['coas']        = $coas;
-        $data['categories']  = (new AccountancyCategoryModel())->orderBy('id','ASC')->findAll();
+        $data['categories']  = $categorydata;
         $data['title']       = 'Akun (COA) - '.lang('Global.accountancyList');
         $data['description'] = 'Akun (COA) '.lang('Global.accountancyListDesc');
 
@@ -149,70 +150,139 @@ class Accountancy extends BaseController
 
     public function createAkunCOA()
     {
-        // Calling Model
-        $AccountancyCOAModel    = new AccountancyCOAModel();
-        $OutletModel            = new OutletModel();
+        $AccountancyCOAModel = new AccountancyCOAModel();
+        $OutletModel         = new OutletModel();
 
-        // Populating Data
-        $input                  = $this->request->getPost();
-        $outlets                = $OutletModel->findAll();
-
-        // Validation
-        if (!$this->validate([
-            'name' => "required|max_length[255]",
-        ])) {
+        $input = $this->request->getPost();
+        
+        if (!$this->validate(['name' => "required|max_length[255]", 'category' => "required"])) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        if ($this->data['outletPick'] === null) {
-            foreach ($outlets as $outlet) {
+        $outlets = $OutletModel->findAll();
+        $targetOutlets = ($this->data['outletPick'] === null) ? $outlets : [['id' => $this->data['outletPick']]];
+
+        $insertedCount = 0;
+        $skippedCount  = 0;
+
+        // Ambil basis nomor dari input manual, jika kosong gunakan sistem auto-increment
+        $baseCode = !empty($input['coa_code']) ? (int)$input['coa_code'] : null;
+
+        foreach ($targetOutlets as $outlet) {
+            $outletId = $outlet['id'];
+
+            // 1. Cek duplikasi nama di outlet yang sama
+            $existing = $AccountancyCOAModel->where([
+                'name'     => $input['name'],
+                'cat_a_id' => $input['category'],
+                'outletid' => $outletId
+            ])->first();
+
+            if (!$existing) {
+                
+                // 2. TENTUKAN COA CODE
+                if ($baseCode !== null) {
+                    // Jika user input manual (misal 001), cari nomor yang tersedia mulai dari 001 dst
+                    $currentTrialCode = $baseCode;
+                } else {
+                    // Jika user kosongkan, cari nomor terakhir di database + 1
+                    $lastRecord = $AccountancyCOAModel->where('cat_a_id', $input['category'])
+                                                    ->orderBy('coa_code', 'DESC')
+                                                    ->first();
+                    $currentTrialCode = $lastRecord ? (int)$lastRecord['coa_code'] + 1 : 1;
+                }
+
+                // Validasi: Pastikan nomor tidak duplikat di kategori yang sama (Global)
+                // Jika nomor sudah ada, cari nomor berikutnya yang kosong
+                while ($AccountancyCOAModel->where(['cat_a_id' => $input['category'], 'coa_code' => str_pad($currentTrialCode, 3, '0', STR_PAD_LEFT)])->first()) {
+                    $currentTrialCode++;
+                }
+
+                $finalCoaCode = str_pad($currentTrialCode, 3, '0', STR_PAD_LEFT);
+
+                // 3. Simpan data
                 $data = [
                     'name'          => $input['name'],
                     'cat_a_id'      => $input['category'],
-                    'outletid'      => $outlet['id'],
+                    'coa_code'      => $finalCoaCode,
+                    'outletid'      => $outletId,
                     'description'   => $input['description'],
                     'status_lock'   => isset($input['status_lock']) ? 0 : 1,
                     'status_active' => 1,
                 ];
 
                 $AccountancyCOAModel->insert($data);
-            }
-        } else {
-            $data = [
-                'name'          => $input['name'],
-                'cat_a_id'      => $input['category'],
-                'outletid'      => $this->data['outletPick'],
-                'description'   => $input['description'],
-                'status_lock'   => isset($input['status_lock']) ? 0 : 1,
-                'status_active' => 1,
-            ];
+                
+                // Jika outletPick null, maka akun berikutnya harus menggunakan nomor setelahnya
+                if ($this->data['outletPick'] === null) {
+                    $baseCode = $currentTrialCode + 1;
+                }
 
-            $AccountancyCOAModel->insert($data);
+                $insertedCount++;
+            } else {
+                $skippedCount++;
+            }
         }
 
-        return redirect()->back()->with('message', lang('Global.saved'));
+        return redirect()->back()->with('message', "Selesai. $insertedCount data dibuat, $skippedCount dilewati.");
     }
 
     public function updateAkunCOA($id)
     {
         $coaModel = new AccountancyCOAModel();
+        $input    = $this->request->getPost();
 
+        $currentData = $coaModel->find($id);
+        if (!$currentData) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
+
+        $existing = $coaModel->where([
+            'cat_a_id' => $input['category'],
+            'coa_code' => $input['coa_code'],
+            'id !='    => $id
+        ])->first();
+
+        if ($existing) {
+            return redirect()->back()->with('errors', [
+                'coa_code' => 'Kode ' . $input['coa_code'] . ' sudah digunakan oleh outlet lain di kategori ini.'
+            ]);
+        }
+
+        // 3. Eksekusi Update
         $coaModel->update($id, [
-            'cat_a_id'      => $this->request->getPost('category'),
-            'name'          => $this->request->getPost('name'),
-            'description'   => $this->request->getPost('description'),
-            'status_active' => $this->request->getPost('status_active') == "0" ? 0 : 1,
+            'cat_a_id'      => $input['category'],
+            'coa_code'      => $input['coa_code'],
+            'name'          => $input['name'],
+            'description'   => $input['description'],
+            'status_active' => (isset($input['status_active']) && $input['status_active'] == "1") ? 1 : 0,
         ]);
 
-        return redirect()->back()->with('success', 'Data berhasil diperbarui');
+        return redirect()->back()->with('message', 'Data berhasil diperbarui');
     }
 
     public function deleteAkunCOA($id)
     {
-        $coaModel = new \App\Models\AccountancyCOAModel();
+        $coaModel = new AccountancyCOAModel();
+        $coa = $coaModel->find($id);
+        if (!$coa) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
+
+        if ($coa['status_lock'] == 1) {
+            return redirect()->back()->with('error', 'Akun ini terkunci oleh sistem dan tidak dapat dihapus.');
+        }
+
+        /** * 3. (Opsional) Cek Transaksi
+         * Di sistem akuntansi, sebaiknya cek apakah ID ini sudah dipakai di tabel Jurnal.
+         * if ($this->checkIfUsedInJurnal($id)) { 
+         * return redirect()->back()->with('error', 'Gagal dihapus! Akun sudah memiliki riwayat transaksi.'); 
+         * }
+         */
+
         $coaModel->delete($id);
 
-        return redirect()->back()->with('success', 'Data berhasil dihapus');
+        return redirect()->back()->with('message', 'Data berhasil dihapus');
     }
 
     public function earlyFunds()
@@ -221,28 +291,47 @@ class Accountancy extends BaseController
         $AccountancyCOAModel        = new AccountancyCOAModel();
         $AccountancyCategoryModel   = new AccountancyCategoryModel();
 
-        // Populating data
+        // Populating date range
+        $input = $this->request->getGet('daterange');
         if (!empty($input)) {
             $daterange  = explode(' - ', $input);
-            $startdate  = $daterange[0];
-            $enddate    = $daterange[1];
+            $startdate  = $daterange[0] . ' 00:00:00';
+            $enddate    = $daterange[1] . ' 23:59:59';
         } else {
-            // $startdate  = date('Y-m-1' . ' 00:00:00');
-            // $enddate    = date('Y-m-t' . ' 23:59:59');
             $startdate  = date('Y-m-d') . ' 00:00:00';
             $enddate    = date('Y-m-d') . ' 23:59:59';
         }
-        $coa = $AccountancyCOAModel
+
+        // Penyesuaian Query COA
+        $builder = $AccountancyCOAModel
             ->select("
                 accountancy_coa.*,
                 accountancy_categories.cat_code,
                 accountancy_categories.name as category_name,
                 accountancy_categories.cat_type,
-                CONCAT(accountancy_categories.cat_code, accountancy_coa.id) AS full_code
+                outlet.name as outlet_name,
+                CONCAT(accountancy_categories.cat_code, accountancy_coa.coa_code) AS full_code
             ")
             ->join('accountancy_categories', 'accountancy_categories.id = accountancy_coa.cat_a_id')
-            ->orderBy('accountancy_categories.cat_code')
-            ->findAll();
+            ->join('outlet', 'outlet.id = accountancy_coa.outletid'); // Join ke tabel outlet
+
+        // Tambahkan filter Outlet jika outletPick tidak null (Sedang memilih outlet spesifik)
+        if ($this->data['outletPick'] !== null) {
+            $builder->where('accountancy_coa.outletid', $this->data['outletPick']);
+        }
+
+        $coa_raw = $builder->orderBy('accountancy_categories.cat_code', 'ASC')
+                    ->orderBy('accountancy_coa.coa_code', 'ASC')
+                    ->findAll();
+
+        // Memproses Nama Akun secara dinamis (Menambahkan nama outlet di belakang)
+        foreach ($coa_raw as &$row) {
+            // Membersihkan prefix nama toko
+            $cleanOutletName = str_replace('58 Vapehouse ', '', $row['outlet_name']);
+            
+            // Append nama outlet ke nama akun agar user tidak bingung saat view "Semua Outlet"
+            $row['name'] = $row['name'] . ' - ' . $cleanOutletName;
+        }
         
         // Parsing data to view
         $data                   = $this->data;
@@ -250,7 +339,7 @@ class Accountancy extends BaseController
         $data['enddate']        = strtotime($enddate);
         $data['title']          = 'Saldo Awal - '.lang('Global.accountancyList');
         $data['description']    = 'Saldo Awal '.lang('Global.accountancyListDesc');
-        $data['coa_list']       = $coa;
+        $data['coa_list']       = $coa_raw;
 
         return view('Views/accountancy/early-funds', $data);
     }

@@ -9,7 +9,8 @@
 <?= $this->section('main') ?>
 <div class="uk-width-1-1 uk-height-1-1" class="uk-inline">
     <div>
-        <?= view('Views/Auth/_permission_message') ?>
+        <!-- </?= view('Views/Auth/_permission_message') ?> -->
+        <?= view('Views/Auth/_message_block') ?>
     </div>
 
     <!-- Page Heading -->
@@ -63,8 +64,10 @@
                                 <select class="uk-select" id="category" name="category" required>
                                     <option value="" disabled selected>Pilih Kategori</option>
                                     <?php foreach ($categories as $category) { ?>
-                                        <option value="<?= $category['id'] ?>" data-code="<?= $category['cat_code'] ?>">
-                                            <?= $category['name'] ?>
+                                        <option 
+                                            value="<?= $category['id'] ?>" 
+                                            data-code="<?= $category['cat_code'] ?>" 
+                                            data-last-code="<?= $category['coa_code'] ?>"> <?= $category['name'] ?>
                                         </option>
                                     <?php } ?>
                                 </select>
@@ -88,8 +91,22 @@
                         <script>
                             document.getElementById('category').addEventListener('change', function () {
                                 const selectedOption = this.options[this.selectedIndex];
-                                const code = selectedOption.getAttribute('data-code');
-                                document.getElementById('cat_code').value = code ?? '';
+                                
+                                // 1. Ambil prefix (misal: 11, 12)
+                                const catCode = selectedOption.getAttribute('data-code');
+                                document.getElementById('cat_code').value = catCode ?? '';
+
+                                // 2. Ambil coa_code terakhir (misal: 003)
+                                const lastCode = selectedOption.getAttribute('data-last-code');
+                                
+                                // 3. Logika Increment (+1)
+                                let nextNumber = 1;
+                                if (lastCode) {
+                                    nextNumber = parseInt(lastCode) + 1;
+                                }
+                                
+                                // 4. Masukkan ke input coa_code dengan format 3 digit (001, 002, dst)
+                                document.getElementById('coa_code').value = nextNumber.toString().padStart(3, '0');
                             });
                         </script>
 
@@ -160,7 +177,7 @@
             <tbody>
                 <?php foreach ($coas as $coa) { ?>
                     <tr>
-                        <td class="uk-text-center"><?= $coa['kode'] ?></td>
+                        <td class="uk-text-center"><?= $coa['full_kode'] ?></td>
                         <td class="">
                             <?= $coa['name']; ?>
                             <?php if ($coa['status_lock'] == 1) { ?>
@@ -229,21 +246,26 @@
                                         </div>
 
                                         <div class="uk-margin-bottom">
-                                            <label class="uk-form-label">Kode</label>
-                                            <div uk-grid>
+                                            <label class="uk-form-label">Kode Akun</label>
+                                            <div uk-grid class="uk-grid-small">
                                                 <div class="uk-width-expand">
-                                                    <input type="text" class="uk-input" name="cat_code" id="cat_code_edit-<?= $coa['id'] ?>" value="<?= $coa['kode'] ?>" readonly>
+                                                    <input type="text" class="uk-input" id="cat_code_edit_<?= $coa['id'] ?>" value="<?= $coa['cat_code'] ?? '' ?>" readonly>
                                                 </div>
                                                 <div class="uk-width-auto uk-padding-remove-left">
-                                                    <input type="text" class="uk-input" name="coa_code" id="coa_code-<?= $coa['id'] ?>" value="<?= $coa['coa_code'] ?>" />
+                                                    <input type="text" class="uk-input" name="coa_code" value="<?= $coa['kode'] ?>" required maxlength="4">
                                                 </div>
                                             </div>
+                                            <small class="uk-text-muted">Prefix kategori akan otomatis berubah jika kategori diganti.</small>
                                         </div>
 
                                         <script>
-                                            document.getElementById('category_edit_<?= $coa['id'] ?>').addEventListener('change', function () {
-                                                const selected = this.options[this.selectedIndex];
-                                                document.getElementById('cat_code_edit-<?= $coa['id'] ?>').value = selected.getAttribute('data-code');
+                                            $(document).on('change', '[id^="category_edit_"]', function() {
+                                                const coaId = $(this).attr('id').replace('category_edit_', '');
+                                                const selected = $(this).find(':selected');
+                                                const newPrefix = selected.data('code');
+                                                
+                                                // Update tampilan prefix di samping input coa_code
+                                                $(`#cat_code_edit_${coaId}`).val(newPrefix);
                                             });
                                         </script>
 
