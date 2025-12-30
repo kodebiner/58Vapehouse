@@ -1,6 +1,9 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('extraScript') ?>
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 <div class="uk-width-1-1 uk-height-1-1" class="uk-inline">
@@ -48,9 +51,25 @@
                         </div>
 
                         <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="value">Jumlah</label>
+                            <label class="uk-form-label" for="value">Persentase Pajak (%)</label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="value" name="value" placeholder="Jumlah" required />
+                                <div class="uk-inline uk-width-1-1">
+                                    <span class="uk-form-icon uk-form-icon-flip" style="font-style: normal;">%</span>
+                                    <input 
+                                        type="number" 
+                                        step="0.01" 
+                                        min="0" 
+                                        max="100" 
+                                        class="uk-input" 
+                                        id="value" 
+                                        name="value" 
+                                        placeholder="0.00" 
+                                        required 
+                                    />
+                                </div>
+                                <p class="uk-text-meta uk-margin-remove-top">
+                                    Gunakan titik (.) untuk desimal. Contoh: 0.5 atau 11
+                                </p>
                             </div>
                         </div>
 
@@ -104,64 +123,118 @@
 
                         <script>
                             $(document).ready(function () {
+                                /* ======================
+                                * TAX CUT STATUS SYNC
+                                * ====================== */
+                                function syncTaxCutStatus() {
+                                    $("#tax_cut_status_val").val(
+                                        $("#tax_cut_status").is(":checked") ? 1 : 0
+                                    );
+                                }
 
+                                $("#tax_cut_status").on("change", syncTaxCutStatus);
+                                syncTaxCutStatus();
+
+                                /* ======================
+                                * TOM SELECT INIT
+                                * ====================== */
+                                const sellSelectEl = document.getElementById('tax_cut_sell');
+                                const buySelectEl  = document.getElementById('tax_cut_buy');
+
+                                const sellTom = new TomSelect(sellSelectEl, {
+                                    placeholder: 'Pilih akun pajak...',
+                                    allowEmptyOption: true,
+                                    sortField: { field: "text", direction: "asc" },
+                                    searchField: ['text'],
+                                });
+
+                                const buyTom = new TomSelect(buySelectEl, {
+                                    placeholder: 'Pilih akun pajak...',
+                                    allowEmptyOption: true,
+                                    sortField: { field: "text", direction: "asc" },
+                                    searchField: ['text'],
+                                });
+
+                                /* ======================
+                                * DATA SOURCE
+                                * ====================== */
+                                const coas1 = JSON.parse($('#tax_cut_sell').attr('data-options'));
+                                const coas2 = JSON.parse($('#tax_cut_buy').attr('data-options'));
+
+                                function fillTomOptions(tom, list) {
+                                    tom.clear(true);
+                                    tom.clearOptions();
+
+                                    list.forEach(item => {
+                                        tom.addOption({
+                                            value: item.id,
+                                            text: item.name
+                                        });
+                                    });
+
+                                    tom.refreshOptions(false);
+                                }
+
+                                /* ======================
+                                * MODE HANDLER
+                                * ====================== */
                                 const sellWrapper = $(".tax-sell");
                                 const buyWrapper  = $(".tax-buy");
 
-                                const sellLabel  = sellWrapper.find("label[for='tax_cut_sell']");
-                                const buyLabel   = buyWrapper.find("label[for='tax_cut_buy']");
-
-                                const sellSelect = $("#tax_cut_sell");
-                                const buySelect  = $("#tax_cut_buy");
-
-                                const coas1 = JSON.parse(sellSelect.attr("data-options"));
-                                const coas2 = JSON.parse(buySelect.attr("data-options"));
-
-                                function fillOptions(select, list) {
-                                    select.empty();
-                                    list.forEach(item => {
-                                        select.append(
-                                            `<option value="${item.id}" data-code="${item.cat_a_id}">${item.name}</option>`
-                                        );
-                                    });
-                                }
+                                const sellLabel = sellWrapper.find("label");
+                                const buyLabel  = buyWrapper.find("label");
 
                                 function applyMode() {
                                     const isCut = $("#tax_cut_status").is(":checked");
 
                                     if (!isCut) {
-                                        // Urutan: SELL → BUY
-                                        $("#tax-cut-wrapper").append(sellWrapper);
-                                        $("#tax-cut-wrapper").append(buyWrapper);
+                                        // Normal
+                                        $("#tax-cut-wrapper").append(sellWrapper, buyWrapper);
 
                                         sellLabel.text("Akun Pajak Saat Penjualan");
                                         buyLabel.text("Akun Pajak Saat Pembelian");
 
-                                        fillOptions(sellSelect, coas1);
-                                        fillOptions(buySelect, coas2);
-
+                                        fillTomOptions(sellTom, coas1);
+                                        fillTomOptions(buyTom, coas2);
                                     } else {
-                                        // === MODE PEMOTONGAN ===
-                                        // Urutan: BUY → SELL
-                                        $("#tax-cut-wrapper").append(buyWrapper);
-                                        $("#tax-cut-wrapper").append(sellWrapper);
+                                        // Pemotongan
+                                        $("#tax-cut-wrapper").append(buyWrapper, sellWrapper);
 
-                                        // Label ikut berubah posisi
                                         buyLabel.text("Akun Pajak Saat Pembelian");
                                         sellLabel.text("Akun Pajak Saat Penjualan");
 
-                                        // Swap isi sesuai posisi barunya:
-                                        fillOptions(buySelect, coas1);
-                                        fillOptions(sellSelect, coas2);
+                                        fillTomOptions(buyTom, coas1);
+                                        fillTomOptions(sellTom, coas2);
                                     }
                                 }
 
-                                $("#tax_cut_status").on("change", function () {
-                                    applyMode();
-                                });
-
-                                // initial load
+                                $("#tax_cut_status").on("change", applyMode);
                                 applyMode();
+
+                                /* ======================
+                                * VALUE INPUT FIX
+                                * ====================== */
+                                $("#value").on("input", function () {
+                                    let val = $(this).val();
+
+                                    // Ganti koma → titik
+                                    if (val.includes(',')) {
+                                        val = val.replace(',', '.');
+                                        $(this).val(val);
+                                    }
+
+                                    // Izinkan hanya angka & satu titik
+                                    if (!/^\d*\.?\d*$/.test(val)) {
+                                        $(this).val(val.slice(0, -1));
+                                        return;
+                                    }
+
+                                    // Batasi max 100 (tanpa ganggu 5. atau 0.)
+                                    const num = parseFloat(val);
+                                    if (!isNaN(num) && num > 100) {
+                                        $(this).val("100");
+                                    }
+                                });
                             });
                         </script>
 
@@ -181,11 +254,12 @@
         <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="taxTable" style="width:100%">
             <thead>
                 <tr>
-                    <th class="uk-text-center uk-width-small">No</th>
-                    <th class="uk-width-large">Nama Pajak</th>
-                    <th class="uk-width-medium">Kode Pajak</th>
-                    <th class="uk-width-medium">Rate (%)</th>
-                    <th class="uk-text-center uk-width-large">Action</th>
+                    <th class="uk-text-center uk-width-auto">No</th>
+                    <th class="uk-width-auto">Nama Pajak</th>
+                    <th class="uk-width-auto">Jumlah</th>
+                    <th class="uk-width-auto">Penjualan</th>
+                    <th class="uk-width-auto">Pembelian</th>
+                    <th class="uk-text-center uk-width-auto">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -193,26 +267,11 @@
                 <?php foreach ($taxes as $tax) { ?>
                     <tr>
                         <td class="uk-text-center"><?= $i++; ?></td>
-                        <td><?= $tax->name; ?></td>
-                        <td><?= $tax->code; ?></td>
-                        <td><?= $tax->rate; ?>%</td>
-                        <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
-
-                            <!-- Edit Button -->
-                            <div>
-                                <a class="uk-icon-button" uk-icon="pencil" 
-                                uk-toggle="target: #editTax<?= $tax->id ?>"></a>
-                            </div>
-
-                            <!-- Delete Button -->
-                            <div>
-                                <a uk-icon="trash" 
-                                class="uk-icon-button-delete" 
-                                href="tax/delete/<?= $tax->id ?>" 
-                                onclick="return confirm('Yakin ingin menghapus pajak ini?')"></a>
-                            </div>
-
-                        </td>
+                        <td><?= $tax['name']; ?></td>
+                        <td><?= $tax['value']; ?></td>
+                        <td><?= $tax['tax_cut_sell']; ?></td>
+                        <td><?= $tax['tax_cut_buy']; ?></td>
+                        <td class="uk-text-center"><a uk-icon="trash" class="uk-icon-button-delete" href="accountancy/tax/delete/<?= $tax['id'] ?>" onclick="return confirm('Yakin ingin menghapus pajak ini?')"></a></td>
                     </tr>
                 <?php } ?>
             </tbody>

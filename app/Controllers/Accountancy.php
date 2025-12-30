@@ -394,43 +394,218 @@ class Accountancy extends BaseController
         foreach ((new OutletModel())->findAll() as $o) {
             $outlets[$o['id']] = $cleanOutlet($o['name']);
         }
+        $categories = [];
+        foreach ($AccountancyCategoryModel->findAll() as $c) {
+            $categories[$c['id']] = $c['cat_code'];
+        }
         $coas = $AccountancyCOAModel->findAll();
-        $filterCoaByCat = function($catId) use ($coas, $outlets) {
+        $filterCoaByCat = function ($catId) use ($coas, $categories, $outlets) {
             $result = [];
+
             foreach ($coas as $c) {
                 if ($c['cat_a_id'] == $catId) {
+                    $fullCode = ($categories[$c['cat_a_id']] ?? '') . $c['coa_code'];
+
                     $result[] = [
-                        'id'       => $c['id'],
-                        'name'     => $c['name'] . ' - ' . ($outlets[$c['outletid']] ?? ''),
-                        'cat_a_id' => $c['cat_a_id'],
-                        'cat_type' => $c['cat_type'] ?? null,
+                        'id'        => $c['id'],
+                        'full_code' => $fullCode,
+                        'name'      => $fullCode . ' - ' . $c['name'] . ' - ' . ($outlets[$c['outletid']] ?? ''),
+                        'cat_a_id'  => $c['cat_a_id'],
                     ];
                 }
             }
+
             return $result;
         };
         $katHartap       = 5;
         $katPenyusutan   = 14;
         $katDepresiasi   = 6;
+
+        $assets = $AccountancyAssetModel
+            ->select("
+                accountancy_asset.*,
+                
+                CASE
+                    WHEN accountancy_asset.depreciation_status = 1 THEN 'Ya'
+                    ELSE 'Tidak'
+                END AS depreciation_status_label,
+
+                CASE
+                    WHEN accountancy_asset.depreciation_status = 1 THEN 'Berjalan'
+                    ELSE ''
+                END AS depreciation_status_text,
+
+                CONCAT(
+                    cat_asset.cat_code, coa_asset.coa_code, ' - ',
+                    coa_asset.name, ' - ',
+                    outlet_asset.name
+                ) AS cat_asset_tetap,
+
+                CONCAT(
+                    cat_tax.cat_code, coa_tax.coa_code, ' - ',
+                    coa_tax.name, ' - ',
+                    outlet_tax.name
+                ) AS cat_tax,
+
+                CONCAT(
+                    cat_credit.cat_code, coa_credit.coa_code, ' - ',
+                    coa_credit.name, ' - ',
+                    outlet_credit.name
+                ) AS cat_asset_credit,
+
+                CONCAT(
+                    cat_dep.cat_code, coa_dep.coa_code, ' - ',
+                    coa_dep.name, ' - ',
+                    outlet_dep.name
+                ) AS depreciation_cat_penyusutan,
+
+                CONCAT(
+                    cat_sum.cat_code, coa_sum.coa_code, ' - ',
+                    coa_sum.name, ' - ',
+                    outlet_sum.name
+                ) AS depreciation_sum_cat_penyusutan
+            ")
+            ->join('accountancy_coa AS coa_asset', 'coa_asset.id = accountancy_asset.cat_asset_tetap', 'left')
+            ->join('accountancy_categories AS cat_asset', 'cat_asset.id = coa_asset.cat_a_id', 'left')
+            ->join('outlet AS outlet_asset', 'outlet_asset.id = coa_asset.outletid', 'left')
+            ->join('accountancy_coa AS coa_tax', 'coa_tax.id = accountancy_asset.cat_tax', 'left')
+            ->join('accountancy_categories AS cat_tax', 'cat_tax.id = coa_tax.cat_a_id', 'left')
+            ->join('outlet AS outlet_tax', 'outlet_tax.id = coa_tax.outletid', 'left')
+            ->join('accountancy_coa AS coa_credit', 'coa_credit.id = accountancy_asset.cat_asset_credit', 'left')
+            ->join('accountancy_categories AS cat_credit', 'cat_credit.id = coa_credit.cat_a_id', 'left')
+            ->join('outlet AS outlet_credit', 'outlet_credit.id = coa_credit.outletid', 'left')
+            ->join('accountancy_coa AS coa_dep', 'coa_dep.id = accountancy_asset.depreciation_cat_penyusutan', 'left')
+            ->join('accountancy_categories AS cat_dep', 'cat_dep.id = coa_dep.cat_a_id', 'left')
+            ->join('outlet AS outlet_dep', 'outlet_dep.id = coa_dep.outletid', 'left')
+            ->join('accountancy_coa AS coa_sum', 'coa_sum.id = accountancy_asset.depreciation_sum_cat_penyusutan', 'left')
+            ->join('accountancy_categories AS cat_sum', 'cat_sum.id = coa_sum.cat_a_id', 'left')
+            ->join('outlet AS outlet_sum', 'outlet_sum.id = coa_sum.outletid', 'left')
+            ->orderBy('accountancy_asset.date', 'DESC')
+            ->findAll();
+
+            foreach ($assets as &$asset) {
+                $asset['nilai_buku']            = $this->hitungNilaiBuku($asset);
+                // $asset['akumulasi_penyusutan']  = ((float)$asset['value_asset_tetap'] - (float)$asset['value_tax']) - $asset['nilai_buku'];
+                $asset['akumulasi_penyusutan']  = (float)$asset['value_asset_tetap'] - $asset['nilai_buku'];
+                $asset['journals'] = $this->generateAssetJournals($asset);
+            }
+            unset($asset);
         
         // Parsing data to view
         $data                   = $this->data;
         $data['title']          = 'Asset - ' . lang('Global.accountancyList');
         $data['description']    = 'Asset ' . lang('Global.accountancyListDesc');
-        $data['assets']         = $AccountancyAssetModel->findAll();
-        $data['coahartaps']     = $filterCoaByCat($katHartap);
-        $data['allcoas']        = array_map(function($c) use ($outlets) {
+        $data['assets']         = $assets;
+        $data['allcoas'] = array_map(function ($c) use ($categories, $outlets) {
+            $fullCode = ($categories[$c['cat_a_id']] ?? '') . $c['coa_code'];
+
             return [
-                'id'       => $c['id'],
-                'name'     => $c['name'] . ' - ' . ($outlets[$c['outletid']] ?? ''),
-                'cat_a_id' => $c['cat_a_id'],
+                'id'        => $c['id'],
+                'full_code' => $fullCode,
+                'name'      => $fullCode . ' - ' . $c['name'] . ' - ' . ($outlets[$c['outletid']] ?? ''),
+                'cat_a_id'  => $c['cat_a_id'],
             ];
         }, $coas);
+        $data['coahartaps']     = $filterCoaByCat($katHartap);
         $data['weights']        = $filterCoaByCat($katPenyusutan);
         $data['coadepreciation']= $filterCoaByCat($katDepresiasi);
         $data['taxes']          = $AccountancyTaxModel->findAll();
 
         return view('Views/accountancy/asset', $data);
+    }
+
+    private function hitungNilaiBuku(array $asset): float
+    {
+        // Jika tidak disusutkan
+        if ((int)$asset['depreciation_status'] !== 1) {
+            // return (float)$asset['value_asset_tetap'] - (float)$asset['value_tax'];
+            return (float)$asset['value_asset_tetap'];
+        }
+
+        // $biayaPerolehan = (float)$asset['value_asset_tetap'] - (float)$asset['value_tax'];
+        $biayaPerolehan = (float)$asset['value_asset_tetap'];
+        $umurManfaat    = (int)$asset['depreciation_benefit_era']; // bulan
+
+        if ($umurManfaat <= 0) {
+            return $biayaPerolehan;
+        }
+
+        $tanggalAkuisisi = new \DateTime($asset['date']);
+        $hariIni         = new \DateTime();
+
+        $diff = $tanggalAkuisisi->diff($hariIni);
+        $bulanBerjalan = ($diff->y * 12) + $diff->m;
+
+        // Maksimal sampai umur manfaat
+        $bulanBerjalan = min($bulanBerjalan, $umurManfaat);
+
+        $depresiasiBulanan = $biayaPerolehan / $umurManfaat;
+        $akumulasi         = $depresiasiBulanan * $bulanBerjalan;
+
+        return max(0, $biayaPerolehan - $akumulasi);
+    }
+
+    private function generateAssetJournals(array $asset): array
+    {
+        $journals = [];
+
+        /** =====================
+         * JURNAL AKUISISI
+         * ===================== */
+        $journals[] = [
+            'tanggal'       => $asset['date'],
+            'transaksi'     => 'Beli Aset',
+            'kode'          => $asset['code_asset'],
+            'akun_debit'    => $asset['cat_asset_tetap'],
+            'akun_kredit'   => $asset['cat_asset_credit'],
+            'nilai'         => (float)$asset['value_asset_tetap'],
+            'catatan'       => $asset['name']
+        ];
+
+        /** =====================
+         * JURNAL PENYUSUTAN
+         * (ditampilkan terbaru → terlama)
+         * ===================== */
+        if ((int)$asset['depreciation_status'] === 1) {
+
+            $depreciationJournals = [];
+
+            $biayaPerolehan = (float)$asset['value_asset_tetap'];
+            $umurManfaat    = max(1, (int)$asset['depreciation_benefit_era']);
+            $nilaiBulanan   = $biayaPerolehan / $umurManfaat;
+
+            $tanggalAkuisisi   = new \DateTime($asset['date']);
+            $tanggalSekarang   = new \DateTime(date('Y-m-01'));
+            $tanggalPenyusutan = (clone $tanggalAkuisisi)->modify('first day of next month');
+
+            $bulanKe = 1;
+
+            while (
+                $tanggalPenyusutan <= $tanggalSekarang &&
+                $bulanKe <= $umurManfaat
+            ) {
+                $depreciationJournals[] = [
+                    'tanggal'       => $tanggalPenyusutan->format('Y-m-d'),
+                    'transaksi'     => 'Penyusutan',
+                    'kode'          => '',
+                    'akun_debit'    => $asset['depreciation_cat_penyusutan'],
+                    'akun_kredit'   => $asset['depreciation_sum_cat_penyusutan'],
+                    'nilai'         => $nilaiBulanan,
+                    'catatan'       => 'Penyusutan bulan ke-' . $bulanKe
+                ];
+
+                $tanggalPenyusutan->modify('+1 month');
+                $bulanKe++;
+            }
+
+            // ⬅️ ini kuncinya
+            $journals = array_merge(
+                $journals,
+                array_reverse($depreciationJournals)
+            );
+        }
+
+        return $journals;
     }
     
     public function createAsset()
@@ -785,20 +960,81 @@ class Accountancy extends BaseController
         // Calling Model
         $AccountancyTaxModel       = new AccountancyTaxModel();
         $AccountancyCOAModel       = new AccountancyCOAModel();
+        $AccountancyCategoryModel  = new AccountancyCategoryModel();
+        $OutletModel               = new OutletModel();
 
         // Populating data
-        $coas1 = $AccountancyCOAModel->findAll();
-        $coas2 = $AccountancyCOAModel->findAll();
-        // $coas = $AccountancyCOAModel->findAll();
-        $taxes = $AccountancyTaxModel->orderBy('name', 'ASC')->findAll();
+        $cleanOutlet = function($name) {
+            return preg_replace('/^58 Vapehouse\s*/i', '', $name);
+        };
+        $outlets = [];
+        foreach (($OutletModel)->findAll() as $o) {
+            $outlets[$o['id']] = $cleanOutlet($o['name']);
+        }
+        $categories = [];
+        foreach ($AccountancyCategoryModel->findAll() as $c) {
+            $categories[$c['id']] = $c['cat_code'];
+        }
+        $coas = $AccountancyCOAModel->findAll();
+        $filterCoaByCat = function (array $catIds) use ($coas, $categories, $outlets) {
+            $result = [];
+            foreach ($coas as $c) {
+                $catId = (int) $c['cat_a_id'];
+                if (!isset($categories[$catId])) {
+                    continue;
+                }
+
+                if (in_array($catId, $catIds, true)) {
+                    $fullCode = $categories[$catId] . $c['coa_code'];
+                    $result[] = [
+                        'id'        => $c['id'],
+                        'full_code' => $fullCode,
+                        'name'      => $fullCode . ' - ' . $c['name'] . ' - ' . ($outlets[$c['outletid']] ?? ''),
+                        'cat_a_id'  => $catId,
+                    ];
+                }
+            }
+            return $result;
+        };
+        $cat1       = [8,9,12,14,15,16];
+        $cat2       = [2,3,4,12,14,15,16];
+        $taxes = $AccountancyTaxModel
+            ->select("
+                accountancy_tax.*,
+
+                CONCAT(
+                    cat_sell.cat_code, sell_coa.coa_code,
+                    ' - ', sell_coa.name,
+                    ' - ', outlet_sell.name
+                ) AS tax_cut_sell,
+
+                CONCAT(
+                    cat_buy.cat_code, buy_coa.coa_code,
+                    ' - ', buy_coa.name,
+                    ' - ', outlet_buy.name
+                ) AS tax_cut_buy,
+
+                CASE 
+                    WHEN accountancy_tax.tax_cut_status = 1
+                    THEN CONCAT('-', accountancy_tax.value, '%')
+                    ELSE CONCAT(accountancy_tax.value, '%')
+                END AS value
+            ")
+            ->join('accountancy_coa AS sell_coa', 'sell_coa.id = accountancy_tax.tax_cat_sell', 'left')
+            ->join('accountancy_coa AS buy_coa',  'buy_coa.id  = accountancy_tax.tax_cat_buy',  'left')
+            ->join('accountancy_categories AS cat_sell', 'cat_sell.id = sell_coa.cat_a_id', 'left')
+            ->join('accountancy_categories AS cat_buy',  'cat_buy.id  = buy_coa.cat_a_id',  'left')
+            ->join('outlet AS outlet_sell', 'outlet_sell.id = sell_coa.outletid', 'left')
+            ->join('outlet AS outlet_buy',  'outlet_buy.id  = buy_coa.outletid',  'left')
+            ->orderBy('accountancy_tax.name', 'ASC')
+            ->findAll();
         
         // Parsing data to view
         $data                   = $this->data;
         $data['title']          = 'Pajak - '.lang('Global.accountancyList');
         $data['description']    = 'Pajak '.lang('Global.accountancyListDesc');
-        // $data['coas']           = $coas;
-        $data['coas1']          = $coas1;
-        $data['coas2']          = $coas2;
+        $data['coas1']          = $filterCoaByCat($cat1);
+        $data['coas2']          = $filterCoaByCat($cat2);
         $data['taxes']          = $taxes;
 
         return view('Views/accountancy/tax', $data);
@@ -810,8 +1046,8 @@ class Accountancy extends BaseController
 
         $data = [
             'name'            => $this->request->getPost('name'),
-            'value'           => $this->request->getPost('value'),
-            'tax_cut_status'  => $this->request->getPost('tax_cut_status'),
+            'value'           => (float) $this->request->getPost('value'),
+            'tax_cut_status'  => (int) $this->request->getPost('tax_cut_status'),
             'tax_cat_sell'    => $this->request->getPost('tax_cut_sell'),
             'tax_cat_buy'     => $this->request->getPost('tax_cut_buy'),
         ];
@@ -823,13 +1059,15 @@ class Accountancy extends BaseController
 
     public function taxDelete($id)
     {
-        $AccountancyTaxModel = new AccountancyTaxModel();
+        $taxModel = new AccountancyTaxModel();
 
-        $AccountancyTaxModel->delete($id);
+        if (!$taxModel->find($id)) {
+            return redirect()->back()->with('error', 'Data pajak tidak ditemukan.');
+        }
+        $taxModel->delete($id);
 
         return redirect()->back()->with('success', 'Data pajak berhasil dihapus.');
     }
-
 
     public function manualAccountingReconciliation()
     {
