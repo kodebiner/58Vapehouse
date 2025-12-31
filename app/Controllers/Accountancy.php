@@ -424,11 +424,19 @@ class Accountancy extends BaseController
         $assets = $AccountancyAssetModel
             ->select("
                 accountancy_asset.*,
+
+                DATE_FORMAT(accountancy_asset.date, '%Y-%m-%d') AS date,
                 
                 CASE
                     WHEN accountancy_asset.depreciation_status = 1 THEN 'Ya'
                     ELSE 'Tidak'
                 END AS depreciation_status_label,
+                
+                CASE
+                    WHEN accountancy_asset.depreciation_method = 0 THEN 'Straight Line'
+                    WHEN accountancy_asset.depreciation_method = 1 THEN 'Declining Balance'
+                    ELSE 'Metode Lain'
+                END AS depreciation_method_label,
 
                 CASE
                     WHEN accountancy_asset.depreciation_status = 1 THEN 'Berjalan'
@@ -439,31 +447,31 @@ class Accountancy extends BaseController
                     cat_asset.cat_code, coa_asset.coa_code, ' - ',
                     coa_asset.name, ' - ',
                     outlet_asset.name
-                ) AS cat_asset_tetap,
+                ) AS cat_asset_tetap_name,
 
                 CONCAT(
                     cat_tax.cat_code, coa_tax.coa_code, ' - ',
                     coa_tax.name, ' - ',
                     outlet_tax.name
-                ) AS cat_tax,
+                ) AS cat_tax_name,
 
                 CONCAT(
                     cat_credit.cat_code, coa_credit.coa_code, ' - ',
                     coa_credit.name, ' - ',
                     outlet_credit.name
-                ) AS cat_asset_credit,
+                ) AS cat_asset_credit_name,
 
                 CONCAT(
                     cat_dep.cat_code, coa_dep.coa_code, ' - ',
                     coa_dep.name, ' - ',
                     outlet_dep.name
-                ) AS depreciation_cat_penyusutan,
+                ) AS depreciation_cat_penyusutan_name,
 
                 CONCAT(
                     cat_sum.cat_code, coa_sum.coa_code, ' - ',
                     coa_sum.name, ' - ',
                     outlet_sum.name
-                ) AS depreciation_sum_cat_penyusutan
+                ) AS depreciation_sum_cat_penyusutan_name
             ")
             ->join('accountancy_coa AS coa_asset', 'coa_asset.id = accountancy_asset.cat_asset_tetap', 'left')
             ->join('accountancy_categories AS cat_asset', 'cat_asset.id = coa_asset.cat_a_id', 'left')
@@ -531,7 +539,7 @@ class Accountancy extends BaseController
         }
 
         $tanggalAkuisisi = new \DateTime($asset['date']);
-        $hariIni         = new \DateTime();
+        $hariIni         =  new \DateTime(date('Y-m-t'));
 
         $diff = $tanggalAkuisisi->diff($hariIni);
         $bulanBerjalan = ($diff->y * 12) + $diff->m;
@@ -556,8 +564,8 @@ class Accountancy extends BaseController
             'tanggal'       => $asset['date'],
             'transaksi'     => 'Beli Aset',
             'kode'          => $asset['code_asset'],
-            'akun_debit'    => $asset['cat_asset_tetap'],
-            'akun_kredit'   => $asset['cat_asset_credit'],
+            'akun_debit'    => $asset['cat_asset_tetap_name'],
+            'akun_kredit'   => $asset['cat_asset_credit_name'],
             'nilai'         => (float)$asset['value_asset_tetap'],
             'catatan'       => $asset['name']
         ];
@@ -588,8 +596,8 @@ class Accountancy extends BaseController
                     'tanggal'       => $tanggalPenyusutan->format('Y-m-d'),
                     'transaksi'     => 'Penyusutan',
                     'kode'          => '',
-                    'akun_debit'    => $asset['depreciation_cat_penyusutan'],
-                    'akun_kredit'   => $asset['depreciation_sum_cat_penyusutan'],
+                    'akun_debit'    => $asset['depreciation_cat_penyusutan_name'],
+                    'akun_kredit'   => $asset['depreciation_sum_cat_penyusutan_name'],
                     'nilai'         => $nilaiBulanan,
                     'catatan'       => 'Penyusutan bulan ke-' . $bulanKe
                 ];
@@ -626,8 +634,26 @@ class Accountancy extends BaseController
         $imageName = null;
 
         if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
+
+            $uploadPath = ROOTPATH . 'public/img/accountancy/assets';
+
+            // Pastikan folder ada
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            // Validasi mime type
+            $allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
+
+            if (!in_array($imageFile->getMimeType(), $allowedMime)) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Format gambar harus JPG, PNG, atau WEBP');
+            }
+
+            // Simpan file
             $imageName = $imageFile->getRandomName();
-            $imageFile->move(ROOTPATH . 'public/uploads/assets', $imageName); // Sesuaikan path jika perlu
+            $imageFile->move($uploadPath, $imageName);
         }
 
         // Validasi Sederhana
@@ -656,20 +682,20 @@ class Accountancy extends BaseController
             'cat_tax'                   => $input['cat_tax'] ?? null,
             'value_tax'                 => $input['value_tax'] ?? 0,
             'cat_asset_credit'          => $input['cat_asset_credit'],
-            'image'                     => $imageName, // Nama file gambar
+            'image_asset'               => $imageName, // Nama file gambar
             'depreciation_status'       => $depreciation_status ? 1 : 0,
             
             // Data Penyusutan (hanya diisi jika depreciation_status dicentang)
-            'depreciation_method'       => $depreciation_status ? ($input['depreciation_method'] ?? 'straight_line') : null,
+            'depreciation_method'       => $depreciation_status ? ($input['depreciation_method'] ?? 0) : null,
             'depreciation_residu'       => $depreciation_status ? ($input['depreciation_residu'] ?? 0) : 0,
             'depreciation_benefit_era'  => $depreciation_status ? ($input['depreciation_benefit_era'] ?? 0) : 0,
             'depreciation_cat_penyusutan' => $depreciation_status ? ($input['depreciation_cat_penyusutan'] ?? null) : null,
             'depreciation_sum_cat_penyusutan' => $depreciation_status ? ($input['depreciation_sum_cat_penyusutan'] ?? null) : null,
             
             // Asumsi nilai-nilai default/wajib lainnya
-            'outletid'                  => $this->data['outletPick'] ?? null, // Sesuaikan dengan logika otentikasi/pemilihan outlet Anda
-            'status_active'             => 1, 
-            'status_lock'               => 1, // Asumsi aset baru defaultnya aktif/terkunci
+            // 'outletid'                  => $this->data['outletPick'] ?? null, // Sesuaikan dengan logika otentikasi/pemilihan outlet Anda
+            // 'status_active'             => 1, 
+            // 'status_lock'               => 1, // Asumsi aset baru defaultnya aktif/terkunci
         ];
 
         // Simpan data ke database
@@ -687,72 +713,99 @@ class Accountancy extends BaseController
     public function updateAsset($id)
     {
         $AssetModel = new \App\Models\AccountancyAssetModel();
-        $input = $this->request->getPost();
-        
-        // Ambil data aset lama untuk cek gambar
+
+        // Ambil data lama
         $oldAsset = $AssetModel->find($id);
-
         if (!$oldAsset) {
-            return redirect()->back()->with('error', 'Aset tidak ditemukan.');
+            return redirect()->back()->with('error', 'Aset tidak ditemukan');
         }
 
-        // Menangani File Upload
-        $imageFile = $this->request->getFile('image_asset');
-        $imageName = $oldAsset['image']; // Tetap gunakan nama lama jika tidak ada upload baru
-
-        if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
-            // Hapus file lama jika ada dan berbeda
-            if (!empty($oldAsset['image'])) {
-                @unlink(ROOTPATH . 'public/uploads/assets/' . $oldAsset['image']);
-            }
-            $imageName = $imageFile->getRandomName();
-            $imageFile->move(ROOTPATH . 'public/uploads/assets', $imageName); // Sesuaikan path jika perlu
-        }
-
-        // Validasi
-        if (!$this->validate([
+        // =============================
+        // VALIDASI
+        // =============================
+        $rules = [
             'date'                  => 'required|valid_date',
             'name'                  => 'required|max_length[255]',
             'cat_asset_tetap'       => 'required|integer',
             'value_asset_tetap'     => 'required|numeric|greater_than_equal_to[0]',
             'cat_asset_credit'      => 'required|integer',
-            // Tambahkan validasi lain sesuai kebutuhan
-        ])) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+            'value_tax'             => 'permit_empty|numeric|greater_than_equal_to[0]',
+            'depreciation_benefit_era' => 'permit_empty|integer|greater_than[0]',
+            'image_asset'           => 'permit_empty|is_image[image_asset]|max_size[image_asset,2048]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
         }
 
-        // Menyiapkan data update
-        $depreciation_status = isset($input['depreciation_status']);
+        $input = $this->request->getPost();
 
+        // =============================
+        // UPLOAD IMAGE
+        // =============================
+        $imageName = $oldAsset['image_asset'];
+
+        $imageFile = $this->request->getFile('image_asset');
+        if ($imageFile && $imageFile->isValid() && !$imageFile->hasMoved()) {
+
+            // hapus file lama
+            if (!empty($oldAsset['image_asset'])) {
+                $oldPath = ROOTPATH . 'public/img/accountancy/assets/' . $oldAsset['image_asset'];
+                if (is_file($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            $imageName = $imageFile->getRandomName();
+            $imageFile->move(
+                ROOTPATH . 'public/img/accountancy/assets',
+                $imageName
+            );
+        }
+
+        // =============================
+        // LOGIKA PENYUSUTAN
+        // =============================
+        $depreciationStatus = $this->request->getPost('depreciation_status') ? 1 : 0;
+
+        // =============================
+        // DATA UPDATE
+        // =============================
         $updateData = [
             'date'                      => $input['date'],
             'name'                      => $input['name'],
             'description'               => $input['description'] ?? null,
             'cat_asset_tetap'           => $input['cat_asset_tetap'],
             'value_asset_tetap'         => $input['value_asset_tetap'],
-            'cat_tax'                   => $input['cat_tax'] ?? null,
+            'cat_tax'                   => $input['cat_tax'] ?: null,
             'value_tax'                 => $input['value_tax'] ?? 0,
             'cat_asset_credit'          => $input['cat_asset_credit'],
-            'image'                     => $imageName,
-            'depreciation_status'       => $depreciation_status ? 1 : 0,
-            
-            // Data Penyusutan (hanya diisi jika depreciation_status dicentang)
-            'depreciation_method'       => $depreciation_status ? ($input['depreciation_method'] ?? 'straight_line') : null,
-            'depreciation_residu'       => $depreciation_status ? ($input['depreciation_residu'] ?? 0) : 0,
-            'depreciation_benefit_era'  => $depreciation_status ? ($input['depreciation_benefit_era'] ?? 0) : 0,
-            'depreciation_cat_penyusutan' => $depreciation_status ? ($input['depreciation_cat_penyusutan'] ?? null) : null,
-            'depreciation_sum_cat_penyusutan' => $depreciation_status ? ($input['depreciation_sum_cat_penyusutan'] ?? null) : null,
-            
-            // Catatan: 'code_asset' dan 'outletid' biasanya tidak diizinkan diubah
-            // 'status_lock' mungkin diubah di form lain atau dihapus dari update jika tidak dimaksudkan untuk diubah di sini
+            'image_asset'               => $imageName,
+
+            'depreciation_status'       => $depreciationStatus,
+            'depreciation_method'       => $depreciationStatus ? ($input['depreciation_method'] ?? 0) : null,
+            'depreciation_residu'       => $depreciationStatus ? ($input['depreciation_residu'] ?? 0) : 0,
+            'depreciation_benefit_era'  => $depreciationStatus ? ($input['depreciation_benefit_era'] ?? 0) : 0,
+            'depreciation_cat_penyusutan' =>
+                $depreciationStatus ? $input['depreciation_cat_penyusutan'] : null,
+            'depreciation_sum_cat_penyusutan' =>
+                $depreciationStatus ? $input['depreciation_sum_cat_penyusutan'] : null,
         ];
 
+        // =============================
+        // UPDATE DATABASE
+        // =============================
         $AssetModel->update($id, $updateData);
 
-        // Logika Jurnal Akuntansi: Jika nilai perolehan/akun berubah, 
-        // perlu dilakukan penyesuaian jurnal (terlalu kompleks untuk disertakan di sini).
+        // NOTE:
+        // Jika kamu pakai jurnal akuntansi otomatis,
+        // sebaiknya di sini:
+        // - delete jurnal lama
+        // - generate ulang jurnal akuisisi & penyusutan
 
-        return redirect()->back()->with('success', 'Data berhasil diperbarui');
+        return redirect()->back()->with('success', 'Data aset berhasil diperbarui');
     }
 
     public function deleteAsset($id)
@@ -765,8 +818,8 @@ class Accountancy extends BaseController
         }
 
         // Hapus file gambar terkait
-        if (!empty($asset['image'])) {
-            @unlink(ROOTPATH . 'public/uploads/assets/' . $asset['image']);
+        if (!empty($asset['image_asset'])) {
+            @unlink(ROOTPATH . 'public/img/accountancy/assets/' . $asset['image_asset']);
         }
 
         // Catatan: Dalam akuntansi, aset tetap jarang dihapus langsung (hard delete).
