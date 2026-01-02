@@ -189,7 +189,7 @@ $routes->group('export', ['filter'=>'login'], function($routes){
 $routes->group('customer', ['filter'=>'login'], function($routes){
     $routes->get('', 'Customer::index', ['filter' => 'role:owner,supervisor,logistik,operator']);
     $routes->post('create', 'Customer::create', ['filter' => 'role:owner,supervisor,logistik,operator']);
-    $routes->post('update/(:num)', 'Customer::update/$1', ['filter' => 'role:owner']);
+    $routes->post('update/(:num)', 'Customer::update/$1', ['filter' => 'role:owner,supervisor,operator']);
     $routes->get('delete/(:num)', 'Customer::delete/$1', ['filter' => 'role:owner']);
 });
 

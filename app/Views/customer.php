@@ -160,13 +160,12 @@
                     } ?>
                     <td class="uk-text-center"><?= $customer['poin']; ?></td>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
+                        <!-- Button Trigger Modal Edit -->
+                        <div>
+                            <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $customer['id'] ?>"></a>
+                        </div>
+                        <!-- End Of Button Trigger Modal Edit -->
                         <?php if (in_groups('owner')) { ?>
-                            <!-- Button Trigger Modal Edit -->
-                            <div>
-                                <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $customer['id'] ?>"></a>
-                            </div>
-                            <!-- End Of Button Trigger Modal Edit -->
-
                             <!-- Button Delete -->
                             <div>
                                 <a uk-icon="trash" class="uk-icon-button-delete" href="customer/delete/<?= $customer['id'] ?>" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')"></a>
