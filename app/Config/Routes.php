@@ -271,6 +271,7 @@ $routes->group('topup', ['filter'=>'login'], function($routes){
 $routes->group('pay', ['filter'=>'login'], function($routes){
     $routes->get('', 'Pay::index', ['filter' => 'role:owner,supervisor,logistik,operator']);
     $routes->post('create', 'Pay::create',['filter'=> 'role:owner,supervisor,logistik,operator']);
+    $routes->get('post-success/(:num)', 'Pay::postSuccess/$1',['filter'=> 'role:owner,supervisor,logistik,operator']);
     // $routes->post('save', 'Pay::save',['filter'=> 'role:owner,supervisor,logistik,operator']);
     $routes->get('delete/(:num)', 'Pay::bookingdelete/$1',['filter'=> 'role:owner,supervisor,logistik,operator']);
     $routes->post('pay', 'Pay::pay',['filter'=> 'role:owner,supervisor,logistik,operator']);

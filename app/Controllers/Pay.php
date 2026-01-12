@@ -29,419 +29,484 @@ class Pay extends BaseController
     protected $auth;
     protected $config;
     
+    // public function create()
+    // {
+    //     // Load Models
+    //     $db                 = \Config\Database::connect();
+    //     $BundleModel        = new BundleModel();
+    //     $BundledetModel     = new BundledetailModel();
+    //     $BookingModel       = new BookingModel();
+    //     $BookingdetailModel = new BookingdetailModel();
+    //     $CashModel          = new CashModel();
+    //     $DebtModel          = new DebtModel();
+    //     $GconfigModel       = new GconfigModel();
+    //     $OutletModel        = new OutletModel();
+    //     $UserModel          = new UserModel();
+    //     $MemberModel        = new MemberModel();
+    //     $PaymentModel       = new PaymentModel();
+    //     $ProductModel       = new ProductModel();
+    //     $VariantModel       = new VariantModel();
+    //     $StockModel         = new StockModel();
+    //     $TransactionModel   = new TransactionModel();
+    //     $TrxdetailModel     = new TrxdetailModel();
+    //     $TrxpaymentModel    = new TrxpaymentModel();
+
+    //     $input = $this->request->getPost();
+    //     $date  = date('Y-m-d H:i:s');
+    //     $Gconfig = $GconfigModel->first();
+
+    //     // Handle image upload
+    //     $fileName = null;
+    //     if (!empty($input['image'])) {
+    //         $img = $input['image'];
+    //         $folderPath = "img/tfproof/";
+    //         $image_parts = explode(";base64,", $img);
+    //         if (count($image_parts) === 2) {
+    //             $image_base64 = base64_decode($image_parts[1]);
+    //             $fileName = uniqid() . '.png';
+    //             $file = $folderPath . $fileName;
+    //             file_put_contents($file, $image_base64);
+    //         }
+    //     }
+
+    //     // Calculate item and bundle values
+    //     $varvalues = [];
+    //     $bundvalues = [];
+    //     $memberid = !empty($input['customerid']) ? $input['customerid'] : '';
+    //     $memberdisc = 0;
+
+    //     // Calculate variant values
+    //     if (!empty($input['qty'])) {
+    //         foreach ($input['qty'] as $varid => $varqty) {
+    //             $variant = $VariantModel->find($varid);
+    //             $discvar = isset($input['varprice'][$varid]) ? (int)$input['varprice'][$varid] * (int)$varqty : 0;
+    //             $globaldisc = 0;
+    //             if (!empty($this->data['gconfig']['globaldisc'])) {
+    //                 if ($this->data['gconfig']['globaldisctype'] === '0') {
+    //                     $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
+    //                 } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+    //                     $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
+    //                 }
+    //             }
+    //             $memberdisc = 0;
+    //             if ($memberid) {
+    //                 if ($this->data['gconfig']['memberdisctype'] === '0') {
+    //                     $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$varqty;
+    //                 } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+    //                     $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
+    //                 }
+    //                 $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
+    //                 if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
+    //             }
+    //             $varvalues[] = (((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty) - $discvar - $globaldisc - $memberdisc;
+    //         }
+    //     } else {
+    //         $varvalues[] = 0;
+    //     }
+
+    //     // Calculate bundle values
+    //     if (!empty($input['bqty'])) {
+    //         foreach ($input['bqty'] as $bunid => $bundqty) {
+    //             $bundle = $BundleModel->find($bunid);
+    //             $bundleval = (int)$bundqty * (int)$bundle['price'];
+    //             $globaldisc = 0;
+    //             if (!empty($this->data['gconfig']['globaldisc'])) {
+    //                 if ($this->data['gconfig']['globaldisctype'] === '0') {
+    //                     $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$bundqty;
+    //                 } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+    //                     $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundle['price'] * (int)$bundqty;
+    //                 }
+    //             }
+    //             $memberdisc = 0;
+    //             if ($memberid) {
+    //                 if ($this->data['gconfig']['memberdisctype'] === '0') {
+    //                     $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$bundqty;
+    //                 } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+    //                     $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price'] * (int)$bundqty;
+    //                 }
+    //                 $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bundqty;
+    //                 if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
+    //             }
+    //             $bundvalues[] = $bundleval - $globaldisc - $memberdisc;
+    //         }
+    //     } else {
+    //         $bundvalues[] = 0;
+    //     }
+
+    //     $subtotal = array_sum($varvalues) + array_sum($bundvalues);
+
+    //     // Transaction discount
+    //     $discount = 0;
+    //     if (!empty($input['discvalue'])) {
+    //         if ($input['disctype'] === '0') {
+    //             $discount = $input['discvalue'];
+    //         } elseif ($input['disctype'] === '1') {
+    //             $discount = ((int)$input['discvalue'] / 100) * (int)$subtotal;
+    //         }
+    //     }
+
+    //     $poin = !empty($input['poin']) ? (int)$input['poin'] : 0;
+    //     $value = (int)$subtotal - (int)$discount - (int)$poin;
+
+    //     // Single Payment
+    //     if (!empty($input['payment']) && empty($input['duedate'])) {
+    //         $trx = [
+    //             'outletid'      => $this->data['outletPick'],
+    //             'userid'        => $this->data['uid'],
+    //             'memberid'      => $memberid,
+    //             'paymentid'     => $input['payment'],
+    //             'value'         => $value,
+    //             'disctype'      => $input['disctype'],
+    //             // 'memberdisc'    => $memberdisc,
+    //             'discvalue'     => $discount,
+    //             'date'          => $date,
+    //             'pointused'     => $poin,
+    //             'amountpaid'    => $input['value'],
+    //             'photo'         => $fileName,
+    //         ];
+    //         $TransactionModel->insert($trx);
+    //     }
+    //     // Splitbill Payment
+    //     elseif (!empty($input['firstpayment']) && !empty($input['secpayment']) && empty($input['duedate'])) {
+    //         $trx = [
+    //             'outletid'      => $this->data['outletPick'],
+    //             'userid'        => $this->data['uid'],
+    //             'memberid'      => $memberid,
+    //             'paymentid'     => '0',
+    //             'value'         => $value,
+    //             'disctype'      => $input['disctype'],
+    //             // 'memberdisc'    => $memberdisc,
+    //             'discvalue'     => $discount,
+    //             'date'          => $date,
+    //             'pointused'     => $poin,
+    //             'amountpaid'    => (int)$input['firstpay'] + (int)$input['secondpay'],
+    //             'photo'         => $fileName,
+    //         ];
+    //         $TransactionModel->insert($trx);
+    //     }
+    //     // Debt
+    //     elseif (!empty($input['duedate'])) {
+    //         $trx = [
+    //             'outletid'      => $this->data['outletPick'],
+    //             'userid'        => $this->data['uid'],
+    //             'memberid'      => $memberid,
+    //             'paymentid'     => '0',
+    //             'value'         => $value,
+    //             'disctype'      => $input['disctype'],
+    //             // 'memberdisc'    => $memberdisc,
+    //             'discvalue'     => $discount,
+    //             'date'          => $date,
+    //             'pointused'     => $poin,
+    //             'amountpaid'    => $input['value'],
+    //             'photo'         => $fileName,
+    //         ];
+    //         $TransactionModel->insert($trx);
+    //     }
+    //     $trxId = $TransactionModel->getInsertID();
+
+    //     // Insert Transaction Details and update stock
+    //     if (!empty($input['qty'])) {
+    //         foreach ($input['qty'] as $varid => $varqty) {
+    //             $variant = $VariantModel->find($varid);
+    //             $discvar = isset($input['varprice'][$varid]) ? (int)$input['varprice'][$varid] * $varqty : 0;
+    //             $globaldisc = 0;
+    //             if (!empty($this->data['gconfig']['globaldisc'])) {
+    //                 if ($this->data['gconfig']['globaldisctype'] === '0') {
+    //                     $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
+    //                 } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+    //                     $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
+    //                 }
+    //             }
+    //             $memberdisc = 0;
+    //             if ($memberid) {
+    //                 if ($this->data['gconfig']['memberdisctype'] === '0') {
+    //                     $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$varqty;
+    //                 } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+    //                     $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
+    //                 }
+    //                 $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
+    //                 if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
+    //             }
+    //             $varPrice = ((int)$variant['hargamodal'] + (int)$variant['hargajual']) - ($discvar / max(1, (int)$varqty)) - ($globaldisc / max(1, (int)$varqty)) - ($memberdisc / max(1, (int)$varqty));
+    //             $marginmodal = (int)$varPrice - (int)$variant['hargamodal'];
+    //             $margindasar = (int)$varPrice - (int)$variant['hargadasar'];
+    //             $TrxdetailModel->save([
+    //                 'transactionid' => $trxId,
+    //                 'variantid'     => $varid,
+    //                 'qty'           => $varqty,
+    //                 'value'         => $varPrice,
+    //                 'discvar'       => $discvar,
+    //                 'globaldisc'    => $globaldisc,
+    //                 'memberdisc'    => $memberdisc,
+    //                 'margindasar'   => $margindasar,
+    //                 'marginmodal'   => $marginmodal,
+    //             ]);
+    //             // Update stock
+    //             $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
+    //             if ($stock) {
+    //                 $StockModel->save([
+    //                     'id'  => $stock['id'],
+    //                     'sale'=> $date,
+    //                     'qty' => max(0, (int)$stock['qty'] - (int)$varqty)
+    //                 ]);
+    //             }
+    //         }
+    //     }
+
+    //     // Insert bundle details and update stock
+    //     if (!empty($input['bqty'])) {
+    //         foreach ($input['bqty'] as $bunid => $bunqty) {
+    //             $bundle = $BundleModel->find($bunid);
+    //             $bundleprice = (int)$bundle['price'];
+    //             $globaldisc = 0;
+    //             if (!empty($this->data['gconfig']['globaldisc'])) {
+    //                 if ($this->data['gconfig']['globaldisctype'] === '0') {
+    //                     $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$bunqty;
+    //                 } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
+    //                     $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleprice * (int)$bunqty;
+    //                 }
+    //             }
+    //             $memberdisc = 0;
+    //             if ($memberid) {
+    //                 if ($this->data['gconfig']['memberdisctype'] === '0') {
+    //                     $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$bunqty;
+    //                 } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
+    //                     $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price'] * (int)$bunqty;
+    //                 }
+    //                 $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bunqty;
+    //                 if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
+    //             }
+    //             $bundlefinprice = (int)$bundleprice - ($globaldisc / max(1, (int)$bunqty)) - ($memberdisc / max(1, (int)$bunqty));
+    //             $TrxdetailModel->save([
+    //                 'transactionid' => $trxId,
+    //                 'bundleid'      => $bunid,
+    //                 'qty'           => $bunqty,
+    //                 'globaldisc'    => $globaldisc,
+    //                 'memberdisc'    => $memberdisc,
+    //                 'value'         => $bundlefinprice
+    //             ]);
+    //             // Update stock for each variant in bundle
+    //             $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
+    //             foreach ($bundledetail as $BundleDetail) {
+    //                 $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
+    //                 if ($bunstock) {
+    //                     $StockModel->save([
+    //                         'id'  => $bunstock['id'],
+    //                         'sale'=> $date,
+    //                         'qty' => max(0, (int)$bunstock['qty'] - (int)$bunqty)
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     // Deduct member points
+    //     if ($memberid) {
+    //         $cust = $MemberModel->find($memberid);
+    //         if ($cust) {
+    //             $MemberModel->save([
+    //                 'id'   => $cust['id'],
+    //                 'poin' => max(0, (int)$cust['poin'] - $poin),
+    //             ]);
+    //         }
+    //     }
+
+    //     // PPN
+    //     $ppn = (int)$value * ((int)$Gconfig['ppn'] / 100);
+    //     $total = (int)$subtotal - (int)$discount - $poin + (int)$ppn;
+
+    //     // Payment handling
+    //     if (!empty($input['firstpayment']) && !empty($input['secpayment']) && empty($input['duedate'])) {
+    //         foreach (['firstpayment' => 'firstpay', 'secpayment' => 'secondpay'] as $payKey => $valKey) {
+    //             $payId = $input[$payKey];
+    //             $payVal = $input[$valKey];
+    //             $TrxpaymentModel->insert([
+    //                 'paymentid'     => $payId,
+    //                 'transactionid' => $trxId,
+    //                 'value'         => $payVal,
+    //             ]);
+    //             $payment = $PaymentModel->find($payId);
+    //             if ($payment) {
+    //                 $cash = $CashModel->find($payment['cashid']);
+    //                 if ($cash) {
+    //                     $CashModel->save([
+    //                         'id'  => $cash['id'],
+    //                         'qty' => (int)$cash['qty'] + (int)$payVal,
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+    //     } elseif (!empty($input['duedate'])) {
+    //         $dpValue   = (int)($input['value'] ?? 0);
+    //         $debtValue = $total - $dpValue;
+
+    //         if ($debtValue > 0) {
+    //             $DebtModel->insert([
+    //                 'memberid'      => $memberid,
+    //                 'transactionid' => $trxId,
+    //                 'value'         => $debtValue,
+    //                 'deadline'      => $input['duedate'],
+    //             ]);
+
+    //             $TrxpaymentModel->insert([
+    //                 'paymentid'     => '0',
+    //                 'transactionid' => $trxId,
+    //                 'value'         => $debtValue,
+    //             ]);
+    //         }
+
+    //         if (!empty($input['payment']) && $dpValue > 0) {
+    //             $TrxpaymentModel->insert([
+    //                 'paymentid'     => $input['payment'],
+    //                 'transactionid' => $trxId,
+    //                 'value'         => $dpValue,
+    //             ]);
+    //             $payment = $PaymentModel->find($input['payment']);
+    //             if ($payment) {
+    //                 $cash = $CashModel->find($payment['cashid']);
+    //                 if ($cash) {
+    //                     $CashModel->save([
+    //                         'id'  => $cash['id'],
+    //                         'qty' => (int)$cash['qty'] + $dpValue,
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+    //     } else {
+    //         if (!empty($input['payment'])) {
+    //             $TrxpaymentModel->insert([
+    //                 'paymentid'     => $input['payment'],
+    //                 'transactionid' => $trxId,
+    //                 'value'         => $total,
+    //             ]);
+    //             $payment = $PaymentModel->find($input['payment']);
+    //             if ($payment) {
+    //                 $cash = $CashModel->find($payment['cashid']);
+    //                 if ($cash) {
+    //                     $CashModel->save([
+    //                         'id'  => $cash['id'],
+    //                         'qty' => (int)$cash['qty'] + (int)$total,
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     // Update member points (earn)
+    //     if ($memberid) {
+    //         $member = $MemberModel->find($memberid);
+    //         if ($member) {
+    //             $minimTrx = $Gconfig['poinorder'];
+    //             $poinval = $Gconfig['poinvalue'];
+    //             $poinresult = 0;
+    //             if ($minimTrx && $total >= $minimTrx) {
+    //                 $poinresult = floor($total / $minimTrx) * $poinval;
+    //             }
+    //             $MemberModel->save([
+    //                 'id'   => $member['id'],
+    //                 'poin' => (int)$member['poin'] + (int)$poinresult,
+    //                 'trx'  => (int)$member['trx'] + 1,
+    //             ]);
+    //         }
+    //     }
+
+    //     // Prepare data for print/redirect
+    //     $transactions = $TransactionModel->find($trxId);
+    //     $user = $UserModel->where('id', $transactions['userid'])->first();
+    //     $actual_link = "https://{$_SERVER['HTTP_HOST']}/pay/copyprint/$trxId";
+    //     $data = $this->data;
+    //     $data['title'] = lang('Global.transaction');
+    //     $data['description'] = lang('Global.transactionListDesc');
+    //     $data['transactions'] = $transactions;
+    //     $data['user'] = $user ? $user->username : '';
+    //     $data['date'] = $transactions['date'];
+    //     $data['transactionid'] = $trxId;
+    //     $data['subtotal'] = $subtotal;
+    //     $data['total'] = $total;
+    //     $data['discount'] = $discount;
+    //     $data['change'] = (!empty($input['value']) && $input['value'] > $total) ? ((int)$input['value'] - (int)$total) : 0;
+    //     $data['pay'] = $input['value'] ?? 0;
+    //     $data['poinused'] = $poin;
+    //     $data['poinearn'] = isset($poinresult) ? $poinresult : 0;
+    //     $data['link'] = $actual_link;
+
+    //     // WhatsApp redirect if phone provided
+    //     if (!empty($input['customerid'])) {
+    //         $memberdata = $MemberModel->find($transactions['memberid']);
+    //         if ($memberdata && !empty($memberdata['phone'])) {
+    //             $waLink = "https://wa.me/+62{$memberdata['phone']}?text=" . urlencode(
+    //                 "Terimakasih telah berbelanja di 58 Vapehouse, untuk detail struk pembelian bisa cek link dibawah lur. ✨✨\n\n$actual_link\n\nJika menemukan kendala, kerusakan produk, atau ingin memberi kritik & saran hubungi 58 Customer Solution kami di wa.me/6288983741558"
+    //             );
+    //             return redirect()->to($waLink);
+    //         }
+    //     }
+
+    //     return redirect()->to('');
+    // }
+
     public function create()
     {
-        // Load Models
-        $db                 = \Config\Database::connect();
-        $BundleModel        = new BundleModel();
-        $BundledetModel     = new BundledetailModel();
-        $BookingModel       = new BookingModel();
-        $BookingdetailModel = new BookingdetailModel();
-        $CashModel          = new CashModel();
-        $DebtModel          = new DebtModel();
-        $GconfigModel       = new GconfigModel();
-        $OutletModel        = new OutletModel();
-        $UserModel          = new UserModel();
-        $MemberModel        = new MemberModel();
-        $PaymentModel       = new PaymentModel();
-        $ProductModel       = new ProductModel();
-        $VariantModel       = new VariantModel();
-        $StockModel         = new StockModel();
-        $TransactionModel   = new TransactionModel();
-        $TrxdetailModel     = new TrxdetailModel();
-        $TrxpaymentModel    = new TrxpaymentModel();
-
         $input = $this->request->getPost();
-        $date  = date('Y-m-d H:i:s');
-        $Gconfig = $GconfigModel->first();
 
-        // Handle image upload
-        $fileName = null;
-        if (!empty($input['image'])) {
-            $img = $input['image'];
-            $folderPath = "img/tfproof/";
-            $image_parts = explode(";base64,", $img);
-            if (count($image_parts) === 2) {
-                $image_base64 = base64_decode($image_parts[1]);
-                $fileName = uniqid() . '.png';
-                $file = $folderPath . $fileName;
-                file_put_contents($file, $image_base64);
-            }
+        try {
+            $service = new \App\Services\TransactionService();
+            $trxId = $service->createTransaction(
+                $input,
+                $this->data['uid'],
+                $this->data['outletPick']
+            );
+
+            return redirect()->to("/pay/post-success/$trxId");
+
+        } catch (\Throwable $e) {
+            log_message('error', $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
+    }
 
-        // Calculate item and bundle values
-        $varvalues = [];
-        $bundvalues = [];
-        $memberid = !empty($input['customerid']) ? $input['customerid'] : '';
-        $memberdisc = 0;
+    public function postSuccess($trxId)
+    {
+        $trx = (new TransactionModel())
+            ->select('`transaction`.*, member.phone as member_phone')
+            ->join('member', 'member.id = `transaction`.memberid', 'left')
+            ->find($trxId);
 
-        // Calculate variant values
-        if (!empty($input['qty'])) {
-            foreach ($input['qty'] as $varid => $varqty) {
-                $variant = $VariantModel->find($varid);
-                $discvar = isset($input['varprice'][$varid]) ? (int)$input['varprice'][$varid] * (int)$varqty : 0;
-                $globaldisc = 0;
-                if (!empty($this->data['gconfig']['globaldisc'])) {
-                    if ($this->data['gconfig']['globaldisctype'] === '0') {
-                        $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
-                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
-                    }
-                }
-                $memberdisc = 0;
-                if ($memberid) {
-                    if ($this->data['gconfig']['memberdisctype'] === '0') {
-                        $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$varqty;
-                    } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                        $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
-                    }
-                    $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
-                    if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
-                }
-                $varvalues[] = (((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty) - $discvar - $globaldisc - $memberdisc;
-            }
-        } else {
-            $varvalues[] = 0;
+        if (!$trx) {
+            return redirect()->to('');
         }
+        
+        $waNumber = $this->normalizeWaNumber($trx['member_phone'] ?? null);
 
-        // Calculate bundle values
-        if (!empty($input['bqty'])) {
-            foreach ($input['bqty'] as $bunid => $bundqty) {
-                $bundle = $BundleModel->find($bunid);
-                $bundleval = (int)$bundqty * (int)$bundle['price'];
-                $globaldisc = 0;
-                if (!empty($this->data['gconfig']['globaldisc'])) {
-                    if ($this->data['gconfig']['globaldisctype'] === '0') {
-                        $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$bundqty;
-                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundle['price'] * (int)$bundqty;
-                    }
-                }
-                $memberdisc = 0;
-                if ($memberid) {
-                    if ($this->data['gconfig']['memberdisctype'] === '0') {
-                        $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$bundqty;
-                    } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                        $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price'] * (int)$bundqty;
-                    }
-                    $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bundqty;
-                    if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
-                }
-                $bundvalues[] = $bundleval - $globaldisc - $memberdisc;
-            }
-        } else {
-            $bundvalues[] = 0;
+        if ($waNumber) {
+            $actual_link = base_url("pay/copyprint/$trxId");
+            $message = "Terimakasih telah berbelanja di 58 Vapehouse, untuk detail struk pembelian bisa cek link dibawah lur. ✨✨\n\n$actual_link\n\nJika menemukan kendala, kerusakan produk, atau ingin memberi kritik & saran hubungi 58 Customer Solution kami di wa.me/6288983741558";
+            $waLink  = "https://wa.me/{$waNumber}?text=" . urlencode($message);
+
+            return redirect()->to($waLink);
         }
-
-        $subtotal = array_sum($varvalues) + array_sum($bundvalues);
-
-        // Transaction discount
-        $discount = 0;
-        if (!empty($input['discvalue'])) {
-            if ($input['disctype'] === '0') {
-                $discount = $input['discvalue'];
-            } elseif ($input['disctype'] === '1') {
-                $discount = ((int)$input['discvalue'] / 100) * (int)$subtotal;
-            }
-        }
-
-        $poin = !empty($input['poin']) ? (int)$input['poin'] : 0;
-        $value = (int)$subtotal - (int)$discount - (int)$poin;
-
-        // Single Payment
-        if (!empty($input['payment']) && empty($input['duedate'])) {
-            $trx = [
-                'outletid'      => $this->data['outletPick'],
-                'userid'        => $this->data['uid'],
-                'memberid'      => $memberid,
-                'paymentid'     => $input['payment'],
-                'value'         => $value,
-                'disctype'      => $input['disctype'],
-                // 'memberdisc'    => $memberdisc,
-                'discvalue'     => $discount,
-                'date'          => $date,
-                'pointused'     => $poin,
-                'amountpaid'    => $input['value'],
-                'photo'         => $fileName,
-            ];
-            $TransactionModel->insert($trx);
-        }
-        // Splitbill Payment
-        elseif (!empty($input['firstpayment']) && !empty($input['secpayment']) && empty($input['duedate'])) {
-            $trx = [
-                'outletid'      => $this->data['outletPick'],
-                'userid'        => $this->data['uid'],
-                'memberid'      => $memberid,
-                'paymentid'     => '0',
-                'value'         => $value,
-                'disctype'      => $input['disctype'],
-                // 'memberdisc'    => $memberdisc,
-                'discvalue'     => $discount,
-                'date'          => $date,
-                'pointused'     => $poin,
-                'amountpaid'    => (int)$input['firstpay'] + (int)$input['secondpay'],
-                'photo'         => $fileName,
-            ];
-            $TransactionModel->insert($trx);
-        }
-        // Debt
-        elseif (!empty($input['duedate'])) {
-            $trx = [
-                'outletid'      => $this->data['outletPick'],
-                'userid'        => $this->data['uid'],
-                'memberid'      => $memberid,
-                'paymentid'     => '0',
-                'value'         => $value,
-                'disctype'      => $input['disctype'],
-                // 'memberdisc'    => $memberdisc,
-                'discvalue'     => $discount,
-                'date'          => $date,
-                'pointused'     => $poin,
-                'amountpaid'    => $input['value'],
-                'photo'         => $fileName,
-            ];
-            $TransactionModel->insert($trx);
-        }
-        $trxId = $TransactionModel->getInsertID();
-
-        // Insert Transaction Details and update stock
-        if (!empty($input['qty'])) {
-            foreach ($input['qty'] as $varid => $varqty) {
-                $variant = $VariantModel->find($varid);
-                $discvar = isset($input['varprice'][$varid]) ? (int)$input['varprice'][$varid] * $varqty : 0;
-                $globaldisc = 0;
-                if (!empty($this->data['gconfig']['globaldisc'])) {
-                    if ($this->data['gconfig']['globaldisctype'] === '0') {
-                        $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$varqty;
-                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
-                    }
-                }
-                $memberdisc = 0;
-                if ($memberid) {
-                    if ($this->data['gconfig']['memberdisctype'] === '0') {
-                        $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$varqty;
-                    } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                        $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * ((int)$variant['hargamodal'] + (int)$variant['hargajual']) * (int)$varqty;
-                    }
-                    $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$varqty;
-                    if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
-                }
-                $varPrice = ((int)$variant['hargamodal'] + (int)$variant['hargajual']) - ($discvar / max(1, (int)$varqty)) - ($globaldisc / max(1, (int)$varqty)) - ($memberdisc / max(1, (int)$varqty));
-                $marginmodal = (int)$varPrice - (int)$variant['hargamodal'];
-                $margindasar = (int)$varPrice - (int)$variant['hargadasar'];
-                $TrxdetailModel->save([
-                    'transactionid' => $trxId,
-                    'variantid'     => $varid,
-                    'qty'           => $varqty,
-                    'value'         => $varPrice,
-                    'discvar'       => $discvar,
-                    'globaldisc'    => $globaldisc,
-                    'memberdisc'    => $memberdisc,
-                    'margindasar'   => $margindasar,
-                    'marginmodal'   => $marginmodal,
-                ]);
-                // Update stock
-                $stock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $varid)->first();
-                if ($stock) {
-                    $StockModel->save([
-                        'id'  => $stock['id'],
-                        'sale'=> $date,
-                        'qty' => max(0, (int)$stock['qty'] - (int)$varqty)
-                    ]);
-                }
-            }
-        }
-
-        // Insert bundle details and update stock
-        if (!empty($input['bqty'])) {
-            foreach ($input['bqty'] as $bunid => $bunqty) {
-                $bundle = $BundleModel->find($bunid);
-                $bundleprice = (int)$bundle['price'];
-                $globaldisc = 0;
-                if (!empty($this->data['gconfig']['globaldisc'])) {
-                    if ($this->data['gconfig']['globaldisctype'] === '0') {
-                        $globaldisc = (int)$this->data['gconfig']['globaldisc'] * (int)$bunqty;
-                    } elseif ($this->data['gconfig']['globaldisctype'] === '1') {
-                        $globaldisc = ((int)$this->data['gconfig']['globaldisc'] / 100) * (int)$bundleprice * (int)$bunqty;
-                    }
-                }
-                $memberdisc = 0;
-                if ($memberid) {
-                    if ($this->data['gconfig']['memberdisctype'] === '0') {
-                        $memberdisc = $this->data['gconfig']['memberdisc'] * (int)$bunqty;
-                    } elseif ($this->data['gconfig']['memberdisctype'] === '1') {
-                        $memberdisc = ((int)$this->data['gconfig']['memberdisc'] / 100) * (int)$bundle['price'] * (int)$bunqty;
-                    }
-                    $maxdisc = $this->data['gconfig']['maxmemberdisc'] * (int)$bunqty;
-                    if ($memberdisc > $maxdisc) $memberdisc = $maxdisc;
-                }
-                $bundlefinprice = (int)$bundleprice - ($globaldisc / max(1, (int)$bunqty)) - ($memberdisc / max(1, (int)$bunqty));
-                $TrxdetailModel->save([
-                    'transactionid' => $trxId,
-                    'bundleid'      => $bunid,
-                    'qty'           => $bunqty,
-                    'globaldisc'    => $globaldisc,
-                    'memberdisc'    => $memberdisc,
-                    'value'         => $bundlefinprice
-                ]);
-                // Update stock for each variant in bundle
-                $bundledetail = $BundledetModel->where('bundleid', $bunid)->find();
-                foreach ($bundledetail as $BundleDetail) {
-                    $bunstock = $StockModel->where('outletid', $this->data['outletPick'])->where('variantid', $BundleDetail['variantid'])->first();
-                    if ($bunstock) {
-                        $StockModel->save([
-                            'id'  => $bunstock['id'],
-                            'sale'=> $date,
-                            'qty' => max(0, (int)$bunstock['qty'] - (int)$bunqty)
-                        ]);
-                    }
-                }
-            }
-        }
-
-        // Deduct member points
-        if ($memberid) {
-            $cust = $MemberModel->find($memberid);
-            if ($cust) {
-                $MemberModel->save([
-                    'id'   => $cust['id'],
-                    'poin' => max(0, (int)$cust['poin'] - $poin),
-                ]);
-            }
-        }
-
-        // PPN
-        $ppn = (int)$value * ((int)$Gconfig['ppn'] / 100);
-        $total = (int)$subtotal - (int)$discount - $poin + (int)$ppn;
-
-        // Payment handling
-        if (!empty($input['firstpayment']) && !empty($input['secpayment']) && empty($input['duedate'])) {
-            foreach (['firstpayment' => 'firstpay', 'secpayment' => 'secondpay'] as $payKey => $valKey) {
-                $payId = $input[$payKey];
-                $payVal = $input[$valKey];
-                $TrxpaymentModel->insert([
-                    'paymentid'     => $payId,
-                    'transactionid' => $trxId,
-                    'value'         => $payVal,
-                ]);
-                $payment = $PaymentModel->find($payId);
-                if ($payment) {
-                    $cash = $CashModel->find($payment['cashid']);
-                    if ($cash) {
-                        $CashModel->save([
-                            'id'  => $cash['id'],
-                            'qty' => (int)$cash['qty'] + (int)$payVal,
-                        ]);
-                    }
-                }
-            }
-        } elseif (!empty($input['duedate'])) {
-            $dpValue   = (int)($input['value'] ?? 0);
-            $debtValue = $total - $dpValue;
-
-            if ($debtValue > 0) {
-                $DebtModel->insert([
-                    'memberid'      => $memberid,
-                    'transactionid' => $trxId,
-                    'value'         => $debtValue,
-                    'deadline'      => $input['duedate'],
-                ]);
-
-                $TrxpaymentModel->insert([
-                    'paymentid'     => '0',
-                    'transactionid' => $trxId,
-                    'value'         => $debtValue,
-                ]);
-            }
-
-            if (!empty($input['payment']) && $dpValue > 0) {
-                $TrxpaymentModel->insert([
-                    'paymentid'     => $input['payment'],
-                    'transactionid' => $trxId,
-                    'value'         => $dpValue,
-                ]);
-                $payment = $PaymentModel->find($input['payment']);
-                if ($payment) {
-                    $cash = $CashModel->find($payment['cashid']);
-                    if ($cash) {
-                        $CashModel->save([
-                            'id'  => $cash['id'],
-                            'qty' => (int)$cash['qty'] + $dpValue,
-                        ]);
-                    }
-                }
-            }
-        } else {
-            if (!empty($input['payment'])) {
-                $TrxpaymentModel->insert([
-                    'paymentid'     => $input['payment'],
-                    'transactionid' => $trxId,
-                    'value'         => $total,
-                ]);
-                $payment = $PaymentModel->find($input['payment']);
-                if ($payment) {
-                    $cash = $CashModel->find($payment['cashid']);
-                    if ($cash) {
-                        $CashModel->save([
-                            'id'  => $cash['id'],
-                            'qty' => (int)$cash['qty'] + (int)$total,
-                        ]);
-                    }
-                }
-            }
-        }
-
-        // Update member points (earn)
-        if ($memberid) {
-            $member = $MemberModel->find($memberid);
-            if ($member) {
-                $minimTrx = $Gconfig['poinorder'];
-                $poinval = $Gconfig['poinvalue'];
-                $poinresult = 0;
-                if ($minimTrx && $total >= $minimTrx) {
-                    $poinresult = floor($total / $minimTrx) * $poinval;
-                }
-                $MemberModel->save([
-                    'id'   => $member['id'],
-                    'poin' => (int)$member['poin'] + (int)$poinresult,
-                    'trx'  => (int)$member['trx'] + 1,
-                ]);
-            }
-        }
-
-        // Prepare data for print/redirect
-        $transactions = $TransactionModel->find($trxId);
-        $user = $UserModel->where('id', $transactions['userid'])->first();
-        $actual_link = "https://{$_SERVER['HTTP_HOST']}/pay/copyprint/$trxId";
-        $data = $this->data;
-        $data['title'] = lang('Global.transaction');
-        $data['description'] = lang('Global.transactionListDesc');
-        $data['transactions'] = $transactions;
-        $data['user'] = $user ? $user->username : '';
-        $data['date'] = $transactions['date'];
-        $data['transactionid'] = $trxId;
-        $data['subtotal'] = $subtotal;
-        $data['total'] = $total;
-        $data['discount'] = $discount;
-        $data['change'] = (!empty($input['value']) && $input['value'] > $total) ? ((int)$input['value'] - (int)$total) : 0;
-        $data['pay'] = $input['value'] ?? 0;
-        $data['poinused'] = $poin;
-        $data['poinearn'] = isset($poinresult) ? $poinresult : 0;
-        $data['link'] = $actual_link;
-
-        // WhatsApp redirect if phone provided
-        if (!empty($input['customerid'])) {
-            $memberdata = $MemberModel->find($transactions['memberid']);
-            if ($memberdata && !empty($memberdata['phone'])) {
-                $waLink = "https://wa.me/+62{$memberdata['phone']}?text=" . urlencode(
-                    "Terimakasih telah berbelanja di 58 Vapehouse, untuk detail struk pembelian bisa cek link dibawah lur. ✨✨\n\n$actual_link\n\nJika menemukan kendala, kerusakan produk, atau ingin memberi kritik & saran hubungi 58 Customer Solution kami di wa.me/6288983741558"
-                );
-                return redirect()->to($waLink);
-            }
-        }
-
+        
         return redirect()->to('');
+    }
+
+    private function normalizeWaNumber(?string $phone): ?string
+    {
+        if (!$phone) return null;
+
+        $phone = preg_replace('/\D/', '', $phone);
+        if (str_starts_with($phone, '08')) {
+            $phone = '62' . substr($phone, 1);
+        }
+        elseif (str_starts_with($phone, '8')) {
+            $phone = '62' . $phone;
+        }
+        if (str_starts_with($phone, '6208')) {
+            $phone = '62' . substr($phone, 3);
+        }
+        elseif (!str_starts_with($phone, '62')) {
+            return null;
+        }
+
+        return strlen($phone) >= 11 ? $phone : null;
     }
 
     public function save()
