@@ -275,9 +275,9 @@ class TransactionService
             }
 
             // Clamp overpay
-            if ($totalPaid + $value > $total) {
-                $value = $total - $totalPaid;
-            }
+            // if ($totalPaid + $value > $total) {
+            //     $value = $total - $totalPaid;
+            // }
             if ($value <= 0) break;
 
             $trxPaymentModel->insert([
