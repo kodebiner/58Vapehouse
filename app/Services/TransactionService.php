@@ -333,9 +333,9 @@ class TransactionService
             'amountpaid' => $totalPaid
         ]);
 
-        if ($totalPaid > $total) {
-            throw new \Exception('Overpayment detected');
-        }
+        // if ($totalPaid > $total) {
+        //     throw new \Exception('Overpayment detected');
+        // }
     }
 
     protected function handleMemberPoint(int $trxId, array $input, int $total, array $config)
