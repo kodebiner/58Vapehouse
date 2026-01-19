@@ -316,7 +316,7 @@ class Pay extends BaseController
         $total = (int)$subtotal - (int)$discount - $poin + (int)$ppn;
 
         // Payment handling
-        if (!empty($input['firstpayment']) && !empty($input['secpayment']) && empty($input['duedate'])) {
+        if (!empty($input['firstpay']) && !empty($input['secondpay']) && empty($input['duedate'])) {
             foreach (['firstpayment' => 'firstpay', 'secpayment' => 'secondpay'] as $payKey => $valKey) {
                 $payId = $input[$payKey];
                 $payVal = $input[$valKey];
