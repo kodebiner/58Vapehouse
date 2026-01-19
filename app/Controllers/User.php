@@ -144,31 +144,37 @@ class User extends BaseController
         
         // Defining input
         $input = $this->request->getPost();
+        $rules = [];
 
         // Finding user
         $user = $UserModel->find($id);
+        if (!$user) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('User not found');
+        }
 
         if (empty($input['role'])) {
-            $input['role'] = $user->role;
-        } else {
             $input['role'] = $user->role;
         }
 
         // Validation basic form
-        if (!empty($input['username'])) {
-            $rules['username']  = 'alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]';
+        if (!empty($input['username']) && $input['username'] !== $user->username) {
+            $rules['username'] = "alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username,id,{$id}]";
         }
-        if (!empty($input['email'])) {
-            $rules['email']     = 'valid_email|is_unique[users.email]';
+        if (!empty($input['email']) && $input['email'] !== $user->email) {
+            $rules['email']     = "valid_email|is_unique[users.email,id,{$id}]";
         }
-        if (!empty($input['phone'])) {
-            $rules['phone']     = 'numeric|is_unique[users.phone]';
+        if (!empty($input['phone']) && $input['phone'] !== $user->phone) {
+            $rules['phone']     = "numeric|is_unique[users.phone,id,{$id}]";
         }
         // $rules['role'] = 'required';
-        
-        if (! $this->validate($rules)) {
+
+        if (!empty($rules) && ! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
+        
+        // if (!$this->validate($rules)) {
+        //     return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        // }
 
         // Data user update
         $updateUser->id = $id;
