@@ -126,6 +126,10 @@ class StockOpname extends BaseController
             if ($this->data['outletPick'] === '4') {
                 $outletcode = 'FEP';
             }
+
+            if ($this->data['outletPick'] === '5') {
+                $outletcode = 'MGW';
+            }
         }
 
         $stockopnamedata    = [];
