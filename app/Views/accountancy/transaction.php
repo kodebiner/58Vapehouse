@@ -1,6 +1,20 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('extraScript') ?>
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
+<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<style>
+    /* Memastikan dropdown TomSelect muncul di depan modal UIkit */
+    .ts-dropdown {
+        z-index: 2000 !important;
+    }
+    /* Menyesuaikan input agar terlihat seperti uk-input */
+    .ts-control {
+        border-radius: 4px !important;
+        padding: 8px 10px !important;
+    }
+</style>
 <?= $this->endSection() ?>
 <?= $this->section('main') ?>
 <div class="uk-width-1-1 uk-height-1-1" class="uk-inline">
@@ -21,450 +35,123 @@
                 <form action="/accounting/transaction/store" method="post" class="uk-form-stacked">
                     <?= csrf_field() ?>
                     <?php $now = new \DateTime(); ?>
+
+                    <!-- ================= TANGGAL ================= -->
                     <div class="uk-grid-small" uk-grid>
                         <div class="uk-width-1-4">
-                            <label class="uk-form-label">Tanggal <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <input class="uk-input uk-border-rounded" type="number" placeholder="DD" min="1" max="31" value="<?= $now->format('d') ?>" name="day" required>
-                            </div>
+                            <label class="uk-form-label">Tanggal *</label>
+                            <input class="uk-input uk-border-rounded" type="number"
+                                value="<?= $now->format('d') ?>" name="day" required>
                         </div>
-
                         <div class="uk-width-1-4">
-                            <label class="uk-form-label">Bulan <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <input class="uk-input uk-border-rounded" type="number" placeholder="MM" min="1" max="12" value="<?= $now->format('m') ?>" name="month" required>
-                            </div>
+                            <label class="uk-form-label">Bulan *</label>
+                            <input class="uk-input uk-border-rounded" type="number"
+                                value="<?= $now->format('m') ?>" name="month" required>
                         </div>
-
                         <div class="uk-width-1-4">
-                            <label class="uk-form-label">Tahun <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <input class="uk-input uk-border-rounded" type="number" placeholder="YYYY" value="<?= $now->format('Y') ?>" name="year" required>
-                            </div>
+                            <label class="uk-form-label">Tahun *</label>
+                            <input class="uk-input uk-border-rounded" type="number"
+                                value="<?= $now->format('Y') ?>" name="year" required>
                         </div>
-
                         <div class="uk-width-1-4">
-                            <label class="uk-form-label">Waktu <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <input class="uk-input uk-border-rounded" type="time" value="<?= $now->format('H:i') ?>" name="time" required>
-                            </div>
+                            <label class="uk-form-label">Waktu *</label>
+                            <input class="uk-input uk-border-rounded" type="time"
+                                value="<?= $now->format('H:i') ?>" name="time" required>
                         </div>
                     </div>
-                    
+
+                    <!-- ================= TYPE ================= -->
                     <div class="uk-margin">
-                        <label class="uk-form-label">Jenis Transaksi <span style="color: red;">*</span></label>
-                        <div class="uk-form-controls">
-                            <select class="uk-select" name="type" required>
-                                <option value="1">Pemasukan</option>
-                                <option value="2">Pengeluaran</option>
-                                <option value="3">Hutang</option>
-                                <option value="4">Piutang</option>
-                                <option value="5">Tanam Modal</option>
-                                <option value="6">Tarik Modal</option>
-                                <option value="7">Transfer Uang</option>
-                                <option value="8">Pemasukan Sebagai Piutang</option>
-                                <option value="9">Pengeluaran Sebagai Hutang</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="uk-margin" id="pemasukkan">
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Simpan ke (Debit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="debit" required>
-                                    <?php foreach ($debitCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Diterima dari (Kredit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="credit" required>
-                                    <?php foreach ($creditCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Nominal <span style="color: red;">*</span></label>
-                            <div class="uk-inline uk-width-1-1">
-                                <span class="uk-form-icon uk-text-bold">Rp</span>
-                                <input class="uk-input uk-border-rounded uk-form-large" id="nominal" name="amount"
-                                    type="text" placeholder="0" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="uk-margin" id="pengeluaran">
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Untuk biaya (Debit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="debit" required>
-                                    <?php foreach ($debitCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Diambil dari (Kredit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="credit" required>
-                                    <?php foreach ($creditCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Nominal <span style="color: red;">*</span></label>
-                            <div class="uk-inline uk-width-1-1">
-                                <span class="uk-form-icon uk-text-bold">Rp</span>
-                                <input class="uk-input uk-border-rounded uk-form-large" id="nominal" name="amount"
-                                    type="text" placeholder="0" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="uk-margin" id="hutang">
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Simpan ke (Debit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="debit" required>
-                                    <?php foreach ($debitCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Hutang dari (Kredit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="credit" required>
-                                    <?php foreach ($creditCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Nominal <span style="color: red;">*</span></label>
-                            <div class="uk-inline uk-width-1-1">
-                                <span class="uk-form-icon uk-text-bold">Rp</span>
-                                <input class="uk-input uk-border-rounded uk-form-large" id="nominal" name="amount"
-                                    type="text" placeholder="0" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="uk-margin" id="piutang">
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Simpan ke (Debit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="debit" required>
-                                    <?php foreach ($debitCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Hutang dari (Kredit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="credit" required>
-                                    <?php foreach ($creditCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Nominal <span style="color: red;">*</span></label>
-                            <div class="uk-inline uk-width-1-1">
-                                <span class="uk-form-icon uk-text-bold">Rp</span>
-                                <input class="uk-input uk-border-rounded uk-form-large" id="nominal" name="amount"
-                                    type="text" placeholder="0" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="uk-margin" id="tanam_modal">
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Simpan ke (Debit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="debit" required>
-                                    <?php foreach ($debitCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Modal (Kredit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="credit" required>
-                                    <?php foreach ($creditCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Nominal <span style="color: red;">*</span></label>
-                            <div class="uk-inline uk-width-1-1">
-                                <span class="uk-form-icon uk-text-bold">Rp</span>
-                                <input class="uk-input uk-border-rounded uk-form-large" id="nominal" name="amount"
-                                    type="text" placeholder="0" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="uk-margin" id="tarik_modal">
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Modal (Debit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="debit" required>
-                                    <?php foreach ($debitCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Diambil dari (Kredit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="credit" required>
-                                    <?php foreach ($creditCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Nominal <span style="color: red;">*</span></label>
-                            <div class="uk-inline uk-width-1-1">
-                                <span class="uk-form-icon uk-text-bold">Rp</span>
-                                <input class="uk-input uk-border-rounded uk-form-large" id="nominal" name="amount"
-                                    type="text" placeholder="0" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="uk-margin" id="transfer_uang">
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Ke (Debit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="debit" required>
-                                    <?php foreach ($debitCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Dari (Kredit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="credit" required>
-                                    <?php foreach ($creditCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Nominal <span style="color: red;">*</span></label>
-                            <div class="uk-inline uk-width-1-1">
-                                <span class="uk-form-icon uk-text-bold">Rp</span>
-                                <input class="uk-input uk-border-rounded uk-form-large" id="nominal" name="amount"
-                                    type="text" placeholder="0" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="uk-margin" id="pemasukan_sebagai_piutang">
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Simpan ke (Debit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="debit" required>
-                                    <?php foreach ($debitCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Diterima dari (Kredit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="credit" required>
-                                    <?php foreach ($creditCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Nominal <span style="color: red;">*</span></label>
-                            <div class="uk-inline uk-width-1-1">
-                                <span class="uk-form-icon uk-text-bold">Rp</span>
-                                <input class="uk-input uk-border-rounded uk-form-large" id="nominal" name="amount"
-                                    type="text" placeholder="0" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="uk-margin" id="pengeluaran_sebagai_hutang">
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Untuk biaya (Debit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="debit" required>
-                                    <?php foreach ($debitCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Diambil dari (Kredit) <span style="color: red;">*</span></label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="credit" required>
-                                    <?php foreach ($creditCoas as $coa): ?>
-                                        <option value="<?= $coa['id'] ?>">
-                                            <?= $coa['name'] ?> (<?= $coa['code'] ?>)
-                                        </option>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Nominal <span style="color: red;">*</span></label>
-                            <div class="uk-inline uk-width-1-1">
-                                <span class="uk-form-icon uk-text-bold">Rp</span>
-                                <input class="uk-input uk-border-rounded uk-form-large" id="nominal" name="amount"
-                                    type="text" placeholder="0" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="uk-margin">
-                        <label class="uk-form-label">Catatan <span style="color: red;">*</span></label>
-                        <div class="uk-form-controls">
-                            <textarea class="uk-textarea" rows="3" name="note" placeholder="Catatan" required></textarea>
-                        </div>
+                        <label class="uk-form-label">Jenis Transaksi *</label>
+                        <select class="uk-select" name="type" id="transactionType" required>
+                            <option value="1">Pemasukan</option>
+                            <option value="2">Pengeluaran</option>
+                            <option value="3">Hutang</option>
+                            <option value="4">Piutang</option>
+                            <option value="5">Tanam Modal</option>
+                            <option value="6">Tarik Modal</option>
+                            <option value="7">Transfer Uang</option>
+                            <option value="8">Pemasukan Sebagai Piutang</option>
+                            <option value="9">Pengeluaran Sebagai Hutang</option>
+                        </select>
                     </div>
 
-                    <div class="uk-margin" id="piutang" hidden>
-                        <label class="uk-form-label">Bunga (%) (optional)</label>
+                    <!-- ================= SECTION DINAMIS ================= -->
+
+                    <?php
+                    function coaSelect($name,$label,$data){
+                    ?>
+                    <div class="uk-margin">
+                        <label class="uk-form-label"><?= $label ?> *</label>
+                        <select class="uk-select select-search" name="<?= $name ?>" required>
+                            <option value="">Pilih Akun...</option>
+                            <?php foreach ($data as $coa): ?>
+                                <option value="<?= $coa['id'] ?>">
+                                    <?= $coa['coa_full_name'] ?>
+                                </option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                    <?php } ?>
+
+                    <?php
+                    $sections = [
+                    1=>['id'=>'pemasukkan','debit'=>'Simpan ke (Debit)','credit'=>'Diterima dari (Kredit)'],
+                    2=>['id'=>'pengeluaran','debit'=>'Untuk biaya (Debit)','credit'=>'Diambil dari (Kredit)'],
+                    3=>['id'=>'hutang','debit'=>'Simpan ke (Debit)','credit'=>'Hutang dari (Kredit)'],
+                    4=>['id'=>'piutang','debit'=>'Simpan ke (Debit)','credit'=>'Piutang dari (Kredit)'],
+                    5=>['id'=>'tanam_modal','debit'=>'Simpan ke (Debit)','credit'=>'Modal (Kredit)'],
+                    6=>['id'=>'tarik_modal','debit'=>'Modal (Debit)','credit'=>'Diambil dari (Kredit)'],
+                    7=>['id'=>'transfer_uang','debit'=>'Ke (Debit)','credit'=>'Dari (Kredit)'],
+                    8=>['id'=>'pemasukan_sebagai_piutang','debit'=>'Simpan ke (Debit)','credit'=>'Diterima dari (Kredit)'],
+                    9=>['id'=>'pengeluaran_sebagai_hutang','debit'=>'Untuk biaya (Debit)','credit'=>'Diambil dari (Kredit)'],
+                    ];
+
+                    foreach($sections as $key=>$s):
+                    ?>
+                    <div class="uk-margin trx-section" id="<?= $s['id'] ?>">
+                        <?php coaSelect('debit',$s['debit'],$debitCoas); ?>
+                        <?php coaSelect('credit',$s['credit'],$creditCoas); ?>
+                    </div>
+                    <?php endforeach; ?>
+
+                    <!-- ================= NOMINAL GLOBAL ================= -->
+                    <div class="uk-margin">
+                        <label class="uk-form-label">Nominal *</label>
                         <div class="uk-inline uk-width-1-1">
-                            <input class="uk-input uk-border-rounded uk-form-large" id="percentage" name="bunga" type="number" placeholder="0%" required>
-                            <p class="uk-margin-small-top">Info: Bunga akan masuk ke akun Pendapatan Bunga</p>
+                            <span class="uk-form-icon uk-text-bold">Rp</span>
+                            <input type="hidden" name="amount" id="amount_hidden">
+                            <input class="uk-input uk-border-rounded uk-form-large money-idr"
+                                data-target="amount_hidden"
+                                type="text"
+                                placeholder="0"
+                                required>
                         </div>
                     </div>
-                    
+
+                    <!-- ================= CATATAN ================= -->
                     <div class="uk-margin">
-                        <label class="uk-form-label">Kontak</label>
-                        <div class="uk-form-controls">
-                            <select class="uk-select" name="contact">
-                                <option value="" selected disabled>Pilih ...</option>
-                                <?php foreach ($contacts as $c): ?>
-                                    <option value="<?= $c['id'] ?>"><?= $c['name'] ?></option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
+                        <label class="uk-form-label">Catatan *</label>
+                        <textarea class="uk-textarea" rows="3"
+                            name="note" required></textarea>
                     </div>
 
+                    <!-- ================= BUNGA ================= -->
+                    <div class="uk-margin" id="piutang_bunga" hidden>
+                        <label class="uk-form-label">Bunga (%)</label>
+                        <input class="uk-input uk-border-rounded uk-form-large"
+                            id="percentage" name="bunga" type="number"
+                            placeholder="0%">
+                    </div>
+
+                    <!-- ================= SUBMIT ================= -->
                     <div class="uk-margin">
-                        <a class="uk-text-small uk-margin-small-top uk-display-inline-block" uk-toggle="target: #tax">Opsional</a>
-                    </div>
-
-                    <div class="uk-margin" id="tax" hidden>
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Pajak</label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="tax">
-                                    <option value="" selected disabled>Pilih Pajak</option>
-                                    <?php foreach ($taxes as $tax) { ?>
-                                        <option value="<?= $tax['id'] ?>"><?= $tax['name'] ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Jatuh Tempo</label>
-                            <div class="uk-form-controls">
-                                <input type="date" name="duedate" value="<?= date('Y-m-d') ?>" class="uk-input uk-border-rounded">
-                            </div>
-                        </div>
-
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Lampiran</label>
-                            <div class="uk-form-controls">
-                                <input type="text" name="attachment" class="uk-input uk-border-rounded" placeholder="Pilih file">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="uk-margin">
-                        <button type="submit" class="uk-button uk-button-primary uk-width-1-1 uk-button-large">
+                        <button type="submit"
+                            class="uk-button uk-button-primary uk-width-1-1 uk-button-large">
                             Simpan
                         </button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -488,34 +175,71 @@
 </div>
 
 <script>
-    $(document).ready(function() {
-        $('#nominal').on('input', function() {
-            let value = $(this).val();
-            value = value.replace(/[^,\d]/g, '').toString();
-            let split = value.split(',');
-            let sisa = split[0].length % 3;
-            let rupiah = split[0].substr(0, sisa);
-            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+document.addEventListener('DOMContentLoaded', function () {
 
-            if (ribuan) {
-                let separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            $(this).val(rupiah);
+    // TOMSELECT
+    document.querySelectorAll('.select-search').forEach(el => {
+        new TomSelect(el,{
+            create:false,
+            sortField:{field:"text",direction:"asc"}
         });
     });
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        const now = new Date();
 
-        document.querySelector('input[name="day"]').value   = now.getDate().toString().padStart(2,'0');
-        document.querySelector('input[name="month"]').value = (now.getMonth()+1).toString().padStart(2,'0');
-        document.querySelector('input[name="year"]').value  = now.getFullYear();
-        document.querySelector('input[name="time"]').value  = 
-            now.getHours().toString().padStart(2,'0') + ":" + 
-            now.getMinutes().toString().padStart(2,'0');
+    // FORMAT RUPIAH
+    document.querySelectorAll('.money-idr').forEach(input => {
+        const hidden = document.getElementById(input.dataset.target);
+        input.addEventListener('input', function () {
+            let value = this.value.replace(/\D/g,'');
+            hidden.value = value;
+            this.value = value
+                ? new Intl.NumberFormat('id-ID').format(value)
+                : '';
+        });
     });
+
+    const typeSelect = document.getElementById('transactionType');
+    const sections = document.querySelectorAll('.trx-section');
+    const bungaField = document.getElementById('piutang_bunga');
+
+    function hideAll(){
+        sections.forEach(sec=>{
+            sec.style.display='none';
+            sec.querySelectorAll('select').forEach(i=>i.disabled=true);
+        });
+        bungaField.hidden = true;
+    }
+
+    function show(type){
+        const map = {
+            1:'pemasukkan',
+            2:'pengeluaran',
+            3:'hutang',
+            4:'piutang',
+            5:'tanam_modal',
+            6:'tarik_modal',
+            7:'transfer_uang',
+            8:'pemasukan_sebagai_piutang',
+            9:'pengeluaran_sebagai_hutang'
+        };
+
+        const id = map[type];
+        if(!id) return;
+
+        const sec = document.getElementById(id);
+        sec.style.display='block';
+        sec.querySelectorAll('select').forEach(i=>i.disabled=false);
+
+        if(type == 4) bungaField.hidden=false;
+    }
+
+    hideAll();
+    show(typeSelect.value);
+
+    typeSelect.addEventListener('change', function(){
+        hideAll();
+        show(this.value);
+    });
+
+});
 </script>
 <?= $this->endSection() ?>

@@ -63,11 +63,45 @@ class Accountancy extends BaseController
         $AccountancyTaxModel        = new AccountancyTaxModel();
 
         // Populating data
-        $debitCoas  = $AccountancyCOAModel->findAll();
-        $creditCoas = $AccountancyCOAModel->findAll();
+        $debitCoas = $AccountancyCOAModel
+            ->select("
+                accountancy_coa.*,
+                CONCAT(
+                    cat.cat_code, accountancy_coa.coa_code, ' - ',
+                    accountancy_coa.name, ' - ',
+                    outlet.name
+                ) AS coa_full_name,
+                CONCAT(
+                    cat.cat_code, accountancy_coa.coa_code
+                ) AS code
+            ")
+            ->join('accountancy_categories AS cat', 'cat.id = accountancy_coa.cat_a_id', 'left')
+            ->join('outlet', 'outlet.id = accountancy_coa.outletid', 'left')
+            ->where('cat.cat_type', 0)
+            ->orderBy('accountancy_coa.coa_code', 'ASC')
+            ->findAll();
+
+        $creditCoas = $AccountancyCOAModel
+            ->select("
+                accountancy_coa.*,
+                CONCAT(
+                    cat.cat_code, accountancy_coa.coa_code, ' - ',
+                    accountancy_coa.name, ' - ',
+                    outlet.name
+                ) AS coa_full_name,
+                CONCAT(
+                    cat.cat_code, accountancy_coa.coa_code
+                ) AS code
+            ")
+            ->join('accountancy_categories AS cat', 'cat.id = accountancy_coa.cat_a_id', 'left')
+            ->join('outlet', 'outlet.id = accountancy_coa.outletid', 'left')
+            ->where('cat.cat_type', 1)
+            ->orderBy('accountancy_coa.coa_code', 'ASC')
+            ->findAll();
+            
         $contacts   = $AccountancyContactModel->findAll();
         $taxes      = $AccountancyTaxModel->findAll();
-        
+
         // Parsing data to view
         $data                   = $this->data;
         $data['title']          = 'Tambah Transaksi - '.lang('Global.accountancyList');
@@ -249,11 +283,10 @@ class Accountancy extends BaseController
             ]);
         }
 
-        // 3. Eksekusi Update
         $coaModel->update($id, [
             'cat_a_id'      => $input['category'],
             'coa_code'      => $input['coa_code'],
-            'name'          => $input['name'],
+            'name'          => trim(strstr($input['name'], '-', true)),
             'description'   => $input['description'],
             'status_active' => (isset($input['status_active']) && $input['status_active'] == "1") ? 1 : 0,
         ]);
