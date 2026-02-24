@@ -37,32 +37,39 @@
                     <?php $now = new \DateTime(); ?>
 
                     <!-- ================= TANGGAL ================= -->
-                    <div class="uk-grid-small" uk-grid>
+                    <!-- <div class="uk-grid-small" uk-grid>
                         <div class="uk-width-1-4">
-                            <label class="uk-form-label">Tanggal *</label>
+                            <label class="uk-form-label">Tanggal <span style="color:red;"> *</span></label>
                             <input class="uk-input uk-border-rounded" type="number"
-                                value="<?= $now->format('d') ?>" name="day" required>
+                                value="</?= $now->format('d') ?>" name="day" required>
                         </div>
                         <div class="uk-width-1-4">
-                            <label class="uk-form-label">Bulan *</label>
+                            <label class="uk-form-label">Bulan <span style="color:red;"> *</span></label>
                             <input class="uk-input uk-border-rounded" type="number"
-                                value="<?= $now->format('m') ?>" name="month" required>
+                                value="</?= $now->format('m') ?>" name="month" required>
                         </div>
                         <div class="uk-width-1-4">
-                            <label class="uk-form-label">Tahun *</label>
+                            <label class="uk-form-label">Tahun <span style="color:red;"> *</span></label>
                             <input class="uk-input uk-border-rounded" type="number"
-                                value="<?= $now->format('Y') ?>" name="year" required>
+                                value="</?= $now->format('Y') ?>" name="year" required>
                         </div>
                         <div class="uk-width-1-4">
-                            <label class="uk-form-label">Waktu *</label>
+                            <label class="uk-form-label">Waktu <span style="color:red;"> *</span></label>
                             <input class="uk-input uk-border-rounded" type="time"
-                                value="<?= $now->format('H:i') ?>" name="time" required>
+                                value="</?= $now->format('H:i') ?>" name="time" required>
                         </div>
+                    </div> -->
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label">Tanggal <span style="color:red;"> *</span></label>
+                        <input type="datetime-local" name="date" 
+                            value="<?= date('Y-m-d\TH:i') ?>" 
+                            class="uk-input uk-border-rounded" required>
                     </div>
 
                     <!-- ================= TYPE ================= -->
                     <div class="uk-margin">
-                        <label class="uk-form-label">Jenis Transaksi *</label>
+                        <label class="uk-form-label">Jenis Transaksi <span style="color:red;"> *</span></label>
                         <select class="uk-select" name="type" id="transactionType" required>
                             <option value="1">Pemasukan</option>
                             <option value="2">Pengeluaran</option>
@@ -82,7 +89,7 @@
                     function coaSelect($name,$label,$data){
                     ?>
                     <div class="uk-margin">
-                        <label class="uk-form-label"><?= $label ?> *</label>
+                        <label class="uk-form-label"><?= $label ?> <span style="color:red;"> *</span></label>
                         <select class="uk-select select-search" name="<?= $name ?>" required>
                             <option value="">Pilih Akun...</option>
                             <?php foreach ($data as $coa): ?>
@@ -117,7 +124,7 @@
 
                     <!-- ================= NOMINAL GLOBAL ================= -->
                     <div class="uk-margin">
-                        <label class="uk-form-label">Nominal *</label>
+                        <label class="uk-form-label">Nominal <span style="color:red;"> *</span></label>
                         <div class="uk-inline uk-width-1-1">
                             <span class="uk-form-icon uk-text-bold">Rp</span>
                             <input type="hidden" name="amount" id="amount_hidden">
@@ -131,7 +138,7 @@
 
                     <!-- ================= CATATAN ================= -->
                     <div class="uk-margin">
-                        <label class="uk-form-label">Catatan *</label>
+                        <label class="uk-form-label">Catatan <span style="color:red;"> *</span></label>
                         <textarea class="uk-textarea" rows="3"
                             name="note" required></textarea>
                     </div>
@@ -140,8 +147,55 @@
                     <div class="uk-margin" id="piutang_bunga" hidden>
                         <label class="uk-form-label">Bunga (%)</label>
                         <input class="uk-input uk-border-rounded uk-form-large"
-                            id="percentage" name="bunga" type="number"
+                            id="percentage" name="bunga" type="number" min="0" step="0.01" max="100"
                             placeholder="0%">
+                    </div>
+
+                    <!-- ================= CONTACT ================= -->
+                    <div class="uk-margin">
+                        <label class="uk-form-label" id="contactLabel">Kontak <span class="required-star" style="color:red; display:none;"> *</span></label>
+                        <div class="uk-form-controls">
+                            <select class="uk-select" name="contact" id="contactField">
+                                <option value="" selected disabled>Pilih ...</option>
+                                <?php foreach ($contacts as $c): ?>
+                                    <option value="<?= $c['id'] ?>"><?= $c['name'] ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <a class="uk-text-small uk-margin-small-top uk-display-inline-block" uk-toggle="target: #optional">Opsional</a>
+                    </div>
+
+                    <div class="uk-margin" id="optional" hidden>
+                        <div class="uk-margin">
+                            <label class="uk-form-label">Pajak</label>
+                            <div class="uk-form-controls">
+                                <select class="uk-select" name="tax">
+                                    <option value="" selected disabled>Pilih Pajak</option>
+                                    <?php foreach ($taxes as $tax) { ?>
+                                        <option value="<?= $tax['id'] ?>"><?= $tax['name'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="uk-margin">
+                            <label class="uk-form-label">Jatuh Tempo</label>
+                            <div class="uk-form-controls">
+                                <input type="date" name="duedate" value="<?= date('Y-m-d') ?>" class="uk-input uk-border-rounded">
+                            </div>
+                        </div>
+
+                        <div class="uk-margin">
+                            <label class="uk-form-label">Lampiran</label>
+                            <div class="uk-form-controls" uk-form-custom="target: true">
+                                <input type="file" name="attachment" aria-label="Custom controls">
+                                <input class="uk-input uk-form-width-medium" type="text" placeholder="Pilih file" aria-label="Custom controls" disabled>
+                                <button class="uk-button uk-button-default">Cari</button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- ================= SUBMIT ================= -->
@@ -176,40 +230,65 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    /* ===============================
+       INIT ELEMENTS
+    =============================== */
 
-    // TOMSELECT
+    const typeSelect     = document.getElementById('transactionType');
+    const sections       = document.querySelectorAll('.trx-section');
+    const bungaField     = document.getElementById('piutang_bunga');
+    const contactField   = document.getElementById('contactField');
+    const contactLabel   = document.getElementById('contactLabel');
+    const contactStar    = contactLabel ? contactLabel.querySelector('.required-star') : null;
+
+    /* ===============================
+       TOMSELECT
+    =============================== */
+
     document.querySelectorAll('.select-search').forEach(el => {
         new TomSelect(el,{
             create:false,
-            sortField:{field:"text",direction:"asc"}
+            sortField:{ field:"text", direction:"asc" }
         });
     });
 
-    // FORMAT RUPIAH
+    /* ===============================
+       FORMAT RUPIAH
+    =============================== */
+
     document.querySelectorAll('.money-idr').forEach(input => {
+
         const hidden = document.getElementById(input.dataset.target);
+
         input.addEventListener('input', function () {
-            let value = this.value.replace(/\D/g,'');
-            hidden.value = value;
-            this.value = value
-                ? new Intl.NumberFormat('id-ID').format(value)
+
+            let numeric = this.value.replace(/\D/g,'');
+            hidden.value = numeric;
+
+            this.value = numeric
+                ? new Intl.NumberFormat('id-ID').format(numeric)
                 : '';
         });
+
     });
 
-    const typeSelect = document.getElementById('transactionType');
-    const sections = document.querySelectorAll('.trx-section');
-    const bungaField = document.getElementById('piutang_bunga');
+    /* ===============================
+       SECTION CONTROL
+    =============================== */
 
-    function hideAll(){
-        sections.forEach(sec=>{
-            sec.style.display='none';
-            sec.querySelectorAll('select').forEach(i=>i.disabled=true);
+    function hideAllSections(){
+        sections.forEach(section => {
+            section.style.display = 'none';
+            section.querySelectorAll('select').forEach(select => {
+                select.disabled = true;
+            });
         });
-        bungaField.hidden = true;
+
+        if(bungaField) bungaField.hidden = true;
     }
 
-    function show(type){
+    function showSection(type){
+
         const map = {
             1:'pemasukkan',
             2:'pengeluaran',
@@ -222,24 +301,68 @@ document.addEventListener('DOMContentLoaded', function () {
             9:'pengeluaran_sebagai_hutang'
         };
 
-        const id = map[type];
-        if(!id) return;
+        const sectionId = map[type];
+        if(!sectionId) return;
 
-        const sec = document.getElementById(id);
-        sec.style.display='block';
-        sec.querySelectorAll('select').forEach(i=>i.disabled=false);
+        const activeSection = document.getElementById(sectionId);
+        if(!activeSection) return;
 
-        if(type == 4) bungaField.hidden=false;
+        activeSection.style.display = 'block';
+
+        activeSection.querySelectorAll('select').forEach(select => {
+            select.disabled = false;
+        });
+
+        // Khusus Piutang tampilkan bunga
+        if(parseInt(type) === 4 && bungaField){
+            bungaField.hidden = false;
+        }
     }
 
-    hideAll();
-    show(typeSelect.value);
+    /* ===============================
+       CONTACT REQUIREMENT
+    =============================== */
 
-    typeSelect.addEventListener('change', function(){
-        hideAll();
-        show(this.value);
-    });
+    function handleContactRequirement(type){
 
+        if(!contactField || !contactStar) return;
+
+        const requiredTypes = [3,4,8,9];
+
+        if(requiredTypes.includes(parseInt(type))){
+            contactField.required = true;
+            contactStar.style.display = 'inline';
+        } else {
+            contactField.required = false;
+            contactStar.style.display = 'none';
+        }
+    }
+
+    /* ===============================
+       INIT STATE
+    =============================== */
+
+    function initialize(){
+        if(!typeSelect) return;
+
+        hideAllSections();
+        showSection(typeSelect.value);
+        handleContactRequirement(typeSelect.value);
+    }
+
+    initialize();
+
+    /* ===============================
+       EVENT LISTENER
+    =============================== */
+
+    if(typeSelect){
+        typeSelect.addEventListener('change', function(){
+            hideAllSections();
+            showSection(this.value);
+            handleContactRequirement(this.value);
+        });
+    }
 });
 </script>
 <?= $this->endSection() ?>
