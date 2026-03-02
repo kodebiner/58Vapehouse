@@ -1317,7 +1317,6 @@ class export extends BaseController
         $totalnetsales  = array_sum($netval);
         $totalcatgross  = array_sum($grossval);
         array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
-        dd($transactiondata);
 
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=Laporan Penjualan Per Produk $outletname ($startdate-$enddate).xls");
