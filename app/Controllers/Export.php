@@ -1360,7 +1360,7 @@ class export extends BaseController
             echo '</tbody>';
             echo '<tfoot>';
                 echo '<tr>';
-                    echo '<td colspan="2" style="text-align:center;font-weight:700;">Total</th>';
+                    echo '<td colspan="3" style="text-align:center;font-weight:700;">Total</th>';
                     echo '<td style="font-weight:700;">' . $totalsalesitem . '</td>';
                     echo '<td style="font-weight:700;">' . $totalnetsales . '</td>';
                 echo '</tr>';
