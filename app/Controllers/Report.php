@@ -1238,7 +1238,13 @@ class Report extends BaseController
                             $category   = $CategoryModel->find($products['catid']);
 
                             if (!empty($category)) {
-                                $transactiondata[$products['id']]['category']    = $category['name'];
+                                if ($category['status'] == '1') {
+                                    $catstatus = 'Aktif';
+                                } else {
+                                    $catstatus = 'Tidak Aktif';
+                                }
+                                $catname  = $category['name'].' ('.$catstatus.')';
+                                $transactiondata[$products['id']]['category']    = $catname;
                             }
                             
                             // $transactiondata[$productid]['grossvalue']      = ((Int)$trxdet['value'] * (Int)$trxdet['qty']) + $trxdet['discvar'];
@@ -1384,7 +1390,13 @@ class Report extends BaseController
                                 }
     
                                 if (!empty($category)) {
-                                    $transactiondata[$category['id']]['name']               = $category['name'];
+                                    if ($category['status'] == '1') {
+                                        $catstatus = 'Aktif';
+                                    } else {
+                                        $catstatus = 'Tidak Aktif';
+                                    }
+                                    $catname  = $category['name'].' ('.$catstatus.')';
+                                    $transactiondata[$category['id']]['name']               = $catname;
                                     $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
                                     $transactiondata[$category['id']]['netvalue'][]         = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
                                     $transactiondata[$category['id']]['grossvalue'][]       = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'] + (Int)$trxdet['memberdisc'];
@@ -1429,7 +1441,13 @@ class Report extends BaseController
                                             }
                 
                                             if (!empty($category)) {
-                                                $transactiondata[$category['id']]['name']               = $category['name'];
+                                                if ($category['status'] == '1') {
+                                                    $catstatus = 'Aktif';
+                                                } else {
+                                                    $catstatus = 'Tidak Aktif';
+                                                }
+                                                $catname  = $category['name'].' ('.$catstatus.')';
+                                                $transactiondata[$category['id']]['name']               = $catname;
                                                 $transactiondata[$category['id']]['qty'][]              = $trxdet['qty'];
                                                 $transactiondata[$category['id']]['netvalue'][]         = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
                                                 $transactiondata[$category['id']]['grossvalue'][]       = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'] + (Int)$trxdet['memberdisc'];
@@ -1569,7 +1587,14 @@ class Report extends BaseController
                                 }
     
                                 if (!empty($brand)) {
-                                    $transactiondata[$brand['id']]['name']               = $brand['name'];
+                                    if ($brand['status'] == '1') {
+                                        $brandstatus = 'Aktif';
+                                    } else {
+                                        $brandstatus = 'Tidak Aktif';
+                                    }
+                                    
+                                    $brandname  = $brand['name'] . ' (' . $brandstatus . ')';
+                                    $transactiondata[$brand['id']]['name']               = $brandname;
                                     $transactiondata[$brand['id']]['qty'][]              = $trxdet['qty'];
                                     $transactiondata[$brand['id']]['netvalue'][]         = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
                                     $transactiondata[$brand['id']]['grossvalue'][]       = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'] + (Int)$trxdet['memberdisc'];
@@ -1614,7 +1639,14 @@ class Report extends BaseController
                                             }
                 
                                             if (!empty($brand)) {
-                                                $transactiondata[$brand['id']]['name']               = $brand['name'];
+                                                if ($brand['status'] == '1') {
+                                                    $brandstatus = 'Aktif';
+                                                } else {
+                                                    $brandstatus = 'Tidak Aktif';
+                                                }
+                                                
+                                                $brandname  = $brand['name'] . ' (' . $brandstatus . ')';
+                                                $transactiondata[$brand['id']]['name']               = $brandname;
                                                 $transactiondata[$brand['id']]['qty'][]              = $trxdet['qty'];
                                                 $transactiondata[$brand['id']]['netvalue'][]         = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
                                                 $transactiondata[$brand['id']]['grossvalue'][]       = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'] + (Int)$trxdet['memberdisc'];
@@ -1713,13 +1745,27 @@ class Report extends BaseController
             foreach ($variants as $variant) {
                 foreach ($products as $product) {
                     foreach ($brands as $brand) {
+                        if ($brand['status'] == '1') {
+                            $brandstatus = 'Aktif';
+                        } else {
+                            $brandstatus = 'Tidak Aktif';
+                        }
+                        
+                        $brandname  = $brand['name'] . ' (' . $brandstatus . ')';
+                        
                         foreach ($category as $cat) {
+                            if ($cat['status'] == '1') {
+                                $catstatus = 'Aktif';
+                            } else {
+                                $catstatus = 'Tidak Aktif';
+                            }
+                            $catname  = $cat['name'].' ('.$catstatus.')';
                             if ($product['catid'] === $cat['id'] && $product['brandid'] === $brand['id'] && $variant['productid'] == $product['id'] && $stock['variantid'] === $variant['id']) {
                                 $productval[] = [
                                     'id'                => $product['catid'],
                                     'prodname'          => $product['name'],
-                                    'catname'           => $cat['name'],
-                                    'brandname'         => $brand['name'],
+                                    'catname'           => $catname,
+                                    'brandname'         => $brandname,
                                     'desc'              => $product['description'],
                                     'varname'           => $variant['name'],
                                     'hargamodal'        => $variant['hargamodal'],

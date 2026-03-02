@@ -215,7 +215,7 @@
                         <script type="text/javascript">
                             $(function() {
                                 var brand = [
-                                    <?php foreach ($brand as $bran) {
+                                    <?php foreach ($brandlist as $bran) {
                                         echo '{label:"' . $bran['name'] . '",idx:' . (int)$bran['id'] . '},';
                                     } ?>
                                 ];
@@ -514,6 +514,13 @@
                             <tr>
                                 <td class="uk-text-center"><?= $i++; ?></td>
                                 <td class="uk-text-center"><?= $cate['name']; ?></td>
+                                <td class="uk-text-center">
+                                    <?php if ($cate['status'] == 1) : ?>
+                                        <span class="uk-label uk-label-success"><?= lang('Global.active') ?></span>
+                                    <?php else : ?>
+                                        <span class="uk-label uk-label-danger"><?= lang('Global.inactive') ?></span>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="uk-text-center"><?= $cate['catcode']; ?></td>
                                 <td class="uk-text-center">
                                     <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editcat<?= $cate['id'] ?>"></a>
@@ -581,6 +588,28 @@
                         </div>
                     </div>
 
+                    <input type="hidden" name="status" id="statusval" value="<?= $cate['status'] ?>">
+                    <label class="uk-form-label" for="status"><?= lang('Global.status') ?></label>
+                    <label class="switch">
+                        <?php if ($cate['status'] != "0") { ?>
+                            <input id="status<?= $cate['id'] ?>" type="checkbox" checked>
+                        <?php } else { ?>
+                            <input id="status<?= $cate['id'] ?>" type="checkbox">
+                        <?php } ?>
+                        <span class="slider round"></span>
+                    </label>
+                    <script>
+                        $(document).ready(function() {
+                            $("input[id='status<?= $cate['id'] ?>']").change(function() {
+                                if ($(this).is(':checked')) {
+                                    $("input[id='statusval']").val("1");
+                                } else {
+                                    $("input[id='statusval']").val("0");
+                                }
+                            });
+                        });
+                    </script>
+
                     <hr>
 
                     <div class="uk-margin">
@@ -623,6 +652,13 @@
                                 <td class="uk-text-center"><?= $i++; ?></td>
                                 <td class="uk-text-center"><?= $bran['name']; ?></td>
                                 <td class="uk-text-center">
+                                    <?php if ($bran['status'] == 1) : ?>
+                                        <span class="uk-label uk-label-success"><?= lang('Global.active') ?></span>
+                                    <?php else : ?>
+                                        <span class="uk-label uk-label-danger"><?= lang('Global.inactive') ?></span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="uk-text-center">
                                     <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editbrand<?= $bran['id'] ?>"></a>
                                     <a class="uk-icon-button-delete" uk-icon="trash" href="product/deletebrand/<?= $bran['id'] ?>"></a>
                                 </td>
@@ -650,6 +686,28 @@
                                                 <input type="text" class="uk-input" id="name" name="name" value="<?= $bran['name']; ?>" autofocus />
                                             </div>
                                         </div>
+
+                                        <input type="hidden" name="status" id="statusval" value="<?= $bran['status'] ?>">
+                                        <label class="uk-form-label" for="status"><?= lang('Global.status') ?></label>
+                                        <label class="switch">
+                                            <?php if ($bran['status'] != "0") { ?>
+                                                <input id="status<?= $bran['id'] ?>" type="checkbox" checked>
+                                            <?php } else { ?>
+                                                <input id="status<?= $bran['id'] ?>" type="checkbox">
+                                            <?php } ?>
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <script>
+                                            $(document).ready(function() {
+                                                $("input[id='status<?= $bran['id'] ?>']").change(function() {
+                                                    if ($(this).is(':checked')) {
+                                                        $("input[id='statusval']").val("1");
+                                                    } else {
+                                                        $("input[id='statusval']").val("0");
+                                                    }
+                                                });
+                                            });
+                                        </script>
 
                                         <hr>
 
@@ -701,7 +759,7 @@
                 <div class="uk-margin-small-top">
                     <select class="uk-select" id="filter" name="category" style="border-radius: 5px; border-style: solid;">
                         <option value="" selected><?= lang('Global.selectcat') ?></option>
-                        <?php foreach ($category as $cate) { ?>
+                        <?php foreach ($categorylist as $cate) { ?>
                             <option value="<?= $cate['id'] ?>" <?= ((!empty($input['category'])) && ($input['category'] === $cate['id'])) ? 'selected' : '' ?>><?= $cate['name'] ?></option>
                         <?php } ?>
                     </select>
@@ -709,7 +767,7 @@
                 <div class="uk-margin-small-top">
                     <select class="uk-select" id="filterbrand" name="brand" style="border-radius: 5px; border-style: solid;">
                         <option value="" <?= ((isset($input['brand'])) && ($input['brand'] == '')) ? 'selected' : '' ?>><?=lang('Global.selectbrand')?></option>
-                        <?php foreach ($brand as $bran) { ?>
+                        <?php foreach ($brandlist as $bran) { ?>
                             <option value="<?= $bran['id'] ?>" <?= ((isset($input['brand'])) && ($input['brand'] == $bran['id'])) ? 'selected' : '' ?>><?= $bran['name'] ?></option>
                         <?php } ?>
                     </select>

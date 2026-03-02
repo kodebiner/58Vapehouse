@@ -246,7 +246,9 @@ class Product extends BaseController
         $products = $query->paginate(20, 'product');
 
         $category       = $CategoryModel->findAll();
+        $categorylist   = $CategoryModel->where('status', 1)->find();
         $brand          = $BrandModel->findAll();
+        $brandlist      = $BrandModel->where('status', 1)->find();
         $productcount   = count($ProductModel->findAll());
 
         $productid      = array();
@@ -346,7 +348,9 @@ class Product extends BaseController
         $data['roles']          = $GroupModel->findAll();
         $data['products']       = $products;
         $data['category']       = $category;
+        $data['categorylist']   = $categorylist;
         $data['brand']          = $brand;
+        $data['brandlist']      = $brandlist;
         $data['variants']       = $variant;
         $data['stocks']         = $stock;
         $data['pager']          = $ProductModel->pager;
@@ -390,8 +394,15 @@ class Product extends BaseController
             echo '<tr>';
             echo '<td>' . $product['name'] . '</td>';
             foreach ($categories as $category) {
+                if ($category['status'] == '1') {
+                    $catstatus = 'Aktif';
+                } else {
+                    $catstatus = 'Tidak Aktif';
+                }
+                $catname  = $category['name'].' ('.$catstatus.')';
+
                 if ($category['id'] === $product['catid']) {
-                    echo '<td>' . $category['name'] . '</td>';
+                    echo '<td>' . $catname . '</td>';
                 }
             }
             echo '</tr>';
@@ -510,18 +521,13 @@ class Product extends BaseController
 
     public function indexvar($id)
     {
-
         // Calling Model        
         $GroupModel     = new GroupModel();
-        $CategoryModel  = new CategoryModel();
         $ProductModel   = new ProductModel();
-        $BrandModel     = new BrandModel();
         $VariantModel   = new VariantModel();
         $StockModel     = new StockModel();
 
         // Populating Data
-        $category   = $CategoryModel->findAll();
-        $brand      = $BrandModel->findAll();
         $variant    = $VariantModel->where('productid', $id)->find();
         if ($this->data['outletPick'] === null) {
             $stock      = $StockModel->findAll();
@@ -536,8 +542,6 @@ class Product extends BaseController
         $data['roles']          = $GroupModel->findAll();
         $data['stock']          = $stock;
         $data['products']       = $data;
-        $data['category']       = $category;
-        $data['brand']          = $brand;
         $data['variants']       = $variant;
         $data['products']       = $ProductModel->find($id);
 

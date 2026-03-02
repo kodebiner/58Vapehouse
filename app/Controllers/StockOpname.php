@@ -144,7 +144,13 @@ class StockOpname extends BaseController
                     if (!empty($product)) {
                         $category   = $CategoryModel->find($product['catid']);
                         if (!empty($category)) {
-                            $categoryName = $category['name'];
+                            if ($category['status'] == '1') {
+                                $catstatus = 'Aktif';
+                            } else {
+                                $catstatus = 'Tidak Aktif';
+                            }
+                            $catname  = $category['name'].' ('.$catstatus.')';
+                            $categoryName = $catname;
                         } else {
                             $categoryName = 'Kategori Tidak Ditemukan';
                         }

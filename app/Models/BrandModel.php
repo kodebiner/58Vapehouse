@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class BrandModel extends Model
 {
     protected $allowedFields = [
-        'name',
+        'name','status',
     ];
 
     protected $table      = 'brand';
