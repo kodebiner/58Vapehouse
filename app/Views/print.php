@@ -528,7 +528,7 @@
                         </div>
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (($bookings['memberid'] !== "0") && ($bookings['id']=== $bookingid)) {
-                                $cust = $cust['name'];
+                                $cust = $cust['name'].' / 0'.$cust['phone'];
                                 $customer = lang('Global.customer');
                                 echo "<div class='uk-width-1-2'> $customer</div>";
                                 echo "<div class='uk-width-1-2 uk-text-right'>$cust</div>";
@@ -665,7 +665,7 @@
 
                         <div class="uk-grid-collapse" uk-grid>
                             <?php if (($transactions['memberid'] !== "0") ) {
-                                $cust = $cust['name'];
+                                $cust = $cust['name'].' / 0'.$cust['phone'];
                                 $customer = lang('Global.customer');
                                 echo "<div class='uk-width-1-2'> $customer</div>";
                                 echo "<div class='uk-width-1-2 uk-text-right'>$cust</div>";

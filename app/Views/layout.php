@@ -382,9 +382,6 @@
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?>">
                                             <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
                                         </li>
-                                        <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?>">
-                                            <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
-                                        </li>
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?>">
                                             <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
                                         </li>
@@ -400,13 +397,16 @@
                                         <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?>">
                                             <a href="</?= base_url('report/diskon') ?>"></?=lang('Global.discountreport');?></a>
                                         </li> -->
-                                        <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?>">
-                                            <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
-                                        </li>
-                                        <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
-                                            <a href="<?= base_url('report/sop') ?>"><?=lang('Global.sopreport');?></a>
-                                        </li>
                                     <?php endif ?>
+                                    <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?>">
+                                        <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
+                                    </li>
+                                    <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?>">
+                                        <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
+                                    </li>
+                                    <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
+                                        <a href="<?= base_url('report/sop') ?>"><?=lang('Global.sopreport');?></a>
+                                    </li>
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?>">
                                         <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
                                     </li>
@@ -684,9 +684,6 @@
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?>">
                                     <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
                                 </li>
-                                <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?>">
-                                    <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
-                                </li>
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?>">
                                     <a href="<?= base_url('report/product') ?>"><?=lang('Global.productreport');?></a>
                                 </li>
@@ -702,13 +699,16 @@
                                 <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?>">
                                     <a href="</?= base_url('report/diskon') ?>"></?=lang('Global.discountreport');?></a>
                                 </li> -->
-                                <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?>">
-                                    <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
-                                </li>
-                                <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
-                                    <a href="<?= base_url('report/sop') ?>"><?=lang('Global.sopreport');?></a>
-                                </li>
                             <?php endif ?>
+                            <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?>">
+                                <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
+                            </li>
+                            <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?>">
+                                <a href="<?= base_url('report/customer') ?>"><?=lang('Global.customerreport');?></a>
+                            </li>
+                            <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
+                                <a href="<?= base_url('report/sop') ?>"><?=lang('Global.sopreport');?></a>
+                            </li>
                             <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?>">
                                 <a href="<?= base_url('report/presence') ?>"><?=lang('Global.presencereport');?></a>
                             </li>

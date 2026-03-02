@@ -367,7 +367,7 @@
                                             <div><?= lang('Global.customer') ?></div>
                                         </div>
                                         <div class="uk-width-1-2 uk-text-right uk-text-bolder" style="color: #000;">
-                                            <div><?= $transaction['membername'] ?></div>
+                                            <div><?= $transaction['membername'].' / 0'.$transaction['memberphone'] ?></div>
                                         </div>
                                     </div>
 
