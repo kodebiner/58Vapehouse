@@ -1282,15 +1282,17 @@ class export extends BaseController
                                 $transactiondata[$products['id']]['category']    = $catname;
                             }
 
-                            $transactiondata[$products['id']]['qty'][]           = $trxdet['qty'];
-                            $transactiondata[$products['id']]['netvalue'][]      = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
-                            $transactiondata[$products['id']]['grossvalue'][]    = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'] + (Int)$trxdet['memberdisc'];
+                            $transactiondata[$products['id']]['sku']                = $variants['sku'];
+                            $transactiondata[$products['id']]['qty'][]              = $trxdet['qty'];
+                            $transactiondata[$products['id']]['netvalue'][]         = (((float)$trxdet['value'] * (Int)$trxdet['qty'])) - ((Int)$discval + (Int)$discmem + (Int)$discpoin);
+                            $transactiondata[$products['id']]['grossvalue'][]       = ((float)$trxdet['value'] * (Int)$trxdet['qty']) + (Int)$trxdet['discvar'] + (Int)$trxdet['globaldisc'] + (Int)$trxdet['memberdisc'];
                         } else {
                             $category   = [];
                         }
                     } else {
                         $products   = [];
                         $category   = [];
+                        $transactiondata[0]['sku']          = 'Kategori / Produk / Variant Terhapus';
                         $transactiondata[0]['name']         = 'Kategori / Produk / Variant Terhapus';
                         $transactiondata[0]['category']     = 'Kategori / Produk / Variant Terhapus';
                         $transactiondata[0]['qty'][]        = $trxdet['qty'];
@@ -1315,6 +1317,7 @@ class export extends BaseController
         $totalnetsales  = array_sum($netval);
         $totalcatgross  = array_sum($grossval);
         array_multisort(array_column($transactiondata, 'qty'), SORT_DESC, $transactiondata);
+        dd($transactiondata);
 
         header("Content-type: application/vnd-ms-excel");
         header("Content-Disposition: attachment; filename=Laporan Penjualan Per Produk $outletname ($startdate-$enddate).xls");
@@ -1348,6 +1351,7 @@ class export extends BaseController
             echo '<tbody>';
                 foreach ($transactiondata as $product => $value) {
                     echo '<tr>';
+                        echo '<td>' . $value['sku'] . '</td>';
                         echo '<td>' . $value['name'] . '</td>';
                         echo '<td>' . $value['category'] . '</td>';
                         echo '<td>' . array_sum($value['qty']) . '</td>';
