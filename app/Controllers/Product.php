@@ -872,6 +872,7 @@ class Product extends BaseController
             'id'        => $id,
             'name'      => $input['name'],
             'catcode'   => strtoupper($catcode),
+            'status'    => $input['status'],
         ];
 
         // update data
@@ -931,6 +932,7 @@ class Product extends BaseController
         $data = [
             'id' => $id,
             'name' => $input['name'],
+            'status' => $input['status'],
         ];
 
         // update data

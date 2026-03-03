@@ -558,6 +558,28 @@
                                             </div>
                                         </div>
 
+                                        <input type="hidden" name="status" id="statusval" value="<?= $cate['status'] ?>">
+                                        <label class="uk-form-label" for="status"><?= lang('Global.status') ?></label>
+                                        <label class="switch">
+                                            <?php if ($cate['status'] != "0") { ?>
+                                                <input id="status<?= $cate['id'] ?>" type="checkbox" checked>
+                                            <?php } else { ?>
+                                                <input id="status<?= $cate['id'] ?>" type="checkbox">
+                                            <?php } ?>
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <script>
+                                            $(document).ready(function() {
+                                                $("input[id='status<?= $cate['id'] ?>']").change(function() {
+                                                    if ($(this).is(':checked')) {
+                                                        $("input[id='statusval']").val("1");
+                                                    } else {
+                                                        $("input[id='statusval']").val("0");
+                                                    }
+                                                });
+                                            });
+                                        </script>
+
                                         <hr>
 
                                         <div class="uk-margin">
@@ -587,28 +609,6 @@
                             <input type="text" class="uk-input <?php if (session('errors.catcode')) : ?>tm-form-invalid<?php endif ?>" id="catcode" name="catcode" placeholder="Code" autofocus required />
                         </div>
                     </div>
-
-                    <input type="hidden" name="status" id="statusval" value="<?= $cate['status'] ?>">
-                    <label class="uk-form-label" for="status"><?= lang('Global.status') ?></label>
-                    <label class="switch">
-                        <?php if ($cate['status'] != "0") { ?>
-                            <input id="status<?= $cate['id'] ?>" type="checkbox" checked>
-                        <?php } else { ?>
-                            <input id="status<?= $cate['id'] ?>" type="checkbox">
-                        <?php } ?>
-                        <span class="slider round"></span>
-                    </label>
-                    <script>
-                        $(document).ready(function() {
-                            $("input[id='status<?= $cate['id'] ?>']").change(function() {
-                                if ($(this).is(':checked')) {
-                                    $("input[id='statusval']").val("1");
-                                } else {
-                                    $("input[id='statusval']").val("0");
-                                }
-                            });
-                        });
-                    </script>
 
                     <hr>
 
