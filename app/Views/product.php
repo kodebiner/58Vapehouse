@@ -187,7 +187,7 @@
                         <script type="text/javascript">
                             $(function() {
                                 var category = [
-                                    <?php foreach ($category as $cat) {
+                                    <?php foreach ($categorylist as $cat) {
                                         echo '{label:"' . $cat['name'] . ' ('. $cat['catcode'] .')' . '",idx:' . (int)$cat['id'] . '},';
                                     } ?>
                                 ];
