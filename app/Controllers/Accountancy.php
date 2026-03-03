@@ -57,6 +57,11 @@ class Accountancy extends BaseController
 
     public function transaction()
     {
+        if ($this->data['outletPick'] === null) {
+            // throw new \Exception('Outlet belum dipilih');
+            return redirect()->back()->with('error', 'Outlet belum dipilih. Mohon pilih outlet terlebih dahulu untuk mengakses halaman ini.');
+        }
+
         // Calling Model
         $AccountancyCOAModel        = new AccountancyCOAModel();
         $AccountancyContactModel    = new AccountancyContactModel();
@@ -77,6 +82,7 @@ class Accountancy extends BaseController
             ")
             ->join('accountancy_categories AS cat', 'cat.id = accountancy_coa.cat_a_id', 'left')
             ->join('outlet', 'outlet.id = accountancy_coa.outletid', 'left')
+            ->where('accountancy_coa.outletid', $this->data['outletPick'])
             ->where('cat.cat_type', 0)
             ->orderBy('accountancy_coa.coa_code', 'ASC')
             ->findAll();
@@ -95,6 +101,7 @@ class Accountancy extends BaseController
             ")
             ->join('accountancy_categories AS cat', 'cat.id = accountancy_coa.cat_a_id', 'left')
             ->join('outlet', 'outlet.id = accountancy_coa.outletid', 'left')
+            ->where('accountancy_coa.outletid', $this->data['outletPick'])
             ->where('cat.cat_type', 1)
             ->orderBy('accountancy_coa.coa_code', 'ASC')
             ->findAll();
