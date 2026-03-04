@@ -150,15 +150,7 @@
 
                             <!-- Button Delete -->
                             <div>
-                                <?php if ($contact['status'] == 1) { ?>
-                                    <a uk-icon="trash" class="uk-icon-button-delete" href="stock/deletesup/<?= $contact['realid'] ?>" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')"></a>
-                                <?php } ?>
-                                <?php if ($contact['status'] == 2) { ?>
-                                    <a uk-icon="trash" class="uk-icon-button-delete" href="user/delete/<?= $contact['realid'] ?>" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')"></a>
-                                <?php } ?>
-                                <?php if ($contact['status'] == 3) { ?>
-                                    <a uk-icon="trash" class="uk-icon-button-delete" href="accountancy/contact/delete/<?= $contact['realid'] ?>" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')"></a>
-                                <?php } ?>
+                                <a uk-icon="trash" class="uk-icon-button-delete" href="accountancy/contact/delete/<?= $contact['id'] ?>" onclick="return confirm('<?= lang('Global.deleteConfirm') ?>')"></a>
                             </div>
                             <!-- End Of Button Delete -->
                         </td>
@@ -183,39 +175,15 @@
                         </div>
                     </div>
                     <div class="uk-modal-body">
-                        <?php if ($contact['status'] == 1) { ?>
-                            <form class="uk-form-stacked" role="form" action="stock/updatesup/<?= $contact['realid'] ?>" method="post">
-                        <?php } ?>
-                        <?php if ($contact['status'] == 2) { ?>
-                            <form class="uk-form-stacked" role="form" action="user/update/<?= $contact['realid'] ?>" method="post">
-                        <?php } ?>
-                        <?php if ($contact['status'] == 3) { ?>
-                            <form class="uk-form-stacked" role="form" action="accountancy/contact/update/<?= $contact['realid'] ?>" method="post">
-                        <?php } ?>
+                        <form class="uk-form-stacked" role="form" action="accountancy/contact/update/<?= $contact['id'] ?>" method="post">
                             <?= csrf_field() ?>
-
-                            <?php if ($contact['status'] == 2) { ?>
-                                <div class="uk-margin-bottom">
-                                    <label class="uk-form-label" for="firstname">Nama Depan</label>
-                                    <div class="uk-form-controls">
-                                        <input type="text" class="uk-input" id="firstname" name="firstname" value="<?= $contact['firstname']; ?>" />
-                                    </div>
+                            
+                            <div class="uk-margin-bottom">
+                                <label class="uk-form-label" for="name">Nama</label>
+                                <div class="uk-form-controls">
+                                    <input type="text" class="uk-input" id="name" name="name" value="<?= $contact['name']; ?>" />
                                 </div>
-                                <div class="uk-margin-bottom">
-                                    <label class="uk-form-label" for="lastname">Nama Belakang</label>
-                                    <div class="uk-form-controls">
-                                        <input type="text" class="uk-input" id="lastname" name="lastname" value="<?= $contact['lastname']; ?>" />
-                                    </div>
-                                </div>
-                            <?php } else { ?>
-                                <div class="uk-margin-bottom">
-                                    <label class="uk-form-label" for="name">Nama</label>
-                                    <div class="uk-form-controls">
-                                        <input type="text" class="uk-input" id="name" name="name" value="<?= $contact['name']; ?>" />
-                                    </div>
-                                </div>
-                            <?php } ?>
-
+                            </div>
                         
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="phone"><?=lang('Global.phone')?></label>

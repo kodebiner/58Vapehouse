@@ -162,7 +162,7 @@
                         <div class="uk-margin">
                             <label class="uk-form-label">Jatuh Tempo</label>
                             <div class="uk-form-controls">
-                                <input type="date" name="duedate" value="<?= date('Y-m-d') ?>" class="uk-input uk-border-rounded">
+                                <input type="date" name="duedate" class="uk-input uk-border-rounded">
                             </div>
                         </div>
 

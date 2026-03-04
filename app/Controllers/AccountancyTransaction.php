@@ -26,11 +26,31 @@ class AccountancyTransaction extends BaseController
     */
     public function index()
     {
-        $data['transactions'] = $this->trxModel
-            ->orderBy('date', 'DESC')
-            ->findAll();
+        $data                   = $this->data;
+        $data['title']          = lang('Global.trxHistory');
+        $data['description']    = lang('Global.trxHistoryListDesc');
+        $typeList               =   [
+                                        1 => 'Pemasukan', 
+                                        2 => 'Pengeluaran',
+                                        3 => 'Hutang',
+                                        4 => 'Piutang',
+                                        5 => 'Tanam Modal',
+                                        6 => 'Tarik Modal',
+                                        7 => 'Transfer Uang',
+                                        8 => 'Pemasukan sebagai Piutang',
+                                        9 => 'Pengeluaran sebagai Hutang'
+                                    ];
+        $transactions = $this->trxModel->getTransactionsWithContact();
 
-        return view('accounting/transaction/index', $data);
+        // Ambil journal untuk tiap transaksi
+        foreach ($transactions as &$trx) {
+            $trx['type']        = $typeList[$trx['type']] ?? '-';
+            $trx['journals']    = $this->journalModel->getByTransaction($trx['id']);
+        }
+
+        $data['transactions'] = $transactions;
+
+        return view('Views/accountancy/transaction-history', $data);
     }
 
     /*
@@ -65,6 +85,13 @@ class AccountancyTransaction extends BaseController
         ];
 
         $trxId = $this->trxModel->insert($trxData);
+
+        if (!$trxId) {
+            $this->db->transRollback();
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $this->trxModel->errors());
+        }
 
         /*
         |--------------------------------------------------------------------------

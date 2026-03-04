@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class AccountancyContactModel extends Model
 {
     protected $allowedFields = [
-        'name','email','phone','address',
+        'name','email','phone','address','source_type','source_id'
 
     ];
 

@@ -48,4 +48,15 @@ class AccountancyTransactionModel extends Model
             ->where('accountancy_transactions.id', $id)
             ->first();
     }
+
+    public function getTransactionsWithContact()
+    {
+        return $this->select('
+                accountancy_transactions.*,
+                accountancy_contact.name as contact,
+            ')
+            ->join('accountancy_contact', 'accountancy_contact.id = accountancy_transactions.contact_id', 'left')
+            ->orderBy('accountancy_transactions.date', 'DESC')
+            ->findAll();
+    }
 }

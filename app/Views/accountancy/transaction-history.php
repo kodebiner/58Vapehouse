@@ -1,346 +1,133 @@
 <?= $this->extend('layout') ?>
-<?= $this->section('extraScript') ?>
-<script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
-<script src="js/cdn.datatables.net_1.13.4_js_jquery.dataTables.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
-<style>
-    /* Memastikan dropdown TomSelect muncul di depan modal UIkit */
-    .ts-dropdown {
-        z-index: 2000 !important;
-    }
-    /* Menyesuaikan input agar terlihat seperti uk-input */
-    .ts-control {
-        border-radius: 4px !important;
-        padding: 8px 10px !important;
-    }
-</style>
-<?= $this->endSection() ?>
 <?= $this->section('main') ?>
-<div class="uk-width-1-1 uk-height-1-1" class="uk-inline">
-    <div>
-        <?= view('Views/Auth/_permission_message') ?>
-    </div>
 
-    <!-- Page Heading -->
-    <div class="tm-card-header uk-light uk-margin-bottom">
-        <h3 class="tm-h3"><?=lang('Global.accountancy').' - Tambah Akuntansi'?></h3>
-        <?= view('Views/Auth/_message_block') ?>
-    </div>
-
-    <div uk-grid class="uk-flex-top uk-child-width-1-2@m">
-        <div>
-            <div class="uk-card uk-card-default uk-card-body uk-margin">
-                <h4 class="uk-margin-small-bottom">Tambah Transaksi</h4>
-
-                <form action="accountancy/transaction/create" method="post" class="uk-form-stacked">
-                    <?= csrf_field() ?>
-                    <?php $now = new \DateTime(); ?>
-
-                    <!-- ================= TANGGAL ================= -->
-                     <div class="uk-margin">
-                        <label class="uk-form-label">Tanggal <span style="color:red;"> *</span></label>
-                        <input type="datetime-local" name="date" 
-                            value="<?= date('Y-m-d\TH:i') ?>" 
-                            class="uk-input uk-border-rounded" required>
-                    </div>
-
-                    <!-- ================= TYPE ================= -->
-                    <div class="uk-margin">
-                        <label class="uk-form-label">Jenis Transaksi <span style="color:red;"> *</span></label>
-                        <select class="uk-select" name="type" id="transactionType" required>
-                            <option value="1">Pemasukan</option>
-                            <option value="2">Pengeluaran</option>
-                            <option value="3">Hutang</option>
-                            <option value="4">Piutang</option>
-                            <option value="5">Tanam Modal</option>
-                            <option value="6">Tarik Modal</option>
-                            <option value="7">Transfer Uang</option>
-                            <option value="8">Pemasukan Sebagai Piutang</option>
-                            <option value="9">Pengeluaran Sebagai Hutang</option>
-                        </select>
-                    </div>
-
-                    <!-- ================= SECTION DINAMIS ================= -->
-
-                    <?php
-                    function coaSelect($name,$label,$data){
-                    ?>
-                    <div class="uk-margin">
-                        <label class="uk-form-label"><?= $label ?> <span style="color:red;"> *</span></label>
-                        <select class="uk-select select-search" name="<?= $name ?>" required>
-                            <option value="">Pilih Akun...</option>
-                            <?php foreach ($data as $coa): ?>
-                                <option value="<?= $coa['id'] ?>">
-                                    <?= $coa['coa_full_name'] ?>
-                                </option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
-                    <?php } ?>
-
-                    <?php
-                    $sections = [
-                    1=>['id'=>'pemasukkan','debit'=>'Simpan ke (Debit)','credit'=>'Diterima dari (Kredit)'],
-                    2=>['id'=>'pengeluaran','debit'=>'Untuk biaya (Debit)','credit'=>'Diambil dari (Kredit)'],
-                    3=>['id'=>'hutang','debit'=>'Simpan ke (Debit)','credit'=>'Hutang dari (Kredit)'],
-                    4=>['id'=>'piutang','debit'=>'Simpan ke (Debit)','credit'=>'Piutang dari (Kredit)'],
-                    5=>['id'=>'tanam_modal','debit'=>'Simpan ke (Debit)','credit'=>'Modal (Kredit)'],
-                    6=>['id'=>'tarik_modal','debit'=>'Modal (Debit)','credit'=>'Diambil dari (Kredit)'],
-                    7=>['id'=>'transfer_uang','debit'=>'Ke (Debit)','credit'=>'Dari (Kredit)'],
-                    8=>['id'=>'pemasukan_sebagai_piutang','debit'=>'Simpan ke (Debit)','credit'=>'Diterima dari (Kredit)'],
-                    9=>['id'=>'pengeluaran_sebagai_hutang','debit'=>'Untuk biaya (Debit)','credit'=>'Diambil dari (Kredit)'],
-                    ];
-
-                    foreach($sections as $key=>$s):
-                    ?>
-                    <div class="uk-margin trx-section" id="<?= $s['id'] ?>">
-                        <?php coaSelect('debit',$s['debit'],$debitCoas); ?>
-                        <?php coaSelect('credit',$s['credit'],$creditCoas); ?>
-                    </div>
-                    <?php endforeach; ?>
-
-                    <!-- ================= NOMINAL GLOBAL ================= -->
-                    <div class="uk-margin">
-                        <label class="uk-form-label">Nominal <span style="color:red;"> *</span></label>
-                        <div class="uk-inline uk-width-1-1">
-                            <span class="uk-form-icon uk-text-bold">Rp</span>
-                            <input type="hidden" name="amount" id="amount_hidden">
-                            <input class="uk-input uk-border-rounded uk-form-large money-idr"
-                                data-target="amount_hidden"
-                                type="text"
-                                placeholder="0"
-                                required>
-                        </div>
-                    </div>
-
-                    <!-- ================= CATATAN ================= -->
-                    <div class="uk-margin">
-                        <label class="uk-form-label">Catatan <span style="color:red;"> *</span></label>
-                        <textarea class="uk-textarea" rows="3"
-                            name="note" required></textarea>
-                    </div>
-
-                    <!-- ================= BUNGA ================= -->
-                    <div class="uk-margin" id="piutang_bunga" hidden>
-                        <label class="uk-form-label">Bunga (%)</label>
-                        <input class="uk-input uk-border-rounded uk-form-large"
-                            id="percentage" name="bunga" type="number" min="0" step="0.01" max="100"
-                            placeholder="0%">
-                    </div>
-
-                    <!-- ================= CONTACT ================= -->
-                    <div class="uk-margin">
-                        <label class="uk-form-label" id="contactLabel">Kontak <span class="required-star" style="color:red; display:none;"> *</span></label>
-                        <div class="uk-form-controls">
-                            <select class="uk-select" name="contact" id="contactField">
-                                <option value="" selected disabled>Pilih ...</option>
-                                <?php foreach ($contacts as $c): ?>
-                                    <option value="<?= $c['id'] ?>"><?= $c['name'] ?></option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="uk-margin">
-                        <a class="uk-text-small uk-margin-small-top uk-display-inline-block" uk-toggle="target: #optional">Opsional</a>
-                    </div>
-
-                    <div class="uk-margin" id="optional" hidden>
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Pajak</label>
-                            <div class="uk-form-controls">
-                                <select class="uk-select" name="tax">
-                                    <option value="" selected disabled>Pilih Pajak</option>
-                                    <?php foreach ($taxes as $tax) { ?>
-                                        <option value="<?= $tax['id'] ?>"><?= $tax['name'] ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Jatuh Tempo</label>
-                            <div class="uk-form-controls">
-                                <input type="date" name="duedate" value="<?= date('Y-m-d') ?>" class="uk-input uk-border-rounded">
-                            </div>
-                        </div>
-
-                        <div class="uk-margin">
-                            <label class="uk-form-label">Lampiran</label>
-                            <div class="uk-form-controls" uk-form-custom="target: true">
-                                <input type="file" name="attachment" aria-label="Custom controls">
-                                <input class="uk-input uk-form-width-medium" type="text" placeholder="Pilih file" aria-label="Custom controls" disabled>
-                                <button class="uk-button uk-button-default">Cari</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ================= SUBMIT ================= -->
-                    <div class="uk-margin">
-                        <button type="submit"
-                            class="uk-button uk-button-primary uk-width-1-1 uk-button-large">
-                            Simpan
-                        </button>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-        
-        <div>
-            <div class="uk-card uk-card-default">
-                <div class="uk-card-header uk-card-title">
-                    <h3>History Transaksi</h3>
-                </div>
-                <div class="uk-card-body">
-                    <p>Anda dapat melihat data history transaksi yang sudah di simpan</p>
-                    <div class="uk-margin">
-                        <a href="accountancy/transaction/history" class="uk-button uk-button-default uk-width-1-1 uk-button-large">
-                            Lihat
-                        </a>
-                    </div>
-                </div>
-            </div>
+<!-- Page Heading -->
+<div class="tm-card-header uk-light uk-margin-bottom">
+    <div uk-grid class="uk-flex-middle">
+        <div class="uk-width-1-3@m uk-width-1-1">
+            <h3 class="tm-h3"><?= lang('Global.trxHistory') ?></h3>
         </div>
     </div>
 </div>
+<?= view('Views/Auth/_message_block') ?>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    /* ===============================
-       INIT ELEMENTS
-    =============================== */
+<!-- Table Of Content -->
+<div class="uk-overflow-auto">
+    <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" style="width:100%">
+        <thead>
+            <tr>
+                <th class="">Tanggal</th>
+                <th class="">Transaksi</th>
+                <th class="">Catatan</th>
+                <th class="">Total</th>
+                <th class="uk-text-center"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($transactions as $transaction) { ?>
+                <tr>
+                    <td><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></td>
+                    <td><?= $transaction['type'] ?></td>
+                    <td><?= $transaction['note'] ?></td>
+                    <td><?= $transaction['amount'] ?></td>
+                    <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
+                        <!-- Button Modal Detail -->
+                        <div>
+                            <a class="uk-icon-button" uk-icon="search" uk-toggle="target: #detaildata<?= $transaction['id'] ?>"></a>
+                        </div>
+                        <?php if ($transaction['source_id'] == 1) { ?>
+                            <!-- Button Modal Edit -->
+                            <div>
+                                <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $transaction['id'] ?>"></a>
+                            </div>
+                            <!-- Button Modal Delete -->
+                            <div>
+                                <a class="uk-icon-button-delete" uk-icon="trash" uk-toggle="target: #deletedata<?= $transaction['id'] ?>"></a>
+                            </div>
+                        <?php } ?>
+                    </td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
+<!-- Table Of Content End -->
 
-    const typeSelect     = document.getElementById('transactionType');
-    const sections       = document.querySelectorAll('.trx-section');
-    const bungaField     = document.getElementById('piutang_bunga');
-    const contactField   = document.getElementById('contactField');
-    const contactLabel   = document.getElementById('contactLabel');
-    const contactStar    = contactLabel ? contactLabel.querySelector('.required-star') : null;
-
-    /* ===============================
-       TOMSELECT
-    =============================== */
-
-    document.querySelectorAll('.select-search').forEach(el => {
-        new TomSelect(el,{
-            create:false,
-            sortField:{ field:"text", direction:"asc" }
-        });
-    });
-
-    /* ===============================
-       FORMAT RUPIAH
-    =============================== */
-
-    document.querySelectorAll('.money-idr').forEach(input => {
-
-        const hidden = document.getElementById(input.dataset.target);
-
-        input.addEventListener('input', function () {
-
-            let numeric = this.value.replace(/\D/g,'');
-            hidden.value = numeric;
-
-            this.value = numeric
-                ? new Intl.NumberFormat('id-ID').format(numeric)
-                : '';
-        });
-
-    });
-
-    /* ===============================
-       SECTION CONTROL
-    =============================== */
-
-    function hideAllSections(){
-        sections.forEach(section => {
-            section.style.display = 'none';
-            section.querySelectorAll('select').forEach(select => {
-                select.disabled = true;
-            });
-        });
-
-        if(bungaField) bungaField.hidden = true;
-    }
-
-    function showSection(type){
-
-        const map = {
-            1:'pemasukkan',
-            2:'pengeluaran',
-            3:'hutang',
-            4:'piutang',
-            5:'tanam_modal',
-            6:'tarik_modal',
-            7:'transfer_uang',
-            8:'pemasukan_sebagai_piutang',
-            9:'pengeluaran_sebagai_hutang'
-        };
-
-        const sectionId = map[type];
-        if(!sectionId) return;
-
-        const activeSection = document.getElementById(sectionId);
-        if(!activeSection) return;
-
-        activeSection.style.display = 'block';
-
-        activeSection.querySelectorAll('select').forEach(select => {
-            select.disabled = false;
-        });
-
-        // Khusus Piutang tampilkan bunga
-        if(parseInt(type) === 4 && bungaField){
-            bungaField.hidden = false;
-        }
-    }
-
-    /* ===============================
-       CONTACT REQUIREMENT
-    =============================== */
-
-    function handleContactRequirement(type){
-
-        if(!contactField || !contactStar) return;
-
-        const requiredTypes = [3,4,8,9];
-
-        if(requiredTypes.includes(parseInt(type))){
-            contactField.required = true;
-            contactStar.style.display = 'inline';
-        } else {
-            contactField.required = false;
-            contactStar.style.display = 'none';
-        }
-    }
-
-    /* ===============================
-       INIT STATE
-    =============================== */
-
-    function initialize(){
-        if(!typeSelect) return;
-
-        hideAllSections();
-        showSection(typeSelect.value);
-        handleContactRequirement(typeSelect.value);
-    }
-
-    initialize();
-
-    /* ===============================
-       EVENT LISTENER
-    =============================== */
-
-    if(typeSelect){
-        typeSelect.addEventListener('change', function(){
-            hideAllSections();
-            showSection(this.value);
-            handleContactRequirement(this.value);
-        });
-    }
-});
-</script>
+<!-- Modal Detail -->
+<?php foreach ($transactions as $transaction) { ?>
+    <div id="detaildata<?= $transaction['id'] ?>" uk-modal>
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+            <div class="uk-modal-content">
+                <div class="uk-modal-header">
+                    <h5 class="uk-modal-title">Detail</h5>
+                </div>
+            </div>
+            <div class="uk-modal-body">
+                <div class="uk-margin">
+                    <h5 class="uk-margin-remove">Transaksi</h5>
+                    <?= $transaction['type'] ?>
+                </div>
+                <div class="uk-margin">
+                    <h5 class="uk-margin-remove">Tanggal</h5>
+                    <?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?>
+                </div>
+                <div class="uk-margin">
+                    <h5 class="uk-margin-remove">Kontak</h5>
+                    <?php if ($transaction['contact']) { ?>
+                        <?= $transaction['contact'] ?>
+                    <?php } else { ?>
+                        <p class="uk-margin-remove">Tidak ada kontak</p>
+                    <?php } ?>
+                </div>
+                <div class="uk-margin">
+                    <h5 class="uk-margin-remove">Jatuh Tempo</h5>
+                    <?php if ($transaction['due_date'] != '0000-00-00') { ?>
+                        <?= date('l, d M Y, H:i:s', strtotime($transaction['due_date'])); ?>
+                    <?php } else { ?>
+                        <p class="uk-margin-remove">Tidak ada jatuh tempo</p>
+                    <?php } ?>
+                </div>
+                <div class="uk-margin">
+                    <h5 class="uk-margin-remove">Catatan</h5>
+                    <?= $transaction['note'] ?>
+                </div>
+                <div class="uk-margin">
+                    <h5 class="uk-margin-remove">Akun COA</h5>
+                    <table class="uk-table uk-table-divider uk-table-small" style="background-color: #fff;">
+                        <thead>
+                            <tr>
+                                <th style="color: #000 !important;">Nama Akun</th>
+                                <th style="color: #000 !important;">Debit</th>
+                                <th style="color: #000 !important;">Kredit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- </?php foreach ($transaction['journals'] as $journal) { ?>
+                                <tr>
+                                    <td style="color: #000 !important;"></?= $journal['coa_name'] ?></td>
+                                    <td style="color: #000 !important;"></?= $journal['debit'] ?></td>
+                                    <td style="color: #000 !important;"></?= $journal['credit'] ?></td>
+                                </tr>
+                            </?php } ?> -->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th style="color: #000 !important;">Total</th>
+                                <th style="color: #000 !important;"><?= $transaction['amount'] ?></th>
+                                <th style="color: #000 !important;"><?= $transaction['amount'] ?></th>
+                            </tr>
+                    </table>
+                </div>
+                <div class="uk-margin">
+                    <h5 class="uk-margin-remove">Lampiran</h5>
+                    <?php if ($transaction['attachment']) { ?>
+                        <a href="/uploads/<?= $transaction['attachment'] ?>" target="_blank">Lihat Lampiran</a>
+                    <?php } else { ?>
+                        <p class="uk-margin-remove">Tidak ada lampiran</p>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
 <?= $this->endSection() ?>

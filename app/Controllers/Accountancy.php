@@ -106,7 +106,7 @@ class Accountancy extends BaseController
             ->orderBy('accountancy_coa.coa_code', 'ASC')
             ->findAll();
             
-        $contacts   = $AccountancyContactModel->findAll();
+        $contacts   = $AccountancyContactModel->orderBy('name', 'ASC')->findAll();
         $taxes      = $AccountancyTaxModel->findAll();
 
         // Parsing data to view
@@ -119,6 +119,49 @@ class Accountancy extends BaseController
         $data['taxes']          = $taxes;
 
         return view('Views/accountancy/transaction', $data);
+    }
+
+    public function syncAllContacts()
+    {
+        $supplierModel = new SupplierModel();
+        $userModel     = new UserModel();
+        $contactModel  = new AccountancyContactModel();
+
+        foreach ($supplierModel->findAll() as $supplier) {
+            $exists = $contactModel
+                ->where('source_type','supplier')
+                ->where('source_id',$supplier['id'])
+                ->first();
+
+            if (!$exists) {
+                $contactModel->insert([
+                    'name'        => $supplier['name'],
+                    'email'       => $supplier['email'],
+                    'phone'       => $supplier['phone'],
+                    'address'     => $supplier['address'],
+                    'source_type' => 'supplier',
+                    'source_id'   => $supplier['id'],
+                ]);
+            }
+        }
+
+        foreach ($userModel->findAll() as $user) {
+            $exists = $contactModel
+                ->where('source_type','user')
+                ->where('source_id',$user->id)
+                ->first();
+
+            if (!$exists) {
+                $contactModel->insert([
+                    'name'        => $user->firstname.' '.$user->lastname,
+                    'email'       => $user->email,
+                    'phone'       => $user->phone,
+                    'address'     => $user->address ?? '',
+                    'source_type' => 'user',
+                    'source_id'   => $user->id,
+                ]);
+            }
+        }
     }
 
     public function akuncoa()
@@ -900,69 +943,13 @@ class Accountancy extends BaseController
     public function contact()
     {
         // Calling Model
-        $UserModel      = new UserModel();
-        $SupplierModel  = new SupplierModel();
         $ContactModel   = new AccountancyContactModel();
 
         // Populating data
-        $contacts               = [];
-        $suppliers              = $SupplierModel->findAll();
-        $users                  = $UserModel->findAll();
-        $accountancycontacts    = $ContactModel->findAll();
-
-        foreach ($suppliers as $supplier) {
-            $contacts[]  = [
-                'id'        => '10'.$supplier['id'],
-                'realid'    => $supplier['id'],
-                'name'      => $supplier['name'],
-                'email'     => $supplier['email'],
-                'phone'     => $supplier['phone'],
-                'address'   => $supplier['address'],
-                'status'    => 1,
-            ];
-        }
-
-        foreach ($users as $user) {
-            $contacts[]  = [
-                'id'        => '20'.$user->id,
-                'realid'    => $user->id,
-                'name'      => $user->firstname.' '.$user->lastname,
-                'firstname' => $user->firstname,
-                'lastname'  => $user->lastname,
-                'email'     => $user->email,
-                'phone'     => $user->phone,
-                'address'   => '',
-                'status'    => 2,
-            ];
-        }
-
-        foreach ($accountancycontacts as $accountancycontact) {
-            $contacts[]  = [
-                'id'        => '30'.$accountancycontact['id'],
-                'realid'    => $accountancycontact['id'],
-                'name'      => $accountancycontact['name'],
-                'email'     => $accountancycontact['email'],
-                'phone'     => $accountancycontact['phone'],
-                'address'   => $accountancycontact['address'],
-                'status'    => 3,
-            ];
-        }
-        if (!empty($input)) {
-            $daterange  = explode(' - ', $input);
-            $startdate  = $daterange[0];
-            $enddate    = $daterange[1];
-        } else {
-            // $startdate  = date('Y-m-1' . ' 00:00:00');
-            // $enddate    = date('Y-m-t' . ' 23:59:59');
-            $startdate  = date('Y-m-d') . ' 00:00:00';
-            $enddate    = date('Y-m-d') . ' 23:59:59';
-        }
-        array_multisort(array_column($contacts, 'name'), SORT_ASC, $contacts);
+        $contacts       = $ContactModel->orderBy('name', 'ASC')->findAll();
         
         // Parsing data to view
         $data                   = $this->data;
-        $data['startdate']      = strtotime($startdate);
-        $data['enddate']        = strtotime($enddate);
         $data['contacts']       = $contacts;
         $data['title']          = 'Kontak - '.lang('Global.accountancyList');
         $data['description']    = 'Kontak '.lang('Global.accountancyListDesc');
