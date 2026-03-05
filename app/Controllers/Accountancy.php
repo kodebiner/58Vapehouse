@@ -74,7 +74,7 @@ class Accountancy extends BaseController
                 CONCAT(
                     cat.cat_code, accountancy_coa.coa_code, ' - ',
                     accountancy_coa.name, ' - ',
-                    outlet.name
+                    REPLACE(outlet.name, '58 Vapehouse ', '')
                 ) AS coa_full_name,
                 CONCAT(
                     cat.cat_code, accountancy_coa.coa_code
@@ -93,7 +93,7 @@ class Accountancy extends BaseController
                 CONCAT(
                     cat.cat_code, accountancy_coa.coa_code, ' - ',
                     accountancy_coa.name, ' - ',
-                    outlet.name
+                    REPLACE(outlet.name, '58 Vapehouse ', '')
                 ) AS coa_full_name,
                 CONCAT(
                     cat.cat_code, accountancy_coa.coa_code

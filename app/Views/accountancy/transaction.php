@@ -42,7 +42,7 @@
                         <label class="uk-form-label">Tanggal <span style="color:red;"> *</span></label>
                         <input type="datetime-local" name="date" 
                             value="<?= date('Y-m-d\TH:i') ?>" 
-                            class="uk-input uk-border-rounded" required>
+                            class="uk-input uk-border-rounded" placeholder="Pilih Tanggal" required>
                     </div>
 
                     <!-- ================= TYPE ================= -->
@@ -133,7 +133,7 @@
                     <div class="uk-margin">
                         <label class="uk-form-label" id="contactLabel">Kontak <span class="required-star" style="color:red; display:none;"> *</span></label>
                         <div class="uk-form-controls">
-                            <select class="uk-select" name="contact" id="contactField">
+                            <select class="uk-select select-search" name="contact" id="contactField" placeholder="Cari kontak...">
                                 <option value="" selected disabled>Pilih ...</option>
                                 <?php foreach ($contacts as $c): ?>
                                     <option value="<?= $c['id'] ?>"><?= $c['name'] ?></option>
@@ -162,7 +162,7 @@
                         <div class="uk-margin">
                             <label class="uk-form-label">Jatuh Tempo</label>
                             <div class="uk-form-controls">
-                                <input type="date" name="duedate" class="uk-input uk-border-rounded">
+                                <input type="date" name="duedate" class="uk-input uk-border-rounded" placeholder="Pilih Tanggal Jatuh Tempo">
                             </div>
                         </div>
 

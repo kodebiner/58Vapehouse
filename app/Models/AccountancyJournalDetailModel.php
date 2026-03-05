@@ -30,8 +30,25 @@ class AccountancyJournalDetailModel extends Model
         'credit'   => 'permit_empty|decimal'
     ];
 
-    public function getByTransaction($trxId)
+    public function getByTransactions(array $trxIds)
     {
-        return $this->where('trx_a_id', $trxId)->findAll();
+        return $this->select("
+            accountancy_journal_details.*,
+            accountancy_coa.name as coa_name,
+            CONCAT(
+                cat.cat_code,
+                accountancy_coa.coa_code,
+                ' - ',
+                accountancy_coa.name,
+                ' - ',
+                REPLACE(outlet.name, '58 Vapehouse ', '')
+            ) AS coa_full_name
+        ")
+        ->join('accountancy_coa', 'accountancy_coa.id = accountancy_journal_details.coa_a_id', 'left')
+        ->join('accountancy_categories AS cat', 'cat.id = accountancy_coa.cat_a_id', 'left')
+        ->join('outlet', 'outlet.id = accountancy_coa.outletid', 'left')
+        ->whereIn('accountancy_journal_details.trx_a_id', $trxIds)
+        ->orderBy('accountancy_journal_details.id', 'ASC')
+        ->findAll();
     }
 }

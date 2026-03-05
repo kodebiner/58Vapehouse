@@ -4,11 +4,15 @@ namespace App\Controllers;
 
 use App\Models\AccountancyTransactionModel;
 use App\Models\AccountancyJournalDetailModel;
+use App\Models\AccountancyContactModel;
+use App\Models\AccountancyCOAModel;
 
 class AccountancyTransaction extends BaseController
 {
     protected $trxModel;
     protected $journalModel;
+    protected $contactModel;
+    protected $coaModel;
     protected $db;
     protected $data;
 
@@ -16,6 +20,8 @@ class AccountancyTransaction extends BaseController
     {
         $this->trxModel     = new AccountancyTransactionModel();
         $this->journalModel = new AccountancyJournalDetailModel();
+        $this->contactModel = new AccountancyContactModel();
+        $this->coaModel     = new AccountancyCOAModel();
         $this->db           = \Config\Database::connect();
     }
 
@@ -26,29 +32,79 @@ class AccountancyTransaction extends BaseController
     */
     public function index()
     {
-        $data                   = $this->data;
-        $data['title']          = lang('Global.trxHistory');
-        $data['description']    = lang('Global.trxHistoryListDesc');
-        $typeList               =   [
-                                        1 => 'Pemasukan', 
-                                        2 => 'Pengeluaran',
-                                        3 => 'Hutang',
-                                        4 => 'Piutang',
-                                        5 => 'Tanam Modal',
-                                        6 => 'Tarik Modal',
-                                        7 => 'Transfer Uang',
-                                        8 => 'Pemasukan sebagai Piutang',
-                                        9 => 'Pengeluaran sebagai Hutang'
-                                    ];
+        $data                = $this->data;
+        $data['title']       = lang('Global.trxHistory');
+        $data['description'] = lang('Global.trxHistoryListDesc');
+
+        $typeList = [
+            1 => 'Pemasukan', 
+            2 => 'Pengeluaran',
+            3 => 'Hutang',
+            4 => 'Piutang',
+            5 => 'Tanam Modal',
+            6 => 'Tarik Modal',
+            7 => 'Transfer Uang',
+            8 => 'Pemasukan sebagai Piutang',
+            9 => 'Pengeluaran sebagai Hutang'
+        ];
+
+        // Get Transaction
         $transactions = $this->trxModel->getTransactionsWithContact();
 
-        // Ambil journal untuk tiap transaksi
-        foreach ($transactions as &$trx) {
-            $trx['type']        = $typeList[$trx['type']] ?? '-';
-            $trx['journals']    = $this->journalModel->getByTransaction($trx['id']);
+        if (empty($transactions)) {
+            $data['transactions'] = [];
+            return view('Views/accountancy/transaction-history', $data);
         }
 
-        $data['transactions'] = $transactions;
+        // Get All Transaction ID
+        $trxIds = array_column($transactions, 'id');
+
+        // Get All Journal Detail by Transaction ID
+        $journals = $this->journalModel->getByTransactions($trxIds);
+
+        // Group Journal by Transaction ID
+        $grouped = [];
+        foreach ($journals as $journal) {
+            $grouped[$journal['trx_a_id']][] = $journal;
+        }
+
+        // Sum Journal Debit & Credit per Transaction
+        foreach ($transactions as &$trx) {
+
+            $trx['type']     = $typeList[$trx['type']] ?? '-';
+            $trx['journals'] = $grouped[$trx['id']] ?? [];
+
+            $debitTotal  = 0;
+            $creditTotal = 0;
+
+            foreach ($trx['journals'] as $journal) {
+                $debitTotal  += (float)$journal['debit'];
+                $creditTotal += (float)$journal['credit'];
+            }
+
+            $trx['debit_total']  = $debitTotal;
+            $trx['credit_total'] = $creditTotal;
+        }
+
+        $data['transactions']   = $transactions;
+        $data['contacts']       = $this->contactModel->orderBy('name', 'ASC')->findAll();
+        $data['coas']           = $this->coaModel
+            ->select("
+                accountancy_coa.*,
+                CONCAT(
+                    cat.cat_code, accountancy_coa.coa_code, ' - ',
+                    accountancy_coa.name, ' - ',
+                    outlet.name
+                ) AS coa_full_name,
+                CONCAT(
+                    cat.cat_code, accountancy_coa.coa_code
+                ) AS code
+            ")
+            ->join('accountancy_categories AS cat', 'cat.id = accountancy_coa.cat_a_id', 'left')
+            ->join('outlet', 'outlet.id = accountancy_coa.outletid', 'left')
+            ->where('accountancy_coa.outletid', $this->data['outletPick'])
+            ->orderBy('accountancy_coa.coa_code', 'ASC')
+            ->findAll();
 
         return view('Views/accountancy/transaction-history', $data);
     }
@@ -155,35 +211,78 @@ class AccountancyTransaction extends BaseController
     {
         $this->db->transStart();
 
-        $amount = $this->request->getPost('amount');
+        $coas   = $this->request->getPost('coa');
+        $debits = $this->request->getPost('debit');
+        $credits= $this->request->getPost('credit');
 
+        $totalDebit  = 0;
+        $totalCredit = 0;
+
+        // =========================
+        // HANDLE ATTACHMENT
+        // =========================
+        $attachmentName = null;
+        $file = $this->request->getFile('attachment');
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+
+            $attachmentName = $file->getRandomName();
+            $file->move(ROOTPATH . 'public/uploads', $attachmentName);
+
+            $updateAttachment = [
+                'attachment' => $attachmentName
+            ];
+        } else {
+            $updateAttachment = [];
+        }
+
+        // =========================
+        // UPDATE TRANSACTION
+        // =========================
+        $this->trxModel->update($id, array_merge([
+            'date'      => $this->request->getPost('date'),
+            'note'      => $this->request->getPost('note'),
+            'contact_id'=> $this->request->getPost('contact'),
+            'due_date'  => $this->request->getPost('duedate')
+        ], $updateAttachment));
+
+        // =========================
+        // DELETE OLD JOURNAL
+        // =========================
+        $this->journalModel
+            ->where('trx_a_id', $id)
+            ->delete();
+            
+        // =========================
+        // INSERT NEW JOURNAL
+        // =========================
+        foreach ($coas as $i => $coa) {
+            $debit  = str_replace('.', '', $debits[$i]);
+            $credit = str_replace('.', '', $credits[$i]);
+            $debit  = $debit  ?: 0;
+            $credit = $credit ?: 0;
+
+            $totalDebit  += $debit;
+            $totalCredit += $credit;
+
+            if ($debit == 0 && $credit == 0) {
+                continue;
+            }
+
+            $this->journalModel->insert([
+                'trx_a_id'   => $id,
+                'coa_a_id'   => $coa,
+                'debit'      => $debit,
+                'credit'     => $credit,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        }
+
+        // =========================
+        // UPDATE TOTAL TRANSACTION
+        // =========================
         $this->trxModel->update($id, [
-            'date'   => $this->request->getPost('date'),
-            'type'   => $this->request->getPost('type'),
-            'amount' => $amount,
-            'note'   => $this->request->getPost('note'),
-            'bunga'  => $this->request->getPost('bunga'),
-            'due_date' => $this->request->getPost('duedate'),
-        ]);
-
-        // hapus journal lama
-        $this->journalModel->where('trx_a_id', $id)->delete();
-
-        // insert ulang journal
-        $this->journalModel->insert([
-            'trx_a_id' => $id,
-            'coa_a_id' => $this->request->getPost('debit'),
-            'debit'    => $amount,
-            'credit'   => 0,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-        $this->journalModel->insert([
-            'trx_a_id' => $id,
-            'coa_a_id' => $this->request->getPost('credit'),
-            'debit'    => 0,
-            'credit'   => $amount,
-            'created_at' => date('Y-m-d H:i:s')
+            'amount' => $totalDebit
         ]);
 
         $this->db->transComplete();
