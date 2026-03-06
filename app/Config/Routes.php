@@ -313,7 +313,7 @@ $routes->group('accountancy', ['filter'=>'login'], function($routes){
     // Master Data
     // Dashboard
     $routes->get('dashboard', 'Accountancy::dashboard', ['filter' => 'role:owner,supervisor']);
-    $routes->get('sync', 'Accountancy::syncAllContacts', ['filter' => 'role:owner,supervisor']);
+    // $routes->get('sync', 'Accountancy::syncAllContacts', ['filter' => 'role:owner,supervisor']);
 
     // Transaction
     $routes->get('transaction', 'Accountancy::transaction', ['filter' => 'role:owner,supervisor']);
