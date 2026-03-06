@@ -352,7 +352,7 @@ class export extends BaseController
                 // Member
                 $members    = $MemberModel->find($trx['memberid']);
                 if (!empty($members)) {
-                    $membername     = $members['name'];
+                    $membername     = $members['name'].' / '.$members['phone'];
                 } else {
                     $membername     = '';
                 }
@@ -2264,12 +2264,13 @@ class export extends BaseController
         }
 
         $presencedata   = [];
-        $presences      = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
         
         if ($this->data['outletPick'] === null) {
+            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
             $addres     = "All Outlets";
             $outletname = "58vapehouse";
         } else {
+            $presences  = $PresenceModel->where('outletid', $this->data['outletPick'])->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
             $outlets    = $OutletModel->find($this->data['outletPick']);
             $addres     = $outlets['address'];
             $outletname = $outlets['name'];
@@ -2280,6 +2281,7 @@ class export extends BaseController
             $users          = $UserModel->find($presence['userid']);
             $usergroups     = $UserGroupModel->where('user_id', $users->id)->first();
             $groups         = $GroupModel->find($usergroups['group_id']);
+            $outlet         = $OutletModel->find($presence['outletid']);
 
             // Define Time
             $s      = strtotime($presence['datetime']);
@@ -2294,6 +2296,7 @@ class export extends BaseController
             $presencedata[$date.$users->id.$shift]['name']     = $users->name;
             $presencedata[$date.$users->id.$shift]['role']     = $groups->name;
             $presencedata[$date.$users->id.$shift]['shift']    = $presence['shift'];
+            $presencedata[$date.$users->id.$shift]['outlet']   = $outlet['name'];
 
             $presencedata[$date.$users->id.$shift]['detail'][$status]['time']         = $time;
             $presencedata[$date.$users->id.$shift]['detail'][$status]['photo']        = $presence['photo'];
@@ -2327,6 +2330,7 @@ class export extends BaseController
                     echo '<th>Nama</th>';
                     echo '<th>Posisi</th>';
                     echo '<th>Shift</th>';
+                    echo '<th>Outlet</th>';
                     echo '<th>Jam Masuk</th>';
                     echo '<th>Keterlambatan</th>';
                     echo '<th>Lokasi Masuk</th>';
@@ -2352,6 +2356,7 @@ class export extends BaseController
                         echo '<td>' . $presence['name'] . '</td>';
                         echo '<td>' . $presence['role'] . '</td>';
                         echo '<td>' . $waktu . '</td>';
+                        echo '<td>' . $presence['outlet'] . '</td>';
                         foreach ($presence['detail'] as $detail) {
                             echo '<td>' . $detail['time'] . '</td>';
                             if ($detail['status'] == '1') {

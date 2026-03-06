@@ -12,6 +12,8 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light uk-margin-bottom">
+    <?= view('Views/Auth/_message_block') ?>
+    
     <div uk-grid class="uk-flex-middle">
         <div class="uk-width-1-3@m">
             <h3 class="tm-h3"><?= lang('Global.presencereport') ?></h3>
@@ -53,6 +55,7 @@
                 <th class="uk-width-medium uk-text-bold"><?= lang('Global.name') ?></th>
                 <th class="uk-width-small uk-text-bold"><?= lang('Global.position') ?></th>
                 <th class="uk-width-small uk-text-bold">Shift</th>
+                <th class="uk-width-small uk-text-bold">Outlet</th>
                 <th class="uk-width-small uk-text-bold"><?= lang('Global.time').' '.lang('Global.checkin') ?></th>
                 <th class="uk-width-small uk-text-bold">Keterlambatan</th>
                 <th class="uk-width-small uk-text-bold"><?= lang('Global.photo').' '.lang('Global.checkin') ?></th>
@@ -80,6 +83,7 @@
                     <td style="color:white;"><?= $presence['name'] ?></td>
                     <td style="color:white;"><?= $presence['role'] ?></td>
                     <td style="color:white;"><?= $waktu ?></td>
+                    <td style="color:white;"><?= $presence['outlet'] ?></td>
                     <?php foreach ($presence['detail'] as $detail) { ?>
                         <td style="color:white;"><?= $detail['time'] ?></td>
                         <?php if ($detail['status'] == '1') {
@@ -118,6 +122,5 @@
         </?= $pager->links('presence', 'front_full') ?>
     </div> -->
 </div>
-<?= view('Views/Auth/_message_block') ?>
 
 <?= $this->endSection() ?>

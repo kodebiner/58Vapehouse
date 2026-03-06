@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class PresenceModel extends Model
 {
     protected $allowedFields = [
-        'userid', 'shift','datetime','geoloc','status','photo',
+        'userid','outletid','shift','datetime','geoloc','status','photo',
 
     ];
 

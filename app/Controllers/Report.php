@@ -2173,15 +2173,11 @@ class Report extends BaseController
         // }
 
         $presencedata   = [];
-        $presences      = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
         
         if ($this->data['outletPick'] === null) {
-            $addres     = "All Outlets";
-            $outletname = "58vapehouse";
+            $presences  = $PresenceModel->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
         } else {
-            $outlets    = $OutletModel->find($this->data['outletPick']);
-            $addres     = $outlets['address'];
-            $outletname = $outlets['name'];
+            $presences  = $PresenceModel->where('outletid', $this->data['outletPick'])->where('datetime >=', $startdate . ' 00:00:00')->where('datetime <=', $enddate . ' 23:59:59')->find();
         }
         
         foreach ($presences as $presence) {
@@ -2189,6 +2185,7 @@ class Report extends BaseController
             $users          = $UserModel->find($presence['userid']);
             $usergroups     = $UserGroupModel->where('user_id', $users->id)->first();
             $groups         = $GroupModel->find($usergroups['group_id']);
+            $outlets        = $OutletModel->find($presence['outletid']);
 
             // Define Time
             $s      = strtotime($presence['datetime']);
@@ -2203,6 +2200,7 @@ class Report extends BaseController
             $presencedata[$date.$users->id.$shift]['name']     = $users->name;
             $presencedata[$date.$users->id.$shift]['role']     = $groups->name;
             $presencedata[$date.$users->id.$shift]['shift']    = $presence['shift'];
+            $presencedata[$date.$users->id.$shift]['outlet']   = $outlets['name'];
 
             $presencedata[$date.$users->id.$shift]['detail'][$status]['time']         = $time;
             $presencedata[$date.$users->id.$shift]['detail'][$status]['photo']        = $presence['photo'];

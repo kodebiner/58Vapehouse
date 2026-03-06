@@ -15,6 +15,11 @@ class Presence extends BaseController
     
     public function index()
     {
+        if ($this->data['outletPick'] === null) {
+            // throw new \Exception('Outlet belum dipilih');
+            return redirect()->back()->with('error', 'Outlet belum dipilih. Mohon pilih outlet terlebih dahulu untuk mengakses halaman ini.');
+        }
+        
         // Calling Models
         $PresenceModel          = new PresenceModel();
         $UserModel              = new UserModel();
