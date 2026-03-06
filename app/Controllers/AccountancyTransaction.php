@@ -49,7 +49,7 @@ class AccountancyTransaction extends BaseController
         ];
 
         // Get Transaction
-        $transactions = $this->trxModel->getTransactionsWithContact();
+        $transactions = $this->trxModel->withDeleted()->getTransactionsWithContact($this->data['outletPick']);
 
         if (empty($transactions)) {
             $data['transactions'] = [];
@@ -126,6 +126,29 @@ class AccountancyTransaction extends BaseController
             return redirect()->back()->with('error', 'Nominal tidak valid');
         }
 
+        $validationRule = [
+            'attachment' => [
+                'label' => 'Lampiran',
+                'rules' => 'permit_empty|max_size[attachment,2048]|ext_in[attachment,pdf,jpg,jpeg,png]'
+            ],
+        ];
+
+        if (!$this->validate($validationRule)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $this->validator->getErrors());
+        }
+
+        $file = $this->request->getFile('attachment');
+        $attachmentName = null;
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+
+            $attachmentName = $file->getRandomName();
+
+            $file->move(FCPATH . 'uploads/transaction', $attachmentName);
+        }
+
         $trxData = [
             'contact_id'    => $this->request->getPost('contact'),
             'tax_id'        => $this->request->getPost('tax'),
@@ -138,6 +161,8 @@ class AccountancyTransaction extends BaseController
             'note'          => $this->request->getPost('note'),
             'bunga'         => $this->request->getPost('bunga'),
             'due_date'      => $this->request->getPost('duedate'),
+            'attachment'    => $attachmentName,
+            'created_by'    => $this->data['uid']
         ];
 
         $trxId = $this->trxModel->insert($trxData);
@@ -221,13 +246,26 @@ class AccountancyTransaction extends BaseController
         // =========================
         // HANDLE ATTACHMENT
         // =========================
+        $validationRule = [
+            'attachment' => [
+                'label' => 'Lampiran',
+                'rules' => 'permit_empty|max_size[attachment,4096]|ext_in[attachment,pdf,jpg,jpeg,png]'
+            ],
+        ];
+
+        if (!$this->validate($validationRule)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $this->validator->getErrors());
+        }
+
         $attachmentName = null;
         $file = $this->request->getFile('attachment');
 
         if ($file && $file->isValid() && !$file->hasMoved()) {
 
             $attachmentName = $file->getRandomName();
-            $file->move(ROOTPATH . 'public/uploads', $attachmentName);
+            $file->move(ROOTPATH . 'uploads/transaction', $attachmentName);
 
             $updateAttachment = [
                 'attachment' => $attachmentName
@@ -282,13 +320,19 @@ class AccountancyTransaction extends BaseController
         // UPDATE TOTAL TRANSACTION
         // =========================
         $this->trxModel->update($id, [
-            'amount' => $totalDebit
+            'amount' => $totalDebit,
+            'updated_by' => user()->id
         ]);
+
+        if ($totalDebit != $totalCredit) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Jurnal tidak balance');
+        }
 
         $this->db->transComplete();
 
-        return redirect()->to('/accounting/transaction')
-            ->with('success', 'Transaksi berhasil diperbarui');
+        return redirect()->back()->with('success', 'Transaksi berhasil diperbarui');
     }
 
     /*
@@ -300,12 +344,11 @@ class AccountancyTransaction extends BaseController
     {
         $this->db->transStart();
 
-        $this->journalModel->where('trx_a_id', $id)->delete();
+        // $this->journalModel->where('trx_a_id', $id)->delete();
         $this->trxModel->delete($id);
 
         $this->db->transComplete();
 
-        return redirect()->to('/accounting/transaction')
-            ->with('success', 'Transaksi berhasil dihapus');
+        return redirect()->back()->with('success', 'Transaksi berhasil dihapus');
     }
 }

@@ -320,7 +320,8 @@ $routes->group('accountancy', ['filter'=>'login'], function($routes){
     $routes->get('transaction/history', 'AccountancyTransaction::index', ['filter' => 'role:owner,supervisor']);
     $routes->post('transaction/create', 'AccountancyTransaction::store', ['filter' => 'role:owner,supervisor']);
     $routes->post('transaction/update/(:num)', 'AccountancyTransaction::update/$1', ['filter' => 'role:owner,supervisor']);
-    $routes->get('transaction/delete/(:num)', 'AccountancyTransaction::delete/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->post('transaction/delete/(:num)', 'AccountancyTransaction::delete/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->get('transactionprint/(:num)', 'AccountancyTransaction::print/$1', ['filter' => 'role:owner,supervisor']);
 
     // Akun COA
     $routes->get('akuncoa', 'Accountancy::akuncoa', ['filter' => 'role:owner,supervisor']);

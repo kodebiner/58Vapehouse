@@ -32,6 +32,7 @@
         <thead>
             <tr>
                 <th class="">Tanggal</th>
+                <th>Nama</th>
                 <th class="">Transaksi</th>
                 <th class="">Catatan</th>
                 <th class="">Total</th>
@@ -42,15 +43,16 @@
             <?php foreach ($transactions as $transaction) { ?>
                 <tr>
                     <td><?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?></td>
+                    <td><?= $transaction['created_by_name'] ?></td>
                     <td><?= $transaction['type'] ?></td>
                     <td><?= $transaction['note'] ?></td>
                     <td><?= number_format($transaction['amount'], 0, ',', '.') ?></td>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                         <!-- Button Modal Detail -->
                         <div>
-                            <a class="uk-icon-button" uk-icon="search" uk-toggle="target: #detaildata<?= $transaction['id'] ?>"></a>
+                            <a class="uk-icon-button-success" uk-icon="search" uk-toggle="target: #detaildata<?= $transaction['id'] ?>"></a>
                         </div>
-                        <?php if ($transaction['source_id'] == 1) { ?>
+                        <?php if ($transaction['source_id'] == 1 && empty($transaction['deleted_at'])) { ?>
                             <!-- Button Modal Edit -->
                             <div>
                                 <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $transaction['id'] ?>"></a>
@@ -70,11 +72,18 @@
 
 <?php foreach ($transactions as $transaction) { ?>
     <!-- Modal Detail -->
-    <div id="detaildata<?= $transaction['id'] ?>" uk-modal>
+    <div class="uk-modal-container" id="detaildata<?= $transaction['id'] ?>" uk-modal>
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <div class="uk-modal-content">
                 <div class="uk-modal-header">
-                    <h5 class="uk-modal-title">Detail</h5>
+                    <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <h5 class="uk-modal-title">Detail</h5>
+                        </div>
+                        <div class="uk-text-right">
+                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="uk-modal-body">
@@ -85,6 +94,18 @@
                 <div class="uk-margin">
                     <h5 class="uk-margin-remove">Tanggal</h5>
                     <?= date('l, d M Y, H:i:s', strtotime($transaction['date'])); ?>
+                </div>
+                <div class="uk-margin">
+                    <h5 class="uk-margin-remove">Pembuat</h5>
+                    <?= $transaction['created_by_name'] ?? '-' ?>
+                </div>
+                <div class="uk-margin">
+                    <h5 class="uk-margin-remove">Pengubah</h5>
+                    <?= $transaction['updated_by_name'] ?? '-' ?>
+                </div>
+                <div class="uk-margin">
+                    <h5 class="uk-margin-remove">Dibatalkan oleh</h5>
+                    <?= $transaction['deleted_by_name'] ?? '-' ?>
                 </div>
                 <div class="uk-margin">
                     <h5 class="uk-margin-remove">Kontak</h5>
@@ -141,7 +162,7 @@
                 <div class="uk-margin">
                     <h5 class="uk-margin-remove">Lampiran</h5>
                     <?php if ($transaction['attachment']) { ?>
-                        <a href="/uploads/<?= $transaction['attachment'] ?>" target="_blank">Lihat Lampiran</a>
+                        <a href="/uploads/transaction/<?= $transaction['attachment'] ?>" target="_blank">Lihat Lampiran</a>
                     <?php } else { ?>
                         <p class="uk-margin-remove">Tidak ada lampiran</p>
                     <?php } ?>
@@ -151,7 +172,7 @@
     </div>
     
     <!-- Modal Edit -->
-    <div id="editdata<?= $transaction['id'] ?>" uk-modal>
+    <div class="uk-modal-container" id="editdata<?= $transaction['id'] ?>" uk-modal>
         <div class="uk-modal-dialog uk-margin-auto-vertical">
             <form id="trxForm<?= $transaction['id'] ?>" action="/accountancy/transaction/update/<?= $transaction['id'] ?>" method="post" enctype="multipart/form-data">
                 <div class="uk-modal-header">
@@ -243,14 +264,14 @@
                             class="uk-alert-danger uk-margin-small-top uk-hidden">
                             ⚠ Jurnal tidak balance (Debit dan Credit harus sama)
                         </div>
-                        <button class="uk-button uk-button-primary uk-width-1-1" type="button" onclick="addJournalRow(<?= $transaction['id'] ?>)">+ Tambah Baris Ayat Jurnal</button>
+                        <button class="uk-button uk-button-primary uk-width-1-1" type="button" onclick="addJournalRow(<?= $transaction['id'] ?>)" style="border-radius: 8px;">+ Tambah Baris Ayat Jurnal</button>
                     </div>
 
                     <div class="uk-margin">
                         <label class="uk-form-label">Lampiran</label>
                         <?php if ($transaction['attachment']) { ?>
                             <div class="uk-margin-small">
-                                <a href="/uploads/<?= $transaction['attachment'] ?>" target="_blank">
+                                <a href="/uploads/transaction/<?= $transaction['attachment'] ?>" target="_blank">
                                     Lihat Lampiran Saat Ini
                                 </a>
                             </div>
@@ -259,7 +280,7 @@
                         <div class="uk-form-controls uk-flex" uk-form-custom="target: true">
                             <input type="file" name="attachment" accept=".jpg,.jpeg,.png,.pdf">
                             <input class="uk-input uk-border-rounded uk-width-expand" type="text" placeholder="Pilih file..." disabled>
-                            <button class="uk-button uk-button-default">Cari</button>
+                            <button class="uk-button uk-button-default" style="border-radius: 8px;">Cari</button>
                         </div>
                         <small class="uk-text-muted">
                             Format: JPG, PNG, PDF (maks 4MB)
@@ -268,8 +289,52 @@
                 </div>
 
                 <div class="uk-modal-footer uk-text-right">
-                    <button class="uk-button uk-button-default uk-modal-close" type="button">Batal</button>
-                    <button class="uk-button uk-button-primary" type="submit">Simpan Perubahan</button>
+                    <button class="uk-button uk-button-default uk-modal-close" type="button" style="border-radius: 8px;">Batal</button>
+                    <button class="uk-button uk-button-primary" type="submit" style="border-radius: 8px;">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Delete -->
+    <div id="deletedata<?= $transaction['id'] ?>" uk-modal>
+        <div class="uk-modal-dialog uk-margin-auto-vertical">
+
+            <form action="/accountancy/transaction/delete/<?= $transaction['id'] ?>" method="post">
+                
+                <div class="uk-modal-header">
+                    <h5 class="uk-modal-title">Apakah kamu yakin ingin menghapus transaksi ini?</h5>
+                </div>
+
+                <div class="uk-modal-body">
+                    <div class="uk-text-center uk-margin-bottom">
+                        <span uk-icon="icon: warning; ratio:2"></span>
+                    </div>
+
+                    <div class="uk-margin-small-top">
+                        <strong>Catatan Transaksi:</strong><br>
+                        <?= esc($transaction['note']) ?>
+                    </div>
+
+                    <div class="uk-margin-small-top">
+                        <strong>Total:</strong><br>
+                        Rp <?= number_format($transaction['amount'],0,',','.') ?>
+                    </div>
+
+                    <div class="uk-alert-warning uk-margin-small-top">
+                        <strong>Catatan:</strong><br>
+                        Transaksi yang dihapus akan menghapus seluruh jurnal terkait.
+                    </div>
+                </div>
+
+                <div class="uk-modal-footer uk-text-right">
+                    <button type="button" class="uk-button uk-button-default uk-modal-close" style="border-radius: 8px;">
+                        Batal
+                    </button>
+
+                    <button type="submit" class="uk-button uk-button-danger" style="border-radius: 8px;">
+                        Hapus Transaksi
+                    </button>
                 </div>
             </form>
         </div>
@@ -311,10 +376,9 @@
         // aktifkan TomSelect
         new TomSelect(newSelect,{
             create:false,
-            sortField:{ field:"text", direction:"asc" }
+            sortField:{ field:"text", direction:"asc" },
+            dropdownParent:'body'
         });
-
-        newSelect.tomselect.focus();
     }
 
     document.addEventListener('click',function(e){

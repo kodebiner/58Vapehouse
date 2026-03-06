@@ -33,7 +33,7 @@
             <div class="uk-card uk-card-default uk-card-body uk-margin">
                 <h4 class="uk-margin-small-bottom">Tambah Transaksi</h4>
 
-                <form action="accountancy/transaction/create" method="post" class="uk-form-stacked">
+                <form action="accountancy/transaction/create" method="post" class="uk-form-stacked" enctype="multipart/form-data">
                     <?= csrf_field() ?>
                     <?php $now = new \DateTime(); ?>
 
@@ -169,17 +169,16 @@
                         <div class="uk-margin">
                             <label class="uk-form-label">Lampiran</label>
                             <div class="uk-form-controls" uk-form-custom="target: true">
-                                <input type="file" name="attachment" aria-label="Custom controls">
+                                <input type="file" name="attachment" aria-label="Custom controls" accept=".pdf,.jpg,.jpeg,.png">
                                 <input class="uk-input uk-form-width-medium" type="text" placeholder="Pilih file" aria-label="Custom controls" disabled>
-                                <button class="uk-button uk-button-default">Cari</button>
+                                <button class="uk-button uk-button-default" style="border-radius: 8px;">Cari</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- ================= SUBMIT ================= -->
                     <div class="uk-margin">
-                        <button type="submit"
-                            class="uk-button uk-button-primary uk-width-1-1 uk-button-large">
+                        <button type="submit" class="uk-button uk-button-primary uk-width-1-1 uk-button-large" style="border-radius: 8px;">
                             Simpan
                         </button>
                     </div>
@@ -196,7 +195,7 @@
                 <div class="uk-card-body">
                     <p>Anda dapat melihat data history transaksi yang sudah di simpan</p>
                     <div class="uk-margin">
-                        <a href="accountancy/transaction/history" class="uk-button uk-button-default uk-width-1-1 uk-button-large">
+                        <a href="accountancy/transaction/history" class="uk-button uk-button-default uk-width-1-1 uk-button-large" style="border-radius: 8px;">
                             Lihat
                         </a>
                     </div>
