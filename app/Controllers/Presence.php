@@ -95,6 +95,7 @@ class Presence extends BaseController
 
         $data = [
             'userid'        => $userId,
+            'outletid'      => $this->data['outletPick'],
             'shift'         => $shift,
             'datetime'      => date("Y-m-d H:i:s"),
             'photo'         => $fileName,
