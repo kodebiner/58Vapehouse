@@ -86,7 +86,7 @@ class Presence extends BaseController
         // }
         
         if (! $this->validate([
-            'geoloc'        => 'required',
+            // 'geoloc'        => 'required',
             'status'        => 'required|max_length[255]',
         ])) {
                 

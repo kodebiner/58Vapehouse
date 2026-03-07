@@ -121,48 +121,48 @@ class Accountancy extends BaseController
         return view('Views/accountancy/transaction', $data);
     }
 
-    public function syncAllContacts()
-    {
-        $supplierModel = new SupplierModel();
-        $userModel     = new UserModel();
-        $contactModel  = new AccountancyContactModel();
+    // public function syncAllContacts()
+    // {
+    //     $supplierModel = new SupplierModel();
+    //     $userModel     = new UserModel();
+    //     $contactModel  = new AccountancyContactModel();
 
-        foreach ($supplierModel->findAll() as $supplier) {
-            $exists = $contactModel
-                ->where('source_type','supplier')
-                ->where('source_id',$supplier['id'])
-                ->first();
+    //     foreach ($supplierModel->findAll() as $supplier) {
+    //         $exists = $contactModel
+    //             ->where('source_type','supplier')
+    //             ->where('source_id',$supplier['id'])
+    //             ->first();
 
-            if (!$exists) {
-                $contactModel->insert([
-                    'name'        => $supplier['name'],
-                    'email'       => $supplier['email'],
-                    'phone'       => $supplier['phone'],
-                    'address'     => $supplier['address'],
-                    'source_type' => 'supplier',
-                    'source_id'   => $supplier['id'],
-                ]);
-            }
-        }
+    //         if (!$exists) {
+    //             $contactModel->insert([
+    //                 'name'        => $supplier['name'],
+    //                 'email'       => $supplier['email'],
+    //                 'phone'       => $supplier['phone'],
+    //                 'address'     => $supplier['address'],
+    //                 'source_type' => 'supplier',
+    //                 'source_id'   => $supplier['id'],
+    //             ]);
+    //         }
+    //     }
 
-        foreach ($userModel->findAll() as $user) {
-            $exists = $contactModel
-                ->where('source_type','user')
-                ->where('source_id',$user->id)
-                ->first();
+    //     foreach ($userModel->findAll() as $user) {
+    //         $exists = $contactModel
+    //             ->where('source_type','user')
+    //             ->where('source_id',$user->id)
+    //             ->first();
 
-            if (!$exists) {
-                $contactModel->insert([
-                    'name'        => $user->firstname.' '.$user->lastname,
-                    'email'       => $user->email,
-                    'phone'       => $user->phone,
-                    'address'     => $user->address ?? '',
-                    'source_type' => 'user',
-                    'source_id'   => $user->id,
-                ]);
-            }
-        }
-    }
+    //         if (!$exists) {
+    //             $contactModel->insert([
+    //                 'name'        => $user->firstname.' '.$user->lastname,
+    //                 'email'       => $user->email,
+    //                 'phone'       => $user->phone,
+    //                 'address'     => $user->address ?? '',
+    //                 'source_type' => 'user',
+    //                 'source_id'   => $user->id,
+    //             ]);
+    //         }
+    //     }
+    // }
 
     public function akuncoa()
     {
