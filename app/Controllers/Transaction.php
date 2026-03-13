@@ -36,17 +36,17 @@ class Transaction extends BaseController
         $BundledetModel         = new BundledetailModel();
         $CashModel              = new CashModel();
         $OutletModel            = new OutletModel();
-        $UserModel              = new UserModel();
+        // $UserModel              = new UserModel();
         $MemberModel            = new MemberModel();
         $PaymentModel           = new PaymentModel();
         $ProductModel           = new ProductModel();
-        $VariantModel           = new VariantModel();
-        $StockModel             = new StockModel();
-        $TransactionModel       = new TransactionModel();
-        $TrxdetailModel         = new TrxdetailModel();
-        $TrxpaymentModel        = new TrxpaymentModel();
-        $BookingModel           = new BookingModel();
-        $BookingdetailModel     = new BookingdetailModel();
+        // $VariantModel           = new VariantModel();
+        // $StockModel             = new StockModel();
+        // $TransactionModel       = new TransactionModel();
+        // $TrxdetailModel         = new TrxdetailModel();
+        // $TrxpaymentModel        = new TrxpaymentModel();
+        // $BookingModel           = new BookingModel();
+        // $BookingdetailModel     = new BookingdetailModel();
         $DailyReportModel       = new DailyReportModel();
 
         // Populating Data
@@ -54,118 +54,116 @@ class Transaction extends BaseController
         $bundets                = $BundledetModel->findAll();
         $Cash                   = $CashModel->findAll();
         $outlets                = $OutletModel->findAll();
-        $users                  = $UserModel->findAll();
         $customers              = $MemberModel->findAll();
         $payments               = $PaymentModel->findAll();
         $products               = $ProductModel->orderBy('name', 'ASC')->where('status', '1')->find();
-        $variants               = $VariantModel->findAll();
-        $stocks                 = $StockModel->findAll();
-        $transactions           = $TransactionModel->findAll();
-        $trxdetails             = $TrxdetailModel->findAll();
-        $trxpayments            = $TrxpaymentModel->findAll();
-        $bookings               = $BookingModel->where('outletid', $this->data['outletPick'])->where('status', '0')->orderBy('created_at', 'DESC')->findAll();
+        // $variants               = $VariantModel->findAll();
+        // $stocks                 = $StockModel->findAll();
+        // $trxdetails             = $TrxdetailModel->findAll();
+        // $trxpayments            = $TrxpaymentModel->findAll();
+        // $bookings               = $BookingModel->where('outletid', $this->data['outletPick'])->where('status', '0')->orderBy('created_at', 'DESC')->findAll();
         // $bookingdetails         = $BookingdetailModel->findAll();
 
         // Bundle Data
-        $bundleBuilder          = $db->table('bundledetail');
-        $bundleVariants         = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
-        $bundleVariants         = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
-        $bundleVariants         = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
-        $bundleVariants         = $bundleBuilder->orderBy('stock.qty', 'ASC');
-        $bundleVariants         = $bundleBuilder->get();
+        // $bundleBuilder          = $db->table('bundledetail');
+        // $bundleVariants         = $bundleBuilder->select('bundledetail.bundleid as bundleid, variant.id as id, variant.productid as productid, variant.name as name, stock.outletid as outletid, stock.qty as qty');
+        // $bundleVariants         = $bundleBuilder->join('variant', 'bundledetail.variantid = variant.id', 'left');
+        // $bundleVariants         = $bundleBuilder->join('stock', 'stock.variantid = variant.id', 'left');
+        // $bundleVariants         = $bundleBuilder->orderBy('stock.qty', 'ASC');
+        // $bundleVariants         = $bundleBuilder->get();
 
         // Booking Data
-        $bookingdata            = [];
-        foreach ($bookings as $booking) {
-            // Booking Data
-            $bookingdata[$booking['id']]['bookid']          = $booking['id'];
-            $bookingdata[$booking['id']]['bookvalue']       = $booking['value'];
-            $bookingdata[$booking['id']]['bookdate']        = $booking['created_at'];
+        // $bookingdata            = [];
+        // foreach ($bookings as $booking) {
+        //     // Booking Data
+        //     $bookingdata[$booking['id']]['bookid']          = $booking['id'];
+        //     $bookingdata[$booking['id']]['bookvalue']       = $booking['value'];
+        //     $bookingdata[$booking['id']]['bookdate']        = $booking['created_at'];
             
-            // Customer Data
-            $bookcustomer       = $MemberModel->find($booking['memberid']);
-            if ($booking['memberid'] != '0') {
-                $bookingdata[$booking['id']]['custid']      = $bookcustomer['id'];    
-                $bookingdata[$booking['id']]['custname']    = $bookcustomer['name'].' / '.$bookcustomer['phone'];
-            } else {
-                $bookingdata[$booking['id']]['custid']      = '0';    
-                $bookingdata[$booking['id']]['custname']    = 'Non Member';
-            }
+        //     // Customer Data
+        //     $bookcustomer       = $MemberModel->find($booking['memberid']);
+        //     if ($booking['memberid'] != '0') {
+        //         $bookingdata[$booking['id']]['custid']      = $bookcustomer['id'];    
+        //         $bookingdata[$booking['id']]['custname']    = $bookcustomer['name'].' / '.$bookcustomer['phone'];
+        //     } else {
+        //         $bookingdata[$booking['id']]['custid']      = '0';    
+        //         $bookingdata[$booking['id']]['custname']    = 'Non Member';
+        //     }
 
-            // Booking Detail Data
-            $bookingdetails     = $BookingdetailModel->where('bookingid', $booking['id'])->find();
-            foreach ($bookingdetails as $bookdet) {
+        //     // Booking Detail Data
+        //     $bookingdetails     = $BookingdetailModel->where('bookingid', $booking['id'])->find();
+        //     foreach ($bookingdetails as $bookdet) {
 
-                // Detail Booking Not Bundle
-                if (($bookdet['variantid'] != '0') && ($bookdet['bundleid'] == '0')) {
-                    // Data Variant
-                    $bookvar       = $VariantModel->find($bookdet['variantid']);
-                    // $bookingdata[$booking['id']]['bookvarid']               = $bookvar['id'];
+        //         // Detail Booking Not Bundle
+        //         if (($bookdet['variantid'] != '0') && ($bookdet['bundleid'] == '0')) {
+        //             // Data Variant
+        //             $bookvar       = $VariantModel->find($bookdet['variantid']);
+        //             // $bookingdata[$booking['id']]['bookvarid']               = $bookvar['id'];
                     
-                    if (!empty($bookvar)) {
-                        // Data Stock
-                        if ($this->data['outletPick'] != null) {
-                            $stocks     = $StockModel->where('variantid', $bookvar['id'])->where('outletid', $this->data['outletPick'])->find();
-                        } else {
-                            $stocks     = $StockModel->where('variantid', $bookvar['id'])->find();
-                        }
-                        $bookprod   = $ProductModel->find($bookvar['productid']);
+        //             if (!empty($bookvar)) {
+        //                 // Data Stock
+        //                 if ($this->data['outletPick'] != null) {
+        //                     $stocks     = $StockModel->where('variantid', $bookvar['id'])->where('outletid', $this->data['outletPick'])->find();
+        //                 } else {
+        //                     $stocks     = $StockModel->where('variantid', $bookvar['id'])->find();
+        //                 }
+        //                 $bookprod   = $ProductModel->find($bookvar['productid']);
 
-                        if (!empty($bookprod)) {
-                            $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['bookvarid']            = $bookvar['id'];
-                            $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['bookvarprice']         = (Int)$bookvar['hargamodal'] + (Int)$bookvar['hargajual'];
-                            $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['prodname']             = $bookprod['name'].' - '.$bookvar['name'];
-                            $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['bookdetqty']           = $bookdet['qty'];
-                            $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['bookdetvalue']         = $bookdet['value'];
+        //                 if (!empty($bookprod)) {
+        //                     $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['bookvarid']            = $bookvar['id'];
+        //                     $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['bookvarprice']         = (Int)$bookvar['hargamodal'] + (Int)$bookvar['hargajual'];
+        //                     $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['prodname']             = $bookprod['name'].' - '.$bookvar['name'];
+        //                     $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['bookdetqty']           = $bookdet['qty'];
+        //                     $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['bookdetvalue']         = $bookdet['value'];
                             
-                            foreach ($stocks as $stock) {
-                                $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['stock']            = $stock['qty'];
-                            }
-                        }
-                    }
-                }
+        //                     foreach ($stocks as $stock) {
+        //                         $bookingdata[$booking['id']]['variantdata'][$bookdet['variantid'].$bookdet['bundleid']]['stock']            = $stock['qty'];
+        //                     }
+        //                 }
+        //             }
+        //         }
                 
-                if (($bookdet['variantid'] == '0') && ($bookdet['bundleid'] != '0')) {
-                    // Data Bundle
-                    $bookbundles        = $BundleModel->find($bookdet['bundleid']);
+        //         if (($bookdet['variantid'] == '0') && ($bookdet['bundleid'] != '0')) {
+        //             // Data Bundle
+        //             $bookbundles        = $BundleModel->find($bookdet['bundleid']);
 
-                    if (!empty($bundles)) {
-                        // Data Bundle Detail
-                        $bookbundledets = $BundledetModel->where('bundleid', $bookbundles['id'])->find();
+        //             if (!empty($bundles)) {
+        //                 // Data Bundle Detail
+        //                 $bookbundledets = $BundledetModel->where('bundleid', $bookbundles['id'])->find();
 
-                        if (!empty($bookbundledets)) {
-                            foreach ($bookbundledets as $bundet) {
-                                // Data Variant
-                                $bundlevariants         = $VariantModel->find($bundet['variantid']);
+        //                 if (!empty($bookbundledets)) {
+        //                     foreach ($bookbundledets as $bundet) {
+        //                         // Data Variant
+        //                         $bundlevariants         = $VariantModel->find($bundet['variantid']);
                                 
-                                if (!empty($bundlevariants)) {
-                                    // Data Stock
-                                    if ($this->data['outletPick'] != null) {
-                                        $bundleStocks   = $StockModel->where('variantid', $bundlevariants['id'])->where('outletid', $this->data['outletPick'])->find();
-                                    } else {
-                                        $bundleStocks   = $StockModel->where('variantid', $bundlevariants['id'])->find();
-                                    }
+        //                         if (!empty($bundlevariants)) {
+        //                             // Data Stock
+        //                             if ($this->data['outletPick'] != null) {
+        //                                 $bundleStocks   = $StockModel->where('variantid', $bundlevariants['id'])->where('outletid', $this->data['outletPick'])->find();
+        //                             } else {
+        //                                 $bundleStocks   = $StockModel->where('variantid', $bundlevariants['id'])->find();
+        //                             }
 
-                                    $bundleproduct      = $ProductModel->find($bundlevariants['productid']);
+        //                             $bundleproduct      = $ProductModel->find($bundlevariants['productid']);
             
-                                    if (!empty($bundleproduct)) {
-                                        $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['bookbundid']                = $bookbundles['id'];
-                                        $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['bookbundprice']             = (Int)$bookbundles['price'];
-                                        $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['bundname']                  = $bookbundles['name'];
-                                        $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['bookbundqty']               = $bookdet['qty'];
-                                        $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['bookbundvalue']             = $bookdet['value'];
+        //                             if (!empty($bundleproduct)) {
+        //                                 $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['bookbundid']                = $bookbundles['id'];
+        //                                 $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['bookbundprice']             = (Int)$bookbundles['price'];
+        //                                 $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['bundname']                  = $bookbundles['name'];
+        //                                 $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['bookbundqty']               = $bookdet['qty'];
+        //                                 $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['bookbundvalue']             = $bookdet['value'];
 
-                                        foreach ($bundleStocks as $bundstok) {
-                                            $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['stock']                 = $bundstok['qty'];
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        //                                 foreach ($bundleStocks as $bundstok) {
+        //                                     $bookingdata[$booking['id']]['bundledata'][$bookdet['variantid'].$bookdet['bundleid']]['stock']                 = $bundstok['qty'];
+        //                                 }
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         // Find Data for Daily Report
         $today                  = date('Y-m-d') . ' 00:00:01';
@@ -179,19 +177,18 @@ class Transaction extends BaseController
         $data['bundles']        = $bundles;
         $data['bundets']        = $bundets;
         $data['cash']           = $Cash;
-        $data['transactions']   = $transactions;
         $data['outlets']        = $outlets;
         $data['payments']       = $payments;
-        $data['members']        = $MemberModel->findAll();
+        // $data['members']        = $MemberModel->findAll();
         $data['customers']      = $customers;
         $data['products']       = $products;
-        $data['variants']       = $variants;
-        $data['stocks']         = $stocks;
-        $data['trxdetails']     = $trxdetails;
-        $data['trxpayments']    = $trxpayments;
-        $data['bundleVariants'] = $bundleVariants->getResult();
+        // $data['variants']       = $variants;
+        // $data['stocks']         = $stocks;
+        // $data['trxdetails']     = $trxdetails;
+        // $data['trxpayments']    = $trxpayments;
+        // $data['bundleVariants'] = $bundleVariants->getResult();
         // $data['bookings']       = $bookings;
-        $data['bookings']       = $bookingdata;
+        // $data['bookings']       = $bookingdata;
         // $data['bookingdetails'] = $bookingdetails;
         $data['dailyreport']    = $dailyreport;
         $data['closed']         = $closed;
