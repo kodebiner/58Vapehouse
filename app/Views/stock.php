@@ -79,7 +79,7 @@
                 <tr>
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td class="">
-                        <?= $stock['outlet'] ?>
+                        <?= $stock['outletname'] ?>
                         <!-- </?php foreach ($outlets as $outlet ) {
                             if ($stock['outletid']=== $outlet['id']) {
                                 echo $outlet['name'];
