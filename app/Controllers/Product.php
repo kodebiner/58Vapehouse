@@ -1669,6 +1669,7 @@ class Product extends BaseController
             ->join('purchase', 'purchase.id = purchasedetail.purchaseid', 'left')
             ->where('purchasedetail.variantid', $id)
             ->where('purchase.date >=', $startdate)
+            ->where('purchase.status', '1')
             ->where('purchase.date <=', $enddate)
             ->where('purchase.outletid', $this->data['outletPick'])
             ->groupBy('purchasedetail.purchaseid')
