@@ -18,12 +18,12 @@
         data.addColumn('number', 'grossvalue');
         data.addColumn('number', 'netvalue');
         data.addRows([
-            <?php foreach ($branddata as $product){
-                $brand          = $product['name'];
-                $sold           = array_sum($product['qty']);
-                $sales          = array_sum($product['grossvalue']);
-                $net            = array_sum($product['netvalue']);
-                echo "['$brand',$net,$sold,$sales],";
+            <?php foreach ($branddata as $brand){
+                $name           = $brand['name'];
+                $sold           =$brand['qty'];
+                $sales          =$brand['grossvalue'];
+                $net            =$brand['netvalue'];
+                echo "['$name',$sold,$sales,$net],";
             }?>
         ]);
 
@@ -49,7 +49,17 @@
 
             <!-- Button Trigger Modal export -->
             <div class="uk-width-1-2@m uk-text-right@m">
-                <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" target="_blank" href="export/brand?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
+                <a
+                    type="button"
+                    class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove"
+                    target="_blank"
+                    href="<?= base_url('export/brand') . '?' . http_build_query([
+                        'daterange' => $daterange,
+                        'search'    => $search
+                    ]) ?>">
+                    
+                    <?=lang('Global.export')?>
+                </a>
             </div>
             <!-- End Of Button Trigger Modal export-->
 
@@ -57,56 +67,68 @@
     </div>
     <!-- End Of Page Heading -->
 
-    <!-- Daterange Filter -->
-    <div class="uk-width-1-1 uk-margin">
-        <form id="short" action="report/brand" method="get">
-            <div class="uk-inline">
-                <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-                <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+    <!-- Filter -->
+    <div class="uk-margin">
+        <form id="filterForm" action="report/brand" method="GET">
+            <!-- Filter -->
+            <div class="uk-width-1-1 uk-margin">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                    <input
+                        type="hidden"
+                        name="daterange"
+                        id="daterange-hidden"
+                        value="<?= esc($daterange) ?>"
+                    >
+                    <input
+                        type="text"
+                        id="daterange-display"
+                        class="uk-input"
+                    >
+                </div>
             </div>
+
+            <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
+                <h3 class="uk-card-title"><?=lang('Global.brandreport')?></h3>
+                <div id="piechart" ></div>
+            </div>
+
+            <div uk-grid class="uk-flex-middle uk-margin-bottom">
+                <!-- Search Filter -->
+                <div class="uk-width-1-4@m">
+                    <div class="uk-search uk-search-default"
+                        style="background-color:#fff;border-radius:7px;">
+                        <span uk-search-icon style="color:#000;"></span>
+                        <input
+                            class="uk-search-input"
+                            type="search"
+                            placeholder="Search"
+                            name="search"
+                            value="<?= esc($search ?? '') ?>"
+                            style="border-radius:7px;"
+                        >
+                    </div>
+                </div>
+                <div class="uk-width-1-4@m uk-text-left@m">
+                    <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.net')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p> 
+                </div>
+                <div class="uk-width-1-4@m uk-text-left@m">
+                    <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($gross,0,',','.');" ";?></p>
+                </div>
+                <div class="uk-width-1-4@m uk-text-left@m">
+                    <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.soldItem')?> : <?php echo $qty;?></p>
+                </div>
+            </div>
+
+            <button type="submit" hidden></button>
         </form>
-        <script>
-            $(function() {
-                $('input[name="daterange"]').daterangepicker({
-                    maxDate: new Date(),
-                    opens: 'right'
-                }, function(start, end, label) {
-                    document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
-                    document.getElementById('short').submit();
-                });
-            });
-        </script>
     </div>
-
-    <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
-        <h3 class="uk-card-title"><?=lang('Global.brandreport')?></h3>
-        <div id="piechart"></div>
-    </div>
-
-    <div uk-grid class="uk-flex-middle uk-margin-bottom">
-        <!-- Search Filter -->
-        <div class="uk-width-1-4@m">
-            <form class="uk-search uk-search-default" method="GET" action="report/brand" style="background-color: #fff; border-radius: 7px;">
-                <span uk-search-icon style="color: #000;"></span>
-                <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
-            </form>
-        </div>
-        <!-- End Search Filter -->
-        <div class="uk-width-1-4@m uk-text-left@m">
-            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.net')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p> 
-        </div>
-        <div class="uk-width-1-4@m uk-text-left@m">
-            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($gross,0,',','.');" ";?></p>
-        </div>
-        <div class="uk-width-1-4@m uk-text-left@m">
-            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.soldItem')?> : <?php echo $qty;?></p>
-        </div>
-    </div>
+    <!-- End Of Filter -->
 
     <!-- Sorting Data Based On Net Value -->
     <?php
-    foreach ($branddata as &$cat) {
-        $cat['totalnetvalue'] = array_sum($cat['netvalue']);
+    foreach ($branddata as &$brands) {
+        $brands['totalnetvalue'] = $brands['netvalue'];
     }
     usort($branddata, function($a, $b) {
         return $b['totalnetvalue'] <=> $a['totalnetvalue'];
@@ -125,20 +147,64 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($branddata as $cat ) {
-                    $totalqty           = array_sum($cat['qty']);
-                    $totalnetvalue      = array_sum($cat['netvalue']);
-                    $totalgrossvalue    = array_sum($cat['grossvalue']); ?>
+                <?php foreach ($branddata as $brand ) { ?>
                     <tr>
-                        <td style="color:white;"><?=$cat['name']?></td>
-                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($totalnetvalue,0,',','.');" ";?></td>
-                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($totalgrossvalue,0,',','.');" ";?></td>
-                        <td style="color:white;" class="uk-text-center"><?= $totalqty ?></td>
+                        <td style="color:white;"><?=$brand['name']?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($brand['netvalue'],0,',','.');" ";?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($brand['grossvalue'],0,',','.');" ";?></td>
+                        <td style="color:white;" class="uk-text-center"><?= $brand['qty'] ?></td>
                     </tr>
                 <?php } ?>
             </tbody>
         </table>
     </div>
+
+    <script>
+    $(function () {
+        let range = $('#daterange-hidden').val();
+        let start = moment().startOf('day');
+        let end   = moment().endOf('day');
+
+        if (range) {
+            const [startStr, endStr] = range.split(' - ');
+
+            start = moment(startStr, 'YYYY-MM-DD');
+            end   = moment(endStr, 'YYYY-MM-DD');
+        }
+
+        $('#daterange-display').daterangepicker({
+            startDate: start,
+            endDate: end,
+            maxDate: new Date(),
+            autoUpdateInput: true,
+            locale: {
+                format: 'MM/DD/YYYY'
+            }
+        });
+
+        $('#daterange-display').on('apply.daterangepicker', function(ev, picker) {
+
+            $('#daterange-hidden').val(
+                picker.startDate.format('YYYY-MM-DD')
+                + ' - ' +
+                picker.endDate.format('YYYY-MM-DD')
+            );
+
+            $('#filterForm').submit();
+        });
+    });
+
+    let timer;
+
+    $('input[name="search"]').on('keyup', function() {
+        clearTimeout(timer);
+
+        timer = setTimeout(function() {
+            $('#filterForm').submit();
+        }, 500);
+    });
+    </script>
+
     <?= view('Views/Auth/_message_block') ?>
 
     <?= $this->endSection() ?>

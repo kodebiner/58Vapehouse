@@ -141,7 +141,12 @@ public/uploads/transaction
 # Docker
 Dockerfile
 docker-compose.yml
+.docker/
 58vapehouse.conf
 server.crt
 server.key
 .devcontainer/
+mkcert.exe
+58vapehouse.local.pem
+58vapehouse.local-key.pem
+.dockerignore

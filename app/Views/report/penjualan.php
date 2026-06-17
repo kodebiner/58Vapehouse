@@ -22,7 +22,7 @@
 
         var options = {
           title: 'Sales Performance',
-          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          hAxis: {title: 'Tanggal',  titleTextStyle: {color: '#333'}},
           lineWidth: 5,
           vAxis: {minValue: 0}
         };

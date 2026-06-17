@@ -13,54 +13,68 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light uk-margin-bottom">
-    <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-3@m">
+    <div uk-grid class="uk-child-width-1-2@m uk-child-width-auto uk-flex-middle">
+        <div>
             <h3 class="tm-h3"><?=lang('Global.employereport')?></h3>
-        </div>
-        <div class="uk-width-expand@m uk-text-right uk-margin-right-remove">
-            <form id="short" action="report/employe" method="get">
-                <div class="uk-inline">
-                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
-                </div>
-            </form>
-            <script>
-                $(function() {
-                    $('input[name="daterange"]').daterangepicker({
-                        maxDate: new Date(),
-                        opens: 'right'
-                    }, function(start, end, label) {
-                        document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
-                        document.getElementById('short').submit();
-                    });
-                });
-            </script>
         </div>
         
         <!-- Button Trigger Modal export -->
-        <div class="uk-width-auto@m uk-text-right@m">
-            <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove"  target="_blank" href="export/employe?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
+        <div class="uk-text-right@m">
+            <a
+                type="button"
+                class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove"
+                target="_blank"
+                href="<?= base_url('export/employe') . '?' . http_build_query([
+                    'daterange' => $daterange,
+                    'search'    => $search
+                ]) ?>">
+                
+                <?=lang('Global.export')?>
+            </a>
         </div>
     </div>
 </div>
 
-<!-- Sorting Data Based On Net Value -->
-<!-- </?php
-usort($employetrx, function($a, $b) {
-    return $b['value'] <=> $a['value'];
-});
-?> -->
-<!-- Sorting Data Based On Net Value End -->
+<div class="uk-margin">
+    <form id="filterForm" action="report/employe" method="GET">
+        <!-- Filter -->
+        <div uk-grid class="uk-child-width-1-3@m uk-child-width-auto uk-flex-between@m uk-flex-middle">
+            <div class="uk-inline">
+                <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                <input
+                    type="hidden"
+                    name="daterange"
+                    id="daterange-hidden"
+                    value="<?= esc($daterange) ?>"
+                >
+                <input
+                    type="text"
+                    id="daterange-display"
+                    class="uk-input"
+                >
+            </div>
 
-<div uk-grid class="uk-flex-middle uk-margin-bottom">
-    <!-- Search Filter -->
-    <div class="uk-width-1-4@m">
-        <form class="uk-search uk-search-default" method="GET" action="report/employe" style="background-color: #fff; border-radius: 7px;">
-            <span uk-search-icon style="color: #000;"></span>
-            <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
-        </form>
-    </div>
-    <!-- End Search Filter -->
+            <div class="uk-text-right@l">
+                <!-- Search Filter -->
+                <div class="uk-search uk-search-default"
+                    style="background-color:#fff;border-radius:7px;">
+                    <span uk-search-icon style="color:#000;"></span>
+                    <input
+                        class="uk-search-input"
+                        type="search"
+                        placeholder="Search"
+                        name="search"
+                        value="<?= esc($search ?? '') ?>"
+                        style="border-radius:7px;"
+                    >
+                </div>
+            </div>
+
+            <div class="uk-hidden@l uk-text-right">
+                <button type="submit" class="uk-button uk-button-primary" style="border-radius: 10px;">Cari</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <table class="uk-table uk-table-divider uk-table-responsive uk-margin-top">
@@ -72,13 +86,15 @@ usort($employetrx, function($a, $b) {
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($employetrx as $employe){ ?>
-            <tr>
-                <td style="color:white;"><?=$employe['name']?></td>
-                <td class="uk-text-center" style="color:white;"><?=$employe['role']?></td>
-                <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($employe['value'],0,',','.');" ";?></td>
-            </tr>
-        <?php } ?>
+        <?php if (!empty($employetrx)) {
+            foreach ($employetrx as $employe) { ?>
+                <tr>
+                    <td style="color:white;"><?=$employe['name']?></td>
+                    <td class="uk-text-center" style="color:white;"><?=$employe['role']?></td>
+                    <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($employe['value'],0,',','.');" ";?></td>
+                </tr>
+            <?php }
+        } else { echo '<tr><td colspan="3" class="uk-text-center" style="color:white;">'.'Data Tidak Tersedia'.'</td></tr>'; } ?>
     </tbody>
 </table>
 
@@ -86,6 +102,50 @@ usort($employetrx, function($a, $b) {
 <script>
     $(document).ready(function () {
         $('#example').DataTable();
+    });
+
+    $(function () {
+        let range = $('#daterange-hidden').val();
+        let start = moment().startOf('day');
+        let end   = moment().endOf('day');
+
+        if (range) {
+            const [startStr, endStr] = range.split(' - ');
+
+            start = moment(startStr, 'YYYY-MM-DD');
+            end   = moment(endStr, 'YYYY-MM-DD');
+        }
+
+        $('#daterange-display').daterangepicker({
+            startDate: start,
+            endDate: end,
+            maxDate: new Date(),
+            autoUpdateInput: true,
+            locale: {
+                format: 'MM/DD/YYYY'
+            }
+        });
+
+        $('#daterange-display').on('apply.daterangepicker', function(ev, picker) {
+
+            $('#daterange-hidden').val(
+                picker.startDate.format('YYYY-MM-DD')
+                + ' - ' +
+                picker.endDate.format('YYYY-MM-DD')
+            );
+
+            $('#filterForm').submit();
+        });
+    });
+
+    let timer;
+
+    $('input[name="search"]').on('keyup', function() {
+        clearTimeout(timer);
+
+        timer = setTimeout(function() {
+            $('#filterForm').submit();
+        }, 500);
     });
 </script>
 <?= view('Views/Auth/_message_block') ?>

@@ -14,16 +14,16 @@
     function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'product');
-        data.addColumn('number', 'sold');
-        data.addColumn('string', 'category');
         data.addColumn('number', 'value');
+        data.addColumn('string', 'category');
+        data.addColumn('number', 'sold');
         data.addRows([
             <?php foreach ($products as $key => $product) {
                 if ($key < 12) {
                     $produk     = $product['name'];
+                    $value      = $product['netvalue'];
                     $category   = $product['category'];
-                    $sold       = array_sum($product['qty']);
-                    $value      = array_sum($product['netvalue']);
+                    $sold       = $product['qty'];
                     echo "[ '$produk',$value,'$category',$sold],";
                 }
             } ?>
@@ -51,64 +51,84 @@
 
             <!-- Button Trigger Modal export -->
             <div class="uk-width-1-2@m uk-text-right@m">
-                <a type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove" target="_blank" href="export/product?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
+                <a
+                    type="button"
+                    class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove"
+                    target="_blank"
+                    href="<?= base_url('export/product') . '?' . http_build_query([
+                        'daterange' => $daterange,
+                        'search'    => $search
+                    ]) ?>">
+                    
+                    <?=lang('Global.export')?>
+                </a>
             </div>
             <!-- End Of Button Trigger Modal export-->
-
         </div>
     </div>
     <!-- End Of Page Heading -->
 
     <!-- Filter -->
-    <div class="uk-width-1-1 uk-margin">
-        <form id="short" action="report/product" method="get">
-            <div class="uk-inline">
-                <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-                <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+    <div class="uk-margin">
+        <form id="filterForm" action="report/product" method="GET">
+            <!-- Filter -->
+            <div class="uk-width-1-1 uk-margin">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                    <input
+                        type="hidden"
+                        name="daterange"
+                        id="daterange-hidden"
+                        value="<?= esc($daterange) ?>"
+                    >
+                    <input
+                        type="text"
+                        id="daterange-display"
+                        class="uk-input"
+                    >
+                </div>
             </div>
+
+            <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
+                <h3 class="uk-card-title"><?=lang('Global.productreport')?></h3>
+                <div id="piechart" ></div>
+            </div>
+
+            <div uk-grid class="uk-flex-middle uk-margin-bottom">
+                <!-- Search Filter -->
+                <div class="uk-width-1-4@m">
+                    <div class="uk-search uk-search-default"
+                        style="background-color:#fff;border-radius:7px;">
+                        <span uk-search-icon style="color:#000;"></span>
+                        <input
+                            class="uk-search-input"
+                            type="search"
+                            placeholder="Search"
+                            name="search"
+                            value="<?= esc($search ?? '') ?>"
+                            style="border-radius:7px;"
+                        >
+                    </div>
+                </div>
+                <div class="uk-width-1-4@m uk-text-left@m">
+                    <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.net')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p> 
+                </div>
+                <div class="uk-width-1-4@m uk-text-left@m">
+                    <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($grosstotal,0,',','.');" ";?></p>
+                </div>
+                <div class="uk-width-1-4@m uk-text-left@m">
+                    <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.soldItem')?> : <?php echo $totalstock;?></p>
+                </div>
+            </div>
+
+            <button type="submit" hidden></button>
         </form>
-        <script>
-            $(function() {
-                $('input[name="daterange"]').daterangepicker({
-                    maxDate: new Date(),
-                    opens: 'right'
-                }, function(start, end, label) {
-                    document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
-                    document.getElementById('short').submit();
-                });
-            });
-        </script>
-    </div>
-
-    <div class="uk-card uk-card-default uk-card-body uk-margin uk-width-1-1@m">
-        <h3 class="uk-card-title"><?=lang('Global.productreport')?></h3>
-        <div id="piechart" ></div>
-    </div>
-
-    <div uk-grid class="uk-flex-middle uk-margin-bottom">
-        <!-- Search Filter -->
-        <div class="uk-width-1-4@m">
-            <form class="uk-search uk-search-default" method="GET" action="report/product" style="background-color: #fff; border-radius: 7px;">
-                <span uk-search-icon style="color: #000;"></span>
-                <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
-            </form>
-        </div>
-        <!-- End Search Filter -->
-        <div class="uk-width-1-4@m uk-text-left@m">
-            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.net')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p> 
-        </div>
-        <div class="uk-width-1-4@m uk-text-left@m">
-            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($grosstotal,0,',','.');" ";?></p>
-        </div>
-        <div class="uk-width-1-4@m uk-text-left@m">
-            <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.soldItem')?> : <?php echo $totalstock;?></p>
-        </div>
     </div>
 
     <!-- Sorting Data Based On Net Value -->
     <?php
     foreach ($products as &$cat) {
-        $cat['totalnetvalue'] = array_sum($cat['netvalue']);
+        $cat['totalnetvalue'] = $cat['netvalue'];
     }
     usort($products, function($a, $b) {
         return $b['totalnetvalue'] <=> $a['totalnetvalue'];
@@ -134,9 +154,9 @@
                     <tr>
                         <td style="color:white;"><?=$product['name']?></td>
                         <td style="color:white;"><?=$product['category']?></td>
-                        <td style="color:white;"><?php echo "Rp. ".number_format(array_sum($product['netvalue']),0,',','.');" ";?></td>
-                        <td style="color:white;"><?php echo "Rp. ".number_format(array_sum($product['grossvalue']),0,',','.');" ";?></td>
-                        <td class="uk-text-center" style="color:white;"><?= array_sum($product['qty']) ?></td>
+                        <td style="color:white;"><?php echo "Rp. ".number_format($product['netvalue'],0,',','.');" ";?></td>
+                        <td style="color:white;"><?php echo "Rp. ".number_format($product['grossvalue']),0,',','.';" ";?></td>
+                        <td class="uk-text-center" style="color:white;"><?= $product['qty'] ?></td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -145,6 +165,52 @@
             <?//= $pager ?>
         </div> -->
     </div>
+
+    <script>
+    $(function () {
+        let range = $('#daterange-hidden').val();
+        let start = moment().startOf('day');
+        let end   = moment().endOf('day');
+
+        if (range) {
+            const [startStr, endStr] = range.split(' - ');
+
+            start = moment(startStr, 'YYYY-MM-DD');
+            end   = moment(endStr, 'YYYY-MM-DD');
+        }
+
+        $('#daterange-display').daterangepicker({
+            startDate: start,
+            endDate: end,
+            maxDate: new Date(),
+            autoUpdateInput: true,
+            locale: {
+                format: 'MM/DD/YYYY'
+            }
+        });
+
+        $('#daterange-display').on('apply.daterangepicker', function(ev, picker) {
+
+            $('#daterange-hidden').val(
+                picker.startDate.format('YYYY-MM-DD')
+                + ' - ' +
+                picker.endDate.format('YYYY-MM-DD')
+            );
+
+            $('#filterForm').submit();
+        });
+    });
+
+    let timer;
+
+    $('input[name="search"]').on('keyup', function() {
+        clearTimeout(timer);
+
+        timer = setTimeout(function() {
+            $('#filterForm').submit();
+        }, 500);
+    });
+    </script>
 
     <?= view('Views/Auth/_message_block') ?>
 
