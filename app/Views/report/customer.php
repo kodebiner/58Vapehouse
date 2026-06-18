@@ -12,46 +12,68 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light uk-margin-bottom">
-    <div uk-grid class="uk-flex-middle">
-        <div class="uk-width-1-3@m">
-            <h3 class="tm-h3 uk-width-1-1@m"><?= lang('Global.report').' '.lang('Global.customer') ?></h3>
-        </div>
-        <div class="uk-width-expand@m uk-text-right uk-margin-right-remove">
-            <form id="short" action="report/customer" method="get">
-                <div class="uk-inline">
-                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
-                    <input class="uk-input uk-width-medium uk-border-rounded" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
-                </div>
-            </form>
-            <script>
-                $(function() {
-                    $('input[name="daterange"]').daterangepicker({
-                        maxDate: new Date(),
-                        opens: 'right'
-                    }, function(start, end, label) {
-                        document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
-                        document.getElementById('short').submit();
-                    });
-                });
-            </script>
+    <div uk-grid class="uk-child-width-1-2@m uk-child-width-auto uk-flex-middle">
+        <div>
+            <h3 class="tm-h3"><?= lang('Global.report').' '.lang('Global.customer') ?></h3>
         </div>
         
         <!-- Button Trigger Modal export -->
-        <div class="uk-width-auto@m uk-text-right@m">
-            <a type="button" class="uk-button uk-button-primary uk-preserve-color" target="_blank" href="export/customer?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>"><?=lang('Global.export')?></a>
+        <div class="uk-text-right@m">
+            <a
+                type="button"
+                class="uk-button uk-button-primary uk-preserve-color uk-margin-right-remove"
+                target="_blank"
+                href="<?= base_url('export/customer') . '?' . http_build_query([
+                    'daterange' => $daterange,
+                    'search'    => $search
+                ]) ?>">
+                
+                <?=lang('Global.export')?>
+            </a>
         </div>
     </div>
 </div>
 
-<div uk-grid class="uk-flex-middle uk-margin-bottom">
-    <!-- Search Filter -->
-    <div class="uk-width-1-2@m">
-        <form class="uk-search uk-search-default" method="GET" action="report/customer" style="background-color: #fff; border-radius: 7px;">
-            <span uk-search-icon style="color: #000;"></span>
-            <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" name="search" style="border-radius: 7px;">
-        </form>
-    </div>
-    <!-- End Search Filter -->
+<div class="uk-margin">
+    <form id="filterForm" action="report/customer" method="GET">
+        <!-- Filter -->
+        <div uk-grid class="uk-child-width-1-3@m uk-child-width-auto uk-flex-between@m uk-flex-middle">
+            <div class="uk-inline">
+                <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+                <input
+                    type="hidden"
+                    name="daterange"
+                    id="daterange-hidden"
+                    value="<?= esc($daterange) ?>"
+                >
+                <input
+                    type="text"
+                    id="daterange-display"
+                    class="uk-input"
+                >
+            </div>
+
+            <div class="uk-text-right@l">
+                <!-- Search Filter -->
+                <div class="uk-search uk-search-default"
+                    style="background-color:#fff;border-radius:7px;">
+                    <span uk-search-icon style="color:#000;"></span>
+                    <input
+                        class="uk-search-input"
+                        type="search"
+                        placeholder="Search"
+                        name="search"
+                        value="<?= esc($search ?? '') ?>"
+                        style="border-radius:7px;"
+                    >
+                </div>
+            </div>
+
+            <div class="uk-hidden@l uk-text-right">
+                <button type="submit" class="uk-button uk-button-primary" style="border-radius: 10px;">Cari</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <?= view('Views/Auth/_message_block') ?>
@@ -120,7 +142,7 @@
                                 <?php foreach ($customer['product'] as $product) { ?>
                                     <tr>
                                         <td><?= $product['name'] ?></td>
-                                        <td><?= array_sum($product['qty']) ?></td>
+                                        <td><?= $product['qty'] ?></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -132,5 +154,51 @@
     </div>
 <?php } ?>
 <!-- Modal Detail End -->
+
+<script>
+$(function () {
+    let range = $('#daterange-hidden').val();
+    let start = moment().startOf('day');
+    let end   = moment().endOf('day');
+
+    if (range) {
+        const [startStr, endStr] = range.split(' - ');
+
+        start = moment(startStr, 'YYYY-MM-DD');
+        end   = moment(endStr, 'YYYY-MM-DD');
+    }
+
+    $('#daterange-display').daterangepicker({
+        startDate: start,
+        endDate: end,
+        maxDate: new Date(),
+        autoUpdateInput: true,
+        locale: {
+            format: 'MM/DD/YYYY'
+        }
+    });
+
+    $('#daterange-display').on('apply.daterangepicker', function(ev, picker) {
+
+        $('#daterange-hidden').val(
+            picker.startDate.format('YYYY-MM-DD')
+            + ' - ' +
+            picker.endDate.format('YYYY-MM-DD')
+        );
+
+        $('#filterForm').submit();
+    });
+});
+
+let timer;
+
+$('input[name="search"]').on('keyup', function() {
+    clearTimeout(timer);
+
+    timer = setTimeout(function() {
+        $('#filterForm').submit();
+    }, 500);
+});
+</script>
 
 <?= $this->endSection() ?>

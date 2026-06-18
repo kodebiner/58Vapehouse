@@ -2454,104 +2454,157 @@ class export extends BaseController
         $VariantModel       = new VariantModel;
 
         // Populating Data
-        // Search Filter
-        $inputsearch    = $this->request->getGet('search');
-        if (!empty($inputsearch)) {
-            $members   = $MemberModel->like('name', $inputsearch)->orderBy('name', 'ASC')->find();
-        } else {
-            $members   = $MemberModel->orderBy('name', 'ASC')->find();
+        $input      = $this->request->getGet();
+        $search     = trim($input['search'] ?? '');
+        $searchName = $search !== '' ? $search : 'Semua Pelanggan';
+
+        $daterange  = $input['daterange'] ?? date('2023-01-01') . ' - ' . date('Y-m-d');
+        [$startdate, $enddate] = explode(' - ', $daterange);
+        $startdate  = date('Y-m-d', strtotime($startdate));
+        $enddate    = date('Y-m-d', strtotime($enddate));
+
+        // Member with Pagination
+        $memberQuery = $MemberModel->orderBy('name', 'ASC');
+        if ($search !== '') {
+            $memberQuery->like('name', $search);
+        }
+        $members    = $memberQuery->paginate(20, 'member');
+        $memberIds  = array_column($members, 'id');
+        if (empty($memberIds)) {
+            $memberIds = [0];
         }
 
-        // Daterange Filter
-        $input = $this->request->getGet('daterange');
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate  = date('2023-01-01' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
+        // Debt Map
+        $debts = $DebtModel
+            ->whereIn('memberid', $memberIds)
+            ->findAll();
+        $debtMap = [];
+        foreach ($debts as $debt) {
+            $debtMap[$debt['memberid']][] = $debt;
         }
 
-        $addres = '';
-        if ($this->data['outletPick'] === null) {
-            $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-            $addres = "All Outlets";
-            $outletname = "58vapehouse";
-        } else {
-            $transactions = $TransactionModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-            $outlets = $OutletModel->find($this->data['outletPick']);
-            $addres = $outlets['address'];
-            $outletname = $outlets['name'];
-        }
-
-        $customerdata   = [];
-        foreach ($members as $member) {
-            $debts      = $DebtModel->where('memberid', $member['id'])->find();
-            $debtvalue  = [];
-            if (!empty($debts)) {
-                foreach ($debts as $debt) {
-                    $debtvalue[]    = $debt['value'];
-                }
-            }
-            
-            if ($this->data['outletPick'] === null) {
-                $transactions   = $TransactionModel->where('memberid', $member['id'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->find();
-                $addres         = "All Outlets";
-                $outletname     = "58vapehouse";
-            } else {
-                $transactions   = $TransactionModel->where('memberid', $member['id'])->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('outletid', $this->data['outletPick'])->find();
-                $outlets        = $OutletModel->find($this->data['outletPick']);
-                $addres         = $outlets['address'];
-                $outletname     = $outlets['name'];
-            }
-            
-            $trxvalue   = [];
-            if (!empty($transactions)) {
-                foreach ($transactions as $trx) {
-                    $trxdetails     = $TrxdetailModel->where('transactionid', $trx['id'])->find();
-                    $trxvalue[]     = $trx['value'];
-                
-                    if (!empty($trxdetails)) {
-                        foreach ($trxdetails as $trxdet) {
-                            $variants       = $VariantModel->find($trxdet['variantid']);
-                            
-                            if (!empty($variants)) {
-                                $products   = $ProductModel->find($variants['productid']);
+        $addres     = "All Outlets";
+        $outletname = "58vapehouse";
         
-                                if (!empty($products)) {
-                                    $customerdata[$member['id']]['product'][$products['id']]['name']            = $products['name'];
-                                    $customerdata[$member['id']]['product'][$products['id']]['qty'][]           = $trxdet['qty'];
-                                }
-                            } else {
-                                $products   = [];
-                                $customerdata[$member['id']]['product'][0]['name']             = 'Kategori / Produk / Variant Terhapus';
-                                $customerdata[$member['id']]['product'][0]['category']         = 'Kategori / Produk / Variant Terhapus';
-                                $customerdata[$member['id']]['product'][0]['qty'][]            = $trxdet['qty'];
+        // Transaction Query
+        $trxQuery = $TransactionModel
+            ->whereIn('memberid', $memberIds)
+            ->where('date >=', $startdate . ' 00:00:00')
+            ->where('date <=', $enddate . ' 23:59:59');
+        if ($this->data['outletPick'] !== null) {
+            $trxQuery->where('outletid', $this->data['outletPick']);
+
+            $outlet         = $OutletModel->find($this->data['outletPick']);
+            $addres         = $outlet['address'];
+            $outletname     = $outlet['name'];
+        }
+        $transactions = $trxQuery->findAll();
+        
+        // Transaction Map
+        $transactionMap = [];
+        foreach ($transactions as $trx) {
+            $transactionMap[$trx['memberid']][] = $trx;
+        }
+        $transactionIds = array_column($transactions, 'id');
+        
+        // Trx Detail Map
+        $trxDetailMap = [];
+        if (!empty($transactionIds)) {
+            $trxdetails = $TrxdetailModel
+                ->whereIn('transactionid', $transactionIds)
+                ->findAll();
+            foreach ($trxdetails as $detail) {
+                $trxDetailMap[$detail['transactionid']][] = $detail;
+            }
+        }
+        
+        // Variant Map
+        $variantMap = [];
+        foreach ($VariantModel->findAll() as $variant) {
+            $variantMap[$variant['id']] = $variant;
+        }
+        
+        // Product Map
+        $productMap = [];
+        foreach ($ProductModel->findAll() as $product) {
+            $productMap[$product['id']] = $product;
+        }
+        
+        // Build Customer Data
+        $customerdata = [];
+        foreach ($members as $member) {
+            $memberId = $member['id'];
+            $customerdata[$memberId] = [
+                'id'       => $memberId,
+                'name'     => $member['name'],
+                'phone'    => $member['phone'],
+                'debt'     => 0,
+                'trx'      => 0,
+                'trxvalue' => 0,
+                'product'  => []
+            ];
+
+            // Total Debt
+            foreach ($debtMap[$memberId] ?? [] as $debt) {
+                $customerdata[$memberId]['debt'] += $debt['value'];
+            }
+
+            // Transaction
+            foreach ($transactionMap[$memberId] ?? [] as $trx) {
+                $customerdata[$memberId]['trx']++;
+                $customerdata[$memberId]['trxvalue'] += $trx['value'];
+
+                // Detail Produk
+                foreach ($trxDetailMap[$trx['id']] ?? [] as $detail) {
+                    $variant = $variantMap[$detail['variantid']] ?? null;
+
+                    if ($variant !== null) {
+                        $product = $productMap[$variant['productid']] ?? null;
+
+                        if ($product !== null) {
+                            $productId = $product['id'];
+                            if (!isset($customerdata[$memberId]['product'][$productId])) {
+                                $customerdata[$memberId]['product'][$productId] = [
+                                    'name' => $product['name'],
+                                    'qty'  => 0
+                                ];
                             }
+
+                            $customerdata[$memberId]['product'][$productId]['qty']
+                                += $detail['qty'];
+                        } else {
+                            // Product terhapus
+                            if (!isset($customerdata[$memberId]['product'][0])) {
+                                $customerdata[$memberId]['product'][0] = [
+                                    'name' => 'Kategori / Produk Terhapus',
+                                    'qty'  => 0
+                                ];
+                            }
+
+                            $customerdata[$memberId]['product'][0]['qty']
+                                += $detail['qty'];
                         }
                     } else {
-                        $variants   = [];
-                        $products   = [];
+                        // Variant terhapus
+                        if (!isset($customerdata[$memberId]['product'][0])) {
+                            $customerdata[$memberId]['product'][0] = [
+                                'name' => 'Kategori / Produk / Variant Terhapus',
+                                'qty'  => 0
+                            ];
+                        }
+
+                        $customerdata[$memberId]['product'][0]['qty']
+                            += $detail['qty'];
                     }
                 }
-            } else {
-                $customerdata[$member['id']]['product'] = [];
             }
-            
-            $customerdata[$member['id']]['id']          = $member['id'];
-            $customerdata[$member['id']]['name']        = $member['name'];
-            $customerdata[$member['id']]['phone']       = $member['phone'];
-            $customerdata[$member['id']]['debt']        = array_sum($debtvalue);
-            $customerdata[$member['id']]['trx']         = count($transactions);
-            $customerdata[$member['id']]['trxvalue']    = array_sum($trxvalue);
         }
-
-        $datestart  = date('d M Y', strtotime($startdate));
-        $dateend    = date('d M Y', strtotime($enddate));
+        uasort($customerdata, function ($a, $b) {
+            return $a['name'] <=> $b['name'];
+        });
 
         header("Content-type: application/vnd-ms-excel");
-        header("Content-Disposition: attachment; filename=Laporan Pelanggan $outletname ($startdate-$enddate).xls");
+        header("Content-Disposition: attachment; filename=Laporan Pelanggan $searchName $outletname ($startdate-$enddate).xls");
 
         // export
         echo '<table>';
@@ -2566,7 +2619,7 @@ class export extends BaseController
                         echo '<th colspan="5" style="align-text:center;">' . $addres . '</th>';
                 echo '</tr>';
                 echo '<tr>';
-                    echo '<th colspan="5" style="align-text:center;">' . $datestart . ' - ' . $dateend . '</th>';
+                    echo '<th colspan="5" style="align-text:center;">' . $startdate . ' - ' . $enddate . '</th>';
                 echo '</tr>';
                 echo '<tr>';
                     echo '<th colspan="5" style="align-text:center;"></th>';
