@@ -1388,7 +1388,7 @@ class Product extends BaseController
             $startdate = $daterange[0];
             $enddate   = $daterange[1];
         } else {
-            $startdate = date('Y-m-l 00:00:00');
+            $startdate = date('Y-m-01 00:00:00');
             $enddate   = date('Y-m-d 23:59:59');
         }
 

@@ -98,7 +98,7 @@
                     </td>
                     <td class="uk-text-center"><?= $stock['qty']; ?></td>
                     <td class="uk-text-center">
-                        <a class="uk-button uk-button-primary" href="product/history/<?= $stock['id'] ?>">Stock History</a>
+                        <a class="uk-button uk-button-primary" href="product/history/<?= $stock['variantid'] ?>">Stock History</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
