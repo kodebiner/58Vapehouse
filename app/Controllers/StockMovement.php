@@ -30,144 +30,175 @@ class StockMovement extends BaseController
         $UserModel                  = new UserModel();
 
         // Populating Data
-        $data                       = $this->data;
-
-        $input = $this->request->getGet('daterange');
-
-        if (!empty($input)) {
-            $daterange = explode(' - ', $input);
-            $startdate = $daterange[0];
-            $enddate = $daterange[1];
-        } else {
-            $startdate  = date('Y-m-m' . ' 00:00:00');
-            $enddate    = date('Y-m-t' . ' 23:59:59');
-        }
+        $data           = $this->data;
+        $input          = $this->request->getGet();
+        $daterange      = $input['daterange'] ?? date('Y-m-01') . ' - ' . date('Y-m-d');
+        
+        [$startdate, $enddate] = explode(' - ', $daterange);
+        $startdate = date('Y-m-d', strtotime($startdate));
+        $enddate   = date('Y-m-d', strtotime($enddate));
 
         if ($this->data['outletPick'] === null) {
             $stockmovements         = $StockmovementModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->orderBy('date', 'DESC')->paginate(20, 'stockmovement');
         } else {
-            $stockmovements         = $StockmovementModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')->where('origin', $this->data['outletPick'])->orWhere('destination', $this->data['outletPick'])->orderBy('date', 'DESC')->paginate(20, 'stockmovement');
+            $stockmovements         = $StockmovementModel->where('date >=', $startdate . ' 00:00:00')->where('date <=', $enddate . ' 23:59:59')
+                                        ->groupStart()
+                                            ->where('origin', $this->data['outletPick'])
+                                            ->orWhere('destination', $this->data['outletPick'])
+                                        ->groupEnd()
+                                        ->orderBy('date', 'DESC')
+                                        ->paginate(20, 'stockmovement');
         }
 
-        $outlets                    = $OutletModel->findAll();
-
-        $productlist                = $ProductModel->where('status', '1')->find();
-
-        $stockmovedata              = array();
-        if (!empty($stockmovements)) {
-            foreach ($stockmovements as $stockmove) {
-                $stockmovedetails   = $StockMoveDetailModel->where('stockmoveid', $stockmove['id'])->find();
-                $dataorigin         = $OutletModel->find($stockmove['origin']);
-                $datadestination    = $OutletModel->find($stockmove['destination']);
-                $creator            = $UserModel->find($stockmove['creator']);
-                $sender             = $UserModel->find($stockmove['sender']);
-                $receiver           = $UserModel->find($stockmove['receiver']);
-
-                if (!empty($dataorigin)) {
-                    $origin         = $dataorigin['name'];
-                    $originid       = $dataorigin['id'];
-                } else {
-                    $origin         = '';
-                    $originid       = '';
-                }
-
-                if (!empty($datadestination)) {
-                    $destination    = $datadestination['name'];
-                    $destinationid  = $datadestination['id'];
-                } else {
-                    $destination = '';
-                    $destinationid  = '';
-                }
-
-                if (!empty($creator)) {
-                    $creator         = $creator->firstname.' '.$creator->lastname;
-                } else {
-                    $creator         = '-';
-                }
-
-                if (!empty($sender)) {
-                    $sender         = $sender->firstname.' '.$sender->lastname;
-                } else {
-                    $sender         = '-';
-                }
-
-                if (!empty($receiver)) {
-                    $receiver       = $receiver->firstname.' '.$receiver->lastname;
-                } else {
-                    $receiver       = '-';
-                }
-
-                $stockmovedata[$stockmove['id']]['id']              = $stockmove['id'];
-                $stockmovedata[$stockmove['id']]['origin']          = $origin;
-                $stockmovedata[$stockmove['id']]['originid']        = $originid;
-                $stockmovedata[$stockmove['id']]['destination']     = $destination;
-                $stockmovedata[$stockmove['id']]['destinationid']   = $destinationid;
-                $stockmovedata[$stockmove['id']]['creator']         = $creator;
-                $stockmovedata[$stockmove['id']]['sender']          = $sender;
-                $stockmovedata[$stockmove['id']]['receiver']        = $receiver;
-                $stockmovedata[$stockmove['id']]['date']            = $stockmove['date'];
-                $stockmovedata[$stockmove['id']]['status']          = $stockmove['status'];
-
-                $arrayqty       = array();
-                $arrayprice     = array();
-                $arraybuyprice  = array();
-                if (!empty($stockmovedetails)) {
-                    foreach ($stockmovedetails as $movedet) {
-                        $movementvariants           = $VariantModel->find($movedet['variantid']);
-    
-                        if (!empty($movementvariants)) {
-                            $movementproducts       = $ProductModel->find($movementvariants['productid']);
-                            $stocks                 = $StockModel->where('variantid', $movementvariants['id'])->where('outletid', $stockmove['origin'])->first();
-    
-                            if (!empty($movementproducts)) {
-                                $product = $movementproducts['name'];
-                            } else {
-                                $product = '';
-                            }
-    
-                            if (!empty($stocks)) {
-                                $qty = $stocks['qty'];
-                            } else {
-                                $qty = '';
-                            }
-    
-                            $varid      = $movementvariants['id'];
-                            $variants   = $movementvariants['name'];
-                            $sku        = $movementvariants['sku'];
-                            $wholesale  = $movementvariants['hargamodal'];
-                            $hargabeli  = $movementvariants['hargadasar'];
-                        } else {
-                            $varid      = '';
-                            $variants   = '';
-                            $sku        = '';
-                            $product    = '';
-                            $qty        = '';
-                            $wholesale  = '';
-                            $hargabeli  = '';
-                        }
-                        
-                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['name']          = $product.' - '.$variants;
-                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['productname']   = $product;
-                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['variantname']   = $variants;
-                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['sku']           = $sku;
-                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['varid']         = $varid;
-                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['qty']           = $qty;
-                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['wholesale']     = $wholesale;
-                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['hargabeli']     = $hargabeli;
-                        $stockmovedata[$stockmove['id']]['detail'][$movedet['id']]['inputqty']      = $movedet['qty'];
-                        
-                        $arrayqty[]         = $movedet['qty'];
-                        $arrayprice[]       = (Int)$wholesale * (Int)$movedet['qty'];
-                        $arraybuyprice[]    = (Int)$hargabeli * (Int)$movedet['qty'];
-                    }
-                } else {
-                    $stockmovedata[$stockmove['id']]['detail']      = array();
-                }
-                    
-                $stockmovedata[$stockmove['id']]['totalqty']        = array_sum($arrayqty);
-                $stockmovedata[$stockmove['id']]['totalwholesale']  = array_sum($arrayprice);
-                $stockmovedata[$stockmove['id']]['totalhargabeli']  = array_sum($arraybuyprice);
+        $productlist    = $ProductModel->where('status', '1')->findAll();
+        $stockmoveIds   = array_column($stockmovements, 'id');
+        $originIds      = [];
+        $destinationIds = [];
+        $userIds        = [];
+        foreach ($stockmovements as $move) {
+            $originIds[]        = $move['origin'];
+            $destinationIds[]   = $move['destination'];
+            if (!empty($move['creator'])) {
+                $userIds[] = $move['creator'];
             }
+            if (!empty($move['sender'])) {
+                $userIds[] = $move['sender'];
+            }
+            if (!empty($move['receiver'])) {
+                $userIds[] = $move['receiver'];
+            }
+        }
+
+        $outletIds      = array_unique(array_merge($originIds, $destinationIds));
+        $originIds      = array_unique($originIds);
+        $destinationIds = array_unique($destinationIds);
+        $userIds        = array_unique($userIds);
+        $outletData     = [];
+        if (!empty($outletIds)) {
+            foreach ($OutletModel->whereIn('id', $outletIds)->findAll() as $outlet) {
+                $outletData[$outlet['id']] = $outlet;
+            }
+        }
+        $userData = [];
+        if (!empty($userIds)) {
+            foreach ($UserModel->whereIn('id', $userIds)->findAll() as $user) {
+                $userData[$user->id] = $user;
+            }
+        }
+        $detailData = [];
+        $variantIds = [];
+        if (!empty($stockmoveIds)) {
+            $details = $StockMoveDetailModel
+                ->whereIn('stockmoveid', $stockmoveIds)
+                ->findAll();
+            foreach ($details as $detail) {
+                $detailData[$detail['stockmoveid']][] = $detail;
+                $variantIds[] = $detail['variantid'];
+            }
+        }
+        $variantIds     = array_unique($variantIds);
+        $variantData    = [];
+        $productIds     = [];
+        if (!empty($variantIds)) {
+            foreach (
+                $VariantModel
+                ->whereIn('id', $variantIds)
+                ->findAll()
+                as $variant
+            ) {
+                $variantData[$variant['id']] = $variant;
+                $productIds[] = $variant['productid'];
+            }
+        }
+        $productIds     = array_unique($productIds);
+        $productData    = [];
+        if (!empty($productIds)) {
+            foreach (
+                $ProductModel
+                ->whereIn('id', $productIds)
+                ->findAll()
+                as $product
+            ) {
+                $productData[$product['id']] = $product;
+            }
+        }
+        $stockData = [];
+        if (!empty($variantIds) && !empty($originIds)) {
+            $stocks = $StockModel
+                ->whereIn('variantid', $variantIds)
+                ->whereIn('outletid', $originIds)
+                ->findAll();
+            foreach ($stocks as $stock) {
+                $key = $stock['variantid'] . '_' . $stock['outletid'];
+                $stockData[$key] = $stock;
+            }
+        }
+        $stockmovedata = [];
+        foreach ($stockmovements as $stockmove) {
+            $originData        = $outletData[$stockmove['origin']] ?? null;
+            $destinationData   = $outletData[$stockmove['destination']] ?? null;
+            $creatorData       = $userData[$stockmove['creator']] ?? null;
+            $senderData        = $userData[$stockmove['sender']] ?? null;
+            $receiverData      = $userData[$stockmove['receiver']] ?? null;
+
+            $stockmovedata[$stockmove['id']] = [
+                'id'            => $stockmove['id'],
+                'origin'        => $originData['name'] ?? '',
+                'originid'      => $originData['id'] ?? '',
+                'destination'   => $destinationData['name'] ?? '',
+                'destinationid' => $destinationData['id'] ?? '',
+                'creator'       => $creatorData ? $creatorData->firstname . ' ' . $creatorData->lastname : '-',
+                'sender'        => $senderData ? $senderData->firstname . ' ' . $senderData->lastname : '-',
+                'receiver'      => $receiverData ? $receiverData->firstname . ' ' . $receiverData->lastname : '-',
+                'date'          => $stockmove['date'],
+                'status'        => $stockmove['status'],
+                'detail'        => []
+            ];
+            $totalQty           = 0;
+            $totalWholesale     = 0;
+            $totalBuyPrice      = 0;
+            $moveDetails        = $detailData[$stockmove['id']] ?? [];
+
+            foreach ($moveDetails as $movedet) {
+                $variant = $variantData[$movedet['variantid']] ?? null;
+                if ($variant) {
+                    $product        = $productData[$variant['productid']] ?? null;
+                    $stockKey       = $variant['id'] . '_' . $stockmove['origin'];
+                    $stock          = $stockData[$stockKey] ?? null;
+                    $productName    = $product['name'] ?? '';
+                    $variantName    = $variant['name'];
+                    $sku            = $variant['sku'];
+                    $varid          = $variant['id'];
+                    $qty            = $stock['qty'] ?? '';
+                    $wholesale      = $variant['hargamodal'];
+                    $hargabeli      = $variant['hargadasar'];
+                } else {
+                    $productName = '';
+                    $variantName = '';
+                    $sku         = '';
+                    $varid       = '';
+                    $qty         = '';
+                    $wholesale   = '';
+                    $hargabeli   = '';
+                }
+                $stockmovedata[$stockmove['id']]['detail'][$movedet['id']] = [
+                    'name'          => $productName . ' - ' . $variantName,
+                    'productname'   => $productName,
+                    'variantname'   => $variantName,
+                    'sku'           => $sku,
+                    'varid'         => $varid,
+                    'qty'           => $qty,
+                    'wholesale'     => $wholesale,
+                    'hargabeli'     => $hargabeli,
+                    'inputqty'      => $movedet['qty'],
+                ];
+                $totalQty += (int) $movedet['qty'];
+                $totalWholesale += (int) $wholesale * (int) $movedet['qty'];
+                $totalBuyPrice += (int) $hargabeli * (int) $movedet['qty'];
+            }
+            $stockmovedata[$stockmove['id']]['totalqty'] = $totalQty;
+            $stockmovedata[$stockmove['id']]['totalwholesale'] = $totalWholesale;
+            $stockmovedata[$stockmove['id']]['totalhargabeli'] = $totalBuyPrice;
         }
 
         // Parsing data to view
@@ -176,7 +207,7 @@ class StockMovement extends BaseController
         $data['stockmovements']     = $stockmovements;
         $data['stockmovedata']      = $stockmovedata;
         $data['productlist']        = $productlist;
-        $data['outlets']            = $outlets;
+        $data['outlets']            = $OutletModel->findAll();
         $data['pager']              = $StockmovementModel->pager;
         $data['startdate']          = strtotime($startdate);
         $data['enddate']            = strtotime($enddate);
@@ -249,8 +280,8 @@ class StockMovement extends BaseController
         $tanggal                    = date_format($date,'Y-m-d H:i:s');
 
         $data = [
-            'origin'                => $input['origin'],
-            'destination'           => $input['destination'],
+            'origin'                => $input['origin'] ?? '',
+            'destination'           => $input['destination'] ?? '',
             'creator'               => $this->data['uid'],
             'date'                  => $tanggal,
             'status'                => "0",
@@ -263,15 +294,16 @@ class StockMovement extends BaseController
         $stockmoveid            = $StockmovementModel->getInsertID();
 
         // Stock Movement Detail
-        foreach ($input['totalpcs'] as $varid => $value) {
-            $datadetail   = [
-                'stockmoveid'   => $stockmoveid,
-                'variantid'     => $varid,
-                'qty'           => $value,
-            ];
+        if (isset($input['totalpcs'])) {
+            foreach ($input['totalpcs'] as $varid => $value) {
+                $datadetail   = [
+                    'stockmoveid'   => $stockmoveid,
+                    'variantid'     => $varid,
+                    'qty'           => $value,
+                ];
 
-            // Save Data Stock Movement Detail
-            $StockMoveDetailModel->save($datadetail);
+                $StockMoveDetailModel->save($datadetail);
+            }
         }
 
         // return
@@ -297,17 +329,8 @@ class StockMovement extends BaseController
         $date                       = date_create();
         $tanggal                    = date_format($date,'Y-m-d H:i:s');
 
-        if ($input['origin'] != $stockmovements['origin']) {
-            $origin                 = $input['origin'];
-        } else {
-            $origin                 = $stockmovements['origin'];
-        }
-
-        if ($input['destination'] != $stockmovements['destination']) {
-            $destination            = $input['destination'];
-        } else {
-            $destination            = $stockmovements['destination'];
-        }
+        $origin                 = $input['origin'] ?? $stockmovements['origin'];
+        $destination            = $input['destination'] ?? $stockmovements['destination'];
 
         if ($this->data['outletPick'] == $stockmovements['origin']) {
             $status                 = 0;
@@ -327,18 +350,18 @@ class StockMovement extends BaseController
         $StockmovementModel->save($data);
 
         // Stock Movement Detail
-        foreach ($input['totalpcs'] as $smdetid => $value) {
-            $datadetail     = [
-                'id'            => $smdetid,
-                'qty'           => $value,
-            ];
-
-            if ($datadetail['qty'] == "0") {
-                $StockMoveDetailModel->delete($smdetid);
+        if (isset($input['totalpcs'])) {
+            foreach ($input['totalpcs'] as $smdetid => $value) {
+                if ($value == "0") {
+                    $StockMoveDetailModel->delete($smdetid);
+                } else {
+                    $datadetail = [
+                        'id'  => $smdetid,
+                        'qty' => $value,
+                    ];
+                    $StockMoveDetailModel->save($datadetail);
+                }
             }
-
-            // Save Data Stock Movement Detail
-            $StockMoveDetailModel->save($datadetail);
         }
 
         if (isset($input['addtotalpcs'])) {
@@ -349,7 +372,6 @@ class StockMovement extends BaseController
                     'qty'           => $val,
                 ];
 
-                // Save Data Stock Movement Detail
                 $StockMoveDetailModel->save($adddata);
             }
         }
@@ -399,37 +421,43 @@ class StockMovement extends BaseController
             $StockmovementModel->save($data);
         }
 
-        foreach ($input['ctotalpcs'][$id] as $key => $value) {
+        foreach ($input['ctotalpcs'][$id] ?? [] as $key => $value) {
             // Update Movement Detail
-            $movedet                = $StockMoveDetailModel->where('stockmoveid', $id)->where('variantid', $key)->first();
-            $movedetdata            = [
-                'id'                => $movedet['id'],
-                'qty'               => $value,
+            $movedet = $StockMoveDetailModel->where('stockmoveid', $id)->where('variantid', $key)->first();
+            if (!$movedet) continue;
+
+            $movedetdata = [
+                'id'  => $movedet['id'],
+                'qty' => $value,
             ];
-    
+
             if ($movedetdata['qty'] == "0") {
                 $StockMoveDetailModel->delete($movedet['id']);
+            } else {
+                $StockMoveDetailModel->save($movedetdata);
             }
-            
-            $StockMoveDetailModel->save($movedetdata);
 
             if ($input['outletpick'] == $stockmovements['destination']) {
-                // Minus Stock
-                $originstock        = $StockModel->where('variantid', $key)->where('outletid', $stockmovements['origin'])->first();
-                $origindata         = [
-                    'id'    => $originstock['id'],
-                    'qty'   => (Int)$originstock['qty'] -= (Int)$value,
-                ];
-                $StockModel->save($origindata);
-    
-                // Plus Stock
-                $destinationstock   = $StockModel->where('variantid', $key)->where('outletid', $stockmovements['destination'])->first();
-                $destinationdata    = [
-                    'id'        => $destinationstock['id'],
-                    'qty'       => (Int)$destinationstock['qty'] += (Int)$value,
-                    'restock'   => $tanggal,
-                ];
-                $StockModel->save($destinationdata);
+                // Minus Stock (origin)
+                $originstock = $StockModel->where('variantid', $key)->where('outletid', $stockmovements['origin'])->first();
+                if ($originstock) {
+                    $origindata = [
+                        'id'  => $originstock['id'],
+                        'qty' => (int)$originstock['qty'] - (int)$value,
+                    ];
+                    $StockModel->save($origindata);
+                }
+
+                // Plus Stock (destination)
+                $destinationstock = $StockModel->where('variantid', $key)->where('outletid', $stockmovements['destination'])->first();
+                if ($destinationstock) {
+                    $destinationdata = [
+                        'id'      => $destinationstock['id'],
+                        'qty'     => (int)$destinationstock['qty'] + (int)$value,
+                        'restock' => $tanggal,
+                    ];
+                    $StockModel->save($destinationdata);
+                }
             }
         }
 

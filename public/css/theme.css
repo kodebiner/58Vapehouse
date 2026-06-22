@@ -12122,3 +12122,30 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+/* Status Badge */
+.status-badge {
+    padding: 5px;
+    border-style: solid;
+    display: inline-block;
+}
+.status-created {
+    border-color: #1e87f0;
+    color: #1e87f0;
+}
+.status-pending {
+    border-color: #faa05a;
+    color: #faa05a;
+}
+.status-sent {
+    border-color: #faa05a;
+    color: #faa05a;
+}
+.status-canceled {
+    border-color: #f0506e;
+    color: #f0506e;
+}
+.status-accepted {
+    border-color: #32d296;
+    color: #32d296;
+}
