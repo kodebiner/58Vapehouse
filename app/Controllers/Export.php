@@ -27,6 +27,9 @@ use App\Models\SopModel;
 use App\Models\SopDetailModel;
 use App\Models\DailyReportModel;
 use App\Models\CheckpointModel;
+use App\Models\PurchaseModel;
+use App\Models\PurchasedetailModel;
+use App\Models\SupplierModel;
 use DateTime;
 
 class export extends BaseController
@@ -3407,6 +3410,111 @@ class export extends BaseController
                 echo '<th style="text-align: left;">Keuntungan Dasar</th>';
                 echo '<td style="text-align: right;">' . $profitdasar . '</td>';
             echo '</tr>';
+        echo '</table>';
+    }
+
+    public function purchase()
+    {
+        $OutletModel                = new OutletModel();
+
+        $input  = $this->request->getGet('daterange');
+
+        if (!empty($input)) {
+            $daterange  = explode(' - ', $input);
+            $startdate  = $daterange[0];
+            $enddate    = $daterange[1];
+        } else {
+            $startdate  = date('Y-m-01');
+            $enddate    = date('Y-m-d');
+        }
+        $startdate  = date('Y-m-d', strtotime($startdate));
+        $enddate    = date('Y-m-d', strtotime($enddate));
+
+        if ($this->data['outletPick'] === null) {
+            $address        = "58vapehouse";
+            $outletnames    = "All Outlets";
+        } else {
+            $outlets        = $OutletModel->find($this->data['outletPick']);
+            $address        = $outlets['address'];
+            $outletnames    = $outlets['name'];
+        }
+
+        $db = \Config\Database::connect();
+
+        $builder = $db->table('purchasedetail');
+        $builder->select('
+            purchase.date,
+            COALESCE(outlet.name, "") as outlet_name,
+            COALESCE(supplier.name, "") as supplier_name,
+            COALESCE(variant.sku, "") as sku,
+            COALESCE(product.name, "") as prod_name,
+            COALESCE(variant.name, "") as variant_name,
+            purchasedetail.qty,
+            purchasedetail.price
+        ');
+        $builder->join('purchase', 'purchase.id = purchasedetail.purchaseid');
+        $builder->join('outlet', 'outlet.id = purchase.outletid', 'left');
+        $builder->join('supplier', 'supplier.id = purchase.supplierid', 'left');
+        $builder->join('variant', 'variant.id = purchasedetail.variantid', 'left');
+        $builder->join('product', 'product.id = variant.productid', 'left');
+        $builder->where('purchase.status', '1');
+        $builder->where('purchase.date >=', $startdate . ' 00:00:00');
+        $builder->where('purchase.date <=', $enddate . ' 23:59:59');
+        if ($this->data['outletPick'] !== null) {
+            $builder->where('purchase.outletid', $this->data['outletPick']);
+        }
+        $builder->orderBy('purchase.date', 'DESC');
+
+        $rows = $builder->get()->getResultArray();
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=Pembelian Barang $outletnames ($startdate-$enddate).xls");
+
+        echo '<table>';
+            echo '<thead>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">Ringkasan Pembelian Barang</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">' . $outletnames . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">' . $address . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;">' . $startdate. ' - ' . $enddate . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="9" style="align-text:center;"></th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th>Tanggal</th>';
+                    echo '<th>Outlet</th>';
+                    echo '<th>Pemasok</th>';
+                    echo '<th>SKU</th>';
+                    echo '<th>Product</th>';
+                    echo '<th>Variant</th>';
+                    echo '<th>Jumlah Barang</th>';
+                    echo '<th>Harga Beli</th>';
+                    echo '<th>Total</th>';
+                echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+                foreach ($rows as $row) {
+                    $total  = (int)$row['qty'] * (int)$row['price'];
+                    echo '<tr>';
+                        echo '<td>' . date('d M Y', strtotime($row['date'])) . '</td>';
+                        echo '<td>' . $row['outlet_name'] . '</td>';
+                        echo '<td>' . $row['supplier_name'] . '</td>';
+                        echo '<td>' . $row['sku'] . '</td>';
+                        echo '<td>' . $row['prod_name'] . '</td>';
+                        echo '<td>' . $row['variant_name'] . '</td>';
+                        echo '<td>' . $row['qty'] . '</td>';
+                        echo '<td>' . $row['price'] . '</td>';
+                        echo '<td>' . $total . '</td>';
+                    echo '</tr>';
+                }
+            echo '</tbody>';
         echo '</table>';
     }
 }

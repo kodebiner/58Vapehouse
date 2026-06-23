@@ -391,144 +391,121 @@ class Stock extends BaseController
 
     public function indexpurchase()
     {
-        // Calling Model
         $SupplierModel              = new SupplierModel();
         $ProductModel               = new ProductModel();
-        $VariantModel               = new VariantModel();
-        $OutletModel                = new OutletModel();
-        $UserModel                  = new UserModel();
-        $PurchaseModel              = new PurchaseModel();
-        $PurchasedetailModel        = new PurchasedetailModel();
-        $OldStockModel              = new OldStockModel();
-        $StockModel                 = new StockModel();
 
-        // Find Data
-        $data                       = $this->data;
+        $input                      = $this->request->getGet();
+        $daterange                  = $input['daterange'] ?? date('Y-m-01') . ' - ' . date('Y-m-d');
 
-        if ($this->data['outletPick'] === null) {
-            $purchases              = $PurchaseModel->orderBy('id', 'DESC')->paginate(10, 'purchase');
-        } else {
-            $purchases              = $PurchaseModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->paginate(10, 'purchase');
+        [$startdate, $enddate]      = explode(' - ', $daterange);
+        $startdate                  = date('Y-m-d', strtotime($startdate));
+        $enddate                    = date('Y-m-d', strtotime($enddate));
+
+        $db = $this->db;
+        $purchaseBuilder = $db->table('purchase');
+        $purchaseBuilder->select('
+            purchase.*,
+            COALESCE(supplier.name, "") as supplier_name,
+            COALESCE(supplier.id, "") as supplier_id,
+            COALESCE(outlet.name, "") as outlet_name,
+            COALESCE(CONCAT(users.firstname, " ", users.lastname), "") as user_name
+        ');
+        $purchaseBuilder->join('supplier', 'supplier.id = purchase.supplierid', 'left');
+        $purchaseBuilder->join('outlet', 'outlet.id = purchase.outletid', 'left');
+        $purchaseBuilder->join('users', 'users.id = purchase.userid', 'left');
+        $purchaseBuilder->where('purchase.date >=', $startdate . ' 00:00:00');
+        $purchaseBuilder->where('purchase.date <=', $enddate . ' 23:59:59');
+        if ($this->data['outletPick'] !== null) {
+            $purchaseBuilder->where('purchase.outletid', $this->data['outletPick']);
         }
+        $purchaseBuilder->orderBy('purchase.date', 'DESC');
+
+        $purchases = $purchaseBuilder->get()->getResultArray();
 
         $suppliers                  = $SupplierModel->findAll();
         $productlist                = $ProductModel->where('status', '1')->find();
 
+        $purchasedata = array();
         if (!empty($purchases)) {
-            $purchasedata   = array();
+            $purchaseIds = array_column($purchases, 'id');
+
+            $detailBuilder = $db->table('purchasedetail');
+            $detailBuilder->select('
+                purchasedetail.*,
+                COALESCE(variant.id, "") as var_id,
+                COALESCE(variant.name, "") as variant_name,
+                COALESCE(variant.sku, "") as sku,
+                COALESCE(variant.hargadasar, "") as hargadasar,
+                COALESCE(product.name, "") as product_name,
+                COALESCE(oldstock.hargadasar, "") as hargaold,
+                COALESCE(stock.qty, "") as stock_qty
+            ');
+            $detailBuilder->join('purchase', 'purchase.id = purchasedetail.purchaseid');
+            $detailBuilder->join('variant', 'variant.id = purchasedetail.variantid', 'left');
+            $detailBuilder->join('product', 'product.id = variant.productid', 'left');
+            $detailBuilder->join('oldstock', 'oldstock.variantid = variant.id', 'left');
+            $detailBuilder->join('stock', 'stock.variantid = variant.id AND stock.outletid = purchase.outletid', 'left');
+
+            $allDetails = array();
+            $detailBuilder->whereIn('purchasedetail.purchaseid', $purchaseIds);
+            $allDetails = $detailBuilder->get()->getResultArray();
+
+            $detailsByPurchase = array();
+            foreach ($allDetails as $det) {
+                $detailsByPurchase[$det['purchaseid']][] = $det;
+            }
+
             foreach ($purchases as $purchase) {
-                $purchasesupplier   = $SupplierModel->find($purchase['supplierid']);
-                $purchasedetails    = $PurchasedetailModel->where('purchaseid', $purchase['id'])->find();
-                $purchaseoutlet     = $OutletModel->find($purchase['outletid']);
-                $purchaseuser       = $UserModel->find($purchase['userid']);
+                $pid = $purchase['id'];
+                $purchasedata[$pid]['outlet']        = $purchase['outlet_name'];
+                $purchasedata[$pid]['supplier']      = $purchase['supplier_name'];
+                $purchasedata[$pid]['supplierid']    = $purchase['supplier_id'];
+                $purchasedata[$pid]['user']          = $purchase['user_name'];
+                $purchasedata[$pid]['date']          = $purchase['date'];
+                $purchasedata[$pid]['status']        = $purchase['status'];
 
-                if (!empty($purchasesupplier)) {
-                    $supplier = $purchasesupplier['name'];
-                } else {
-                    $supplier = '';
-                }
-
-                if (!empty($purchasesupplier)) {
-                    $supplierid = $purchasesupplier['id'];
-                } else {
-                    $supplierid = '';
-                }
-
-                if (!empty($purchaseoutlet)) {
-                    $outlets = $purchaseoutlet['name'];
-                } else {
-                    $outlets = '';
-                }
-
-                if (!empty($purchaseuser)) {
-                    $users = $purchaseuser->firstname.' '.$purchaseuser->lastname;
-                } else {
-                    $users = '';
-                }
-
-                $purchasedata[$purchase['id']]['outlet']        = $outlets;
-                $purchasedata[$purchase['id']]['supplier']      = $supplier;
-                $purchasedata[$purchase['id']]['supplierid']    = $supplierid;
-                $purchasedata[$purchase['id']]['user']          = $users;
-                $purchasedata[$purchase['id']]['date']          = $purchase['date'];
-                $purchasedata[$purchase['id']]['status']        = $purchase['status'];
+                $pdetails = $detailsByPurchase[$pid] ?? array();
 
                 $arrayqty       = array();
                 $arrayprice     = array();
-                if (!empty($purchasedetails)) {
-                    foreach ($purchasedetails as $purdet) {
-                        $purchasevariants           = $VariantModel->find($purdet['variantid']);
-    
-                        if (!empty($purchasevariants)) {
-                            $hargadasar             = $purchasevariants['hargadasar'];
-                            $purchaseproducts       = $ProductModel->find($purchasevariants['productid']);
-                            $purchaseoldstocks      = $OldStockModel->where('variantid', $purchasevariants['id'])->first();
-                            $purchasestocks         = $StockModel->where('variantid', $purchasevariants['id'])->where('outletid', $purchase['outletid'])->first();
-    
-                            $varid      = $purchasevariants['id'];
-                            $variants   = $purchasevariants['name'];
-                            $sku        = $purchasevariants['sku'];
-    
-                            if (!empty($purchaseproducts)) {
-                                $product = $purchaseproducts['name'];
-                            } else {
-                                $product = '';
-                            }
-    
-                            if (!empty($purchaseoldstocks)) {
-                                $hargaold = $purchaseoldstocks['hargadasar'];
-                            } else {
-                                $hargaold = '';
-                            }
-    
-                            if (!empty($purchasestocks)) {
-                                $qty = $purchasestocks['qty'];
-                            } else {
-                                $qty = '';
-                            }
-                        } else {
-                            $varid      = '';
-                            $variants   = '';
-                            $sku        = '';
-                            $product    = '';
-                            $hargadasar = '';
-                            $hargaold   = '';
-                            $qty        = '';
-                        }
-    
-                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['name']         = $product.' - '.$variants;
-                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['sku']          = $sku;
-                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['productname']  = $product;
-                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['variantname']  = $variants;
-                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['varid']        = $varid;
-                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['hargadasar']   = $hargadasar;
-                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['hargaold']     = $hargaold;
-                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['qty']          = $qty;
-                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['inputqty']     = $purdet['qty'];
-                        $purchasedata[$purchase['id']]['detail'][$purdet['id']]['inputprice']   = $purdet['price'];
-    
+                if (!empty($pdetails)) {
+                    foreach ($pdetails as $purdet) {
+                        $detid = $purdet['id'];
+                        $prod  = $purdet['product_name'];
+                        $vname = $purdet['variant_name'];
+
+                        $purchasedata[$pid]['detail'][$detid]['name']         = ($prod ? $prod . ' - ' : '') . $vname;
+                        $purchasedata[$pid]['detail'][$detid]['sku']          = $purdet['sku'];
+                        $purchasedata[$pid]['detail'][$detid]['productname']  = $prod;
+                        $purchasedata[$pid]['detail'][$detid]['variantname']  = $vname;
+                        $purchasedata[$pid]['detail'][$detid]['varid']        = $purdet['var_id'];
+                        $purchasedata[$pid]['detail'][$detid]['hargadasar']   = $purdet['hargadasar'];
+                        $purchasedata[$pid]['detail'][$detid]['hargaold']     = $purdet['hargaold'];
+                        $purchasedata[$pid]['detail'][$detid]['qty']          = $purdet['stock_qty'];
+                        $purchasedata[$pid]['detail'][$detid]['inputqty']     = $purdet['qty'];
+                        $purchasedata[$pid]['detail'][$detid]['inputprice']   = $purdet['price'];
+
                         $arrayqty[]     = $purdet['qty'];
                         $arrayprice[]   = (Int)$purdet['qty'] * (Int)$purdet['price'];
                     }
                 } else {
-                    $purchasedata[$purchase['id']]['detail']   = array();
+                    $purchasedata[$pid]['detail'] = array();
                 }
-                    
-                $purchasedata[$purchase['id']]['totalqty']      = array_sum($arrayqty);
-                $purchasedata[$purchase['id']]['totalprice']    = array_sum($arrayprice);
+
+                $purchasedata[$pid]['totalqty']      = array_sum($arrayqty);
+                $purchasedata[$pid]['totalprice']    = array_sum($arrayprice);
             }
-        } else {
-            $purchasedata   = array();
         }
 
-        // Parsing data to view
+        $data                       = $this->data;
         $data['title']              = lang('Global.purchase');
         $data['description']        = lang('Global.purchaseListDesc');
         $data['purchases']          = $purchases;
         $data['purchasedata']       = $purchasedata;
         $data['suppliers']          = $suppliers;
         $data['productlist']        = $productlist;
-        $data['pager']              = $PurchaseModel->pager;
+        $data['startdate']          = strtotime($startdate);
+        $data['enddate']            = strtotime($enddate);
 
         return view ('Views/purchase', $data);
     }

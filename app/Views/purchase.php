@@ -5,6 +5,9 @@
 <script src="js/ajax.googleapis.com_ajax_libs_jquery_3.6.4_jquery.min.js"></script>
 <script src="js/code.jquery.com_jquery-3.6.0.js"></script>
 <script src="js/code.jquery.com_ui_1.13.2_jquery-ui.js"></script>
+<script type="text/javascript" src="js/moment.min.js"></script>
+<script type="text/javascript" src="js/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -24,7 +27,7 @@
 
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
-    <div uk-grid class="uk-flex-middle">
+    <div uk-grid class="uk-child-width-1-uk-flex-middle">
         <div class="uk-width-1-2@m">
             <h3 class="tm-h3"><?=lang('Global.purchaseList')?></h3>
         </div>
@@ -32,15 +35,42 @@
         <?php if ($outletPick != null) { ?>
             <!-- Button Trigger Modal Add -->
             <div class="uk-width-1-2@m uk-text-right@m">
-                <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addPurchase')?></button>
+                <button type="button" class="uk-button uk-button-primary uk-preserve-color uk-margin@s" uk-toggle="target: #tambahdata"><?=lang('Global.addPurchase')?></button>
+                <a href="<?= base_url('export/purchase') ?>?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>" class="uk-button uk-button-success uk-preserve-color uk-margin@s" target="_blank"><?=lang('Global.export')?></a>
             </div>
             <!-- Button Trigger Modal Add End -->
+        <?php } else { ?>
+            <div class="uk-width-1-2@m uk-text-right@m">
+                <a href="<?= base_url('export/purchase') ?>?daterange=<?=date('Y-m-d', $startdate)?>+-+<?=date('Y-m-d', $enddate)?>" class="uk-button uk-button-success uk-preserve-color" target="_blank"><?=lang('Global.export')?></a>
+            </div>
         <?php } ?>
     </div>
 </div>
 <!-- Page Heading End -->
 
 <?= view('Views/Auth/_message_block') ?>
+
+<!-- Filter -->
+<div class="uk-width-1-1 uk-margin">
+    <form id="short" action="stock/purchase" method="get">
+        <div class="uk-inline">
+            <span class="uk-form-icon uk-form-icon-flip" uk-icon="calendar"></span>
+            <input class="uk-input uk-width-medium uk-border-rounded uk-box-shadow-small uk-box-shadow-hover-large" type="text" id="daterange" name="daterange" value="<?=date('m/d/Y', $startdate)?> - <?=date('m/d/Y', $enddate)?>" />
+        </div>
+    </form>
+    <script>
+        $(function() {
+            $('input[name="daterange"]').daterangepicker({
+                maxDate: new Date(),
+                opens: 'right'
+            }, function(start, end, label) {
+                document.getElementById('daterange').value = start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD');
+                document.getElementById('short').submit();
+            });
+        });
+    </script>
+</div>
+<!-- Filter End -->
 
 <!-- Modal Add -->
 <div uk-modal class="uk-flex-top uk-modal-container" id="tambahdata">
@@ -430,9 +460,6 @@
             <?php } ?>
         </tbody>
     </table>
-    <div>
-        <?= $pager->links('purchase', 'front_full') ?>
-    </div>
 </div>
 <!-- Table Content End -->
 
