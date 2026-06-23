@@ -217,6 +217,7 @@ $routes->group('stock', ['filter'=>'login'], function($routes){
     $routes->post('confirm/(:num)', 'Stock::confirmpur/$1', ['filter' => 'role:owner,logistik']);
     $routes->post('updatepur/(:num)', 'Stock::updatepur/$1', ['filter' => 'role:owner,logistik']);
     $routes->post('cancelpur/(:num)', 'Stock::cancelpur/$1', ['filter' => 'role:owner,logistik']);
+    $routes->get('printpur/(:num)', 'Stock::printpur/$1', ['filter' => 'role:owner,logistik']);
 
     // Inventory
     $routes->get('inventory', 'Stock::indexinventory', ['filter' => 'role:owner']);

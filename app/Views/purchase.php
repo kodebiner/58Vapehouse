@@ -381,6 +381,12 @@
                                 </div>
                                 <!-- End Of Button Trigger Modal Detail -->
 
+                                <!-- Button Print -->
+                                <div class="">
+                                    <a class="uk-icon-button" uk-icon="print" href="<?= base_url('stock/printpur/'.$purchase['id']) ?>" target="_blank"></a>
+                                </div>
+                                <!-- End Of Button Print -->
+
                                 <?php if ($outletPick != null) { ?>
                                     <!-- Button Trigger Modal Edit -->
                                     <div class="">
@@ -406,11 +412,18 @@
                         </td>
                     <?php } else { ?>
                         <td class="uk-text-center uk-width-small">
-                            <!-- Button Trigger Modal Detail -->
-                            <div class="uk-text-center">
-                                <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
+                            <div class="uk-child-width-auto uk-flex-center uk-flex-middle uk-grid-row-small uk-grid-column-small uk-text-center" uk-grid>
+                                <!-- Button Trigger Modal Detail -->
+                                <div>
+                                    <a uk-icon="eye" class="uk-icon-link" uk-toggle="target: #detail<?= $purchase['id'] ?>"></a>
+                                </div>
+                                <!-- End Of Button Trigger Modal Detail -->
+                                <!-- Button Print -->
+                                <div>
+                                    <a class="uk-icon-button" uk-icon="print" href="<?= base_url('stock/printpur/'.$purchase['id']) ?>" target="_blank"></a>
+                                </div>
+                                <!-- End Of Button Print -->
                             </div>
-                            <!-- End Of Button Trigger Modal Detail -->
                         </td>
                     <?php } ?>
                 </tr>

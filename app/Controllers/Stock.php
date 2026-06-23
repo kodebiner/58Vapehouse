@@ -799,6 +799,118 @@ class Stock extends BaseController
         return redirect()->back()->with('massage', lang('global.saved'));
     }
 
+    public function printpur($id)
+    {
+        $PurchaseModel              = new PurchaseModel();
+        $PurchasedetailModel        = new PurchasedetailModel();
+        $ProductModel               = new ProductModel();
+        $VariantModel               = new VariantModel();
+        $OutletModel                = new OutletModel();
+        $SupplierModel              = new SupplierModel();
+        $UserModel                  = new UserModel();
+
+        $purchase                   = $PurchaseModel->find($id);
+
+        $purchasedata               = array();
+        if (!empty($purchase)) {
+            $purchasedetails        = $PurchasedetailModel->where('purchaseid', $purchase['id'])->find();
+            $purchaseoutlet         = $OutletModel->find($purchase['outletid']);
+            $purchasesupplier       = $SupplierModel->find($purchase['supplierid']);
+            $purchaseuser           = $UserModel->find($purchase['userid']);
+
+            if (!empty($purchaseoutlet)) {
+                $outlet     = $purchaseoutlet['name'];
+                $address    = $purchaseoutlet['address'];
+                $phone      = $purchaseoutlet['phone'];
+            } else {
+                $outlet     = '';
+                $address    = '';
+                $phone      = '';
+            }
+
+            if (!empty($purchasesupplier)) {
+                $supplier   = $purchasesupplier['name'];
+            } else {
+                $supplier   = '';
+            }
+
+            if (!empty($purchaseuser)) {
+                $user       = $purchaseuser->firstname.' '.$purchaseuser->lastname;
+            } else {
+                $user       = '';
+            }
+
+            $purchasedata['id']         = $purchase['id'];
+            $purchasedata['outlet']     = $outlet;
+            $purchasedata['address']    = $address;
+            $purchasedata['phone']      = $phone;
+            $purchasedata['supplier']   = $supplier;
+            $purchasedata['user']       = $user;
+            $purchasedata['date']       = $purchase['date'];
+            $purchasedata['status']     = $purchase['status'];
+
+            $arrayqty       = array();
+            $arrayprice     = array();
+            if (!empty($purchasedetails)) {
+                foreach ($purchasedetails as $purdet) {
+                    $purchasevariants       = $VariantModel->find($purdet['variantid']);
+
+                    if (!empty($purchasevariants)) {
+                        $purchaseproducts   = $ProductModel->find($purchasevariants['productid']);
+
+                        if (!empty($purchaseproducts)) {
+                            $product = $purchaseproducts['name'];
+                        } else {
+                            $product = '';
+                        }
+
+                        $variants   = $purchasevariants['name'];
+                        $sku        = $purchasevariants['sku'];
+                    } else {
+                        $variants   = '';
+                        $sku        = '';
+                        $product    = '';
+                    }
+
+                    $purchasedata['detail'][$purdet['id']]['name']         = $product.' - '.$variants;
+                    $purchasedata['detail'][$purdet['id']]['productname']  = $product;
+                    $purchasedata['detail'][$purdet['id']]['variantname']  = $variants;
+                    $purchasedata['detail'][$purdet['id']]['sku']          = $sku;
+                    $purchasedata['detail'][$purdet['id']]['qty']          = $purdet['qty'];
+                    $purchasedata['detail'][$purdet['id']]['price']        = $purdet['price'];
+
+                    $arrayqty[]     = $purdet['qty'];
+                    $arrayprice[]   = (Int)$purdet['qty'] * (Int)$purdet['price'];
+                }
+            } else {
+                $purchasedata['detail'] = array();
+            }
+
+            $purchasedata['totalqty']   = array_sum($arrayqty);
+            $purchasedata['totalprice'] = array_sum($arrayprice);
+        }
+
+        $data['purchasedata']   = $purchasedata;
+
+        $mpdf   = new \Mpdf\Mpdf([
+            'default_font_size' => 7,
+        ]);
+        $mpdf->Image('./img/logo.png', 80, 0, 210, 297, 'png', '', true, false);
+        $mpdf->showImageErrors = true;
+        $mpdf->AddPage("P", "", "", "", "", "15", "15", "2", "15", "", "", "", "", "", "", "", "", "", "", "", "A4-P");
+
+        $date       = date_create($purchasedata['date']);
+        $filename   = "PO" . date_format($date, 'Ymd') . $purchasedata['id'] . ".pdf";
+        $html       = view('Views/purchaseprint', $data);
+        $mpdf->WriteHTML($html);
+
+        ob_clean();
+        return $this->response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Content-Disposition', 'attachment; filename="'.$filename.'"')
+            ->setBody($mpdf->Output($filename, 'S'));
+    }
+
     // Inventory
     public function indexinventory()
     {
