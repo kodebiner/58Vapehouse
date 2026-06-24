@@ -758,7 +758,7 @@
                 </div>
                 <div class="uk-margin-small-top">
                     <select class="uk-select" id="filter" name="category" style="border-radius: 5px; border-style: solid;">
-                        <option value="" selected><?= lang('Global.selectcat') ?></option>
+                        <option value="" selected>Semua Kategori</option>
                         <?php foreach ($categorylist as $cate) { ?>
                             <option value="<?= $cate['id'] ?>" <?= ((!empty($input['category'])) && ($input['category'] === $cate['id'])) ? 'selected' : '' ?>><?= $cate['name'] ?></option>
                         <?php } ?>
@@ -766,7 +766,7 @@
                 </div>
                 <div class="uk-margin-small-top">
                     <select class="uk-select" id="filterbrand" name="brand" style="border-radius: 5px; border-style: solid;">
-                        <option value="" <?= ((isset($input['brand'])) && ($input['brand'] == '')) ? 'selected' : '' ?>><?=lang('Global.selectbrand')?></option>
+                        <option value="" <?= ((isset($input['brand'])) && ($input['brand'] == '')) ? 'selected' : '' ?>>Semua Merek</option>
                         <?php foreach ($brandlist as $bran) { ?>
                             <option value="<?= $bran['id'] ?>" <?= ((isset($input['brand'])) && ($input['brand'] == $bran['id'])) ? 'selected' : '' ?>><?= $bran['name'] ?></option>
                         <?php } ?>
@@ -774,14 +774,14 @@
                 </div>
                 <div class="uk-margin-small-top">
                     <select class="uk-select" id="filterstatus" name="status" style="border-radius: 5px; border-style: solid;">
-                        <option value="" <?= ((isset($input['status'])) && ($input['status'] == '')) ? 'selected' : '' ?>>Status</option>
+                        <option value="" <?= ((isset($input['status'])) && ($input['status'] == '')) ? 'selected' : '' ?>>Semua Status</option>
                         <option value="0" <?= ((isset($input['status'])) && ($input['status'] == '0')) ? 'selected' : '' ?>>Tidak Aktif</option>
                         <option value="1" <?= ((isset($input['status'])) && ($input['status'] == '1')) ? 'selected' : '' ?>>Aktif</option>
                     </select>
                 </div>
                 <div class="uk-margin-small-top">
                     <select class="uk-select" id="filterarchived" name="is_archived" style="border-radius: 5px; border-style: solid;">
-                        <option value="" <?= ((isset($input['is_archived'])) && ($input['is_archived'] == '')) ? 'selected' : '' ?>>Arsip</option>
+                        <option value="" <?= ((isset($input['is_archived'])) && ($input['is_archived'] == '')) ? 'selected' : '' ?>>Semua Penyimpanan</option>
                         <option value="0" <?= ((isset($input['is_archived'])) && ($input['is_archived'] == '0')) ? 'selected' : '' ?>>Tidak Diarsipkan</option>
                         <option value="1" <?= ((isset($input['is_archived'])) && ($input['is_archived'] == '1')) ? 'selected' : '' ?>>Diarsipkan</option>
                     </select>

@@ -215,11 +215,11 @@ class Debt extends BaseController
             $memberpoin  = $memberRow['poin'] ?? '';
 
             // Debt Data — aggregate installments directly (no per-debt loop)
-            $trxDebtInsts = $debtInstByTrx[$trxId] ?? [];
-            $totaldebtin = !empty($trxDebtInsts) ? array_sum(array_column($trxDebtInsts, 'qty')) : 0;
-            $statustrx = (int)$trx['value'] - ((int)$trx['amountpaid'] + (int)$totaldebtin);
+            $trxDebtInsts   = $debtInstByTrx[$trxId] ?? [];
+            $totaldebtin    = !empty($trxDebtInsts) ? array_sum(array_column($trxDebtInsts, 'qty')) : 0;
+            $statustrx      = ((int)$trx['amountpaid'] + (int)$totaldebtin) - (int)$trx['value'];
 
-            if ($statustrx != 0) {
+            if (($statustrx != 0) && ($statustrx < 0)) {
                 $paidstatus = '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">' . lang('Global.notpaid') . '</div>';
             } else {
                 $paidstatus = '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">' . lang('Global.paid') . '</div>';

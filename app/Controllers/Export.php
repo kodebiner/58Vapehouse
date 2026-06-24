@@ -402,8 +402,8 @@ class export extends BaseController
             // Debt Data — aggregate installments directly
             $trxDebtInsts = $debtInstByTrx[$trxId] ?? [];
             $totaldebtin = !empty($trxDebtInsts) ? array_sum(array_column($trxDebtInsts, 'qty')) : 0;
-            $statustrx = (int)$trx['value'] - ((int)$trx['amountpaid'] + (int)$totaldebtin);
-            $paidstatus = ($statustrx != 0)
+            $statustrx = ((int)$trx['amountpaid'] + (int)$totaldebtin) - (int)$trx['value'];
+            $paidstatus = (($statustrx != 0) && ($statustrx < 0))
                 ? '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e;">' . lang('Global.notpaid') . '</div>'
                 : '<div class="uk-text-success" style="border-style: solid; border-color: #32d296;">' . lang('Global.paid') . '</div>';
 
