@@ -166,9 +166,9 @@ class Transaction extends BaseController
         // }
 
         // Find Data for Daily Report
-        $today                  = date('Y-m-d') . ' 00:00:01';
-        $dailyreport            = $DailyReportModel->where('dateopen >', $today)->where('outletid', $this->data['outletPick'])->first();
-        $closed                 = $DailyReportModel->where('dateopen >', $today)->where('dateclose !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->first();
+        $today                  = date('Y-m-d') . ' 00:00:00';
+        $dailyreport            = $DailyReportModel->where('dateopen >=', $today)->where('outletid', $this->data['outletPick'])->first();
+        $closed                 = $DailyReportModel->where('dateopen >=', $today)->where('dateclose !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->first();
 
         // Parsing Data to View
         $data                   = $this->data;
@@ -194,6 +194,12 @@ class Transaction extends BaseController
         $data['closed']         = $closed;
 
         return view('Views/transaction', $data);
+    }
+
+    public function status()
+    {
+        $check = $this->checkStoreOpen();
+        return $this->response->setJSON($check);
     }
 
     // public function create()

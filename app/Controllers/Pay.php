@@ -31,6 +31,11 @@ class Pay extends BaseController
     
     public function create()
     {
+        $check = $this->checkStoreOpen();
+        if (!$check['status']) {
+            return redirect()->back()->with('error', $check['message']);
+        }
+
         // Load Models
         $db                 = \Config\Database::connect();
         $BundleModel        = new BundleModel();
@@ -511,6 +516,11 @@ class Pay extends BaseController
 
     public function save()
     {
+        $check = $this->checkStoreOpen();
+        if (!$check['status']) {
+            return redirect()->back()->with('error', $check['message']);
+        }
+
         // Calling Models
         $BundleModel            = new BundleModel();
         $BundledetModel         = new BundledetailModel();
@@ -1263,6 +1273,11 @@ class Pay extends BaseController
 
     public function topup()
     {
+        $check = $this->checkStoreOpen();
+        if (!$check['status']) {
+            return redirect()->back()->with('error', $check['message']);
+        }
+
         // Declaration Model
         $MemberModel            = new MemberModel;
         $TrxotherModel          = new TrxotherModel;

@@ -15,6 +15,7 @@ use App\Models\GroupUserModel;
 use App\Models\GconfigModel;
 use App\Models\OutletModel;
 use App\Models\OutletaccessModel;
+use App\Models\DailyReportModel;
 
 /**
  * Class BaseController
@@ -148,5 +149,32 @@ abstract class BaseController extends Controller
         if ($auth->check()) {
             $this->data['role'] = $role->name;
         }
+    }
+
+    protected function checkStoreOpen(): array
+    {
+        $outletPick = $this->data['outletPick'] ?? null;
+
+        if ($outletPick === null) {
+            return ['status' => false, 'message' => lang('Global.chooseoutlet')];
+        }
+
+        $today = date('Y-m-d') . ' 00:00:00';
+        $dailyReportModel = new DailyReportModel();
+
+        $dailyreport = $dailyReportModel
+            ->where('dateopen >=', $today)
+            ->where('outletid', $outletPick)
+            ->first();
+
+        if (empty($dailyreport)) {
+            return ['status' => false, 'message' => lang('Global.storeNotOpen')];
+        }
+
+        if ($dailyreport['dateclose'] !== '0000-00-00 00:00:00' && !empty($dailyreport['dateclose'])) {
+            return ['status' => false, 'message' => lang('Global.storeClosed')];
+        }
+
+        return ['status' => true, 'dailyreport' => $dailyreport];
     }
 }

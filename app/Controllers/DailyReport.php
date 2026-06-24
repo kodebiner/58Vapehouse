@@ -866,8 +866,8 @@ class DailyReport extends BaseController
         $users                  = $UserModel->findAll();
 
         // Creating Daily Report
-        $today                  = date('Y-m-d') . ' 00:00:01';
-        $dailyreport            = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >', $today)->first();
+        $today                  = date('Y-m-d') . ' 00:00:00';
+        $dailyreport            = $DailyReportModel->where('outletid', $this->data['outletPick'])->where('dateopen >=', $today)->first();
         $date                   = date_create();
         $tanggal                = date_format($date, 'Y-m-d H:i:s');
 

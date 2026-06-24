@@ -239,6 +239,7 @@ $routes->group('cashinout', ['filter'=>'login'], function($routes){
 // Transaction Routes
 $routes->group('transaction', ['filter'=>'login'], function($routes){
     $routes->get('', 'Transaction::index', ['filter' => 'role:owner,supervisor,logistik,operator']);
+    $routes->get('status', 'Transaction::status', ['filter' => 'role:owner,supervisor,logistik,operator,investor']);
     // $routes->get('create', 'Transaction::index',['filter'=> 'role:owner,supervisor,logistik,operator']);
     // $routes->post('create', 'Transaction::create',['filter'=> 'role:owner,supervisor,logistik,operator']);
     // $routes->post('pay', 'Transaction::pay',['filter'=> 'role:owner,supervisor,logistik,operator']);

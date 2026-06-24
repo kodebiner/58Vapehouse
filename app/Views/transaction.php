@@ -96,7 +96,6 @@
                         <div class="uk-navbar-right">
                             <div class="uk-child-width-auto uk-grid-divider" uk-grid>
                                 <div>
-                                    <!-- <a class="uk-button uk-button-text" uk-toggle="#modal-sections"></?=lang('Global.topup')?></a> -->
                                     <a uk-icon="user" uk-toggle="target: #tambahmember"></a>
                                 </div>
                                 <div>
@@ -140,14 +139,7 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!-- <div class="uk-margin">
-                                            <label class="uk-form-label" for="email"></?= lang('Auth.email') ?></label>
-                                            <div class="uk-form-controls">
-                                                <input type="email" class="uk-input </?php if (session('errors.email')) : ?>tm-form-invalid</?php endif ?>" name="email" id="email" placeholder="</?= lang('Auth.email') ?>" />
-                                            </div>
-                                        </div> -->
-
+                                        
                                         <hr>
 
                                         <div class="uk-margin">
@@ -159,1180 +151,6 @@
                         </div>
                     </div>
                     <!-- Modal Add Member End -->
-
-                    <!-- </?php if ($ismobile === false) { ?>
-                        <div class="uk-navbar-right">
-                            <div class="uk-child-width-1-2 uk-flex uk-flex-middle" uk-grid>
-                                <div>
-                                    <a class="uk-button uk-button-text" uk-toggle="#modal-sections"></?=lang('Global.topup')?></a>
-                                </div>
-                                <div>
-                                    <button type="button" class="uk-button" uk-toggle="target: #bookinglist" uk-icon="folder" width="35" height="35" style="color: #fff;"></button>
-                                </div>
-                                <div>
-                                    <button type="button" class="uk-button" uk-toggle="target: #tambahdata" uk-icon="cart" width="50" height="50" style="color: #fff;"></button>
-                                </div>
-                            </div>
-                        </div>
-                    </?php } else { ?>
-                        <div class="uk-navbar-right">
-                            <div class="uk-child-width-1-2 uk-flex uk-flex-middle" uk-grid>
-                                <div class="uk-padding-small uk-padding-remove-right uk-flex uk-flex-center">
-                                    <a class="uk-button uk-button-text uk-padding-remove" uk-toggle="#modal-sections"></?=lang('Global.topup')?></a>
-                                </div>
-                                <div class="uk-padding-small uk-padding-remove-right uk-flex uk-flex-center">
-                                    <button type="button" class="uk-button uk-padding-remove" uk-toggle="target: #bookinglist" uk-icon="folder" width="30" height="30" style="color: #fff;"></button>
-                                </div>
-                                <div class="uk-padding-small uk-padding-remove-right uk-flex uk-flex-center">
-                                    <button type="button" class="uk-button uk-padding-remove" uk-toggle="target: #tambahdata" uk-icon="cart" width="30" height="30" style="color: #fff;"></button>
-                                </div>
-                            </div>
-                        </div>
-                    </?php } ?> -->
-                    <!-- Navbar Right End -->
-
-                    <!-- Modal Top Up Point -->
-                    <!-- <div class="uk-flex-top" id="modal-sections" uk-modal>
-                        <div class="uk-modal-dialog uk-margin-auto-vertical">
-                            <div class="uk-modal-header">
-                                <div class="uk-child-width-1-2" uk-grid>
-                                    <div>
-                                        <h2 class="uk-modal-title"></?=lang('Global.topup')?></h2>
-                                    </div>
-                                    <div class="uk-text-right">
-                                        <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="uk-modal-body">
-                                <form class="uk-form-horizontal uk-margin-large" action="pay/topup" method="post">
-                                    <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-horizontal-text">Name</label>
-                                        <div class="uk-form-controls">
-                                            <div class="uk-inline uk-width-1-1">
-                                                <span class="uk-form-icon" uk-icon="icon: user"></span>
-                                                <input class="uk-input ui-autocomplete-input1" type="text" placeholder="Name" id="customer" name="customer" aria-label="Not clickable icon">
-                                                <input id="customerx" name="customerid" hidden />
-                                            </div>
-                                        </div>                                    
-                                    </div>
-                                    
-                                    <script type="text/javascript">
-                                        $(function() {
-                                            var customerList = [
-                                                {label: "Non Member", idx:0},
-                                                </?php
-                                                    foreach ($customers as $customer) {
-                                                        echo '{label:"'.$customer['name'].' / '.$customer['phone'].'",idx:'.$customer['id'].'},';
-                                                    }
-                                                ?>
-                                            ];
-                                            $("#customer").autocomplete({
-                                                source: customerList,
-                                                select: function(e, i) {
-                                                    $("#customerx").val(i.item.idx);
-                                                },
-                                                minLength: 1
-                                            });
-                                        });
-                                    </script>
-
-                                    <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-horizontal-text"></?=lang('Global.payment')?></label>
-                                        <div class="uk-form-controls">
-                                            <div class="uk-inline uk-width-1-1">
-                                                <span class="uk-form-icon" uk-icon="icon: credit-card"></span>
-                                                <select class="uk-select uk-input" id="payment" name="payment" required >
-                                                    <option value="" selected disabled hidden></?=lang('Global.payment')?></option>
-                                                    </?php
-                                                    foreach ($payments as $pay) {
-                                                        if (($pay['outletid'] === $outletPick) || ($pay['outletid'] === '0')) {
-                                                            echo '<option value="'.$pay['id'].'">'.$pay['name'].'</option>';
-                                                        }
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="uk-margin">
-                                        <label class="uk-form-label" for="form-horizontal-text"></?=lang('global.value')?></label>
-                                        <div class="uk-form-controls">
-                                            <div class="uk-inline uk-width-1-1">
-                                                <span class="uk-form-icon" uk-icon="icon: database"></span>
-                                                <input class="uk-input" min="0" name="value" type="number" placeholder="Point" aria-label="Not clickable icon">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="uk-margin">
-                                        <div class="uk-form-controls">
-                                            <a class="uk-button uk-button-default" uk-toggle="#topupproof"></?= lang('Global.topupproof') ?></a>
-                                        </div>
-                                    </div>
-
-                                    <div class="uk-margin" hidden>
-                                        <input class="image-tag" name="image">
-                                    </div>
-
-                                    <div class="uk-modal-footer uk-text-right">
-                                        <button class="uk-button uk-button-primary" type="submit" value="submit"></?= lang('Global.save') ?></button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div> -->
-                    <!-- Modal Top Up Point End -->
-
-                    <!-- Modal Top Up Proof -->
-                    <!-- <div uk-modal class="uk-flex-top" id="topupproof">
-                        <div class="uk-modal-dialog uk-margin-auto-vertical">
-                            <div class="uk-modal-content">
-                                <div class="uk-modal-header">
-                                    <div class="uk-flex uk-flex-middle uk-child-width-auto" uk-grid>
-                                        <div class="uk-padding-remove uk-margin-medium-left">
-                                            <a uk-icon="arrow-left" uk-toggle="#modal-sections" width="35" height="35"></a>
-                                        </div>
-                                        <div>
-                                            <h5 class="uk-modal-title" ></?=lang('Global.topupproof')?></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="uk-modal-body">
-                                    <div class="uk-flex-center uk-child-width-1-1" uk-grid>
-                                        <div id="topup_camera"></div>
-                                        <div class="uk-text-center uk-margin-small-top">
-                                            <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="topup_snapshot()">
-                                        </div>
-                                        <div class="uk-text-center" id="topup_results"></div>
-                                    </div> -->
-
-                                    <!-- Script Webcam Top Up Proof -->
-                                    <!-- <script type="text/javascript">
-
-                                        Webcam.set({
-                                            width: 490,
-                                            height: 390,
-                                            image_format: 'jpeg',
-                                            jpeg_quality: 90,
-                                            video: {
-                                                facingMode: "environment"
-                                            },
-                                            constraints: {
-                                                facingMode: 'environment'
-                                            }
-                                        });
-                                    
-                                        Webcam.attach( '#topup_camera' );
-
-                                        function topup_snapshot() {
-                                            Webcam.snap( function(data_uri) {
-                                                $(".image-tag").val(data_uri);
-                                                document.getElementById('topup_results').innerHTML = '<img src="'+data_uri+'"/>';
-                                            } );
-                                        }
-                                    </script> -->
-                                    <!-- Script Webcam Top Up Proof End -->
-                                <!-- </div>
-                            </div>
-                        </div>
-                    </div> -->
-                    <!-- Modal Top Up Proof End -->
-
-                    <!-- Modal Booking -->
-                    <!-- <div uk-modal class="uk-flex-top" id="bookinglist">
-                        <div class="uk-modal-dialog uk-margin-auto-vertical">
-                            <div class="uk-modal-content">
-                                <div class="uk-modal-header">
-                                    <div class="uk-child-width-1-2" uk-grid>
-                                        <div>
-                                            <h5 class="uk-modal-title" id="bookinglist" ></?=lang('Global.bookingList')?></h5>
-                                        </div>
-                                        <div class="uk-text-right">
-                                            <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="uk-modal-body">
-                                    </?php foreach ($bookings as $book) { ?>
-                                        <div id="booklist</?=$book['bookid']?>">
-                                            <div class="uk-h5 tm-h5"></?= date('l, d M Y', strtotime($book['bookdate'])); ?></div>
-                                            <div class="uk-margin-small-top" uk-grid>
-                                                <a class="uk-width-5-6 uk-link-reset" uk-toggle="target: #detail</?= $book['bookid'] ?>">
-                                                    <div></?= $book['custname'] ?></div>
-                                                    <div></?= $book['bookvalue'] ?></div>
-                                                </a>
-                                                <div class="uk-width-1-6 uk-light">
-                                                    <a uk-icon="trash" class="uk-icon-button-delete" href="pay/delete/</?= $book['bookid'] ?>" onclick="return confirm('</?=lang('Global.deleteConfirm')?>')"></a>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                        </div> -->
-                                        <!-- <div id="booklist</?=$book['id']?>">
-                                            <div class="uk-h5 tm-h5"></?= date('l, d M Y', strtotime($book['created_at'])); ?></div>
-                                            <div class="uk-margin-small-top" uk-grid>
-                                                <a class="uk-width-5-6 uk-link-reset" uk-toggle="target: #detail</?= $book['id'] ?>">
-                                                    </?php
-                                                    if ($book['memberid'] === '0') {
-                                                        $member = 'Non Member';
-                                                    } else {
-                                                        foreach ($customers as $cust) {
-                                                            if ($book['memberid'] === $cust['id']) {
-                                                                $member = $cust['name'].' / '.$cust['phone'];
-                                                            }
-                                                        }
-                                                    }
-                                                    ?>
-                                                    <div></?= $member ?></div>
-                                                    <div></?= $book['value'] ?></div>
-                                                </a>
-                                                <div class="uk-width-1-6 uk-light">
-                                                    <a uk-icon="trash" class="uk-icon-button-delete" href="pay/delete/</?= $book['id'] ?>" onclick="return confirm('</?=lang('Global.deleteConfirm')?>')"></a>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                        </div> -->
-
-                                        <!-- Modal Booking Detail -->
-                                        <!-- <div uk-modal class="uk-flex-top" id="detail</?= $book['bookid'] ?>">
-                                            <div class="uk-modal-dialog uk-margin-auto-vertical">
-                                                <div class="uk-modal-content">
-                                                    <div class="uk-modal-header">
-                                                        <div class="uk-child-width-1-2" uk-grid>
-                                                            <div>
-                                                                <h5 class="uk-modal-title" id="bookinglist" ></?=lang('Global.bookdetList')?></h5>
-                                                            </div>
-                                                            <div class="uk-text-right">
-                                                                <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="uk-modal-body">
-                                                        <input type="number" value="</?=$book['bookid']?>" hidden>
-                                                        <div class="uk-h3 tm-h4"></?= $book['custname'] ?></div>
-                                                        </?php 
-                                                        if (!empty($book['variantdata'])) {
-                                                            foreach ($book['variantdata'] as $bookvar) { ?>
-                                                                <div class="uk-margin-remove" uk-grid>
-                                                                    <div class="uk-width-1-6">
-                                                                        <div></?= $bookvar['bookdetqty'] ?></div>
-                                                                    </div>
-                                                                    <div class="uk-width-2-3">
-                                                                        <div></?= $bookvar['prodname'] ?></div>
-                                                                    </div>
-                                                                    <div class="uk-width-1-6">
-                                                                        <div></?= $bookvar['bookdetvalue'] ?></div>
-                                                                    </div>
-                                                                </div>
-                                                            </?php }
-                                                        }
-                                                        if (!empty($book['bundledata'])) {
-                                                            foreach ($book['bundledata'] as $bookbund) { ?>
-                                                                <div class="uk-margin-remove" uk-grid>
-                                                                    <div class="uk-width-1-6">
-                                                                        <div></?= $bookbund['bookbundqty'] ?></div>
-                                                                    </div>
-                                                                    <div class="uk-width-2-3">
-                                                                        <div></?= $bookbund['bundname'] ?></div>
-                                                                    </div>
-                                                                    <div class="uk-width-1-6">
-                                                                        <div></?= $bookbund['bookbundvalue'] ?></div>
-                                                                    </div>
-                                                                </div>
-                                                            </?php }
-                                                        } ?>
-                                                        <hr>
-                                                        <div class="uk-margin">
-                                                            <a href="pay/bookprint/</?=$book['bookid']?>" class="uk-button uk-button-default" style="border-radius: 8px; width: 540px;"></?= lang('Global.print') ?></a>
-                                                        </div>
-                                                        <div>
-                                                            <a class="uk-button uk-button-primary" style="border-radius: 8px; width: 540px;" uk-toggle="#tambahdata" onclick="insertBooking</?= $book['bookid'] ?>()"></?= lang('Global.tocart') ?></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                        <!-- <div uk-modal class="uk-flex-top" id="detail</?= $book['id'] ?>">
-                                            <div class="uk-modal-dialog uk-margin-auto-vertical">
-                                                <div class="uk-modal-content">
-                                                    <div class="uk-modal-header">
-                                                        <div class="uk-child-width-1-2" uk-grid>
-                                                            <div>
-                                                                <h5 class="uk-modal-title" id="bookinglist" ></?=lang('Global.bookdetList')?></h5>
-                                                            </div>
-                                                            <div class="uk-text-right">
-                                                                <button class="uk-modal-close uk-icon-button-delete" uk-icon="icon: close;" type="button"></button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="uk-modal-body">
-                                                        </?php
-                                                        if ($book['memberid'] === '0') {
-                                                            $member = 'Non Member';
-                                                        } else {
-                                                            foreach ($customers as $cust) {
-                                                                if ($book['memberid'] === $cust['id']) {
-                                                                    $member = $cust['name'].' / '.$cust['phone'];
-                                                                }
-                                                            }
-                                                        }
-                                                        ?>
-                                                        <div class="uk-h3 tm-h4"></?= $member ?></div>
-                                                        </?php foreach ($bookingdetails as $bookdet) { 
-                                                            if ($bookdet['bookingid'] === $book['id']) {
-                                                                if ($bookdet['variantid'] != '0') {
-                                                                    foreach ($variants as $variant) {
-                                                                        foreach ($products as $product) {
-                                                                            if (($product['id'] === $variant['productid']) && ($variant['id'] === $bookdet['variantid'])) {
-                                                                                $vname = $product['name'].' - '.$variant['name']; ?>
-                                                                                <div class="uk-margin-remove" uk-grid>
-                                                                                    <div class="uk-width-1-6">
-                                                                                        <div></?= $bookdet['qty'] ?></div>
-                                                                                        <input type="number" value="</?=$book['id']?>" name="id" hidden>
-                                                                                    </div>
-                                                                                    <div class="uk-width-2-3">
-                                                                                        <div></?= $vname ?></div>
-                                                                                    </div>
-                                                                                    <div class="uk-width-1-6">
-                                                                                        <div></?= $bookdet['value'] ?></div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </?php }
-                                                                        }
-                                                                    }
-                                                                } else {
-                                                                    foreach ($bundles as $bundle) {
-                                                                        if ($bundle['id'] === $bookdet['bundleid']) {
-                                                                            $bname = $bundle['name']; ?>
-                                                                            <input type="number" value="</?=$book['id']?>" hidden>
-                                                                            <div class="uk-margin-remove" uk-grid>
-                                                                                <div class="uk-width-1-6">
-                                                                                    <div></?= $bookdet['qty'] ?></div>
-                                                                                </div>
-                                                                                <div class="uk-width-2-3">
-                                                                                    <div></?= $bname ?></div>
-                                                                                </div>
-                                                                                <div class="uk-width-1-6">
-                                                                                    <div></?= $bookdet['value'] ?></div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </?php }
-                                                                    }
-                                                                }
-                                                            }
-                                                        } ?>
-                                                        <hr>
-                                                        <div class="uk-margin">
-                                                            <a href="pay/bookprint/</?=$book['id']?>" class="uk-button uk-button-default" style="border-radius: 8px; width: 540px;"></?= lang('Global.print') ?></a>
-                                                        </div>
-                                                        <div>
-                                                            <a class="uk-button uk-button-primary" style="border-radius: 8px; width: 540px;" uk-toggle="#tambahdata" onclick="insertBooking</?= $book['id'] ?>()"></?= lang('Global.tocart') ?></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                        <!-- Modal Booking Detail End -->
-
-                                        <!-- Script Booking -->
-                                        <!-- <script type="text/javascript">
-                                            function insertBooking</?= $book['bookid'] ?>() {
-
-                                                document.getElementById("customername").value = '</?=$book['custname']?>';
-                                                document.getElementById("customerid").value = '</?=$book['custid']?>';
-
-                                                var products = document.getElementById('products');
-
-                                                document.getElementById('booklist</?= $book['bookid'] ?>').remove();
-                                                
-                                                var oldproducts = document.querySelector('#products');
-                                                var oldproductschild = oldproducts.lastElementChild;
-                                                while (oldproductschild) {
-                                                    oldproducts.removeChild(oldproductschild);
-                                                    oldproductschild = oldproducts.lastElementChild;
-                                                }
-                                                </?php
-                                                $bookqty        = array();
-                                                $bookbundqty    = array();
-                                                if (!empty($book['variantdata'])) {
-                                                    foreach ($book['variantdata'] as $bookdet) {
-                                                        echo 'var count = '.$bookdet['bookdetqty'].';';
-                                                        $bookqty[$bookdet['bookvarid']] = $bookdet['bookdetqty'];
-                                                        $Price      = (Int)$bookdet['bookvarprice'];
-                                                        $ProdName   = $bookdet['prodname']; ?>
-
-                                                        if ( $( "#product</?= $book['bookid'] ?></?=$bookdet['bookvarid']?>" ).length ) {
-                                                            alert('</?=lang('Global.readyAdd');?>');
-                                                        } else {
-                                                            </?php
-                                                                echo 'let stock = '.$bookdet['stock'].';';
-                                                            ?>
-                                                            var minstock = 1;
-                                                            var minval = count;
-                                                            
-                                                            var productgrid = document.createElement('div');
-                                                            productgrid.setAttribute('id', 'product</?= $book['bookid'] ?></?=$bookdet['bookvarid']?>');
-                                                            productgrid.setAttribute('class', 'uk-margin-small');
-                                                            productgrid.setAttribute('uk-grid', '');
-
-                                                            var addcontainer = document.createElement('div');
-                                                            addcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                            
-                                                            var productqtyinputadd = document.createElement('div');
-                                                            productqtyinputadd.setAttribute('id','addqty</?=$bookdet['bookvarid']?>');
-                                                            productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
-                                                            productqtyinputadd.innerHTML = '+';
-
-                                                            var delcontainer = document.createElement('div');
-                                                            delcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                            
-                                                            var productqtyinputdel = document.createElement('div');
-                                                            productqtyinputdel.setAttribute('id','delqty</?=$bookdet['bookvarid']?>');
-                                                            productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
-                                                            productqtyinputdel.innerHTML = '-';
-
-                                                            var quantitycontainer = document.createElement('div');
-                                                            quantitycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle uk-width-1-6');
-
-                                                            var productqty = document.createElement('div');                                               
-
-                                                            var inputqty = document.createElement('input');
-                                                            inputqty.setAttribute('type', 'number');
-                                                            inputqty.setAttribute('id', "qty[</?=$bookdet['bookvarid']?>]");
-                                                            inputqty.setAttribute('name', "qty[</?=$bookdet['bookvarid']?>]");
-                                                            inputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
-                                                            inputqty.setAttribute('min', minstock);
-                                                            inputqty.setAttribute('max', stock);
-                                                            inputqty.setAttribute('value', '</?= $bookdet['bookdetqty'] ?>');
-                                                            inputqty.setAttribute('onchange', 'showprice()');
-                                                            
-                                                            var handleIncrement = () => {
-                                                                count++;
-                                                                if (inputqty.value == stock) {
-                                                                    inputqty.value = stock;
-                                                                    count = stock;
-                                                                    alert('</?=lang('Global.alertstock')?>');
-                                                                } else {
-                                                                    inputqty.value = count;
-                                                                    var price = count * </?=$Price?>;
-                                                                    var bargainprice = varbargain.value * inputqty.value;
-                                                                    if(varbargain.value){
-                                                                        document.getElementById('price</?=$bookdet['bookvarid']?>').innerHTML = bargainprice;
-                                                                    }
-                                                                    else {
-                                                                        productprice.innerHTML = price;
-                                                                        productprice.value = price;
-                                                                    }
-                                                                }
-                                                            };
-                                                            
-                                                            var handleDecrement = () => {
-                                                                count--;
-                                                                if (inputqty.value == '1') {
-                                                                    inputqty.value = '0';
-                                                                    inputqty.remove();                                                                                                
-                                                                    productgrid.remove();
-                                                                } else {
-                                                                    inputqty.value = count;
-                                                                    var price = count * </?=$Price?>;
-                                                                    var bargainprice = varbargain.value * inputqty.value;
-                                                                    if(varbargain.value){
-                                                                        document.getElementById('price</?=$bookdet['bookvarid']?>').innerHTML = bargainprice;
-                                                                    }
-                                                                    else {
-                                                                        productprice.innerHTML = price;
-                                                                        productprice.value = price;
-                                                                    }
-                                                                }
-                                                            };
-
-                                                            productqtyinputadd.addEventListener("click", handleIncrement);
-                                                            productqtyinputdel.addEventListener("click", handleDecrement);
-
-                                                            var namecontainer = document.createElement('div');
-                                                            namecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
-
-                                                            var productname = document.createElement('div');
-                                                            productname.setAttribute('id', 'name</?=$bookdet['bookvarid']?>');
-                                                            productname.setAttribute('class', 'tm-h2');
-                                                            productname.innerHTML = '</?=$ProdName?>';
-
-                                                            var pricecontainer = document.createElement('div');
-                                                            pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                            
-                                                            var productprice = document.createElement('div');
-                                                            productprice.setAttribute('id', 'price</?=$bookdet['bookvarid']?>');
-                                                            productprice.setAttribute('class', 'tm-h2');
-                                                            productprice.setAttribute('name', 'price[]');
-                                                            productprice.setAttribute('value', showprice())
-                                                            productprice.innerHTML = showprice();
-
-                                                            // var varpricecontainer = document.createElement('div');
-                                                            // varpricecontainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
-
-                                                            // var varbardiv = document.createElement('div');
-                                                            // varbardiv.setAttribute('class','uk-margin uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
-
-                                                            // var varbarlab = document.createElement('label');
-                                                            // varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
-
-                                                            // var varbartext = document.createTextNode("Variant Bargain");
-
-                                                            // var varbarform = document.createElement('div');
-                                                            // varbarform.setAttribute('class','uk-form-controls');
-
-                                                            // var varbargain = document.createElement('input');
-                                                            // varbargain.setAttribute('class', 'uk-input uk-form-width-small');
-                                                            // varbargain.setAttribute('id', 'varbargain</?=$bookdet['bookvarid']?>');
-                                                            // varbargain.setAttribute('placeholder', '0');
-                                                            // varbargain.setAttribute('name', 'varbargain[</?=$bookdet['bookvarid']?>]');
-                                                            // varbargain.setAttribute('min', "0");
-                                                            // varbargain.setAttribute('type', 'number');
-
-                                                            var varvaluecontainer = document.createElement('div');
-                                                            varvaluecontainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
-
-                                                            var varpricediv = document.createElement('div');
-                                                            varpricediv.setAttribute('class','uk-margin uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
-
-                                                            var varpricelab = document.createElement('label');
-                                                            varpricelab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4' );
-
-                                                            var varpricetext = document.createTextNode("Discount Variant");
-
-                                                            var varpriceform = document.createElement('div');
-                                                            varpriceform.setAttribute('class','uk-form-controls');
-                                                            
-                                                            var varprice = document.createElement('input');
-                                                            varprice.setAttribute('class', 'uk-input uk-form-width-small varprice');
-                                                            varprice.setAttribute('data-index', '</?=$bookdet['bookvarid']?>');
-                                                            varprice.setAttribute('id', 'varprice</?=$bookdet['bookvarid']?>');
-                                                            varprice.setAttribute('placeholder', '0');
-                                                            varprice.setAttribute('name', 'varprice[</?=$bookdet['bookvarid']?>]');
-                                                            varprice.setAttribute('value', '0');
-                                                            varprice.setAttribute('type', 'number');
-                                                            varprice.setAttribute('min', '0');
-
-
-                                                            function showprice() {
-                                                                var qty = inputqty.value;
-                                                                var price = qty * </?=$Price?>;
-                                                                return price;
-                                                                productprice.innerHTML = price;
-                                                            }
-
-                                                            inputqty.onchange = function() {showprice()};
-
-                                                            // varbargain.onchange = function() {
-                                                            //     var bargainprice = varbargain.value * inputqty.value;
-                                                            //     if (bargainprice) {
-                                                            //         document.getElementById('price</?=$bookdet['bookvarid']?>').innerHTML = bargainprice;
-                                                            //     } else {
-                                                            //         document.getElementById('price</?=$bookdet['bookvarid']?>').innerHTML = showprice();
-                                                            //     }
-                                                            // }
-
-                                                            varprice.onchange = function() {
-                                                                var discvar = varprice.value * inputqty.value;
-                                                                if (discvar) {
-                                                                    document.getElementById('price</?=$bookdet['bookvarid']?>').innerHTML = showprice() - discvar;
-                                                                } else {
-                                                                    document.getElementById('price</?=$bookdet['bookvarid']?>').innerHTML = showprice();
-                                                                }
-                                                            }
-
-                                                            addcontainer.appendChild(productqtyinputadd);
-                                                            productqty.appendChild(inputqty);
-                                                            quantitycontainer.appendChild(productqty);
-                                                            delcontainer.appendChild(productqtyinputdel);
-                                                            pricecontainer.appendChild(productprice);
-                                                            namecontainer.appendChild(productname);
-                                                            // varpricecontainer.appendChild(varbardiv);
-                                                            // varbardiv.appendChild(varbarlab);
-                                                            // varbarlab.appendChild(varbartext);
-                                                            // varbarlab.appendChild(varbarform);
-                                                            // varbarform.appendChild(varbargain);
-                                                            varvaluecontainer.appendChild(varpricediv);
-                                                            varpricediv.appendChild(varpricelab);
-                                                            varpricelab.appendChild(varpricetext);
-                                                            varpricelab.appendChild(varpriceform);
-                                                            varpriceform.appendChild(varprice);
-                                                            productgrid.appendChild(delcontainer);
-                                                            productgrid.appendChild(quantitycontainer);
-                                                            productgrid.appendChild(addcontainer);
-                                                            productgrid.appendChild(namecontainer);
-                                                            productgrid.appendChild(pricecontainer);
-                                                            productgrid.appendChild(pricecontainer);
-                                                            // productgrid.appendChild(varpricecontainer);
-                                                            productgrid.appendChild(varvaluecontainer);
-                                                            products.appendChild(productgrid);
-                                                        }
-                                                    </?php }
-                                                } ?>
-                                                
-                                                </?php
-                                                if (!empty($book['bundledata'])) {
-                                                    foreach ($book['bundledata'] as $bundle) {
-                                                        $BunName    = $bundle['bundname'];
-                                                        $BunPrice   = $bundle['bookbundprice'];
-                                                            $i = 0;
-                                                            foreach ($bundleVariants as $variant) {
-                                                                if (($variant->bundleid === $bundle['bookbundid']) && ($variant->outletid === $outletPick)) {
-                                                                    $i++;
-                                                                    if ($i === 1) {
-                                                                        echo 'var bstock = '.$variant->qty.';';
-                                                                        $bookbundqty[$variant->id] = $bundle['bookbundqty'];
-                                                                    }
-                                                                }
-                                                            } ?>
-
-                                                            var minbstock = 1; 
-                                                            var minbval = count;
-                                                            
-                                                            var bundlegrid = document.createElement('div');
-                                                            bundlegrid.setAttribute('id', 'bundle</?= $book['bookid'] ?></?= $bundle['bookbundid'] ?>');
-                                                            bundlegrid.setAttribute('class', 'uk-margin-small');
-                                                            bundlegrid.setAttribute('uk-grid', '');
-
-                                                            var addbundlecontainer = document.createElement('div');
-                                                            addbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                            
-                                                            var bunldeqtyinputadd = document.createElement('div');
-                                                            bunldeqtyinputadd.setAttribute('id','addbqty</?= $bundle['bookbundid'] ?>');
-                                                            bunldeqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
-                                                            bunldeqtyinputadd.innerHTML = '+';
-
-                                                            var delbundlecontainer = document.createElement('div');
-                                                            delbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                            
-                                                            var bundleqtyinputdel = document.createElement('div');
-                                                            bundleqtyinputdel.setAttribute('id','delbqty</?= $bundle['bookbundid'] ?>');
-                                                            bundleqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
-                                                            bundleqtyinputdel.innerHTML = '-';
-
-                                                            var bundleqtycontainer = document.createElement('div');
-                                                            bundleqtycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle uk-width-1-6');
-
-                                                            var bundleqty = document.createElement('div');                                               
-
-                                                            var bundleinputqty = document.createElement('input');
-                                                            bundleinputqty.setAttribute('type', 'number');
-                                                            bundleinputqty.setAttribute('id', "bqty[</?= $bundle['bookbundid'] ?>]");
-                                                            bundleinputqty.setAttribute('name', "bqty[</?= $bundle['bookbundid'] ?>]");
-                                                            bundleinputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
-                                                            bundleinputqty.setAttribute('min', minbstock);
-                                                            bundleinputqty.setAttribute('max', bstock);
-                                                            bundleinputqty.setAttribute('value', '</?= $bundle['bookbundqty'] ?>');
-                                                            bundleinputqty.setAttribute('onchange', 'showbprice()');
-                                                            
-                                                            var handleIncrements = () => {
-                                                                count++;
-                                                                if (bundleinputqty.value == bstock) {
-                                                                    bundleinputqty.value = bstock;
-                                                                    count = bstock;
-                                                                    alert('</?=lang('Global.alertstock')?>');
-                                                                } else {
-                                                                    bundleinputqty.value = count;
-                                                                    var bprice = count * </?= $BunPrice ?>;
-                                                                    bundleprice.innerHTML = bprice;
-                                                                    bundleprice.value = bprice;
-                                                                }
-                                                            };
-                                                            
-                                                            var handleDecrements = () => {
-                                                                count--;
-                                                                if (bundleinputqty.value == '1') {
-                                                                    bundleinputqty.value = '0';
-                                                                    bundleinputqty.remove();
-                                                                    bundlegrid.remove();
-                                                                } else {
-                                                                    bundleinputqty.value = count;
-                                                                    var bprice = count * </?= $BunPrice ?>;
-                                                                    bundleprice.innerHTML = bprice;
-                                                                }
-                                                            };
-
-                                                            bunldeqtyinputadd.addEventListener("click", handleIncrements);
-                                                            bundleqtyinputdel.addEventListener("click", handleDecrements);
-
-                                                            var bundlenamecontainer = document.createElement('div');
-                                                            bundlenamecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
-
-                                                            var bundlename = document.createElement('div');
-                                                            bundlename.setAttribute('id', 'name</?= $bundle['bookbundid'] ?>');
-                                                            bundlename.setAttribute('class', 'tm-h2');
-                                                            bundlename.innerHTML = '</?= $BunName ?>';
-
-                                                            var bpricecontainer = document.createElement('div');
-                                                            bpricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                            
-                                                            var bundleprice = document.createElement('div');
-                                                            bundleprice.setAttribute('id', 'bprice</?= $bundle['bookbundid'] ?>');
-                                                            bundleprice.setAttribute('class', 'tm-h2');
-                                                            bundleprice.setAttribute('name', 'price[]');
-                                                            bundleprice.setAttribute('value', showbprice());
-                                                            bundleprice.innerHTML = showbprice();
-
-                                                            function showbprice() {
-                                                                var bqty = bundleinputqty.value;
-                                                                var bprice = bqty * </?= $BunPrice ?>;
-                                                                return bprice;
-                                                                bundleprice.innerHTML = bprice;
-                                                            }
-
-                                                            bundleinputqty.onchange = function() {showbprice()};
-
-                                                            addbundlecontainer.appendChild(bunldeqtyinputadd);
-                                                            bundleqty.appendChild(bundleinputqty);
-                                                            bundleqtycontainer.appendChild(bundleqty);
-                                                            delbundlecontainer.appendChild(bundleqtyinputdel);
-                                                            bundlegrid.appendChild(delbundlecontainer);
-                                                            bundlegrid.appendChild(bundleqtycontainer);
-                                                            bundlegrid.appendChild(addbundlecontainer);
-                                                            bundlenamecontainer.appendChild(bundlename);
-                                                            bundlegrid.appendChild(bundlenamecontainer);
-                                                            bpricecontainer.appendChild(bundleprice);
-                                                            bundlegrid.appendChild(bpricecontainer);
-                                                            products.appendChild(bundlegrid);
-                                                    </?php }
-                                                }
-                                                
-                                                $datavar = json_encode($bookqty);
-                                                $databund = json_encode($bookbundqty);
-                                                ?>
-                                                $.ajax({
-                                                    url: "transaction/restorestock",
-                                                    type: "POST",    
-                                                    data: {
-                                                        bookingid: </?=$book['bookid']?>,
-                                                        datavar: </?=$datavar?>,
-                                                        databund: </?=$databund?>
-                                                    },
-                                                    success: function(response) {
-                                                        console.log(response);
-                                                    },
-                                                    error: function(response) {
-                                                        console.log(response);
-                                                    }   
-                                                });
-                                            }
-                                            // function insertBooking</?= $book['id'] ?>() {
-
-                                            //     </?php
-                                            //     foreach ($customers as $customer) {
-                                            //         if ($book['memberid'] === '0') {
-                                            //     ?>
-                                            //             document.getElementById("customername").value = 'Non Member';
-                                            //             document.getElementById("customerid").value = '0';
-                                            //     </?php } elseif ($book['memberid'] === $customer['id']) { ?>
-                                            //             document.getElementById("customername").value = '</?=$customer['name']?>';
-                                            //             document.getElementById("customerid").value = '</?=$customer['id']?>';
-                                            //     </?php
-                                            //         }
-                                            //     }
-                                            //     ?>
-
-                                            //     var products = document.getElementById('products');
-
-                                            //     document.getElementById('booklist</?= $book['id'] ?>').remove();
-                                                
-                                            //     var oldproducts = document.querySelector('#products');
-                                            //     var oldproductschild = oldproducts.lastElementChild;
-                                            //     while (oldproductschild) {
-                                            //         oldproducts.removeChild(oldproductschild);
-                                            //         oldproductschild = oldproducts.lastElementChild;
-                                            //     }
-                                            //     </?php
-                                            //     $bookqty = array();
-                                            //     $bookbundqty = array();
-                                            //     foreach ($bookingdetails as $bookdet) {
-                                            //         echo 'var count = '.$bookdet['qty'].';';
-                                            //         foreach ($products as $product) {
-                                            //             foreach ($variants as $variant) {
-                                            //                 if (($bookdet['bookingid'] === $book['id']) && ($variant['id'] === $bookdet['variantid']) && ($variant['productid'] === $product['id'])) {
-                                            //                     $bookqty[$variant['id']] = $bookdet['qty'];
-                                            //                     $VarName    = $variant['name'];
-                                            //                     $Price      = (Int)$variant['hargamodal'] + (Int)$variant['hargajual'];
-                                            //                     $ProdName   = $product['name'].' - '. $variant['name']; ?>
-
-                                            //                     if ( $( "#product</?= $book['id'] ?></?=$variant['id']?>" ).length ) {
-                                            //                         alert('</?=lang('Global.readyAdd');?>');
-                                            //                     } else {
-                                            //                         </?php
-                                            //                         foreach ($stocks as $stock) {
-                                            //                             if (($stock['variantid'] === $variant['id']) && ($stock['outletid'] === $outletPick)) {
-                                            //                                 echo 'let stock = '.$stock['qty'].';';
-                                            //                                 if ($stock['qty'] === '0') {
-                                            //                                     echo 'alert("'.lang('Global.alertstock').'")';
-                                            //                                 } else {
-                                            //                         ?>
-                                            //                                     var minstock = 1;
-                                            //                                     var minval = count;
-                                                                                
-                                            //                                     var productgrid = document.createElement('div');
-                                            //                                     productgrid.setAttribute('id', 'product</?= $book['id'] ?></?=$variant['id']?>');
-                                            //                                     productgrid.setAttribute('class', 'uk-margin-small');
-                                            //                                     productgrid.setAttribute('uk-grid', '');
-
-                                            //                                     var addcontainer = document.createElement('div');
-                                            //                                     addcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                                                
-                                            //                                     var productqtyinputadd = document.createElement('div');
-                                            //                                     productqtyinputadd.setAttribute('id','addqty</?=$variant['id']?>');
-                                            //                                     productqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
-                                            //                                     productqtyinputadd.innerHTML = '+';
-
-                                            //                                     var delcontainer = document.createElement('div');
-                                            //                                     delcontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                                                
-                                            //                                     var productqtyinputdel = document.createElement('div');
-                                            //                                     productqtyinputdel.setAttribute('id','delqty</?=$variant['id']?>');
-                                            //                                     productqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
-                                            //                                     productqtyinputdel.innerHTML = '-';
-
-                                            //                                     var quantitycontainer = document.createElement('div');
-                                            //                                     quantitycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle uk-width-1-6');
-
-                                            //                                     var productqty = document.createElement('div');                                               
-
-                                            //                                     var inputqty = document.createElement('input');
-                                            //                                     inputqty.setAttribute('type', 'number');
-                                            //                                     inputqty.setAttribute('id', "qty[</?=$variant['id']?>]");
-                                            //                                     inputqty.setAttribute('name', "qty[</?=$variant['id']?>]");
-                                            //                                     inputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
-                                            //                                     inputqty.setAttribute('min', minstock);
-                                            //                                     inputqty.setAttribute('max', stock);
-                                            //                                     inputqty.setAttribute('value', '</?= $bookdet['qty'] ?>');
-                                            //                                     inputqty.setAttribute('onchange', 'showprice()');
-                                                                                
-                                            //                                     var handleIncrement = () => {
-                                            //                                         count++;
-                                            //                                         if (inputqty.value == stock) {
-                                            //                                             inputqty.value = stock;
-                                            //                                             count = stock;
-                                            //                                             alert('</?=lang('Global.alertstock')?>');
-                                            //                                         } else {
-                                            //                                             inputqty.value = count;
-                                            //                                             var price = count * </?=$Price?>;
-                                            //                                             var bargainprice = varbargain.value * inputqty.value;
-                                            //                                             if(varbargain.value){
-                                            //                                                 document.getElementById('price</?=$variant['id']?>').innerHTML = bargainprice;
-                                            //                                             }
-                                            //                                             else {
-                                            //                                                 productprice.innerHTML = price;
-                                            //                                                 productprice.value = price;
-                                            //                                             }
-                                            //                                         }
-                                            //                                     };
-                                                                                
-                                            //                                     var handleDecrement = () => {
-                                            //                                         count--;
-                                            //                                         if (inputqty.value == '1') {
-                                            //                                             inputqty.value = '0';
-                                            //                                             inputqty.remove();                                                                                                
-                                            //                                             productgrid.remove();
-                                            //                                         } else {
-                                            //                                             inputqty.value = count;
-                                            //                                             var price = count * </?=$Price?>;
-                                            //                                             var bargainprice = varbargain.value * inputqty.value;
-                                            //                                             if(varbargain.value){
-                                            //                                                 document.getElementById('price</?=$variant['id']?>').innerHTML = bargainprice;
-                                            //                                             }
-                                            //                                             else {
-                                            //                                                 productprice.innerHTML = price;
-                                            //                                                 productprice.value = price;
-                                            //                                             }
-                                            //                                         }
-                                            //                                     };
-
-                                            //                                     productqtyinputadd.addEventListener("click", handleIncrement);
-                                            //                                     productqtyinputdel.addEventListener("click", handleDecrement);
-
-                                            //                                     var namecontainer = document.createElement('div');
-                                            //                                     namecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
-
-                                            //                                     var productname = document.createElement('div');
-                                            //                                     productname.setAttribute('id', 'name</?=$variant['id']?>');
-                                            //                                     productname.setAttribute('class', 'tm-h2');
-                                            //                                     productname.innerHTML = '</?=$ProdName?>';
-
-                                            //                                     var pricecontainer = document.createElement('div');
-                                            //                                     pricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                                                
-                                            //                                     var productprice = document.createElement('div');
-                                            //                                     productprice.setAttribute('id', 'price</?=$variant['id']?>');
-                                            //                                     productprice.setAttribute('class', 'tm-h2');
-                                            //                                     productprice.setAttribute('name', 'price[]');
-                                            //                                     productprice.setAttribute('value', showprice())
-                                            //                                     productprice.innerHTML = showprice();
-
-                                            //                                     var varpricecontainer = document.createElement('div');
-                                            //                                     varpricecontainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
-
-                                            //                                     var varbardiv = document.createElement('div');
-                                            //                                     varbardiv.setAttribute('class','uk-margin uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
-
-                                            //                                     var varbarlab = document.createElement('label');
-                                            //                                     varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
-
-                                            //                                     var varbartext = document.createTextNode("Variant Bargain");
-
-                                            //                                     var varbarform = document.createElement('div');
-                                            //                                     varbarform.setAttribute('class','uk-form-controls');
-
-                                            //                                     var varbargain = document.createElement('input');
-                                            //                                     varbargain.setAttribute('class', 'uk-input uk-form-width-small');
-                                            //                                     varbargain.setAttribute('id', 'varbargain</?=$variant['id']?>');
-                                            //                                     varbargain.setAttribute('placeholder', '0');
-                                            //                                     varbargain.setAttribute('name', 'varbargain[</?=$variant['id']?>]');
-                                            //                                     varbargain.setAttribute('min', "0");
-                                            //                                     varbargain.setAttribute('type', 'number');
-
-                                            //                                     var varvaluecontainer = document.createElement('div');
-                                            //                                     varvaluecontainer.setAttribute('class', 'uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
-
-                                            //                                     var varpricediv = document.createElement('div');
-                                            //                                     varpricediv.setAttribute('class','uk-margin uk-margin-small uk-flex uk-flex-middle uk-width-1-2');
-
-                                            //                                     var varpricelab = document.createElement('label');
-                                            //                                     varpricelab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4' );
-
-                                            //                                     var varpricetext = document.createTextNode("Discount Variant");
-
-                                            //                                     var varpriceform = document.createElement('div');
-                                            //                                     varpriceform.setAttribute('class','uk-form-controls');
-                                                                                
-                                            //                                     var varprice = document.createElement('input');
-                                            //                                     varprice.setAttribute('class', 'uk-input uk-form-width-small varprice');
-                                            //                                     varprice.setAttribute('data-index', '</?=$variant['id']?>');
-                                            //                                     varprice.setAttribute('id', 'varprice</?=$variant['id']?>');
-                                            //                                     varprice.setAttribute('placeholder', '0');
-                                            //                                     varprice.setAttribute('name', 'varprice[</?=$variant['id']?>]');
-                                            //                                     varprice.setAttribute('value', '0');
-                                            //                                     varprice.setAttribute('type', 'number');
-                                            //                                     varprice.setAttribute('min', '0');
-
-
-                                            //                                     function showprice() {
-                                            //                                         var qty = inputqty.value;
-                                            //                                         var price = qty * </?=$Price?>;
-                                            //                                         return price;
-                                            //                                         productprice.innerHTML = price;
-                                            //                                     }
-
-                                            //                                     inputqty.onchange = function() {showprice()};
-
-                                            //                                     varbargain.onchange = function() {
-                                            //                                         var bargainprice = varbargain.value * inputqty.value;
-                                            //                                         if (bargainprice) {
-                                            //                                             document.getElementById('price</?=$variant['id']?>').innerHTML = bargainprice;
-                                            //                                         } else {
-                                            //                                             document.getElementById('price</?=$variant['id']?>').innerHTML = showprice();
-                                            //                                         }
-                                            //                                     }
-
-                                            //                                     varprice.onchange = function() {
-                                            //                                         var discvar = varprice.value * inputqty.value;
-                                            //                                         if (discvar) {
-                                            //                                             document.getElementById('price</?=$variant['id']?>').innerHTML = showprice() - discvar;
-                                            //                                         } else {
-                                            //                                             document.getElementById('price</?=$variant['id']?>').innerHTML = showprice();
-                                            //                                         }
-                                            //                                     }
-
-                                            //                                     addcontainer.appendChild(productqtyinputadd);
-                                            //                                     productqty.appendChild(inputqty);
-                                            //                                     quantitycontainer.appendChild(productqty);
-                                            //                                     delcontainer.appendChild(productqtyinputdel);
-                                            //                                     pricecontainer.appendChild(productprice);
-                                            //                                     namecontainer.appendChild(productname);
-                                            //                                     varpricecontainer.appendChild(varbardiv);
-                                            //                                     varbardiv.appendChild(varbarlab);
-                                            //                                     varbarlab.appendChild(varbartext);
-                                            //                                     varbarlab.appendChild(varbarform);
-                                            //                                     varbarform.appendChild(varbargain);
-                                            //                                     varvaluecontainer.appendChild(varpricediv);
-                                            //                                     varpricediv.appendChild(varpricelab);
-                                            //                                     varpricelab.appendChild(varpricetext);
-                                            //                                     varpricelab.appendChild(varpriceform);
-                                            //                                     varpriceform.appendChild(varprice);
-                                            //                                     productgrid.appendChild(delcontainer);
-                                            //                                     productgrid.appendChild(quantitycontainer);
-                                            //                                     productgrid.appendChild(addcontainer);
-                                            //                                     productgrid.appendChild(namecontainer);
-                                            //                                     productgrid.appendChild(pricecontainer);
-                                            //                                     productgrid.appendChild(pricecontainer);
-                                            //                                     productgrid.appendChild(varpricecontainer);
-                                            //                                     productgrid.appendChild(varvaluecontainer);
-                                            //                                     products.appendChild(productgrid);
-                                            //                                 </?php }
-                                            //                             }
-                                            //                         } ?>
-                                            //                     }
-                                            //                 </?php }
-                                            //             }
-                                            //         } ?>
-                                                    
-                                            //         </?php foreach ($bundles as $bundle) {
-
-                                            //             $BunName = $bundle['name'];
-                                            //             $BunPrice = $bundle['price'];
-                                            //             if (($bookdet['bookingid'] === $book['id']) && ($bundle['id'] === $bookdet['bundleid'])) {
-                                            //                 foreach ($bundets as $bundet) {
-                                            //                     if ($bundle['id'] === $bundet['bundleid']) {
-                                            //                         $i = 0;
-                                            //                         foreach ($bundleVariants as $variant) {
-                                            //                             if (($variant->bundleid === $bundle['id']) && ($variant->outletid === $outletPick)) {
-                                            //                                 $i++;
-                                            //                                 if ($i === 1) {
-                                            //                                     echo 'var bstock = '.$variant->qty.';';
-                                            //                                     $bookbundqty[$variant->id] = $bookdet['qty'];
-                                            //                                 }
-                                            //                             }
-                                            //                         }
-                                            //                     }
-                                            //                 } ?>
-
-                                            //                 var minbstock = 1; 
-                                            //                 var minbval = count;
-                                                            
-                                            //                 var bundlegrid = document.createElement('div');
-                                            //                 bundlegrid.setAttribute('id', 'bundle</?= $book['id'] ?></?= $bundle['id'] ?>');
-                                            //                 bundlegrid.setAttribute('class', 'uk-margin-small');
-                                            //                 bundlegrid.setAttribute('uk-grid', '');
-
-                                            //                 var addbundlecontainer = document.createElement('div');
-                                            //                 addbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                            
-                                            //                 var bunldeqtyinputadd = document.createElement('div');
-                                            //                 bunldeqtyinputadd.setAttribute('id','addbqty</?= $bundle['id'] ?>');
-                                            //                 bunldeqtyinputadd.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-primary');
-                                            //                 bunldeqtyinputadd.innerHTML = '+';
-
-                                            //                 var delbundlecontainer = document.createElement('div');
-                                            //                 delbundlecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                            
-                                            //                 var bundleqtyinputdel = document.createElement('div');
-                                            //                 bundleqtyinputdel.setAttribute('id','delbqty</?= $bundle['id'] ?>');
-                                            //                 bundleqtyinputdel.setAttribute('class','tm-h2 pointerbutton uk-button uk-button-small uk-button-danger');
-                                            //                 bundleqtyinputdel.innerHTML = '-';
-
-                                            //                 var bundleqtycontainer = document.createElement('div');
-                                            //                 bundleqtycontainer.setAttribute('class', 'tm-h2 uk-flex uk-flex-middle uk-width-1-6');
-
-                                            //                 var bundleqty = document.createElement('div');                                               
-
-                                            //                 var bundleinputqty = document.createElement('input');
-                                            //                 bundleinputqty.setAttribute('type', 'number');
-                                            //                 bundleinputqty.setAttribute('id', "bqty[</?= $bundle['id'] ?>]");
-                                            //                 bundleinputqty.setAttribute('name', "bqty[</?= $bundle['id'] ?>]");
-                                            //                 bundleinputqty.setAttribute('class', 'uk-input uk-form-width-xsmall');
-                                            //                 bundleinputqty.setAttribute('min', minbstock);
-                                            //                 bundleinputqty.setAttribute('max', bstock);
-                                            //                 bundleinputqty.setAttribute('value', '</?= $bookdet['qty'] ?>');
-                                            //                 bundleinputqty.setAttribute('onchange', 'showbprice()');
-                                                            
-                                            //                 var handleIncrements = () => {
-                                            //                     count++;
-                                            //                     if (bundleinputqty.value == bstock) {
-                                            //                         bundleinputqty.value = bstock;
-                                            //                         count = bstock;
-                                            //                         alert('</?=lang('Global.alertstock')?>');
-                                            //                     } else {
-                                            //                         bundleinputqty.value = count;
-                                            //                         var bprice = count * </?= $BunPrice ?>;
-                                            //                         bundleprice.innerHTML = bprice;
-                                            //                         bundleprice.value = bprice;
-                                            //                     }
-                                            //                 };
-                                                            
-                                            //                 var handleDecrements = () => {
-                                            //                     count--;
-                                            //                     if (bundleinputqty.value == '1') {
-                                            //                         bundleinputqty.value = '0';
-                                            //                         bundleinputqty.remove();
-                                            //                         bundlegrid.remove();
-                                            //                     } else {
-                                            //                         bundleinputqty.value = count;
-                                            //                         var bprice = count * </?= $BunPrice ?>;
-                                            //                         bundleprice.innerHTML = bprice;
-                                            //                     }
-                                            //                 };
-
-                                            //                 bunldeqtyinputadd.addEventListener("click", handleIncrements);
-                                            //                 bundleqtyinputdel.addEventListener("click", handleDecrements);
-
-                                            //                 var bundlenamecontainer = document.createElement('div');
-                                            //                 bundlenamecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-3');
-
-                                            //                 var bundlename = document.createElement('div');
-                                            //                 bundlename.setAttribute('id', 'name</?= $bundle['id'] ?>');
-                                            //                 bundlename.setAttribute('class', 'tm-h2');
-                                            //                 bundlename.innerHTML = '</?= $BunName ?>';
-
-                                            //                 var bpricecontainer = document.createElement('div');
-                                            //                 bpricecontainer.setAttribute('class', 'uk-flex uk-flex-middle uk-width-1-6');
-                                                            
-                                            //                 var bundleprice = document.createElement('div');
-                                            //                 bundleprice.setAttribute('id', 'bprice</?= $bundle['id'] ?>');
-                                            //                 bundleprice.setAttribute('class', 'tm-h2');
-                                            //                 bundleprice.setAttribute('name', 'price[]');
-                                            //                 bundleprice.setAttribute('value', showbprice());
-                                            //                 bundleprice.innerHTML = showbprice();
-
-                                            //                 function showbprice() {
-                                            //                     var bqty = bundleinputqty.value;
-                                            //                     var bprice = bqty * </?= $BunPrice ?>;
-                                            //                     return bprice;
-                                            //                     bundleprice.innerHTML = bprice;
-                                            //                 }
-
-                                            //                 bundleinputqty.onchange = function() {showbprice()};
-
-                                            //                 addbundlecontainer.appendChild(bunldeqtyinputadd);
-                                            //                 bundleqty.appendChild(bundleinputqty);
-                                            //                 bundleqtycontainer.appendChild(bundleqty);
-                                            //                 delbundlecontainer.appendChild(bundleqtyinputdel);
-                                            //                 bundlegrid.appendChild(delbundlecontainer);
-                                            //                 bundlegrid.appendChild(bundleqtycontainer);
-                                            //                 bundlegrid.appendChild(addbundlecontainer);
-                                            //                 bundlenamecontainer.appendChild(bundlename);
-                                            //                 bundlegrid.appendChild(bundlenamecontainer);
-                                            //                 bpricecontainer.appendChild(bundleprice);
-                                            //                 bundlegrid.appendChild(bpricecontainer);
-                                            //                 products.appendChild(bundlegrid);
-                                            //             </?php }
-                                            //         }
-                                            //     } ?>
-                                            //     </?php
-                                            //     $datavar = json_encode($bookqty);
-                                            //     $databund = json_encode($bookbundqty);
-                                            //     ?>
-                                            //     $.ajax({
-                                            //         url: "transaction/restorestock",
-                                            //         type: "POST",    
-                                            //         data: {
-                                            //             bookingid: </?=$book['id']?>,
-                                            //             datavar: </?=$datavar?>,
-                                            //             databund: </?=$databund?>
-                                            //         },
-                                            //         success: function(response) {
-                                            //             console.log(response);
-                                            //         },
-                                            //         error: function(response) {
-                                            //             console.log(response);
-                                            //         }   
-                                            //     });
-                                            // }
-                                        </script> -->
-                                        <!-- Script Booking End -->
-                                    <!-- </?php } ?> -->
-                                <!-- </div>
-                            </div>
-                        </div>
-                    </div> -->
-                    <!-- Modal Booking End -->
                 </div>
             </div>
         </header>
@@ -1450,7 +268,6 @@
                                 <?php endif ?>
                             </ul>
                         </li>
-                        <!-- <li class="tm-main-navbar uk-parent </?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?></?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>"> -->
                         <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='dailysell')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='product')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='category')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='brand')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='presence')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='customer')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='stockcategory')?'uk-active':''?><?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='sop')?'uk-active':''?>">
                             <a class="tm-h3" href=""><img src="img/layout/laporan.svg" uk-svg><?=lang('Global.report');?><span uk-nav-parent-icon></span></a>
                             <ul class="uk-nav-sub">
@@ -1461,9 +278,6 @@
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='penjualan')?'uk-active':''?>">
                                         <a href="<?= base_url('report/penjualan') ?>"><?=lang('Global.salesreport');?></a>
                                     </li>
-                                    <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='keuntungan')?'uk-active':''?>">
-                                        <a href="</?= base_url('report/keuntungan') ?>"></?=lang('Global.profitreport');?></a>
-                                    </li> -->
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='payment')?'uk-active':''?>">
                                         <a href="<?= base_url('report/payment') ?>"><?=lang('Global.paymentreport');?></a>
                                     </li>
@@ -1476,12 +290,6 @@
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='brand')?'uk-active':''?>">
                                         <a href="<?= base_url('report/brand') ?>"><?=lang('Global.brandreport');?></a>
                                     </li>
-                                    <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='bundle')?'uk-active':''?>">
-                                        <a href="</?= base_url('report/bundle') ?>"></?=lang('Global.bundlereport');?></a>
-                                    </li> -->
-                                    <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='diskon')?'uk-active':''?>">
-                                        <a href="</?= base_url('report/diskon') ?>"></?=lang('Global.discountreport');?></a>
-                                    </li> -->
                                 <?php endif ?>
                                 <li class="tm-h4 <?=($uri->getSegment(1)==='report')&&($uri->getSegment(2)==='employe')?'uk-active':''?>">
                                     <a href="<?= base_url('report/employe') ?>"><?=lang('Global.employereport');?></a>
@@ -1522,24 +330,10 @@
                                 </ul>
                             </li>
                         <?php endif ?>
-                        <!-- <li class="tm-main-navbar </?=($uri->getSegment(1)==='topup')?'uk-active':''?>">
-                            <a class="tm-h3" href="</?= base_url('topup') ?>"><img src="img/layout/topup.svg" uk-svg></?=lang('Global.topup');?></a>
-                        </li> -->
                         <?php if (in_groups('owner')) : ?>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='sop')?'uk-active':''?>">
                                 <a class="tm-h3" href="<?= base_url('sop') ?>"><img src="img/layout/sop.svg" uk-svg><?=lang('Global.sop');?></a>
                             </li>
-                            <!-- <li class="tm-main-navbar uk-parent </?=($uri->getSegment(1)==='product')?'uk-active':''?></?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
-                                <a class="tm-h3" href=""><img src="img/layout/product.svg" uk-svg></?=lang('Global.product');?><span uk-nav-parent-icon></span></a>
-                                <ul class="uk-nav-sub">
-                                    <li class="tm-h4 </?=($uri->getSegment(1)==='product')?'uk-active':''?>">
-                                        <a href="</?= base_url('product') ?>"></?=lang('Global.product');?></a>
-                                    </li>
-                                    <li class="tm-h4 </?=($uri->getSegment(1)==='bundle')?'uk-active':''?>">
-                                        <a href="</?= base_url('bundle') ?>"></?=lang('Global.bundle');?></a>
-                                    </li>
-                                </ul>
-                            </li> -->
                         <?php endif ?>
                         <?php if ((in_groups('owner')) || (in_groups('logistik'))) : ?>
                             <li class="tm-main-navbar <?=($uri->getSegment(1)==='product')?'uk-active':''?>">
@@ -1560,7 +354,6 @@
                             </li>
                         <?php endif ?>
                         <?php if (!in_groups('investor')) : ?>
-                            <!-- <li class="tm-main-navbar uk-parent </?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?></?=($uri->getSegment(1)==='stockmove')?'uk-active':''?></?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?></?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>"> -->
                             <li class="tm-main-navbar uk-parent <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='supplier')?'uk-active':''?><?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='purchase')?'uk-active':''?><?=($uri->getSegment(1)==='stockmove')?'uk-active':''?><?=($uri->getSegment(1)==='stockadjustment')?'uk-active':''?><?=($uri->getSegment(1)==='stockopname')?'uk-active':''?>">
                                 <a class="tm-h3" href=""><img src="img/layout/inventori.svg" uk-svg><?=lang('Global.inventory');?><span uk-nav-parent-icon></span></a>
                                 <ul class="uk-nav-sub">
@@ -1582,20 +375,15 @@
                                             <a href="<?= base_url('stockadjustment') ?>"><?=lang('Global.stockAdj');?></a>
                                         </li>
                                     <?php endif ?>
-                                        <!-- <li class="tm-h4 </?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='stockcycle')?'uk-active':''?>">
-                                            <a href="</?= base_url('stock/stockcycle') ?>"></?=lang('Global.stockCycle');?></a>
-                                        </li> -->
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='stock')&&($uri->getSegment(2)==='')?'uk-active':''?>">
                                         <a href="<?= base_url('stock') ?>"><?=lang('Global.stock');?></a>
                                     </li>
                                     <li class="tm-h4 <?=($uri->getSegment(1)==='stockmove')?'uk-active':''?>">
                                         <a href="<?= base_url('stockmove') ?>"><?=lang('Global.stockMove');?></a>
                                     </li>
-                                    <!-- </?php if ((in_groups('owner')) || (in_groups('logistik')) || (in_groups('supervisor'))) : ?> -->
                                         <li class="tm-h4 <?=($uri->getSegment(1)==='stockopname')?'uk-active':''?>">
                                             <a href="<?= base_url('stockopname') ?>">Stock Opname</a>
                                         </li>
-                                    <!-- </?php endif ?> -->
                                 </ul>
                             </li>
                         <?php endif ?>
@@ -1887,17 +675,6 @@
                                     <input type="number" class="uk-input" id="outlet" name="outlet" value="<?= $outid ?>" />
                                 </div>
                             </div>
-
-                            <!-- <div class="uk-margin">
-                                <div class="uk-width-1-1">
-                                    <a class="uk-button uk-button-primary" uk-toggle="#trxproof"></?= lang('Global.trxproof') ?></a>
-                                </div>
-                            </div>
-
-                            <div class="uk-margin" hidden>
-                                <input class="image-tag" name="image">
-                            </div> -->
-
                         </div>
                         <div class="uk-modal-footer" style="border-top: 0;">
                             <div class="uk-margin">
@@ -1917,60 +694,6 @@
             </div>
         </div>
         <!-- Modal Detail Transaction End -->
-
-        <!-- Modal Transaction Proof -->
-        <!-- <div uk-modal class="uk-flex-top" id="trxproof">
-            <div class="uk-modal-dialog uk-margin-auto-vertical">
-                <div class="uk-modal-content">
-                    <div class="uk-modal-header">
-                        <div class="uk-flex uk-flex-middle uk-child-width-auto" uk-grid>
-                            <div class="uk-padding-remove uk-margin-medium-left">
-                                <a class="" uk-icon="arrow-left" uk-toggle="#tambahdata" width="35" height="35"></a>
-                            </div>
-                            <div>
-                                <h5 class="uk-modal-title" ></?=lang('Global.trxproof')?></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-modal-body">
-                        <div class="uk-flex-center uk-child-width-1-1" uk-grid>
-                            <div id="my_camera"></div>
-                            <div class="uk-text-center">
-                                <input class="uk-button uk-button-primary" id="btnTake" type="button" value="Take Snapshot" onClick="take_snapshot()">
-                            </div>
-                            <div class="uk-text-center" id="results"></div>
-                        </div> -->
-
-                        <!-- Script Webcam Trx Proof -->
-                        <!-- <script type="text/javascript">
-                            Webcam.set({
-                                width: 490,
-                                height: 390,
-                                image_format: 'jpeg',
-                                jpeg_quality: 90,
-                                video: {
-                                    facingMode: "environment"
-                                },
-                                constraints: {
-                                    facingMode: 'environment'
-                                }
-                            });
-                        
-                            Webcam.attach( '#my_camera' );
-
-                            function take_snapshot() {
-                                Webcam.snap( function(data_uri) {
-                                    $(".image-tag").val(data_uri);
-                                    document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
-                                } );
-                            }
-                        </script> -->
-                        <!-- Script Webcam Trx Proof End -->
-                    <!-- </div>
-                </div>
-            </div>
-        </div> -->
-        <!-- Modal Transaction Proof End -->
 
         <!-- Main Section -->
         <main role="main">
@@ -2275,28 +998,6 @@
                                                                 productprice.setAttribute('value', showprice());
                                                                 productprice.innerHTML = showprice();
 
-                                                                // const varpricecontainer = document.createElement('div');
-                                                                // varpricecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
-
-                                                                // const varbardiv = document.createElement('div');
-                                                                // varbardiv.setAttribute('class','uk-margin uk-margin-small uk-width-1-2');
-
-                                                                // const varbarlab = document.createElement('label');
-                                                                // varbarlab.setAttribute('class','uk-form-label uk-margin-remove uk-text-bold uk-text-small uk-h4');
-
-                                                                // const varbartext = document.createTextNode("Variant Bargain");
-
-                                                                // const varbarform = document.createElement('div');
-                                                                // varbarform.setAttribute('class','uk-form-controls');
-
-                                                                // const varbargain = document.createElement('input');
-                                                                // varbargain.setAttribute('class', 'uk-input uk-form-width-small');
-                                                                // varbargain.setAttribute('id', 'varbargain'+variant);
-                                                                // varbargain.setAttribute('placeholder', '0');
-                                                                // varbargain.setAttribute('name', 'varbargain['+variant+']');
-                                                                // varbargain.setAttribute('min', "0");
-                                                                // varbargain.setAttribute('type', 'number');
-
                                                                 const varvaluecontainer = document.createElement('div');
                                                                 varvaluecontainer.setAttribute('class', 'uk-margin-small uk-width-1-2');
 
@@ -2317,7 +1018,6 @@
                                                                 varprice.setAttribute('id', 'varprice'+variant);
                                                                 varprice.setAttribute('placeholder', '0');
                                                                 varprice.setAttribute('name', 'varprice['+variant+']');
-                                                                // varprice.setAttribute('value', '0');
                                                                 varprice.setAttribute('type', 'number');
                                                                 varprice.setAttribute('min', '0');
 
@@ -2361,78 +1061,7 @@
 
                                                                 inputqty.onchange = function() {showprice()};
                                                                 inputqty.onchange = function() {handleChangeCount(variant)};
-
-                                                                // varbargain.onchange = function() {VarBargain(variant)};
                                                                 varprice.onchange = function() {VarDisc(variant)};
-
-                                                                // varbargain.onchange = function() {
-                                                                //     var discvar = varprice.value;
-                                                                //     var bargain = varbargain.value;
-
-                                                                //     if (varprice.value) {
-                                                                //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                                //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                                //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                                //             </?php } else { ?>
-                                                                //                 var globaldisc  = (bargain - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                                //             </?php } ?>
-
-                                                                //             var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
-                                                                //         </?php } else { ?>
-                                                                //             var bargainprice = bargain * inputqty.value;
-                                                                //         </?php } ?>
-                                                                //     } else {
-                                                                //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                                //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                                //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                                //             </?php } else { ?>
-                                                                //                 var globaldisc  = bargain * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                                //             </?php } ?>
-
-                                                                //             var bargainprice = (bargain - globaldisc) * inputqty.value;
-                                                                //         </?php } else { ?>
-                                                                //             var bargainprice = bargain * inputqty.value;
-                                                                //         </?php } ?>
-                                                                //     }
-
-                                                                //     if (bargainprice) {
-                                                                //         document.getElementById('price'+variant).innerHTML = bargainprice;
-                                                                //     } else {
-                                                                //         document.getElementById('price'+variant).innerHTML = showprice();
-                                                                //     }
-                                                                // }
-
-                                                                // varprice.onchange = function() {
-                                                                //     if (varbargain.value) {
-                                                                //         var subvalue    = (varbargain.value - varprice.value);
-
-                                                                //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                                //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                                //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                                //             </?php } else { ?>
-                                                                //                 var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                                //             </?php } ?>
-
-                                                                //             document.getElementById('price'+variant).innerHTML = (subvalue - globaldisc) * inputqty.value;
-                                                                //         </?php } else { ?>
-                                                                //             document.getElementById('price'+variant).innerHTML = subvalue * inputqty.value;
-                                                                //         </?php } ?>
-                                                                //     } else {
-                                                                //         var subvalue    = (variantarray[x]['sellprice'] - varprice.value);
-
-                                                                //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                                //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                                //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                                //             </?php } else { ?>
-                                                                //                 var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                                //             </?php } ?>
-
-                                                                //             document.getElementById('price'+variant).innerHTML = (subvalue - globaldisc) * inputqty.value;
-                                                                //         </?php } else { ?>
-                                                                //             document.getElementById('price'+variant).innerHTML = subvalue * inputqty.value;
-                                                                //         </?php } ?>
-                                                                //     }
-                                                                // }
 
                                                                 var sellprice = document.createElement('input');
                                                                 sellprice.setAttribute('id', 'sellprice'+variant);
@@ -2445,11 +1074,6 @@
                                                                 delcontainer.appendChild(productqtyinputdel);
                                                                 pricecontainer.appendChild(productprice);
                                                                 namecontainer.appendChild(productname);
-                                                                // varpricecontainer.appendChild(varbardiv);
-                                                                // varbardiv.appendChild(varbarlab);
-                                                                // varbarlab.appendChild(varbartext);
-                                                                // varbarlab.appendChild(varbarform);
-                                                                // varbarform.appendChild(varbargain);
                                                                 varvaluecontainer.appendChild(varpricediv);
                                                                 varpricediv.appendChild(varpricelab);
                                                                 varpricelab.appendChild(varpricetext);
@@ -2461,7 +1085,6 @@
                                                                 productgrid.appendChild(namecontainer);
                                                                 productgrid.appendChild(pricecontainer);
                                                                 productgrid.appendChild(pricecontainer);
-                                                                // productgrid.appendChild(varpricecontainer);
                                                                 productgrid.appendChild(varvaluecontainer);
                                                                 products.appendChild(sellprice);
                                                                 products.appendChild(productgrid);
@@ -2475,47 +1098,6 @@
                                                     }
                                                 }
                                             };
-
-                                            // function VarBargain(id) {
-                                            //     var inputqty        = document.getElementById('qty['+id+']');
-                                            //     var varbargain      = document.getElementById('varbargain'+id);
-                                            //     var varprice        = document.getElementById('varprice'+id);
-                                            //     var sellprice       = document.getElementById('sellprice'+id);
-                                            //     var productprice    = document.getElementById('price'+id);
-                                            //     var productgrid     = document.getElementById('product'+id);
-
-                                            //     if (varprice.value) {
-                                            //         </?php if ($gconfig['globaldisc'] != '0') {
-                                            //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //             </?php } else { ?>
-                                            //                 var globaldisc  = (bargain - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //             </?php } ?>
-
-                                            //             var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
-                                            //         </?php } else { ?>
-                                            //             var bargainprice = bargain * inputqty.value;
-                                            //         </?php } ?>
-                                            //     } else {
-                                            //         </?php if ($gconfig['globaldisc'] != '0') {
-                                            //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                            //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                            //             </?php } else { ?>
-                                            //                 var globaldisc  = bargain * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                            //             </?php } ?>
-
-                                            //             var bargainprice = (bargain - globaldisc) * inputqty.value;
-                                            //         </?php } else { ?>
-                                            //             var bargainprice = bargain * inputqty.value;
-                                            //         </?php } ?>
-                                            //     }
-
-                                            //     if (bargainprice) {
-                                            //         productprice.innerHTML = bargainprice;
-                                            //     } else {
-                                            //         productprice.innerHTML = showprice();
-                                            //     }
-                                            // }
 
                                             function VarDisc(id) {
                                                 var inputqty        = document.getElementById('qty['+id+']');
@@ -2555,46 +1137,8 @@
 
                                                 var subvalue    = sellprice.value - globaldisc - memberdisc - varprice.value;
                                                 var totalprice  = subvalue * inputqty.value;
-                                                // var totaldisc   = globaldisc + memberdisc;
-                                                // var totalprice  = (subvalue - totaldisc) * inputqty.value;
 
                                                 productprice.innerHTML = totalprice;
-                                                // var inputqty        = document.getElementById('qty['+id+']');
-                                                // // var varbargain      = document.getElementById('varbargain'+id);
-                                                // var varprice        = document.getElementById('varprice'+id);
-                                                // var sellprice       = document.getElementById('sellprice'+id);
-                                                // var productprice    = document.getElementById('price'+id);
-                                                // var productgrid     = document.getElementById('product'+id);
-
-                                                // // if (varbargain.value) {
-                                                // //     var subvalue    = (varbargain.value - varprice.value);
-
-                                                // //     </?php if ($gconfig['globaldisc'] != '0') {
-                                                // //         if ($gconfig['globaldisctype'] == '0') { ?>
-                                                // //             var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                // //         </?php } else { ?>
-                                                // //             var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                // //         </?php } ?>
-
-                                                // //         productprice.innerHTML = (subvalue - globaldisc) * inputqty.value;
-                                                // //     </?php } else { ?>
-                                                // //         productprice.innerHTML = subvalue * inputqty.value;
-                                                // //     </?php } ?>
-                                                // // } else {
-                                                //     var subvalue    = (sellprice.value - varprice.value);
-
-                                                //     </?php if ($gconfig['globaldisc'] != '0') {
-                                                //         if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //             var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //         </?php } else { ?>
-                                                //             var globaldisc  = subvalue * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //         </?php } ?>
-
-                                                //         productprice.innerHTML = (subvalue - globaldisc) * inputqty.value;
-                                                //     </?php } else { ?>
-                                                //         productprice.innerHTML = subvalue * inputqty.value;
-                                                //     </?php } ?>
-                                                // // }
                                             };
 
                                             function handleCount(id, type) {
@@ -2664,171 +1208,6 @@
                                                 var total = finalprice * count;
                                                 productprice.innerHTML  = total;
                                                 productprice.value      = total;
-                                                // var inputqty        = document.getElementById('qty['+id+']');
-                                                // // var varbargain      = document.getElementById('varbargain'+id);
-                                                // var varprice        = document.getElementById('varprice'+id);
-                                                // var sellprice       = document.getElementById('sellprice'+id);
-                                                // var productprice    = document.getElementById('price'+id);
-                                                // var productgrid     = document.getElementById('product'+id);
-                                                // var count           = inputqty.value;
-                                                // var discvar         = varprice.value;
-                                                // if (type == 1) {
-                                                //     count++;
-                                                //     if (inputqty.value == inputqty.getAttribute('max')) {
-                                                //         inputqty.value = inputqty.getAttribute('max');
-                                                //         count = inputqty.getAttribute('max');
-                                                //         alert('</?=lang('Global.alertstock')?>');
-                                                //     } else {
-                                                //         inputqty.value      = count;
-                                                //         // var price           = count * sellprice.value;
-
-                                                //         // var price           = count * sellprice.value;
-                                                //         // var bargainprice    = varbargain.value * inputqty.value;
-
-                                                //         // if (varbargain.value) {
-                                                //         //     if (varprice.value) {
-                                                //         //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                //         //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //         //             </?php } else { ?>
-                                                //         //                 var globaldisc  = (varbargain.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //         //             </?php } ?>
-
-                                                //         //             var bargainprice    = ((varbargain.value - discvar) - globaldisc) * inputqty.value;
-                                                //         //         </?php } else { ?>
-                                                //         //             var bargainprice    = (varbargain.value - discvar) * inputqty.value;
-                                                //         //         </?php } ?>
-                                                //         //     } else {
-                                                //         //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                //         //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //         //             </?php } else { ?>
-                                                //         //                 var globaldisc  = varbargain.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //         //             </?php } ?>
-
-                                                //         //             var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                //         //         </?php } else { ?>
-                                                //         //             var bargainprice    = varbargain.value * inputqty.value;
-                                                //         //         </?php } ?>
-                                                //         //     }
-
-                                                //         //     document.getElementById('price'+id).innerHTML = bargainprice;
-                                                //         // } else {
-                                                //             if (varprice.value) {
-                                                //                 </?php if ($gconfig['globaldisc'] != '0') {
-                                                //                     if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //                     </?php } else { ?>
-                                                //                         var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //                     </?php } ?>
-
-                                                //                     var price           = count * ((sellprice.value - discvar) - globaldisc);
-                                                //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                //                 </?php } else { ?>
-                                                //                     // var bargainprice    = varbargain.value * inputqty.value;
-                                                //                     var price           = count * (sellprice.value - discvar);
-                                                //                 </?php } ?>
-                                                //             } else {
-                                                //                 </?php if ($gconfig['globaldisc'] != '0') {
-                                                //                     if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //                     </?php } else { ?>
-                                                //                         var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //                     </?php } ?>
-
-                                                //                     var price           = count * (sellprice.value - globaldisc);
-                                                //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                //                 </?php } else { ?>
-                                                //                     // var bargainprice    = varbargain.value * inputqty.value;
-                                                //                     var price           = count * sellprice.value;
-                                                //                 </?php } ?>
-                                                //             }
-
-                                                //             productprice.innerHTML = price;
-                                                //             productprice.value = price;
-                                                //         // }
-                                                //     }
-                                                // } else if (type == 0) {
-                                                //     count--;
-                                                //     if (inputqty.value == '1') {
-                                                //         inputqty.value = '0';
-                                                //         inputqty.remove();                                                                                                
-                                                //         productgrid.remove();
-                                                //     } else {
-                                                //         inputqty.value  = count;
-                                                //         // var price       = count * sellprice.value;
-
-                                                //         // var price = count * sellprice.value;
-                                                //         // var bargainprice = varbargain.value * inputqty.value;
-
-                                                //         // if (varbargain.value) {
-                                                //         //     if (varprice.value) {
-                                                //         //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                //         //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //         //             </?php } else { ?>
-                                                //         //                 var globaldisc  = (varbargain.value - discvar) * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                                //         //             </?php } ?>
-
-                                                //         //             // var price           = count * (sellprice.value - globaldisc);
-                                                //         //             var bargainprice    = (varbargain.value - discvar) * inputqty.value;
-                                                //         //         </?php } else { ?>
-                                                //         //             var bargainprice    = (varbargain.value - discvar) * inputqty.value;
-                                                //         //             // var price           = count * sellprice.value;
-                                                //         //         </?php } ?>
-                                                //         //     } else {
-                                                //         //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                //         //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //         //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //         //             </?php } else { ?>
-                                                //         //                 var globaldisc  = varbargain.value * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                                //         //             </?php } ?>
-
-                                                //         //             // var price           = count * (sellprice.value - globaldisc);
-                                                //         //             var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                //         //         </?php } else { ?>
-                                                //         //             var bargainprice    = varbargain.value * inputqty.value;
-                                                //         //             // var price           = count * sellprice.value;
-                                                //         //         </?php } ?>
-                                                //         //     }
-                                                //         //     document.getElementById('price'+id).innerHTML = bargainprice;
-                                                //         // }
-                                                //         // else {
-                                                //             if (varprice.value) {
-                                                //                 </?php if ($gconfig['globaldisc'] != '0') {
-                                                //                     if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //                     </?php } else { ?>
-                                                //                         var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                                //                     </?php } ?>
-
-                                                //                     var price           = count * ((sellprice.value - discvar) - globaldisc);
-                                                //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                //                 </?php } else { ?>
-                                                //                     // var bargainprice    = varbargain.value * inputqty.value;
-                                                //                     var price           = count * (sellprice.value - discvar);
-                                                //                 </?php } ?>
-                                                //             } else {
-                                                //                 </?php if ($gconfig['globaldisc'] != '0') {
-                                                //                     if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //                         var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //                     </?php } else { ?>
-                                                //                         var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                                //                     </?php } ?>
-
-                                                //                     var price           = count * (sellprice.value - globaldisc);
-                                                //                     // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                //                 </?php } else { ?>
-                                                //                     // var bargainprice    = varbargain.value * inputqty.value;
-                                                //                     var price           = count * sellprice.value;
-                                                //                 </?php } ?>
-                                                //             }
-                                                            
-                                                //             productprice.innerHTML = price;
-                                                //             productprice.value = price;
-                                                //         // }
-                                                //     }
-                                                // }
                                             };
 
                                             function handleChangeCount(id) {
@@ -2888,168 +1267,6 @@
                                                 var total = finalprice * count;
                                                 productprice.innerHTML = total;
                                                 productprice.value = total;
-                                                // var inputqty        = document.getElementById('qty['+id+']');
-                                                // // var varbargain      = document.getElementById('varbargain'+id);
-                                                // var varprice        = document.getElementById('varprice'+id);
-                                                // var sellprice       = document.getElementById('sellprice'+id);
-                                                // var productprice    = document.getElementById('price'+id);
-                                                // var productgrid     = document.getElementById('product'+id);
-                                                // // var bargain         = varbargain.value;
-                                                // var discvar         = varprice.value;
-
-                                                // if (inputqty.value > inputqty.getAttribute('max')) {
-                                                //     inputqty.value = inputqty.getAttribute('max');
-                                                //     alert('</?=lang('Global.alertstock')?>');
-
-                                                //     // var bargainprice = varbargain.value * inputqty.value;
-
-                                                //     // if (varbargain.value) {
-                                                //     //     if (varprice.value) {
-                                                //     //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                //     //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //     //             </?php } else { ?>
-                                                //     //                 var globaldisc  = (bargain - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //     //             </?php } ?>
-
-                                                //     //             var bargainprice = ((bargain - discvar) - globaldisc) * inputqty.value;
-                                                //     //         </?php } else { ?>
-                                                //     //             var bargainprice = (bargain - discvar) * inputqty.value;
-                                                //     //         </?php } ?>
-                                                //     //     } else {
-                                                //     //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                //     //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //     //             </?php } else { ?>
-                                                //     //                 var globaldisc  = bargain * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //     //             </?php } ?>
-
-                                                //     //             var bargainprice = (bargain - globaldisc) * inputqty.value;
-                                                //     //         </?php } else { ?>
-                                                //     //             var bargainprice = bargain * inputqty.value;
-                                                //     //         </?php } ?>
-                                                //     //     }
-                                                //     //     document.getElementById('price'+id).innerHTML = bargainprice;
-                                                //     // } else {
-                                                //         if (varprice.value) {
-                                                //             </?php if ($gconfig['globaldisc'] != '0') {
-                                                //                 if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //                 </?php } else { ?>
-                                                //                     var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                                //                 </?php } ?>
-
-                                                //                 var price           = count * ((sellprice.value - discvar) - globaldisc);
-                                                //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                //             </?php } else { ?>
-                                                //                 // var bargainprice    = varbargain.value * inputqty.value;
-                                                //                 var price           = count * (sellprice.value - discvar);
-                                                //             </?php } ?>
-                                                //         } else {
-                                                //             </?php if ($gconfig['globaldisc'] != '0') {
-                                                //                 if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //                 </?php } else { ?>
-                                                //                     var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc']  / 100) ?>;
-                                                //                 </?php } ?>
-
-                                                //                 var price           = count * (sellprice.value - globaldisc);
-                                                //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                //             </?php } else { ?>
-                                                //                 // var bargainprice    = varbargain.value * inputqty.value;
-                                                //                 var price           = count * sellprice.value;
-                                                //             </?php } ?>
-                                                //         }
-                                                        
-                                                //         productprice.innerHTML = price;
-                                                //         productprice.value = price;
-                                                        
-                                                //         // if (varprice.value) {
-                                                //         //     productprice.innerHTML = price - discvar;
-                                                //         //     productprice.value = price - discvar;
-                                                //         // } else {
-                                                //         //     productprice.innerHTML = price;
-                                                //         //     productprice.value = price;
-                                                //         // }
-                                                //     // }
-                                                // } else if (inputqty.value < 1) {
-                                                //     inputqty.value = '0';
-                                                //     inputqty.remove();
-                                                //     productgrid.remove();
-                                                // } else {
-                                                //     // var price = count * sellprice.value;
-                                                //     // var bargainprice = varbargain.value * inputqty.value;
-
-                                                //     // if(varbargain.value) {
-                                                //     //     if (varprice.value) {
-                                                //     //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                //     //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //     //             </?php } else { ?>
-                                                //     //                 var globaldisc  = (varbargain.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //     //             </?php } ?>
-
-                                                //     //             var bargainprice = ((varbargain.value - discvar) - globaldisc) * inputqty.value;
-                                                //     //         </?php } else { ?>
-                                                //     //             var bargainprice = (varbargain.value - discvar) * inputqty.value;
-                                                //     //         </?php } ?>
-                                                //     //     } else {
-                                                //     //         </?php if ($gconfig['globaldisc'] != '0') {
-                                                //     //             if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //     //                 var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //     //             </?php } else { ?>
-                                                //     //                 var globaldisc  = varbargain.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //     //             </?php } ?>
-
-                                                //     //             var bargainprice = (varbargain.value - globaldisc) * inputqty.value;
-                                                //     //         </?php } else { ?>
-                                                //     //             var bargainprice = varbargain.value * inputqty.value;
-                                                //     //         </?php } ?>
-                                                //     //     }
-                                                //     //     document.getElementById('price'+id).innerHTML = bargainprice;
-                                                //     // } else {
-                                                //         if (varprice.value) {
-                                                //             </?php if ($gconfig['globaldisc'] != '0') {
-                                                //                 if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //                 </?php } else { ?>
-                                                //                     var globaldisc  = (sellprice.value - discvar) * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //                 </?php } ?>
-
-                                                //                 var price           = count * ((sellprice.value - discvar) - globaldisc);
-                                                //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                //             </?php } else { ?>
-                                                //                 var price           = count * (sellprice.value - discvar);
-                                                //                 // var bargainprice    = varbargain.value * inputqty.value;
-                                                //             </?php } ?>
-                                                //         } else {
-                                                //             </?php if ($gconfig['globaldisc'] != '0') {
-                                                //                 if ($gconfig['globaldisctype'] == '0') { ?>
-                                                //                     var globaldisc  = </?= $gconfig['globaldisc'] ?>;
-                                                //                 </?php } else { ?>
-                                                //                     var globaldisc  = sellprice.value * </?= ((Int)$gconfig['globaldisc'] / 100) ?>;
-                                                //                 </?php } ?>
-
-                                                //                 var price           = count * (sellprice.value - globaldisc);
-                                                //                 // var bargainprice    = (varbargain.value - globaldisc) * inputqty.value;
-                                                //             </?php } else { ?>
-                                                //                 var price           = count * sellprice.value;
-                                                //                 // var bargainprice    = varbargain.value * inputqty.value;
-                                                //             </?php } ?>
-                                                //         }
-
-                                                //         productprice.innerHTML = price;
-                                                //         productprice.value = price;
-
-                                                //         // if (varprice.value) {
-                                                //         //     productprice.innerHTML = (price - discavr);
-                                                //         //     productprice.value = (price - discavr);
-                                                //         // } else {
-                                                //         //     productprice.innerHTML = price;
-                                                //         //     productprice.value = price;
-                                                //         // }
-                                                //     // }
-                                                // }
                                             };
 
                                             function applyMemberDiscountToAll(id) {
@@ -3246,38 +1463,6 @@
                                         </div>
                                         <div class="uk-child-width-1-3 uk-child-width-1-5@l" uk-grid uk-height-match="target: > div > .uk-card > .uk-card-header">
                                             <?php foreach ($bundles as $bundle) {
-                                                // $BunName        = $bundle['name'];
-                                                // $originalPrice  = (int)$bundle['price'];
-
-                                                // // Global Discount
-                                                // if ($gconfig['globaldisc'] != '0') {
-                                                //     if ($gconfig['globaldisctype'] == '0') {
-                                                //         $globaldisc = (int)$gconfig['globaldisc'];
-                                                //     } else {
-                                                //         $globaldisc = $originalPrice * ((int)$gconfig['globaldisc'] / 100);
-                                                //     }
-                                                // } else {
-                                                //     $globaldisc = 0;
-                                                // }
-
-                                                // // Member Discount
-                                                // if ($gconfig['memberdisc'] != '0') {
-                                                //     if ($gconfig['memberdisctype'] == '0') {
-                                                //         $memberdisc = (int)$gconfig['memberdisc'];
-                                                //     } else {
-                                                //         $memberdisc = $originalPrice * ((int)$gconfig['memberdisc'] / 100);
-                                                //     }
-
-                                                //     // Validate Max Member Discount
-                                                //     if ($memberdisc > (int)$gconfig['maxmemberdisc']) {
-                                                //         $memberdisc = (int)$gconfig['maxmemberdisc'];
-                                                //     }
-                                                // } else {
-                                                //     $memberdisc = 0;
-                                                // }
-
-                                                // // Final Price Bundle
-                                                // $BunPrice = $originalPrice - $globaldisc - $memberdisc;
 
                                                 $BunName = $bundle['name'];
                                                 if ($gconfig['globaldisc'] != '0') {
@@ -3499,7 +1684,6 @@
             var disctypeval = 0;
             var discount = 0;
             var poin = 0;
-            // var memberdisc = 0;
             var min = 0;
 
             let subtotalobserve = new MutationObserver(mutationRecords => {
@@ -3517,36 +1701,6 @@
                     var subtotal = subarr.reduce(function(a, b){ return a + b; });
                     document.getElementById('subtotal').innerHTML = subtotal;
                 }
-                
-                // $(document).ready(function() {
-                //     $("#pay").click(function () {
-                //         $('#order').attr('action', "/pay/create");
-                //         $('#order').trigger('submit');
-                //     });
-
-                //     $("#order").on("submit", function (e) {
-                //         const isValid = $("#customerid").attr("data-valid");
-
-                //         if (isValid !== "1") {
-                //             e.preventDefault();
-                //             alert("Silakan pilih pelanggan dari daftar yang muncul.");
-                //             $("#customername").addClass("uk-form-danger");
-                //             return false;
-                //         }
-
-                //         const debt      = parseFloat(document.getElementById('debt').value) || 0;
-                //         const duedate   = document.getElementById('duedate').value;
-
-                //         if (debt > 0 && duedate.trim() === '') {
-                //             e.preventDefault();
-                //             alert("Karena pembayaran belum lunas, silakan isi tanggal jatuh tempo.");
-                //             document.getElementById('duedate').focus();
-                //             return false;
-                //         }
-
-                //         $("#customername").removeClass("uk-form-danger");
-                //     });
-                // });
             });
 
             let totalobserve = new MutationObserver(totalcount);
@@ -3610,7 +1764,6 @@
                 var tax = (<?=(int)$gconfig['ppn']?>/100)*subtotal;
                 
                 // Count Total Price
-                // var totalprice = subtotal - discount - memberdisc - poin;
                 var totalprice = subtotal - discount - poin;
 
                 // Tax
@@ -3621,14 +1774,11 @@
 
                 // Pay button
                 var buttonpay = document.getElementById('pay');
-                // var buttonsave = document.getElementById('save');
                 if (paidprice >= 0) {
                     buttonpay.removeAttribute('disabled');
-                    // buttonsave.removeAttribute('disabled', '');
                     var printprice = paidprice;
                 } else {
                     buttonpay.setAttribute('disabled', '');
-                    // buttonsave.setAttribute('disabled', '');
                     var printprice = "Sorry Price To Low!";
                 }
 
@@ -3850,6 +2000,24 @@
                 $(form).attr('action', actionUrl);
                 form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
             }
+
+            // Auto-refresh: poll store status every 60 seconds (only when POS is active)
+            <?php if ($outletPick !== null && !empty($dailyreport) && empty($closed)) { ?>
+            (function startStoreHeartbeat() {
+                const checkStatus = function () {
+                    fetch('transaction/status')
+                        .then(function (res) { return res.json(); })
+                        .then(function (data) {
+                            if (!data.status) {
+                                location.reload();
+                            }
+                        })
+                        .catch(function () {});
+                };
+                checkStatus();
+                setInterval(checkStatus, 60000);
+            })();
+            <?php } ?>
         </script>
     </body>
 </html>
