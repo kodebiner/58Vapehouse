@@ -349,9 +349,15 @@ class StockMovement extends BaseController
         // Save Data Stock Movement
         $StockmovementModel->save($data);
 
+        // Get existing detail IDs for cleanup
+        $existingDetails = $StockMoveDetailModel->where('stockmoveid', $id)->findAll();
+        $existingIds = array_column($existingDetails, 'id');
+
         // Stock Movement Detail
+        $submittedIds = [];
         if (isset($input['totalpcs'])) {
             foreach ($input['totalpcs'] as $smdetid => $value) {
+                $submittedIds[] = $smdetid;
                 if ($value == "0") {
                     $StockMoveDetailModel->delete($smdetid);
                 } else {
@@ -362,6 +368,12 @@ class StockMovement extends BaseController
                     $StockMoveDetailModel->save($datadetail);
                 }
             }
+        }
+
+        // Delete details that were removed from the DOM (value set to 0 and row removed)
+        $toDelete = array_diff($existingIds, $submittedIds);
+        if (!empty($toDelete)) {
+            $StockMoveDetailModel->delete($toDelete);
         }
 
         if (isset($input['addtotalpcs'])) {

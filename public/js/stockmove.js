@@ -60,7 +60,7 @@ var StockMoveApp = (function($) {
         var v = findVariant(createVariantData, varId);
         if (!v) return;
         if (v.qty === '0' || v.qty === 0) { alert(window.alertStock); return; }
-        if ($('#product' + v.id).length) { alert(window.alertReadyAdd); return; }
+        if ($('#tableproduct').find('[data-var-id="' + v.id + '"]').length) { alert(window.alertReadyAdd); return; }
         addProductRow(v, 'tableproduct', '', 'totalpcs');
         $('#productname').val('');
     }
@@ -105,7 +105,7 @@ var StockMoveApp = (function($) {
         if (!variants) return;
         var v = findVariant(variants, varId);
         if (!v) return;
-        if ($('#editdata' + smId).find('[data-var-id="' + varId + '"]').length) {
+        if ($('#editdata' + smId).find('[data-var-id="' + varId + '"]:not(.js-add-variant-edit)').length) {
             alert(window.alertReadyAdd);
             return;
         }
