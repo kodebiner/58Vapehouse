@@ -749,7 +749,7 @@
     <!-- Search Engine -->
     <div class="uk-margin-medium-bottom">
         <form action="product" method="GET">
-            <div class="uk-child-width-1-1 uk-child-width-1-5@m uk-flex-middle" uk-grid>
+            <div class="uk-child-width-1-auto uk-child-width-1-6@m uk-flex-middle" uk-grid>
                 <div class="uk-text-right@l uk-margin-small-top">
                     <div class="uk-search uk-search-default uk-width-1-1">
                         <span class="uk-form-icon" uk-icon="icon: search" style="color: #000;"></span>
@@ -777,6 +777,13 @@
                         <option value="" <?= ((isset($input['status'])) && ($input['status'] == '')) ? 'selected' : '' ?>>Status</option>
                         <option value="0" <?= ((isset($input['status'])) && ($input['status'] == '0')) ? 'selected' : '' ?>>Tidak Aktif</option>
                         <option value="1" <?= ((isset($input['status'])) && ($input['status'] == '1')) ? 'selected' : '' ?>>Aktif</option>
+                    </select>
+                </div>
+                <div class="uk-margin-small-top">
+                    <select class="uk-select" id="filterarchived" name="is_archived" style="border-radius: 5px; border-style: solid;">
+                        <option value="" <?= ((isset($input['is_archived'])) && ($input['is_archived'] == '')) ? 'selected' : '' ?>>Arsip</option>
+                        <option value="0" <?= ((isset($input['is_archived'])) && ($input['is_archived'] == '0')) ? 'selected' : '' ?>>Tidak Diarsipkan</option>
+                        <option value="1" <?= ((isset($input['is_archived'])) && ($input['is_archived'] == '1')) ? 'selected' : '' ?>>Diarsipkan</option>
                     </select>
                 </div>
                 <div class="uk-text-center">
@@ -851,7 +858,9 @@
                         </form>
                     </td>
                     <td>
-                        <?php if ($product['status'] != '0') { ?>
+                        <?php if ($product['is_archived'] == '1') { ?>
+                            <div><?= $product['name'] ?> <span style="font-size: 10px; padding: 2px 6px; background: #e5e5e5; border-radius: 3px; color: #999;">Arsip</span></div>
+                        <?php } elseif ($product['status'] != '0') { ?>
                             <div><?= $product['name']; ?></div>
                         <?php } else { ?>
                             <div style="text-decoration: line-through"><?= $product['name'] ?></div>
@@ -947,55 +956,6 @@
                         }
                         ?>
                     </td>
-                    <!-- <td>
-                        </?php
-                        $formatday  = [];
-                        $hasQtyZero = false; // track if any matching stock has qty=0
-                        foreach ($stocks as $stock) {
-                            foreach ($variants as $variant) {
-                                // Check if this stock item matches the product and variant and outlet conditions
-                                $matchesProduct = ($variant['productid'] == $product['id']);
-                                $matchesVariant = ($stock['variantid'] == $variant['id']);
-                                $matchesOutlet  = ($outletPick === null) ? true: ($stock['outletid'] == $outletPick);
-                                if ($matchesProduct && $matchesVariant && $matchesOutlet) {
-                                    if ($stock['qty']   == 0) {
-                                        // Stock qty is zero for this variant/product/outlet
-                                        $hasQtyZero = true;
-                                    }
-                                    else {
-                                        // Check if restock date is valid
-                                        $restockDate    = $stock['restock'];
-                                        if ($restockDate !== null && $restockDate !== '0000-00-00 00:00:00' && $restockDate !== '') {
-                                            $origin         = new DateTime($restockDate);
-                                            $target         = new DateTime('now');
-                                            $interval       = $origin->diff($target); // Store the absolute day difference as string
-                                            $formatday[]    = substr($interval->format('%R%a'), 1);
-                                        } // If date invalid, skip this entry silently (do not add '-')
-                                    }
-                                }
-                            }
-                        }
-
-                        // Now decide what to display
-                        if (!empty($formatday)) {
-                            // We have valid days to display
-                            echo min($formatday) . ' ' . lang('Global.day');
-                        }
-
-                        else {
-                            // No valid days found
-                            if ($hasQtyZero) {
-                                // If there are stocks with qty=0, show '-'
-                                echo '-';
-                            }
-                            else {
-                                // Otherwise, no matching stocks or no dates -> also show '-'
-                                echo '-';
-                            }
-                        }
-
-                        ?>
-                    </td> -->
                     <?php if (in_groups('owner')) : ?>
                         <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                             <!-- Button Trigger Modal Edit -->
@@ -1003,6 +963,12 @@
                                 <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $product['id'] ?>"></a>
                             </div>
                             <!-- End Of Button Trigger Modal Edit -->
+
+                            <!-- Button Archive -->
+                            <div>
+                                <a class="uk-icon-button-warning" uk-icon="folder" href="product/archive/<?= $product['id'] ?>" onclick="return confirm('<?= $product['is_archived'] == '1' ? lang('Global.unarchive') : lang('Global.archive') ?> produk ini?')"></a>
+                            </div>
+                            <!-- End Of Button Archive -->
 
                             <!-- Button Delete -->
                             <div>

@@ -77,156 +77,14 @@ class Product extends BaseController
 
         // Populating Data
         $input      = $this->request->getGet();
-        // if (!empty($input['search']) && empty($input['category'])) {
-        //     $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // } elseif (empty($input['search']) && !empty($input['category'])) {
-        //     $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // } elseif (!empty($input['search']) && !empty($input['category'])) {
-        //     $products   = $ProductModel->where('catid', $input['category'])->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // } else {
-        //     $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        
-        // if (!empty($input['search'])) {
-        //     if (!empty($input['category'])) {
-        //         if (!empty($input['brand'])) {
-        //             $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        //         } else {
-        //             $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        //         }
-        //     } else {
-        //         $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        //     }
-        // } else {
-        //     $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-
-        // if (!empty($input['category'])) {
-        //     if (!empty($input['brand'])) {
-        //         if (!empty($input['search'])) {
-        //             $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        //         } else {
-        //             $products   = $ProductModel->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        //         }
-        //     } else {
-        //         $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        //     }
-        // } else {
-        //     $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-
-        // if (!empty($input['brand'])) {
-        //     if (!empty($input['category'])) {
-        //         if (!empty($input['search'])) {
-        //             $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        //         } else {
-        //             $products   = $ProductModel->where('brandid', $input['brand'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        //         }
-        //     } else {
-        //         $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        //     }
-        // } else {
-        //     $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        
-        // if (!empty($input['category'])) {
-        //     $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // } if (!empty($input['brand'])) {
-        //     $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // } else {
-        //     $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-
-        // if ((!empty($input['search'])) && (!empty($input['category'])) && (!empty($input['brand'])) && (isset($input['status']))) {
-        //     $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->where('brandid', $input['brand'])->where('status', $input['status'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // elseif ((!empty($input['search'])) && (!empty($input['category']))) {
-        //     $products   = $ProductModel->like('name', $input['search'])->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // elseif ((!empty($input['search'])) && (!empty($input['brand']))) {
-        //     $products   = $ProductModel->like('name', $input['search'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // elseif ((!empty($input['search'])) && (isset($input['status']))) {
-        //     $products   = $ProductModel->like('name', $input['search'])->where('status', $input['status'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // elseif ((!empty($input['category'])) && (!empty($input['brand']))) {
-        //     $products   = $ProductModel->where('catid', $input['category'])->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // elseif ((!empty($input['category'])) && (isset($input['status']))) {
-        //     $products   = $ProductModel->where('catid', $input['category'])->where('status', $input['status'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // elseif ((!empty($input['brand'])) && (isset($input['status']))) {
-        //     $products   = $ProductModel->where('brandid', $input['brand'])->where('status', $input['status'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // elseif (!empty($input['search'])) {
-        //     $products   = $ProductModel->like('name', $input['search'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // elseif (!empty($input['category'])) {
-        //     $products   = $ProductModel->where('catid', $input['category'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // elseif (!empty($input['brand'])) {
-        //     $products   = $ProductModel->where('brandid', $input['brand'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // elseif (isset($input['status'])) {
-        //     $products   = $ProductModel->where('status', $input['status'])->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-        // else {
-        //     $products   = $ProductModel->orderBy('id', 'DESC')->paginate(20, 'product');
-        // }
-
-        // $productdata    = [];
-        // if (!empty($products)) {
-        //     foreach ($products as $product) {
-        //         $variants   = $VariantModel->where('productid', $product['id'])->find();
-        //         $category   = $CategoryModel->find($product['catid']);
-        //         $brand      = $BrandModel->find($product['brandid']);
-
-        //         $productdata[$product['id']]['id']          = $product['id'];
-        //         $productdata[$product['id']]['favorite']    = $product['favorite'];
-        //         $productdata[$product['id']]['name']        = $product['name'];
-        //         $productdata[$product['id']]['photo']       = $product['photo'];
-        //         $productdata[$product['id']]['thumbnail']   = $product['thumbnail'];
-        //         $productdata[$product['id']]['link']        = $product['link'];
-
-        //         if (!empty($brand)) {
-        //             $productdata[$product['id']]['brand']       = $brand['name'];
-        //         } else {
-        //             $productdata[$product['id']]['brand']       = 'Tidak Ada Brand';
-        //         }
-
-        //         if (!empty($category)) {
-        //             $productdata[$product['id']]['category']    = $category['name'];
-        //         } else {
-        //             $productdata[$product['id']]['category']    = 'Tidak Ada Kategori';
-        //         }
-
-        //         // if (!empty($variants)) {
-        //         //     $productdata[$product['id']]['price']       = "Rp " . number_format(($variants['hargamodal'] + $variants['hargajual']), 2, ',', '.');
-
-        //         //     $stocks     = $StockModel->where('variantid', $variants['id'])->find();
-        //         // } else {
-        //         //     $productdata[$product['id']]['price']       = "Rp 0";
-        //         // }
-
-        //         if (!empty($variants)) {
-        //             $countvar = array_count_values(array_column($variants, 'productid'))[$product['id']];
-        //         } else {
-        //             $countvar = 0;
-        //         }
-
-        //         if ($countvar > 1) {
-        //             $productdata[$product['id']]['price']       = $countvar . ' ' . lang('Global.variant');
-        //         } elseif ($countvar == 1) {
-        //             foreach ($variants as $variant) {
-        //                 $productdata[$product['id']]['price']   = "Rp " . number_format(($variant['hargamodal'] + $variant['hargajual']), 2, ',', '.');
-        //             }
-        //         } else {
-        //             echo '0';
-        //         }
-        //     }
-        // }
 
         $query = $ProductModel->orderBy('id', 'DESC');
+
+        // Archive filter: default exclude archived, show all if explicitly requested
+        if (isset($input['is_archived']) && $input['is_archived'] !== '') {
+            $query->where('is_archived', (int)$input['is_archived']);
+        }
+
         if (!empty($input['search'])) {
             $query->like('name', $input['search']);
         }
@@ -264,9 +122,6 @@ class Product extends BaseController
         foreach ($variant as $var) {
             $variantid[] = $var['id'];
         }
-
-        // $productchart = $ProductModel->findAll();
-        // $variantchart = $VariantModel->findAll();
 
         $totalcap       = array();
         $totalbase      = array();
@@ -983,6 +838,24 @@ class Product extends BaseController
 
         $ProductModel->save($data);
         die(json_encode(array($input)));
+    }
+
+    public function archive($id)
+    {
+        $ProductModel = new ProductModel();
+        $product = $ProductModel->find($id);
+
+        if ($product) {
+            $newStatus = $product['is_archived'] ? 0 : 1;
+            $ProductModel->save([
+                'id' => $id,
+                'is_archived' => $newStatus,
+            ]);
+            $msg = $newStatus ? lang('Global.archived') : lang('Global.unarchived');
+            return redirect()->back()->with('message', $msg);
+        }
+
+        return redirect()->back()->with('error', 'Product not found');
     }
 
     // public function history($id)

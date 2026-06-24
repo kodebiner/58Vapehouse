@@ -394,4 +394,9 @@ return [
     'userProfileDesc'           => 'Information about your profile',
     'businessInfoDesc'          => 'Information about your business',
     'accountancyDesc'           => 'Your business accounting management',
+    'archived'                  => 'Product has been archived',
+    'unarchived'                => 'Product has been unarchived',
+    'archive'                   => 'Archive',
+    'unarchive'                 => 'Unarchive',
+    'archivedFilter'            => 'Archived',
 ];

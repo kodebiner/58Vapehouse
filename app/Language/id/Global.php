@@ -394,4 +394,9 @@ return [
     'userProfileDesc'           => 'Informasi mengenai profil anda',
     'businessInfoDesc'          => 'Informasi mengenai bisnis anda',
     'accountancyDesc'           => 'Manajemen akuntansi bisnis anda',
+    'archived'                  => 'Produk sudah diarsipkan',
+    'unarchived'                => 'Produk sudah dikembalikan dari arsip',
+    'archive'                   => 'Arsipkan',
+    'unarchive'                 => 'Aktifkan Kembali',
+    'archivedFilter'            => 'Diarsipkan',
 ];

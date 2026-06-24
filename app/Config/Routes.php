@@ -134,6 +134,7 @@ $routes->group('product', ['filter'=>'login'], function($routes){
     $routes->post('create', 'Product::create', ['filter' => 'role:owner,supervisor,logistik']);
     $routes->get('edit(:num)', 'Product::edit/$1', ['filter' => 'role:owner,supervisor,logistik']);
     $routes->post('update/(:num)', 'Product::update/$1', ['filter' => 'role:owner,supervisor,logistik']);
+    $routes->get('archive/(:num)', 'Product::archive/$1', ['filter' => 'role:owner,supervisor,logistik']);
     $routes->get('delete/(:num)', 'Product::delete/$1', ['filter' => 'role:owner,supervisor,logistik']);
 
     // category

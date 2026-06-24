@@ -50,7 +50,7 @@ class export extends BaseController
         $StockModel     = new StockModel();
 
         // Populating Data
-        $products   = $ProductModel->findAll();
+        $products   = $ProductModel->where('is_archived', '0')->findAll();
 
         if ($this->data['outletPick'] === null) {
             $bizzadd        = "All Outlets";
