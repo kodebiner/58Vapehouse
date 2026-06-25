@@ -447,7 +447,7 @@ class Stock extends BaseController
             $detailBuilder->join('stock', 'stock.variantid = variant.id AND stock.outletid = purchase.outletid', 'left');
 
             $allDetails = array();
-            $detailBuilder->whereIn('purchasedetail.purchaseid', $purchaseIds);
+            $detailBuilder->whereIn('purchasedetail.purchaseid', $purchaseIds)->orderBy('id', 'ASC');
             $allDetails = $detailBuilder->get()->getResultArray();
 
             $detailsByPurchase = array();
@@ -790,7 +790,7 @@ class Stock extends BaseController
 
         $purchasedata               = array();
         if (!empty($purchase)) {
-            $purchasedetails        = $PurchasedetailModel->where('purchaseid', $purchase['id'])->find();
+            $purchasedetails        = $PurchasedetailModel->where('purchaseid', $purchase['id'])->orderBy('id', 'ASC')->find();
             $purchaseoutlet         = $OutletModel->find($purchase['outletid']);
             $purchasesupplier       = $SupplierModel->find($purchase['supplierid']);
             $purchaseuser           = $UserModel->find($purchase['userid']);
