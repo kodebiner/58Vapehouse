@@ -268,6 +268,8 @@ var StockMoveApp = (function($) {
             else { inp.value = val + 1; }
             recalc();
         });
+
+        recalc();
     }
 
     // ============================================================

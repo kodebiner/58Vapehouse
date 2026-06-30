@@ -62,145 +62,6 @@ class Stock extends BaseController
         return view('Views/stock', $data);
     }
 
-    // public function index()
-    // {
-    //     $pager      = \Config\Services::pager();
-    //     $db         = \Config\Database::connect();
-
-    //     // Calling Model
-    //     $StockModel     = new StockModel;
-    //     $VariantModel   = new VariantModel;
-    //     $ProductModel   = new ProductModel;
-    //     $OutletModel    = new OutletModel;
-
-    //     // Populating Data
-    //     $input      = $this->request->getGet();
-    //     if (!empty($input['search'])) {
-    //         $products   = $ProductModel->like('name', $input['search'])->find();
-    //     } else {
-    //         $products   = $ProductModel->findAll();
-    //     }
-
-    //     $stockdata  = [];
-    //     if (!empty($products)) {
-    //         foreach ($products as $product) {
-    //             $variants   = $VariantModel->where('productid', $product['id'])->find();
-    //             if (!empty($variants)) {
-    //                 foreach ($variants as $variant) {
-    //                     if ($this->data['outletPick'] === null) {
-    //                         $stocks         = $StockModel->where('variantid', $variant['id'])->find();
-    //                         // $stockcount     = count($StockModel->where('variantid', $variant['id'])->find());
-    //                         // $totalstock     = array_sum(array_column($StockModel->where('variantid', $variant['id'])->find(), 'qty'));
-    //                     } else {
-    //                         $stocks         = $StockModel->where('variantid', $variant['id'])->where('outletid', $this->data['outletPick'])->find();
-    //                         // $stockcount     = count($StockModel->where('variantid', $variant['id'])->where('outletid', $this->data['outletPick'])->find());
-    //                         // $totalstock     = array_sum(array_column($StockModel->where('variantid', $variant['id'])->where('outletid', $this->data['outletPick'])->find(), 'qty'));
-    //                     }
-
-    //                     if (!empty($stocks)) {
-    //                         foreach ($stocks as $stock) {
-    //                             $outlet     = $OutletModel->find($stock['outletid']);
-
-    //                             $stockdata[$stock['id']]['id']          = $variant['id'];
-    //                             $stockdata[$stock['id']]['outlet']      = $outlet['name'];
-    //                             $stockdata[$stock['id']]['name']        = $product['name'].' - '.$variant['name'];
-    //                             $stockdata[$stock['id']]['qty']         = $stock['qty'];
-    //                             $stockdata[$stock['id']]['price']       = $variant['hargamodal'];
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     array_multisort(array_column($stockdata, 'id'), SORT_DESC, $stockdata);
-
-    //     $totalcap       = [];
-    //     $totalstocks    = [];
-    //     $totalproduct   = [];
-    //     foreach ($stockdata as $stockdat) {
-    //         $totalstocks[]  = $stockdat['qty'];
-    //         $totalproduct[] = $stockdat['id'];
-    //         $totalcap[]     = (int)$stockdat['qty'] * (int)$stockdat['price'];
-    //     }
-    //     $stockcount     = count($totalproduct);
-    //     $totalstock     = array_sum($totalstocks);
-    //     $capsum         = array_sum($totalcap);
-
-    //     $page       = (int) ($this->request->getGet('page') ?? 1);
-    //     $perPage    = 20;
-    //     $total      = count($stockdata);
-
-    //     // Parsing data to view
-    //     $data                       = $this->data;
-    //     $data['title']              = lang('Global.stockList');
-    //     $data['description']        = lang('Global.stockListDesc');
-    //     $data['stocks']             = array_slice($stockdata, ($page*20)-20, $page*20);
-    //     $data['totalstock']         = $totalstock;
-    //     $data['stockcount']         = $stockcount;
-    //     $data['capsum']             = $capsum;
-    //     $data['pager_links']        = $pager->makeLinks($page, $perPage, $total, 'front_full');
-
-    //     // $db         = \Config\Database::connect();
-    //     // // Find Data
-    //     // $data           = $this->data;
-    //     // $outlets        = $OutletModel->findAll();
-
-    //     // if ($this->data['outletPick'] === null) {
-    //     //     $stock          = $StockModel->orderBy('id', 'DESC')->paginate(20, 'stock');
-    //     //     $stockcount     = count($StockModel->findAll());
-    //     //     $totalstock     = array_sum(array_column($StockModel->findAll(), 'qty'));
-    //     // } else {
-    //     //     $stock          = $StockModel->orderBy('id', 'DESC')->where('outletid', $this->data['outletPick'])->paginate(20, 'stock');
-    //     //     $stockcount     = count($StockModel->where('outletid', $this->data['outletPick'])->find());
-    //     //     $totalstock     = array_sum(array_column($StockModel->where('outletid', $this->data['outletPick'])->find(), 'qty'));
-    //     // }
-
-    //     // if (!empty($stock)) {
-    //     //     $variantid   = array();
-    //     //     foreach ($stock as $stok) {
-    //     //         $variantid[]  = $stok['variantid'];
-    //     //     }
-    //     //     $variants           = $VariantModel->find($variantid);
-
-    //     //     $productid = array();
-    //     //     foreach ($variants as $variant) {
-    //     //         $productid[]    = $variant['productid'];
-    //     //     }
-    //     //     $products           = $ProductModel->find($productid);
-    //     // } else {
-    //     //     $products = array();
-    //     //     $variants = array();
-    //     // }
-
-    //     // $totalcap = array();
-    //     // $capbuilder     = $db->table('stock');
-    //     // $stockcap       = $capbuilder->select('stock.qty as qty, variant.hargamodal as price');
-    //     // $stockcap       = $capbuilder->join('variant', 'stock.variantid = variant.id', 'left');
-    //     // if ($this->data['outletPick'] != null) {
-    //     //     $stockcap       = $capbuilder->where('stock.outletid', $this->data['outletPick']);
-    //     // }
-    //     // $stockcap       = $capbuilder->get();
-    //     // $caps           = $stockcap->getResult();
-    //     // foreach ($caps as $cap) {
-    //     //     $totalcap[] = (int)$cap->qty * (int)$cap->price;
-    //     // }
-    //     // $capsum = array_sum($totalcap);
-
-    //     // // Parsing data to view
-    //     // $data['title']          = lang('Global.stockList');
-    //     // $data['description']    = lang('Global.stockListDesc');
-    //     // $data['stocks']         = $stock;
-    //     // $data['stockcount']     = $stockcount;
-    //     // $data['variants']       = $variants;
-    //     // $data['products']       = $products;
-    //     // $data['outlets']        = $outlets;
-    //     // $data['totalstock']     = $totalstock;
-    //     // $data['capsum']         = $capsum;
-    //     // $data['pager']          = $StockModel->pager;
-
-    //     return view ('Views/stock', $data);
-    // }
-
     // Stock Cycle
     public function stockcycle()
     {
@@ -223,21 +84,6 @@ class Stock extends BaseController
         }
 
         $stockdata  = [];
-        // $variants   = $VariantModel->findAll();
-
-        // foreach ($variants as $variant) {
-        //     $stockdata[$variant['id']]['id']    = $variant['id'];
-
-        //     $products   = $ProductModel->find($variant['productid']);
-        //     $stockdata[$variant['id']]['name']  = $products['name'].'-'.$variant['name'];
-
-        //     if ($this->data['outletPick'] === null) {
-        //         $stock      = $StockModel->where('variantid', $variant['id'])->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->find();
-        //     } else {
-        //         $stock      = $StockModel->where('variantid', $variant['id'])->where('restock !=', '0000-00-00 00:00:00')->where('sale !=', '0000-00-00 00:00:00')->where('outletid', $this->data['outletPick'])->find();
-        //     }
-        // }
-        // dd($stock);
         if (!empty($stock)) {
             foreach ($stock as $stok) {
                 $variants       = $VariantModel->find($stok['variantid']);
@@ -258,18 +104,6 @@ class Stock extends BaseController
                     $stockdata[$stok['id']]['qty']      = $stok['qty'];
                 }
             }
-            
-            // $varid  = array();
-            // foreach ($stock as $stok) {
-            //     $varid[]    = $stok['variantid'];
-            // }
-            // $variants       = $VariantModel->find($varid);
-    
-            // $prodid = array();
-            // foreach ($variants as $var) {
-            //     $prodid[]   = $var['productid'];
-            // }
-            // $products   = $ProductModel->find($prodid);
         } else {
             $variants       = array();
             $products       = array();

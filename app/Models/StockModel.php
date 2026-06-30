@@ -24,9 +24,9 @@ class StockModel extends Model
             product.name as productname,
             outlet.name as outletname,
             CONCAT(
-                variant.name,
+                product.name,
                 " - ",
-                product.name
+                variant.name
             ) AS name
         ');
 

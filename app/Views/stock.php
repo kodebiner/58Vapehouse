@@ -80,21 +80,9 @@
                     <td class="uk-text-center"><?= $i++; ?></td>
                     <td class="">
                         <?= $stock['outletname'] ?>
-                        <!-- </?php foreach ($outlets as $outlet ) {
-                            if ($stock['outletid']=== $outlet['id']) {
-                                echo $outlet['name'];
-                            }
-                        } ?> -->
                     </td>
                     <td class="">
                         <?= $stock['name'] ?>
-                        <!-- </?php foreach ($variants as $variant ) {
-                            foreach ($products as $product) {
-                                if(($stock['variantid'] === $variant['id']) && ($product['id'] === $variant['productid'])) {
-                                    echo $product['name'].' - '.$variant['name'];
-                                }
-                            }
-                        } ?> -->
                     </td>
                     <td class="uk-text-center"><?= $stock['qty']; ?></td>
                     <td class="uk-text-center">
