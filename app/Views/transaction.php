@@ -1909,6 +1909,16 @@
                 $("#order").on("submit", function (e) {
                     if (isSubmitted) return true;
 
+                    // 0. Sync form state before validation
+                    totalcount();
+
+                    // 0a. Force-enable duedate if debt > 0 (defensive)
+                    const debtVal = parseFloat(document.getElementById('debt').value) || 0;
+                    if (debtVal > 0) {
+                        document.getElementById('duedate').removeAttribute('disabled');
+                        document.getElementById('debtcontainer').removeAttribute('hidden');
+                    }
+
                     // 1. Customer Validation
                     const isValid = $("#customerid").attr("data-valid");
                     if (isValid !== "1") {
@@ -1929,6 +1939,8 @@
                     if (isSplitBill) {
                         const firstPayment = document.getElementById('firstpayment').value;
                         const secondPayment = document.getElementById('secpayment').value;
+                        const firstAmt = parseFloat(document.getElementById('firstpay').value) || 0;
+                        const secondAmt = parseFloat(document.getElementById('secondpay').value) || 0;
 
                         if (!firstPayment || firstPayment.trim() === '') {
                             e.preventDefault();
@@ -1944,9 +1956,17 @@
                             return false;
                         }
 
-                        if (debt > 0) {
+                        if (firstAmt <= 0 && secondAmt <= 0) {
                             e.preventDefault();
-                            alert("Split bill tidak dapat digunakan bersamaan dengan transaksi hutang.");
+                            alert("Silakan masukkan jumlah pembayaran.");
+                            document.getElementById('firstpay').focus();
+                            return false;
+                        }
+
+                        if (debt > 0 && duedate === '') {
+                            e.preventDefault();
+                            alert("Karena pembayaran belum lunas, silakan isi tanggal jatuh tempo.");
+                            document.getElementById('duedate').focus();
                             return false;
                         }
                     } else {
