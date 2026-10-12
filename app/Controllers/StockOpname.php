@@ -104,32 +104,32 @@ class StockOpname extends BaseController
         // Populating Data
         if ($this->data['outletPick'] === null) {
             $stocks     = $StockModel->where('qty !=', '0')->find();
-            $outletcode = 'AOT';
+            // $outletcode = 'AOT';
             $outletname = 'All Outlets';
         } else {
             $stocks     = $StockModel->where('qty !=', '0')->where('outletid', $this->data['outletPick'])->find();
             $outlets    = $OutletModel->find($this->data['outletPick']);
             $outletname = $outlets['name'];
 
-            if ($this->data['outletPick'] === '1') {
-                $outletcode = 'PST';
-            }
+            // if ($this->data['outletPick'] === '1') {
+            //     $outletcode = 'PST';
+            // }
 
-            if ($this->data['outletPick'] === '2') {
-                $outletcode = 'SLM';
-            }
+            // if ($this->data['outletPick'] === '2') {
+            //     $outletcode = 'SLM';
+            // }
 
-            if ($this->data['outletPick'] === '3') {
-                $outletcode = 'UGM';
-            }
+            // if ($this->data['outletPick'] === '3') {
+            //     $outletcode = 'UGM';
+            // }
 
-            if ($this->data['outletPick'] === '4') {
-                $outletcode = 'FEP';
-            }
+            // if ($this->data['outletPick'] === '4') {
+            //     $outletcode = 'FEP';
+            // }
 
-            if ($this->data['outletPick'] === '5') {
-                $outletcode = 'MGW';
-            }
+            // if ($this->data['outletPick'] === '5') {
+            //     $outletcode = 'MGW';
+            // }
         }
 
         $stockopnamedata    = [];
@@ -196,6 +196,7 @@ class StockOpname extends BaseController
         $dateexport     = date('d-m-Y');
         $timeapproval   = date('H:i');
         $dateapproval   = date('j F Y');
+        $outletcode     = $outletname;
 
         // Parsing data to view
         $data                   = $this->data;
