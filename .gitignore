@@ -149,4 +149,11 @@ server.key
 mkcert.exe
 58vapehouse.local.pem
 58vapehouse.local-key.pem
+docker/certs/*.key
 .dockerignore
+docker/
+scripts/
+compose.yaml
+
+# Database
+vape1906_58vapehouse.sql

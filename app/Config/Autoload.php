@@ -43,14 +43,13 @@ class Autoload extends AutoloadConfig
         APP_NAMESPACE   => APPPATH, // For custom app namespace
         'Config'        => APPPATH . 'Config',
         'Myth\Auth'     => APPPATH . 'ThirdParty/MythAuth',
-        'mpdf/psr-http-message-shim'    => APPPATH . 'ThirdParty/psr-http-message-shim/src',
-        'mpdf/psr-log-aware-trait'      => APPPATH . 'ThirdParty/psr-log-aware-trait-3.x/src',
-        'myclabs/deep-copy'             => APPPATH . 'ThirdParty/DeepCopy-1.11.1/src',
-        'paragonie/random_compat'       => APPPATH . 'ThirdParty/random_compat-2.0.21/lib',
-        'psr/httpmessage'               => APPPATH . 'ThirdParty/http-message-2.0/src',
-        'psr/log'                       => APPPATH . 'ThirdParty/log-3.0.0/src',
-        'setasign\Fpdi'                 => APPPATH . 'ThirdParty/FPDI-2.6.0/src',
         'Mpdf'                          => APPPATH . 'ThirdParty/mpdf-8.1.0/src',
+        'Mpdf\PsrHttpMessageShim'       => APPPATH . 'ThirdParty/psr-http-message-shim/src',
+        'Mpdf\PsrLogAwareTrait'         => APPPATH . 'ThirdParty/psr-log-aware-trait-3.x/src',
+        'DeepCopy'                      => APPPATH . 'ThirdParty/DeepCopy-1.11.1/src/DeepCopy',
+        'Psr\Http\Message'              => APPPATH . 'ThirdParty/http-message-1.1/src',
+        'Psr\Log'                       => APPPATH . 'ThirdParty/log-1.1.4/src',
+        'setasign\Fpdi'                 => APPPATH . 'ThirdParty/FPDI-2.6.0/src',
     ];
 
     /**
