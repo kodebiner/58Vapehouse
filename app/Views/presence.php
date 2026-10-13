@@ -39,7 +39,7 @@
                     <option value="1">Siang (12:00)</option>
                     <option value="2">Sore (16:00)</option>
                     <option value="4">Malam (00:00)</option>
-                    <option value="3">UGM (10:00)</option>
+                    <option value="3">Outlet Mini (10:00)</option>
                 </select>
             </div>
         </div>

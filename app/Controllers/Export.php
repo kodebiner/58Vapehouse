@@ -2474,7 +2474,7 @@ class export extends BaseController
                     } elseif ($presence['shift'] == '2') {
                         $waktu  = 'Sore (16:00)';
                     } elseif ($presence['shift'] == '3') {
-                        $waktu  = 'UGM (10:00)';
+                        $waktu  = 'Outlet Mini (10:00)';
                     } elseif ($presence['shift'] == '4') {
                         $waktu  = 'Malam (00:00)';
                     }
