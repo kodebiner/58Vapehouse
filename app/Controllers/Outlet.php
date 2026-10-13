@@ -58,7 +58,7 @@ class Outlet extends BaseController
         $data = [
             'name'      => $input['name'],
             'address'   => $input['address'],
-            'maps'      => $input['maps'],
+            'maps'      => extract_maps_pb($input['maps'] ?? ''),
             'instagram' => $input['instagram'],
             'phone'     => $input['phone'],
             'facebook'  => $input['facebook'],
@@ -138,7 +138,7 @@ class Outlet extends BaseController
             'id'        => $id,
             'name'      => $input['name'],
             'address'   => $input['address'],
-            'maps'      => $input['maps'],
+            'maps'      => extract_maps_pb($input['maps'] ?? ''),
             'instagram' => $input['instagram'],
             'phone'     => $input['phone'],
             'facebook'  => $input['facebook'],
@@ -148,7 +148,7 @@ class Outlet extends BaseController
         if (! $this->validate([
             'name'      => "max_length[255]",
             'address'   => "max_length[255]",
-            'maps'      => "max_length[255]",
+            'maps'      => "max_length[2000]",
             'instagram' => "max_length[255]",
             'phone'     => "max_length[255]",
             'facebook'  => "max_length[255]",

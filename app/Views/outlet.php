@@ -61,7 +61,8 @@
                     <div class="uk-margin-bottom">
                         <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.maps')) : ?>tm-form-invalid<?php endif ?>" id="maps" name="maps" placeholder="<?=lang('Global.maps')?>" required />
+                            <textarea class="uk-textarea <?php if (session('errors.maps')) : ?>tm-form-invalid<?php endif ?>" id="maps" name="maps" rows="3" placeholder='<iframe src="https://www.google.com/maps/embed?pb=..." ...></iframe>' required></textarea>
+                            <p class="uk-text-meta uk-margin-small-top">Tempel kode embed dari Google Maps (Share &gt; Embed a map &gt; Copy HTML). Kode lama berupa potongan <code>!1m18!...</code> tetap bisa dipakai.</p>
                         </div>
                     </div>
 
@@ -178,7 +179,8 @@
                         <div class="uk-margin-bottom">
                             <label class="uk-form-label" for="maps"><?=lang('Global.maps')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="maps" name="maps"  value="<?= $outlet['maps']; ?>" />
+                                <textarea class="uk-textarea" id="maps" name="maps" rows="3" placeholder='<iframe src="https://www.google.com/maps/embed?pb=..." ...></iframe>'><?= esc($outlet['maps']); ?></textarea>
+                                <p class="uk-text-meta uk-margin-small-top">Tempel kode embed dari Google Maps. Kode lama berupa potongan <code>!1m18!...</code> tetap bisa dipakai.</p>
                             </div>
                         </div>
 
