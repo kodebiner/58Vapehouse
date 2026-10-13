@@ -9,11 +9,19 @@
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
+            // var data = google.visualization.arrayToDataTable([
+            //     ['tanggal', '</?=lang('Global.sales')?>', '</?=lang('Global.capitalgains')?>', '</?=lang('Global.basicprofit')?>', '</?=lang('Global.discount')?> </?=lang('Global.transaction')?>', '</?=lang('Global.discount')?> </?=lang('Global.variant')?>', '</?=lang('Global.discount')?> Global', '</?=lang('Global.discount')?> Member', '</?=lang('Global.discount')?> </?=lang('Global.point')?>'],
+            //     </?php
+            //         foreach ($transactions as $transaction) {
+            //             echo '["'.$transaction['waktu'].'", '.$transaction['value'].', '.$transaction['profitmodal'].', '.$transaction['profitdasar'].', '.$transaction['trxdisc'].', '.$transaction['vardisc'].', '.$transaction['globdisc'].', '.$transaction['membdisc'].', '.$transaction['pointdisc'].'],';
+            //         }
+            //     ?>
+            // ]);
             var data = google.visualization.arrayToDataTable([
-                ['tanggal', '<?=lang('Global.sales')?>', '<?=lang('Global.capitalgains')?>', '<?=lang('Global.basicprofit')?>', '<?=lang('Global.discount')?> <?=lang('Global.transaction')?>', '<?=lang('Global.discount')?> <?=lang('Global.variant')?>', '<?=lang('Global.discount')?> Global', '<?=lang('Global.discount')?> Member', '<?=lang('Global.discount')?> <?=lang('Global.point')?>'],
+                ['tanggal', '<?=lang('Global.sales')?>', '<?=lang('Global.capitalgains')?>', '<?=lang('Global.basicprofit')?>', '<?=lang('Global.discount')?> <?=lang('Global.variant')?>', '<?=lang('Global.discount')?> Member'],
                 <?php
                     foreach ($transactions as $transaction) {
-                        echo '["'.$transaction['waktu'].'", '.$transaction['value'].', '.$transaction['profitmodal'].', '.$transaction['profitdasar'].', '.$transaction['trxdisc'].', '.$transaction['vardisc'].', '.$transaction['globdisc'].', '.$transaction['membdisc'].', '.$transaction['pointdisc'].'],';
+                        echo '["'.$transaction['waktu'].'", '.$transaction['value'].', '.$transaction['profitmodal'].', '.$transaction['profitdasar'].', '.$transaction['vardisc'].', '.$transaction['membdisc'].'],';
                     }
                 ?>
             ]);
@@ -119,19 +127,6 @@
         <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.salesreport')?></h1>
         <div class="uk-child-width-1-2@m uk-grid-match uk-margin-top" uk-grid>
             <div>
-                <div class="uk-card uk-card-default  uk-card-primary uk-card-hover uk-card-body">
-                    <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.net')?></h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.salestotal')?></p>
-                    <hr>
-                    <div>
-                        <div uk-grid>
-                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($result,0,',','.');" ";?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
                 <div class="uk-card uk-card-default uk-card-hover uk-card-body">
                     <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.gross')?></h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.salestotal')?></p>
@@ -139,6 +134,19 @@
                     <div>
                         <div uk-grid>
                             <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($gross,0,',','.');" ";?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="uk-card uk-card-default  uk-card-primary uk-card-hover uk-card-body">
+                    <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.net')?></h3>
+                    <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.salestotal')?></p>
+                    <hr>
+                    <div>
+                        <div uk-grid>
+                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($result,0,',','.');" ";?></div>
                         </div>
                     </div>
                 </div>
@@ -185,14 +193,14 @@
     <section class="uk-margin">
         <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.discountreport')?></h1>
         <div class="uk-child-width-1-2@m uk-grid-match uk-margin-top" uk-grid>
-            <div>
+            <!-- <div>
                 <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #109618; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discpoint')?></h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.totaldiscpoint')?></p>
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"></?=lang('Global.discpoint')?></h3>
+                    <p class="uk-margin-remove-top uk-text-bolder"></?=lang('Global.totaldiscpoint')?></p>
                     <hr>
                     <div>
                     <div uk-grid>
-                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($poindisc,2,',','.');" ";?></div>
+                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"></?php echo "Rp. ".number_format($poindisc,2,',','.');" ";?></div>
                     </div>
                     </div>
                 </div>
@@ -200,6 +208,58 @@
 
             <div>
                 <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #990099; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"></?=lang('Global.discount')?> </?=lang('Global.variant')?></h3>
+                    <p class="uk-margin-remove-top uk-text-bolder"></?=lang('Global.totaldiscvar')?></p>
+                    <hr>
+                    <div>
+                        <div uk-grid>
+                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"></?php echo "Rp. ".number_format($trxvardis,2,',','.');" ";?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #0099c6; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"></?=lang('Global.discount')?> Global</h3>
+                    <p class="uk-margin-remove-top uk-text-bolder"></?=lang('Global.discount')?> yang diatur melalui "Informasi Usaha"</p>
+                    <hr>
+                    <div>
+                        <div uk-grid>
+                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"></?php echo "Rp. ".number_format($trxglodis,2,',','.');" ";?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #dd4477; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"></?=lang('Global.discount')?> Member</h3>
+                    <p class="uk-margin-remove-top uk-text-bolder"></?=lang('Global.discount')?> Member yang diatur melalui "Informasi Usaha"</p>
+                    <hr>
+                    <div>
+                        <div uk-grid>
+                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"></?php echo "Rp. ".number_format($trxmemdis,2,',','.');" ";?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #66aa00; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"></?=lang('Global.discount')?> </?=lang('Global.transaction')?></h3>
+                    <p class="uk-margin-remove-top uk-text-bolder"></?=lang('Global.totaldisctrx')?></p>
+                    <hr>
+                    <div>
+                        <div uk-grid>
+                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"></?php echo "Rp. ".number_format($trxdisc,2,',','.');" ";?></div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #109618; color: white;">
                     <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discount')?> <?=lang('Global.variant')?></h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.totaldiscvar')?></p>
                     <hr>
@@ -212,39 +272,13 @@
             </div>
 
             <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #0099c6; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discount')?> Global</h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.discount')?> yang diatur melalui "Informasi Usaha"</p>
-                    <hr>
-                    <div>
-                        <div uk-grid>
-                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxglodis,2,',','.');" ";?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #dd4477; color: white;">
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #990099; color: white;">
                     <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discount')?> Member</h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.discount')?> Member yang diatur melalui "Informasi Usaha"</p>
                     <hr>
                     <div>
                         <div uk-grid>
                             <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxmemdis,2,',','.');" ";?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #66aa00; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discount')?> <?=lang('Global.transaction')?></h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.totaldisctrx')?></p>
-                    <hr>
-                    <div>
-                        <div uk-grid>
-                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxdisc,2,',','.');" ";?></div>
                         </div>
                     </div>
                 </div>

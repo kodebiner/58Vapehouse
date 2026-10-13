@@ -110,10 +110,10 @@
                     </div>
                 </div>
                 <div class="uk-width-1-4@m uk-text-left@m">
-                    <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.net')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p> 
+                    <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($gross,0,',','.');" ";?></p>
                 </div>
                 <div class="uk-width-1-4@m uk-text-left@m">
-                    <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.gross')?> : <?php echo "Rp. ".number_format($gross,0,',','.');" ";?></p>
+                    <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.net')?> : <?php echo "Rp. ".number_format($netsales,0,',','.');" ";?></p> 
                 </div>
                 <div class="uk-width-1-4@m uk-text-left@m">
                     <p class="uk-text-default uk-margin" style="font-size:20px;color:white;"><?=lang('Global.total')?> <?=lang('Global.soldItem')?> : <?php echo $qty;?></p>
@@ -141,8 +141,8 @@
             <thead>
                 <tr>
                     <th><?=lang('Global.brand')?></th>
-                    <th class="uk-text-center"><?=lang('Global.net')?></th>
                     <th class="uk-text-center"><?=lang('Global.gross')?></th>
+                    <th class="uk-text-center"><?=lang('Global.net')?></th>
                     <th class="uk-text-center"><?=lang('Global.soldItem')?></th>
                 </tr>
             </thead>
@@ -150,8 +150,8 @@
                 <?php foreach ($branddata as $brand ) { ?>
                     <tr>
                         <td style="color:white;"><?=$brand['name']?></td>
-                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($brand['netvalue'],0,',','.');" ";?></td>
                         <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($brand['grossvalue'],0,',','.');" ";?></td>
+                        <td class="uk-text-center" style="color:white;"><?php echo "Rp. ".number_format($brand['netvalue'],0,',','.');" ";?></td>
                         <td style="color:white;" class="uk-text-center"><?= $brand['qty'] ?></td>
                     </tr>
                 <?php } ?>

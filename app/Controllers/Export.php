@@ -783,26 +783,26 @@ class export extends BaseController
                 echo '<th style="text-align: left;">Penjualan</th>';
                 echo '<td style="text-align: right;">' . $salesresult . '</td>';
             echo '</tr>';
-            echo '<tr>';
-                echo '<th style="text-align: left;">Diskon Transaksi</th>';
-                echo '<td style="text-align: right;">' . $transactiondisc . '</td>';
-            echo '</tr>';
+            // echo '<tr>';
+            //     echo '<th style="text-align: left;">Diskon Transaksi</th>';
+            //     echo '<td style="text-align: right;">' . $transactiondisc . '</td>';
+            // echo '</tr>';
             echo '<tr>';
                 echo '<th style="text-align: left;">Diskon Variant</th>';
                 echo '<td style="text-align: right;">' . $variantdisc . '</td>';
             echo '</tr>';
-            echo '<tr>';
-                echo '<th style="text-align: left;">Diskon Global</th>';
-                echo '<td style="text-align: right;">' . $globaldisc . '</td>';
-            echo '</tr>';
+            // echo '<tr>';
+            //     echo '<th style="text-align: left;">Diskon Global</th>';
+            //     echo '<td style="text-align: right;">' . $globaldisc . '</td>';
+            // echo '</tr>';
             echo '<tr>';
                 echo '<th style="text-align: left;">Diskon Member Per Item</th>';
                 echo '<td style="text-align: right;">' . $memberdiscitem . '</td>';
             echo '</tr>';
-            echo '<tr>';
-                echo '<th style="text-align: left;">Diskon Tukar Poin</th>';
-                echo '<td style="text-align: right;">' . $poindisc . '</td>';
-            echo '</tr>';
+            // echo '<tr>';
+            //     echo '<th style="text-align: left;">Diskon Tukar Poin</th>';
+            //     echo '<td style="text-align: right;">' . $poindisc . '</td>';
+            // echo '</tr>';
             echo '<tr>';
                 echo '<th style="text-align: left;">Total Omset</th>';
                 echo '<td style="text-align: right;">' . $grossales . '</td>';
@@ -1689,8 +1689,8 @@ class export extends BaseController
         echo '<tr>';
         echo '<th>Nama</th>';
         echo '<th>Jumlah Penjualan</th>';
-        echo '<th>Penjualan Bersih</th>';
         echo '<th>Penjualan Kotor</th>';
+        echo '<th>Penjualan Bersih</th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
@@ -1698,8 +1698,8 @@ class export extends BaseController
                 echo '<tr>';
                     echo '<td>' . $prod['name'] . '</td>';
                     echo '<td>' . $prod['qty'] . '</td>';
-                    echo '<td>' . $prod['netvalue'] . '</td>';
                     echo '<td>' . $prod['grossvalue'] . '</td>';
+                    echo '<td>' . $prod['netvalue'] . '</td>';
                 echo '</tr>';
             }
         echo '</tbody>';
@@ -1707,8 +1707,8 @@ class export extends BaseController
             echo '<tr>';
                 echo '<td style="text-align:center;font-weight:700;">Total</th>';
                 echo '<td style="font-weight:700;">' . $totalsalesitem . '</td>';
-                echo '<td style="font-weight:700;">' . $totalnetsales . '</td>';
                 echo '<td style="font-weight:700;">' . $totalcatgross . '</td>';
+                echo '<td style="font-weight:700;">' . $totalnetsales . '</td>';
             echo '</tr>';
         echo '</tfoot>';
         echo '</table>';
@@ -1992,8 +1992,8 @@ class export extends BaseController
                 echo '<tr>';
                     echo '<td>' . $prod['name'] . '</td>';
                     echo '<td>' . $prod['qty'] . '</td>';
-                    echo '<td>' . $prod['netvalue'] . '</td>';
                     echo '<td>' . $prod['grossvalue'] . '</td>';
+                    echo '<td>' . $prod['netvalue'] . '</td>';
                 echo '</tr>';
             }
         echo '</tbody>';
@@ -2001,8 +2001,8 @@ class export extends BaseController
             echo '<tr>';
                 echo '<td style="text-align:center;font-weight:700;">Total</th>';
                 echo '<td style="font-weight:700;">' . $totalsalesitem . '</td>';
-                echo '<td style="font-weight:700;">' . $totalnetsales . '</td>';
                 echo '<td style="font-weight:700;">' . $totalcatgross . '</td>';
+                echo '<td style="font-weight:700;">' . $totalnetsales . '</td>';
             echo '</tr>';
         echo '</tfoot>';
         echo '</table>';
