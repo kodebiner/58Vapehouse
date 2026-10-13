@@ -112,16 +112,35 @@ class Upload extends BaseController
 
         if ($input->isValid() && ! $input->hasMoved()) {
             // Getting file extensions
-            $ext = $input->guessExtension();
+            $ext = $input->guessExtension() ?: $input->getClientExtension();
+            if ($ext === 'jpeg') {
+                $ext = 'jpg';
+            }
 
-            // Saving uploaded file
-            $filename = 'logo';
-            $input->move(FCPATH.'img/', $filename);
+            // Saving uploaded file directly with final name (overwrite old logo)
+            $filename = 'logo.'.$ext;
 
-            // Resizing Profile
+            // Removing stale files
+            if (is_file(FCPATH.'img/logo')) {
+                @unlink(FCPATH.'img/logo');
+            }
+            foreach (glob(FCPATH.'img/logo_*') ?: [] as $stale) {
+                if (is_file($stale)) {
+                    @unlink($stale);
+                }
+            }
+            foreach (glob(FCPATH.'img/logo.*') ?: [] as $old) {
+                if (is_file($old) && basename($old) !== $filename) {
+                    @unlink($old);
+                }
+            }
+
+            $input->move(FCPATH.'img/', $filename, true);
+
+            // Resizing logo
             $image->withFile(FCPATH.'img/'.$filename)
                 ->resize(1000, 250, true, 'auto')
-                ->save(FCPATH.'img/'.$filename.'.'.$ext, 50);
+                ->save(FCPATH.'img/'.$filename, 50);
 
             // Calling Models
             $GconfigModel = new GconfigModel();
@@ -129,12 +148,12 @@ class Upload extends BaseController
             // Updating User Profile
             $update = [
                 'id'    => '1',
-                'logo'  => $filename.'.'.$ext
+                'logo'  => $filename
             ];
             $GconfigModel->save($update);
 
             // Returning Message
-            die(json_encode($filename.'.'.$ext));
+            die(json_encode($filename));
         }
     }
 
@@ -151,8 +170,10 @@ class Upload extends BaseController
         $GconfigModel->save($update);
 
         // Removing File
-        $input = $this->request->getPost('logo');
-        unlink(FCPATH.'img/'.$input);
+        $input = basename((string) $this->request->getPost('logo'));
+        if ($input !== '' && is_file(FCPATH.'img/'.$input)) {
+            @unlink(FCPATH.'img/'.$input);
+        }
 
         // Return Message
         die(json_encode(array('message' => lang('Global.deleted'))));
