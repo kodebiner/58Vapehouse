@@ -779,9 +779,9 @@ class export extends BaseController
                 echo '<th colspan="2" style="align-text:center;"></th>';
             echo '</tr>';
 
-            echo '<tr >';
-                echo '<th style="text-align: left;">Penjualan</th>';
-                echo '<td style="text-align: right;">' . $salesresult . '</td>';
+            echo '<tr>';
+                echo '<th style="text-align: left;">Total Omset</th>';
+                echo '<td style="text-align: right;">' . $grossales . '</td>';
             echo '</tr>';
             // echo '<tr>';
             //     echo '<th style="text-align: left;">Diskon Transaksi</th>';
@@ -804,8 +804,8 @@ class export extends BaseController
             //     echo '<td style="text-align: right;">' . $poindisc . '</td>';
             // echo '</tr>';
             echo '<tr>';
-                echo '<th style="text-align: left;">Total Omset</th>';
-                echo '<td style="text-align: right;">' . $grossales . '</td>';
+                echo '<th style="text-align: left;">Penjualan</th>';
+                echo '<td style="text-align: right;">' . $salesresult . '</td>';
             echo '</tr>';
             echo '<tr>';
                 echo '<th style="text-align: left;">Harga Modal</th>';
@@ -3458,17 +3458,17 @@ class export extends BaseController
             echo '<tr>';
             echo '</tr>';
 
-            echo '<tr >';
-                echo '<th style="text-align: left;">Penjualan</th>';
-                echo '<td style="text-align: right;">' . $salesresult . '</td>';
+            echo '<tr>';
+                echo '<th style="text-align: left;">Total Omset</th>';
+                echo '<td style="text-align: right;">' . $grossales . '</td>';
             echo '</tr>';
             echo '<tr>';
                 echo '<th style="text-align: left;">Diskon</th>';
                 echo '<td style="text-align: right;">' . $alldisc . '</td>';
             echo '</tr>';
             echo '<tr>';
-                echo '<th style="text-align: left;">Total Omset</th>';
-                echo '<td style="text-align: right;">' . $grossales . '</td>';
+                echo '<th style="text-align: left;">Penjualan</th>';
+                echo '<td style="text-align: right;">' . $salesresult . '</td>';
             echo '</tr>';
             echo '<tr>';
                 echo '<th style="text-align: left;">Keuntungan Modal</th>';
