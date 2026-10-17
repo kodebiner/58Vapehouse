@@ -229,7 +229,22 @@ class Stock extends BaseController
         $ProductModel               = new ProductModel();
 
         $input                      = $this->request->getGet();
-        $daterange                  = $input['daterange'] ?? date('Y-m-01') . ' - ' . date('Y-m-d');
+
+        // Default the filter to the most recent purchase date, so the list opens
+        // on the last actual purchase instead of the current month (which may be
+        // empty). Falls back to today when there is no purchase yet.
+        if (!empty($input['daterange'])) {
+            $daterange              = $input['daterange'];
+        } else {
+            $lastPurchaseBuilder    = $this->db->table('purchase')->selectMax('date', 'lastdate');
+            if ($this->data['outletPick'] !== null) {
+                $lastPurchaseBuilder->where('purchase.outletid', $this->data['outletPick']);
+            }
+            $lastPurchase           = $lastPurchaseBuilder->get()->getRowArray();
+
+            $lastpurchasedate       = !empty($lastPurchase['lastdate']) ? date('Y-m-d', strtotime($lastPurchase['lastdate'])) : date('Y-m-d');
+            $daterange              = $lastpurchasedate . ' - ' . $lastpurchasedate;
+        }
 
         [$startdate, $enddate]      = explode(' - ', $daterange);
         $startdate                  = date('Y-m-d', strtotime($startdate));
