@@ -53,6 +53,7 @@
                         <script>
                             $(function() {
                                 $('input[name="daterange"]').daterangepicker({
+                                    autoApply: true,
                                     opens: 'left',
                                     maxDate: new Date(),
                                 }, function(start, end, label) {

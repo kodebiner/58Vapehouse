@@ -33,6 +33,9 @@
         <?= $this->renderSection('extraScript') ?>
         <!-- Extra Script Section end -->
 
+        <!-- Mobile-friendly Date Range Picker -->
+        <link rel="stylesheet" href="css/daterangepicker-mobile.css">
+
     </head>
     <body style="background-color: #000;">
 

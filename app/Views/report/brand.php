@@ -173,6 +173,7 @@
         }
 
         $('#daterange-display').daterangepicker({
+            autoApply: true,
             startDate: start,
             endDate: end,
             maxDate: new Date(),

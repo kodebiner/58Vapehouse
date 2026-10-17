@@ -1,0 +1,69 @@
+/**
+ * Mobile-friendly Date Range Picker.
+ *
+ * The default daterangepicker popup is wide (two calendars) and can render
+ * below the viewport, which cuts off the calendar (and the Apply button) on
+ * phones. On small screens we turn the popup into a centered, scrollable
+ * overlay so every part of the calendar stays reachable.
+ *
+ * This is paired with `autoApply: true` on every picker init, so the filter
+ * is submitted as soon as the start and end dates are chosen - no need to
+ * press the (often cut-off) Apply button.
+ */
+
+@media (max-width: 640px) {
+    .daterangepicker {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%) !important;
+        width: calc(100vw - 20px) !important;
+        max-width: 360px !important;
+        margin: 0 !important;
+        max-height: 90vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, .35);
+    }
+
+    .daterangepicker:before,
+    .daterangepicker:after {
+        display: none;
+    }
+
+    /* Stack both calendars vertically instead of side by side. */
+    .daterangepicker .drp-calendar.left,
+    .daterangepicker .drp-calendar.right {
+        float: none !important;
+        clear: both !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 8px !important;
+        box-sizing: border-box;
+    }
+
+    .daterangepicker .drp-calendar.left .calendar-table,
+    .daterangepicker .drp-calendar.right .calendar-table {
+        border: none !important;
+    }
+
+    .daterangepicker .calendar-table table {
+        width: 100% !important;
+    }
+
+    /* Larger tap targets for touch screens. */
+    .daterangepicker .calendar-table th,
+    .daterangepicker .calendar-table td {
+        min-width: 38px;
+        width: 38px;
+        height: 36px;
+        line-height: 36px;
+        font-size: 13px;
+    }
+
+    .daterangepicker .drp-buttons {
+        padding: 10px;
+    }
+}
