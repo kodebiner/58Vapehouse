@@ -36,14 +36,25 @@ class User extends BaseController
 
         // Populating data
 
+        // Status filter (active | inactive | all), default only active employees
+        $status = $this->request->getGet('status');
+        if (! in_array($status, ['active', 'inactive', 'all'], true)) {
+            $status = 'active';
+        }
+
         $this->builder->where('deleted_at', null);
         $this->builder->join('auth_groups_users', 'auth_groups_users.user_id = users.id');
         $this->builder->join('auth_groups', 'auth_groups.id = auth_groups_users.group_id');
         if ($this->data['role'] === 'supervisor') {
             $this->builder->where('auth_groups.name', 'operator');
         }
+        if ($status === 'active') {
+            $this->builder->where('users.active', 1);
+        } elseif ($status === 'inactive') {
+            $this->builder->where('users.active', 0);
+        }
         $this->builder->where('users.id !=', $this->data['uid']);
-        $this->builder->select('users.id as id, users.username as username, users.firstname as firstname, users.lastname as lastname, users.email as email, users.phone as phone, auth_groups.id as group_id, auth_groups.name as role');
+        $this->builder->select('users.id as id, users.username as username, users.firstname as firstname, users.lastname as lastname, users.email as email, users.phone as phone, users.active as active, auth_groups.id as group_id, auth_groups.name as role');
         $query =   $this->builder->get();
 
         
@@ -56,6 +67,7 @@ class User extends BaseController
         $data['outlets']        = $OutletModel->findAll();
         $data['outletAccess']   = $OutletAccessModel->findAll();
         $data['groups']         = $GroupUserModel->findAll();
+        $data['statusFilter']   = $status;
 
         return view('Views/user', $data);
     }
@@ -314,25 +326,68 @@ class User extends BaseController
 
     }
 
+    public function activate($id)
+    {
+        $UserModel = new UserModel();
+
+        // Finding user
+        $user = $UserModel->find($id);
+        if (! $user) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('User not found');
+        }
+
+        // Reactivate account (allows login again)
+        $user->activate();
+        $UserModel->save($user);
+
+        return redirect()->back()->with('message', lang('Global.activated'));
+    }
+
+    public function deactivate($id)
+    {
+        $UserModel = new UserModel();
+
+        // Never allow deactivating your own account
+        if ((int) $id === (int) $this->data['uid']) {
+            return redirect()->back()->with('error', lang('Global.cannotDeactivateSelf'));
+        }
+
+        // Finding user
+        $user = $UserModel->find($id);
+        if (! $user) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('User not found');
+        }
+
+        // Deactivate account (blocks login, data & history remain intact)
+        $user->deactivate();
+        $UserModel->save($user);
+
+        return redirect()->back()->with('message', lang('Global.deactivated'));
+    }
+
     public function delete($id)
     {
         $usersModel = new UserModel();
-        $input = $this->request->getPost();
+        $OutletAccessModel = new OutletaccessModel();
 
-        $data['users']= $usersModel->find($id);
-        if (empty($data)) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data Password Tidak Ditemukan !');
+        // Never allow deleting your own account
+        if ((int) $id === (int) $this->data['uid']) {
+            return redirect()->back()->with('error', lang('Global.cannotDeleteSelf'));
         }
-        $usersModel->update($id, [
-            'active'   => '0'
-        ]);
+
+        // Finding user
+        $user = $usersModel->find($id);
+        if (empty($user)) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data Pegawai Tidak Ditemukan !');
+        }
+
+        // Clean up outlet access before removing the user
+        $OutletAccessModel->where('userid', $id)->delete();
+
+        // Soft delete the user, keeping transaction & presence history intact
         $usersModel->delete($id);
+
         return redirect()->to('user')->with('message', lang('Global.deleted'));
-
-        // delete Outlet Access
-        $outAccess =  $OutletAccessModel->where('id',$id);
-        $OutletAccessModel->delete($outAccess);
-
     }
 
 

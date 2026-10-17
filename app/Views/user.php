@@ -139,6 +139,23 @@
 
 <!-- Table Of Content -->
 <?php if (in_groups(['owner','supervisor'])) { ?>
+    <div id="employeeFilter" class="uk-flex uk-flex-middle uk-flex-between uk-margin">
+        <form action="<?= base_url('user') ?>" method="GET" class="uk-flex uk-flex-middle uk-margin-remove">
+            <label class="uk-form-label uk-margin-small-right uk-text-nowrap" for="status" style="color: #ffffff;"><?=lang('Global.status')?></label>
+            <select class="uk-select uk-width-medium" name="status" id="status" onchange="this.form.submit()">
+                <option value="active" <?= ($statusFilter === 'active') ? 'selected' : '' ?>><?=lang('Global.activeOnly')?></option>
+                <option value="inactive" <?= ($statusFilter === 'inactive') ? 'selected' : '' ?>><?=lang('Global.inactiveOnly')?></option>
+                <option value="all" <?= ($statusFilter === 'all') ? 'selected' : '' ?>><?=lang('Global.allStatus')?></option>
+            </select>
+        </form>
+
+        <!-- Search Filter -->
+        <div class="uk-search uk-search-default" style="background-color: #ffffff; border-radius: 7px;">
+            <span uk-search-icon style="color: #000000;"></span>
+            <input id="employeeSearch" class="uk-search-input" type="search" placeholder="<?=lang('Global.searchEmployee')?>" aria-label="<?=lang('Global.searchEmployee')?>" autocomplete="off" style="border-radius: 7px;">
+        </div>
+    </div>
+
     <div class="uk-overflow-auto uk-margin">
         <table class="uk-table uk-table-justify uk-table-middle uk-table-divider uk-light" id="example" style="width:100%">
             <thead>
@@ -147,6 +164,7 @@
                     <th class="uk-width-large"><?=lang('Global.name')?></th>
                     <th class="uk-width-medium"><?=lang('Global.phone')?></th>
                     <th class="uk-width-medium"><?=lang('Global.accessLevel')?></th>
+                    <th class="uk-text-center uk-width-small"><?=lang('Global.status')?></th>
                     <th class="uk-text-center uk-width-large"><?=lang('Global.action')?></th>
                 </tr>
             </thead>
@@ -158,12 +176,29 @@
                         <td class=""><?= $user->firstname.' '.$user->lastname; ?></td>
                         <td class=""><?= $user->phone; ?></td>
                         <td class=""><?= $user->role; ?></td>
+                        <td class="uk-text-center">
+                            <?php if ($user->active == 1) { ?>
+                                <span class="uk-label" style="background-color: #32d296; color: #ffffff;"><?=lang('Global.active')?></span>
+                            <?php } else { ?>
+                                <span class="uk-label" style="background-color: #f0506e; color: #ffffff;"><?=lang('Global.inactive')?></span>
+                            <?php } ?>
+                        </td>
                         <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                             <!-- Button Trigger Modal Edit -->
                             <div>
                                 <a class="uk-icon-button" uk-icon="pencil" uk-toggle="target: #editdata<?= $user->id ?>"></a>
                             </div>
                             <!-- End Of Button Trigger Modal Edit -->
+
+                            <!-- Button Activate / Deactivate -->
+                            <div>
+                                <?php if ($user->active == 1) { ?>
+                                    <a uk-icon="ban" class="uk-icon-button-warning" uk-tooltip="<?=lang('Global.deactivate')?>" href="user/deactivate/<?= $user->id ?>" onclick="return confirm('<?=lang('Global.deactivateConfirm')?>')"></a>
+                                <?php } else { ?>
+                                    <a uk-icon="check" class="uk-icon-button-success" uk-tooltip="<?=lang('Global.activate')?>" href="user/activate/<?= $user->id ?>" onclick="return confirm('<?=lang('Global.activateConfirm')?>')"></a>
+                                <?php } ?>
+                            </div>
+                            <!-- End Of Button Activate / Deactivate -->
 
                             <!-- Button Delete -->
                             <div>
@@ -315,7 +350,17 @@
 <!-- Search Engine Script -->
 <script>
     $(document).ready(function () {
-        $('#example').DataTable();
+        // Disable the default DataTables search box; we use our own styled input
+        var table = $('#example').DataTable({
+            dom: 'lrtip'
+        });
+
+        // Wire the custom search input to DataTables
+        $('#employeeSearch').on('keyup change', function () {
+            if (table.search() !== this.value) {
+                table.search(this.value).draw();
+            }
+        });
     });
 </script>
 <!-- Search Engine Script End -->

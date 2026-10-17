@@ -113,6 +113,8 @@ $routes->group('user', ['filter'=>'login'], function($routes){
     $routes->get('edit(:num)', 'User::edit/$1', ['filter' => 'role:owner,supervisor']);
     $routes->post('update/(:num)', 'User::update/$1', ['filter' => 'role:owner,supervisor']);
     $routes->get('delete/(:num)', 'User::delete/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->get('activate/(:num)', 'User::activate/$1', ['filter' => 'role:owner,supervisor']);
+    $routes->get('deactivate/(:num)', 'User::deactivate/$1', ['filter' => 'role:owner,supervisor']);
 });
 
 // Outlet Routes
