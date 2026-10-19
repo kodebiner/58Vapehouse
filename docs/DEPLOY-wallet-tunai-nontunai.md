@@ -45,12 +45,24 @@ Simpan file `.sql` hasil export.
 3. Klik **Pull or Deploy** → **Update from Remote** (ambil commit terbaru dari `main`).
 4. Klik **Deploy HEAD Commit**.
 
-> Pastikan branch yang dipakai cPanel = `main` (sesuai `origin/main`).
+> Branch yang dipakai cPanel harus `main` (sama dengan `origin/main`).
+> Repo ini **belum punya `.cpanel.yml`**; kalau tombol deploy Anda memerlukan
+> file itu, buat dulu sebelum deploy.
 
-Kode baru **belum dipakai** sampai langkah 4 SQL selesai. Jika ada pengguna
-yang membuka aplikasi di sela-sela, akan muncul error karena kolom
-`cash.type` belum ada. Karena itu lakukan langkah 3–5 berurutan dan cepat
-(atau di luar jam operasional).
+**PENTING — urutan:** kode baru butuh kolom `cash.type`. Bila kode sudah
+ter-deploy tetapi SQL belum dijalankan, aplikasi akan error. Jadi **siapkan
+file SQL di phpMyAdmin lebih dulu**, baru klik deploy, lalu langsung jalankan
+SQL. Tidak ada `php spark down` di proyek ini (CI4 4.2 tanpa perintah
+maintenance), jadi lakukan di luar jam operasional agar aman.
+
+### Opsi lebih aman — 2 fase (tanpa mematikan aplikasi)
+
+- **Fase A** (kapan saja, kode lama tetap jalan):
+  jalankan **STEP 1 + STEP 2** saja dari file SQL (tambah kolom `type` + isi
+  tipenya). Kode lama tidak memakai kolom ini.
+- **Fase B** (jendela singkat): klik **Deploy HEAD Commit**, lalu jalankan
+  **STEP 2 (ulangi) + STEP 3 sampai STEP 10**. Mengulang STEP 2 aman dan
+  memastikan dompet yang mungkin dibuat di sela-sela tetap bertipe benar.
 
 ---
 
