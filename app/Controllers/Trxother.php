@@ -59,7 +59,7 @@ class Trxother extends BaseController
         $users              = $UserModel->findAll();
         $outlet             = $OutletModel->findAll();
         $cash               = $CashModel->findAll();
-        $payments           = $PaymentModel->notLike('name', 'Cash')->find();
+        $payments           = $PaymentModel->orderBy('outletid', 'ASC')->find();
 
         $input  = $this->request->getGet('daterange');
 
@@ -142,11 +142,7 @@ class Trxother extends BaseController
                                 if (!empty($payment)) {
                                     $cashdata       = $CashModel->find($payment['cashid']);
     
-                                    if (strcmp($cashdata['name'], 'Petty Cash ' . $outlets['name']) == 0) {
-                                        $cashname   = 'Tunai';
-                                    } else {
-                                        $cashname   = $cashdata['name'];
-                                    }
+                                    $cashname       = (!empty($cashdata) && (int) $cashdata['type'] === 0) ? 'Tunai' : 'Non Tunai';
     
                                     // Transaction Summary
                                     $dailyreportdata['trxpayments'][$cashdata['id']]['name']                                 = $cashname;
@@ -489,7 +485,7 @@ class Trxother extends BaseController
 
         // initialize
         $input              = $this->request->getPost();
-        $cash               = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
+        $cash               = $CashModel->where('type', CashModel::TYPE_CASH)->where('outletid', $this->data['outletPick'])->first();
 
         // Get Date
         $date               = date_create();
@@ -571,7 +567,7 @@ class Trxother extends BaseController
 
         // initialize
         $input          = $this->request->getPost();
-        $cash           = $CashModel->like('name', 'Cash')->where('outletid', $this->data['outletPick'])->first();
+        $cash           = $CashModel->where('type', CashModel::TYPE_CASH)->where('outletid', $this->data['outletPick'])->first();
 
         $payment        = $PaymentModel->where('id', $input['payment'])->first();
         $idcashplus     = $CashModel->where('id', $payment['cashid'])->first();

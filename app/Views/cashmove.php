@@ -10,6 +10,15 @@
 
 <?= $this->section('main') ?>
 
+<?php
+// Label dompet + nama outlet agar tidak ambigu (nama dompet kini sama antar outlet)
+$wlabel = function ($w) use ($outlets) {
+    $o = ($w['outletid'] == 0) ? lang('Global.allOutlets') : '';
+    foreach ($outlets as $out) { if ($out['id'] == $w['outletid']) { $o = $out['name']; } }
+    return $w['name'] . (!empty($o) ? ' (' . $o . ')' : '');
+};
+?>
+
 <!-- Page Heading -->
 <div class="tm-card-header uk-light">
     <div uk-grid class="uk-flex-middle">
@@ -83,7 +92,7 @@
                             <select class="uk-select" name="origin" id="sel_ori">
                                 <option selected disabled><?=lang('Global.origin')?></option>
                                     <?php foreach ($origins as $origin) { ?>
-                                        <option value="<?= $origin['id']; ?>"><?= $origin['name']; ?></option>
+                                        <option value="<?= $origin['id']; ?>"><?= $wlabel($origin); ?></option>
                                     <?php  } ?>
                             </select>
                         </div>
@@ -97,7 +106,7 @@
                             <select class="uk-select" name="destination" id="sel_des">
                                 <option selected disabled><?=lang('Global.destination')?></option>
                                     <?php foreach ($destinations as $destination) { ?>
-                                        <option value="<?= $destination['id']; ?>"><?= $destination['name']; ?></option>
+                                        <option value="<?= $destination['id']; ?>"><?= $wlabel($destination); ?></option>
                                     <?php } ?>
                             </select>
                         </div>
@@ -146,14 +155,14 @@
                     <td>
                         <?php foreach ($origins as $origin) {
                             if ($origin['id'] == $cashmv['origin']) {
-                                echo $origin['name'];
+                                echo $wlabel($origin);
                             }
                         } ?>
                     </td>
                     <td>
                         <?php foreach ($destinations as $destination){
                             if ($destination['id'] == $cashmv['destination']) {
-                                echo $destination['name'];
+                                echo $wlabel($destination);
                             }
                         }
                         ?>
@@ -203,7 +212,7 @@
                                         } ?>
                                     </option>
                                     <?php foreach ($origins as $origin) { ?>
-                                        <option value="<?= $origin['id']; ?>"><?= $origin['name']; ?></option>
+                                        <option value="<?= $origin['id']; ?>"><?= $wlabel($origin); ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -223,7 +232,7 @@
                                         } ?>
                                     </option>
                                     <?php foreach ($destinations as $destination) { ?>
-                                        <option value="<?= $destination['id']; ?>"><?= $destination['name']; ?></option>
+                                        <option value="<?= $destination['id']; ?>"><?= $wlabel($destination); ?></option>
                                     <?php } ?>
                                 </select>
                             </div>

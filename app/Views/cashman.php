@@ -67,9 +67,12 @@
                     </div>
 
                     <div class="uk-margin-bottom">
-                        <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                        <label class="uk-form-label" for="type"><?=lang('Global.walletType')?></label>
                         <div class="uk-form-controls">
-                            <input type="text" class="uk-input <?php if (session('errors.name')) : ?>tm-form-invalid<?php endif ?>" id="name" name="name" placeholder="<?=lang('Global.name')?>" autofocus required />
+                            <select class="uk-select" name="type" id="type" required>
+                                <option value="0" selected><?=lang('Global.cashType')?></option>
+                                <option value="1"><?=lang('Global.nonCash')?></option>
+                            </select>
                         </div>
                     </div>
 
@@ -176,9 +179,12 @@
                         </div>
 
                         <div class="uk-margin-bottom">
-                            <label class="uk-form-label" for="name"><?=lang('Global.name')?></label>
+                            <label class="uk-form-label" for="type"><?=lang('Global.walletType')?></label>
                             <div class="uk-form-controls">
-                                <input type="text" class="uk-input" id="name" name="name" value="<?= $cash['name']; ?>" />
+                                <select class="uk-select" name="type" id="type">
+                                    <option value="0" <?php if ((int)$cash['type'] === 0) echo 'selected'; ?>><?=lang('Global.cashType')?></option>
+                                    <option value="1" <?php if ((int)$cash['type'] === 1) echo 'selected'; ?>><?=lang('Global.nonCash')?></option>
+                                </select>
                             </div>
                         </div>
                     

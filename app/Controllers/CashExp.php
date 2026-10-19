@@ -32,7 +32,12 @@ class CashExp extends BaseController
             $enddate    = date('Y-m-t' . ' 23:59:59');
         }
 
-        $cashmans                   = $CashModel->notLike('name', 'Petty Cash')->find();
+        // Daftar dompet (Tunai & Non Tunai)
+        if ($this->data['outletPick'] !== null) {
+            $cashmans               = $CashModel->where('outletid', $this->data['outletPick'])->orWhere('outletid', 0)->orderBy('type', 'ASC')->find();
+        } else {
+            $cashmans               = $CashModel->orderBy('outletid', 'ASC')->orderBy('type', 'ASC')->find();
+        }
 
         // if (!empty($input)) {
         //     if ($startdate === $enddate) {

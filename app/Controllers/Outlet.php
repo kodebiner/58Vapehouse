@@ -70,28 +70,39 @@ class Outlet extends BaseController
         // Getting Outlet ID
         $outletID = $OutletModel->getInsertID();
 
-        // Insert Wallet
-        $cash     = $CashModel->findAll();
-        $wallet = [
+        // Insert Wallets (Tunai & Non Tunai)
+        $cash = $CashModel->findAll();
+
+        // Dompet Tunai
+        $CashModel->insert([
             'outletid'  => $outletID,
-            'name'      => "Petty Cash ".$input['name'],
+            'type'      => CashModel::TYPE_CASH,
+            'name'      => lang('Global.cashType'),
             'qty'       => "0",
-        ];
-        // Insert Cash Data
-        $CashModel->insert($wallet);
+        ]);
+        $tunaiid = $CashModel->getInsertID();
 
-        // Getting Cash ID
-        $cashid = $CashModel->getInsertID();
-
-        // Insert Payment
-        $payments   = $PaymentModel->findAll();
-        $paymet = [
-            'cashid'    => $cashid,
-            'name'      => "Cash",
+        // Dompet Non Tunai
+        $CashModel->insert([
             'outletid'  => $outletID,
-        ];
-        // Insert Payment Data
-        $PaymentModel->insert($paymet);
+            'type'      => CashModel::TYPE_NON_CASH,
+            'name'      => lang('Global.nonCash'),
+            'qty'       => "0",
+        ]);
+        $nontunaiid = $CashModel->getInsertID();
+
+        // Insert Default Payment Methods
+        $payments   = $PaymentModel->findAll();
+        $PaymentModel->insert([
+            'cashid'    => $tunaiid,
+            'name'      => lang('Global.cashType'),
+            'outletid'  => $outletID,
+        ]);
+        $PaymentModel->insert([
+            'cashid'    => $nontunaiid,
+            'name'      => lang('Global.nonCash'),
+            'outletid'  => $outletID,
+        ]);
 
         // insert variants
         $variants   = $VariantModel->findAll();

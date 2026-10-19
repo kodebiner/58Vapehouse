@@ -1,0 +1,123 @@
+# Deploy — Penyederhanaan Dompet (Tunai & Non Tunai)
+
+Panduan deploy ke **produksi** untuk server **tanpa CLI/terminal** (cPanel).
+Perubahan sudah diuji di lokal dan di DB terpisah: 18 → 14 dompet, konservasi
+saldo tetap, 0 duplikat, 0 referensi rusak.
+
+---
+
+## 1. Berkas yang berubah
+
+**Kode (13 file)**
+- `app/Controllers/Outlet.php`
+- `app/Controllers/CashMan.php`
+- `app/Controllers/CashExp.php`
+- `app/Controllers/Trxother.php`
+- `app/Controllers/DailyReport.php`
+- `app/Controllers/Export.php`
+- `app/Controllers/Pay.php`
+- `app/Models/CashModel.php`
+- `app/Views/cashman.php`
+- `app/Views/cashexp.php`
+- `app/Views/cashmove.php`
+- `app/Language/id/Global.php`
+- `app/Language/en/Global.php`
+
+**SQL migrasi**
+- `app/Database/wallet-tunai-nontunai.sql`
+
+---
+
+## 2. Backup database (WAJIB)
+
+cPanel → **phpMyAdmin** → pilih database → tab **Export** → **Go**.
+Simpan file `.sql` hasil export.
+
+> `ALTER TABLE` otomatis commit (tidak bisa dibungkus 1 transaksi),
+> jadi backup adalah jaring pengaman utama.
+
+---
+
+## 3. Deploy kode lewat tombol cPanel
+
+1. cPanel → **Git™ Version Control**.
+2. Pilih repository 58 Vapehouse.
+3. Klik **Pull or Deploy** → **Update from Remote** (ambil commit terbaru dari `main`).
+4. Klik **Deploy HEAD Commit**.
+
+> Pastikan branch yang dipakai cPanel = `main` (sesuai `origin/main`).
+
+Kode baru **belum dipakai** sampai langkah 4 SQL selesai. Jika ada pengguna
+yang membuka aplikasi di sela-sela, akan muncul error karena kolom
+`cash.type` belum ada. Karena itu lakukan langkah 3–5 berurutan dan cepat
+(atau di luar jam operasional).
+
+---
+
+## 4. Jalankan SQL migrasi
+
+**Jalankan STEP 0 dulu (hanya SELECT)** untuk memeriksa daftar dompet:
+buka `app/Database/wallet-tunai-nontunai.sql`, copy bagian **STEP 0** ke
+phpMyAdmin → **SQL** → **Go**. Pastikan dompet kas bernama `Petty Cash ...`
+(atau `Tunai`), sisanya bank/EDC.
+
+Lalu jalankan seluruh file:
+
+1. phpMyAdmin → pilih database → tab **Import**.
+2. **Choose File** → `wallet-tunai-nontunai.sql`.
+3. **Go**.
+
+Skrip ini **tanpa TEMPORARY TABLE**, jadi aman dijalankan via phpMyAdmin
+(dijalankan sebagai satu sesi).
+
+---
+
+## 5. Verifikasi
+
+### Database (phpMyAdmin → SQL)
+```sql
+-- harus tepat 1 baris per outlet per type
+SELECT outletid, type, name, qty FROM cash ORDER BY outletid, type;
+
+-- harus 0
+SELECT COUNT(*) AS duplikat FROM (
+  SELECT outletid, type, COUNT(*) c FROM cash GROUP BY outletid, type HAVING c > 1
+) d;
+
+-- harus SAMA dengan total saldo sebelum migrasi
+SELECT SUM(CAST(qty AS DECIMAL(20,2))) AS total_saldo FROM cash;
+```
+
+### Aplikasi (per outlet)
+- [ ] Pengelolaan Dompet: tampil **Tunai** & **Non Tunai** saja.
+- [ ] Tambah/Edit dompet: pilihan **Tipe Dompet** tersimpan benar.
+- [ ] Pengelolaan Kas: Kas Masuk/Keluar menambah/mengurangi dompet Tunai.
+- [ ] POS: bayar Tunai → saldo Tunai naik; EDC → saldo Non Tunai naik.
+- [ ] Pemindahan Dompet: asal/tujuan berlabel jelas.
+- [ ] Pengeluaran Dana: daftar dompet muncul dengan label + nama outlet.
+- [ ] Pembayaran: tiap metode terpetakan ke dompet yang benar.
+- [ ] Laporan Harian: label Tunai / Non Tunai (bukan "Petty Cash ...").
+
+---
+
+## 6. Rollback
+
+1. phpMyAdmin → database → **Import** file backup dari langkah 2.
+2. cPanel → Git Version Control → deploy commit sebelumnya (revert dulu di Git
+   bila perlu).
+
+Melepas kolom (bila diperlukan):
+```sql
+ALTER TABLE `cash` DROP INDEX `uq_cash_outlet_type`, DROP COLUMN `type`;
+```
+
+---
+
+## 7. Catatan
+
+- Kode dan SQL harus berbarengan: kode baru butuh kolom `cash.type`,
+  sedangkan kode lama bergantung pada nama dompet.
+- Modul akuntansi tidak terpengaruh (tidak ada relasi ke tabel `cash`).
+- Saldo "Non Tunai" = jumlah seluruh saldo bank/EDC outlet tersebut.
+- Outlet yang belum punya dompet Non Tunai otomatis dibuatkan (saldo 0).
+- Dompet "All Outlet" (outletid 0) tetap sebagai dompet pusat.

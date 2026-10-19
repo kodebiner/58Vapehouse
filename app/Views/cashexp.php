@@ -76,7 +76,11 @@
                             <select class="uk-select" name="wallet" id="wallet" required>
                                 <option><?=lang('Global.wallet')?></option>
                                     <?php foreach ($cashmans as $cas) { ?>
-                                        <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?></option>
+                                        <?php
+                                            $casoutlet = ($cas['outletid'] == 0) ? lang('Global.allOutlets') : '';
+                                            foreach ($outlets as $out) { if ($out['id'] === $cas['outletid']) { $casoutlet = $out['name']; } }
+                                        ?>
+                                        <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?><?= (!empty($casoutlet)) ? ' ('.$casoutlet.')' : ''; ?></option>
                                     <?php } ?>
                             </select>
                         </div>
@@ -130,7 +134,9 @@
                     <td>
                         <?php foreach ($cashmans as $cash){
                             if( $cash['id'] === $cashexp['cashid']){
-                                echo $cash['name'];
+                                $casoutlet = ($cash['outletid'] == 0) ? lang('Global.allOutlets') : '';
+                                foreach ($outlets as $out) { if ($out['id'] === $cash['outletid']) { $casoutlet = $out['name']; } }
+                                echo $cash['name'].(!empty($casoutlet) ? ' ('.$casoutlet.')' : '');
                             }
                         }
                         ?>

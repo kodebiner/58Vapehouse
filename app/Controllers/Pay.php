@@ -1286,7 +1286,6 @@ class Pay extends BaseController
         $member                 = $MemberModel->where('id', $input['customerid'])->first();
         $cash                   = $CashModel->where('id', $payments['cashid'])->first();
         $outlet                 = $OutletModel->find($this->data['outletPick']);
-        $pettycash              = $CashModel->where('name', 'Petty Cash ' . $outlet['name'])->first();
 
         // // Image Capture
         // $img                    = $input['image'];

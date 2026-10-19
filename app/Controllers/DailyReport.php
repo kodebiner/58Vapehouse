@@ -395,11 +395,7 @@ class DailyReport extends BaseController
                                 $payment        = $PaymentModel->find($trxpayment['paymentid']);
                                 $cashdata       = $CashModel->find($payment['cashid']);
 
-                                if (strcmp($cashdata['name'], 'Petty Cash ' . $outlets['name']) == 0) {
-                                    $cashname   = 'Tunai';
-                                } else {
-                                    $cashname   = $cashdata['name'];
-                                }
+                                $cashname       = (!empty($cashdata) && (int) $cashdata['type'] === 0) ? 'Tunai' : 'Non Tunai';
 
                                 // Transaction Summary
                                 $dailyreportdata[$dayrep['id']]['trxpayments'][$cashdata['id']]['name']                                 = $cashname;

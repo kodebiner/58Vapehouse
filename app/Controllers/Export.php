@@ -2952,7 +2952,7 @@ class export extends BaseController
                             if (!empty($payment)) {
                                 $cashdata       = $CashModel->find($payment['cashid']);
     
-                                if (strcmp($cashdata['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+                                if (!empty($cashdata) && (int) $cashdata['type'] === 0) {
                                     // Transaction Summary
                                     $dailyreportdata[$dayrep['id']]['trxpayments'][0]['name']                               = 'Tunai';
                                     $dailyreportdata[$dayrep['id']]['trxpayments'][0]['detail'][$trxpayment['id']]['type']  = '0';
@@ -3085,7 +3085,7 @@ class export extends BaseController
                     // Debt Installment Data
                     $cashdebt       = $CashModel->find($debtin['cashid']);
 
-                    if (strcmp($cashdebt['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+                    if (!empty($cashdebt) && (int) $cashdebt['type'] === 0) {
                         // Transaction Summary
                         $dailyreportdata[$dayrep['id']]['debtins'][0]['name']                               = 'Tunai';
                         $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtin['id']]['type']      = '0';
@@ -3106,7 +3106,7 @@ class export extends BaseController
                         $paymentins     = $PaymentModel->find($debtinstall['paymentid']);
                         $cashdebtins    = $CashModel->find($paymentins['cashid']);
     
-                        if (strcmp($cashdebtins['name'], 'Petty Cash ' . $outlets['name']) == 0) {
+                        if (!empty($cashdebtins) && (int) $cashdebtins['type'] === 0) {
                             $dailyreportdata[$dayrep['id']]['debtins'][0]['name']                               = 'Tunai';
                             $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtinstall['id']]['type']      = '0';
                             $dailyreportdata[$dayrep['id']]['debtins'][0]['detail'][$debtinstall['id']]['value']     = $debtinstall['qty'];

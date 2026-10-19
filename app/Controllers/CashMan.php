@@ -63,23 +63,17 @@ class CashMan extends BaseController
         // initialize
         $input          = $this->request->getPost();
 
-        if ($input['outlet'] ==="0"){
-          
-                $data = [
-                    'outletid'          => 0,
-                    'name'              => $input['name'],
-                    'qty'               => $input['qty'],
-                ];
-                $CashModel->insert($data);
-            
-        }else{
-            $data = [
-                'outletid'          => $input['outlet'],
-                'name'              => $input['name'],
-                'qty'               => $input['qty'],
-            ];
-            $CashModel->insert($data);
-        }
+        // Resolve dompet type (0 = Tunai, 1 = Non Tunai)
+        $type           = ($input['type'] === '1') ? CashModel::TYPE_NON_CASH : CashModel::TYPE_CASH;
+        $outletid       = ($input['outlet'] === "0") ? 0 : (int) $input['outlet'];
+
+        $data = [
+            'outletid'          => $outletid,
+            'type'              => $type,
+            'name'              => CashModel::typeLabel($type),
+            'qty'               => $input['qty'],
+        ];
+        $CashModel->insert($data);
 
         return redirect()->back()->with('message', lang('Global.saved'));
     }
@@ -92,17 +86,21 @@ class CashMan extends BaseController
         // initialize
         $input = $this->request->getpost();
 
+        // Resolve dompet type (0 = Tunai, 1 = Non Tunai)
+        $type  = ($input['type'] === '1') ? CashModel::TYPE_NON_CASH : CashModel::TYPE_CASH;
+
         // saved data
         $data = [
             'id'                => $id,
-            'name'              => $input['name'],
-            'outletid'          => $input['outlet'],
+            'outletid'          => (int) $input['outlet'],
+            'type'              => $type,
+            'name'              => CashModel::typeLabel($type),
             'qty'               => $input['qty'],
         ];
 
         // validation
         if (! $this->validate([
-            'name'              =>  "required|max_length[255]',",
+            'outlet'            =>  "required",
             // 'qty'               =>  "required"
                 ])
             )
