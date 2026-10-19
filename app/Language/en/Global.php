@@ -371,6 +371,7 @@ return [
     'dailyreportList'           => 'Daily Report List',
     'promoList'                 => 'Promo List',
     'inventoryList'             => 'Inventory List',
+    'inventoryPrice'            => 'Price',
     'billhistoryList'           => 'Bill History',
     'dosop'                     => 'Do SOP',
     'businessInfo'              => 'Business Information',

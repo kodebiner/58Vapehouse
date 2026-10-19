@@ -187,6 +187,7 @@ $routes->group('export', ['filter'=>'login'], function($routes){
     $routes->get('dayrep', 'Export::dayrep', ['filter' => 'role:owner,supervisor,investor']);
     $routes->get('dailysell', 'Export::dailysell', ['filter' => 'role:owner,supervisor,investor']);
     $routes->get('purchase', 'Export::purchase', ['filter' => 'role:owner,logistik']);
+    $routes->get('inventory', 'Export::inventory', ['filter' => 'role:owner']);
 });
 
 // Customer Routes

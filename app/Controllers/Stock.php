@@ -751,7 +751,7 @@ class Stock extends BaseController
         if ($this->data['outletPick'] === null) {
             $inventory      = $InventoryModel->orderBy('id', 'DESC')->findAll();
         } else {
-            $inventory      = $InventoryModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->find();
+            $inventory      = $InventoryModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->findAll();
         }
 
         // Parsing data to view
@@ -776,6 +776,7 @@ class Stock extends BaseController
             'name'      => $input['name'],
             'outletid'  => $input['outlet'],
             'qty'       => $input['qty'],
+            'price'     => $input['price'] ?? '0',
             
         ];
         $InventoryModel->save($data);
@@ -797,6 +798,7 @@ class Stock extends BaseController
             'name'          => $input['name'],
             'outletid'      => $input['outlet'],
             'qty'           => $input['qty'],
+            'price'         => $input['price'] ?? '0',
         ];
         $InventoryModel->save($data);
 

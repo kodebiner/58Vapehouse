@@ -30,6 +30,7 @@ use App\Models\CheckpointModel;
 use App\Models\PurchaseModel;
 use App\Models\PurchasedetailModel;
 use App\Models\SupplierModel;
+use App\Models\InventoryModel;
 use DateTime;
 
 class export extends BaseController
@@ -3582,6 +3583,92 @@ class export extends BaseController
                         echo '<td>' . $total . '</td>';
                     echo '</tr>';
                 }
+            echo '</tbody>';
+        echo '</table>';
+    }
+
+    public function inventory()
+    {
+        // Calling Models
+        $InventoryModel = new InventoryModel();
+        $OutletModel    = new OutletModel();
+
+        // Populating Data
+        if ($this->data['outletPick'] === null) {
+            $inventory  = $InventoryModel->orderBy('id', 'DESC')->findAll();
+            $addres     = "All Outlets";
+            $outletname = "58vapehouse";
+        } else {
+            $inventory  = $InventoryModel->where('outletid', $this->data['outletPick'])->orderBy('id', 'DESC')->findAll();
+            $outlet     = $OutletModel->find($this->data['outletPick']);
+            $addres     = $outlet['address'];
+            $outletname = $outlet['name'];
+        }
+
+        // Outlet Map
+        $outletMap = [];
+        foreach ($OutletModel->findAll() as $outlet) {
+            $outletMap[$outlet['id']] = $outlet['name'];
+        }
+
+        $totalqty   = 0;
+        $totalvalue = 0;
+
+        header("Content-type: application/vnd-ms-excel");
+        header("Content-Disposition: attachment; filename=Inventaris $outletname.xls");
+
+        // export
+        echo '<table>';
+            echo '<thead>';
+                echo '<tr>';
+                    echo '<th colspan="6" style="align-text:center;">Inventaris</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="6" style="align-text:center;">' . $outletname . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="6" style="align-text:center;">' . $addres . '</th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th colspan="6" style="align-text:center;"></th>';
+                echo '</tr>';
+                echo '<tr>';
+                    echo '<th>No</th>';
+                    echo '<th>Nama</th>';
+                    echo '<th>Outlet</th>';
+                    echo '<th>Jumlah</th>';
+                    echo '<th>Harga</th>';
+                    echo '<th>Total</th>';
+                echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+                $i = 1;
+                foreach ($inventory as $inv) {
+                    $qty    = (int)$inv['qty'];
+                    $price  = (int)$inv['price'];
+                    $total  = $qty * $price;
+
+                    $totalqty   += $qty;
+                    $totalvalue += $total;
+
+                    echo '<tr>';
+                        echo '<td>' . $i++ . '</td>';
+                        echo '<td>' . $inv['name'] . '</td>';
+                        echo '<td>' . ($outletMap[$inv['outletid']] ?? '') . '</td>';
+                        echo '<td>' . $qty . '</td>';
+                        echo '<td>' . $price . '</td>';
+                        echo '<td>' . $total . '</td>';
+                    echo '</tr>';
+                }
+
+                echo '<tr>';
+                    echo '<th style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">Total</th>';
+                    echo '<td></td>';
+                    echo '<td></td>';
+                    echo '<td style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">' . $totalqty . '</td>';
+                    echo '<td></td>';
+                    echo '<td style="align-text:left; font-family: arial, sans-serif; font-weight: bold;">' . $totalvalue . '</td>';
+                echo '</tr>';
             echo '</tbody>';
         echo '</table>';
     }

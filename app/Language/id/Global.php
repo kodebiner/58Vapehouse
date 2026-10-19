@@ -371,6 +371,7 @@ return [
     'dailyreportList'           => 'Daftar Laporan Harian',
     'promoList'                 => 'Daftar Promo',
     'inventoryList'             => 'Daftar Inventaris',
+    'inventoryPrice'            => 'Harga',
     'billhistoryList'           => 'Riwayat Tagihan',
     'dosop'                     => 'Lakukan SOP',
     'businessInfo'              => 'Informasi Usaha',

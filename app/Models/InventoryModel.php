@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 class InventoryModel extends Model
 {
     protected $allowedFields = [
-        'outletid','name','qty',
+        'outletid','name','qty','price',
 
     ];
 

@@ -14,13 +14,17 @@
             <h3 class="tm-h3"><?=lang('Global.inventoryList')?></h3>
         </div>
 
-        <?php if ($this->data['outletPick'] != null) { ?>
-            <!-- Button Trigger Modal Add -->
-            <div class="uk-width-1-2@m uk-text-right@m">
+        <div class="uk-width-1-2@m uk-text-right@m">
+            <?php if ($this->data['outletPick'] != null) { ?>
+                <!-- Button Trigger Modal Add -->
                 <button type="button" class="uk-button uk-button-primary uk-preserve-color" uk-toggle="target: #tambahdata"><?=lang('Global.addInventory')?></button>
-            </div>
-            <!-- End Of Button Trigger Modal Add -->
-        <?php } ?>
+                <!-- End Of Button Trigger Modal Add -->
+            <?php } ?>
+
+            <!-- Button Export -->
+            <a type="button" class="uk-button uk-button-success uk-preserve-color uk-margin-right-remove" target="_blank" href="export/inventory"><?=lang('Global.export')?></a>
+            <!-- End Of Button Export -->
+        </div>
     </div>
 </div>
 <!-- End Of Page Heading -->
@@ -76,6 +80,13 @@
                         </div>
                     </div>
 
+                    <div class="uk-margin-bottom">
+                        <label class="uk-form-label" for="price"><?=lang('Global.inventoryPrice')?></label>
+                        <div class="uk-form-controls">
+                            <input type="number" step="any" min="0" class="uk-input <?php if (session('errors.price')) : ?>tm-form-invalid<?php endif ?>" id="price" name="price" placeholder="<?=lang('Global.inventoryPrice')?>" required />
+                        </div>
+                    </div>
+
                     <hr>
 
                     <div class="uk-margin">
@@ -97,6 +108,7 @@
                 <th class="uk-width-medium"><?=lang('Global.name')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.outlet')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.quantity')?></th>
+                <th class="uk-text-center uk-width-small"><?=lang('Global.inventoryPrice')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
             </tr>
         </thead>
@@ -114,6 +126,7 @@
                         } ?>
                     </td>
                     <td class="uk-text-center uk-width-small"><?= $inv['qty']; ?></td>
+                    <td class="uk-text-center uk-width-small">Rp <?= number_format((int)($inv['price'] ?? 0), 0, ',', '.'); ?></td>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                         <!-- Button Trigger Modal Edit -->
                         <div>
@@ -178,6 +191,13 @@
                             <label class="uk-form-label" for="qty"><?=lang('Global.quantity')?></label>
                             <div class="uk-form-controls">
                                 <input type="number" class="uk-input" id="qty" name="qty" value="<?= $inv['qty']; ?>" />
+                            </div>
+                        </div>
+
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="price"><?=lang('Global.inventoryPrice')?></label>
+                            <div class="uk-form-controls">
+                                <input type="number" step="any" min="0" class="uk-input" id="price" name="price" value="<?= (int)($inv['price'] ?? 0); ?>" />
                             </div>
                         </div>
 
