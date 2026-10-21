@@ -156,7 +156,11 @@ class Report extends BaseController
         $grossales          = (Int)$salesresult + (Int)$variantdisc + (Int)$globaldisc + (Int)$memberdiscitem + (Int)$transactiondisc + (Int)$poindisc;
         $profitmodal        = (Int)$marginmodalsum - (Int)$transactiondisc - (Int)$poindisc;
         $profitdasar        = (Int)$margindasarsum - (Int)$transactiondisc - (Int)$poindisc;
-        
+
+        // Diskon Program (Member + Poin) dan Diskon Tambahan (Varian + Global)
+        $programdisc      = (Int)$memberdiscitem + (Int)$poindisc;
+        $extradisc     = (Int)$variantdisc + (Int)$globaldisc;
+
         // Parsing Data to View
         $data                   = $this->data;
         $data['title']          = 'Laporan Penjualan Harian';
@@ -166,6 +170,8 @@ class Report extends BaseController
         $data['gross']          = $grossales;
         $data['profitmodal']    = $profitmodal;
         $data['profitdasar']    = $profitdasar;
+        $data['programdisc']  = $programdisc;
+        $data['extradisc'] = $extradisc;
         $data['trxvardis']      = $variantdisc;
         $data['trxglodis']      = $globaldisc;
         $data['trxmemdis']      = $memberdiscitem;
@@ -304,6 +310,10 @@ class Report extends BaseController
         $memberdiscitem     = array_sum($discountmember);
         $poindisc           = array_sum($discountpoin);
 
+        // Diskon Program (Member + Poin) dan Diskon Tambahan (Varian + Global)
+        $programdisc      = (Int)$memberdiscitem + (Int)$poindisc;
+        $extradisc     = (Int)$variantdisc + (Int)$globaldisc;
+
         $transactionarr[] = $transactions;
 
         // Sales Result
@@ -326,6 +336,8 @@ class Report extends BaseController
         $data['gross']          = $grossales;
         $data['modals']         = $keuntunganmodal;
         $data['dasars']         = $keuntungandasar;
+        $data['programdisc']  = $programdisc;
+        $data['extradisc'] = $extradisc;
         $data['trxvardis']      = $variantdisc;
         $data['trxglodis']      = $globaldisc;
         $data['trxmemdis']      = $memberdiscitem;
