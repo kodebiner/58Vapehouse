@@ -145,7 +145,13 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <hr class="uk-divider-icon">
+
+        <!-- Laporan Keuntungan Section End -->
+        <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.profitreport')?></h1>
+        <div class="uk-child-width-1-2@m uk-child-width-1-1 uk-grid-match uk-margin" uk-grid>
             <!-- Keuntungan Modal -->
             <div class="uk-width-1-2@m">
                 <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #dc3912; color: white;">
@@ -172,9 +178,7 @@
                     </div>
                 </div>
             </div>
-
         </div>
-        <hr class="uk-divider-icon">
     </section>
     <!-- Laporan Penjualan &amp; Keuntungan Section End -->
 

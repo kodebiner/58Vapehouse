@@ -127,7 +127,6 @@
     <section class="uk-margin">
         <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.salesreport')?></h1>
         <div class="uk-grid-match uk-margin-top" uk-grid>
-
             <!-- Penjualan Kotor (Gross) -->
             <div class="uk-width-1-1@m">
                 <div class="uk-card uk-card-default uk-card-hover uk-card-body">
@@ -183,7 +182,13 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <hr class="uk-divider-icon">
+
+        <!-- Laporan Keuntungan Section End -->
+        <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.profitreport')?></h1>
+        <div class="uk-child-width-1-2@m uk-child-width-1-1 uk-grid-match uk-margin" uk-grid>
             <!-- Keuntungan Modal -->
             <div class="uk-width-1-2@m">
                 <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #dc3912; color: white;">
@@ -210,13 +215,8 @@
                     </div>
                 </div>
             </div>
-
         </div>
-        <hr class="uk-divider-icon">
     </section>
-    <!-- Laporan Penjualan &amp; Keuntungan Section End -->
-
-    <!-- <div class="uk-child-width-1-4@m uk-child-width-1-1 uk-grid-match uk-margin" uk-grid> -->
         <!-- Sales -->
         <!-- <div>
             <div class="uk-card uk-card-default uk-card-primary uk-card-hover uk-card-body">
@@ -272,7 +272,6 @@
             </div>
         </div> -->
         <!-- Profit End -->
-    <!-- </div> -->
     <!-- End Of Page Heading -->
 
     <?= view('Views/Auth/_message_block') ?>
