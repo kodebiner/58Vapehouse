@@ -85,13 +85,15 @@
     </div>
     <!-- End Of Page Heading -->
 
-    <!-- Sales Section -->
+    <!-- Laporan Penjualan &amp; Keuntungan Section -->
     <section class="uk-margin">
         <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.salesreport')?></h1>
-        <div class="uk-child-width-1-2@m uk-grid-match uk-margin-top" uk-grid>
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body">
-                    <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.gross')?></h3>
+        <div class="uk-grid-match uk-margin-top" uk-grid>
+
+            <!-- Penjualan Kotor (Gross) -->
+            <div class="uk-width-1-1@m">
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #3366cc; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: white;"><?=lang('Global.gross')?></h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.salestotal')?></p>
                     <hr>
                     <div>
@@ -102,8 +104,37 @@
                 </div>
             </div>
 
-            <div>
-                <div class="uk-card uk-card-default  uk-card-primary uk-card-hover uk-card-body">
+            <!-- Diskon Program (Member + Point) -->
+            <div class="uk-width-1-2@m">
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #990099; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: white;"><?=lang('Global.programdisc')?></h3>
+                    <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.discount')?> <?=lang('Global.member')?> + <?=lang('Global.discount')?> <?=lang('Global.pointlabel')?></p>
+                    <hr>
+                    <div>
+                        <div uk-grid>
+                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($programdisc,0,',','.');" ";?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diskon Tambahan (Varian + Global) -->
+            <div class="uk-width-1-2@m">
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #109618; color: white;">
+                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: white;"><?=lang('Global.extradisc')?></h3>
+                    <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.discount')?> <?=lang('Global.variant')?> + <?=lang('Global.discount')?> <?=lang('Global.global')?></p>
+                    <hr>
+                    <div>
+                        <div uk-grid>
+                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($extradisc,0,',','.');" ";?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Penjualan Bersih (Net) -->
+            <div class="uk-width-1-1@m">
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-card-primary">
                     <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.net')?></h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.salestotal')?></p>
                     <hr>
@@ -114,141 +145,38 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <hr class="uk-divider-icon">
-    </section>
-    <!-- Sales Section End -->
 
-    <!-- Profit Section -->
-    <section class="uk-margin">
-        <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.profitreport')?></h1>
-        <div class="uk-child-width-1-2@m uk-grid-match uk-margin-top" uk-grid>
-            <div>
-                <div class="uk-card uk-card-default uk-card-default uk-card-hover uk-card-body" style="background-color: #dc3912; color: white;">
+            <!-- Keuntungan Modal -->
+            <div class="uk-width-1-2@m">
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #dc3912; color: white;">
                     <h3 class="uk-card-title uk-margin-remove-bottom" style="color: white;"><?=lang('Global.capitalgains')?></h3>
                     <hr>
                     <div>
                         <div class="uk-margin-remove-top" uk-grid>
-                            <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right" style="color: white;"><?php echo "Rp. ".number_format($modals,2,',','.');" ";?></div>
+                            <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right" style="color: white;"><?php echo "Rp. ".number_format($modals,0,',','.');" ";?></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div>
-                <div class="uk-card uk-card-default uk-card-body" style="background-color: #ff9900; color: white;">
+            <!-- Keuntungan Dasar -->
+            <div class="uk-width-1-2@m">
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #ff9900; color: white;">
                     <h3 class="uk-card-title uk-margin-remove-bottom" style="color: white;"><?=lang('Global.basicprofit')?></h3>
                     <hr>
                     <div>
                         <div class="uk-margin-remove-top" uk-grid>
-                            <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right" style="color: white;"><?php echo "Rp. ".number_format($dasars,2,',','.');" ";?></div>
+                            <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right" style="color: white;"><?php echo "Rp. ".number_format($dasars,0,',','.');" ";?></div>
                         </div>
                         
                     </div>
                 </div>
             </div>
+
         </div>
         <hr class="uk-divider-icon">
     </section>
-    <!-- Profit Section End -->
-
-    <!-- Discount Section -->
-    <section class="uk-margin">
-        <h1 class="uk-h3 uk-heading-bullet uk-margin-remove" style="color: #fff;"><?=lang('Global.discountreport')?></h1>
-        <div class="uk-child-width-1-2@m uk-grid-match uk-margin-top" uk-grid>
-            <!-- <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #109618; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"></?=lang('Global.discpoint')?></h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"></?=lang('Global.totaldiscpoint')?></p>
-                    <hr>
-                    <div>
-                    <div uk-grid>
-                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"></?php echo "Rp. ".number_format($poindisc,2,',','.');" ";?></div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #990099; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"></?=lang('Global.discount')?> </?=lang('Global.variant')?></h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"></?=lang('Global.totaldiscvar')?></p>
-                    <hr>
-                    <div>
-                        <div uk-grid>
-                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"></?php echo "Rp. ".number_format($trxvardis,2,',','.');" ";?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #0099c6; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"></?=lang('Global.discount')?> Global</h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"></?=lang('Global.discount')?> yang diatur melalui "Informasi Usaha"</p>
-                    <hr>
-                    <div>
-                        <div uk-grid>
-                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"></?php echo "Rp. ".number_format($trxglodis,2,',','.');" ";?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #dd4477; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"></?=lang('Global.discount')?> Member</h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"></?=lang('Global.discount')?> Member yang diatur melalui "Informasi Usaha"</p>
-                    <hr>
-                    <div>
-                        <div uk-grid>
-                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"></?php echo "Rp. ".number_format($trxmemdis,2,',','.');" ";?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #66aa00; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"></?=lang('Global.discount')?> </?=lang('Global.transaction')?></h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"></?=lang('Global.totaldisctrx')?></p>
-                    <hr>
-                    <div>
-                        <div uk-grid>
-                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"></?php echo "Rp. ".number_format($trxdisc,2,',','.');" ";?></div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #109618; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discount')?> <?=lang('Global.variant')?></h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.totaldiscvar')?></p>
-                    <hr>
-                    <div>
-                        <div uk-grid>
-                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxvardis,2,',','.');" ";?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #990099; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: #fff;"><?=lang('Global.discount')?> Member</h3>
-                    <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.discount')?> Member yang diatur melalui "Informasi Usaha"</p>
-                    <hr>
-                    <div>
-                        <div uk-grid>
-                            <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxmemdis,2,',','.');" ";?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Discount Section End -->
+    <!-- Laporan Penjualan &amp; Keuntungan Section End -->
 
     <?= view('Views/Auth/_message_block') ?>
 
