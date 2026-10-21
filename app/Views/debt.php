@@ -52,7 +52,7 @@
     <!-- Total Debt List -->
     <div class="uk-container uk-container-large uk-light">
         <div class="uk-form-horizontal">
-            <div class="uk-form-label"><?= lang('Global.total') ?> <?= lang('Global.debt') ?> : Rp <?= number_format($totaldebt, 2, ',', '.') ?></div>
+            <div class="uk-form-label"><?= lang('Global.total') ?> <?= lang('Global.debt') ?> : Rp <?= number_format($totaldebt, 0, ',', '.') ?></div>
         </div>
     </div>
     <!-- Total Debt List End -->
@@ -77,7 +77,7 @@
                     <td class=""><?= $debt['outlet'] ?></td>
                     <td class=""><?= $debt['name'] ?></td>
                     <td class=""><?= date('l, d M Y', strtotime($debt['deadline'])); ?></td>
-                    <td class="">Rp <?= number_format($debt['value'], 2, ',', '.') ?></td>
+                    <td class="">Rp <?= number_format($debt['value'], 0, ',', '.') ?></td>
                     <!-- <td class="uk-flex-middle uk-text-center">
                         <a class="uk-icon-link uk-icon" uk-icon="credit-card" uk-toggle="target:#pay-</?= $debt['id'] ?>"></a>
                     </td>
@@ -102,7 +102,7 @@
 
                     <td class=""></?= date('l, d M Y', strtotime($debt['deadline'])); ?></td>
 
-                    <td class="">Rp </?= number_format($debt['value'], 2, ',', '.') ?></td> -->
+                    <td class="">Rp </?= number_format($debt['value'], 0, ',', '.') ?></td> -->
                 </tr>
             <?php } ?>
         </tbody>
@@ -128,7 +128,7 @@
                             <h3 class="tm-h2"><?= lang('Global.paybill') ?></h5>
                         </div>
                         <div class="uk-margin-remove-top uk-text-center">
-                            <h5 class="uk-modal-title" style="color: #000;">Rp <?= number_format($debt['value'], 2, ',', '.') ?></h5>
+                            <h5 class="uk-modal-title" style="color: #000;">Rp <?= number_format($debt['value'], 0, ',', '.') ?></h5>
                         </div>
                     </div>
                 </div>

@@ -123,7 +123,7 @@
                         }
                         ?>
                     </td>
-                    <td class="uk-text-center">Rp <?= number_format($cash['qty'],2,',','.'); ?></td>
+                    <td class="uk-text-center">Rp <?= number_format($cash['qty'],0,',','.'); ?></td>
                     <td class="uk-child-width-auto uk-flex-center uk-grid-row-small uk-grid-column-small" uk-grid>
                         <!-- Button Trigger Modal Edit -->
                         <div>

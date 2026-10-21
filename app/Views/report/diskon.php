@@ -82,7 +82,7 @@
                 <hr>
                 <div>
                 <div uk-grid>
-                    <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($poindisc,2,',','.');" ";?></div>
+                    <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($poindisc,0,',','.');" ";?></div>
                 </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                 <hr>
                 <div>
                     <div uk-grid>
-                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxvardis,2,',','.');" ";?></div>
+                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxvardis,0,',','.');" ";?></div>
                     </div>
                 </div>
             </div>
@@ -108,7 +108,7 @@
                 <hr>
                 <div>
                     <div uk-grid>
-                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxglodis,2,',','.');" ";?></div>
+                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxglodis,0,',','.');" ";?></div>
                     </div>
                 </div>
             </div>
@@ -121,7 +121,7 @@
                 <hr>
                 <div>
                     <div uk-grid>
-                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxmemdis,2,',','.');" ";?></div>
+                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxmemdis,0,',','.');" ";?></div>
                     </div>
                 </div>
             </div>
@@ -134,7 +134,7 @@
                 <hr>
                 <div>
                     <div uk-grid>
-                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxdisc,2,',','.');" ";?></div>
+                        <div class="uk-width-1-1 uk-margin-remove uk-text-large uk-text-bolder uk-text-right" style="font-size:30px;"><?php echo "Rp. ".number_format($trxdisc,0,',','.');" ";?></div>
                     </div>
                 </div>
             </div>

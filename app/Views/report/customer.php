@@ -102,8 +102,8 @@
                     </td>
                     <td style="color:white;"><?=$customer['name']?></td>
                     <td class="uk-text-center" style="color:white;"><?=$customer['trx']?></td>
-                    <td class="uk-text-center" style="color:white;"><?= "Rp. ".number_format($customer['trxvalue'],2,',','.');" ";?></td>
-                    <td class="uk-text-center" style="color:white;"><?= "Rp. ".number_format($customer['debt'],2,',','.');" ";?></td>
+                    <td class="uk-text-center" style="color:white;"><?= "Rp. ".number_format($customer['trxvalue'],0,',','.');" ";?></td>
+                    <td class="uk-text-center" style="color:white;"><?= "Rp. ".number_format($customer['debt'],0,',','.');" ";?></td>
                     <td class="uk-text-center" style="color:white;"><?="+62".$customer['phone']?></td>
                 </tr>
             <?php } ?>

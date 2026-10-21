@@ -167,7 +167,7 @@ $wlabel = function ($w) use ($outlets) {
                         }
                         ?>
                     </td>
-                    <td class="uk-text-center">Rp <?= number_format($cashmv['qty'],2,',','.'); ?></td>
+                    <td class="uk-text-center">Rp <?= number_format($cashmv['qty'],0,',','.'); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

@@ -111,10 +111,10 @@
                 <tr>
                     <td class="uk-text-center"><?= $variant['sku'] ?></td>
                     <td class="uk-text-center"><?= $variant['name'] ?></td>
-                    <td class="uk-text-center">Rp <?= number_format((Int)$variant['hargadasar'],2,',','.'); ?></td>
-                    <td class="uk-text-center">Rp <?= number_format((Int)$variant['hargamodal'],2,',','.'); ?></td>
-                    <td class="uk-text-center">Rp <?= number_format((Int)$variant['hargarekomendasi'],2,',','.'); ?></td>
-                    <td class="uk-text-center">Rp <?= number_format(((Int)$variant['hargajual'] + (Int)$variant['hargamodal']),2,',','.'); ?></td>
+                    <td class="uk-text-center">Rp <?= number_format((Int)$variant['hargadasar'],0,',','.'); ?></td>
+                    <td class="uk-text-center">Rp <?= number_format((Int)$variant['hargamodal'],0,',','.'); ?></td>
+                    <td class="uk-text-center">Rp <?= number_format((Int)$variant['hargarekomendasi'],0,',','.'); ?></td>
+                    <td class="uk-text-center">Rp <?= number_format(((Int)$variant['hargajual'] + (Int)$variant['hargamodal']),0,',','.'); ?></td>
                     <td class="uk-text-center">
                         <?php
                         $qty = 0;

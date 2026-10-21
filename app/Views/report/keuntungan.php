@@ -88,7 +88,7 @@
                 <hr>
                 <div>
                     <div class="uk-margin-remove-top" uk-grid>
-                        <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right"><?php echo "Rp. ".number_format($modals,2,',','.');" ";?></div>
+                        <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right"><?php echo "Rp. ".number_format($modals,0,',','.');" ";?></div>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@
                 <hr>
                 <div>
                     <div class="uk-margin-remove-top" uk-grid>
-                        <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right"><?php echo "Rp. ".number_format($dasars,2,',','.');" ";?></div>
+                        <div class="uk-width-expand@m uk-card-title uk-text-bold uk-text-right"><?php echo "Rp. ".number_format($dasars,0,',','.');" ";?></div>
                     </div>
                     
                 </div>

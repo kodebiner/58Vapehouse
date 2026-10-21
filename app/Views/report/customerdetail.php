@@ -87,7 +87,7 @@
                                         } ?>
                                     <?php }
                                     $sum = array_sum($prices);
-                                    echo "Rp " . number_format($sum,2,',','.'); ?>
+                                    echo "Rp " . number_format($sum,0,',','.'); ?>
                                 </td>
 
                                 <td class="uk-text-center">
@@ -411,7 +411,7 @@
 
                                 <td class=""><?= $debt['deadline'] ?></td>
 
-                                <td class="">Rp <?= number_format($debt['value'],2,',','.') ?></td>
+                                <td class="">Rp <?= number_format($debt['value'],0,',','.') ?></td>
                             </tr>
                         <?php }
                     } ?>
@@ -432,7 +432,7 @@
                             <h3 class="tm-h2"><?=lang('Global.paybill')?></h5>
                         </div>
                         <div class="uk-margin-remove-top uk-text-center">
-                            <h5 class="uk-modal-title" style="color: #000;">Rp <?= number_format($debt['value'],2,',','.') ?></h5>
+                            <h5 class="uk-modal-title" style="color: #000;">Rp <?= number_format($debt['value'],0,',','.') ?></h5>
                         </div>
                     </div>
                 </div>

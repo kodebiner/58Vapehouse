@@ -68,29 +68,35 @@
                     <td><?= $transaction['outlet'] ?></td>
                     <td><?= $transaction['cashier'] ?></td>
                     <td><?= $transaction['payment'] ?></td>
-                    <td><?= "Rp " . number_format($transaction['value'], 2, ',', '.'); ?></td>
+                    <td><?= "Rp " . number_format($transaction['value'], 0, ',', '.'); ?></td>
                     <td>
                         <?php
                         if (!empty($transaction['outsidehours'])) {
                             echo '<div class="uk-text-danger" style="border-style: solid; border-color: #f0506e; padding: 2px 4px; margin-bottom: 4px;">Transaksi di Luar Pembukuan Kas</div>';
                         }
-                        if (!empty($transaction['pointused'])) {
-                            echo '<div>Tukar Poin</div>';
+                        // if (!empty($transaction['pointused'])) {
+                        //     echo '<div>Tukar Poin</div>';
+                        // }
+                        // if (!empty($transaction['memberdisc'])) {
+                        //     echo '<div>Diskon Member</div>';
+                        // }
+                        // if (!empty($transaction['trxdiscount'])) {
+                        //     echo '<div>Diskon Transaksi</div>';
+                        // }
+                        // if ($transaction['has_discvar']) {
+                        //     echo '<div>Diskon Variant</div>';
+                        // }
+                        // if ($transaction['has_globaldisc']) {
+                        //     echo '<div>Diskon Global</div>';
+                        // }
+                        // if ($transaction['has_memberdisc']) {
+                        //     echo '<div>Diskon Member Per Item</div>';
+                        // }
+                        if ($transaction['has_memberdisc'] || !empty($transaction['memberdisc']) || !empty($transaction['pointused'])) {
+                            echo '<div>'. lang('Global.programdisc') .'</div>';
                         }
-                        if (!empty($transaction['memberdisc'])) {
-                            echo '<div>Diskon Member</div>';
-                        }
-                        if (!empty($transaction['trxdiscount'])) {
-                            echo '<div>Diskon Transaksi</div>';
-                        }
-                        if ($transaction['has_discvar']) {
-                            echo '<div>Diskon Variant</div>';
-                        }
-                        if ($transaction['has_globaldisc']) {
-                            echo '<div>Diskon Global</div>';
-                        }
-                        if ($transaction['has_memberdisc']) {
-                            echo '<div>Diskon Member Per Item</div>';
+                        if ($transaction['has_discvar'] || $transaction['has_globaldisc'] || !empty($transaction['trxdiscount'])) {
+                            echo '<div>'. lang('Global.extradisc') .'</div>';
                         }
                         ?>
                     </td>

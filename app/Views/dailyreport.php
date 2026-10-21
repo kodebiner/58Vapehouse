@@ -80,10 +80,10 @@
                         <td class=""><?= $dayrep['outlet'] ?></td>
                         <td><?= $dayrep['dateopen'] ?></td>
                         <td><?= $dayrep['dateclose'] ?></td>
-                        <td>Rp <?= number_format($dayrep['totalcashin'],2,',','.');?></td>
-                        <td>Rp <?= number_format($dayrep['totalcashout'],2,',','.');?></td>
-                        <td>Rp <?= number_format((Int)$dayrep['cashclose'],2,',','.');?></td>
-                        <td>Rp <?= number_format((Int)$dayrep['noncashclose'],2,',','.');?></td>
+                        <td>Rp <?= number_format($dayrep['totalcashin'],0,',','.');?></td>
+                        <td>Rp <?= number_format($dayrep['totalcashout'],0,',','.');?></td>
+                        <td>Rp <?= number_format((Int)$dayrep['cashclose'],0,',','.');?></td>
+                        <td>Rp <?= number_format((Int)$dayrep['noncashclose'],0,',','.');?></td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -203,7 +203,7 @@
                                             </div>
                                             <div class="uk-text-right">
                                                 <div>
-                                                    <?= 'Rp '.number_format($totalpaymethodvalue,2,',','.'); ?>
+                                                    <?= 'Rp '.number_format($totalpaymethodvalue,0,',','.'); ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -223,7 +223,7 @@
                                             </div>
                                             <div class="uk-text-right">
                                                 <div>
-                                                    <?= 'Rp '.number_format($totalpaymethodvaluedebtpoin,2,',','.'); ?>
+                                                    <?= 'Rp '.number_format($totalpaymethodvaluedebtpoin,0,',','.'); ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -240,7 +240,7 @@
                                         <div>
                                             <?php
                                                 $totalvalue = array_sum($totaltrxvalue);
-                                                echo "Rp ".number_format($totalvalue,2,',','.');
+                                                echo "Rp ".number_format($totalvalue,0,',','.');
                                             ?>
                                         </div>
                                     </div>
@@ -265,7 +265,7 @@
                                         <div class=""><?= lang('Global.initialcash') ?></div>
                                     </div>
                                     <div class="uk-text-right">
-                                        <div>Rp <?= number_format($dayrep['initialcash'],2,',','.') ?></div>
+                                        <div>Rp <?= number_format($dayrep['initialcash'],0,',','.') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -289,7 +289,7 @@
                                         <div class=""><?= lang('Global.totalcashin') ?></div>
                                     </div>
                                     <div class="uk-text-right">
-                                        <div>Rp <?= number_format($summarycashin,2,',','.') ?></div>
+                                        <div>Rp <?= number_format($summarycashin,0,',','.') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -300,7 +300,7 @@
                                         <div class=""><?= lang('Global.totalcashout') ?></div>
                                     </div>
                                     <div class="uk-text-right">
-                                        <div>-Rp <?= number_format($summarycashout,2,',','.') ?></div>
+                                        <div>-Rp <?= number_format($summarycashout,0,',','.') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -311,7 +311,7 @@
                                         <div class=""><?= lang('Global.totalcash') ?></div>
                                     </div>
                                     <div class="uk-text-right">
-                                        <div>Rp <?= number_format(((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)),2,',','.') ?></div>
+                                        <div>Rp <?= number_format(((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)),0,',','.') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -344,7 +344,7 @@
                                         </div>
                                         <div class="uk-text-right">
                                             <div>
-                                                <?= 'Rp '.number_format($totaldebtinstallment,2,',','.'); ?>
+                                                <?= 'Rp '.number_format($totaldebtinstallment,0,',','.'); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -360,7 +360,7 @@
                                         <div>
                                             <?php
                                                 $totaldebtvalue = array_sum($totaldebtins);
-                                                echo "Rp ".number_format($totaldebtvalue,2,',','.');
+                                                echo "Rp ".number_format($totaldebtvalue,0,',','.');
                                             ?>
                                         </div>
                                     </div>
@@ -395,7 +395,7 @@
                                         </div>
                                         <div class="uk-text-right">
                                             <div>
-                                                </?= 'Rp '.number_format($totaltopups,2,',','.'); ?>
+                                                </?= 'Rp '.number_format($totaltopups,0,',','.'); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -411,7 +411,7 @@
                                         <div>
                                             </?php
                                                 $totaltopupvalue = array_sum($totaltopup);
-                                                echo "Rp ".number_format($totaltopupvalue,2,',','.');
+                                                echo "Rp ".number_format($totaltopupvalue,0,',','.');
                                             ?>
                                         </div>
                                     </div>
@@ -446,7 +446,7 @@
                                         </div>
                                         <div class="uk-text-right">
                                             <div>
-                                                </?= 'Rp '.number_format($totalwithdraws,2,',','.'); ?>
+                                                </?= 'Rp '.number_format($totalwithdraws,0,',','.'); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -462,7 +462,7 @@
                                         <div>
                                             </?php
                                                 $totalwithdrawvalue = array_sum($totalwithdraw);
-                                                echo "Rp ".number_format($totalwithdrawvalue,2,',','.');
+                                                echo "Rp ".number_format($totalwithdrawvalue,0,',','.');
                                             ?>
                                         </div>
                                     </div>
@@ -487,7 +487,7 @@
                                         <div class=""><?= lang('Global.cashreceived') ?></div>
                                     </div>
                                     <div class="uk-text-right">
-                                        <div>Rp <?= number_format($dayrep['cashclose'],2,',','.') ?></div>
+                                        <div>Rp <?= number_format($dayrep['cashclose'],0,',','.') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -498,7 +498,7 @@
                                         <div class=""><?= lang('Global.noncashreceived') ?></div>
                                     </div>
                                     <div class="uk-text-right">
-                                        <div>Rp <?= number_format($dayrep['noncashclose'],2,',','.') ?></div>
+                                        <div>Rp <?= number_format($dayrep['noncashclose'],0,',','.') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -509,7 +509,7 @@
                                         <div class=""><?= lang('Global.totalactualrec') ?></div>
                                     </div>
                                     <div class="uk-text-right">
-                                        <div>Rp <?= number_format($dayrep['actualsummary'],2,',','.') ?></div>
+                                        <div>Rp <?= number_format($dayrep['actualsummary'],0,',','.') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -614,8 +614,8 @@
                                         <div class="uk-text-muted"><?= lang('Global.descreception') ?></div>
                                     </div>
                                     <div class="uk-text-right">
-                                    <!-- <div>Rp </?=number_format((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$totaldebtvalue + (Int)$totaltopupvalue + (Int)$totalwithdrawvalue + ((Int)$summarycashin - (Int)$summarycashout))),2,',','.') ?></div> -->
-                                        <div>Rp <?=number_format((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$totaldebtvalue + ((Int)$summarycashin - (Int)$summarycashout))),2,',','.') ?></div>
+                                    <!-- <div>Rp </?=number_format((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$totaldebtvalue + (Int)$totaltopupvalue + (Int)$totalwithdrawvalue + ((Int)$summarycashin - (Int)$summarycashout))),0,',','.') ?></div> -->
+                                        <div>Rp <?=number_format((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$totaldebtvalue + ((Int)$summarycashin - (Int)$summarycashout))),0,',','.') ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -628,8 +628,8 @@
                                     </div>
                                     <div class="uk-text-right uk-text-bolder" style="color: #000;">
                                         <div>
-                                        <!-- </?= number_format((Int)$dayrep['actualsummary'] - ((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$totaldebtvalue + (Int)$totaltopupvalue + (Int)$totalwithdrawvalue + ((Int)$summarycashin - (Int)$summarycashout)))),2,',','.') ?> -->
-                                            <?= number_format((Int)$dayrep['actualsummary'] - ((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$totaldebtvalue + ((Int)$summarycashin - (Int)$summarycashout)))),2,',','.') ?>
+                                        <!-- </?= number_format((Int)$dayrep['actualsummary'] - ((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$totaldebtvalue + (Int)$totaltopupvalue + (Int)$totalwithdrawvalue + ((Int)$summarycashin - (Int)$summarycashout)))),0,',','.') ?> -->
+                                            <?= number_format((Int)$dayrep['actualsummary'] - ((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$totaldebtvalue + ((Int)$summarycashin - (Int)$summarycashout)))),0,',','.') ?>
                                         </div>
                                     </div>
                                 </div>
@@ -712,7 +712,7 @@
                             <div>
                                 <div class="uk-text-right">
                                     <?php
-                                        echo "Rp ".number_format($totalvalue,2,',','.');
+                                        echo "Rp ".number_format($totalvalue,0,',','.');
                                     ?>
                                 </div>
                             </div>
@@ -749,7 +749,7 @@
                                         <div><?= $detail['name'] ?></div>
                                     </div>
                                     <div class="uk-text-right uk-text-bold" style="color: #000;">
-                                        Rp <?= number_format($detail['value'],2,',','.') ?>
+                                        Rp <?= number_format($detail['value'],0,',','.') ?>
                                     </div>
                                 </div>
 
@@ -791,7 +791,7 @@
                                 <div><?= lang('Global.close') ?></div>
                             </div>
                             <div>
-                                <div class="uk-text-right">Rp <?= number_format((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)),2,',','.') ?></div>
+                                <div class="uk-text-right">Rp <?= number_format((Int)$totalvalue + ((Int)$dayrep['initialcash'] + ((Int)$summarycashin - (Int)$summarycashout)),0,',','.') ?></div>
                             </div>
                         </div>
 
@@ -844,9 +844,9 @@
                                 <div class="uk-text-right">
                                     <div>
                                         <?php if ($trxot['type'] == '0') {
-                                            echo "<div class='uk-text-success'>"."+Rp ".number_format($trxot['qty'],2,',','.')."</div>";
+                                            echo "<div class='uk-text-success'>"."+Rp ".number_format($trxot['qty'],0,',','.')."</div>";
                                         } else {
-                                            echo "<div class='uk-text-danger'>"."-Rp ".number_format($trxot['qty'],2,',','.')."</div>";
+                                            echo "<div class='uk-text-danger'>"."-Rp ".number_format($trxot['qty'],0,',','.')."</div>";
                                         } ?>
                                     </div>
                                 </div>
@@ -904,7 +904,7 @@
                                 <div><?= lang('Global.initialcash') ?></div>
                             </div>
                             <div>
-                                <div class="uk-text-right">+Rp <?= number_format($dayrep['initialcash'],2,',','.') ?></div>
+                                <div class="uk-text-right">+Rp <?= number_format($dayrep['initialcash'],0,',','.') ?></div>
                             </div>
                         </div>
 
@@ -969,7 +969,7 @@
                                 <div class="uk-text-right">
                                     <?php
                                         $totaldebtvalue = array_sum($totaldebtins);
-                                        echo "Rp ".number_format($totaldebtvalue,2,',','.');
+                                        echo "Rp ".number_format($totaldebtvalue,0,',','.');
                                     ?>
                                 </div>
                             </div>
@@ -1002,9 +1002,9 @@
                                             <div>
                                                 <?php
                                                 // if ($debtdetail['type'] == '0') {
-                                                    echo "<div class='uk-text-success'>"."+Rp ".number_format($debtdetail['value'],2,',','.')."</div>";
+                                                    echo "<div class='uk-text-success'>"."+Rp ".number_format($debtdetail['value'],0,',','.')."</div>";
                                                 // } else {
-                                                //     echo "<div class='uk-text-danger'>"."-Rp ".number_format($debtdetail['value'],2,',','.')."</div>";
+                                                //     echo "<div class='uk-text-danger'>"."-Rp ".number_format($debtdetail['value'],0,',','.')."</div>";
                                                 // }
                                                 ?>
                                             </div>
@@ -1091,7 +1091,7 @@
                                 <div class="uk-text-right">
                                     </?php
                                         $totaltopupvalue = array_sum($totaltopup);
-                                        echo "Rp ".number_format($totaltopupvalue,2,',','.');
+                                        echo "Rp ".number_format($totaltopupvalue,0,',','.');
                                     ?>
                                 </div>
                             </div>
@@ -1121,7 +1121,7 @@
                                         <div class="uk-text-right">
                                             <div>
                                                 </?php if ($topupdetail['type'] == '0') {
-                                                    echo "<div class='uk-text-success'>"."+Rp ".number_format($topupdetail['value'],2,',','.')."</div>";
+                                                    echo "<div class='uk-text-success'>"."+Rp ".number_format($topupdetail['value'],0,',','.')."</div>";
                                                 } ?>
                                             </div>
                                         </div>
@@ -1202,7 +1202,7 @@
                                 <div class="uk-text-right">
                                     </?php
                                         $totalwithdrawvalue = array_sum($totalwithdraw);
-                                        echo "Rp ".number_format($totalwithdrawvalue,2,',','.');
+                                        echo "Rp ".number_format($totalwithdrawvalue,0,',','.');
                                     ?>
                                 </div>
                             </div>
@@ -1232,7 +1232,7 @@
                                         <div class="uk-text-right">
                                             <div>
                                                 </?php if ($withdrawdetail['type'] == '1') {
-                                                    echo "<div class='uk-text-success'>"."+Rp ".number_format($withdrawdetail['value'],2,',','.')."</div>";
+                                                    echo "<div class='uk-text-success'>"."+Rp ".number_format($withdrawdetail['value'],0,',','.')."</div>";
                                                 } ?>
                                             </div>
                                         </div>

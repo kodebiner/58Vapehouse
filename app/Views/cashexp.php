@@ -141,7 +141,7 @@
                         }
                         ?>
                     </td>
-                    <td class="uk-text-center">Rp <?= number_format($cashexp['qty'],2,',','.'); ?></td>
+                    <td class="uk-text-center">Rp <?= number_format($cashexp['qty'],0,',','.'); ?></td>
                     <td><?= $cashexp['description']; ?></td>
                 </tr>
             <?php endforeach; ?>

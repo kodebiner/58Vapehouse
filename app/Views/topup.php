@@ -63,7 +63,7 @@
                         } ?>
                     </td>
                     <td class=""><?= $trx['description'];?></td>
-                    <td class="uk-text-center">Rp <?= number_format($trx['qty'],2,',','.');?></td>
+                    <td class="uk-text-center">Rp <?= number_format($trx['qty'],0,',','.');?></td>
                 </tr>
             <?php } ?>
         </tbody>

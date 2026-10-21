@@ -813,14 +813,14 @@
         <!-- Base Price -->
         <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.basePrice') ?> :</div>
-            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalbase, 2, ',', '.') ?></div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalbase, 0, ',', '.') ?></div>
         </div>
         <!-- Base Price End -->
 
         <!-- Capital Price -->
         <div class="uk-width-1-2 uk-width-1-4@m uk-form-horizontal">
             <div class="uk-form-label uk-margin-top" style="width: 120px;"><?= lang('Global.total') ?> <?= lang('Global.capitalPrice') ?> :</div>
-            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalcap, 2, ',', '.') ?></div>
+            <div class="uk-form-controls uk-margin-top uk-margin-remove-left">Rp <?= number_format($totalcap, 0, ',', '.') ?></div>
         </div>
         <!-- Capital Price End -->
     </div>
@@ -892,7 +892,7 @@
                         } elseif ($countvar === 1) {
                             foreach ($variants as $variant) {
                                 if ($variant['productid'] === $product['id']) {
-                                    echo "Rp " . number_format(($variant['hargamodal'] + $variant['hargajual']), 2, ',', '.');
+                                    echo "Rp " . number_format(($variant['hargamodal'] + $variant['hargajual']), 0, ',', '.');
                                 }
                             }
                         } else {
@@ -1438,7 +1438,7 @@
                                                 ?>
                                             </td>
                                             <td>
-                                                <?= "Rp " . number_format(((int)$variant['hargamodal'] + (int)$variant['hargajual']), 2, ',', '.'); ?>
+                                                <?= "Rp " . number_format(((int)$variant['hargamodal'] + (int)$variant['hargajual']), 0, ',', '.'); ?>
                                             </td>
                                             <td class="uk-text-center">
                                                 <a class="uk-icon-button" uk-icon="history" href="product/history/<?= $variant['id'] ?>"></a>

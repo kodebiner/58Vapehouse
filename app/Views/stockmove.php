@@ -187,7 +187,7 @@
                 <td class="uk-width-small"><?= $stockmove['origin'] ?></td>
                 <td class="uk-width-small"><?= $stockmove['destination'] ?></td>
                 <td class="uk-text-center uk-width-small"><?= $stockmove['totalqty'] ?></td>
-                <td class="uk-width-small"><?= "Rp " . number_format($stockmove['totalhargabeli'],2,',','.') ?></td>
+                <td class="uk-width-small"><?= "Rp " . number_format($stockmove['totalhargabeli'],0,',','.') ?></td>
                 <td class="uk-text-center uk-width-small"><?= renderStatusBadge($stockmove['status'], $stockmove['origin'], $stockmove['destination'], $stockmove['originid'], $stockmove['destinationid'], $outletPick) ?></td>
 
                 <?php if ((($stockmove['status'] == "0") || ($stockmove['status'] == "1")) && ($outletPick != null)) {

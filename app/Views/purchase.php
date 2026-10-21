@@ -389,7 +389,7 @@
                             $prices[] = (Int)$detail['inputqty'] * (Int)$detail['inputprice'];
                         }
                         $sum = array_sum($prices);
-                        echo "Rp " . number_format($sum,2,',','.');
+                        echo "Rp " . number_format($sum,0,',','.');
                         ?>
                     </td>
 
