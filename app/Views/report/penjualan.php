@@ -92,8 +92,8 @@
 
             <!-- Penjualan Kotor (Gross) -->
             <div class="uk-width-1-1@m">
-                <div class="uk-card uk-card-default uk-card-hover uk-card-body" style="background-color: #3366cc; color: white;">
-                    <h3 class="uk-card-title uk-margin-remove-bottom" style="color: white;"><?=lang('Global.gross')?></h3>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body">
+                    <h3 class="uk-card-title uk-margin-remove-bottom"><?=lang('Global.gross')?></h3>
                     <p class="uk-margin-remove-top uk-text-bolder"><?=lang('Global.salestotal')?></p>
                     <hr>
                     <div>
