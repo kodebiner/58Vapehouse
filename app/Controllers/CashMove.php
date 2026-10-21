@@ -38,11 +38,11 @@ class CashMove extends BaseController
         $outlets                = $OutletModel->findAll();
         // $cashman                = $CashModel->findAll();
         if ($this->data['outletPick'] != null) {
-            $origins                = $CashModel->where('outletid', $this->data['outletPick'])->find();
-            $destinations           = $CashModel->where('outletid !=', $this->data['outletPick'])->find();
+            $origins                = $CashModel->where('outletid', $this->data['outletPick'])->orderBy('outletid', 'ASC')->find();
+            $destinations           = $CashModel->where('outletid !=', $this->data['outletPick'])->orderBy('outletid', 'ASC')->find();
         } else {
-            $origins                = $CashModel->findAll();
-            $destinations           = $CashModel->findAll();
+            $origins                = $CashModel->orderBy('outletid', 'ASC')->findAll();
+            $destinations           = $CashModel->orderBy('outletid', 'ASC')->findAll();
         }
 
         // if (!empty($input)) {

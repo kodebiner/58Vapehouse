@@ -22,7 +22,7 @@ class Payment extends BaseController
 
         // Populating Data
         $outlets                = $OutletModel->findAll();
-        $cash                   = $CashModel->findAll();
+        $cash                   = $CashModel->orderBy('outletid', 'ASC')->findAll();
 
         // get outlet
         $payment = $PaymentModel->where('outletid', '0')->orWhere('outletid', $this->data['outletPick'])->find();

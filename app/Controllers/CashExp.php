@@ -34,9 +34,9 @@ class CashExp extends BaseController
 
         // Daftar dompet (Tunai & Non Tunai)
         if ($this->data['outletPick'] !== null) {
-            $cashmans               = $CashModel->where('outletid', $this->data['outletPick'])->orWhere('outletid', 0)->orderBy('type', 'ASC')->find();
+            $cashmans               = $CashModel->where('outletid', $this->data['outletPick'])->orWhere('outletid', 0)->orderBy('outletid', 'ASC')->find();
         } else {
-            $cashmans               = $CashModel->orderBy('outletid', 'ASC')->orderBy('type', 'ASC')->find();
+            $cashmans               = $CashModel->orderBy('outletid', 'ASC')->orderBy('outletid', 'ASC')->find();
         }
 
         // if (!empty($input)) {

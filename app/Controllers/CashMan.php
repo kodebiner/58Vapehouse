@@ -55,9 +55,9 @@ class CashMan extends BaseController
         
         // get outlet
         if ($this->data['outletPick'] === null) {
-            $cashman      = $CashModel->findAll();
+            $cashman      = $CashModel->orderBy('outletid', 'ASC')->findAll();
         } else {
-            $cashman      = $CashModel->where('outletid', $this->data['outletPick'])->find();
+            $cashman      = $CashModel->where('outletid', $this->data['outletPick'])->orderBy('outletid', 'ASC')->find();
         }
         
         // initialize
