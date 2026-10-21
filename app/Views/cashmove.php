@@ -15,7 +15,7 @@
 $wlabel = function ($w) use ($outlets) {
     $o = ($w['outletid'] == 0) ? lang('Global.allOutlets') : '';
     foreach ($outlets as $out) { if ($out['id'] == $w['outletid']) { $o = $out['name']; } }
-    return $w['name'] . (!empty($o) ? ' (' . $o . ')' : '');
+    return $w['name'] . (!empty($o) ? ' - ' . $o : '');
 };
 ?>
 

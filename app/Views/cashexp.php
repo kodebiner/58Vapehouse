@@ -80,7 +80,7 @@
                                             $casoutlet = ($cas['outletid'] == 0) ? lang('Global.allOutlets') : '';
                                             foreach ($outlets as $out) { if ($out['id'] === $cas['outletid']) { $casoutlet = $out['name']; } }
                                         ?>
-                                        <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?><?= (!empty($casoutlet)) ? ' ('.$casoutlet.')' : ''; ?></option>
+                                        <option value="<?= $cas['id']; ?>"><?= $cas['name']; ?><?= (!empty($casoutlet)) ? ' - '.$casoutlet : ''; ?></option>
                                     <?php } ?>
                             </select>
                         </div>

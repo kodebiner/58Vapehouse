@@ -56,7 +56,9 @@
                                 <option  selected hidden disabled>-- <?=lang('Global.choosewallet')?> --</option>
                                 <?php foreach ($cash as $cas) {                                    
                                     if (($cas['outletid'] === '0') || ($cas['outletid'] === $outletPick)) {
-                                        echo '<option value="'.$cas['id'].'">'.$cas['name'].'</option>';
+                                        $casoutlet = ($cas['outletid'] == 0) ? lang('Global.allOutlets') : '';
+                                        foreach ($outlets as $outlet) { if ($outlet['id'] === $cas['outletid']) { $casoutlet = $outlet['name']; } }
+                                        echo '<option value="'.$cas['id'].'">'.$cas['name'].' - '.$casoutlet.'</option>';
                                     }
                                 } ?>
                             </select>
@@ -90,7 +92,7 @@
                 <th class="uk-text-center uk-width-small">No</th>
                 <th class="uk-width-medium"><?=lang('Global.name')?></th>
                 <th class="uk-width-medium"><?=lang('Global.outlet')?></th>
-                <th class="uk-text-center uk-width-small"><?=lang('Global.cash')?></th>
+                <th class="uk-text-center uk-width-small"><?=lang('Global.wallet')?></th>
                 <th class="uk-text-center uk-width-small"><?=lang('Global.action')?></th>
             </tr>
         </thead>
@@ -114,7 +116,9 @@
                     <td class="uk-text-center">
                         <?php  foreach ($cash as $cas){
                                 if ($cas['id'] == $payment['cashid']){
-                                    echo $cas['name'];
+                                    $casoutlet = ($cas['outletid'] == 0) ? lang('Global.allOutlets') : '';
+                                    foreach ($outlets as $outlet) { if ($outlet['id'] === $cas['outletid']) { $casoutlet = $outlet['name']; } }
+                                    echo $cas['name'].' - '.$casoutlet;
                                 }
                         } ?>    
                     </td>
@@ -166,12 +170,14 @@
                                     <?php
                                     foreach ($cash as $cas) {
                                         if (($cas['outletid'] === '0') || ($cas['outletid'] === $outletPick)) {
+                                            $casoutlet = ($cas['outletid'] == 0) ? lang('Global.allOutlets') : '';
+                                            foreach ($outlets as $outlet) { if ($outlet['id'] === $cas['outletid']) { $casoutlet = $outlet['name']; } }
                                             if ($payment['cashid'] === $cas['id']) {
                                                 $selected = 'selected';
                                             } else {
                                                 $selected = '';
                                             }
-                                            echo '<option value="'.$cas['id'].'" '.$selected.'>'.$cas['name'].'</option>';
+                                            echo '<option value="'.$cas['id'].'" '.$selected.'>'.$cas['name'].' - '.$casoutlet.'</option>';
                                         }
                                     }
                                     ?>
